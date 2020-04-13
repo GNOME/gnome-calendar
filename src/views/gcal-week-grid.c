@@ -1,6 +1,6 @@
 /* gcal-week-grid.c
  *
- * Copyright (C) 2016 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ * Copyright (C) 2016-2020 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *                    Vamsi Krishna Gollapudi <pandu.sonu@yahoo.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -127,14 +127,13 @@ uint16_compare (gconstpointer a,
 
 static inline guint
 get_event_index (GcalRangeTree *tree,
-                 GDateTime     *start,
-                 GDateTime     *end)
+                 GcalRange     *range)
 {
   g_autoptr (GPtrArray) array;
   gint idx, i;
 
   i = idx = 0;
-  array = gcal_range_tree_get_data_at_range (tree, start, end);
+  array = gcal_range_tree_get_data_at_range (tree, range);
 
   if (!array)
     return 0;
@@ -154,59 +153,35 @@ get_event_index (GcalRangeTree *tree,
 
 static guint
 count_overlaps_at_range (GcalRangeTree *self,
-                         GDateTime     *start,
-                         GDateTime     *end)
+                         GcalRange     *range)
 {
+  g_autoptr (GDateTime) start = NULL;
+  g_autoptr (GDateTime) end = NULL;
   guint64 counter;
+  gint minutes;
+  gint i;
 
   g_return_val_if_fail (self, 0);
 
   counter = 0;
+  start = gcal_range_get_start (range);
+  end = gcal_range_get_end (range);
+  minutes = g_date_time_difference (end, start) / G_TIME_SPAN_MINUTE;
 
-  while (g_date_time_compare (start, end) < 0)
+  for (i = 0; i < minutes; i++)
     {
-      g_autoptr (GDateTime) start_plus_one = NULL;
+      g_autoptr (GcalRange) minute_range = NULL;
       guint n_events;
 
-      start_plus_one = g_date_time_add_minutes (start, 1);
-      n_events = gcal_range_tree_count_entries_at_range (self, start, start_plus_one);
+      minute_range = gcal_range_new_take (g_date_time_add_minutes (start, i),
+                                          g_date_time_add_minutes (start, i + 1),
+                                          GCAL_RANGE_DEFAULT);
+      n_events = gcal_range_tree_count_entries_at_range (self, minute_range);
 
       if (n_events == 0)
         break;
 
       counter = MAX (counter, n_events);
-
-      start = g_steal_pointer (&start_plus_one);
-    }
-
-  return counter;
-}
-
-static guint
-count_overlaps_of_event (GcalRangeTree *self,
-                         GDateTime     *day_start,
-                         GDateTime     *day_end,
-                         GDateTime     *event_start,
-                         GDateTime     *event_end)
-{
-  guint64 counter;
-
-  counter = count_overlaps_at_range (self, event_start, day_end);
-
-  while (g_date_time_compare (event_start, day_start) > 0)
-    {
-      g_autoptr (GDateTime) start_minus_one = NULL;
-      guint n_events;
-
-      start_minus_one = g_date_time_add_minutes (event_start, -1);
-      n_events = gcal_range_tree_count_entries_at_range (self, start_minus_one, event_start);
-
-      if (n_events == 0)
-        break;
-
-      counter = MAX (counter, n_events);
-
-      event_start = g_date_time_add_minutes (event_start, 1);
     }
 
   return counter;
@@ -589,20 +564,21 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
    */
   for (i = 0; i < 7; i++)
     {
-      g_autoptr (GDateTime) day_start = NULL;
-      g_autoptr (GDateTime) day_end = NULL;
+      g_autoptr (GcalRange) day_range = NULL;
       GPtrArray *widgets_data;
       guint j;
 
-      day_start = g_date_time_add_days (week_start, i);
-      day_end = g_date_time_add_days (day_start, 1);
-      widgets_data = gcal_range_tree_get_data_at_range (self->events, day_start, day_end);
+      day_range = gcal_range_new_take (g_date_time_add_days (week_start, i),
+                                       g_date_time_add_days (week_start, i + 1),
+                                       GCAL_RANGE_DEFAULT);
+      widgets_data = gcal_range_tree_get_data_at_range (self->events, day_range);
 
       for (j = 0; widgets_data && j < widgets_data->len; j++)
         {
           GtkStyleContext *context;
           GtkAllocation child_allocation;
           GtkWidget *event_widget;
+          GcalRange *event_range;
           GDateTime *event_start;
           GDateTime *event_end;
           ChildData *data;
@@ -617,15 +593,16 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
 
           data =  g_ptr_array_index (widgets_data, j);
           event_widget = data->widget;
+          event_range = gcal_event_get_range (data->event);
           event_start = gcal_event_get_date_start (data->event);
           event_end = gcal_event_get_date_end (data->event);
           context = gtk_widget_get_style_context (event_widget);
 
           /* The total number of events available in this range */
-          events_at_range = count_overlaps_of_event (self->events, day_start, day_end, event_start, event_end);
+          events_at_range = count_overlaps_at_range (self->events, event_range);
 
           /* The real horizontal position of this event */
-          widget_index = get_event_index (overlaps, event_start, event_end);
+          widget_index = get_event_index (overlaps, event_range);
 
           /* Gtk complains about that */
           gtk_widget_get_preferred_height (event_widget, NULL, &natural_height);
@@ -663,10 +640,7 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
            * Add the current event to the temporary overlaps tree so we have a way to
            * know how many events are already positioned in the current column.
            */
-          gcal_range_tree_add_range (overlaps,
-                                     event_start,
-                                     event_end,
-                                     GUINT_TO_POINTER (widget_index));
+          gcal_range_tree_add_range (overlaps, event_range, GUINT_TO_POINTER (widget_index));
         }
 
       g_clear_pointer (&widgets_data, g_ptr_array_unref);
@@ -1114,8 +1088,7 @@ gcal_week_grid_add_event (GcalWeekGrid *self,
                          NULL);
 
   gcal_range_tree_add_range (self->events,
-                             gcal_event_get_date_start (event),
-                             gcal_event_get_date_end (event),
+                             gcal_event_get_range (event),
                              child_data_new (widget, event));
 
   setup_event_widget (self, widget);
@@ -1146,10 +1119,7 @@ gcal_week_grid_remove_event (GcalWeekGrid *self,
       if (g_strcmp0 (gcal_event_get_uid (event), uid) != 0)
         continue;
 
-      gcal_range_tree_remove_range (self->events,
-                                    gcal_event_get_date_start (event),
-                                    gcal_event_get_date_end (event),
-                                    data);
+      gcal_range_tree_remove_range (self->events, gcal_event_get_range (event), data);
       destroy_event_widget (self, data->widget);
       gtk_widget_queue_allocate (GTK_WIDGET (self));
       g_object_unref (event);

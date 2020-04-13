@@ -37,6 +37,7 @@ static void
 range_tree_insert (void)
 {
   g_autoptr (GcalRangeTree) range_tree = NULL;
+  g_autoptr (GcalRange) range = NULL;
   g_autoptr (GDateTime) start = NULL;
   g_autoptr (GDateTime) end = NULL;
 
@@ -45,15 +46,16 @@ range_tree_insert (void)
 
   start = g_date_time_new_local (2020, 3, 17, 9, 30, 0);
   end = g_date_time_add_hours (start, 1);
+  range = gcal_range_new (start, end, GCAL_RANGE_DEFAULT);
 
-  gcal_range_tree_add_range (range_tree, start, end, (gpointer) 0xdeadbeef);
-  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 1);
+  gcal_range_tree_add_range (range_tree, range, (gpointer) 0xdeadbeef);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range), ==, 1);
 
-  gcal_range_tree_add_range (range_tree, start, end, (gpointer) 0x8badf00d);
-  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 2);
+  gcal_range_tree_add_range (range_tree, range, (gpointer) 0x8badf00d);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range), ==, 2);
 
-  gcal_range_tree_add_range (range_tree, start, end, (gpointer) 0x0badcafe);
-  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 3);
+  gcal_range_tree_add_range (range_tree, range, (gpointer) 0x0badcafe);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range), ==, 3);
 }
 
 /*********************************************************************************************************************/
@@ -73,8 +75,7 @@ static struct {
 };
 
 static gboolean
-traverse_func (GDateTime *start,
-               GDateTime *end,
+traverse_func (GcalRange *range,
                gpointer   data,
                gpointer   user_data)
 {
@@ -96,13 +97,13 @@ range_tree_traverse (void)
   utc = g_time_zone_new_utc ();
   for (i = 0; i < G_N_ELEMENTS (ranges); i++)
     {
-      g_autoptr (GDateTime) start = NULL;
-      g_autoptr (GDateTime) end = NULL;
+      g_autoptr (GcalRange) range = NULL;
 
-      start = g_date_time_new_from_iso8601 (ranges[i].start, utc);
-      end = g_date_time_new_from_iso8601 (ranges[i].end, utc);
+      range = gcal_range_new_take (g_date_time_new_from_iso8601 (ranges[i].start, utc),
+                                   g_date_time_new_from_iso8601 (ranges[i].end, utc),
+                                   GCAL_RANGE_DEFAULT);
 
-      gcal_range_tree_add_range (range_tree, start, end, GINT_TO_POINTER (i));
+      gcal_range_tree_add_range (range_tree, range, GINT_TO_POINTER (i));
     }
 
   gcal_range_tree_traverse (range_tree, G_PRE_ORDER, traverse_func, NULL);
@@ -118,6 +119,8 @@ range_tree_smaller_range (void)
   g_autoptr (GcalRangeTree) range_tree = NULL;
   g_autoptr (GDateTime) range_start = NULL;
   g_autoptr (GDateTime) range_end = NULL;
+  g_autoptr (GcalRange) range1 = NULL;
+  g_autoptr (GcalRange) range2 = NULL;
   g_autoptr (GDateTime) start = NULL;
   g_autoptr (GDateTime) end = NULL;
 
@@ -126,14 +129,16 @@ range_tree_smaller_range (void)
 
   start = g_date_time_new_local (2020, 3, 17, 9, 30, 0);
   end = g_date_time_add_hours (start, 1);
+  range1 = gcal_range_new (start, end, GCAL_RANGE_DEFAULT);
 
-  gcal_range_tree_add_range (range_tree, start, end, (gpointer) 0xdeadbeef);
-  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 1);
+  gcal_range_tree_add_range (range_tree, range1, (gpointer) 0xdeadbeef);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range1), ==, 1);
 
   range_start = g_date_time_new_local (2020, 3, 20, 9, 30, 0);
   range_end = g_date_time_add_hours (range_start, 1);
+  range2 = gcal_range_new (range_start, range_end, GCAL_RANGE_DEFAULT);
 
-  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range_start, range_end), ==, 0);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range2), ==, 0);
 }
 
 /*********************************************************************************************************************/
@@ -142,6 +147,7 @@ static void
 range_tree_remove_data (void)
 {
   g_autoptr (GcalRangeTree) range_tree = NULL;
+  g_autoptr (GcalRange) range = NULL;
   g_autoptr (GDateTime) start = NULL;
   g_autoptr (GDateTime) end = NULL;
 
@@ -150,30 +156,31 @@ range_tree_remove_data (void)
 
   start = g_date_time_new_local (2020, 3, 17, 9, 30, 0);
   end = g_date_time_add_hours (start, 1);
+  range = gcal_range_new (start, end, GCAL_RANGE_DEFAULT);
 
-  gcal_range_tree_add_range (range_tree, start, end, (gpointer) 0xdeadbeef);
-  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 1);
+  gcal_range_tree_add_range (range_tree, range, (gpointer) 0xdeadbeef);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range), ==, 1);
 
-  gcal_range_tree_add_range (range_tree, start, end, (gpointer) 0xdeadbeef);
-  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 2);
+  gcal_range_tree_add_range (range_tree, range, (gpointer) 0xdeadbeef);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range), ==, 2);
 
-  gcal_range_tree_add_range (range_tree, start, end, (gpointer) 0xbadcafe);
-  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 3);
+  gcal_range_tree_add_range (range_tree, range, (gpointer) 0xbadcafe);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range), ==, 3);
 
   /* Remove the 2 deadbeefs */
   gcal_range_tree_remove_data (range_tree, (gpointer) 0xdeadbeef);
-  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 2);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range), ==, 2);
 
   gcal_range_tree_remove_data (range_tree, (gpointer) 0xdeadbeef);
-  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 1);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range), ==, 1);
 
   /* Try again */
   gcal_range_tree_remove_data (range_tree, (gpointer) 0xdeadbeef);
-  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 1);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range), ==, 1);
 
   /* Remove bad cafe */
   gcal_range_tree_remove_data (range_tree, (gpointer) 0xbadcafe);
-  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 0);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, range), ==, 0);
 }
 
 /*********************************************************************************************************************/

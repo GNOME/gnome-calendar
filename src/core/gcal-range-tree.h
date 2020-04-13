@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "gcal-range.h"
+
 #include <glib-object.h>
 
 G_BEGIN_DECLS
@@ -37,8 +39,7 @@ typedef struct _GcalRangeTree GcalRangeTree;
  *
  * Returns: %TRUE to stop traversing, %FALSE to continue traversing
  */
-typedef gboolean    (*GcalRangeTraverseFunc)                     (GDateTime          *start,
-                                                                  GDateTime          *end,
+typedef gboolean    (*GcalRangeTraverseFunc)                     (GcalRange          *range,
                                                                   gpointer            data,
                                                                   gpointer            user_data);
 
@@ -58,13 +59,11 @@ GcalRangeTree*       gcal_range_tree_ref                         (GcalRangeTree 
 void                 gcal_range_tree_unref                       (GcalRangeTree      *self);
 
 void                 gcal_range_tree_add_range                   (GcalRangeTree      *self,
-                                                                  GDateTime          *start,
-                                                                  GDateTime          *end,
+                                                                  GcalRange          *range,
                                                                   gpointer            data);
 
 void                 gcal_range_tree_remove_range                (GcalRangeTree      *self,
-                                                                  GDateTime          *start,
-                                                                  GDateTime          *end,
+                                                                  GcalRange          *range,
                                                                   gpointer            data);
 
 void                 gcal_range_tree_remove_data                 (GcalRangeTree      *self,
@@ -78,12 +77,10 @@ void                 gcal_range_tree_traverse                    (GcalRangeTree 
 GPtrArray*           gcal_range_tree_get_all_data                (GcalRangeTree      *self);
 
 GPtrArray*           gcal_range_tree_get_data_at_range           (GcalRangeTree      *self,
-                                                                  GDateTime          *start,
-                                                                  GDateTime          *end);
+                                                                  GcalRange          *range);
 
 guint64              gcal_range_tree_count_entries_at_range      (GcalRangeTree      *self,
-                                                                  GDateTime          *start,
-                                                                  GDateTime          *end);
+                                                                  GcalRange          *range);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalRangeTree, gcal_range_tree_unref)
 
