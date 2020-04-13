@@ -32,6 +32,8 @@
 
 #include <libedataserver/libedataserver.h>
 
+#define BATCH_SIZE 5
+
 typedef enum
 {
   ADD_EVENT,
@@ -581,87 +583,96 @@ timeline_source_dispatch (GSource     *source,
 {
   TimelineSource *timeline_source;
   GcalTimeline *self;
-  GcalRange *event_range;
-  QueueData *queue_data;
-  GcalEvent *event;
-  gint i;
+  gint processed_events;
 
   GCAL_ENTRY;
 
+  processed_events = 0;
   timeline_source = (TimelineSource*) source;
   self = timeline_source->timeline;
-  queue_data = g_queue_pop_head (self->event_queue);
 
-  event = queue_data->event;
-  event_range = gcal_event_get_range (event);
-
-  switch (queue_data->queue_event)
+  while (processed_events < BATCH_SIZE && !g_queue_is_empty (self->event_queue))
     {
-    case ADD_EVENT:
-      GCAL_TRACE_MSG ("Processing ADD_EVENT for event '%s' (%s)",
-                      gcal_event_get_summary (event),
-                      gcal_event_get_uid (event));
+      GcalRange *event_range;
+      QueueData *queue_data;
+      GcalEvent *event;
+      gint i;
 
-      if (queue_data->update_range_tree)
-        gcal_range_tree_add_range (self->events, event_range, g_object_ref (event));
+      queue_data = g_queue_pop_head (self->event_queue);
 
-      for (i = 0; queue_data->subscribers && i < queue_data->subscribers->len; i++)
+      event = queue_data->event;
+      event_range = gcal_event_get_range (event);
+
+      switch (queue_data->queue_event)
         {
-          GcalTimelineSubscriber *subscriber = g_ptr_array_index (queue_data->subscribers, i);
+        case ADD_EVENT:
+          GCAL_TRACE_MSG ("Processing ADD_EVENT for event '%s' (%s)",
+                          gcal_event_get_summary (event),
+                          gcal_event_get_uid (event));
 
-          if (!subscriber_contains_event (subscriber, event))
-            continue;
-
-          add_event_to_subscriber (subscriber, event);
-        }
-      break;
-
-    case UPDATE_EVENT:
-      {
-        GCAL_TRACE_MSG ("Processing UPDATE_EVENT for event '%s' (%s)",
-                        gcal_event_get_summary (event),
-                        gcal_event_get_uid (event));
-
-        if (queue_data->update_range_tree)
-          {
-            GcalRange *old_event_range;
-
-            /* Remove the old event */
-            old_event_range = gcal_event_get_range (queue_data->old_event);
-
-            gcal_range_tree_remove_range (self->events, old_event_range, queue_data->old_event);
+          if (queue_data->update_range_tree)
             gcal_range_tree_add_range (self->events, event_range, g_object_ref (event));
-          }
 
-        for (i = 0; queue_data->subscribers && i < queue_data->subscribers->len; i++)
+          for (i = 0; queue_data->subscribers && i < queue_data->subscribers->len; i++)
+            {
+              GcalTimelineSubscriber *subscriber = g_ptr_array_index (queue_data->subscribers, i);
+
+              if (!subscriber_contains_event (subscriber, event))
+                continue;
+
+              add_event_to_subscriber (subscriber, event);
+            }
+          break;
+
+        case UPDATE_EVENT:
           {
-            GcalTimelineSubscriber *subscriber = g_ptr_array_index (queue_data->subscribers, i);
+            GCAL_TRACE_MSG ("Processing UPDATE_EVENT for event '%s' (%s)",
+                            gcal_event_get_summary (event),
+                            gcal_event_get_uid (event));
 
-            if (!subscriber_contains_event (subscriber, event))
-              continue;
+            if (queue_data->update_range_tree)
+              {
+                GcalRange *old_event_range;
 
-            update_subscriber_event (subscriber, event);
+                /* Remove the old event */
+                old_event_range = gcal_event_get_range (queue_data->old_event);
+
+                gcal_range_tree_remove_range (self->events, old_event_range, queue_data->old_event);
+                gcal_range_tree_add_range (self->events, event_range, g_object_ref (event));
+              }
+
+            for (i = 0; queue_data->subscribers && i < queue_data->subscribers->len; i++)
+              {
+                GcalTimelineSubscriber *subscriber = g_ptr_array_index (queue_data->subscribers, i);
+
+                if (!subscriber_contains_event (subscriber, event))
+                  continue;
+
+                update_subscriber_event (subscriber, event);
+              }
           }
-      }
-      break;
+          break;
 
-    case REMOVE_EVENT:
-      GCAL_TRACE_MSG ("Processing REMOVE_EVENT for event '%s' (%s)",
-                      gcal_event_get_summary (event),
-                      gcal_event_get_uid (event));
+        case REMOVE_EVENT:
+          GCAL_TRACE_MSG ("Processing REMOVE_EVENT for event '%s' (%s)",
+                          gcal_event_get_summary (event),
+                          gcal_event_get_uid (event));
 
-      for (i = 0; queue_data->subscribers && i < queue_data->subscribers->len; i++)
-        {
-          GcalTimelineSubscriber *subscriber = g_ptr_array_index (queue_data->subscribers, i);
-          remove_event_from_subscriber (subscriber, event);
+          for (i = 0; queue_data->subscribers && i < queue_data->subscribers->len; i++)
+            {
+              GcalTimelineSubscriber *subscriber = g_ptr_array_index (queue_data->subscribers, i);
+              remove_event_from_subscriber (subscriber, event);
+            }
+
+          if (queue_data->update_range_tree)
+            gcal_range_tree_remove_range (self->events, event_range, event);
+          break;
         }
 
-      if (queue_data->update_range_tree)
-        gcal_range_tree_remove_range (self->events, event_range, event);
-      break;
-    }
+      queue_data_free (queue_data);
 
-  queue_data_free (queue_data);
+      processed_events++;
+    }
 
   GCAL_RETURN (G_SOURCE_CONTINUE);
 }
