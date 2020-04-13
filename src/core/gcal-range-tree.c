@@ -444,6 +444,30 @@ remove_data_func (GcalRange *range,
 }
 
 static void
+recursively_print_node_to_string (Node    *n,
+                                  GString *string,
+                                  gint     depth)
+{
+  g_autofree gchar *range = NULL;
+  gint64 i;
+
+  for (i = 0; i < depth * 2; i++)
+    g_string_append (string, "  ");
+
+  if (!n)
+    {
+      g_string_append (string, "(null)\n");
+      return;
+    }
+
+  range = gcal_range_to_string (n->range);
+  g_string_append_printf (string, "Node %s (hits: %d)\n", range, n->hits);
+
+  recursively_print_node_to_string (n->left, string, depth + 1);
+  recursively_print_node_to_string (n->right, string, depth + 1);
+}
+
+static void
 gcal_range_tree_free (GcalRangeTree *self)
 {
   g_assert (self);
@@ -713,4 +737,24 @@ gcal_range_tree_count_entries_at_range (GcalRangeTree *self,
   gcal_range_tree_traverse (self, G_IN_ORDER, count_entries_at_range, &gather_data);
 
   return gather_data.counter;
+}
+
+/**
+ * gcal_range_tree_print:
+ * @self: a #GcalRangeTree
+ *
+ * Prints @self. This is only useful for debugging purposes. There
+ * are no guarantees about the format, except that it's human-readable.
+ */
+void
+gcal_range_tree_print (GcalRangeTree *self)
+{
+  g_autoptr (GString) string = NULL;
+
+  g_return_if_fail (self);
+
+  string = g_string_new ("");
+  recursively_print_node_to_string (self->root, string, 0);
+
+  g_print ("%s", string->str);
 }

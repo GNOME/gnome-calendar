@@ -82,6 +82,8 @@ GPtrArray*           gcal_range_tree_get_data_at_range           (GcalRangeTree 
 guint64              gcal_range_tree_count_entries_at_range      (GcalRangeTree      *self,
                                                                   GcalRange          *range);
 
+void                 gcal_range_tree_print                       (GcalRangeTree      *self);
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalRangeTree, gcal_range_tree_unref)
 
 G_END_DECLS
