@@ -75,8 +75,7 @@ struct _GcalCalendarMonitor
    */
   struct {
     GMutex            mutex;
-    GDateTime        *range_start;
-    GDateTime        *range_end;
+    GcalRange        *range;
     gchar            *filter;
   } shared;
 };
@@ -114,12 +113,13 @@ static GParamSpec *properties [N_PROPS] = { NULL, };
  */
 
 static gchar*
-build_subscriber_filter (GDateTime   *range_start,
-                         GDateTime   *range_end,
+build_subscriber_filter (GcalRange   *range,
                          const gchar *filter)
 {
   g_autoptr (GDateTime) utc_range_start = NULL;
   g_autoptr (GDateTime) utc_range_end = NULL;
+  g_autoptr (GDateTime) range_start = NULL;
+  g_autoptr (GDateTime) range_end = NULL;
   g_autofree gchar *start_str = NULL;
   g_autofree gchar *end_str = NULL;
   g_autofree gchar *result = NULL;
@@ -129,9 +129,11 @@ build_subscriber_filter (GDateTime   *range_start,
    * g_date_time_format_iso8601().
    */
 
+  range_start = gcal_range_get_start (range);
   utc_range_start = g_date_time_to_utc (range_start);
   start_str = g_date_time_format (utc_range_start, "%Y%m%dT%H%M%SZ");
 
+  range_end = gcal_range_get_end (range);
   utc_range_end = g_date_time_to_utc (range_end);
   end_str = g_date_time_format (utc_range_end, "%Y%m%dT%H%M%SZ");
 
@@ -173,7 +175,7 @@ get_monitor_ranges (GcalCalendarMonitor  *self)
   g_autoptr (GcalRange) range = NULL;
 
   g_mutex_lock (&self->shared.mutex);
-  range = gcal_range_new (self->shared.range_start, self->shared.range_end, GCAL_RANGE_DEFAULT);
+  range = gcal_range_copy (self->shared.range);
   g_mutex_unlock (&self->shared.mutex);
 
   return g_steal_pointer (&range);
@@ -608,13 +610,13 @@ create_view (GcalCalendarMonitor *self)
   g_assert (self->cancellable == NULL);
   self->cancellable = g_cancellable_new ();
 
-  if (!self->shared.range_start || !self->shared.range_end)
+  if (!self->shared.range)
     {
       g_mutex_unlock (&self->shared.mutex);
       GCAL_RETURN ();
     }
 
-  filter = build_subscriber_filter (self->shared.range_start, self->shared.range_end, self->shared.filter);
+  filter = build_subscriber_filter (self->shared.range, self->shared.filter);
 
   g_mutex_unlock (&self->shared.mutex);
 
@@ -813,7 +815,7 @@ maybe_spawn_view_thread (GcalCalendarMonitor *self)
 {
   g_autofree gchar *thread_name = NULL;
 
-  if (self->thread || !self->shared.range_start || !self->shared.range_end)
+  if (self->thread || !self->shared.range)
     return;
 
   thread_name = g_strdup_printf ("GcalCalendarMonitor (%s)", gcal_calendar_get_id (self->calendar));
@@ -824,17 +826,12 @@ maybe_spawn_view_thread (GcalCalendarMonitor *self)
 
 static void
 remove_events_outside_range (GcalCalendarMonitor *self,
-                             GDateTime           *range_start,
-                             GDateTime           *range_end)
+                             GcalRange           *range)
 {
-  g_autoptr (GcalRange) range = NULL;
   GHashTableIter iter;
   GcalEvent *event;
 
   GCAL_TRACE_MSG ("Removing events outside range from monitor");
-
-  if (range_start && range_end)
-    range = gcal_range_new (range_start, range_end, GCAL_RANGE_DEFAULT);
 
   g_hash_table_iter_init (&iter, self->events);
   while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &event))
@@ -1006,8 +1003,7 @@ gcal_calendar_monitor_finalize (GObject *object)
   g_clear_pointer (&self->main_context, g_main_context_unref);
   g_clear_pointer (&self->messages, g_async_queue_unref);
   g_clear_pointer (&self->shared.filter, g_free);
-  gcal_clear_date_time (&self->shared.range_start);
-  gcal_clear_date_time (&self->shared.range_end);
+  g_clear_pointer (&self->shared.range, gcal_range_unref);
 
   G_OBJECT_CLASS (gcal_calendar_monitor_parent_class)->finalize (object);
 }
@@ -1125,8 +1121,7 @@ gcal_calendar_monitor_new (GcalCalendar *calendar)
 /**
  * gcal_calendar_monitor_set_range:
  * @self: a #GcalCalendarMonitor
- * @range_start: new range start
- * @range_end: new range end
+ * @range: a #GcalRange
  *
  * Updates the range of @self. This usually will result in
  * @self creating a new view, and gathering the events from
@@ -1134,23 +1129,20 @@ gcal_calendar_monitor_new (GcalCalendar *calendar)
  */
 void
 gcal_calendar_monitor_set_range (GcalCalendarMonitor *self,
-                                 GDateTime           *range_start,
-                                 GDateTime           *range_end)
+                                 GcalRange           *range)
 {
   gboolean range_changed;
 
   g_return_if_fail (GCAL_IS_CALENDAR_MONITOR (self));
-  g_return_if_fail ((!range_start && !range_end) || g_date_time_compare (range_start, range_end) < 0);
 
   GCAL_ENTRY;
 
   g_mutex_lock (&self->shared.mutex);
 
   range_changed =
-    !self->shared.range_start ||
-    !self->shared.range_end ||
-    (self->shared.range_start && range_start && g_date_time_compare (self->shared.range_start, range_start) != 0) ||
-    (self->shared.range_end && range_end && g_date_time_compare (self->shared.range_end, range_end) != 0);
+    !self->shared.range ||
+    !range ||
+    gcal_range_calculate_overlap (self->shared.range, range, NULL) != GCAL_RANGE_EQUAL;
 
   if (!range_changed)
     {
@@ -1158,13 +1150,13 @@ gcal_calendar_monitor_set_range (GcalCalendarMonitor *self,
       GCAL_RETURN ();
     }
 
-  gcal_set_date_time (&self->shared.range_start, range_start);
-  gcal_set_date_time (&self->shared.range_end, range_end);
+  g_clear_pointer (&self->shared.range, gcal_range_unref);
+  self->shared.range = range ? gcal_range_copy (range) : NULL;
 
   g_mutex_unlock (&self->shared.mutex);
 
   maybe_spawn_view_thread (self);
-  remove_events_outside_range (self, range_start, range_end);
+  remove_events_outside_range (self, range);
 
   g_cancellable_cancel (self->cancellable);
 

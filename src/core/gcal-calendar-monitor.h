@@ -23,6 +23,7 @@
 #include <glib-object.h>
 
 #include "gcal-types.h"
+#include "gcal-range.h"
 
 G_BEGIN_DECLS
 
@@ -32,8 +33,7 @@ G_DECLARE_FINAL_TYPE (GcalCalendarMonitor, gcal_calendar_monitor, GCAL, CALENDAR
 GcalCalendarMonitor* gcal_calendar_monitor_new                   (GcalCalendar        *calendar);
 
 void                 gcal_calendar_monitor_set_range             (GcalCalendarMonitor *self,
-                                                                  GDateTime           *range_start,
-                                                                  GDateTime           *range_end);
+                                                                  GcalRange           *range);
 
 GcalEvent*           gcal_calendar_monitor_get_cached_event      (GcalCalendarMonitor  *self,
                                                                   const gchar          *event_id);

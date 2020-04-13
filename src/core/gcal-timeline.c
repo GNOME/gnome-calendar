@@ -62,8 +62,7 @@ struct _GcalTimeline
   GObject             parent_instance;
 
   gulong              update_range_idle_id;
-  GDateTime          *range_start;
-  GDateTime          *range_end;
+  GcalRange          *range;
 
   GcalRangeTree      *events;
   gchar              *filter;
@@ -205,8 +204,6 @@ subscriber_contains_event (GcalTimelineSubscriber *subscriber,
 static void
 update_range (GcalTimeline *self)
 {
-  g_autoptr (GDateTime) new_range_start = NULL;
-  g_autoptr (GDateTime) new_range_end = NULL;
   GcalTimelineSubscriber *subscriber;
   GHashTableIter iter;
   gboolean has_subscribers;
@@ -219,49 +216,40 @@ update_range (GcalTimeline *self)
 
   if (has_subscribers)
     {
+      g_autoptr (GcalRange) new_range = NULL;
+
       g_hash_table_iter_init (&iter, self->subscribers);
       while (g_hash_table_iter_next (&iter, (gpointer*) &subscriber, NULL))
         {
           g_autoptr (GcalRange) subscriber_range = NULL;
-          g_autoptr (GDateTime) subscriber_start = NULL;
-          g_autoptr (GDateTime) subscriber_end = NULL;
+          g_autoptr (GcalRange) union_range = NULL;
 
           subscriber_range = gcal_timeline_subscriber_get_range (subscriber);
-          subscriber_start = gcal_range_get_start (subscriber_range);
-          subscriber_end = gcal_range_get_end (subscriber_range);
 
-          if (!new_range_start || g_date_time_compare (subscriber_start, new_range_start) < 0)
+          if (new_range)
             {
-              gcal_clear_date_time (&new_range_start);
-              new_range_start = g_steal_pointer (&subscriber_start);
+              union_range = gcal_range_union (subscriber_range, new_range);
+
+              g_clear_pointer (&new_range, gcal_range_unref);
+              new_range = g_steal_pointer (&union_range);
             }
-
-          if (!new_range_end || g_date_time_compare (subscriber_end, new_range_end) > 0)
+          else
             {
-              gcal_clear_date_time (&new_range_end);
-              new_range_end = g_steal_pointer (&subscriber_end);
+              new_range = g_steal_pointer (&subscriber_range);
             }
         }
 
-      if (!self->range_start || g_date_time_compare (self->range_start, new_range_start) != 0)
+      if (!self->range || gcal_range_compare (self->range, new_range) != 0)
         {
-          gcal_clear_date_time (&self->range_start);
-          self->range_start = g_steal_pointer (&new_range_start);
-          range_changed = TRUE;
-        }
-
-      if (!self->range_end || g_date_time_compare (self->range_end, new_range_end) != 0)
-        {
-          gcal_clear_date_time (&self->range_end);
-          self->range_end = g_steal_pointer (&new_range_end);
+          g_clear_pointer (&self->range, gcal_range_unref);
+          self->range = g_steal_pointer (&new_range);
           range_changed = TRUE;
         }
 
     }
-  else if (self->range_start || self->range_end)
+  else if (self->range)
     {
-      gcal_clear_date_time (&self->range_start);
-      gcal_clear_date_time (&self->range_end);
+      g_clear_pointer (&self->range, gcal_range_unref);
       range_changed = TRUE;
     }
 
@@ -273,7 +261,7 @@ update_range (GcalTimeline *self)
 
       g_hash_table_iter_init (&iter, self->calendars);
       while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &monitor))
-        gcal_calendar_monitor_set_range (monitor, self->range_start, self->range_end);
+        gcal_calendar_monitor_set_range (monitor, self->range);
     }
 
   GCAL_EXIT;
@@ -446,6 +434,7 @@ update_subscriber_range (GcalTimeline           *self,
   gcal_range_tree_add_range (self->subscriber_ranges, new_range, subscriber);
 
   g_hash_table_insert (self->subscribers, g_object_ref (subscriber), g_steal_pointer (&new_range));
+  g_steal_pointer (&old_range);
 
   GCAL_EXIT;
 }
@@ -884,8 +873,8 @@ gcal_timeline_add_calendar (GcalTimeline *self,
   g_signal_connect (monitor, "completed", G_CALLBACK (on_calendar_monitor_completed_cb), self);
   g_hash_table_insert (self->calendars, calendar, g_object_ref (monitor));
 
-  if (self->range_start && self->range_end)
-    gcal_calendar_monitor_set_range (monitor, self->range_start, self->range_end);
+  if (self->range)
+    gcal_calendar_monitor_set_range (monitor, self->range);
 
   GCAL_EXIT;
 }
