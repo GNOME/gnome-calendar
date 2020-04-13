@@ -195,15 +195,11 @@ static gboolean
 subscriber_contains_event (GcalTimelineSubscriber *subscriber,
                            GcalEvent              *event)
 {
-  g_autoptr (GDateTime) subscriber_range_start = NULL;
-  g_autoptr (GDateTime) subscriber_range_end = NULL;
   g_autoptr (GcalRange) subscriber_range = NULL;
 
   subscriber_range = gcal_timeline_subscriber_get_range (subscriber);
-  subscriber_range_start = gcal_range_get_start (subscriber_range);
-  subscriber_range_end = gcal_range_get_end (subscriber_range);
 
-  return gcal_event_is_within_range (event, subscriber_range_start, subscriber_range_end);
+  return gcal_event_is_within_range (event, subscriber_range);
 }
 
 static void
@@ -364,7 +360,7 @@ calculate_changed_events (GcalTimeline            *self,
     {
       GcalEvent *event = g_ptr_array_index (events_to_remove, i);
 
-      if (!gcal_event_is_within_range (event, old_range_start, old_range_end))
+      if (!gcal_event_is_within_range (event, old_range))
         continue;
 
       GCAL_TRACE_MSG ("Removing event from subscriber %s due to time range change (event: '%s' (%s))",
@@ -380,7 +376,7 @@ calculate_changed_events (GcalTimeline            *self,
     {
       GcalEvent *event = g_ptr_array_index (events_to_add, i);
 
-      if (!gcal_event_is_within_range (event, new_range_start, new_range_end))
+      if (!gcal_event_is_within_range (event, new_range))
         continue;
 
       GCAL_TRACE_MSG ("Queueing event addition for subscriber %s (event: '%s' (%s))",
@@ -397,8 +393,6 @@ add_cached_events_to_subscriber (GcalTimeline           *self,
                                  GcalTimelineSubscriber *subscriber)
 {
   g_autoptr (GcalRange) subscriber_range = NULL;
-  g_autoptr (GDateTime) subscriber_start = NULL;
-  g_autoptr (GDateTime) subscriber_end = NULL;
   g_autoptr (GPtrArray) subscriber_array = NULL;
   g_autoptr (GPtrArray) events_to_add = NULL;
   gint i;
@@ -406,8 +400,6 @@ add_cached_events_to_subscriber (GcalTimeline           *self,
   GCAL_ENTRY;
 
   subscriber_range = gcal_timeline_subscriber_get_range (subscriber);
-  subscriber_start = gcal_range_get_start (subscriber_range);
-  subscriber_end = gcal_range_get_end (subscriber_range);
 
   events_to_add = gcal_range_tree_get_data_at_range (self->events, subscriber_range);
 
@@ -418,7 +410,7 @@ add_cached_events_to_subscriber (GcalTimeline           *self,
     {
       GcalEvent *event = g_ptr_array_index (events_to_add, i);
 
-      if (!gcal_event_is_within_range (event, subscriber_start, subscriber_end))
+      if (!gcal_event_is_within_range (event, subscriber_range))
         continue;
 
       GCAL_TRACE_MSG ("Queueing event addition for subscriber %s (event: '%s' (%s))",
