@@ -1,6 +1,6 @@
 /* gcal-range-tree.h
  *
- * Copyright (C) 2016 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ * Copyright (C) 2016-2020 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GCAL_RANGE_TREE_H
-#define GCAL_RANGE_TREE_H
+#pragma once
 
 #include <glib-object.h>
 
@@ -89,5 +88,3 @@ guint64              gcal_range_tree_count_entries_at_range      (GcalRangeTree 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalRangeTree, gcal_range_tree_unref)
 
 G_END_DECLS
-
-#endif /* GCAL_RANGE_TREE_H */
