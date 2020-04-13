@@ -89,6 +89,7 @@ struct _GcalEvent
 
   GDateTime          *dt_start;
   GDateTime          *dt_end;
+  GcalRange          *range;
 
   GdkRGBA            *color;
   GBinding           *color_binding;
@@ -124,6 +125,7 @@ enum {
   PROP_DATE_START,
   PROP_LOCATION,
   PROP_CALENDAR,
+  PROP_RANGE,
   PROP_SUMMARY,
   PROP_TIMEZONE,
   PROP_UID,
@@ -137,6 +139,13 @@ static GParamSpec* properties[N_PROPS] = { NULL, };
 /*
  * Auxiliary methods
  */
+
+static void
+clear_range (GcalEvent *self)
+{
+  g_clear_pointer (&self->range, gcal_range_unref);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_RANGE]);
+}
 
 static GTimeZone*
 get_timezone_from_ical (ECalComponentDateTime *comp)
@@ -447,6 +456,7 @@ gcal_event_finalize (GObject *object)
 
   g_clear_pointer (&self->dt_start, g_date_time_unref);
   g_clear_pointer (&self->dt_end, g_date_time_unref);
+  g_clear_pointer (&self->range, gcal_range_unref);
   g_clear_pointer (&self->summary, g_free);
   g_clear_pointer (&self->location, g_free);
   g_clear_pointer (&self->description, g_free);
@@ -500,6 +510,10 @@ gcal_event_get_property (GObject    *object,
 
     case PROP_LOCATION:
       g_value_set_string (value, gcal_event_get_location (self));
+      break;
+
+    case PROP_RANGE:
+      g_value_take_boxed (value, gcal_event_get_range (self));
       break;
 
     case PROP_SUMMARY:
@@ -675,6 +689,17 @@ gcal_event_class_init (GcalEventClass *klass)
                                                    "The location of the event",
                                                    "",
                                                    G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+  * GcalEvent::range:
+  *
+  * The range of the event, as a combination of the start and end dates.
+  */
+  properties[PROP_RANGE] = g_param_spec_boxed ("range",
+                                               "Range of the event",
+                                               "The time range of the event",
+                                               GCAL_TYPE_RANGE,
+                                               G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
   * GcalEvent::recurrence:
@@ -863,6 +888,8 @@ gcal_event_set_all_day (GcalEvent *self,
       self->all_day = all_day;
 
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ALL_DAY]);
+
+      clear_range (self);
     }
 }
 
@@ -910,6 +937,7 @@ gcal_event_set_date_end (GcalEvent *self,
 
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DATE_END]);
 
+      clear_range (self);
       e_cal_component_datetime_free (component_dt);
     }
 }
@@ -955,8 +983,33 @@ gcal_event_set_date_start (GcalEvent *self,
 
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DATE_START]);
 
+      clear_range (self);
       e_cal_component_datetime_free (component_dt);
     }
+}
+
+/**
+ * gcal_event_get_range:
+ * @self: a #GcalEvent
+ *
+ * Retrieves the range of @self. This is a simple combination of
+ * the start and end dates.
+ *
+ * Returns: (transfer none): a #GcalRange
+ */
+GcalRange*
+gcal_event_get_range (GcalEvent *self)
+{
+  g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
+
+  if (!self->range)
+    {
+      self->range = gcal_range_new (gcal_event_get_date_start (self),
+                                    gcal_event_get_date_end (self),
+                                    self->all_day ? GCAL_RANGE_DATE_ONLY : GCAL_RANGE_DEFAULT);
+    }
+
+  return self->range;
 }
 
 /**
