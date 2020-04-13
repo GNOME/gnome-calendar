@@ -1879,21 +1879,13 @@ gcal_event_format_date (GcalEvent *self)
 
 gboolean
 gcal_event_is_within_range (GcalEvent *self,
-                            GDateTime *range_start,
-                            GDateTime *range_end)
+                            GcalRange *range)
 {
-  GDateTime *event_start;
-  GDateTime *event_end;
+  GcalRange *event_range;
 
-  event_start = gcal_event_get_date_start (self);
-  event_end = gcal_event_get_date_end (self);
+  g_return_val_if_fail (GCAL_IS_EVENT (self), FALSE);
+  g_return_val_if_fail (range != NULL, FALSE);
 
-  if (gcal_event_get_all_day (self))
-    {
-      return gcal_date_time_compare_date (range_end, event_start) > 0 &&
-             gcal_date_time_compare_date (event_end, range_start) > 0;
-    }
-
-  return g_date_time_compare (range_end, event_start) > 0 &&
-         g_date_time_compare (event_end, range_start) > 0;
+  event_range = gcal_event_get_range (self);
+  return gcal_range_calculate_overlap (event_range, range, NULL) != GCAL_RANGE_NO_OVERLAP;
 }

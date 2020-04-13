@@ -167,20 +167,16 @@ maybe_init_event_arrays (GcalCalendarMonitor *self)
     }
 }
 
-static void
-get_monitor_ranges (GcalCalendarMonitor  *self,
-                    GDateTime           **out_range_start,
-                    GDateTime           **out_range_end)
+static GcalRange*
+get_monitor_ranges (GcalCalendarMonitor  *self)
 {
+  g_autoptr (GcalRange) range = NULL;
+
   g_mutex_lock (&self->shared.mutex);
-
-  if (out_range_start)
-    *out_range_start = g_date_time_ref (self->shared.range_start);
-
-  if (out_range_end)
-    *out_range_end = g_date_time_ref (self->shared.range_end);
-
+  range = gcal_range_new (self->shared.range_start, self->shared.range_end, GCAL_RANGE_DEFAULT);
   g_mutex_unlock (&self->shared.mutex);
+
+  return g_steal_pointer (&range);
 }
 
 static void
@@ -307,14 +303,13 @@ on_client_view_objects_added_cb (ECalClientView      *view,
                                  GcalCalendarMonitor *self)
 {
   g_autoptr (GPtrArray) components_to_expand = NULL;
-  g_autoptr (GDateTime) range_start = NULL;
-  g_autoptr (GDateTime) range_end = NULL;
+  g_autoptr (GcalRange) range = NULL;
   const GSList *l;
   gint i;
 
   GCAL_ENTRY;
 
-  get_monitor_ranges (self, &range_start, &range_end);
+  range = get_monitor_ranges (self);
 
   maybe_init_event_arrays (self);
   components_to_expand = g_ptr_array_new ();
@@ -360,7 +355,7 @@ on_client_view_objects_added_cb (ECalClientView      *view,
           continue;
         }
 
-      if (!gcal_event_is_within_range (event, range_start, range_end))
+      if (!gcal_event_is_within_range (event, range))
         continue;
 
       event_id = g_strdup (gcal_event_get_uid (event));
@@ -381,6 +376,8 @@ on_client_view_objects_added_cb (ECalClientView      *view,
   if (components_to_expand->len > 0)
     {
       g_autoptr (GPtrArray) expanded_events = NULL;
+      g_autoptr (GDateTime) range_start = NULL;
+      g_autoptr (GDateTime) range_end = NULL;
       ECalClient *client;
       time_t range_start_time;
       time_t range_end_time;
@@ -389,8 +386,10 @@ on_client_view_objects_added_cb (ECalClientView      *view,
 
       client = gcal_calendar_get_client (self->calendar);
 
+      range_start = gcal_range_get_start (range);
+      range_end = gcal_range_get_end (range);
       range_start_time = g_date_time_to_unix (range_start);
-      range_end_time = g_date_time_to_unix (range_end);
+      range_end_time = g_date_time_to_unix (range_end) - 1;
 
       expanded_events = g_ptr_array_new_with_free_func (g_object_unref);
 
@@ -425,15 +424,13 @@ on_client_view_objects_added_cb (ECalClientView      *view,
 
 #if GCAL_ENABLE_TRACE
             {
-              g_autofree gchar *range_start_str = g_date_time_format_iso8601 (range_start);
-              g_autofree gchar *range_end_str = g_date_time_format_iso8601 (range_end);
+              g_autofree gchar *range_str = gcal_range_to_string (range);
 
-              GCAL_TRACE_MSG ("Component %s (%s) added %d instance(s) between %s and %s",
+              GCAL_TRACE_MSG ("Component %s (%s) added %d instance(s) between %s",
                               i_cal_component_get_summary (icomponent),
                               i_cal_component_get_uid (icomponent),
                               expanded_events->len - old_size,
-                              range_start_str,
-                              range_end_str);
+                              range_str);
             }
 #endif
         }
@@ -447,7 +444,7 @@ on_client_view_objects_added_cb (ECalClientView      *view,
           if (g_cancellable_is_cancelled (self->cancellable))
             return;
 
-          if (!gcal_event_is_within_range (event, range_start, range_end))
+          if (!gcal_event_is_within_range (event, range))
             continue;
 
           event_id = g_strdup (gcal_event_get_uid (event));
@@ -473,8 +470,6 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
                                     const GSList        *objects,
                                     GcalCalendarMonitor *self)
 {
-  g_autoptr (GDateTime) range_start = NULL;
-  g_autoptr (GDateTime) range_end = NULL;
   const GSList *l;
 
   GCAL_ENTRY;
@@ -484,8 +479,6 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
       g_clear_pointer (&self->monitor_thread.events_to_add, g_hash_table_destroy);
       return;
     }
-
-  get_monitor_ranges (self, &range_start, &range_end);
 
   for (l = objects; l; l = l->next)
     {
@@ -834,15 +827,19 @@ remove_events_outside_range (GcalCalendarMonitor *self,
                              GDateTime           *range_start,
                              GDateTime           *range_end)
 {
+  g_autoptr (GcalRange) range = NULL;
   GHashTableIter iter;
   GcalEvent *event;
 
   GCAL_TRACE_MSG ("Removing events outside range from monitor");
 
+  if (range_start && range_end)
+    range = gcal_range_new (range_start, range_end, GCAL_RANGE_DEFAULT);
+
   g_hash_table_iter_init (&iter, self->events);
   while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &event))
     {
-      if (range_start && range_end && gcal_event_is_within_range (event, range_start, range_end))
+      if (range && gcal_event_is_within_range (event, range))
         continue;
 
       g_object_ref (event);
