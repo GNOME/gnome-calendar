@@ -384,20 +384,12 @@ on_manager_calendar_removed_cb (GcalManager             *manager,
  * GcalTimelineSubscriber iface
  */
 
-static GDateTime*
-gcal_shell_search_provider_get_range_start (GcalTimelineSubscriber *subscriber)
+static GcalRange*
+gcal_shell_search_provider_get_range (GcalTimelineSubscriber *subscriber)
 {
   GcalShellSearchProvider *self = GCAL_SHELL_SEARCH_PROVIDER (subscriber);
 
-  return g_date_time_ref (self->range_start);
-}
-
-static GDateTime*
-gcal_shell_search_provider_get_range_end (GcalTimelineSubscriber *subscriber)
-{
-  GcalShellSearchProvider *self = GCAL_SHELL_SEARCH_PROVIDER (subscriber);
-
-  return g_date_time_ref (self->range_end);
+  return gcal_range_new (self->range_start, self->range_end, GCAL_RANGE_DEFAULT);
 }
 
 static void
@@ -437,8 +429,7 @@ gcal_shell_search_provider_remove_event (GcalTimelineSubscriber *subscriber,
 static void
 gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
 {
-  iface->get_range_start = gcal_shell_search_provider_get_range_start;
-  iface->get_range_end = gcal_shell_search_provider_get_range_end;
+  iface->get_range = gcal_shell_search_provider_get_range;
   iface->add_event = gcal_shell_search_provider_add_event;
   iface->update_event = gcal_shell_search_provider_update_event;
   iface->remove_event = gcal_shell_search_provider_remove_event;

@@ -1,6 +1,6 @@
 /* gcal-date-time-utils.c
  *
- * Copyright 2019 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ * Copyright 2019-2020 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -148,7 +148,7 @@ gcal_date_time_compare_date (GDateTime *dt1,
                   g_date_time_get_month (dt2),
                   g_date_time_get_year (dt2));
 
-  return g_date_days_between (&d1, &d2);
+  return g_date_days_between (&d2, &d1);
 }
 
 /**

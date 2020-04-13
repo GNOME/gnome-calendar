@@ -25,6 +25,7 @@
 #define LIBICAL_GLIB_UNSTABLE_API
 #include <libical-glib/libical-glib.h>
 
+#include "gcal-range.h"
 #include "gcal-types.h"
 
 G_BEGIN_DECLS
@@ -37,8 +38,7 @@ struct _GcalTimelineSubscriberInterface
 {
   GTypeInterface parent;
 
-  GDateTime*         (*get_range_start)                          (GcalTimelineSubscriber *self);
-  GDateTime*         (*get_range_end)                            (GcalTimelineSubscriber *self);
+  GcalRange*         (*get_range)                                (GcalTimelineSubscriber *self);
 
   void               (*add_event)                                (GcalTimelineSubscriber *self,
                                                                   GcalEvent              *event);
@@ -50,9 +50,7 @@ struct _GcalTimelineSubscriberInterface
                                                                   GcalEvent              *event);
 };
 
-GDateTime*           gcal_timeline_subscriber_get_range_start      (GcalTimelineSubscriber  *self);
-
-GDateTime*           gcal_timeline_subscriber_get_range_end        (GcalTimelineSubscriber  *self);
+GcalRange*           gcal_timeline_subscriber_get_range            (GcalTimelineSubscriber  *self);
 
 void                 gcal_timeline_subscriber_range_changed        (GcalTimelineSubscriber *self);
 

@@ -1,7 +1,7 @@
 /* gcal-month-view.c
  *
  * Copyright © 2015 Erick Pérez Castellanos
- *             2017 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ *             2017-2020 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1000,15 +1000,15 @@ update_month_cells (GcalMonthView *self)
                 selection_end = selection_start;
 
               /* Swap dates if end is before start */
-              if (gcal_date_time_compare_date (selection_end, selection_start) < 0)
+              if (gcal_date_time_compare_date (selection_start, selection_end) < 0)
                 {
                   GDateTime *aux = selection_end;
                   selection_end = selection_start;
                   selection_start = aux;
                 }
 
-              selected = gcal_date_time_compare_date (gcal_month_cell_get_date (cell), selection_start) >= 0 &&
-                         gcal_date_time_compare_date (gcal_month_cell_get_date (cell), selection_end) <= 0;
+              selected = gcal_date_time_compare_date (selection_start, gcal_month_cell_get_date (cell)) >= 0 &&
+                         gcal_date_time_compare_date (selection_end, gcal_month_cell_get_date (cell)) <= 0;
             }
 
           gcal_month_cell_set_selected (cell, selected);
@@ -1263,23 +1263,20 @@ gtk_buildable_interface_init (GtkBuildableIface *iface)
  * GcalTimelineSubscriber iface
  */
 
-static GDateTime*
-gcal_month_view_get_range_start (GcalTimelineSubscriber *subscriber)
-{
-  GcalMonthView *self = GCAL_MONTH_VIEW (subscriber);
-
-  return g_date_time_new_local (g_date_time_get_year (self->date),
-                                g_date_time_get_month (self->date),
-                                1, 0, 0, 0);
-}
-
-static GDateTime*
-gcal_month_view_get_range_end (GcalTimelineSubscriber *subscriber)
+static GcalRange*
+gcal_month_view_get_range (GcalTimelineSubscriber *subscriber)
 {
   g_autoptr (GDateTime) month_start = NULL;
+  g_autoptr (GDateTime) month_end = NULL;
+  GcalMonthView *self;
 
-  month_start = gcal_month_view_get_range_start (subscriber);
-  return g_date_time_add_months (month_start, 1);
+  self = GCAL_MONTH_VIEW (subscriber);
+  month_start = g_date_time_new_local (g_date_time_get_year (self->date),
+                                       g_date_time_get_month (self->date),
+                                       1, 0, 0, 0);
+  month_end = g_date_time_add_months (month_start, 1);
+
+  return gcal_range_new (month_start, month_end, GCAL_RANGE_DEFAULT);
 }
 
 static void
@@ -1371,8 +1368,7 @@ gcal_month_view_remove_event (GcalTimelineSubscriber *subscriber,
 static void
 gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
 {
-  iface->get_range_start = gcal_month_view_get_range_start;
-  iface->get_range_end = gcal_month_view_get_range_end;
+  iface->get_range = gcal_month_view_get_range;
   iface->add_event = gcal_month_view_add_event;
   iface->update_event = gcal_month_view_update_event;
   iface->remove_event = gcal_month_view_remove_event;
