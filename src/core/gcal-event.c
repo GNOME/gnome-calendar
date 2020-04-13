@@ -1890,8 +1890,8 @@ gcal_event_is_within_range (GcalEvent *self,
 
   if (gcal_event_get_all_day (self))
     {
-      return gcal_date_time_compare_date (range_end, event_start) < 0 &&
-             gcal_date_time_compare_date (range_start, event_end) > 0;
+      return gcal_date_time_compare_date (range_end, event_start) > 0 &&
+             gcal_date_time_compare_date (event_end, range_start) > 0;
     }
 
   return g_date_time_compare (range_end, event_start) > 0 &&

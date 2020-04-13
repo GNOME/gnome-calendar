@@ -48,35 +48,19 @@ gcal_timeline_subscriber_default_init (GcalTimelineSubscriberInterface *iface)
 }
 
 /**
- * gcal_timeline_subscriber_get_range_start:
+ * gcal_timeline_subscriber_get_range:
  * @self: a #GcalTimelineSubscriber
  *
- * Retrieves the start of the range of @self.
+ * Retrieves the range of @self.
  *
- * Returns: (transfer full): a #GDateTime
+ * Returns: (transfer full): a #GcalRange
  */
-GDateTime*
-gcal_timeline_subscriber_get_range_start (GcalTimelineSubscriber *self)
+GcalRange*
+gcal_timeline_subscriber_get_range (GcalTimelineSubscriber *self)
 {
   g_return_val_if_fail (GCAL_IS_TIMELINE_SUBSCRIBER (self), NULL);
 
-  return GCAL_TIMELINE_SUBSCRIBER_GET_IFACE (self)->get_range_start (self);
-}
-
-/**
- * gcal_timeline_subscriber_get_range_end:
- * @self: a #GcalTimelineSubscriber
- *
- * Retrieves the end of the range of @self.
- *
- * Returns: (transfer full): a #GDateTime
- */
-GDateTime*
-gcal_timeline_subscriber_get_range_end (GcalTimelineSubscriber *self)
-{
-  g_return_val_if_fail (GCAL_IS_TIMELINE_SUBSCRIBER (self), NULL);
-
-  return GCAL_TIMELINE_SUBSCRIBER_GET_IFACE (self)->get_range_end (self);
+  return GCAL_TIMELINE_SUBSCRIBER_GET_IFACE (self)->get_range (self);
 }
 
 /**

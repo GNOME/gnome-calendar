@@ -318,20 +318,14 @@ update_hours_sidebar_size (GcalWeekView *self)
  * GcalTimelineSubscriber iface
  */
 
-static GDateTime*
-gcal_week_view_get_range_start (GcalTimelineSubscriber *subscriber)
+static GcalRange*
+gcal_week_view_get_range (GcalTimelineSubscriber *subscriber)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
 
-  return gcal_date_time_get_start_of_week (self->date);
-}
-
-static GDateTime*
-gcal_week_view_get_range_end (GcalTimelineSubscriber *subscriber)
-{
-  GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
-
-  return gcal_date_time_get_end_of_week (self->date);
+  return gcal_range_new_take (gcal_date_time_get_start_of_week (self->date),
+                              gcal_date_time_get_end_of_week (self->date),
+                              GCAL_RANGE_DEFAULT);
 }
 
 static void
@@ -386,8 +380,7 @@ gcal_week_view_remove_event (GcalTimelineSubscriber *subscriber,
 static void
 gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
 {
-  iface->get_range_start = gcal_week_view_get_range_start;
-  iface->get_range_end = gcal_week_view_get_range_end;
+  iface->get_range = gcal_week_view_get_range;
   iface->add_event = gcal_week_view_add_event;
   iface->update_event = gcal_week_view_update_event;
   iface->remove_event = gcal_week_view_remove_event;

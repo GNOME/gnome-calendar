@@ -402,7 +402,7 @@ format_datetime_for_display (GDateTime      *date,
   string = g_string_new ("");
 
   now = g_date_time_new_now_local ();
-  days_diff = gcal_date_time_compare_date (now, date);
+  days_diff = gcal_date_time_compare_date (date, now);
 
   switch (days_diff)
     {

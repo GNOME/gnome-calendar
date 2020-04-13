@@ -1569,22 +1569,18 @@ navigator_drag_leave_cb (GcalYearView   *self,
  * GcalTimelineSubscriber implementation
  */
 
-static GDateTime*
-gcal_year_view_get_range_start (GcalTimelineSubscriber *subscriber)
+static GcalRange*
+gcal_year_view_get_range (GcalTimelineSubscriber *subscriber)
 {
-  GcalYearView *self = GCAL_YEAR_VIEW (subscriber);
+  g_autoptr (GDateTime) start = NULL;
+  g_autoptr (GDateTime) end = NULL;
+  GcalYearView *self;
 
-  return g_date_time_new_local (g_date_time_get_year (self->date),
-                                1, 1, 0, 0, 0);
-}
+  self = GCAL_YEAR_VIEW (subscriber);
+  start = g_date_time_new_local (g_date_time_get_year (self->date), 1, 1, 0, 0, 0);
+  end = g_date_time_add_years (start, 1);
 
-static GDateTime*
-gcal_year_view_get_range_end (GcalTimelineSubscriber *subscriber)
-{
-  GcalYearView *self = GCAL_YEAR_VIEW (subscriber);
-
-  return g_date_time_new_local (g_date_time_get_year (self->date) + 1,
-                                1, 1, 0, 0, 0);
+  return gcal_range_new (start, end, GCAL_RANGE_DEFAULT);
 }
 
 static void
@@ -1714,8 +1710,7 @@ gcal_year_view_update_event (GcalTimelineSubscriber *subscriber,
 static void
 gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
 {
-  iface->get_range_start = gcal_year_view_get_range_start;
-  iface->get_range_end = gcal_year_view_get_range_end;
+  iface->get_range = gcal_year_view_get_range;
   iface->add_event = gcal_year_view_add_event;
   iface->remove_event = gcal_year_view_remove_event;
   iface->update_event = gcal_year_view_update_event;

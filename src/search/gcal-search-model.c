@@ -1,6 +1,6 @@
 /* gcal-search-model.c
  *
- * Copyright 2019 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ * Copyright 2019-2020 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -96,20 +96,12 @@ compare_search_hits_cb (gconstpointer a,
   return gcal_search_hit_compare (hit_a, hit_b);
 }
 
-static GDateTime*
-gcal_search_model_get_range_start (GcalTimelineSubscriber *subscriber)
+static GcalRange*
+gcal_search_model_get_range (GcalTimelineSubscriber *subscriber)
 {
   GcalSearchModel *self = GCAL_SEARCH_MODEL (subscriber);
 
-  return g_date_time_ref (self->range_start);
-}
-
-static GDateTime*
-gcal_search_model_get_range_end (GcalTimelineSubscriber *subscriber)
-{
-  GcalSearchModel *self = GCAL_SEARCH_MODEL (subscriber);
-
-  return g_date_time_ref (self->range_end);
+  return gcal_range_new (self->range_start, self->range_end, GCAL_RANGE_DEFAULT);
 }
 
 static void
@@ -149,8 +141,7 @@ gcal_search_model_remove_event (GcalTimelineSubscriber *subscriber,
 static void
 gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
 {
-  iface->get_range_start = gcal_search_model_get_range_start;
-  iface->get_range_end = gcal_search_model_get_range_end;
+  iface->get_range = gcal_search_model_get_range;
   iface->add_event = gcal_search_model_add_event;
   iface->update_event = gcal_search_model_update_event;
   iface->remove_event = gcal_search_model_remove_event;

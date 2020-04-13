@@ -57,12 +57,6 @@ typedef struct
   GcalTimeline       *timeline;
 } TimelineSource;
 
-typedef struct
-{
-  GDateTime          *range_start;
-  GDateTime          *range_end;
-} SubscriberData;
-
 struct _GcalTimeline
 {
   GObject             parent_instance;
@@ -163,26 +157,6 @@ increase_completed_calendars (GcalTimeline *self)
     g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPLETE]);
 }
 
-static SubscriberData*
-subscriber_data_new (GcalTimelineSubscriber *subscriber)
-{
-  SubscriberData *subscriber_data;
-
-  subscriber_data = g_new0 (SubscriberData, 1);
-  subscriber_data->range_start = gcal_timeline_subscriber_get_range_start (subscriber);
-  subscriber_data->range_end = gcal_timeline_subscriber_get_range_end (subscriber);
-
-  return g_steal_pointer (&subscriber_data);
-}
-
-static void
-subscriber_data_free (SubscriberData *subscriber_data)
-{
-  gcal_clear_date_time (&subscriber_data->range_start);
-  gcal_clear_date_time (&subscriber_data->range_end);
-  g_free (subscriber_data);
-}
-
 static void
 add_event_to_subscriber (GcalTimelineSubscriber *subscriber,
                          GcalEvent              *event)
@@ -223,9 +197,11 @@ subscriber_contains_event (GcalTimelineSubscriber *subscriber,
 {
   g_autoptr (GDateTime) subscriber_range_start = NULL;
   g_autoptr (GDateTime) subscriber_range_end = NULL;
+  g_autoptr (GcalRange) subscriber_range = NULL;
 
-  subscriber_range_start = gcal_timeline_subscriber_get_range_start (subscriber);
-  subscriber_range_end = gcal_timeline_subscriber_get_range_end (subscriber);
+  subscriber_range = gcal_timeline_subscriber_get_range (subscriber);
+  subscriber_range_start = gcal_range_get_start (subscriber_range);
+  subscriber_range_end = gcal_range_get_end (subscriber_range);
 
   return gcal_event_is_within_range (event, subscriber_range_start, subscriber_range_end);
 }
@@ -250,11 +226,13 @@ update_range (GcalTimeline *self)
       g_hash_table_iter_init (&iter, self->subscribers);
       while (g_hash_table_iter_next (&iter, (gpointer*) &subscriber, NULL))
         {
+          g_autoptr (GcalRange) subscriber_range = NULL;
           g_autoptr (GDateTime) subscriber_start = NULL;
           g_autoptr (GDateTime) subscriber_end = NULL;
 
-          subscriber_start = gcal_timeline_subscriber_get_range_start (subscriber);
-          subscriber_end = gcal_timeline_subscriber_get_range_end (subscriber);
+          subscriber_range = gcal_timeline_subscriber_get_range (subscriber);
+          subscriber_start = gcal_range_get_start (subscriber_range);
+          subscriber_end = gcal_range_get_end (subscriber_range);
 
           if (!new_range_start || g_date_time_compare (subscriber_start, new_range_start) < 0)
             {
@@ -427,9 +405,9 @@ add_cached_events_to_subscriber (GcalTimeline           *self,
 
   GCAL_ENTRY;
 
-  subscriber_start = gcal_timeline_subscriber_get_range_start (subscriber);
-  subscriber_end = gcal_timeline_subscriber_get_range_end (subscriber);
-  subscriber_range = gcal_range_new (subscriber_start, subscriber_end, GCAL_RANGE_DEFAULT);
+  subscriber_range = gcal_timeline_subscriber_get_range (subscriber);
+  subscriber_start = gcal_range_get_start (subscriber_range);
+  subscriber_end = gcal_range_get_end (subscriber_range);
 
   events_to_add = gcal_range_tree_get_data_at_range (self->events, subscriber_range);
 
@@ -460,18 +438,13 @@ update_subscriber_range (GcalTimeline           *self,
 {
   g_autoptr (GcalRange) old_range = NULL;
   g_autoptr (GcalRange) new_range = NULL;
-  SubscriberData *subscriber_data;
-
 
   GCAL_ENTRY;
 
-  subscriber_data = g_hash_table_lookup (self->subscribers, subscriber);
-  g_assert (subscriber_data != NULL);
+  old_range = g_hash_table_lookup (self->subscribers, subscriber);
+  g_assert (old_range != NULL);
 
-  old_range = gcal_range_new (subscriber_data->range_start, subscriber_data->range_end, GCAL_RANGE_DEFAULT);
-  new_range = gcal_range_new_take (gcal_timeline_subscriber_get_range_start (subscriber),
-                                   gcal_timeline_subscriber_get_range_end (subscriber),
-                                   GCAL_RANGE_DEFAULT);
+  new_range = gcal_timeline_subscriber_get_range (subscriber);
 
   /* Diff new and old event ranges */
   calculate_changed_events (self, subscriber, old_range, new_range);
@@ -480,11 +453,7 @@ update_subscriber_range (GcalTimeline           *self,
   gcal_range_tree_remove_data (self->subscriber_ranges, subscriber);
   gcal_range_tree_add_range (self->subscriber_ranges, new_range, subscriber);
 
-  gcal_clear_date_time (&subscriber_data->range_start);
-  subscriber_data->range_start = gcal_range_get_start (new_range);
-
-  gcal_clear_date_time (&subscriber_data->range_end);
-  subscriber_data->range_end = gcal_range_get_end (new_range);
+  g_hash_table_insert (self->subscribers, g_object_ref (subscriber), g_steal_pointer (&new_range));
 
   GCAL_EXIT;
 }
@@ -861,7 +830,7 @@ gcal_timeline_init (GcalTimeline *self)
   self->cancellable = g_cancellable_new ();
   self->events = gcal_range_tree_new_with_free_func (g_object_unref);
   self->calendars = g_hash_table_new_full (NULL, NULL, NULL, g_object_unref);
-  self->subscribers = g_hash_table_new_full (NULL, NULL, g_object_unref, (GDestroyNotify) subscriber_data_free);
+  self->subscribers = g_hash_table_new_full (NULL, NULL, g_object_unref, (GDestroyNotify) gcal_range_unref);
   self->subscriber_ranges = gcal_range_tree_new ();
   self->event_queue = g_queue_new ();
 
@@ -952,7 +921,7 @@ void
 gcal_timeline_add_subscriber (GcalTimeline           *self,
                               GcalTimelineSubscriber *subscriber)
 {
-  SubscriberData *subscriber_data;
+  g_autoptr (GcalRange) subscriber_range = NULL;
 
   g_return_if_fail (GCAL_IS_TIMELINE (self));
   g_return_if_fail (GCAL_IS_TIMELINE_SUBSCRIBER (subscriber));
@@ -964,9 +933,9 @@ gcal_timeline_add_subscriber (GcalTimeline           *self,
 
   g_debug ("Adding subscriber %s to timeline %p", G_OBJECT_TYPE_NAME (subscriber), self);
 
-  subscriber_data = subscriber_data_new (subscriber);
+  subscriber_range = gcal_timeline_subscriber_get_range (subscriber);
 
-  g_hash_table_insert (self->subscribers, g_object_ref (subscriber), g_steal_pointer (&subscriber_data));
+  g_hash_table_insert (self->subscribers, g_object_ref (subscriber), gcal_range_ref (subscriber_range));
   g_signal_connect_object (subscriber,
                            "range-changed",
                            G_CALLBACK (on_subscriber_range_changed_cb),
