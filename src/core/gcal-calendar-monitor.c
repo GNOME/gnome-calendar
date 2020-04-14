@@ -357,9 +357,6 @@ on_client_view_objects_added_cb (ECalClientView      *view,
           continue;
         }
 
-      if (!gcal_event_is_within_range (event, range))
-        continue;
-
       event_id = g_strdup (gcal_event_get_uid (event));
 
       if (!self->monitor_thread.populated)
@@ -445,9 +442,6 @@ on_client_view_objects_added_cb (ECalClientView      *view,
 
           if (g_cancellable_is_cancelled (self->cancellable))
             return;
-
-          if (!gcal_event_is_within_range (event, range))
-            continue;
 
           event_id = g_strdup (gcal_event_get_uid (event));
 
@@ -836,9 +830,6 @@ remove_events_outside_range (GcalCalendarMonitor *self,
   g_hash_table_iter_init (&iter, self->events);
   while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &event))
     {
-      if (range && gcal_event_is_within_range (event, range))
-        continue;
-
       g_object_ref (event);
 
       g_hash_table_iter_remove (&iter);
