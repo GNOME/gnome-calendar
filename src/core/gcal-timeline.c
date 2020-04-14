@@ -681,7 +681,9 @@ gcal_timeline_finalize (GObject *object)
   g_clear_pointer (&self->calendars, g_hash_table_destroy);
   g_clear_pointer (&self->subscribers, g_hash_table_destroy);
   g_clear_pointer (&self->subscriber_ranges, gcal_range_tree_unref);
-  g_clear_pointer (&self->timeline_source, g_source_destroy);
+
+  g_source_destroy (self->timeline_source);
+  g_clear_pointer (&self->timeline_source, g_source_unref);
 
   if (self->event_queue)
     {
