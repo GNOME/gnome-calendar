@@ -192,17 +192,6 @@ remove_event_from_subscriber (GcalTimelineSubscriber *subscriber,
   GCAL_TIMELINE_SUBSCRIBER_GET_IFACE (subscriber)->remove_event (subscriber, event);
 }
 
-static gboolean
-subscriber_contains_event (GcalTimelineSubscriber *subscriber,
-                           GcalEvent              *event)
-{
-  g_autoptr (GcalRange) subscriber_range = NULL;
-
-  subscriber_range = gcal_timeline_subscriber_get_range (subscriber);
-
-  return gcal_event_is_within_range (event, subscriber_range);
-}
-
 static void
 update_range (GcalTimeline *self)
 {
@@ -350,9 +339,6 @@ calculate_changed_events (GcalTimeline            *self,
     {
       GcalEvent *event = g_ptr_array_index (events_to_remove, i);
 
-      if (!gcal_event_is_within_range (event, old_range))
-        continue;
-
       GCAL_TRACE_MSG ("Removing event from subscriber %s due to time range change (event: '%s' (%s))",
                       G_OBJECT_TYPE_NAME (subscriber),
                       gcal_event_get_summary (event),
@@ -365,9 +351,6 @@ calculate_changed_events (GcalTimeline            *self,
   for (i = 0; i < events_to_add->len; i++)
     {
       GcalEvent *event = g_ptr_array_index (events_to_add, i);
-
-      if (!gcal_event_is_within_range (event, new_range))
-        continue;
 
       GCAL_TRACE_MSG ("Queueing event addition for subscriber %s (event: '%s' (%s))",
                       G_OBJECT_TYPE_NAME (subscriber),
@@ -399,9 +382,6 @@ add_cached_events_to_subscriber (GcalTimeline           *self,
   for (i = 0; events_to_add && i < events_to_add->len; i++)
     {
       GcalEvent *event = g_ptr_array_index (events_to_add, i);
-
-      if (!gcal_event_is_within_range (event, subscriber_range))
-        continue;
 
       GCAL_TRACE_MSG ("Queueing event addition for subscriber %s (event: '%s' (%s))",
                       G_OBJECT_TYPE_NAME (subscriber),
@@ -617,9 +597,6 @@ timeline_source_dispatch (GSource     *source,
             {
               GcalTimelineSubscriber *subscriber = g_ptr_array_index (queue_data->subscribers, i);
 
-              if (!subscriber_contains_event (subscriber, event))
-                continue;
-
               add_event_to_subscriber (subscriber, event);
             }
           break;
@@ -644,9 +621,6 @@ timeline_source_dispatch (GSource     *source,
             for (i = 0; queue_data->subscribers && i < queue_data->subscribers->len; i++)
               {
                 GcalTimelineSubscriber *subscriber = g_ptr_array_index (queue_data->subscribers, i);
-
-                if (!subscriber_contains_event (subscriber, event))
-                  continue;
 
                 update_subscriber_event (subscriber, event);
               }
