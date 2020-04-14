@@ -1876,16 +1876,3 @@ gcal_event_format_date (GcalEvent *self)
 
   return g_steal_pointer (&formatted_string);
 }
-
-gboolean
-gcal_event_is_within_range (GcalEvent *self,
-                            GcalRange *range)
-{
-  GcalRange *event_range;
-
-  g_return_val_if_fail (GCAL_IS_EVENT (self), FALSE);
-  g_return_val_if_fail (range != NULL, FALSE);
-
-  event_range = gcal_event_get_range (self);
-  return gcal_range_calculate_overlap (event_range, range, NULL) != GCAL_RANGE_NO_OVERLAP;
-}
