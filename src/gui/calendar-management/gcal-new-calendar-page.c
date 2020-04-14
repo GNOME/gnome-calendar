@@ -534,6 +534,7 @@ gcal_new_calendar_page_activate (GcalCalendarManagementPage *page,
 
   GCAL_EXIT;
 }
+
 static void
 gcal_new_calendar_page_deactivate (GcalCalendarManagementPage *page)
 {
