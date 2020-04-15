@@ -357,8 +357,7 @@ calculate_changed_events (GcalTimeline            *self,
                       gcal_event_get_summary (event),
                       gcal_event_get_uid (event));
 
-      /* XXX: remove immediately, but add in idle */
-      remove_event_from_subscriber (subscriber, event);
+      queue_event_data (self, REMOVE_EVENT, subscriber, event, NULL, FALSE);
     }
 
   for (i = 0; i < events_to_add->len; i++)
