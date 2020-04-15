@@ -267,68 +267,84 @@ calculate_changed_events (GcalTimeline            *self,
 {
   g_autoptr (GPtrArray) events_to_remove = NULL;
   g_autoptr (GPtrArray) events_to_add = NULL;
-  g_autoptr (GDateTime) old_range_start = NULL;
-  g_autoptr (GDateTime) old_range_end = NULL;
-  g_autoptr (GDateTime) new_range_start = NULL;
-  g_autoptr (GDateTime) new_range_end = NULL;
+  GcalRangeOverlap overlap;
   gint range_diff;
   gint i;
 
   events_to_add = g_ptr_array_new ();
   events_to_remove = g_ptr_array_new ();
 
-  old_range_start = gcal_range_get_start (old_range);
-  old_range_end = gcal_range_get_end (old_range);
-  new_range_start = gcal_range_get_start (new_range);
-  new_range_end = gcal_range_get_end (new_range);
+  overlap = gcal_range_calculate_overlap (new_range, old_range, NULL);
 
-  /* Start ranges diff */
-  range_diff = g_date_time_compare (old_range_start, new_range_start);
-  if (range_diff != 0)
+  if (overlap == GCAL_RANGE_NO_OVERLAP)
     {
-      g_autoptr (GPtrArray) events = NULL;
+      GCAL_TRACE_MSG ("Ranges don't overlap, doing a full cleanup");
 
-      if (range_diff < 0)
-        {
-          g_autoptr (GcalRange) range = gcal_range_new (old_range_start, new_range_start, GCAL_RANGE_DEFAULT);
-
-          /* Removed */
-          events = gcal_range_tree_get_data_at_range (self->events, range);
-          if (events)
-            g_ptr_array_extend (events_to_remove, events, NULL, NULL);
-        }
-      else if (range_diff > 0)
-        {
-          g_autoptr (GcalRange) range = gcal_range_new (new_range_start, old_range_start, GCAL_RANGE_DEFAULT);
-
-          /* Added */
-          events = gcal_range_tree_get_data_at_range (self->events, range);
-          if (events)
-            g_ptr_array_extend (events_to_add, events, NULL, NULL);
-        }
+      events_to_remove = gcal_range_tree_get_data_at_range (self->events, old_range);
+      events_to_add = gcal_range_tree_get_data_at_range (self->events, new_range);
     }
-
-  /* End ranges diff */
-  range_diff = g_date_time_compare (old_range_end, new_range_end);
-  if (range_diff != 0)
+  else
     {
-      g_autoptr (GPtrArray) events = NULL;
+      g_autoptr (GDateTime) old_range_start = NULL;
+      g_autoptr (GDateTime) old_range_end = NULL;
+      g_autoptr (GDateTime) new_range_start = NULL;
+      g_autoptr (GDateTime) new_range_end = NULL;
 
-      if (range_diff < 0)
+      GCAL_TRACE_MSG ("Ranges overlap, doing a diff");
+
+      old_range_start = gcal_range_get_start (old_range);
+      old_range_end = gcal_range_get_end (old_range);
+      new_range_start = gcal_range_get_start (new_range);
+      new_range_end = gcal_range_get_end (new_range);
+
+      /* Start ranges diff */
+      range_diff = g_date_time_compare (old_range_start, new_range_start);
+      if (range_diff != 0)
         {
-          g_autoptr (GcalRange) range = gcal_range_new (old_range_end, new_range_end, GCAL_RANGE_DEFAULT);
+          g_autoptr (GPtrArray) events = NULL;
 
-          events = gcal_range_tree_get_data_at_range (self->events, range);
-          if (events)
-            g_ptr_array_extend (events_to_add, events, NULL, NULL);
+          if (range_diff < 0)
+            {
+              g_autoptr (GcalRange) range = gcal_range_new (old_range_start, new_range_start, GCAL_RANGE_DEFAULT);
+
+              /* Removed */
+              events = gcal_range_tree_get_data_at_range (self->events, range);
+              if (events)
+                g_ptr_array_extend (events_to_remove, events, NULL, NULL);
+            }
+          else if (range_diff > 0)
+            {
+              g_autoptr (GcalRange) range = gcal_range_new (new_range_start, old_range_start, GCAL_RANGE_DEFAULT);
+
+              /* Added */
+              events = gcal_range_tree_get_data_at_range (self->events, range);
+              if (events)
+                g_ptr_array_extend (events_to_add, events, NULL, NULL);
+            }
         }
-      else if (range_diff > 0)
-        {
-          g_autoptr (GcalRange) range = gcal_range_new (new_range_end, old_range_end, GCAL_RANGE_DEFAULT);
 
-          events = gcal_range_tree_get_data_at_range (self->events, range);
-          if (events)
-            g_ptr_array_extend (events_to_remove, events, NULL, NULL);
+      /* End ranges diff */
+      range_diff = g_date_time_compare (old_range_end, new_range_end);
+      if (range_diff != 0)
+        {
+          g_autoptr (GPtrArray) events = NULL;
+
+          if (range_diff < 0)
+            {
+              g_autoptr (GcalRange) range = gcal_range_new (old_range_end, new_range_end, GCAL_RANGE_DEFAULT);
+
+              events = gcal_range_tree_get_data_at_range (self->events, range);
+              if (events)
+                g_ptr_array_extend (events_to_add, events, NULL, NULL);
+            }
+          else if (range_diff > 0)
+            {
+              g_autoptr (GcalRange) range = gcal_range_new (new_range_end, old_range_end, GCAL_RANGE_DEFAULT);
+
+              events = gcal_range_tree_get_data_at_range (self->events, range);
+              if (events)
+                g_ptr_array_extend (events_to_remove, events, NULL, NULL);
+            }
         }
     }
 
