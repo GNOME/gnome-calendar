@@ -939,6 +939,7 @@ gcal_timeline_remove_subscriber (GcalTimeline           *self,
       reset_completed_calendars (self);
     }
 
+  gcal_range_tree_remove_data (self->subscriber_ranges, subscriber);
   update_range (self);
 
   GCAL_EXIT;
