@@ -271,9 +271,6 @@ calculate_changed_events (GcalTimeline            *self,
   gint range_diff;
   gint i;
 
-  events_to_add = g_ptr_array_new ();
-  events_to_remove = g_ptr_array_new ();
-
   overlap = gcal_range_calculate_overlap (new_range, old_range, NULL);
 
   if (overlap == GCAL_RANGE_NO_OVERLAP)
@@ -291,6 +288,9 @@ calculate_changed_events (GcalTimeline            *self,
       g_autoptr (GDateTime) new_range_end = NULL;
 
       GCAL_TRACE_MSG ("Ranges overlap, doing a diff");
+
+      events_to_add = g_ptr_array_new ();
+      events_to_remove = g_ptr_array_new ();
 
       old_range_start = gcal_range_get_start (old_range);
       old_range_end = gcal_range_get_end (old_range);
@@ -348,7 +348,7 @@ calculate_changed_events (GcalTimeline            *self,
         }
     }
 
-  for (i = 0; i < events_to_remove->len; i++)
+  for (i = 0; events_to_remove && i < events_to_remove->len; i++)
     {
       GcalEvent *event = g_ptr_array_index (events_to_remove, i);
 
@@ -360,7 +360,7 @@ calculate_changed_events (GcalTimeline            *self,
       queue_event_data (self, REMOVE_EVENT, subscriber, event, NULL, FALSE);
     }
 
-  for (i = 0; i < events_to_add->len; i++)
+  for (i = 0; events_to_add && i < events_to_add->len; i++)
     {
       GcalEvent *event = g_ptr_array_index (events_to_add, i);
 
