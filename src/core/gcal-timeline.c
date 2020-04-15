@@ -589,6 +589,13 @@ timeline_source_dispatch (GSource     *source,
       subscriber = queue_data->subscriber;
       event_range = gcal_event_get_range (event);
 
+      /* The subscriber may have been removed already */
+      if (!g_hash_table_contains (self->subscribers, subscriber))
+        {
+          queue_data_free (queue_data);
+          continue;
+        }
+
       switch (queue_data->queue_event)
         {
         case ADD_EVENT:
