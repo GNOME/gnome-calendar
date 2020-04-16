@@ -116,6 +116,7 @@ static gchar*
 build_subscriber_filter (GcalRange   *range,
                          const gchar *filter)
 {
+  g_autoptr (GDateTime) inclusive_range_end = NULL;
   g_autoptr (GDateTime) utc_range_start = NULL;
   g_autoptr (GDateTime) utc_range_end = NULL;
   g_autoptr (GDateTime) range_start = NULL;
@@ -134,7 +135,8 @@ build_subscriber_filter (GcalRange   *range,
   start_str = g_date_time_format (utc_range_start, "%Y%m%dT%H%M%SZ");
 
   range_end = gcal_range_get_end (range);
-  utc_range_end = g_date_time_to_utc (range_end);
+  inclusive_range_end = g_date_time_add_seconds (range_end, -1);
+  utc_range_end = g_date_time_to_utc (inclusive_range_end);
   end_str = g_date_time_format (utc_range_end, "%Y%m%dT%H%M%SZ");
 
   if (filter)
