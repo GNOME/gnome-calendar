@@ -422,7 +422,7 @@ gcal_range_compare (GcalRange *a,
   result = compare_func (a->range_start, b->range_start);
 
   if (result == 0)
-    result = compare_func (b->range_end, a->range_end);
+    result = compare_func (a->range_end, b->range_end);
 
   return result;
 }
