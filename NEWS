@@ -1,3 +1,9 @@
+Major changes in 3.36.1:
+* Introduce a new engine
+* Fix a lot of bugs
+* Support webcal:// URLs
+* Updated translations
+
 Major changes in 3.36.0:
 * Updated translations
 
