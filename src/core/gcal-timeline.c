@@ -47,7 +47,6 @@ typedef struct
 
   QueueEvent          queue_event;
 
-
   GcalTimelineSubscriber *subscriber;
   GcalEvent          *event;
   GcalEvent          *old_event;
