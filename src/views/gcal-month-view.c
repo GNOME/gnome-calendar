@@ -573,6 +573,16 @@ get_real_event_widget_height (GtkWidget *widget)
   return min_height;
 }
 
+static inline gboolean
+month_view_contains_event (GcalRange *month_range,
+                           GcalEvent *event)
+{
+  GcalRangeOverlap overlap;
+
+  overlap = gcal_range_calculate_overlap (month_range, gcal_event_get_range (event), NULL);
+  return overlap != GCAL_RANGE_NO_OVERLAP;
+}
+
 static void
 allocate_multiday_events (GcalMonthView *self,
                           gdouble       *vertical_cell_space,
@@ -580,12 +590,14 @@ allocate_multiday_events (GcalMonthView *self,
                           gint          *events_at_day,
                           gint          *allocated_events_at_day)
 {
+  g_autoptr (GcalRange) month_range = NULL;
   GtkAllocation event_allocation;
   GtkBorder margin;
   GList *l;
   gboolean is_rtl;
 
   is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
+  month_range = gcal_timeline_subscriber_get_range (GCAL_TIMELINE_SUBSCRIBER (self));
 
   for (l = self->multi_cell_children; l; l = g_list_next (l))
     {
@@ -602,6 +614,9 @@ allocate_multiday_events (GcalMonthView *self,
 
       event = gcal_event_widget_get_event (l->data);
       child_context = gtk_widget_get_style_context (l->data);
+
+      if (!month_view_contains_event (month_range, event))
+        continue;
 
       /*
        * Multiday events can "break" following these rules:
@@ -744,11 +759,14 @@ allocate_single_day_events (GcalMonthView *self,
                             gint          *events_at_day,
                             gint          *allocated_events_at_day)
 {
+  g_autoptr (GcalRange) month_range = NULL;
   GHashTableIter iter;
   GtkAllocation event_allocation;
   GtkAllocation cell_allocation;
   GtkBorder margin;
   gpointer key, value;
+
+  month_range = gcal_timeline_subscriber_get_range (GCAL_TIMELINE_SUBSCRIBER (self));
 
   g_hash_table_iter_init (&iter, self->single_cell_children);
 
@@ -770,6 +788,7 @@ allocate_single_day_events (GcalMonthView *self,
       l = (GList*) value;
       for (aux = l; aux; aux = g_list_next (aux))
         {
+          GcalEvent *event;
           GtkStyleContext *child_context;
           GtkWidget *child_widget;
           gdouble real_height;
@@ -780,8 +799,12 @@ allocate_single_day_events (GcalMonthView *self,
           gint minimum_height;
 
           child_widget = aux->data;
+          event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (child_widget));
 
           if (!gtk_widget_get_visible (child_widget))
+            continue;
+
+          if (!month_view_contains_event (month_range, event))
             continue;
 
           child_context = gtk_widget_get_style_context (child_widget);
