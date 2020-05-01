@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-12-06 19:37+0000\n"
-"PO-Revision-Date: 2020-01-21 19:33+0800\n"
-"Last-Translator: Yi-Jyun Pan <pan93412@gmail.com>\n"
+"POT-Creation-Date: 2020-03-28 21:22+0000\n"
+"PO-Revision-Date: 2020-05-02 00:19+0800\n"
+"Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
@@ -434,7 +434,6 @@ msgstr "這個%A"
 #.
 #: src/gui/gcal-edit-dialog.c:468
 #, c-format
-#| msgid "to %1$s %2$s"
 msgid "%1$s, %2$s"
 msgstr "%1$s，%2$s"
 
@@ -907,7 +906,7 @@ msgstr "鍵盤捷徑鍵(_K)"
 
 #: src/gui/gcal-window.ui:342
 msgid "_About Calendar"
-msgstr "關於行事曆(_A)"
+msgstr "關於《行事曆》(_A)"
 
 #: src/help-overlay.ui:13
 msgctxt "shortcut window"
