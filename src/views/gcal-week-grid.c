@@ -575,12 +575,12 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
 
       for (j = 0; widgets_data && j < widgets_data->len; j++)
         {
+          g_autoptr (GDateTime) event_start = NULL;
+          g_autoptr (GDateTime) event_end = NULL;
           GtkStyleContext *context;
           GtkAllocation child_allocation;
           GtkWidget *event_widget;
           GcalRange *event_range;
-          GDateTime *event_start;
-          GDateTime *event_end;
           ChildData *data;
           GtkBorder margin;
           guint64 events_at_range;
@@ -594,8 +594,8 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
           data =  g_ptr_array_index (widgets_data, j);
           event_widget = data->widget;
           event_range = gcal_event_get_range (data->event);
-          event_start = gcal_event_get_date_start (data->event);
-          event_end = gcal_event_get_date_end (data->event);
+          event_start = g_date_time_to_local (gcal_event_get_date_start (data->event));
+          event_end = g_date_time_to_local (gcal_event_get_date_end (data->event));
           context = gtk_widget_get_style_context (event_widget);
 
           /* The total number of events available in this range */
