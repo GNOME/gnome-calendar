@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2020-04-05 11:02+0000\n"
-"PO-Revision-Date: 2020-04-05 23:06+0200\n"
+"PO-Revision-Date: 2020-05-20 23:09+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -164,7 +164,7 @@ msgstr "Nastavitve"
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
 #: src/gui/gcal-edit-dialog.ui:177
 msgid "Location"
-msgstr "Mesto"
+msgstr "Mesto dogodka"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
 msgid "Calendar name"
@@ -228,8 +228,8 @@ msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
 msgstr ""
-"Mogoče je tudi vnesti spletni naslov koledarja, ki ga želite uvoziti, ali pa "
-"odpreti podprto datoteko koledarja."
+"Koledar je mogoče uvoziti s spletnega naslova, ali pa odpreti podprto vrsto "
+"datoteke z diska."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:137
 msgid "Open a File"
@@ -244,8 +244,8 @@ msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"Če je koledar dostopen prek spletnega računa, ga je mogoče dodati prek <a "
-"href=\"GOA\">spletnih nastavitev koledarja</a>."
+"Koledarje, ki so dostopni prek storitev, ki zahtevajo prijavo, je mogoče "
+"dodati med nastavitvami <a href=\"GOA\">spletnih računov</a>."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:240
 msgid "User"
@@ -467,17 +467,17 @@ msgstr "%A pred enim tednom"
 
 #: src/gui/gcal-edit-dialog.c:420
 msgid "Yesterday"
-msgstr "Včeraj"
+msgstr "včeraj"
 
 #: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
 #: src/views/gcal-year-view.c:282 src/views/gcal-year-view.c:560
 #: src/views/gcal-year-view.ui:88
 msgid "Today"
-msgstr "Danes"
+msgstr "danes"
 
 #: src/gui/gcal-edit-dialog.c:428
 msgid "Tomorrow"
-msgstr "Jutri"
+msgstr "jutri"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
 #: src/gui/gcal-edit-dialog.c:438
@@ -516,7 +516,7 @@ msgstr "Celodnevni dogodek"
 
 #: src/gui/gcal-edit-dialog.ui:247
 msgid "Starts"
-msgstr "Se začne"
+msgstr "Začetek"
 
 #: src/gui/gcal-edit-dialog.ui:254 src/gui/gcal-edit-dialog.ui:302
 msgid "Check this out!"
@@ -524,19 +524,19 @@ msgstr "Preverite to!"
 
 #: src/gui/gcal-edit-dialog.ui:295
 msgid "Ends"
-msgstr "Se konča"
+msgstr "Konec"
 
 #: src/gui/gcal-edit-dialog.ui:343
 msgid "Repeat"
-msgstr "Ponovi"
+msgstr "Ponovitve"
 
 #: src/gui/gcal-edit-dialog.ui:354
 msgid "No Repeat"
-msgstr "Ne ponovi"
+msgstr "Se ne ponovi"
 
 #: src/gui/gcal-edit-dialog.ui:355
 msgid "Daily"
-msgstr "Dnevno"
+msgstr "Dnevno ponavljanje"
 
 #: src/gui/gcal-edit-dialog.ui:356
 msgid "Monday – Friday"
@@ -544,19 +544,19 @@ msgstr "Od ponedeljka do petka"
 
 #: src/gui/gcal-edit-dialog.ui:357
 msgid "Weekly"
-msgstr "Tedensko"
+msgstr "Tedensko ponavljanje"
 
 #: src/gui/gcal-edit-dialog.ui:358
 msgid "Monthly"
-msgstr "Mesečno"
+msgstr "Mesečno ponavljanje"
 
 #: src/gui/gcal-edit-dialog.ui:359
 msgid "Yearly"
-msgstr "Letno"
+msgstr "Letno ponavljanje"
 
 #: src/gui/gcal-edit-dialog.ui:372
 msgid "End Repeat"
-msgstr "Končaj ponavljanje"
+msgstr "Konec ponavljanja"
 
 #: src/gui/gcal-edit-dialog.ui:382
 msgid "Forever"
@@ -1003,12 +1003,12 @@ msgstr "Krmarjenje"
 #: src/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Go back"
-msgstr "Se vrne nazaj"
+msgstr "Skoči na predhodni dan / mesec / leto"
 
 #: src/help-overlay.ui:65
 msgctxt "shortcut window"
 msgid "Go forward"
-msgstr "Gre naprej"
+msgstr "Skoči na naslednji dan / mesec / leto"
 
 #: src/help-overlay.ui:72
 msgctxt "shortcut window"
@@ -1018,12 +1018,12 @@ msgstr "Pokaže današnji dan"
 #: src/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
-msgstr "Naslednji pogled"
+msgstr "Skoči na naslednji ogledan dogodek"
 
 #: src/help-overlay.ui:86
 msgctxt "shortcut window"
 msgid "Previous view"
-msgstr "Predhodni pogled"
+msgstr "Skoči na predhodni ogledan dogodek"
 
 #: src/help-overlay.ui:95
 msgctxt "shortcut window"
@@ -1123,7 +1123,7 @@ msgstr "Pokaži vremensko napoved"
 
 #: src/weather/gcal-weather-settings.ui:53
 msgid "Automatic Location"
-msgstr "Samodejno določeno mesto"
+msgstr "Samodejno določi mesto"
 
 #~ msgid "Date"
 #~ msgstr "Datum"
