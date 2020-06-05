@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2020-04-05 11:02+0000\n"
-"PO-Revision-Date: 2020-05-20 23:09+0200\n"
+"PO-Revision-Date: 2020-06-04 18:11+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -204,7 +204,7 @@ msgstr "Razveljavi"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:97
 msgid "Add Calendar…"
-msgstr "Dodaj koledar ..."
+msgstr "Dodaj koledar …"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:505
 msgid "New Calendar"
@@ -449,7 +449,7 @@ msgstr "Upravljanje koledarjev"
 #: src/gui/gcal-calendar-popover.ui:75
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
-msgstr "Poteka usklajevanje oddaljenih koledarje ..."
+msgstr "Poteka usklajevanje oddaljenih koledarjev …"
 
 #: src/gui/gcal-edit-dialog.c:374
 msgid "Save"
@@ -584,7 +584,7 @@ msgstr "Opomniki"
 
 #: src/gui/gcal-edit-dialog.ui:474
 msgid "Add a Reminder…"
-msgstr "Dodaj opomnik ..."
+msgstr "Dodaj opomnik …"
 
 #: src/gui/gcal-edit-dialog.ui:495
 msgid "Notes"
@@ -901,7 +901,7 @@ msgstr "Nov dogodek na %d. decembra"
 
 #: src/gui/gcal-quick-add-popover.ui:117
 msgid "Edit Details…"
-msgstr "Uredi podrobnosti ..."
+msgstr "Uredi podrobnosti …"
 
 #: src/gui/gcal-time-selector.ui:22
 msgid ":"
@@ -951,7 +951,7 @@ msgstr "Iskanje dogodkov"
 
 #: src/gui/gcal-window.ui:309
 msgid "_Online Accounts…"
-msgstr "_Spletni računi ..."
+msgstr "_Spletni računi …"
 
 #: src/gui/gcal-window.ui:318 src/weather/gcal-weather-settings.ui:12
 msgid "_Weather"
@@ -1071,7 +1071,7 @@ msgstr "_Vsi dogodki"
 
 #: src/views/gcal-month-popover.ui:91
 msgid "New Event…"
-msgstr "Nov dogodek ..."
+msgstr "Nov dogodek …"
 
 #: src/views/gcal-week-grid.c:706 src/views/gcal-week-view.c:293
 msgid "00 AM"
@@ -1115,7 +1115,7 @@ msgstr "Ni dogodkov"
 
 #: src/views/gcal-year-view.ui:155
 msgid "Add Event…"
-msgstr "Dodaj dogodek ..."
+msgstr "Dodaj dogodek …"
 
 #: src/weather/gcal-weather-settings.ui:30
 msgid "Show Weather"
