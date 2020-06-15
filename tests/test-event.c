@@ -236,4 +236,3 @@ main (gint   argc,
 
   return g_test_run ();
 }
-
