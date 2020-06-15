@@ -22,6 +22,7 @@
 #include "config.h"
 #include "gcal-application.h"
 #include "gcal-clock.h"
+#include "gcal-debug.h"
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 #include "gcal-month-cell.h"
@@ -218,11 +219,13 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
   event_widget = gtk_drag_get_source_widget (context);
   mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
 
+  GCAL_ENTRY;
+
   if (!GCAL_IS_EVENT_WIDGET (event_widget))
-    return FALSE;
+    GCAL_RETURN (FALSE);
 
   if (self->different_month)
-    return FALSE;
+    GCAL_RETURN (FALSE);
 
   event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
   calendar = gcal_event_get_calendar (event);
@@ -230,7 +233,7 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
   if (gcal_event_has_recurrence (event) &&
       !ask_recurrence_modification_type (widget, &mod, calendar))
     {
-      goto out;
+      GCAL_GOTO (out);
     }
 
   /* Move the event's date */
@@ -281,7 +284,7 @@ out:
   gtk_drag_unhighlight (widget);
   gtk_drag_finish (context, TRUE, FALSE, time);
 
-  return TRUE;
+  GCAL_RETURN (TRUE);
 }
 
 static void
