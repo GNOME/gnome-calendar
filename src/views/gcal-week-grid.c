@@ -900,11 +900,11 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
                           gint            y,
                           guint           time)
 {
+  g_autoptr (GDateTime) week_start = NULL;
+  g_autoptr (GDateTime) dnd_date = NULL;
+  g_autoptr (GDateTime) new_end = NULL;
   GcalRecurrenceModType mod;
   GcalWeekGrid *self;
-  g_autoptr (GDateTime) week_start;
-  g_autoptr (GDateTime) dnd_date;
-  g_autoptr (GDateTime) new_end;
   GcalCalendar *calendar;
   GtkWidget *event_widget;
   GcalEvent *event;
@@ -918,9 +918,6 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   event_widget = gtk_drag_get_source_widget (context);
 
   mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
-  week_start = NULL;
-  dnd_date = NULL;
-  new_end = NULL;
 
   if (!GCAL_IS_EVENT_WIDGET (event_widget))
     return FALSE;
