@@ -204,6 +204,7 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
                            gint            y,
                            guint           time)
 {
+  g_autoptr (GcalEvent) changed_event = NULL;
   GcalRecurrenceModType mod;
   GcalMonthCell *self;
   GcalCalendar *calendar;
@@ -228,17 +229,18 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
     GCAL_RETURN (FALSE);
 
   event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
-  calendar = gcal_event_get_calendar (event);
+  changed_event = gcal_event_new_from_event (event);
+  calendar = gcal_event_get_calendar (changed_event);
 
-  if (gcal_event_has_recurrence (event) &&
+  if (gcal_event_has_recurrence (changed_event) &&
       !ask_recurrence_modification_type (widget, &mod, calendar))
     {
       GCAL_GOTO (out);
     }
 
   /* Move the event's date */
-  start_dt = gcal_event_get_date_start (event);
-  end_dt = gcal_event_get_date_end (event);
+  start_dt = gcal_event_get_date_start (changed_event);
+  end_dt = gcal_event_get_date_end (changed_event);
 
   start_month = g_date_time_get_month (start_dt);
   start_year = g_date_time_get_year (start_dt);
@@ -263,18 +265,18 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
 
        new_start = g_date_time_add_days (start_dt, diff);
 
-      gcal_event_set_date_start (event, new_start);
+      gcal_event_set_date_start (changed_event, new_start);
 
       /* The event may have a NULL end date, so we have to check it here */
       if (end_dt)
         {
           GDateTime *new_end = g_date_time_add (new_start, timespan);
 
-          gcal_event_set_date_end (event, new_end);
+          gcal_event_set_date_end (changed_event, new_end);
           g_clear_pointer (&new_end, g_date_time_unref);
         }
 
-      gcal_manager_update_event (gcal_context_get_manager (self->context), event, mod);
+      gcal_manager_update_event (gcal_context_get_manager (self->context), changed_event, mod);
     }
 
   g_clear_pointer (&start_dt, g_date_time_unref);
