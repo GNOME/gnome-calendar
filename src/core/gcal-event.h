@@ -53,6 +53,8 @@ GcalEvent*           gcal_event_new                              (GcalCalendar  
                                                                   ECalComponent      *component,
                                                                   GError            **error);
 
+GcalEvent*           gcal_event_new_from_event                   (GcalEvent          *self);
+
 gboolean             gcal_event_get_all_day                      (GcalEvent          *self);
 
 void                 gcal_event_set_all_day                      (GcalEvent          *self,

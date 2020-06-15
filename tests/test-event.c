@@ -82,6 +82,31 @@ event_new (void)
 /*********************************************************************************************************************/
 
 static void
+event_clone (void)
+{
+  g_autoptr (GcalEvent) clone1 = NULL;
+  g_autoptr (GcalEvent) clone2 = NULL;
+  g_autoptr (GcalEvent) event = NULL;
+  g_autoptr (GError) error = NULL;
+
+  event = create_event_for_string (STUB_EVENT, &error);
+
+  g_assert_no_error (error);
+  g_assert_nonnull (event);
+
+  clone1 = gcal_event_new_from_event (event);
+  g_assert_nonnull (clone1);
+
+  gcal_event_set_summary (event, "Another summary");
+
+  clone2 = gcal_event_new_from_event (event);
+  g_assert_nonnull (clone2);
+}
+
+
+/*********************************************************************************************************************/
+
+static void
 event_uid (void)
 {
   g_autoptr (GcalEvent) event = NULL;
@@ -227,6 +252,7 @@ main (gint   argc,
   g_test_init (&argc, &argv, NULL);
 
   g_test_add_func ("/event/new", event_new);
+  g_test_add_func ("/event/clone", event_clone);
   g_test_add_func ("/event/uid", event_uid);
   g_test_add_func ("/event/summary", event_summary);
   g_test_add_func ("/event/date/start", event_date_start);
