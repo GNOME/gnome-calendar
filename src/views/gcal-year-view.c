@@ -1485,6 +1485,7 @@ navigator_drag_drop_cb (GcalYearView   *self,
 
       if (!is_title)
         {
+          g_autoptr (GcalEvent) changed_event = NULL;
           GcalRecurrenceModType mod;
           GcalEventWidget *event_widget;
           GcalCalendar *calendar;
@@ -1494,17 +1495,18 @@ navigator_drag_drop_cb (GcalYearView   *self,
 
           event_widget = GCAL_EVENT_WIDGET (gtk_drag_get_source_widget (context));
           event = gcal_event_widget_get_event (event_widget);
-          calendar = gcal_event_get_calendar (event);
+          changed_event = gcal_event_new_from_event (event);
+          calendar = gcal_event_get_calendar (changed_event);
           mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
 
-          if (gcal_event_has_recurrence (event) &&
+          if (gcal_event_has_recurrence (changed_event) &&
               !ask_recurrence_modification_type (GTK_WIDGET (self), &mod, calendar))
             {
               goto out;
             }
 
-          start_dt = gcal_event_get_date_start (event);
-          end_dt = gcal_event_get_date_end (event);
+          start_dt = gcal_event_get_date_start (changed_event);
+          end_dt = gcal_event_get_date_end (changed_event);
 
           drop_date = g_date_time_add_full (start_dt,
                                             g_date_time_get_year (self->date) - g_date_time_get_year (start_dt),
@@ -1518,7 +1520,7 @@ navigator_drag_drop_cb (GcalYearView   *self,
               GDateTime *new_start;
 
               new_start = g_date_time_add (start_dt, diff);
-              gcal_event_set_date_start (event, new_start);
+              gcal_event_set_date_start (changed_event, new_start);
 
               /* The event may have a NULL end date, so we have to check it here */
               if (end_dt)
@@ -1526,12 +1528,14 @@ navigator_drag_drop_cb (GcalYearView   *self,
                   GDateTime *new_end;
 
                   new_end = g_date_time_add (end_dt, diff);
-                  gcal_event_set_date_end (event, new_end);
+                  gcal_event_set_date_end (changed_event, new_end);
 
                   g_clear_pointer (&new_end, g_date_time_unref);
                 }
 
-              gcal_manager_update_event (gcal_context_get_manager (self->context), event, mod);
+              gcal_manager_update_event (gcal_context_get_manager (self->context),
+                                         changed_event,
+                                         mod);
 
               g_clear_pointer (&new_start, g_date_time_unref);
             }
