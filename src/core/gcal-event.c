@@ -800,6 +800,27 @@ gcal_event_new (GcalCalendar   *calendar,
 }
 
 /**
+ * gcal_event_new:
+ * @self: a #GcalEvent
+ *
+ * Clones @event into a new #GcalEvent instance. This is useful
+ * for updating events.
+ *
+ * Returns: (transfer full)(nullable): a #GcalEvent
+ */
+GcalEvent*
+gcal_event_new_from_event (GcalEvent *self)
+{
+  g_autoptr (ECalComponent) component = NULL;
+
+  g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
+
+  component = e_cal_component_clone (self->component);
+
+  return gcal_event_new (self->calendar, component, NULL);
+}
+
+/**
  * gcal_event_get_all_day:
  * @self: a #GcalEvent
  *
