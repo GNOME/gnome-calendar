@@ -1430,6 +1430,7 @@ void
 gcal_edit_dialog_set_event (GcalEditDialog *self,
                             GcalEvent      *event)
 {
+  g_autoptr (GcalEvent) cloned_event = NULL;
   GcalRecurrenceLimitType limit_type;
   GcalRecurrenceFrequency frequency;
   GcalRecurrence *recur;
@@ -1445,7 +1446,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
 
   g_return_if_fail (GCAL_IS_EDIT_DIALOG (self));
 
-  g_set_object (&self->event, event);
+  g_clear_object (&self->event);
 
   self->setting_event = TRUE;
 
@@ -1459,8 +1460,11 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
   if (!event)
     GCAL_GOTO (out);
 
+  cloned_event = gcal_event_new_from_event (event);
+  self->event = g_object_ref (cloned_event);
+
   /* Recurrences */
-  recur = gcal_event_get_recurrence (event);
+  recur = gcal_event_get_recurrence (cloned_event);
   frequency = recur ? recur->frequency : GCAL_RECURRENCE_NO_REPEAT;
   limit_type = recur ? recur->limit_type : GCAL_RECURRENCE_FOREVER;
 
@@ -1492,8 +1496,8 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
       break;
     }
 
-  all_day = gcal_event_get_all_day (event);
-  calendar = gcal_event_get_calendar (event);
+  all_day = gcal_event_get_all_day (cloned_event);
+  calendar = gcal_event_get_calendar (cloned_event);
 
   /* Clear event data */
   gcal_edit_dialog_clear_data (self);
@@ -1506,7 +1510,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
 
   /* Load new event data */
   /* summary */
-  summary = gcal_event_get_summary (event);
+  summary = gcal_event_get_summary (cloned_event);
 
   if (g_strcmp0 (summary, "") == 0)
     gtk_entry_set_text (GTK_ENTRY (self->summary_entry), _("Unnamed event"));
@@ -1514,7 +1518,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
     gtk_entry_set_text (GTK_ENTRY (self->summary_entry), summary);
 
   /* dialog titlebar's title & subtitle */
-  surface = get_circle_surface_from_color (gcal_event_get_color (event), 10);
+  surface = get_circle_surface_from_color (gcal_event_get_color (cloned_event), 10);
   gtk_image_set_from_surface (GTK_IMAGE (self->source_image), surface);
   g_clear_pointer (&surface, cairo_surface_destroy);
 
@@ -1522,10 +1526,10 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
   self->selected_calendar = calendar;
 
   /* retrieve start and end dates */
-  date_start = gcal_event_get_date_start (event);
+  date_start = gcal_event_get_date_start (cloned_event);
   date_start = all_day ? g_date_time_ref (date_start) : g_date_time_to_local (date_start);
 
-  date_end = gcal_event_get_date_end (event);
+  date_end = gcal_event_get_date_end (cloned_event);
   /*
    * This is subtracting what has been added in action_button_clicked ().
    * See bug 769300.
@@ -1561,11 +1565,11 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
   self->recurrence_changed = FALSE;
 
   /* location */
-  gtk_entry_set_text (GTK_ENTRY (self->location_entry), gcal_event_get_location (event));
+  gtk_entry_set_text (GTK_ENTRY (self->location_entry), gcal_event_get_location (cloned_event));
 
   /* notes */
   gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->notes_text)),
-                            gcal_event_get_description (event),
+                            gcal_event_get_description (cloned_event),
                             -1);
 
   set_writable (self, !gcal_calendar_is_read_only (calendar));
