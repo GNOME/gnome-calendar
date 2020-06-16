@@ -1529,6 +1529,7 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   g_autoptr (GDateTime) dnd_date = NULL;
   g_autoptr (GDateTime) new_end = NULL;
   g_autoptr (GDateTime) tmp_dt = NULL;
+  g_autoptr (GcalEvent) changed_event = NULL;
   GcalWeekHeader *self;
   GDateTime *start_date;
   GDateTime *end_date;
@@ -1554,11 +1555,12 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
     drop_cell = 6 - drop_cell;
 
   event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
-  start_date = gcal_event_get_date_start (event);
-  end_date = gcal_event_get_date_end (event);
+  changed_event = gcal_event_new_from_event (event);
+  start_date = gcal_event_get_date_start (changed_event);
+  end_date = gcal_event_get_date_end (changed_event);
   week_start = gcal_date_time_get_start_of_week (self->active_date);
 
-  turn_all_day = !gcal_event_is_multiday (event) || gcal_event_get_all_day (event);
+  turn_all_day = !gcal_event_is_multiday (changed_event) || gcal_event_get_all_day (changed_event);
 
   if (!turn_all_day)
     {
@@ -1587,20 +1589,20 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   difference = turn_all_day ? 24 : g_date_time_difference (end_date, start_date) / G_TIME_SPAN_HOUR;
 
   new_end = g_date_time_add_hours (dnd_date, difference);
-  gcal_event_set_date_end (event, new_end);
+  gcal_event_set_date_end (changed_event, new_end);
 
   /*
    * Set the start date ~after~ the end date, so we can compare
    * the event's start and end dates above
    */
-  gcal_event_set_date_start (event, dnd_date);
+  gcal_event_set_date_start (changed_event, dnd_date);
 
   if (turn_all_day)
-    gcal_event_set_all_day (event, TRUE);
+    gcal_event_set_all_day (changed_event, TRUE);
 
   /* Commit the changes */
   gcal_manager_update_event (gcal_context_get_manager (self->context),
-                             event,
+                             changed_event,
                              GCAL_RECURRENCE_MOD_THIS_ONLY);
 
   /* Cancel the DnD */
