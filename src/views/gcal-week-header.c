@@ -1525,11 +1525,11 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
                             gint            y,
                             guint           time)
 {
+  g_autoptr (GDateTime) week_start = NULL;
+  g_autoptr (GDateTime) dnd_date = NULL;
+  g_autoptr (GDateTime) new_end = NULL;
+  g_autoptr (GDateTime) tmp_dt = NULL;
   GcalWeekHeader *self;
-  g_autoptr (GDateTime) week_start;
-  g_autoptr (GDateTime) dnd_date;
-  g_autoptr (GDateTime) new_end;
-  g_autoptr (GDateTime) tmp_dt;
   GDateTime *start_date;
   GDateTime *end_date;
   GTimeSpan difference;
@@ -1545,11 +1545,6 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
   drop_cell = get_dnd_cell (widget, x, y);
   event_widget = gtk_drag_get_source_widget (context);
-
-  week_start = NULL;
-  dnd_date = NULL;
-  new_end = NULL;
-  tmp_dt = NULL;
 
   if (!GCAL_IS_EVENT_WIDGET (event_widget))
     return FALSE;
