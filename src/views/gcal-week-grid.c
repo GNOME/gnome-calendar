@@ -903,6 +903,7 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   g_autoptr (GDateTime) week_start = NULL;
   g_autoptr (GDateTime) dnd_date = NULL;
   g_autoptr (GDateTime) new_end = NULL;
+  g_autoptr (GcalEvent) changed_event = NULL;
   GcalRecurrenceModType mod;
   GcalWeekGrid *self;
   GcalCalendar *calendar;
@@ -934,9 +935,10 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
     }
 
   event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
-  calendar = gcal_event_get_calendar (event);
+  changed_event = gcal_event_new_from_event (event);
+  calendar = gcal_event_get_calendar (changed_event);
 
-  if (gcal_event_has_recurrence (event) &&
+  if (gcal_event_has_recurrence (changed_event) &&
       !ask_recurrence_modification_type (widget, &mod, calendar))
     {
       goto out;
@@ -949,23 +951,23 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
    * Calculate the diff between the dropped cell and the event's start date,
    * so we can update the end date accordingly.
    */
-  timespan = g_date_time_difference (gcal_event_get_date_end (event), gcal_event_get_date_start (event));
+  timespan = g_date_time_difference (gcal_event_get_date_end (changed_event), gcal_event_get_date_start (changed_event));
 
   /*
    * Set the event's start and end dates. Since the event may have a
    * NULL end date, so we have to check it here
    */
-  gcal_event_set_all_day (event, FALSE);
-  gcal_event_set_date_start (event, dnd_date);
+  gcal_event_set_all_day (changed_event, FALSE);
+  gcal_event_set_date_start (changed_event, dnd_date);
 
 
   /* Setup the new end date */
   new_end = g_date_time_add (dnd_date, timespan);
-  gcal_event_set_date_end (event, new_end);
+  gcal_event_set_date_end (changed_event, new_end);
 
   /* Commit the changes */
 
-  gcal_manager_update_event (gcal_context_get_manager (self->context), event, mod);
+  gcal_manager_update_event (gcal_context_get_manager (self->context), changed_event, mod);
 
 out:
   /* Cancel the DnD */
