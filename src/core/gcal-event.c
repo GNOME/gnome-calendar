@@ -816,6 +816,7 @@ gcal_event_new_from_event (GcalEvent *self)
   g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
 
   component = e_cal_component_clone (self->component);
+  e_cal_component_commit_sequence (component);
 
   return gcal_event_new (self->calendar, component, NULL);
 }
@@ -1200,6 +1201,8 @@ gcal_event_remove_all_alarms (GcalEvent *self)
       g_hash_table_iter_remove (&iter);
     }
 
+  e_cal_component_commit_sequence (self->component);
+
   GCAL_EXIT;
 }
 
@@ -1244,6 +1247,8 @@ gcal_event_add_alarm (GcalEvent          *self,
 
   e_cal_component_alarm_free (new_alarm);
 
+  e_cal_component_commit_sequence (self->component);
+
   GCAL_EXIT;
 }
 
@@ -1273,6 +1278,8 @@ gcal_event_remove_alarm (GcalEvent *self,
       e_cal_component_remove_alarm (self->component, alarm_uid);
 
       g_hash_table_remove (self->alarms, GINT_TO_POINTER (type));
+
+      e_cal_component_commit_sequence (self->component);
     }
 }
 
@@ -1313,6 +1320,7 @@ gcal_event_set_location (GcalEvent   *self,
   if (g_strcmp0 (current_location, location) != 0)
     {
       e_cal_component_set_location (self->component, (location && *location) ? location : NULL);
+      e_cal_component_commit_sequence (self->component);
 
       g_clear_pointer (&self->location, g_free);
       self->location = g_strdup (location ? location : "");
@@ -1642,6 +1650,8 @@ gcal_event_set_recurrence (GcalEvent      *self,
       i_cal_component_add_property (icalcomp, prop);
     }
 
+  e_cal_component_commit_sequence (self->component);
+
   g_clear_object (&rrule);
   g_clear_object (&prop);
 }
@@ -1809,6 +1819,8 @@ gcal_event_save_original_timezones (GcalEvent *self)
 
       i_cal_component_take_property (icalcomp, property);
     }
+
+  e_cal_component_commit_sequence (self->component);
 
   GCAL_EXIT;
 }
