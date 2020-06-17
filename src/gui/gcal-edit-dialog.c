@@ -654,6 +654,140 @@ clear_alarms (GcalEditDialog *self)
     }
 }
 
+static void
+apply_changes_to_event (GcalEditDialog *self)
+{
+  GcalRecurrenceFrequency freq;
+  GcalRecurrence *old_recur;
+  GDateTime *start_date, *end_date;
+  gboolean was_all_day;
+  gboolean all_day;
+  gchar *note_text;
+  gsize i;
+
+  /* Update summary */
+  gcal_event_set_summary (self->event, gtk_entry_get_text (GTK_ENTRY (self->summary_entry)));
+
+  /* Update description */
+  g_object_get (G_OBJECT (gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->notes_text))),
+                "text", &note_text,
+                NULL);
+
+  gcal_event_set_description (self->event, note_text);
+  g_free (note_text);
+
+  all_day = gtk_switch_get_active (self->all_day_switch);
+  was_all_day = gcal_event_get_all_day (self->event);
+
+  if (!was_all_day && all_day)
+    gcal_event_save_original_timezones (self->event);
+
+  /*
+   * Update start & end dates. The dates are already translated to the current
+   * timezone (unless the event used to be all day, but no longer is).
+   */
+  start_date = get_date_start (self);
+  end_date = get_date_end (self);
+
+#ifdef GCAL_ENABLE_TRACE
+    {
+      g_autofree gchar *start_dt_string = g_date_time_format (start_date, "%x %X %z");
+      g_autofree gchar *end_dt_string = g_date_time_format (end_date, "%x %X %z");
+
+      g_debug ("New start date: %s", start_dt_string);
+      g_debug ("New end date: %s", end_dt_string);
+    }
+#endif
+
+  gcal_event_set_all_day (self->event, all_day);
+
+  /*
+   * The end date for multi-day events is exclusive, so we bump it by a day.
+   * This fixes the discrepancy between the end day of the event and how it
+   * is displayed in the month view. See bug 769300.
+   */
+  if (all_day)
+    {
+      GDateTime *fake_end_date = g_date_time_add_days (end_date, 1);
+
+      g_clear_pointer (&end_date, g_date_time_unref);
+      end_date = fake_end_date;
+    }
+  else if (!all_day && was_all_day)
+    {
+      /* When an all day event is changed to be not an all day event, we
+       * need to correct for the fact that the event's timezone was until
+       * now set to UTC. That means we need to change the timezone to
+       * localtime now, or else it will be saved incorrectly.
+       */
+      GDateTime *localtime_date;
+
+      localtime_date = g_date_time_to_local (start_date);
+      g_clear_pointer (&start_date, g_date_time_unref);
+      start_date = localtime_date;
+
+      localtime_date = g_date_time_to_local (end_date);
+      g_clear_pointer (&end_date, g_date_time_unref);
+      end_date = localtime_date;
+    }
+
+  gcal_event_set_date_start (self->event, start_date);
+  gcal_event_set_date_end (self->event, end_date);
+
+  g_clear_pointer (&start_date, g_date_time_unref);
+  g_clear_pointer (&end_date, g_date_time_unref);
+
+  /* Update alarms */
+  gcal_event_remove_all_alarms (self->event);
+
+  for (i = 0; i < self->alarms->len; i++)
+    gcal_event_add_alarm (self->event, g_ptr_array_index (self->alarms, i));
+
+  clear_alarms (self);
+
+  /* Check Repeat popover and set recurrence-rules accordingly */
+  old_recur = gcal_event_get_recurrence (self->event);
+  freq = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_combo));
+
+  if (freq != GCAL_RECURRENCE_NO_REPEAT)
+    {
+      GcalRecurrence *recur;
+
+      recur = gcal_recurrence_new ();
+      recur->frequency = freq;
+      recur->limit_type = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_duration_combo));
+
+      if (recur->limit_type == GCAL_RECURRENCE_UNTIL)
+        recur->limit.until = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector));
+      else if (recur->limit_type == GCAL_RECURRENCE_COUNT)
+        recur->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
+
+      /* Only apply the new recurrence if it's different from the old one */
+      if (!gcal_recurrence_is_equal (old_recur, recur))
+        {
+          /* Remove the previous recurrence... */
+          remove_recurrence_properties (self->event);
+
+          /* ... and set the new one */
+          gcal_event_set_recurrence (self->event, recur);
+
+          self->recurrence_changed = TRUE;
+        }
+
+      g_clear_pointer (&recur, gcal_recurrence_unref);
+    }
+  else
+    {
+      /* When NO_REPEAT is set, make sure to remove the old recurrent */
+      remove_recurrence_properties (self->event);
+
+      /* If the recurrence from an recurrent event was removed, mark it as changed */
+      if (old_recur && old_recur->frequency != GCAL_RECURRENCE_NO_REPEAT)
+        self->recurrence_changed = TRUE;
+    }
+}
+
+
 /*
  * Callbacks
  */
@@ -791,135 +925,9 @@ on_action_button_clicked_cb (GtkWidget *widget,
     }
   else
     {
-      GcalRecurrenceFrequency freq;
-      GcalRecurrence *old_recur;
       GcalCalendar *calendar;
-      GDateTime *start_date, *end_date;
-      gboolean was_all_day;
-      gboolean all_day;
-      gchar *note_text;
-      gsize i;
 
-      /* Update summary */
-      gcal_event_set_summary (self->event, gtk_entry_get_text (GTK_ENTRY (self->summary_entry)));
-
-      /* Update description */
-      g_object_get (G_OBJECT (gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->notes_text))),
-                    "text", &note_text,
-                    NULL);
-
-      gcal_event_set_description (self->event, note_text);
-      g_free (note_text);
-
-      all_day = gtk_switch_get_active (self->all_day_switch);
-      was_all_day = gcal_event_get_all_day (self->event);
-
-      if (!was_all_day && all_day)
-        gcal_event_save_original_timezones (self->event);
-
-      /*
-       * Update start & end dates. The dates are already translated to the current
-       * timezone (unless the event used to be all day, but no longer is).
-       */
-      start_date = get_date_start (self);
-      end_date = get_date_end (self);
-
-#ifdef GCAL_ENABLE_TRACE
-        {
-          g_autofree gchar *start_dt_string = g_date_time_format (start_date, "%x %X %z");
-          g_autofree gchar *end_dt_string = g_date_time_format (end_date, "%x %X %z");
-
-          g_debug ("New start date: %s", start_dt_string);
-          g_debug ("New end date: %s", end_dt_string);
-        }
-#endif
-
-      gcal_event_set_all_day (self->event, all_day);
-
-      /*
-       * The end date for multi-day events is exclusive, so we bump it by a day.
-       * This fixes the discrepancy between the end day of the event and how it
-       * is displayed in the month view. See bug 769300.
-       */
-      if (all_day)
-        {
-          GDateTime *fake_end_date = g_date_time_add_days (end_date, 1);
-
-          g_clear_pointer (&end_date, g_date_time_unref);
-          end_date = fake_end_date;
-        }
-      else if (!all_day && was_all_day)
-        {
-          /* When an all day event is changed to be not an all day event, we
-           * need to correct for the fact that the event's timezone was until
-           * now set to UTC. That means we need to change the timezone to
-           * localtime now, or else it will be saved incorrectly.
-           */
-          GDateTime *localtime_date;
-
-          localtime_date = g_date_time_to_local (start_date);
-          g_clear_pointer (&start_date, g_date_time_unref);
-          start_date = localtime_date;
-
-          localtime_date = g_date_time_to_local (end_date);
-          g_clear_pointer (&end_date, g_date_time_unref);
-          end_date = localtime_date;
-        }
-
-      gcal_event_set_date_start (self->event, start_date);
-      gcal_event_set_date_end (self->event, end_date);
-
-      g_clear_pointer (&start_date, g_date_time_unref);
-      g_clear_pointer (&end_date, g_date_time_unref);
-
-      /* Update alarms */
-      gcal_event_remove_all_alarms (self->event);
-
-      for (i = 0; i < self->alarms->len; i++)
-        gcal_event_add_alarm (self->event, g_ptr_array_index (self->alarms, i));
-
-      clear_alarms (self);
-
-      /* Check Repeat popover and set recurrence-rules accordingly */
-      old_recur = gcal_event_get_recurrence (self->event);
-      freq = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_combo));
-
-      if (freq != GCAL_RECURRENCE_NO_REPEAT)
-        {
-          GcalRecurrence *recur;
-
-          recur = gcal_recurrence_new ();
-          recur->frequency = freq;
-          recur->limit_type = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_duration_combo));
-
-          if (recur->limit_type == GCAL_RECURRENCE_UNTIL)
-            recur->limit.until = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector));
-          else if (recur->limit_type == GCAL_RECURRENCE_COUNT)
-            recur->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
-
-          /* Only apply the new recurrence if it's different from the old one */
-          if (!gcal_recurrence_is_equal (old_recur, recur))
-            {
-              /* Remove the previous recurrence... */
-              remove_recurrence_properties (self->event);
-
-              /* ... and set the new one */
-              gcal_event_set_recurrence (self->event, recur);
-
-              self->recurrence_changed = TRUE;
-            }
-
-          g_clear_pointer (&recur, gcal_recurrence_unref);
-        }
-      else
-        {
-          /* When NO_REPEAT is set, make sure to remove the old recurrent */
-          remove_recurrence_properties (self->event);
-
-          /* If the recurrence from an recurrent event was removed, mark it as changed */
-          if (old_recur && old_recur->frequency != GCAL_RECURRENCE_NO_REPEAT)
-            self->recurrence_changed = TRUE;
-        }
+      apply_changes_to_event (self);
 
       /* Update the source if needed */
       calendar = gcal_event_get_calendar (self->event);
