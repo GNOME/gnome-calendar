@@ -926,11 +926,15 @@ on_action_button_clicked_cb (GtkWidget *widget,
   else
     {
       GcalCalendar *calendar;
+      gint response;
 
       apply_changes_to_event (self);
 
+      response = self->event_is_new ? GCAL_RESPONSE_CREATE_EVENT : GCAL_RESPONSE_SAVE_EVENT;
+
       /* Update the source if needed */
       calendar = gcal_event_get_calendar (self->event);
+
       if (self->selected_calendar && calendar != self->selected_calendar)
         {
           if (self->event_is_new)
@@ -942,14 +946,14 @@ on_action_button_clicked_cb (GtkWidget *widget,
               gcal_manager_move_event_to_source (gcal_context_get_manager (self->context),
                                                  self->event,
                                                  gcal_calendar_get_source (self->selected_calendar));
+              response = GTK_RESPONSE_CANCEL;
             }
         }
 
       self->selected_calendar = NULL;
 
       /* Send the response */
-      gtk_dialog_response (GTK_DIALOG (self),
-                           self->event_is_new ? GCAL_RESPONSE_CREATE_EVENT : GCAL_RESPONSE_SAVE_EVENT);
+      gtk_dialog_response (GTK_DIALOG (self), response);
     }
 
   GCAL_EXIT;
