@@ -1266,15 +1266,15 @@ void
 gcal_event_remove_alarm (GcalEvent *self,
                          guint      type)
 {
+  const gchar *alarm_uid;
+
   g_return_if_fail (GCAL_IS_EVENT (self));
 
+  alarm_uid = g_hash_table_lookup (self->alarms, GINT_TO_POINTER (type));
+
   /* Only 1 alarm per relative time */
-  if (g_hash_table_contains (self->alarms, GINT_TO_POINTER (type)))
+  if (alarm_uid)
     {
-      const gchar *alarm_uid;
-
-      alarm_uid = g_hash_table_lookup (self->alarms, GINT_TO_POINTER (type));
-
       e_cal_component_remove_alarm (self->component, alarm_uid);
 
       g_hash_table_remove (self->alarms, GINT_TO_POINTER (type));
