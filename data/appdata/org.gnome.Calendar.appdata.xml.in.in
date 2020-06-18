@@ -49,6 +49,12 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2020-04-16" version="3.36.2">
+      <description>
+        <p> This is a stable release that fixes important bugs.</p>
+      </description>
+    </release>
+
     <release date="2020-04-16" version="3.36.1">
       <description>
         <p> This is a stable release that fixes a lot of bugs, and introduces a new engine for Calendar. This new engine should be more robust and stable.</p>

@@ -1,3 +1,9 @@
+Major changes in 3.36.2:
+* Week view now properly translates the event to the local timezone (Douglas Fuller)
+* Properly commit sequence after event changes, and prevent data loss
+* Fix first weekday calculation (Evangelos Ribeiro Tzaras)
+* Updated translations
+
 Major changes in 3.36.1:
 * Introduce a new engine
 * Fix a lot of bugs
