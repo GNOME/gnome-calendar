@@ -1099,6 +1099,8 @@ gcal_manager_move_event_to_source (GcalManager *self,
   clone = e_cal_component_clone (ecomponent);
   comp = e_cal_component_get_icalcomponent (clone);
 
+  g_assert (clone != NULL);
+
   e_cal_client_create_object_sync (gcal_calendar_get_client (calendar),
                                    comp,
                                    E_CAL_OPERATION_FLAG_NONE,
