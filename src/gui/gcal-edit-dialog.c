@@ -387,6 +387,7 @@ remove_recurrence_properties (GcalEvent *event)
 
   e_cal_component_set_recurid (comp, NULL);
   e_cal_component_set_rrules (comp, NULL);
+  e_cal_component_commit_sequence (comp);
 }
 
 static gchar*
