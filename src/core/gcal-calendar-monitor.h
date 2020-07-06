@@ -41,4 +41,6 @@ GcalEvent*           gcal_calendar_monitor_get_cached_event      (GcalCalendarMo
 void                 gcal_calendar_monitor_set_filter            (GcalCalendarMonitor *self,
                                                                   const gchar         *filter);
 
+gboolean             gcal_calendar_monitor_is_complete           (GcalCalendarMonitor *self);
+
 G_END_DECLS

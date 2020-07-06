@@ -33,6 +33,7 @@ typedef struct
   GcalCalendarMonitor *monitor;
   GcalEvent           *event;
   gchar               *event_id;
+  gboolean             complete;
 } IdleData;
 
 typedef enum
@@ -58,6 +59,7 @@ struct _GcalCalendarMonitor
 
   GAsyncQueue        *messages;
   GcalCalendar       *calendar;
+  gboolean            complete;
 
   /*
    * These fields are only accessed on the monitor thread, and
@@ -92,7 +94,6 @@ enum
   EVENT_ADDED,
   EVENT_UPDATED,
   EVENT_REMOVED,
-  COMPLETED,
   N_SIGNALS,
 };
 
@@ -100,6 +101,7 @@ enum
 {
   PROP_0,
   PROP_CALENDAR,
+  PROP_COMPLETE,
   N_PROPS
 };
 
@@ -244,12 +246,14 @@ remove_event_in_idle (GcalCalendarMonitor *self,
 }
 
 static void
-complete_in_idle (GcalCalendarMonitor *self)
+set_complete_in_idle (GcalCalendarMonitor *self,
+                      gboolean             complete)
 {
   IdleData *idle_data;
 
   idle_data = g_new0 (IdleData, 1);
   idle_data->monitor = g_object_ref (self);
+  idle_data->complete = complete;
 
   g_main_context_invoke_full (self->main_context,
                               G_PRIORITY_DEFAULT_IDLE,
@@ -584,7 +588,7 @@ on_client_view_complete_cb (ECalClientView      *view,
 
   self->monitor_thread.populated = TRUE;
 
-  complete_in_idle (self);
+  set_complete_in_idle (self, TRUE);
 
   g_debug ("Finished initial loading of calendar '%s'", gcal_calendar_get_name (self->calendar));
 
@@ -651,6 +655,8 @@ create_view (GcalCalendarMonitor *self)
     }
 
   self->monitor_thread.view = g_steal_pointer (&view);
+
+  set_complete_in_idle (self, FALSE);
 
   GCAL_EXIT;
 }
@@ -857,6 +863,19 @@ remove_all_events (GcalCalendarMonitor *self)
     }
 }
 
+static void
+set_complete (GcalCalendarMonitor *self,
+              gboolean             complete)
+{
+  if (self->complete == complete)
+    return;
+
+  GCAL_TRACE_MSG ("Setting complete to %s", complete ? "TRUE" : "FALSE");
+
+  self->complete = complete;
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPLETE]);
+}
+
 
 /*
  * Callbacks
@@ -959,7 +978,6 @@ on_calendar_visible_changed_cb (GcalCalendar        *calendar,
 static gboolean
 complete_in_idle_cb (gpointer user_data)
 {
-  g_autoptr (GcalEvent) event = NULL;
   GcalCalendarMonitor *self;
   IdleData *idle_data;
 
@@ -970,7 +988,8 @@ complete_in_idle_cb (gpointer user_data)
   g_assert (idle_data->event == NULL);
   g_assert (idle_data->event_id == NULL);
 
-  g_signal_emit (self, signals[COMPLETED], 0, event);
+  set_complete (self, idle_data->complete);
+
   GCAL_RETURN (G_SOURCE_REMOVE);
 }
 
@@ -1015,6 +1034,10 @@ gcal_calendar_monitor_get_property (GObject    *object,
       g_value_set_object (value, self->calendar);
       break;
 
+    case PROP_COMPLETE:
+      g_value_set_boolean (value, self->complete);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -1039,6 +1062,7 @@ gcal_calendar_monitor_set_property (GObject      *object,
                         self);
       break;
 
+    case PROP_COMPLETE:
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -1078,18 +1102,18 @@ gcal_calendar_monitor_class_init (GcalCalendarMonitorClass *klass)
                                          1,
                                          GCAL_TYPE_EVENT);
 
-  signals[COMPLETED] = g_signal_new ("completed",
-                                     GCAL_TYPE_CALENDAR_MONITOR,
-                                     G_SIGNAL_RUN_FIRST,
-                                     0, NULL, NULL, NULL,
-                                     G_TYPE_NONE,
-                                     0);
-
   properties[PROP_CALENDAR] = g_param_spec_object ("calendar",
                                                    "Calendar",
-                                                   "Calendar to be monitores",
+                                                   "Calendar to be monitored",
                                                    GCAL_TYPE_CALENDAR,
                                                    G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+
+  properties[PROP_COMPLETE] = g_param_spec_boolean ("complete",
+                                                    "Complete",
+                                                    "Whether",
+                                                    FALSE,
+                                                    G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 }
@@ -1101,6 +1125,7 @@ gcal_calendar_monitor_init (GcalCalendarMonitor *self)
   self->thread_context = g_main_context_new ();
   self->main_context = g_main_context_ref_thread_default ();
   self->messages = g_async_queue_new ();
+  self->complete = FALSE;
 }
 
 GcalCalendarMonitor*
@@ -1197,4 +1222,12 @@ gcal_calendar_monitor_set_filter (GcalCalendarMonitor *self,
 
   if (gcal_calendar_get_visible (self->calendar))
     notify_view_thread (self, FILTER_UPDATED);
+}
+
+gboolean
+gcal_calendar_monitor_is_complete (GcalCalendarMonitor *self)
+{
+  g_return_val_if_fail (GCAL_IS_CALENDAR_MONITOR (self), FALSE);
+
+  return self->complete;
 }

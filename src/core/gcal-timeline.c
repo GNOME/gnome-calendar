@@ -205,17 +205,6 @@ reset_completed_calendars (GcalTimeline *self)
 }
 
 static void
-increase_completed_calendars (GcalTimeline *self)
-{
-  self->completed_calendars++;
-
-  g_assert (self->completed_calendars <= g_hash_table_size (self->calendars));
-
-  if (is_timeline_complete (self))
-    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPLETE]);
-}
-
-static void
 add_event_to_subscriber (GcalTimelineSubscriber *subscriber,
                          GcalEvent              *event)
 {
@@ -591,11 +580,20 @@ on_calendar_monitor_event_removed_cb (GcalCalendarMonitor *monitor,
 
 static void
 on_calendar_monitor_completed_cb (GcalCalendarMonitor *monitor,
+                                  GParamSpec          *pspec,
                                   GcalTimeline        *self)
 {
   GCAL_ENTRY;
 
-  increase_completed_calendars (self);
+  if (gcal_calendar_monitor_is_complete (monitor))
+    self->completed_calendars++;
+  else
+    self->completed_calendars--;
+
+  g_assert (self->completed_calendars <= g_hash_table_size (self->calendars));
+
+  if (is_timeline_complete (self))
+    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPLETE]);
 
   GCAL_EXIT;
 }
@@ -953,7 +951,7 @@ gcal_timeline_add_calendar (GcalTimeline *self,
   g_signal_connect (monitor, "event-added", G_CALLBACK (on_calendar_monitor_event_added_cb), self);
   g_signal_connect (monitor, "event-updated", G_CALLBACK (on_calendar_monitor_event_updated_cb), self);
   g_signal_connect (monitor, "event-removed", G_CALLBACK (on_calendar_monitor_event_removed_cb), self);
-  g_signal_connect (monitor, "completed", G_CALLBACK (on_calendar_monitor_completed_cb), self);
+  g_signal_connect (monitor, "notify::complete", G_CALLBACK (on_calendar_monitor_completed_cb), self);
   g_hash_table_insert (self->calendars, calendar, g_object_ref (monitor));
 
   if (self->range)
