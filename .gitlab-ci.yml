@@ -6,7 +6,6 @@ variables:
 
 stages:
   - 'flatpak'
-  - 'review'
   - 'deploy'
 
 flatpak:master:
@@ -21,16 +20,6 @@ flatpak:master:
         # are passed except the config-args because we build it ourselves
         MESON_ARGS: "-Dtracing=true -Dprofile=development"
         APP_ID: "org.gnome.Calendar.Devel"
-
-review:
-    extends: '.review'
-    stage: 'review'
-    dependencies:
-        - 'flatpak:master'
-
-stop_review:
-    extends: '.stop_review'
-    stage: 'review'
 
 flatpak:nightly:
     extends: '.publish_nightly'
