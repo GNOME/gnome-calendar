@@ -2,7 +2,6 @@ include: 'https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_
 
 variables:
   GIT_SUBMODULE_STRATEGY: 'normal'
-  BUNDLE: "org.gnome.Calendar.Devel.flatpak"
 
 stages:
   - 'flatpak'
@@ -16,10 +15,9 @@ flatpak:master:
         MANIFEST_PATH: "build-aux/flatpak/org.gnome.Calendar.json"
         RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
         FLATPAK_MODULE: "gnome-calendar"
-        # Make sure to keep this in sync with the Flatpak manifest, all arguments
-        # are passed except the config-args because we build it ourselves
-        MESON_ARGS: "-Dtracing=true -Dprofile=development"
         APP_ID: "org.gnome.Calendar.Devel"
+        BUNDLE: "org.gnome.Calendar.Devel.flatpak"
+
 
 flatpak:nightly:
     extends: '.publish_nightly'
