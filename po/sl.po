@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-04-05 11:02+0000\n"
-"PO-Revision-Date: 2020-06-04 18:11+0200\n"
+"POT-Creation-Date: 2020-08-19 04:14+0000\n"
+"PO-Revision-Date: 2020-08-21 17:14+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -128,7 +128,7 @@ msgstr ""
 "Uporaba nastavitve nočne osvetlitve omogoča zagon nočnega načina prikaza."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1802
+#: src/core/gcal-event.c:1882
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s – %2$s"
@@ -137,14 +137,14 @@ msgstr "%1$s – %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1810
+#: src/core/gcal-event.c:1890
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s, %2$s – %3$s, %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1826 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1906 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -275,80 +275,80 @@ msgstr "Dodaj"
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
-msgstr[0] ""
-msgstr[1] "%1$u dan, %2$u ur in %3$u minuto prej"
-msgstr[2] "%1$u dan, %2$u ur in %3$u minuti prej"
-msgstr[3] "%1$u dan, %2$u ur in %3$u minute prej"
+msgstr[0] "%1$u dan, %2$u ura in %3$u minut prej"
+msgstr[1] "%1$u dan, %2$u ura in %3$u minuto prej"
+msgstr[2] "%1$u dan, %2$u ura in %3$u minuti prej"
+msgstr[3] "%1$u dan, %2$u ura in %3$u minute prej"
 
 # This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:89
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
-msgstr[0] ""
-msgstr[1] "%1$u dan, %2$u uro in %3$u minut prej"
-msgstr[2] "%1$u dan, %2$u uri in %3$u minut prej"
-msgstr[3] "%1$u dan, %2$u ure in %3$u minut prej"
+msgstr[0] "%1$u dan, %2$u ur in %3$u minut prej"
+msgstr[1] "%1$u dan, %2$u ur in %3$u minuta prej"
+msgstr[2] "%1$u dan, %2$u ur in %3$u minuti prej"
+msgstr[3] "%1$u dan, %2$u ur in %3$u minute prej"
 
 # This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:95
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
-msgstr[0] ""
-msgstr[1] "%1$u dan, %2$u ur in %3$u minut prej"
-msgstr[2] "%1$u dneva, %2$u ur in %3$u minut prej"
-msgstr[3] "%1$u dni, %2$u ur in %3$u minut prej"
+msgstr[0] "%1$u dni, %2$u ura in %3$u minut prej"
+msgstr[1] "%1$u dni, %2$u ura in %3$u minut prej"
+msgstr[2] "%1$u dni, %2$u ura in %3$u minuti prej"
+msgstr[3] "%1$u dni, %2$u ura in %3$u minute prej"
 
 # This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:99
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%1$u dni, %2$u ur in %3$u minut prej"
+msgstr[1] "%1$u dni, %2$u ur in %3$u minuta prej"
+msgstr[2] "%1$u dni, %2$u ur in %3$u minuti prej"
+msgstr[3] "%1$u dni, %2$u ur in %3$u minute prej"
 
 # This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:114
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%1$u dan in %2$u ur prej"
+msgstr[1] "%1$u dan in %2$u ura prej"
+msgstr[2] "%1$u dan in %2$u uri prej"
+msgstr[3] "%1$u dan in %2$u ure prej"
 
 # This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:118
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%1$u dni in %2$u ur prej"
+msgstr[1] "%1$u dni in %2$u ura prej"
+msgstr[2] "%1$u dni in %2$u uri prej"
+msgstr[3] "%1$u dni in %2$u ure prej"
 
 # This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:134
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%1$u dan in %2$u minut prej"
+msgstr[1] "%1$u dan in %2$u minuta prej"
+msgstr[2] "%1$u dan in %2$u minuti prej"
+msgstr[3] "%1$u dan in %2$u minute prej"
 
 # This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:138
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%1$u dni in %2$u minut prej"
+msgstr[1] "%1$u dni in %2$u minuta prej"
+msgstr[2] "%1$u dni in %2$u minuti prej"
+msgstr[3] "%1$u dni in %2$u minute prej"
 
 #: src/gui/gcal-alarm-row.c:148
 #, c-format
@@ -364,20 +364,20 @@ msgstr[3] "%1$u dni prej"
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%1$u ura in %2$u minut prej"
+msgstr[1] "%1$u ura in %2$u minuta prej"
+msgstr[2] "%1$u ura in %2$u minuti prej"
+msgstr[3] "%1$u ura in %2$u minute prej"
 
 # This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:170
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
-msgstr[0] ""
-msgstr[1] "%1$u ura in %2$u minuta prej"
-msgstr[2] "%1$u uri in %2$u minuti prej"
-msgstr[3] "%1$u ure in %2$u minute prej"
+msgstr[0] "%1$u ur in %2$u minut prej"
+msgstr[1] "%1$u ur in %2$u minuta prej"
+msgstr[2] "%1$u ur in %2$u minuti prej"
+msgstr[3] "%1$u ur in %2$u minute prej"
 
 #: src/gui/gcal-alarm-row.c:180
 #, c-format
@@ -460,27 +460,27 @@ msgid "Done"
 msgstr "Končano"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:416
+#: src/gui/gcal-edit-dialog.c:417
 #, c-format
 msgid "Last %A"
 msgstr "%A pred enim tednom"
 
-#: src/gui/gcal-edit-dialog.c:420
+#: src/gui/gcal-edit-dialog.c:421
 msgid "Yesterday"
 msgstr "včeraj"
 
-#: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
+#: src/gui/gcal-edit-dialog.c:425 src/gui/gcal-window.ui:180
 #: src/views/gcal-year-view.c:282 src/views/gcal-year-view.c:560
 #: src/views/gcal-year-view.ui:88
 msgid "Today"
 msgstr "danes"
 
-#: src/gui/gcal-edit-dialog.c:428
+#: src/gui/gcal-edit-dialog.c:429
 msgid "Tomorrow"
 msgstr "jutri"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:438
+#: src/gui/gcal-edit-dialog.c:439
 #, c-format
 msgid "This %A"
 msgstr "%A"
@@ -489,12 +489,12 @@ msgstr "%A"
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
-#: src/gui/gcal-edit-dialog.c:468
+#: src/gui/gcal-edit-dialog.c:469
 #, c-format
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
-#: src/gui/gcal-edit-dialog.c:1512 src/gui/gcal-quick-add-popover.c:687
+#: src/gui/gcal-edit-dialog.c:1529 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
 msgstr "Neimenovan dogodek"
 
@@ -907,11 +907,11 @@ msgstr "Uredi podrobnosti …"
 msgid ":"
 msgstr ":"
 
-#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:447
+#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:440
 msgid "AM"
 msgstr "dop"
 
-#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:447
+#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:440
 msgid "PM"
 msgstr "pop"
 
@@ -1018,12 +1018,12 @@ msgstr "Pokaže današnji dan"
 #: src/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
-msgstr "Skoči na naslednji ogledan dogodek"
+msgstr "Skoči na naslednji dogodek"
 
 #: src/help-overlay.ui:86
 msgctxt "shortcut window"
 msgid "Previous view"
-msgstr "Skoči na predhodni ogledan dogodek"
+msgstr "Skoči na predhodni dogodek"
 
 #: src/help-overlay.ui:95
 msgctxt "shortcut window"
@@ -1073,11 +1073,11 @@ msgstr "_Vsi dogodki"
 msgid "New Event…"
 msgstr "Nov dogodek …"
 
-#: src/views/gcal-week-grid.c:706 src/views/gcal-week-view.c:293
+#: src/views/gcal-week-grid.c:680 src/views/gcal-week-view.c:293
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/views/gcal-week-grid.c:709 src/views/gcal-week-view.c:296
+#: src/views/gcal-week-grid.c:683 src/views/gcal-week-view.c:296
 msgid "00:00"
 msgstr "00:00"
 
