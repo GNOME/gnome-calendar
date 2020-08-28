@@ -531,7 +531,7 @@ msgstr "Per sempre"
 
 #: src/gui/gcal-edit-dialog.ui:383
 msgid "No. of occurrences"
-msgstr "Nombre d'aparicions"
+msgstr "Nombre d'ocurrències"
 
 #: src/gui/gcal-edit-dialog.ui:384
 msgid "Until Date"
@@ -539,7 +539,7 @@ msgstr "Fins a una data"
 
 #: src/gui/gcal-edit-dialog.ui:397
 msgid "Number of Occurrences"
-msgstr "Nombre d'aparicions"
+msgstr "Nombre d'ocurrències"
 
 #: src/gui/gcal-edit-dialog.ui:415
 msgid "End Repeat Date"
