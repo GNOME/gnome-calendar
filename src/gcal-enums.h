@@ -44,12 +44,9 @@ typedef enum
  */
 typedef enum
 {
-  GCAL_WINDOW_VIEW_DAY,
   GCAL_WINDOW_VIEW_WEEK,
   GCAL_WINDOW_VIEW_MONTH,
   GCAL_WINDOW_VIEW_YEAR,
-  GCAL_WINDOW_VIEW_LIST,
-  GCAL_WINDOW_VIEW_SEARCH,
 } GcalWindowView;
 
 typedef enum

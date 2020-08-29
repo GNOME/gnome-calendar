@@ -200,12 +200,6 @@ update_today_button_sensitive (GcalWindow *window)
 
   switch (window->active_view)
     {
-    case GCAL_WINDOW_VIEW_DAY:
-      sensitive = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
-                  g_date_time_get_month (window->active_date) != g_date_time_get_month (now) ||
-                  g_date_time_get_day_of_month (window->active_date) != g_date_time_get_day_of_month (now);
-      break;
-
     case GCAL_WINDOW_VIEW_WEEK:
       sensitive = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
                   g_date_time_get_week_of_year (window->active_date) !=  g_date_time_get_week_of_year (now);
@@ -224,8 +218,6 @@ update_today_button_sensitive (GcalWindow *window)
       sensitive = g_date_time_get_year (window->active_date) != g_date_time_get_year (now);
       break;
 
-    case GCAL_WINDOW_VIEW_LIST:
-    case GCAL_WINDOW_VIEW_SEARCH:
     default:
       sensitive = TRUE;
       break;
@@ -468,9 +460,6 @@ view_changed (GObject    *object,
   view_type = eval->value;
 
   g_type_class_unref (eklass);
-
-  if (view_type == GCAL_WINDOW_VIEW_SEARCH)
-    return;
 
   window->active_view = view_type;
   update_today_button_sensitive (window);
