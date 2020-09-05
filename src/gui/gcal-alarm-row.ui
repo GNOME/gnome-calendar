@@ -3,7 +3,7 @@
   <template class="GcalAlarmRow" parent="HdyActionRow">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <child type="action">
+    <child>
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>

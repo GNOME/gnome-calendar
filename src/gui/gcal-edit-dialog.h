@@ -22,7 +22,6 @@
 #include "gcal-event.h"
 #include "gcal-manager.h"
 
-#include <handy.h>
 
 G_BEGIN_DECLS
 
@@ -32,7 +31,7 @@ G_BEGIN_DECLS
 
 #define GCAL_TYPE_EDIT_DIALOG                (gcal_edit_dialog_get_type ())
 
-G_DECLARE_FINAL_TYPE (GcalEditDialog, gcal_edit_dialog, GCAL, EDIT_DIALOG, HdyDialog);
+G_DECLARE_FINAL_TYPE (GcalEditDialog, gcal_edit_dialog, GCAL, EDIT_DIALOG, GtkDialog);
 
 GtkWidget*           gcal_edit_dialog_new                     (void);
 

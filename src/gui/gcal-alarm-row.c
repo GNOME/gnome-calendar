@@ -214,7 +214,7 @@ setup_alarm (GcalAlarmRow *self)
   duration = e_cal_component_alarm_trigger_get_duration (trigger);
   formatted_duration = format_alarm_duration (duration);
 
-  hdy_action_row_set_title (HDY_ACTION_ROW (self), formatted_duration);
+  hdy_preferences_row_set_title (HDY_PREFERENCES_ROW (self), formatted_duration);
 
   action = e_cal_component_alarm_get_action (self->alarm);
   gtk_toggle_button_set_active (self->volume_button, action == E_CAL_COMPONENT_ALARM_AUDIO);
