@@ -1,3 +1,8 @@
+Major changes in 3.37.92:
+* Various fixes to the timeline
+* Convert timezones when allocating on Week view
+* Updated translations
+
 Major changes in 3.36.0:
 * Updated translations
 
