@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.14"/>
-  <template class="GcalWindow" parent="GtkApplicationWindow">
+  <template class="GcalWindow" parent="HdyApplicationWindow">
     <property name="window_position">center</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
@@ -12,265 +12,274 @@
       <class name="org-gnome-Calendar"/>
     </style>    
     <child>
-      <object class="GtkOverlay" id="views_overlay">
+      <object class="GtkBox">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <child>
-          <object class="GtkBox" id="main_box">
+          <object class="GtkOverlay" id="views_overlay">
             <property name="visible">True</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">True</property>
-            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkStack" id="views_stack">
+              <object class="GtkBox" id="main_box">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
-                <property name="transition_duration">250</property>
-                <property name="transition_type">crossfade</property>
-                <signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no"/>
-                <style>
-                  <class name="view"/>
-                </style>
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GcalWeekView" id="week_view">
+                  <object class="GtkStack" id="views_stack">
                     <property name="visible">True</property>
-                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
-                    <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
-                    <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <property name="transition_duration">250</property>
+                    <property name="transition_type">crossfade</property>
+                    <signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no"/>
+                    <style>
+                      <class name="view"/>
+                    </style>
+                    <child>
+                      <object class="GcalWeekView" id="week_view">
+                        <property name="visible">True</property>
+                        <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
+                        <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
+                        <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="name">week</property>
+                        <property name="title" translatable="yes">Week</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GcalMonthView" id="month_view">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
+                        <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
+                        <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
+                        <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                        <property name="name">month</property>
+                        <property name="title" translatable="yes">Month</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GcalYearView" id="year_view">
+                        <property name="visible">True</property>
+                        <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
+                        <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
+                        <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
+                        <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="position">2</property>
+                        <property name="name">year</property>
+                        <property name="title" translatable="yes">Year</property>
+                      </packing>
+                    </child>
                   </object>
-                  <packing>
-                    <property name="name">week</property>
-                    <property name="title" translatable="yes">Week</property>
-                  </packing>
                 </child>
+              </object>
+            </child>
+            <child type="overlay">
+              <object class="GtkRevealer" id="notification">
+                <property name="visible">True</property>
+                <property name="halign">center</property>
+                <property name="valign">start</property>
+                <property name="transition_duration">100</property>
+                <signal name="notify::child-revealed" handler="remove_event" object="GcalWindow" swapped="no"/>
                 <child>
-                  <object class="GcalMonthView" id="month_view">
+                  <object class="GtkFrame">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="margin_start">12</property>
+                        <property name="margin_end">12</property>
+                        <property name="margin_top">2</property>
+                        <property name="margin_bottom">2</property>
+                        <property name="column_spacing">12</property>
+                        <child>
+                          <object class="GtkLabel" id="notification_label">
+                            <property name="visible">True</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="notification_action_button">
+                            <property name="label">button</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="no_show_all">True</property>
+                            <signal name="clicked" handler="undo_remove_action" object="GcalWindow" swapped="no"/>
+                            <style>
+                              <class name="text-button"/>
+                            </style>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="notification_close_button">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="relief">none</property>
+                            <property name="focus_on_click">False</property>
+                            <signal name="clicked" handler="hide_notification" object="GcalWindow" swapped="yes"/>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon_name">window-close-symbolic</property>
+                                <property name="icon_size">2</property>
+                              </object>
+                            </child>
+                            <style>
+                              <class name="image-button"/>
+                            </style>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="app-notification"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack_type">end</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHeaderBar" id="header_bar">
+            <property name="visible">True</property>
+            <property name="show_close_button">True</property>
+            <property name="title" translatable="yes">Calendar</property>
+            <child>
+              <object class="GtkButton" id="new_event_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="action-name">win.new-event</property>
+                <property name="tooltip_text" translatable="yes" context="tooltip">Add a new event</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="icon-name">list-add-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="today_button">
+                <property name="label" translatable="yes">Today</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="action-name">win.today</property>
+                <accelerator key="t" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
+                <accelerator key="Home" signal="clicked"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="button_box">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkButton" id="back_button">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
-                    <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
-                    <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
-                    <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
+                    <property name="receives_default">True</property>
+                    <property name="action-name">win.previous-date</property>
+                    <accelerator key="Left" modifiers="GDK_MOD1_MASK" signal="clicked"/>
+                    <accelerator key="Page_Up" signal="clicked"/>
+                    <child>
+                      <object class="GtkImage" id="go_back_image">
+                        <property name="visible">True</property>
+                        <property name="icon_name">go-previous-symbolic</property>
+                      </object>
+                    </child>
                   </object>
-                  <packing>
-                    <property name="position">1</property>
-                    <property name="name">month</property>
-                    <property name="title" translatable="yes">Month</property>
-                  </packing>
                 </child>
                 <child>
-                  <object class="GcalYearView" id="year_view">
+                  <object class="GtkButton" id="forward_button">
                     <property name="visible">True</property>
-                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
-                    <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
-                    <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
-                    <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="position">2</property>
-                    <property name="name">year</property>
-                    <property name="title" translatable="yes">Year</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child type="overlay">
-          <object class="GtkRevealer" id="notification">
-            <property name="visible">True</property>
-            <property name="halign">center</property>
-            <property name="valign">start</property>
-            <property name="transition_duration">100</property>
-            <signal name="notify::child-revealed" handler="remove_event" object="GcalWindow" swapped="no"/>
-            <child>
-              <object class="GtkFrame">
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkGrid">
-                    <property name="visible">True</property>
-                    <property name="margin_start">12</property>
-                    <property name="margin_end">12</property>
-                    <property name="margin_top">2</property>
-                    <property name="margin_bottom">2</property>
-                    <property name="column_spacing">12</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="action-name">win.next-date</property>
+                    <accelerator key="Right" modifiers="GDK_MOD1_MASK" signal="clicked"/>
+                    <accelerator key="Page_Down" signal="clicked"/>
                     <child>
-                      <object class="GtkLabel" id="notification_label">
+                      <object class="GtkImage" id="go_next_image">
                         <property name="visible">True</property>
-                        <property name="use_markup">True</property>
+                        <property name="icon_name">go-next-symbolic</property>
                       </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="notification_action_button">
-                        <property name="label">button</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="no_show_all">True</property>
-                        <signal name="clicked" handler="undo_remove_action" object="GcalWindow" swapped="no"/>
-                        <style>
-                          <class name="text-button"/>
-                        </style>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="notification_close_button">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="relief">none</property>
-                        <property name="focus_on_click">False</property>
-                        <signal name="clicked" handler="hide_notification" object="GcalWindow" swapped="yes"/>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="icon_name">window-close-symbolic</property>
-                            <property name="icon_size">2</property>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="image-button"/>
-                        </style>
-                      </object>
-                      <packing>
-                        <property name="left_attach">2</property>
-                        <property name="top_attach">0</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
                 <style>
-                  <class name="app-notification"/>
+                  <class name="linked"/>
                 </style>
               </object>
             </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child type="titlebar">
-      <object class="GtkHeaderBar" id="header_bar">
-        <property name="visible">True</property>
-        <property name="show_close_button">True</property>
-        <property name="title" translatable="yes">Calendar</property>
-        <child>
-          <object class="GtkButton" id="new_event_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="action-name">win.new-event</property>
-            <property name="tooltip_text" translatable="yes" context="tooltip">Add a new event</property>
-            <child>
-              <object class="GtkImage">
+            <child type="title">
+              <object class="GtkStackSwitcher" id="views_switcher">
                 <property name="visible">True</property>
-                <property name="icon-name">list-add-symbolic</property>
+                <property name="stack">views_stack</property>
               </object>
             </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="today_button">
-            <property name="label" translatable="yes">Today</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="action-name">win.today</property>
-            <accelerator key="t" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
-            <accelerator key="Home" signal="clicked"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox" id="button_box">
-            <property name="visible">True</property>
             <child>
-              <object class="GtkButton" id="back_button">
+              <object class="GtkMenuButton" id="menu_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="popover">win_menu</property>
                 <property name="receives_default">True</property>
-                <property name="action-name">win.previous-date</property>
-                <accelerator key="Left" modifiers="GDK_MOD1_MASK" signal="clicked"/>
-                <accelerator key="Page_Up" signal="clicked"/>
                 <child>
-                  <object class="GtkImage" id="go_back_image">
+                  <object class="GtkImage" id="menu_image">
                     <property name="visible">True</property>
-                    <property name="icon_name">go-previous-symbolic</property>
+                    <property name="icon_name">open-menu-symbolic</property>
                   </object>
                 </child>
               </object>
+              <packing>
+                <property name="pack_type">end</property>
+              </packing>
             </child>
             <child>
-              <object class="GtkButton" id="forward_button">
+              <object class="GtkMenuButton" id="calendars_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="action-name">win.next-date</property>
-                <accelerator key="Right" modifiers="GDK_MOD1_MASK" signal="clicked"/>
-                <accelerator key="Page_Down" signal="clicked"/>
-                <child>
-                  <object class="GtkImage" id="go_next_image">
-                    <property name="visible">True</property>
-                    <property name="icon_name">go-next-symbolic</property>
-                  </object>
-                </child>
+                <property name="popover">calendar_popover</property>
+                <property name="tooltip_text" translatable="yes">Manage your calendars</property>
               </object>
+              <packing>
+                <property name="pack_type">end</property>
+              </packing>
             </child>
-            <style>
-              <class name="linked"/>
-            </style>
-          </object>
-        </child>
-        <child type="title">
-          <object class="GtkStackSwitcher" id="views_switcher">
-            <property name="visible">True</property>
-            <property name="stack">views_stack</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkMenuButton" id="menu_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="popover">win_menu</property>
-            <property name="receives_default">True</property>
             <child>
-              <object class="GtkImage" id="menu_image">
+              <object class="GcalSearchButton" id="search_button">
                 <property name="visible">True</property>
-                <property name="icon_name">open-menu-symbolic</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="tooltip_text" translatable="yes" context="tooltip">Search for events</property>
               </object>
+              <packing>
+                <property name="pack_type">end</property>
+              </packing>
             </child>
           </object>
-          <packing>
-            <property name="pack_type">end</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkMenuButton" id="calendars_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="popover">calendar_popover</property>
-            <property name="tooltip_text" translatable="yes">Manage your calendars</property>
-          </object>
-          <packing>
-            <property name="pack_type">end</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GcalSearchButton" id="search_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="tooltip_text" translatable="yes" context="tooltip">Search for events</property>
-          </object>
-          <packing>
-            <property name="pack_type">end</property>
-          </packing>
         </child>
       </object>
     </child>
@@ -293,14 +302,14 @@
     <signal name="response" handler="edit_dialog_closed" object="GcalWindow" swapped="no"/>
     <signal name="delete-event" handler="gtk_widget_hide_on_delete" object="GcalWindow" swapped="no"/>
   </object>
-
+  
   <object class="GtkPopoverMenu" id="win_menu">
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="margin">12</property>
         <property name="orientation">vertical</property>
-
+        
         <!-- About -->
         <child>
           <object class="GtkModelButton">
@@ -309,7 +318,7 @@
             <property name="text" translatable="yes">_Online Accounts…</property>
           </object>
         </child>
-
+        
         <!-- Weather -->
         <child>
           <object class="GtkModelButton">
@@ -318,13 +327,13 @@
             <property name="text" translatable="yes">_Weather</property>
           </object>
         </child>
-
+        
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
           </object>
         </child>
-
+        
         <!-- Shortcuts -->
         <child>
           <object class="GtkModelButton">
@@ -333,7 +342,7 @@
             <property name="text" translatable="yes">_Keyboard Shortcuts</property>
           </object>
         </child>
-
+        
         <!-- About -->
         <child>
           <object class="GtkModelButton">
@@ -344,7 +353,7 @@
         </child>
       </object>
     </child>
-
+    
     <!-- Weather submenu -->
     <child>
       <object class="GcalWeatherSettings" id="weather_settings">
@@ -355,6 +364,6 @@
         <property name="submenu">weather</property>
       </packing>
     </child>
-
+    
   </object>
 </interface>

@@ -23,14 +23,14 @@
 #include "gcal-enums.h"
 #include "gcal-utils.h"
 
-#include <gtk/gtk.h>
+#include <handy.h>
 
 G_BEGIN_DECLS
 
 
 #define GCAL_TYPE_WINDOW                    (gcal_window_get_type ())
 
-G_DECLARE_FINAL_TYPE (GcalWindow, gcal_window, GCAL, WINDOW, GtkApplicationWindow)
+G_DECLARE_FINAL_TYPE (GcalWindow, gcal_window, GCAL, WINDOW, HdyApplicationWindow)
 
 GtkWidget*           gcal_window_new_with_date                  (GcalApplication     *app,
                                                                  GDateTime           *date);

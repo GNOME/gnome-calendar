@@ -88,7 +88,7 @@ typedef struct
 
 struct _GcalWindow
 {
-  GtkApplicationWindow parent;
+  HdyApplicationWindow parent;
 
   /* timeout ids */
   guint               notification_timeout;
@@ -179,7 +179,7 @@ enum
   gtk_application_set_accels_for_action (GTK_APPLICATION (app), action, tmp);\
 }
 
-G_DEFINE_TYPE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
+G_DEFINE_TYPE (GcalWindow, gcal_window, HDY_TYPE_APPLICATION_WINDOW)
 
 static GParamSpec* properties[N_PROPS] = { NULL, };
 
