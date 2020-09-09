@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-01-26 13:15+0000\n"
-"PO-Revision-Date: 2020-02-09 14:41+0200\n"
+"POT-Creation-Date: 2020-05-26 14:15+0000\n"
+"PO-Revision-Date: 2020-09-09 17:43+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -122,7 +122,7 @@ msgid "Use GNOME night light setting to activate night-mode."
 msgstr "Käytä Gnomen yövaloasetusta yötilan aktivointiin."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1878
+#: src/core/gcal-event.c:1849
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -131,14 +131,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1886
+#: src/core/gcal-event.c:1857
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1902 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1873 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -192,7 +192,7 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "Kalenteri <b>%s</b> poistettu"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:705 src/gui/gcal-window.c:709
+#: src/gui/gcal-window.c:722 src/gui/gcal-window.c:726
 msgid "Undo"
 msgstr "Kumoa"
 
@@ -200,11 +200,11 @@ msgstr "Kumoa"
 msgid "Add Calendar…"
 msgstr "Lisää kalenteri…"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:491
+#: src/gui/calendar-management/gcal-new-calendar-page.c:505
 msgid "New Calendar"
 msgstr "Uusi kalenteri"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:653
+#: src/gui/calendar-management/gcal-new-calendar-page.c:667
 msgid "Calendar files"
 msgstr "Kalenteritiedostot"
 
@@ -428,7 +428,7 @@ msgid "Yesterday"
 msgstr "Eilen"
 
 #: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
-#: src/views/gcal-year-view.c:279 src/views/gcal-year-view.c:557
+#: src/views/gcal-year-view.c:282 src/views/gcal-year-view.c:560
 #: src/views/gcal-year-view.ui:88
 msgid "Today"
 msgstr "Tänään"
@@ -449,7 +449,6 @@ msgstr "Tämä %A"
 #.
 #: src/gui/gcal-edit-dialog.c:468
 #, c-format
-#| msgid "to %1$s %2$s"
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
@@ -515,15 +514,15 @@ msgstr "Vuosittain"
 
 #: src/gui/gcal-edit-dialog.ui:372
 msgid "End Repeat"
-msgstr "Lopeta toisto"
+msgstr "Toiston lopetus"
 
 #: src/gui/gcal-edit-dialog.ui:382
 msgid "Forever"
-msgstr "Ikuisesti"
+msgstr "Ei lopetusta"
 
 #: src/gui/gcal-edit-dialog.ui:383
 msgid "No. of occurrences"
-msgstr "Toistokertoja"
+msgstr "Toistokertojen mukaan"
 
 #: src/gui/gcal-edit-dialog.ui:384
 msgid "Until Date"
@@ -866,19 +865,19 @@ msgstr "Muokkaa tietoja…"
 msgid ":"
 msgstr ":"
 
-#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:475
+#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:440
 msgid "AM"
 msgstr "AM"
 
-#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:475
+#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:440
 msgid "PM"
 msgstr "PM"
 
-#: src/gui/gcal-window.c:705
+#: src/gui/gcal-window.c:722
 msgid "Another event deleted"
 msgstr "Toinen tapahtuma poistettu"
 
-#: src/gui/gcal-window.c:709
+#: src/gui/gcal-window.c:726
 msgid "Event deleted"
 msgstr "Tapahtuma poistettu"
 
@@ -1032,11 +1031,11 @@ msgstr "_Kaikkiin tapahtumiin"
 msgid "New Event…"
 msgstr "Uusi tapahtuma…"
 
-#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:313
+#: src/views/gcal-week-grid.c:680 src/views/gcal-week-view.c:293
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/views/gcal-week-grid.c:756 src/views/gcal-week-view.c:316
+#: src/views/gcal-week-grid.c:683 src/views/gcal-week-view.c:296
 msgid "00:00"
 msgstr "00:00"
 
@@ -1055,14 +1054,14 @@ msgstr "viikko %d"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:291
 msgid "%B %d…"
 msgstr "%e. %Bta…"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:560
+#: src/views/gcal-year-view.c:297 src/views/gcal-year-view.c:563
 msgid "%B %d"
 msgstr "%e. %Bta"
 
