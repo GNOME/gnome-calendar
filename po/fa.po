@@ -2,22 +2,22 @@
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Amir Farsi <amir_farsi@ymail.com>, 2013.
-# Arash Mousavi <mousavi.arash@gmail.com>, 2013, 2015, 2016, 2017.
-# Danial Behzadi <dani.behzi@ubuntu.com>, 2018, 2019, 2020.
+# Arash Mousavi <mousavi.arash@gmail.com>, 2013-2017.
+# Danial Behzadi <dani.behzi@ubuntu.com>, 2018-2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-12-06 19:37+0000\n"
-"PO-Revision-Date: 2020-02-07 15:35+0000\n"
+"POT-Creation-Date: 2020-05-26 14:15+0000\n"
+"PO-Revision-Date: 2020-09-09 12:12+0000\n"
 "Last-Translator: Arash Mousavi <mousavi.arash@gmail.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.4.1\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
@@ -56,7 +56,7 @@ msgstr "نمای هفتگی"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
 msgid "Search for events"
-msgstr "جست‌وجو برای رویدادها"
+msgstr "جست‌وجوی رویدادها"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
 msgid "Calendar management"
@@ -64,7 +64,7 @@ msgstr "مدیریت تقویم"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
-msgstr "دسترسی و مدیریت تقویم‌هایتان"
+msgstr "نمایش و مدیریت تقویم‌هایتان"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in.in:13
@@ -124,7 +124,7 @@ msgid "Use GNOME night light setting to activate night-mode."
 msgstr "استفاده از نور شب گنوم برای فعّال کردن حالت شب."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1878
+#: src/core/gcal-event.c:1849
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -133,14 +133,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1886
+#: src/core/gcal-event.c:1857
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1902 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1873 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -193,8 +193,8 @@ msgstr "مدیریت تقویم‌ها"
 msgid "Calendar <b>%s</b> removed"
 msgstr "تقویم <b>%s</b> حذف شد"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:31 src/gui/gcal-window.c:705
-#: src/gui/gcal-window.c:709
+#: src/gui/calendar-management/gcal-calendars-page.ui:31 src/gui/gcal-window.c:722
+#: src/gui/gcal-window.c:726
 msgid "Undo"
 msgstr "برگردان"
 
@@ -202,11 +202,11 @@ msgstr "برگردان"
 msgid "Add Calendar…"
 msgstr "افزودن تقویم…"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:491
+#: src/gui/calendar-management/gcal-new-calendar-page.c:505
 msgid "New Calendar"
 msgstr "تقویم جدید"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:653
+#: src/gui/calendar-management/gcal-new-calendar-page.c:667
 msgid "Calendar files"
 msgstr "پرونده‌های تقویم"
 
@@ -366,15 +366,15 @@ msgstr "نمایش شمارهٔ نگارش"
 
 #: src/gui/gcal-application.c:73
 msgid "Enable debug messages"
-msgstr "فعال‌سازی پیام‌های رفع‌اشکال"
+msgstr "به کار انداختن پیام‌های رفع‌اشکال"
 
 #: src/gui/gcal-application.c:78
 msgid "Open calendar on the passed date"
-msgstr "باز کردن تقویم در تاریخ رد شده"
+msgstr "گشودن تقویم در تاریخ رد شده"
 
 #: src/gui/gcal-application.c:83
 msgid "Open calendar showing the passed event"
-msgstr "بازکردن تقویم با نمایش تاریخ رد شده"
+msgstr "گشودن تقویم با نمایش تاریخ رد شده"
 
 #: src/gui/gcal-application.c:234
 #, c-format
@@ -413,14 +413,14 @@ msgstr "انجام شد"
 #: src/gui/gcal-edit-dialog.c:416
 #, c-format
 msgid "Last %A"
-msgstr "آخرین %A"
+msgstr "%Aٔ پیش"
 
 #: src/gui/gcal-edit-dialog.c:420
 msgid "Yesterday"
 msgstr "دیروز"
 
 #: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
-#: src/views/gcal-year-view.c:279 src/views/gcal-year-view.c:557
+#: src/views/gcal-year-view.c:282 src/views/gcal-year-view.c:560
 #: src/views/gcal-year-view.ui:88
 msgid "Today"
 msgstr "امروز"
@@ -857,19 +857,19 @@ msgstr "ویرایش جزییات…"
 msgid ":"
 msgstr ":"
 
-#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:475
+#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:440
 msgid "AM"
 msgstr "صبح"
 
-#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:475
+#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:440
 msgid "PM"
 msgstr "عصر"
 
-#: src/gui/gcal-window.c:705
+#: src/gui/gcal-window.c:722
 msgid "Another event deleted"
 msgstr "رویدادی دیگر حذف شد"
 
-#: src/gui/gcal-window.c:709
+#: src/gui/gcal-window.c:726
 msgid "Event deleted"
 msgstr "رویداد حذف شد"
 
@@ -1023,11 +1023,11 @@ msgstr "_تمام رویدادها"
 msgid "New Event…"
 msgstr "رویداد جدید…"
 
-#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:313
+#: src/views/gcal-week-grid.c:680 src/views/gcal-week-view.c:293
 msgid "00 AM"
 msgstr "نیمه‌شب"
 
-#: src/views/gcal-week-grid.c:756 src/views/gcal-week-view.c:316
+#: src/views/gcal-week-grid.c:683 src/views/gcal-week-view.c:296
 msgid "00:00"
 msgstr "۰۰:۰۰"
 
@@ -1045,14 +1045,14 @@ msgstr "هفتهٔ %Id"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:291
 msgid "%B %d…"
 msgstr "%Od %OB…"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:560
+#: src/views/gcal-year-view.c:297 src/views/gcal-year-view.c:563
 msgid "%B %d"
 msgstr "%Od %OB"
 
