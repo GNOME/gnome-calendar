@@ -1,7 +1,7 @@
 project(
   'gnome-calendar',
                'c',
-           version: '3.38.0',
+           version: '40.alpha',
            license: 'GPL3+',
      meson_version: '>= 0.50.0'
 )
@@ -14,8 +14,7 @@ project(
 calendar_version = meson.project_version()
 version_array = calendar_version.split('.')
 calendar_major_version = version_array[0].to_int()
-calendar_minor_version = version_array[1].to_int()
-calendar_micro_version = version_array[2].to_int()
+calendar_minor_version = version_array[1]
 
 
 #################
@@ -52,7 +51,10 @@ else
   application_id = 'org.gnome.Calendar.@0@'.format(profile)
 endif
 calendar_buildtype = get_option('buildtype')
-calendar_debug = calendar_minor_version.is_odd() or calendar_buildtype.contains('debug')
+development_release = calendar_minor_version.startswith('alpha') or \
+                      calendar_minor_version.startswith('beta') or \
+                      calendar_minor_version.startswith('rc')
+calendar_debug = development_release or calendar_buildtype.contains('debug')
 enable_tracing = get_option('tracing')
 
 cc = meson.get_compiler('c')
