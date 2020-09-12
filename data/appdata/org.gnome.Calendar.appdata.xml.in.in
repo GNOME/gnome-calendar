@@ -21,19 +21,15 @@
 
   <screenshots>
     <screenshot type="default">
-      <image width="1200" height="675">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/default.png</image>
+      <image width="1560" height="1029">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/default.png</image>
     </screenshot>
     <screenshot>
       <caption>Week view</caption>
-      <image width="1200" height="675">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/week-view.png</image>
+      <image width="1560" height="1029">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/week-view.png</image>
     </screenshot>
     <screenshot>
-      <caption>Search for events</caption>
-      <image width="1200" height="675">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/search.png</image>
-    </screenshot>
-    <screenshot>
-      <caption>Calendar management</caption>
-      <image width="1202" height="681">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/calendar-management.png</image>
+      <caption>Year view</caption>
+      <image width="1560" height="1029">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/year-view.png</image>
     </screenshot>
   </screenshots>
 
