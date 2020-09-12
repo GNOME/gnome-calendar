@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-06-15 19:19+0000\n"
-"PO-Revision-Date: 2020-06-25 14:55+0500\n"
+"POT-Creation-Date: 2020-09-12 15:51+0000\n"
+"PO-Revision-Date: 2020-09-12 20:54+0500\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.3.1\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -55,12 +55,8 @@ msgid "Week view"
 msgstr "Апта көрінісі"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Search for events"
-msgstr "Оқиғаларды іздеу"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
-msgid "Calendar management"
-msgstr "Күнтізбені басқару"
+msgid "Year view"
+msgstr "Жыл көрінісі"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -126,9 +122,8 @@ msgstr ""
 "қолданыңыз."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1849
+#: src/core/gcal-event.c:1882
 #, c-format
-#| msgid "%1$s %2$d"
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
 
@@ -136,15 +131,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1857
+#: src/core/gcal-event.c:1890
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1873 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1906 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -296,8 +290,6 @@ msgstr[0] "%1$u күн, %2$u сағат және %3$u минут бұрын"
 
 #: src/gui/gcal-alarm-row.c:114
 #, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
 msgstr[0] "%1$u күн және %2$u сағат бұрын"
@@ -322,8 +314,6 @@ msgstr[0] "%1$u күн және %2$u минут бұрын"
 
 #: src/gui/gcal-alarm-row.c:148
 #, c-format
-#| msgid "%d day before"
-#| msgid_plural "%d days before"
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "%1$u күн бұрын"
@@ -336,24 +326,18 @@ msgstr[0] "%1$u сағат және %2$u минут бұрын"
 
 #: src/gui/gcal-alarm-row.c:170
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "%1$u сағат және %2$u минут бұрын"
 
 #: src/gui/gcal-alarm-row.c:180
 #, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "%1$u сағат бұрын"
 
 #: src/gui/gcal-alarm-row.c:192
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "%1$u минут бұрын"
@@ -421,27 +405,27 @@ msgid "Done"
 msgstr "Дайын"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:416
+#: src/gui/gcal-edit-dialog.c:417
 #, c-format
 msgid "Last %A"
 msgstr "Соңғы %A"
 
-#: src/gui/gcal-edit-dialog.c:420
+#: src/gui/gcal-edit-dialog.c:421
 msgid "Yesterday"
 msgstr "Кеше"
 
-#: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
+#: src/gui/gcal-edit-dialog.c:425 src/gui/gcal-window.ui:180
 #: src/views/gcal-year-view.c:282 src/views/gcal-year-view.c:560
 #: src/views/gcal-year-view.ui:88
 msgid "Today"
 msgstr "Бүгін"
 
-#: src/gui/gcal-edit-dialog.c:428
+#: src/gui/gcal-edit-dialog.c:429
 msgid "Tomorrow"
 msgstr "Ертең"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:438
+#: src/gui/gcal-edit-dialog.c:439
 #, c-format
 msgid "This %A"
 msgstr "Бұл %A"
@@ -450,13 +434,12 @@ msgstr "Бұл %A"
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
-#: src/gui/gcal-edit-dialog.c:468
+#: src/gui/gcal-edit-dialog.c:469
 #, c-format
-#| msgid "%1$s %2$d"
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
-#: src/gui/gcal-edit-dialog.c:1512 src/gui/gcal-quick-add-popover.c:687
+#: src/gui/gcal-edit-dialog.c:1529 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
 msgstr "Атаусыз оқиға"
 
@@ -1083,6 +1066,12 @@ msgstr "Ауа райын көрсету"
 #: src/weather/gcal-weather-settings.ui:53
 msgid "Automatic Location"
 msgstr "Автоматты орны"
+
+#~ msgid "Search for events"
+#~ msgstr "Оқиғаларды іздеу"
+
+#~ msgid "Calendar management"
+#~ msgstr "Күнтізбені басқару"
 
 #~ msgid "org.gnome.Calendar"
 #~ msgstr "org.gnome.Calendar"
