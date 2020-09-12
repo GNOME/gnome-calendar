@@ -3,7 +3,7 @@ project(
                'c',
            version: '40.alpha',
            license: 'GPL3+',
-     meson_version: '>= 0.50.0'
+     meson_version: '>= 0.53.0'
 )
 
 
@@ -201,13 +201,11 @@ configure_file(
   configuration: config_h
 )
 
-output = '\n\n      GNOME Calendar ' + calendar_version + '\n'
-output += '      =========================\n\n'
-output += '          Source ..........................: ' + meson.source_root() + '\n'
-output += '          Prefix ..........................: ' + calendar_prefix + '\n'
-output += '          Compiler ........................: ' + cc.get_id() + '\n\n'
-output += '      Development options\n'
-output += '          Enable Debug: ...................: ' + calendar_debug.to_string() + '\n'
-output += '          Enable Tracing: .................: ' + enable_tracing.to_string() + '\n'
-output += '    Now type "ninja -C ' + meson.build_root() + '" to build ' + meson.project_name() + '\n\n'
-message(output)
+summary({
+  'Source': meson.source_root(),
+  'Prefix': calendar_prefix,
+})
+summary({
+  'Debug': calendar_debug,
+  'Tracing': enable_tracing,
+}, section: 'Development')
