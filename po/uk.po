@@ -1,18 +1,19 @@
 # Ukrainian translation for gnome-calendar.
 # Copyright (C) 2015 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
+#
 # Mykola Tkach <Stuartlittle1970@gmail.com>, 2016.
 # Daniel Korostil <ted.korostiled@gmail.com>, 2015-2019.
 # Danylo Korostil <ted.korostiled@gmail.com>, 2020.
-#
+# Yuri Chornoivan <yurchor@ukr.net>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-12-16 14:30+0000\n"
-"PO-Revision-Date: 2020-02-27 12:42+0200\n"
-"Last-Translator: Danylo Korostil <ted.korostiled@gmail.com>\n"
-"Language-Team:  <trans-uk@lists.fedoraproject.org>\n"
+"POT-Creation-Date: 2020-09-12 15:51+0000\n"
+"PO-Revision-Date: 2020-09-12 18:52+0300\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1: 2);\n"
-"X-Generator: Gtranslator 3.34.0\n"
+"X-Generator: Lokalize 20.11.70\n"
 "X-Project-Style: gnome\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
@@ -59,12 +60,10 @@ msgid "Week view"
 msgstr "Перегляд тижня"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Search for events"
-msgstr "Пошук подій"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
-msgid "Calendar management"
-msgstr "Керування календарем"
+#| msgctxt "shortcut window"
+#| msgid "Year view"
+msgid "Year view"
+msgstr "Перегляд року"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -128,7 +127,7 @@ msgstr ""
 "Використовуйте параметри нічного світла GNOME, щоб увімкнути нічний режим."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1878
+#: src/core/gcal-event.c:1882
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -137,14 +136,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1886
+#: src/core/gcal-event.c:1890
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1902 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1906 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -198,7 +197,7 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "Календар <b>%s</b> вилучено"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:705 src/gui/gcal-window.c:709
+#: src/gui/gcal-window.c:722 src/gui/gcal-window.c:726
 msgid "Undo"
 msgstr "Повернути"
 
@@ -206,11 +205,11 @@ msgstr "Повернути"
 msgid "Add Calendar…"
 msgstr "Додати календар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:491
+#: src/gui/calendar-management/gcal-new-calendar-page.c:505
 msgid "New Calendar"
 msgstr "Календар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:653
+#: src/gui/calendar-management/gcal-new-calendar-page.c:667
 msgid "Calendar files"
 msgstr "Файл календаря"
 
@@ -453,27 +452,27 @@ msgid "Done"
 msgstr "Зроблено"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:416
+#: src/gui/gcal-edit-dialog.c:417
 #, c-format
 msgid "Last %A"
 msgstr "Останній %A"
 
-#: src/gui/gcal-edit-dialog.c:420
+#: src/gui/gcal-edit-dialog.c:421
 msgid "Yesterday"
 msgstr "Учора"
 
-#: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
-#: src/views/gcal-year-view.c:279 src/views/gcal-year-view.c:557
+#: src/gui/gcal-edit-dialog.c:425 src/gui/gcal-window.ui:180
+#: src/views/gcal-year-view.c:282 src/views/gcal-year-view.c:560
 #: src/views/gcal-year-view.ui:88
 msgid "Today"
 msgstr "Сьогодні"
 
-#: src/gui/gcal-edit-dialog.c:428
+#: src/gui/gcal-edit-dialog.c:429
 msgid "Tomorrow"
 msgstr "Завтра"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:438
+#: src/gui/gcal-edit-dialog.c:439
 #, c-format
 msgid "This %A"
 msgstr "Цей %A"
@@ -482,12 +481,12 @@ msgstr "Цей %A"
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
-#: src/gui/gcal-edit-dialog.c:468
+#: src/gui/gcal-edit-dialog.c:469
 #, c-format
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
-#: src/gui/gcal-edit-dialog.c:1512 src/gui/gcal-quick-add-popover.c:687
+#: src/gui/gcal-edit-dialog.c:1529 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
 msgstr "Безіменна подія"
 
@@ -900,19 +899,19 @@ msgstr "Редагувати подробиці…"
 msgid ":"
 msgstr ":"
 
-#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:475
+#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:440
 msgid "AM"
 msgstr "AM"
 
-#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:475
+#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:440
 msgid "PM"
 msgstr "PM"
 
-#: src/gui/gcal-window.c:705
+#: src/gui/gcal-window.c:722
 msgid "Another event deleted"
 msgstr "Іншу подію вилучено"
 
-#: src/gui/gcal-window.c:709
+#: src/gui/gcal-window.c:726
 msgid "Event deleted"
 msgstr "Подію вилучено"
 
@@ -1066,11 +1065,11 @@ msgstr "Для _всіх подій"
 msgid "New Event…"
 msgstr "Створити подію"
 
-#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:313
+#: src/views/gcal-week-grid.c:680 src/views/gcal-week-view.c:293
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/views/gcal-week-grid.c:756 src/views/gcal-week-view.c:316
+#: src/views/gcal-week-grid.c:683 src/views/gcal-week-view.c:296
 msgid "00:00"
 msgstr "00:00"
 
@@ -1091,14 +1090,14 @@ msgstr "тиждень %d"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:291
 msgid "%B %d…"
 msgstr "%B %d"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:560
+#: src/views/gcal-year-view.c:297 src/views/gcal-year-view.c:563
 msgid "%B %d"
 msgstr "%B %d"
 
@@ -1117,6 +1116,12 @@ msgstr "Показати погоду"
 #: src/weather/gcal-weather-settings.ui:53
 msgid "Automatic Location"
 msgstr "Автоматичне визначення місцевості"
+
+#~ msgid "Search for events"
+#~ msgstr "Пошук подій"
+
+#~ msgid "Calendar management"
+#~ msgstr "Керування календарем"
 
 #~ msgid "List of the disabled sources"
 #~ msgstr "Перелік вимкнених джерел"
