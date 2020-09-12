@@ -45,6 +45,16 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2020-09-12" version="3.38.0">
+      <description>
+        <p>
+          GNOME Calendar 3.38 release is here! This release brings stability
+          improvements and more security by preventing data loss when moving
+          events to other calendars.
+        </p>
+      </description>
+    </release>
+
     <release date="2020-03-06" version="3.36.0">
       <description>
         <p>GNOME Calendar 3.36 release is here!</p>
