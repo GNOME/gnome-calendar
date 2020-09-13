@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-08-19 04:14+0000\n"
-"PO-Revision-Date: 2020-08-21 17:14+0200\n"
+"POT-Creation-Date: 2020-09-13 18:22+0000\n"
+"PO-Revision-Date: 2020-09-13 21:12+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -57,12 +57,8 @@ msgid "Week view"
 msgstr "Tedenski pogled"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Search for events"
-msgstr "Iskanje dogodkov"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
-msgid "Calendar management"
-msgstr "Upravljanje s koledarjem"
+msgid "Year view"
+msgstr "Letni pogled"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -1124,6 +1120,12 @@ msgstr "Pokaži vremensko napoved"
 #: src/weather/gcal-weather-settings.ui:53
 msgid "Automatic Location"
 msgstr "Samodejno določi mesto"
+
+#~ msgid "Search for events"
+#~ msgstr "Iskanje dogodkov"
+
+#~ msgid "Calendar management"
+#~ msgstr "Upravljanje s koledarjem"
 
 #~ msgid "Date"
 #~ msgstr "Datum"
