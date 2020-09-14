@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-06-15 17:53+0000\n"
-"PO-Revision-Date: 2020-05-23 13:32+0800\n"
+"POT-Creation-Date: 2020-09-12 15:56+0000\n"
+"PO-Revision-Date: 2020-09-13 20:04-0400\n"
 "Last-Translator: Dingzhong Chen <wsxy162@gmail.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Launchpad-Export-Date: 2016-03-22 14:52+0000\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -59,12 +59,8 @@ msgid "Week view"
 msgstr "周视图"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Search for events"
-msgstr "搜索事件"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
-msgid "Calendar management"
-msgstr "日历管理"
+msgid "Year view"
+msgstr "年视图"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -126,7 +122,7 @@ msgid "Use GNOME night light setting to activate night-mode."
 msgstr "使用 GNOME 夜光设置激活夜间模式。"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1870
+#: src/core/gcal-event.c:1882
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -135,14 +131,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1878
+#: src/core/gcal-event.c:1890
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1894 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1906 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s，%2$s – %3$s"
@@ -412,27 +408,27 @@ msgid "Done"
 msgstr "完成"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:416
+#: src/gui/gcal-edit-dialog.c:417
 #, c-format
 msgid "Last %A"
 msgstr "上周的%A"
 
-#: src/gui/gcal-edit-dialog.c:420
+#: src/gui/gcal-edit-dialog.c:421
 msgid "Yesterday"
 msgstr "昨天"
 
-#: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
+#: src/gui/gcal-edit-dialog.c:425 src/gui/gcal-window.ui:180
 #: src/views/gcal-year-view.c:282 src/views/gcal-year-view.c:560
 #: src/views/gcal-year-view.ui:88
 msgid "Today"
 msgstr "今天"
 
-#: src/gui/gcal-edit-dialog.c:428
+#: src/gui/gcal-edit-dialog.c:429
 msgid "Tomorrow"
 msgstr "明天"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:438
+#: src/gui/gcal-edit-dialog.c:439
 #, c-format
 msgid "This %A"
 msgstr "本周的%A"
@@ -441,12 +437,12 @@ msgstr "本周的%A"
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
-#: src/gui/gcal-edit-dialog.c:468
+#: src/gui/gcal-edit-dialog.c:469
 #, c-format
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
-#: src/gui/gcal-edit-dialog.c:1516 src/gui/gcal-quick-add-popover.c:687
+#: src/gui/gcal-edit-dialog.c:1529 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
 msgstr "未命名事件"
 
@@ -1071,6 +1067,12 @@ msgstr "显示天气"
 #: src/weather/gcal-weather-settings.ui:53
 msgid "Automatic Location"
 msgstr "自动定位"
+
+#~ msgid "Search for events"
+#~ msgstr "搜索事件"
+
+#~ msgid "Calendar management"
+#~ msgstr "日历管理"
 
 #~ msgid "Date"
 #~ msgstr "日期"
