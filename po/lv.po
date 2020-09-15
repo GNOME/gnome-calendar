@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-05-26 14:15+0000\n"
-"PO-Revision-Date: 2020-09-12 19:07+0300\n"
+"POT-Creation-Date: 2020-09-12 16:08+0000\n"
+"PO-Revision-Date: 2020-09-15 21:11+0300\n"
 "Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
 "Language: lv\n"
@@ -55,12 +55,10 @@ msgid "Week view"
 msgstr "Nedēļas skats"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Search for events"
-msgstr "Meklēt notikumus"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
-msgid "Calendar management"
-msgstr "Kalendāra pārvaldība"
+#| msgctxt "shortcut window"
+#| msgid "Year view"
+msgid "Year view"
+msgstr "Gada skats"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -124,7 +122,7 @@ msgid "Use GNOME night light setting to activate night-mode."
 msgstr "Izmantot GNOME nakts gaismas iestatījumus, lai ieslēgtu nakts režīmu."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1849
+#: src/core/gcal-event.c:1882
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -133,14 +131,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1857
+#: src/core/gcal-event.c:1890
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1873 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1906 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -300,8 +298,6 @@ msgstr[2] "%1$u dienas, %2$u stundas un %3$u minūtes pirms"
 
 #: src/gui/gcal-alarm-row.c:114
 #, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
 msgstr[0] "%1$u dienu un %2$u stundu pirms"
@@ -310,8 +306,6 @@ msgstr[2] "%1$u dienu un %2$u stundas pirms"
 
 #: src/gui/gcal-alarm-row.c:118
 #, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
 msgstr[0] "%1$u dienas un %2$u stundu pirms"
@@ -320,8 +314,6 @@ msgstr[2] "%1$u dienas un %2$u stundas pirms"
 
 #: src/gui/gcal-alarm-row.c:134
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
 msgstr[0] "%1$u dienu un %2$u minūti pirms"
@@ -330,8 +322,6 @@ msgstr[2] "%1$u dienu un %2$u minūtes pirms"
 
 #: src/gui/gcal-alarm-row.c:138
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
 msgstr[0] "%1$u dienas %2$u minūti pirms"
@@ -340,8 +330,6 @@ msgstr[2] "%1$u dienas %2$u minūtes pirms"
 
 #: src/gui/gcal-alarm-row.c:148
 #, c-format
-#| msgid "%d day before"
-#| msgid_plural "%d days before"
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "%1$u dienu pirms"
@@ -350,8 +338,6 @@ msgstr[2] "%1$u dienas pirms"
 
 #: src/gui/gcal-alarm-row.c:166
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "%1$u stundu un %2$u minūti pirms"
@@ -360,8 +346,6 @@ msgstr[2] "%1$u stundu un %2$u minūtes pirms"
 
 #: src/gui/gcal-alarm-row.c:170
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "%1$u stundas un %2$u minūti pirms"
@@ -370,8 +354,6 @@ msgstr[2] "%1$u stundas un %2$u minūtes pirms"
 
 #: src/gui/gcal-alarm-row.c:180
 #, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "%1$u stundu pirms"
@@ -380,8 +362,6 @@ msgstr[2] "%1$u stundas pirms"
 
 #: src/gui/gcal-alarm-row.c:192
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "%1$u minūti pirms"
@@ -451,29 +431,27 @@ msgid "Done"
 msgstr "Pabeigts"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:416
+#: src/gui/gcal-edit-dialog.c:417
 #, c-format
 msgid "Last %A"
 msgstr "Pēdējā %A"
 
-#: src/gui/gcal-edit-dialog.c:420
-#| msgid "to Yesterday"
+#: src/gui/gcal-edit-dialog.c:421
 msgid "Yesterday"
 msgstr "Vakar"
 
-#: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
+#: src/gui/gcal-edit-dialog.c:425 src/gui/gcal-window.ui:180
 #: src/views/gcal-year-view.c:282 src/views/gcal-year-view.c:560
 #: src/views/gcal-year-view.ui:88
 msgid "Today"
 msgstr "Šodien"
 
-#: src/gui/gcal-edit-dialog.c:428
-#| msgid "to Tomorrow"
+#: src/gui/gcal-edit-dialog.c:429
 msgid "Tomorrow"
 msgstr "Rīt"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:438
+#: src/gui/gcal-edit-dialog.c:439
 #, c-format
 msgid "This %A"
 msgstr "Šo %A"
@@ -482,13 +460,12 @@ msgstr "Šo %A"
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
-#: src/gui/gcal-edit-dialog.c:468
+#: src/gui/gcal-edit-dialog.c:469
 #, c-format
-#| msgid "to %1$s %2$s"
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
-#: src/gui/gcal-edit-dialog.c:1512 src/gui/gcal-quick-add-popover.c:687
+#: src/gui/gcal-edit-dialog.c:1529 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
 msgstr "Nenosaukts notikums"
 
@@ -549,7 +526,6 @@ msgid "Yearly"
 msgstr "Ik gadu"
 
 #: src/gui/gcal-edit-dialog.ui:372
-#| msgid "Repeat"
 msgid "End Repeat"
 msgstr "Beigt atkārtošanu"
 
@@ -566,7 +542,6 @@ msgid "Until Date"
 msgstr "Līdz datumam"
 
 #: src/gui/gcal-edit-dialog.ui:397
-#| msgid "No. of occurrences"
 msgid "Number of Occurrences"
 msgstr "Atkārtojumu skaits"
 
@@ -579,7 +554,6 @@ msgid "Reminders"
 msgstr "Atgādinājumi"
 
 #: src/gui/gcal-edit-dialog.ui:474
-#| msgid "Add reminder…"
 msgid "Add a Reminder…"
 msgstr "Pievienot atgādinājumu…"
 
@@ -1120,6 +1094,12 @@ msgstr "Rādīt laikapstākļus"
 #: src/weather/gcal-weather-settings.ui:53
 msgid "Automatic Location"
 msgstr "Automātiska atrašanās vieta"
+
+#~ msgid "Search for events"
+#~ msgstr "Meklēt notikumus"
+
+#~ msgid "Calendar management"
+#~ msgstr "Kalendāra pārvaldība"
 
 #~ msgid "Date"
 #~ msgstr "Datums"
