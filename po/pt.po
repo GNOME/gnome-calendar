@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-09-08 20:01+0000\n"
-"PO-Revision-Date: 2020-09-12 08:44-0300\n"
+"POT-Creation-Date: 2020-09-12 15:56+0000\n"
+"PO-Revision-Date: 2020-09-16 14:53-0300\n"
 "Last-Translator: Juliano de Souza Camargo <julianosc@protonmail.com>\n"
 "Language-Team: Portuguese <>\n"
 "Language: pt\n"
@@ -60,12 +60,10 @@ msgid "Week view"
 msgstr "Vista da semana"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Search for events"
-msgstr "Procurar eventos"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
-msgid "Calendar management"
-msgstr "Gestão de agenda"
+#| msgctxt "shortcut window"
+#| msgid "Year view"
+msgid "Year view"
+msgstr "Vista de ano"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -110,7 +108,7 @@ msgstr "Tipo da visão da janela ativa, sendo o padrão: visão mensal"
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
-msgstr "Configuração do Serviço de Meteorologia"
+msgstr "Configuração do serviço de meteorologia"
 
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid ""
@@ -122,11 +120,11 @@ msgstr ""
 
 #: data/org.gnome.calendar.gschema.xml.in:31
 msgid "Follow system night light"
-msgstr "Seguir as definições de night light do sistema"
+msgstr "Seguir as definições de luz noturna do sistema"
 
 #: data/org.gnome.calendar.gschema.xml.in:32
 msgid "Use GNOME night light setting to activate night-mode."
-msgstr "Usar a definição de night light do GNOME para ativar o modo noturno"
+msgstr "Usar a definição de luz noturna do GNOME para ativar o modo noturno"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #: src/core/gcal-event.c:1882
@@ -192,7 +190,7 @@ msgstr "Remover agenda"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:359
 msgid "Manage Calendars"
-msgstr "Gerir Agendas"
+msgstr "Gerir agendas"
 
 #. Update notification label
 #: src/gui/calendar-management/gcal-calendars-page.c:389
@@ -208,12 +206,12 @@ msgstr "Desfazer"
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: src/gui/calendar-management/gcal-calendars-page.ui:97
 msgid "Add Calendar…"
-msgstr "Adicionar Agenda…"
+msgstr "Adicionar agenda…"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: src/gui/calendar-management/gcal-new-calendar-page.c:505
 msgid "New Calendar"
-msgstr "Nova Agenda"
+msgstr "Nova agenda"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: src/gui/calendar-management/gcal-new-calendar-page.c:667
@@ -223,12 +221,12 @@ msgstr "Ficheiros de agenda"
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:33
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:41
 msgid "Calendar Name"
-msgstr "Nome da Agenda"
+msgstr "Nome da agenda"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:86
 msgid "Import a Calendar"
-msgstr "Importar Agenda"
+msgstr "Importar agenda"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:105
 msgid ""
@@ -261,7 +259,7 @@ msgstr "Utilizador"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:254
 msgid "Password"
-msgstr "Senha"
+msgstr "Palavra-passe"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:302
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:341
@@ -308,8 +306,6 @@ msgstr[1] "%1$u dias, %2$u horas, e %3$u minutos antes"
 
 #: src/gui/gcal-alarm-row.c:114
 #, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
 msgstr[0] "%1$u dia e %2$u hora antes"
@@ -317,8 +313,6 @@ msgstr[1] "%1$u dia e %2$u horas antes"
 
 #: src/gui/gcal-alarm-row.c:118
 #, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
 msgstr[0] "%1$u dias e %2$u hora antes"
@@ -326,8 +320,6 @@ msgstr[1] "%1$u dias e %2$u horas antes"
 
 #: src/gui/gcal-alarm-row.c:134
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
 msgstr[0] "%1$u dia e %2$u minuto antes"
@@ -335,8 +327,6 @@ msgstr[1] "%1$u dia e %2$u minutos antes"
 
 #: src/gui/gcal-alarm-row.c:138
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
 msgstr[0] "%1$u dias e %2$u minuto antes"
@@ -344,8 +334,6 @@ msgstr[1] "%1$u dias e %2$u minutos antes"
 
 #: src/gui/gcal-alarm-row.c:148
 #, c-format
-#| msgid "%d day before"
-#| msgid_plural "%d days before"
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "%1$u dia antes"
@@ -353,8 +341,6 @@ msgstr[1] "%1$u dias antes"
 
 #: src/gui/gcal-alarm-row.c:166
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "%1$u hora e %2$u minuto antes"
@@ -362,8 +348,6 @@ msgstr[1] "%1$u hora e %2$u minutos antes"
 
 #: src/gui/gcal-alarm-row.c:170
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "%1$u horas e %2$u minuto antes"
@@ -371,8 +355,6 @@ msgstr[1] "%1$u horas e %2$u minutos antes"
 
 #: src/gui/gcal-alarm-row.c:180
 #, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "%1$u hora antes"
@@ -380,8 +362,6 @@ msgstr[1] "%1$u horas antes"
 
 #: src/gui/gcal-alarm-row.c:192
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "%1$u minuto antes"
@@ -411,11 +391,11 @@ msgstr "Mostrar número da versão"
 
 #: src/gui/gcal-application.c:73
 msgid "Enable debug messages"
-msgstr "Ativar mensagens de depuração"
+msgstr "Ativar as mensagens de depuração"
 
 #: src/gui/gcal-application.c:78
 msgid "Open calendar on the passed date"
-msgstr "Abrir agenda em data passada"
+msgstr "Abrir a agenda em data passada"
 
 #: src/gui/gcal-application.c:83
 msgid "Open calendar showing the passed event"
@@ -432,20 +412,20 @@ msgstr ""
 "Tiago Santos <tiagofsantos81@sapo.pt>\n"
 "Pedro Albuquerque <palbuquerque73@gmail.com>\n"
 "João Nuno Matos <joaonmatos@gmail.com>\n"
-"Juliano S. Camargo <julianosc@pm.me>"
+"Juliano de Souza Camargo <julianosc@pm.me>"
 
 #: src/gui/gcal-calendar-popover.ui:43
 msgid "_Synchronize Calendars"
-msgstr "_Sincronizar Agendas"
+msgstr "_Sincronizar agendas"
 
 #: src/gui/gcal-calendar-popover.ui:51
 msgid "Manage Calendars…"
-msgstr "Gerir Agendas…"
+msgstr "Gerir agendas…"
 
 #: src/gui/gcal-calendar-popover.ui:75
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
-msgstr "Sincronizando as agendas remotas…"
+msgstr "A sincronizar as agendas remotas…"
 
 #: src/gui/gcal-edit-dialog.c:374
 msgid "Save"
@@ -462,7 +442,6 @@ msgid "Last %A"
 msgstr "Último(a) %A"
 
 #: src/gui/gcal-edit-dialog.c:421
-#| msgid "to Yesterday"
 msgid "Yesterday"
 msgstr "Ontem"
 
@@ -473,7 +452,6 @@ msgid "Today"
 msgstr "Hoje"
 
 #: src/gui/gcal-edit-dialog.c:429
-#| msgid "to Tomorrow"
 msgid "Tomorrow"
 msgstr "Amanhã"
 
@@ -489,7 +467,6 @@ msgstr "Neste(a) %A"
 #.
 #: src/gui/gcal-edit-dialog.c:469
 #, c-format
-#| msgid "to %1$s %2$s"
 msgid "%1$s, %2$s"
 msgstr "%1$s %2$s"
 
@@ -511,7 +488,7 @@ msgstr "Agenda"
 
 #: src/gui/gcal-edit-dialog.ui:226
 msgid "All Day"
-msgstr "Dia completo"
+msgstr "Todo o dia"
 
 #: src/gui/gcal-edit-dialog.ui:247
 msgid "Starts"
@@ -554,7 +531,6 @@ msgid "Yearly"
 msgstr "Anualmente"
 
 #: src/gui/gcal-edit-dialog.ui:372
-#| msgid "Repeat"
 msgid "End Repeat"
 msgstr "Repetir até"
 
@@ -571,7 +547,6 @@ msgid "Until Date"
 msgstr "Até à data"
 
 #: src/gui/gcal-edit-dialog.ui:397
-#| msgid "No. of occurrences"
 msgid "Number of Occurrences"
 msgstr "Número de ocorrências"
 
@@ -584,7 +559,6 @@ msgid "Reminders"
 msgstr "Lembretes"
 
 #: src/gui/gcal-edit-dialog.ui:474
-#| msgid "Add reminder…"
 msgid "Add a Reminder…"
 msgstr "Adicionar um lembrete…"
 
@@ -775,7 +749,7 @@ msgstr "até hoje"
 #: src/gui/gcal-quick-add-popover.c:327
 #, c-format
 msgid "to Tomorrow"
-msgstr "até amanã"
+msgstr "até amanhã"
 
 #: src/gui/gcal-quick-add-popover.c:331
 #, c-format
@@ -953,7 +927,7 @@ msgstr "Procurar eventos"
 
 #: src/gui/gcal-window.ui:309
 msgid "_Online Accounts…"
-msgstr "Contas _Online"
+msgstr "Contas _online"
 
 #: src/gui/gcal-window.ui:318 src/weather/gcal-weather-settings.ui:12
 msgid "_Weather"
@@ -961,12 +935,12 @@ msgstr "_Meteorologia"
 
 #: src/gui/gcal-window.ui:333
 msgid "_Keyboard Shortcuts"
-msgstr "Atalhos de _Teclado"
+msgstr "Atalhos de _teclado"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: src/gui/gcal-window.ui:342
 msgid "_About Calendar"
-msgstr "_Acerca da Agenda GNOME"
+msgstr "_Acerca da Agenda"
 
 #: src/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -1074,7 +1048,7 @@ msgstr "_Todos os eventos"
 
 #: src/views/gcal-month-popover.ui:91
 msgid "New Event…"
-msgstr "Novo Evento…"
+msgstr "Novo evento…"
 
 #: src/views/gcal-week-grid.c:680 src/views/gcal-week-view.c:293
 msgid "00 AM"
@@ -1120,11 +1094,17 @@ msgstr "Adicionar evento…"
 
 #: src/weather/gcal-weather-settings.ui:30
 msgid "Show Weather"
-msgstr "Mostrar Metereologia"
+msgstr "Mostrar meteorologia"
 
 #: src/weather/gcal-weather-settings.ui:53
 msgid "Automatic Location"
-msgstr "Localização Automática"
+msgstr "Localização automática"
+
+#~ msgid "Search for events"
+#~ msgstr "Procurar eventos"
+
+#~ msgid "Calendar management"
+#~ msgstr "Gestão de agenda"
 
 #~ msgid "Date"
 #~ msgstr "Data"
