@@ -164,7 +164,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHeaderBar" id="header_bar">
+          <object class="HdyHeaderBar" id="header_bar">
             <property name="visible">True</property>
             <property name="show_close_button">True</property>
             <property name="title" translatable="yes">Calendar</property>
