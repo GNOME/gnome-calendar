@@ -11,16 +11,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-09-12 15:56+0000\n"
-"PO-Revision-Date: 2020-09-16 14:53-0300\n"
+"POT-Creation-Date: 2020-09-16 17:54+0000\n"
+"PO-Revision-Date: 2020-10-11 15:24+0100\n"
 "Last-Translator: Juliano de Souza Camargo <julianosc@protonmail.com>\n"
-"Language-Team: Portuguese <>\n"
+"Language-Team: Portuguese < >\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Generator: Gtranslator 3.36.0\n"
+"X-Generator: Gtranslator 3.38.0\n"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
@@ -60,8 +60,6 @@ msgid "Week view"
 msgstr "Vista da semana"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-#| msgctxt "shortcut window"
-#| msgid "Year view"
 msgid "Year view"
 msgstr "Vista de ano"
 
@@ -1075,14 +1073,14 @@ msgstr "semana %d"
 #. * end is unspecified.
 #: src/views/gcal-year-view.c:291
 msgid "%B %d…"
-msgstr "%B %d…"
+msgstr "%d de %B…"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
 #: src/views/gcal-year-view.c:297 src/views/gcal-year-view.c:563
 msgid "%B %d"
-msgstr "%B %d"
+msgstr "%d de %B"
 
 #: src/views/gcal-year-view.ui:133
 msgid "No events"
