@@ -195,16 +195,6 @@ is_timeline_complete (GcalTimeline *self)
 }
 
 static void
-reset_completed_calendars (GcalTimeline *self)
-{
-  gboolean was_complete = is_timeline_complete (self);
-
-  self->completed_calendars = 0;
-  if (is_timeline_complete (self) != was_complete)
-    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPLETE]);
-}
-
-static void
 add_event_to_subscriber (GcalTimelineSubscriber *subscriber,
                          GcalEvent              *event)
 {
@@ -293,8 +283,6 @@ update_range (GcalTimeline *self)
   if (range_changed)
     {
       GcalCalendarMonitor *monitor;
-
-      reset_completed_calendars (self);
 
       g_hash_table_iter_init (&iter, self->calendars);
       while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &monitor))
@@ -479,8 +467,6 @@ update_calendar_monitor_filters (GcalTimeline *self)
 {
   GcalCalendarMonitor *monitor;
   GHashTableIter iter;
-
-  reset_completed_calendars (self);
 
   g_hash_table_iter_init (&iter, self->calendars);
   while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &monitor))
@@ -1027,12 +1013,8 @@ gcal_timeline_remove_subscriber (GcalTimeline           *self,
   g_signal_handlers_disconnect_by_func (subscriber, on_subscriber_range_changed_cb, self);
   g_hash_table_remove (self->subscribers, subscriber);
 
-  /* If all subscribers were removed, reset the complete counter */
   if (g_hash_table_size (self->subscribers) == 0)
-    {
-      g_queue_clear_full (self->event_queue, (GDestroyNotify) queue_data_free);
-      reset_completed_calendars (self);
-    }
+    g_queue_clear_full (self->event_queue, (GDestroyNotify) queue_data_free);
 
   gcal_range_tree_remove_data (self->subscriber_ranges, subscriber);
   update_range (self);
