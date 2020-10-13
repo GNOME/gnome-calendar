@@ -70,7 +70,7 @@ struct _GcalTimeline
   gchar              *filter;
 
   GHashTable         *calendars; /* GcalCalendar* -> GcalCalendarMonitor* */
-  gint                completed_calendars;
+  guint               completed_calendars;
 
   GHashTable         *subscribers; /* GcalTimelineSubscriber* -> SubscriberData* */
   GcalRangeTree      *subscriber_ranges;
