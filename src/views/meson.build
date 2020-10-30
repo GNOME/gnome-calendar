@@ -1,5 +1,11 @@
 calendar_incs +=  include_directories('.')
 
+built_sources += gnome.compile_resources(
+  'views-resources',
+  'views.gresource.xml',
+  c_name: 'views',
+)
+
 sources += files(
   'gcal-month-cell.c',
   'gcal-month-popover.c',

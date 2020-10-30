@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/gnome/calendar/ui/gui">
+    <file compressed="true">gcal-alarm-row.ui</file>
+    <file compressed="true">gcal-calendar-popover.ui</file>
+    <file compressed="true">gcal-date-chooser.ui</file>
+    <file compressed="true">gcal-date-selector.ui</file>
+    <file compressed="true">gcal-edit-dialog.ui</file>
+    <file compressed="true">gcal-event-widget.ui</file>
+    <file compressed="true">gcal-quick-add-popover.ui</file>
+    <file compressed="true">gcal-multi-choice.ui</file>
+    <file compressed="true">gcal-time-selector.ui</file>
+    <file compressed="true">gcal-window.ui</file>
+  </gresource>
+</gresources>

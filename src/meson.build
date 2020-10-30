@@ -60,12 +60,6 @@ built_sources += configure_file(
   configuration: debug_conf
 )
 
-libgcal_generated_sources_dep = declare_dependency(
-  sources: built_sources,
-)
-
-gcal_deps += libgcal_generated_sources_dep
-
 
 #######################
 # Include directories #
@@ -84,9 +78,16 @@ sources = files()
 subdir('core')
 subdir('gui')
 subdir('search')
+subdir('theme')
 subdir('utils')
 subdir('views')
 subdir('weather')
+
+libgcal_generated_sources_dep = declare_dependency(
+  sources: built_sources,
+)
+
+gcal_deps += libgcal_generated_sources_dep
 
 libgcal = static_library(
                'gcal-private',

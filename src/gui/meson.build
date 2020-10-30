@@ -2,6 +2,12 @@ subdir('calendar-management')
 
 calendar_incs +=  include_directories('.')
 
+built_sources += gnome.compile_resources(
+  'gui-resources',
+  'gui.gresource.xml',
+  c_name: 'gui',
+)
+
 sources += files(
   'gcal-alarm-row.c',
   'gcal-application.c',

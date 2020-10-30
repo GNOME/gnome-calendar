@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/gnome/calendar/ui/gui/calendar-management">
+    <file compressed="true">calendar-row.ui</file>
+    <file compressed="true">gcal-calendar-management-dialog.ui</file>
+    <file compressed="true">gcal-calendars-page.ui</file>
+    <file compressed="true">gcal-edit-calendar-page.ui</file>
+    <file compressed="true">gcal-new-calendar-page.ui</file>
+  </gresource>
+</gresources>
