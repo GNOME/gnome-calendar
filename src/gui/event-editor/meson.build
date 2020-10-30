@@ -11,7 +11,7 @@ sources += files(
   'gcal-date-chooser.c',
   'gcal-date-chooser-day.c',
   'gcal-date-selector.c',
-  'gcal-edit-dialog.c',
+  'gcal-event-editor-dialog.c',
   'gcal-multi-choice.c',
   'gcal-time-selector.c',
 )

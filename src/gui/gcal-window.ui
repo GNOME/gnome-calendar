@@ -296,7 +296,7 @@
     <property name="transient_for">GcalWindow</property>
     <signal name="delete-event" handler="gtk_widget_hide_on_delete" object="GcalWindow" swapped="no" />
   </object>
-  <object class="GcalEditDialog" id="edit_dialog">
+  <object class="GcalEventEditorDialog" id="event_editor">
     <property name="visible">False</property>
     <property name="transient_for">GcalWindow</property>
     <signal name="response" handler="edit_dialog_closed" object="GcalWindow" swapped="no"/>

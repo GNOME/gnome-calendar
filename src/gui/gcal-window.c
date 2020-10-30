@@ -23,7 +23,7 @@
 #include "gcal-calendar-popover.h"
 #include "config.h"
 #include "gcal-debug.h"
-#include "gcal-edit-dialog.h"
+#include "gcal-event-editor-dialog.h"
 #include "gcal-event-widget.h"
 #include "gcal-context.h"
 #include "gcal-manager.h"
@@ -59,10 +59,10 @@
  * ## Edit dialog
  *
  * When an event is clicked, the views send the `event-activated`
- * signal. #GcalWindow responds to this signal opening #GcalEditDialog
+ * signal. #GcalWindow responds to this signal opening #GcalEventEditorDialog
  * with the clicked event.
  *
- * When #GcalEditDialog sends a response, #GcalWindow reacts by
+ * When #GcalEventEditorDialog sends a response, #GcalWindow reacts by
  * either propagating to gcal_manager_update_event(), or hiding
  * the delete event widgets from the views.
  *
@@ -122,7 +122,7 @@ struct _GcalWindow
 
   /* day, week, month, year, list */
   GtkWidget          *views [6];
-  GtkWidget          *edit_dialog;
+  GtkWidget          *event_editor;
   gboolean            subscribed;
 
   GcalContext        *context;
@@ -392,10 +392,10 @@ on_window_new_event_cb (GSimpleAction *action,
   default_calendar = gcal_manager_get_default_calendar (manager);
   event = gcal_event_new (default_calendar, comp, NULL);
 
-  gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (self->edit_dialog), TRUE);
-  gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (self->edit_dialog), event);
+  gcal_event_editor_dialog_set_event_is_new (GCAL_EVENT_EDITOR_DIALOG (self->event_editor), TRUE);
+  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (self->event_editor), event);
 
-  gtk_widget_show (self->edit_dialog);
+  gtk_widget_show (self->event_editor);
 }
 
 static void
@@ -610,10 +610,10 @@ edit_event (GcalQuickAddPopover *popover,
             GcalEvent           *event,
             GcalWindow          *window)
 {
-  gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);
-  gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
+  gcal_event_editor_dialog_set_event_is_new (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), TRUE);
+  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), event);
 
-  gtk_widget_show (window->edit_dialog);
+  gtk_widget_show (window->event_editor);
 }
 
 static void
@@ -633,10 +633,10 @@ create_event_detailed_cb (GcalView *view,
   default_calendar = gcal_manager_get_default_calendar (manager);
   event = gcal_event_new (default_calendar, comp, NULL);
 
-  gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);
-  gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
+  gcal_event_editor_dialog_set_event_is_new (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), TRUE);
+  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), event);
 
-  gtk_widget_show (window->edit_dialog);
+  gtk_widget_show (window->event_editor);
 
   g_clear_object (&comp);
 }
@@ -650,10 +650,10 @@ event_activated (GcalView        *view,
   GcalEvent *event;
 
   event = gcal_event_widget_get_event (event_widget);
-  gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), FALSE);
-  gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
+  gcal_event_editor_dialog_set_event_is_new (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), FALSE);
+  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), event);
 
-  gtk_widget_show (window->edit_dialog);
+  gtk_widget_show (window->event_editor);
 }
 
 static void
@@ -661,11 +661,11 @@ edit_dialog_closed (GtkDialog *dialog,
                     gint       response,
                     gpointer   user_data)
 {
+  GcalEventEditorDialog *edit_dialog;
   GcalRecurrenceModType mod;
   GcalCalendar *calendar;
   GcalManager *manager;
   GcalWindow *window;
-  GcalEditDialog *edit_dialog;
   GcalEvent *event;
   GcalView *view;
   GList *widgets;
@@ -674,13 +674,13 @@ edit_dialog_closed (GtkDialog *dialog,
 
   window = GCAL_WINDOW (user_data);
   manager = gcal_context_get_manager (window->context);
-  edit_dialog = GCAL_EDIT_DIALOG (dialog);
-  event = gcal_edit_dialog_get_event (edit_dialog);
+  edit_dialog = GCAL_EVENT_EDITOR_DIALOG (dialog);
+  event = gcal_event_editor_dialog_get_event (edit_dialog);
   view = GCAL_VIEW (window->views[window->active_view]);
   mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
   calendar = gcal_event_get_calendar (event);
 
-  if (!gcal_edit_dialog_get_recurrence_changed (edit_dialog) &&
+  if (!gcal_event_editor_dialog_get_recurrence_changed (edit_dialog) &&
       gcal_event_has_recurrence (event) &&
       (response != GCAL_RESPONSE_CREATE_EVENT &&
        response != GTK_RESPONSE_CANCEL &&
@@ -741,7 +741,7 @@ edit_dialog_closed (GtkDialog *dialog,
 
   gtk_widget_hide (GTK_WIDGET (dialog));
 
-  gcal_edit_dialog_set_event (edit_dialog, NULL);
+  gcal_event_editor_dialog_set_event (edit_dialog, NULL);
 
   GCAL_EXIT;
 }
@@ -880,7 +880,7 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->week_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->year_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "context", self->edit_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->event_editor, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->search_button, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
@@ -1009,7 +1009,7 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   g_type_ensure (GCAL_TYPE_CALENDAR_MANAGEMENT_DIALOG);
   g_type_ensure (GCAL_TYPE_CALENDAR_POPOVER);
-  g_type_ensure (GCAL_TYPE_EDIT_DIALOG);
+  g_type_ensure (GCAL_TYPE_EVENT_EDITOR_DIALOG);
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
   g_type_ensure (GCAL_TYPE_QUICK_ADD_POPOVER);
@@ -1062,7 +1062,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, back_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_popover);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, edit_dialog);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, event_editor);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, forward_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, main_box);
