@@ -1,4 +1,6 @@
 subdir('calendar-management')
+subdir('gtk')
+subdir('views')
 
 calendar_incs +=  include_directories('.')
 
@@ -19,6 +21,8 @@ sources += files(
   'gcal-event-widget.c',
   'gcal-multi-choice.c',
   'gcal-quick-add-popover.c',
+  'gcal-search-button.c',
   'gcal-time-selector.c',
+  'gcal-weather-settings.c',
   'gcal-window.c',
 )

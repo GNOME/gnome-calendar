@@ -26,7 +26,6 @@
 #include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-log.h"
-#include "gcal-resources.h"
 #include "gcal-shell-search-provider.h"
 #include "gcal-window.h"
 
@@ -612,8 +611,6 @@ static void
 gcal_application_init (GcalApplication *self)
 {
   GcalManager *manager;
-
-  g_resources_register (calendar_get_resource ());
 
   g_application_add_main_option_entries (G_APPLICATION (self), gcal_application_goptions);
 

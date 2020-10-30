@@ -28,14 +28,6 @@ built_sources = gnome.mkenums(
   h_template: enum_types + '.h.template'
 )
 
-gresource = files('calendar.gresource.xml')
-built_sources += gnome.compile_resources(
-  'gcal-resources',
-         gresource,
-            c_name: 'calendar',
-            export: true
-)
-
 built_sources += gnome.gdbus_codegen(
   'gcal-shell-search-provider-generated',
   shell_search_provider_dbus_interfaces,
@@ -80,7 +72,6 @@ subdir('gui')
 subdir('search')
 subdir('theme')
 subdir('utils')
-subdir('views')
 subdir('weather')
 
 libgcal_generated_sources_dep = declare_dependency(

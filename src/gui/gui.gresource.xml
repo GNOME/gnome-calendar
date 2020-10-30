@@ -10,6 +10,7 @@
     <file compressed="true">gcal-quick-add-popover.ui</file>
     <file compressed="true">gcal-multi-choice.ui</file>
     <file compressed="true">gcal-time-selector.ui</file>
+    <file compressed="true">gcal-weather-settings.ui</file>
     <file compressed="true">gcal-window.ui</file>
   </gresource>
 </gresources>
