@@ -1314,7 +1314,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-edit-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-edit-dialog.ui");
 
   /* Alarms */
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, five_minutes_button);

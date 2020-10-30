@@ -426,7 +426,7 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
                   NULL,
                   G_TYPE_NONE, 0);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-multi-choice.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-multi-choice.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, down_button);
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, up_button);
