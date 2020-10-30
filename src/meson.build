@@ -74,73 +74,19 @@ gcal_deps += libgcal_generated_sources_dep
 calendar_incs = [
   top_inc,
   include_directories('.'),
-  include_directories('core'),
-  include_directories('gui'),
-  include_directories(join_paths('gui', 'calendar-management')),
-  include_directories('search'),
-  include_directories('utils'),
-  include_directories('views'),
-  include_directories('weather'),
 ]
 
 ###################
 # Private library #
 ###################
 
-sources = files(
-  'core/gcal-calendar.c',
-  'core/gcal-calendar-monitor.c',
-  'core/gcal-clock.c',
-  'core/gcal-context.c',
-  'core/gcal-event.c',
-  'core/gcal-log.c',
-  'core/gcal-manager.c',
-  'core/gcal-night-light-monitor.c',
-  'core/gcal-range.c',
-  'core/gcal-range-tree.c',
-  'core/gcal-recurrence.c',
-  'core/gcal-shell-search-provider.c',
-  'core/gcal-timeline.c',
-  'core/gcal-timeline-subscriber.c',
-  'core/gcal-timer.c',
-  'core/gcal-time-zone-monitor.c',
-  'gui/calendar-management/gcal-calendar-management-dialog.c',
-  'gui/calendar-management/gcal-calendar-management-page.c',
-  'gui/calendar-management/gcal-calendars-page.c',
-  'gui/calendar-management/gcal-edit-calendar-page.c',
-  'gui/calendar-management/gcal-new-calendar-page.c',
-  'gui/gcal-alarm-row.c',
-  'gui/gcal-application.c',
-  'gui/gcal-calendar-popover.c',
-  'gui/gcal-date-chooser.c',
-  'gui/gcal-date-chooser-day.c',
-  'gui/gcal-date-selector.c',
-  'gui/gcal-edit-dialog.c',
-  'gui/gcal-event-widget.c',
-  'gui/gcal-multi-choice.c',
-  'gui/gcal-quick-add-popover.c',
-  'gui/gcal-time-selector.c',
-  'gui/gcal-window.c',
-  'search/gcal-search-button.c',
-  'search/gcal-search-engine.c',
-  'search/gcal-search-hit.c',
-  'search/gcal-search-hit-event.c',
-  'search/gcal-search-model.c',
-  'utils/gcal-date-time-utils.c',
-  'utils/gcal-source-discoverer.c',
-  'utils/gcal-utils.c',
-  'views/gcal-month-cell.c',
-  'views/gcal-month-popover.c',
-  'views/gcal-month-view.c',
-  'views/gcal-view.c',
-  'views/gcal-week-grid.c',
-  'views/gcal-week-header.c',
-  'views/gcal-week-view.c',
-  'views/gcal-year-view.c',
-  'weather/gcal-weather-info.c',
-  'weather/gcal-weather-service.c',
-  'weather/gcal-weather-settings.c',
-)
+sources = files()
+subdir('core')
+subdir('gui')
+subdir('search')
+subdir('utils')
+subdir('views')
+subdir('weather')
 
 libgcal = static_library(
                'gcal-private',
