@@ -51,46 +51,40 @@ struct _GcalEventEditorDialog
 {
   GtkDialog         parent;
 
-  gboolean          writable;
-
-  GcalContext      *context;
-
-  /* titlebar */
-  GtkWidget        *titlebar;
-  GtkWidget        *title_label;
-  GtkWidget        *subtitle_label;
-
-  GtkWidget        *scrolled_window;
-
+  GtkWidget              *cancel_button;
+  GtkWidget              *delete_button;
+  GtkWidget              *done_button;
+  GtkWidget              *lock;
+  GcalEventEditorSection *notes_section;
   GcalEventEditorSection *reminders_section;
   GcalEventEditorSection *schedule_section;
+  GtkWidget              *scrolled_window;
+  GtkWidget              *sources_button;
+  GtkWidget              *sources_popover;
+  GtkWidget              *source_image;
+  GtkWidget              *source_label;
+  GtkWidget              *subtitle_label;
   GcalEventEditorSection *summary_section;
-  GcalEventEditorSection *notes_section;
+  GtkWidget              *titlebar;
+  GtkWidget              *title_label;
+
+
   GcalEventEditorSection *sections[4];
 
-  GtkWidget        *lock;
-  GtkWidget        *source_image;
-  GtkWidget        *source_label;
 
-  GtkWidget        *delete_button;
-  GtkWidget        *done_button;
-  GtkWidget        *cancel_button;
-  GtkWidget        *sources_button;
-  GtkWidget        *sources_popover;
-
-  GBinding           *event_title_binding;
-
-  /* actions */
   GMenu              *sources_menu;
   GSimpleActionGroup *action_group;
 
-  /* new data holders */
-  GcalEvent        *event;
-  GcalCalendar     *selected_calendar;
+  GcalContext        *context;
+  GcalEvent          *event;
+  GcalCalendar       *selected_calendar;
+
+  GBinding           *event_title_binding;
 
   /* flags */
   gboolean          event_is_new;
   gboolean          recurrence_changed;
+  gboolean          writable;
 };
 
 static void          on_calendar_selected_action_cb              (GSimpleAction      *menu_item,
@@ -151,11 +145,11 @@ fill_sources_menu (GcalEventEditorDialog *self)
 
   for (aux = list; aux != NULL; aux = aux->next)
     {
+      g_autoptr (GMenuItem) item = NULL;
+      g_autoptr (GdkPixbuf) pix = NULL;
       GcalCalendar *calendar;
       const GdkRGBA *color;
-      GMenuItem *item;
       cairo_surface_t *surface;
-      GdkPixbuf *pix;
 
       calendar = GCAL_CALENDAR (aux->data);
 
@@ -182,8 +176,6 @@ fill_sources_menu (GcalEventEditorDialog *self)
       g_menu_append_item (self->sources_menu, item);
 
       g_clear_pointer (&surface, cairo_surface_destroy);
-      g_object_unref (pix);
-      g_object_unref (item);
     }
 
   gtk_popover_bind_model (GTK_POPOVER (self->sources_popover), G_MENU_MODEL (self->sources_menu), "edit");
@@ -220,7 +212,7 @@ on_calendar_selected_action_cb (GSimpleAction *action,
   GcalEventEditorDialog *self;
   GcalManager *manager;
   GList *aux;
-  gchar *uid;
+  const gchar *uid;
 
   GCAL_ENTRY;
 
@@ -229,7 +221,7 @@ on_calendar_selected_action_cb (GSimpleAction *action,
   list = gcal_manager_get_calendars (manager);
 
   /* retrieve selected calendar uid */
-  g_variant_get (value, "s", &uid);
+  g_variant_get (value, "&s", &uid);
 
   /* search for any source with the given UID */
   for (aux = list; aux != NULL; aux = aux->next)
@@ -254,8 +246,6 @@ on_calendar_selected_action_cb (GSimpleAction *action,
           break;
         }
     }
-
-  g_free (uid);
 
   GCAL_EXIT;
 }
@@ -495,23 +485,21 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-event-editor-dialog.ui");
 
-  /* Buttons */
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, done_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, delete_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_button);
-  /* Other */
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, titlebar);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, title_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, subtitle_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, done_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, lock);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, scrolled_window);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, source_image);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, notes_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, reminders_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, schedule_section);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, scrolled_window);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_popover);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, source_image);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, subtitle_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, summary_section);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, titlebar);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, title_label);
 
 
   /* callbacks */
