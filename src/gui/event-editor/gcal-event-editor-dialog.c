@@ -21,15 +21,13 @@
 
 #include "gcal-alarm-row.h"
 #include "gcal-context.h"
-#include "gcal-date-selector.h"
 #include "gcal-debug.h"
 #include "gcal-event-editor-dialog.h"
 #include "gcal-event-editor-section.h"
-#include "gcal-time-selector.h"
 #include "gcal-utils.h"
 #include "gcal-event.h"
-#include "gcal-recurrence.h"
 #include "gcal-reminders-section.h"
+#include "gcal-schedule-section.h"
 
 #include <dazzle.h>
 #include <libecal/libecal.h>
@@ -63,6 +61,7 @@ struct _GcalEventEditorDialog
   GtkWidget        *scrolled_window;
 
   GcalEventEditorSection *reminders_section;
+  GcalEventEditorSection *schedule_section;
 
   GtkWidget        *lock;
   GtkWidget        *source_image;
@@ -76,22 +75,8 @@ struct _GcalEventEditorDialog
 
   GtkWidget        *summary_entry;
 
-  GtkWidget        *start_date_selector;
-  GtkLabel         *event_start_label;
-  GtkWidget        *end_date_selector;
-  GtkLabel         *event_end_label;
-  GtkSwitch        *all_day_switch;
-  GtkWidget        *start_time_selector;
-  GtkWidget        *end_time_selector;
   GtkWidget        *location_entry;
   GtkWidget        *notes_text;
-
-  GtkWidget        *repeat_combo;
-  GtkWidget        *repeat_duration_combo;
-
-  /* Recurrence widgets */
-  GtkWidget        *number_of_occurrences_spin;
-  GtkWidget        *until_date_selector;
 
   /* actions */
   GMenu              *sources_menu;
@@ -215,337 +200,17 @@ fill_sources_menu (GcalEventEditorDialog *self)
 }
 
 static void
-find_best_timezones_for_event (GcalEventEditorDialog  *self,
-                               GTimeZone             **out_tz_start,
-                               GTimeZone             **out_tz_end)
-{
-  gboolean was_all_day;
-  gboolean all_day;
-
-  /* Update all day */
-  all_day = gtk_switch_get_active (self->all_day_switch);
-  was_all_day = gcal_event_get_all_day (self->event);
-
-  GCAL_TRACE_MSG ("Finding best timezone with all_day=%d, was_all_day=%d, event_is_new=%d",
-                  all_day,
-                  was_all_day,
-                  self->event_is_new);
-
-  if (!self->event_is_new && was_all_day && !all_day)
-    {
-      GCAL_TRACE_MSG ("Using original event timezones");
-
-      gcal_event_get_original_timezones (self->event, out_tz_start, out_tz_end);
-      return;
-    }
-
-  if (all_day)
-    {
-      GCAL_TRACE_MSG ("Using UTC timezones");
-
-      if (out_tz_start)
-        *out_tz_start = g_time_zone_new_utc ();
-
-      if (out_tz_end)
-        *out_tz_end = g_time_zone_new_utc ();
-    }
-  else
-    {
-      g_autoptr (GTimeZone) tz_start = NULL;
-      g_autoptr (GTimeZone) tz_end = NULL;
-
-      if (self->event_is_new)
-        {
-          GCAL_TRACE_MSG ("Using the local timezone");
-
-          tz_start = g_time_zone_new_local ();
-          tz_end = g_time_zone_new_local ();
-        }
-      else
-        {
-          GCAL_TRACE_MSG ("Using the current timezones");
-
-          tz_start = g_time_zone_ref (g_date_time_get_timezone (gcal_event_get_date_start (self->event)));
-          tz_end = g_time_zone_ref (g_date_time_get_timezone (gcal_event_get_date_end (self->event)));
-        }
-
-      if (out_tz_start)
-        *out_tz_start = g_steal_pointer (&tz_start);
-
-      if (out_tz_end)
-        *out_tz_end = g_steal_pointer (&tz_end);
-    }
-}
-
-static GDateTime*
-return_datetime_for_widgets (GcalEventEditorDialog *self,
-                             GTimeZone             *timezone,
-                             GcalDateSelector      *date_selector,
-                             GcalTimeSelector      *time_selector)
-{
-  g_autoptr (GDateTime) date_in_local_tz = NULL;
-  g_autoptr (GDateTime) date_in_best_tz = NULL;
-  GDateTime *date;
-  GDateTime *time;
-  GDateTime *retval;
-  gboolean all_day;
-
-  all_day = gtk_switch_get_active (self->all_day_switch);
-  date = gcal_date_selector_get_date (date_selector);
-  time = gcal_time_selector_get_time (time_selector);
-
-  date_in_local_tz = g_date_time_new_local (g_date_time_get_year (date),
-                                            g_date_time_get_month (date),
-                                            g_date_time_get_day_of_month (date),
-                                            all_day ? 0 : g_date_time_get_hour (time),
-                                            all_day ? 0 : g_date_time_get_minute (time),
-                                            0);
-
-  if (all_day)
-    date_in_best_tz = g_date_time_ref (date_in_local_tz);
-  else
-    date_in_best_tz = g_date_time_to_timezone (date_in_local_tz, timezone);
-
-  retval = g_date_time_new (timezone,
-                            g_date_time_get_year (date_in_best_tz),
-                            g_date_time_get_month (date_in_best_tz),
-                            g_date_time_get_day_of_month (date_in_best_tz),
-                            all_day ? 0 : g_date_time_get_hour (date_in_best_tz),
-                            all_day ? 0 : g_date_time_get_minute (date_in_best_tz),
-                            0);
-
-  return retval;
-}
-
-static GDateTime*
-get_date_start (GcalEventEditorDialog *self)
-{
-  g_autoptr (GTimeZone) start_tz = NULL;
-
-  find_best_timezones_for_event (self, &start_tz, NULL);
-
-  return return_datetime_for_widgets (self,
-                                      start_tz,
-                                      GCAL_DATE_SELECTOR (self->start_date_selector),
-                                      GCAL_TIME_SELECTOR (self->start_time_selector));
-}
-
-static GDateTime*
-get_date_end (GcalEventEditorDialog *self)
-{
-  g_autoptr (GTimeZone) end_tz = NULL;
-
-  find_best_timezones_for_event (self, NULL, &end_tz);
-
-  return return_datetime_for_widgets (self,
-                                      end_tz,
-                                      GCAL_DATE_SELECTOR (self->end_date_selector),
-                                      GCAL_TIME_SELECTOR (self->end_time_selector));
-}
-
-static void
 set_writable (GcalEventEditorDialog *self,
               gboolean               writable)
 {
-  gboolean all_day;
-
   if (self->writable == writable)
     return;
-
-  all_day = gtk_switch_get_active (self->all_day_switch);
-
-  gtk_widget_set_sensitive (self->start_time_selector, !all_day && writable);
-  gtk_widget_set_sensitive (self->end_time_selector, !all_day && writable);
 
   gtk_button_set_label (GTK_BUTTON (self->done_button), writable ? _("Save") : _("Done"));
 
   self->writable = writable;
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_WRITABLE]);
-}
-
-static void
-remove_recurrence_properties (GcalEvent *event)
-{
-  ECalComponent *comp;
-
-  comp = gcal_event_get_component (event);
-
-  e_cal_component_set_recurid (comp, NULL);
-  e_cal_component_set_rrules (comp, NULL);
-  e_cal_component_commit_sequence (comp);
-}
-
-static gchar*
-format_datetime_for_display (GDateTime      *date,
-                             GcalTimeFormat  format,
-                             gboolean        all_day)
-{
-  g_autofree gchar *formatted_date = NULL;
-  g_autoptr (GDateTime) now = NULL;
-  GString *string;
-  gint days_diff;
-
-  string = g_string_new ("");
-
-  now = g_date_time_new_now_local ();
-  days_diff = gcal_date_time_compare_date (date, now);
-
-  switch (days_diff)
-    {
-    case -7:
-    case -6:
-    case -5:
-    case -4:
-    case -3:
-    case -2:
-      /* Translators: %A is the weekday name (e.g. Sunday, Monday, etc) */
-      formatted_date = g_date_time_format (date, _("Last %A"));
-      break;
-
-    case -1:
-      formatted_date = g_strdup (_("Yesterday"));
-      break;
-
-    case 0:
-      formatted_date = g_strdup (_("Today"));
-      break;
-
-    case 1:
-      formatted_date = g_strdup (_("Tomorrow"));
-      break;
-
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-    case 7:
-      /* Translators: %A is the weekday name (e.g. Sunday, Monday, etc) */
-      formatted_date = g_date_time_format (date, _("This %A"));
-      break;
-
-    default:
-      formatted_date = g_date_time_format (date, "%x");
-      break;
-    }
-
-  if (!all_day)
-    {
-      g_autofree gchar *formatted_time = NULL;
-
-      switch (format)
-        {
-        case GCAL_TIME_FORMAT_12H:
-          formatted_time = g_date_time_format (date, "%I:%M %P");
-          break;
-
-        case GCAL_TIME_FORMAT_24H:
-          formatted_time = g_date_time_format (date, "%R");
-          break;
-
-        default:
-          g_assert_not_reached ();
-        }
-
-      /*
-       * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
-       * formatted time (e.g. 03:14 PM, or 21:29)
-       */
-      g_string_printf (string, _("%1$s, %2$s"), formatted_date, formatted_time);
-    }
-  else
-    {
-      g_string_printf (string, "%s", formatted_date);
-    }
-
-  return g_string_free (string, FALSE);
-}
-
-static void
-update_date_labels (GcalEventEditorDialog *self)
-{
-  g_autofree gchar *start_label = NULL;
-  g_autofree gchar *end_label = NULL;
-  g_autoptr (GDateTime) start = NULL;
-  g_autoptr (GDateTime) end = NULL;
-  GcalTimeFormat time_format;
-  gboolean all_day;
-
-  time_format = gcal_context_get_time_format (self->context);
-
-  all_day = gtk_switch_get_active (self->all_day_switch);
-  start = get_date_start (self);
-  end = get_date_end (self);
-  start_label = format_datetime_for_display (start, time_format, all_day);
-  end_label = format_datetime_for_display (end, time_format, all_day);
-
-  gtk_label_set_label (self->event_start_label, start_label);
-  gtk_label_set_label (self->event_end_label, end_label);
-}
-
-static void
-sync_datetimes (GcalEventEditorDialog *self,
-                GParamSpec            *pspec,
-                GtkWidget             *widget)
-{
-  GDateTime *start, *end, *start_local, *end_local, *new_date;
-  GtkWidget *date_widget, *time_widget;
-  gboolean is_start, is_all_day;
-
-  GCAL_ENTRY;
-
-  is_start = (widget == self->start_time_selector || widget == self->start_date_selector);
-  is_all_day = gtk_switch_get_active (self->all_day_switch);
-  start = get_date_start (self);
-  end = get_date_end (self);
-
-  /* The date is valid, no need to update the fields */
-  if (g_date_time_compare (end, start) >= 0)
-    GCAL_GOTO (out);
-
-  start_local = g_date_time_to_local (start);
-  end_local = g_date_time_to_local (end);
-
-  /*
-   * If the user is changing the start date or time, we change the end
-   * date or time (and vice versa).
-   */
-  if (is_start)
-    {
-      new_date = is_all_day ? g_date_time_add_hours (start, 0) : g_date_time_add_hours (start_local, 1);
-
-      date_widget = self->end_date_selector;
-      time_widget = self->end_time_selector;
-    }
-  else
-    {
-      new_date = is_all_day ? g_date_time_add_hours (end, 0) : g_date_time_add_hours (end_local, -1);
-
-      date_widget = self->start_date_selector;
-      time_widget = self->start_time_selector;
-    }
-
-  g_signal_handlers_block_by_func (date_widget, sync_datetimes, self);
-  g_signal_handlers_block_by_func (time_widget, sync_datetimes, self);
-
-  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (date_widget), new_date);
-  gcal_time_selector_set_time (GCAL_TIME_SELECTOR (time_widget), new_date);
-
-  g_signal_handlers_unblock_by_func (date_widget, sync_datetimes, self);
-  g_signal_handlers_unblock_by_func (time_widget, sync_datetimes, self);
-
-  g_clear_pointer (&start_local, g_date_time_unref);
-  g_clear_pointer (&end_local, g_date_time_unref);
-  g_clear_pointer (&new_date, g_date_time_unref);
-
-out:
-  g_clear_pointer (&start, g_date_time_unref);
-  g_clear_pointer (&end, g_date_time_unref);
-
-  update_date_labels (self);
-
-  GCAL_EXIT;
 }
 
 static void
@@ -572,11 +237,6 @@ gcal_event_editor_dialog_clear_data (GcalEventEditorDialog *self)
 static void
 apply_changes_to_event (GcalEventEditorDialog *self)
 {
-  GcalRecurrenceFrequency freq;
-  GcalRecurrence *old_recur;
-  GDateTime *start_date, *end_date;
-  gboolean was_all_day;
-  gboolean all_day;
   gchar *note_text;
 
   /* Update summary */
@@ -590,110 +250,8 @@ apply_changes_to_event (GcalEventEditorDialog *self)
   gcal_event_set_description (self->event, note_text);
   g_free (note_text);
 
-  all_day = gtk_switch_get_active (self->all_day_switch);
-  was_all_day = gcal_event_get_all_day (self->event);
-
-  if (!was_all_day && all_day)
-    gcal_event_save_original_timezones (self->event);
-
-  /*
-   * Update start & end dates. The dates are already translated to the current
-   * timezone (unless the event used to be all day, but no longer is).
-   */
-  start_date = get_date_start (self);
-  end_date = get_date_end (self);
-
-#ifdef GCAL_ENABLE_TRACE
-    {
-      g_autofree gchar *start_dt_string = g_date_time_format (start_date, "%x %X %z");
-      g_autofree gchar *end_dt_string = g_date_time_format (end_date, "%x %X %z");
-
-      g_debug ("New start date: %s", start_dt_string);
-      g_debug ("New end date: %s", end_dt_string);
-    }
-#endif
-
-  gcal_event_set_all_day (self->event, all_day);
-
-  /*
-   * The end date for multi-day events is exclusive, so we bump it by a day.
-   * This fixes the discrepancy between the end day of the event and how it
-   * is displayed in the month view. See bug 769300.
-   */
-  if (all_day)
-    {
-      GDateTime *fake_end_date = g_date_time_add_days (end_date, 1);
-
-      g_clear_pointer (&end_date, g_date_time_unref);
-      end_date = fake_end_date;
-    }
-  else if (!all_day && was_all_day)
-    {
-      /* When an all day event is changed to be not an all day event, we
-       * need to correct for the fact that the event's timezone was until
-       * now set to UTC. That means we need to change the timezone to
-       * localtime now, or else it will be saved incorrectly.
-       */
-      GDateTime *localtime_date;
-
-      localtime_date = g_date_time_to_local (start_date);
-      g_clear_pointer (&start_date, g_date_time_unref);
-      start_date = localtime_date;
-
-      localtime_date = g_date_time_to_local (end_date);
-      g_clear_pointer (&end_date, g_date_time_unref);
-      end_date = localtime_date;
-    }
-
-  gcal_event_set_date_start (self->event, start_date);
-  gcal_event_set_date_end (self->event, end_date);
-
-  g_clear_pointer (&start_date, g_date_time_unref);
-  g_clear_pointer (&end_date, g_date_time_unref);
-
-  /* Update alarms */
   gcal_event_editor_section_apply (self->reminders_section);
-
-  /* Check Repeat popover and set recurrence-rules accordingly */
-  old_recur = gcal_event_get_recurrence (self->event);
-  freq = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_combo));
-
-  if (freq != GCAL_RECURRENCE_NO_REPEAT)
-    {
-      GcalRecurrence *recur;
-
-      recur = gcal_recurrence_new ();
-      recur->frequency = freq;
-      recur->limit_type = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_duration_combo));
-
-      if (recur->limit_type == GCAL_RECURRENCE_UNTIL)
-        recur->limit.until = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector));
-      else if (recur->limit_type == GCAL_RECURRENCE_COUNT)
-        recur->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
-
-      /* Only apply the new recurrence if it's different from the old one */
-      if (!gcal_recurrence_is_equal (old_recur, recur))
-        {
-          /* Remove the previous recurrence... */
-          remove_recurrence_properties (self->event);
-
-          /* ... and set the new one */
-          gcal_event_set_recurrence (self->event, recur);
-
-          self->recurrence_changed = TRUE;
-        }
-
-      g_clear_pointer (&recur, gcal_recurrence_unref);
-    }
-  else
-    {
-      /* When NO_REPEAT is set, make sure to remove the old recurrent */
-      remove_recurrence_properties (self->event);
-
-      /* If the recurrence from an recurrent event was removed, mark it as changed */
-      if (old_recur && old_recur->frequency != GCAL_RECURRENCE_NO_REPEAT)
-        self->recurrence_changed = TRUE;
-    }
+  gcal_event_editor_section_apply (self->schedule_section);
 }
 
 
@@ -841,52 +399,6 @@ on_action_button_clicked_cb (GtkWidget *widget,
   GCAL_EXIT;
 }
 
-static void
-on_repeat_duration_changed_cb (GtkComboBox           *widget,
-                               GcalEventEditorDialog *self)
-{
-  gint active = gtk_combo_box_get_active (widget);
-
-  gtk_widget_set_visible (self->number_of_occurrences_spin, active == 1);
-  gtk_widget_set_visible (self->until_date_selector, active == 2);
-}
-
-static void
-on_repeat_type_changed_cb (GtkComboBox           *combobox,
-                           GcalEventEditorDialog *self)
-{
-  GcalRecurrenceFrequency frequency;
-
-  frequency = gtk_combo_box_get_active (combobox);
-
-  gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
-  gtk_widget_set_visible (self->repeat_duration_combo, frequency != GCAL_RECURRENCE_NO_REPEAT);
-}
-
-static void
-on_all_day_switch_active_changed_cb (GtkSwitch             *all_day_switch,
-                                     GParamSpec            *pspec,
-                                     GcalEventEditorDialog *self)
-{
-  gboolean active = gtk_switch_get_active (all_day_switch);
-
-  gtk_widget_set_sensitive (self->start_time_selector, !active);
-  gtk_widget_set_sensitive (self->end_time_selector, !active);
-
-  update_date_labels (self);
-}
-
-static void
-on_time_format_changed_cb (GcalEventEditorDialog *self)
-{
-  GcalTimeFormat time_format;
-
-  time_format = gcal_context_get_time_format (self->context);
-
-  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (self->start_time_selector), time_format);
-  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (self->end_time_selector), time_format);
-}
-
 
 /*
  * Gobject overrides
@@ -988,12 +500,6 @@ gcal_event_editor_dialog_set_property (GObject      *object,
     case PROP_CONTEXT:
       g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
-      g_signal_connect_object (self->context,
-                               "notify::time-format",
-                               G_CALLBACK (on_time_format_changed_cb),
-                               self,
-                               G_CONNECT_SWAPPED);
-      on_time_format_changed_cb (self);
       g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
       break;
 
@@ -1012,9 +518,8 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  g_type_ensure (GCAL_TYPE_DATE_SELECTOR);
   g_type_ensure (GCAL_TYPE_REMINDERS_SECTION);
-  g_type_ensure (GCAL_TYPE_TIME_SELECTOR);
+  g_type_ensure (GCAL_TYPE_SCHEDULE_SECTION);
 
   object_class->finalize = gcal_event_editor_dialog_finalize;
   object_class->constructed = gcal_event_editor_dialog_constructed;
@@ -1065,37 +570,23 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_button);
   /* Entries */
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, summary_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, start_time_selector);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, start_date_selector);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, end_time_selector);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, end_date_selector);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, location_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, event_start_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, event_end_label);
   /* Other */
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, notes_text);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, all_day_switch);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, titlebar);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, title_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, subtitle_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, lock);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, number_of_occurrences_spin);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, repeat_combo);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, repeat_duration_combo);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, scrolled_window);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, source_image);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_popover);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, until_date_selector);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, reminders_section);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, schedule_section);
 
 
   /* callbacks */
   gtk_widget_class_bind_template_callback (widget_class, fix_reminders_label_height_cb);
-  gtk_widget_class_bind_template_callback (widget_class, sync_datetimes);
   gtk_widget_class_bind_template_callback (widget_class, on_action_button_clicked_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_all_day_switch_active_changed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_repeat_duration_changed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_repeat_type_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_summary_entry_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_location_entry_changed_cb);
 }
@@ -1108,6 +599,7 @@ gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 
   g_object_bind_property (self, "context", self->reminders_section, "context", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "context", self->schedule_section, "context", G_BINDING_DEFAULT);
 }
 
 /**
@@ -1170,16 +662,9 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
 {
   g_autoptr (GcalEvent) cloned_event = NULL;
   GcalEventEditorFlags flags;
-  GcalRecurrenceLimitType limit_type;
-  GcalRecurrenceFrequency frequency;
-  GcalRecurrence *recur;
-  GtkAdjustment *count_adjustment;
   GcalCalendar *calendar;
-  GDateTime *date_start;
-  GDateTime *date_end;
   cairo_surface_t *surface;
   const gchar *summary;
-  gboolean all_day;
 
   GCAL_ENTRY;
 
@@ -1189,12 +674,6 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
 
   self->setting_event = TRUE;
 
-  count_adjustment = gtk_adjustment_new (0, 2, G_MAXDOUBLE, 1, 1, 10);
-
-  gtk_spin_button_set_adjustment (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), count_adjustment);
-
-  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), TRUE);
-
   /* If we just set the event to NULL, simply send a property notify */
   if (!event)
     GCAL_GOTO (out);
@@ -1202,40 +681,6 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   cloned_event = gcal_event_new_from_event (event);
   self->event = g_object_ref (cloned_event);
 
-  /* Recurrences */
-  recur = gcal_event_get_recurrence (cloned_event);
-  frequency = recur ? recur->frequency : GCAL_RECURRENCE_NO_REPEAT;
-  limit_type = recur ? recur->limit_type : GCAL_RECURRENCE_FOREVER;
-
-  gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_combo), frequency);
-  gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_duration_combo), limit_type);
-
-  if (frequency == GCAL_RECURRENCE_NO_REPEAT)
-    {
-      gtk_widget_hide (self->repeat_duration_combo);
-    }
-  else
-    {
-      gtk_widget_show (self->repeat_duration_combo);
-      gtk_widget_show (self->repeat_duration_combo);
-    }
-
-  switch (limit_type)
-    {
-    case GCAL_RECURRENCE_COUNT:
-      gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), recur->limit.count);
-      break;
-
-    case GCAL_RECURRENCE_UNTIL:
-      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->until_date_selector), recur->limit.until);
-      break;
-
-    case GCAL_RECURRENCE_FOREVER:
-      gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), 0);
-      break;
-    }
-
-  all_day = gcal_event_get_all_day (cloned_event);
   calendar = gcal_event_get_calendar (cloned_event);
 
   /* Clear event data */
@@ -1264,42 +709,6 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   gtk_label_set_label (GTK_LABEL (self->subtitle_label), gcal_calendar_get_name (calendar));
   self->selected_calendar = calendar;
 
-  /* retrieve start and end dates */
-  date_start = gcal_event_get_date_start (cloned_event);
-  date_start = all_day ? g_date_time_ref (date_start) : g_date_time_to_local (date_start);
-
-  date_end = gcal_event_get_date_end (cloned_event);
-  /*
-   * This is subtracting what has been added in action_button_clicked ().
-   * See bug 769300.
-   */
-  date_end = all_day ? g_date_time_add_days (date_end, -1) : g_date_time_to_local (date_end);
-
-  /* date */
-  g_signal_handlers_block_by_func (self->end_date_selector, sync_datetimes, self);
-  g_signal_handlers_block_by_func (self->start_date_selector, sync_datetimes, self);
-
-  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->start_date_selector), date_start);
-  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->end_date_selector), date_end);
-
-  g_signal_handlers_unblock_by_func (self->start_date_selector, sync_datetimes, self);
-  g_signal_handlers_unblock_by_func (self->end_date_selector, sync_datetimes, self);
-
-  /* time */
-  g_signal_handlers_block_by_func (self->end_time_selector, sync_datetimes, self);
-  g_signal_handlers_block_by_func (self->start_time_selector, sync_datetimes, self);
-
-  gcal_time_selector_set_time (GCAL_TIME_SELECTOR (self->start_time_selector), date_start);
-  gcal_time_selector_set_time (GCAL_TIME_SELECTOR (self->end_time_selector), date_end);
-
-  g_signal_handlers_unblock_by_func (self->start_time_selector, sync_datetimes, self);
-  g_signal_handlers_unblock_by_func (self->end_time_selector, sync_datetimes, self);
-
-  /* all_day  */
-  gtk_switch_set_active (self->all_day_switch, all_day);
-
-  update_date_labels (self);
-
   /* recurrence_changed */
   self->recurrence_changed = FALSE;
 
@@ -1313,9 +722,6 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
 
   set_writable (self, !gcal_calendar_is_read_only (calendar));
 
-  g_clear_pointer (&date_start, g_date_time_unref);
-  g_clear_pointer (&date_end, g_date_time_unref);
-
 out:
   flags = GCAL_EVENT_EDITOR_FLAG_NONE;
 
@@ -1323,6 +729,7 @@ out:
     flags |= GCAL_EVENT_EDITOR_FLAG_NEW_EVENT;
 
   gcal_event_editor_section_set_event (self->reminders_section, cloned_event, flags);
+  gcal_event_editor_section_set_event (self->schedule_section, cloned_event, flags);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
 
