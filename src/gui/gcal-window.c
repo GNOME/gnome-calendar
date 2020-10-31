@@ -115,6 +115,8 @@ struct _GcalWindow
   GtkWidget          *today_button;
   GtkWidget          *views_switcher;
 
+  GcalEventEditorDialog *event_editor;
+
   DzlSuggestionButton *search_button;
 
   /* new event popover widgets */
@@ -122,7 +124,6 @@ struct _GcalWindow
 
   /* day, week, month, year, list */
   GtkWidget          *views [6];
-  GtkWidget          *event_editor;
   gboolean            subscribed;
 
   GcalContext        *context;
@@ -392,9 +393,8 @@ on_window_new_event_cb (GSimpleAction *action,
   default_calendar = gcal_manager_get_default_calendar (manager);
   event = gcal_event_new (default_calendar, comp, NULL);
 
-  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (self->event_editor), event, TRUE);
-
-  gtk_widget_show (self->event_editor);
+  gcal_event_editor_dialog_set_event (self->event_editor, event, TRUE);
+  gtk_widget_show (GTK_WIDGET (self->event_editor));
 }
 
 static void
@@ -609,8 +609,8 @@ edit_event (GcalQuickAddPopover *popover,
             GcalEvent           *event,
             GcalWindow          *window)
 {
-  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), event, TRUE);
-  gtk_widget_show (window->event_editor);
+  gcal_event_editor_dialog_set_event (window->event_editor, event, TRUE);
+  gtk_widget_show (GTK_WIDGET (window->event_editor));
 }
 
 static void
@@ -630,8 +630,8 @@ create_event_detailed_cb (GcalView *view,
   default_calendar = gcal_manager_get_default_calendar (manager);
   event = gcal_event_new (default_calendar, comp, NULL);
 
-  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), event, TRUE);
-  gtk_widget_show (window->event_editor);
+  gcal_event_editor_dialog_set_event (window->event_editor, event, TRUE);
+  gtk_widget_show (GTK_WIDGET (window->event_editor));
 
   g_clear_object (&comp);
 }
@@ -645,9 +645,8 @@ event_activated (GcalView        *view,
   GcalEvent *event;
 
   event = gcal_event_widget_get_event (event_widget);
-  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), event, FALSE);
-
-  gtk_widget_show (window->event_editor);
+  gcal_event_editor_dialog_set_event (window->event_editor, event, FALSE);
+  gtk_widget_show (GTK_WIDGET (window->event_editor));
 }
 
 static void
