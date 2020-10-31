@@ -286,7 +286,9 @@ on_button_released (GcalWeekHeader *self,
                     GdkEventButton *event,
                     GtkWidget      *widget)
 {
-  g_autoptr (GDateTime) week_start, selection_start, selection_end;
+  g_autoptr (GDateTime) selection_start = NULL;
+  g_autoptr (GDateTime) selection_end = NULL;
+  g_autoptr (GDateTime) week_start = NULL;
   GtkWidget *weekview;
   gboolean ltr;
   gdouble column_width;
@@ -378,7 +380,8 @@ get_event_by_uuid (GcalWeekHeader *self,
 static inline gint
 get_today_column (GcalWeekHeader *self)
 {
-  g_autoptr(GDateTime) today, week_start;
+  g_autoptr (GDateTime) week_start = NULL;
+  g_autoptr (GDateTime) today = NULL;
   gint days_diff;
 
   today = g_date_time_new_now_local ();
@@ -677,7 +680,7 @@ split_event_widget_at_column (GcalWeekHeader *self,
   /* Create a new widget after the current widget */
   if (create_after)
     {
-      g_autoptr (GDateTime) event_end;
+      g_autoptr (GDateTime) event_end = NULL;
       GtkWidget *widget_after;
 
       event_end = g_date_time_to_local (gcal_event_widget_get_date_end (GCAL_EVENT_WIDGET (widget)));
@@ -888,8 +891,10 @@ static void
 update_unchanged_events (GcalWeekHeader *self,
                          GDateTime      *new_date)
 {
-  g_autoptr (GDateTime) new_week_start, new_week_end;
-  g_autoptr (GDateTime) utc_week_start, utc_week_end;
+  g_autoptr (GDateTime) new_week_start = NULL;
+  g_autoptr (GDateTime) utc_week_start = NULL;
+  g_autoptr (GDateTime) new_week_end = NULL;
+  g_autoptr (GDateTime) utc_week_end = NULL;
   GList *events_to_update, *l;
   gint weekday;
 
@@ -912,7 +917,8 @@ update_unchanged_events (GcalWeekHeader *self,
 
       for (l = events; l != NULL; l = l->next)
         {
-          g_autoptr (GDateTime) event_start, event_end;
+          g_autoptr (GDateTime) event_start = NULL;
+          g_autoptr (GDateTime) event_end = NULL;
           GDateTime *week_start, *week_end;
 
           /*

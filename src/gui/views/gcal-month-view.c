@@ -1072,7 +1072,7 @@ update_weekday_labels (GcalMonthView *self)
 
   for (i = 0; i < 7; i++)
     {
-      g_autofree gchar *weekday_name;
+      g_autofree gchar *weekday_name = NULL;
 
       weekday_name = g_utf8_strup (gcal_get_weekday ((i + self->first_weekday) % 7), -1);
 

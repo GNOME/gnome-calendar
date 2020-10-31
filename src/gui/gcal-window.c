@@ -192,7 +192,7 @@ static GParamSpec* properties[N_PROPS] = { NULL, };
 static void
 update_today_button_sensitive (GcalWindow *window)
 {
-  g_autoptr (GDateTime) now;
+  g_autoptr (GDateTime) now = NULL;
   gboolean sensitive;
 
   GCAL_ENTRY;

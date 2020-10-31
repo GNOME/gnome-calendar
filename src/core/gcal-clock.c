@@ -57,7 +57,7 @@ static guint signals[NUM_SIGNALS] = { 0, };
 static void
 update_current_date (GcalClock *self)
 {
-  g_autoptr (GDateTime) now;
+  g_autoptr (GDateTime) now = NULL;
   gboolean minute_changed;
   gboolean hour_changed;
   gboolean day_changed;
@@ -91,7 +91,7 @@ update_current_date (GcalClock *self)
 static void
 schedule_update_timeout (GcalClock *self)
 {
-  g_autoptr (GDateTime) now;
+  g_autoptr (GDateTime) now = NULL;
   guint seconds_between;
 
   /* Remove the previous timeout if we came from resume */

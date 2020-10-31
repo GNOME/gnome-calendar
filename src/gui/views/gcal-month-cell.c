@@ -81,7 +81,7 @@ static GParamSpec *properties[N_PROPS] = { 0, };
 static void
 update_style_flags (GcalMonthCell *self)
 {
-  g_autoptr (GDateTime) today;
+  g_autoptr (GDateTime) today = NULL;
   GtkStyleContext *context;
   GtkStateFlags flags;
   GtkWidget *widget;
@@ -261,7 +261,7 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
       current_month != start_month ||
       current_year != start_year)
     {
-      g_autoptr (GDateTime) new_start;
+      g_autoptr (GDateTime) new_start = NULL;
 
        new_start = g_date_time_add_days (start_dt, diff);
 

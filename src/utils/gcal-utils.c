@@ -1121,10 +1121,10 @@ filter_event_list_by_uid_and_modtype (GList                 *widgets,
   /* Second pass: find the other related events */
   if (event && mod != GCAL_RECURRENCE_MOD_THIS_ONLY)
     {
+      g_autofree gchar *id_prefix = NULL;
       ECalComponentId *id;
       ECalComponent *component;
       GcalCalendar *calendar;
-      g_autofree gchar *id_prefix;
 
       component = gcal_event_get_component (event);
       calendar = gcal_event_get_calendar (event);

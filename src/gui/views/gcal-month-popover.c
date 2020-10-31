@@ -881,7 +881,7 @@ gcal_month_popover_set_date (GcalMonthPopover *self,
 
   if (date)
     {
-      g_autofree gchar *label;
+      g_autofree gchar *label = NULL;
 
       self->date = g_date_time_ref (date);
 

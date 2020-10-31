@@ -129,7 +129,7 @@ static inline guint
 get_event_index (GcalRangeTree *tree,
                  GcalRange     *range)
 {
-  g_autoptr (GPtrArray) array;
+  g_autoptr (GPtrArray) array = NULL;
   gint idx, i;
 
   i = idx = 0;
@@ -342,7 +342,8 @@ gcal_week_grid_unmap (GtkWidget *widget)
 static inline gint
 get_today_column (GcalWeekGrid *self)
 {
-  g_autoptr(GDateTime) today, week_start;
+  g_autoptr(GDateTime) week_start = NULL;
+  g_autoptr(GDateTime) today = NULL;
   gint days_diff;
 
   today = g_date_time_new_now_local ();
@@ -486,7 +487,7 @@ gcal_week_grid_draw (GtkWidget *widget,
 
   if (today_column != -1)
     {
-      g_autoptr (GDateTime) now;
+      g_autoptr (GDateTime) now = NULL;
       GtkBorder margin;
       gdouble strip_width;
       guint minutes_from_midnight;

@@ -105,7 +105,7 @@ load_weather_settings (GcalWeatherSettings *self)
     }
   else
     {
-      g_autoptr (GWeatherLocation) weather_location;
+      g_autoptr (GWeatherLocation) weather_location = NULL;
       GWeatherLocation *world;
 
       world = gweather_location_get_world ();
@@ -170,7 +170,7 @@ update_menu_weather_sensitivity (GcalWeatherSettings *self)
 static GWeatherLocation*
 get_checked_fixed_location (GcalWeatherSettings *self)
 {
-  g_autoptr (GWeatherLocation) location;
+  g_autoptr (GWeatherLocation) location = NULL;
 
   location = gweather_location_entry_get_location (GWEATHER_LOCATION_ENTRY (self->weather_location_entry));
 

@@ -26,7 +26,7 @@ gint
 main (gint    argc,
       gchar **argv)
 {
-  g_autoptr (GcalApplication) app;
+  g_autoptr (GcalApplication) app = NULL;
 
   bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");

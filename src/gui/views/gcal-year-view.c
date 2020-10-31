@@ -713,7 +713,8 @@ count_events_at_day (GcalYearView *self,
 
   for (i = 0; i < events->len; i++)
     {
-      g_autoptr (GDateTime) event_start, event_end;
+      g_autoptr (GDateTime) event_start = NULL;
+      g_autoptr (GDateTime) event_end = NULL;
       GcalEvent *event;
 
       event = g_ptr_array_index (events, i);

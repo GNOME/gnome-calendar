@@ -451,7 +451,9 @@ update_header (GcalQuickAddPopover *self)
         }
       else
         {
-          g_autofree gchar *start_hour, *end_hour, *event_date_name;
+          g_autofree gchar *event_date_name = NULL;
+          g_autofree gchar *start_hour = NULL;
+          g_autofree gchar *end_hour = NULL;
           GcalTimeFormat time_format;
           gchar *hour_format;
 
@@ -475,7 +477,7 @@ update_header (GcalQuickAddPopover *self)
     }
   else
     {
-      g_autofree gchar *event_date_name;
+      g_autofree gchar *event_date_name = NULL;
       event_date_name = get_date_string_for_day (self->date_start);
       title_date = g_strdup_printf ("%s", event_date_name);
     }

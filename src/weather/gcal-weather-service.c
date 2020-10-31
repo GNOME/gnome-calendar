@@ -553,8 +553,8 @@ preprocess_gweather_reports (GcalWeatherService *self,
   /* Produce GcalWeatherInfo for each bucket: */
   for (i = 0; i < self->max_days; i++)
     {
-      g_autofree gchar *icon_name;
-      g_autofree gchar *temperature;
+      g_autofree gchar *temperature = NULL;
+      g_autofree gchar *icon_name = NULL;
 
       if (compute_weather_info_data (days[i], i == 0, &icon_name, &temperature))
         g_ptr_array_add (result, gcal_weather_info_new (&cur_gdate, icon_name, temperature));
