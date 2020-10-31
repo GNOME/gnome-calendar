@@ -1254,6 +1254,7 @@ gcal_event_editor_dialog_set_property (GObject      *object,
                                self,
                                G_CONNECT_SWAPPED);
       on_time_format_changed_cb (self);
+      g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
       break;
 
     case PROP_WRITABLE:
