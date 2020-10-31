@@ -6,6 +6,7 @@
     <file compressed="true">gcal-date-selector.ui</file>
     <file compressed="true">gcal-event-editor-dialog.ui</file>
     <file compressed="true">gcal-multi-choice.ui</file>
+    <file compressed="true">gcal-notes-section.ui</file>
     <file compressed="true">gcal-reminders-section.ui</file>
     <file compressed="true">gcal-schedule-section.ui</file>
     <file compressed="true">gcal-summary-section.ui</file>
