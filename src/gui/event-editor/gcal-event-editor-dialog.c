@@ -66,6 +66,7 @@ struct _GcalEventEditorDialog
   GcalEventEditorSection *schedule_section;
   GcalEventEditorSection *summary_section;
   GcalEventEditorSection *notes_section;
+  GcalEventEditorSection *sections[4];
 
   GtkWidget        *lock;
   GtkWidget        *source_image;
@@ -205,15 +206,6 @@ set_writable (GcalEventEditorDialog *self,
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_WRITABLE]);
 }
 
-static void
-apply_changes_to_event (GcalEventEditorDialog *self)
-{
-  gcal_event_editor_section_apply (self->notes_section);
-  gcal_event_editor_section_apply (self->reminders_section);
-  gcal_event_editor_section_apply (self->schedule_section);
-  gcal_event_editor_section_apply (self->summary_section);
-}
-
 
 /*
  * Callbacks
@@ -303,8 +295,10 @@ on_action_button_clicked_cb (GtkWidget *widget,
     {
       GcalCalendar *calendar;
       gint response;
+      gint i;
 
-      apply_changes_to_event (self);
+      for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
+        gcal_event_editor_section_apply (self->sections[i]);
 
       response = self->event_is_new ? GCAL_RESPONSE_CREATE_EVENT : GCAL_RESPONSE_SAVE_EVENT;
 
@@ -527,14 +521,19 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
 static void
 gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
 {
+  gint i = 0;
+
   self->writable = TRUE;
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  g_object_bind_property (self, "context", self->notes_section, "context", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "context", self->reminders_section, "context", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "context", self->schedule_section, "context", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "context", self->summary_section, "context", G_BINDING_DEFAULT);
+  self->sections[i++] = self->notes_section;
+  self->sections[i++] = self->reminders_section;
+  self->sections[i++] = self->schedule_section;
+  self->sections[i++] = self->summary_section;
+
+  for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
+    g_object_bind_property (self, "context", self->sections[i], "context", G_BINDING_DEFAULT);
 }
 
 /**
@@ -599,6 +598,7 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   GcalEventEditorFlags flags;
   GcalCalendar *calendar;
   cairo_surface_t *surface;
+  gint i;
 
   GCAL_ENTRY;
 
@@ -649,10 +649,8 @@ out:
   if (self->event_is_new)
     flags |= GCAL_EVENT_EDITOR_FLAG_NEW_EVENT;
 
-  gcal_event_editor_section_set_event (self->notes_section, cloned_event, flags);
-  gcal_event_editor_section_set_event (self->reminders_section, cloned_event, flags);
-  gcal_event_editor_section_set_event (self->schedule_section, cloned_event, flags);
-  gcal_event_editor_section_set_event (self->summary_section, cloned_event, flags);
+  for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
+    gcal_event_editor_section_set_event (self->sections[i], cloned_event, flags);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
 
