@@ -657,91 +657,44 @@ event_activated (GcalView        *view,
 }
 
 static void
-edit_dialog_closed (GtkDialog *dialog,
-                    gint       response,
-                    gpointer   user_data)
+on_event_editor_dialog_remove_event_cb (GcalEventEditorDialog *edit_dialog,
+                                        GcalEvent             *event,
+                                        GcalRecurrenceModType  modifier,
+                                        GcalWindow            *self)
 {
-  GcalEventEditorDialog *edit_dialog;
-  GcalRecurrenceModType mod;
-  GcalCalendar *calendar;
+  g_autoptr (GList) widgets = NULL;
   GcalManager *manager;
-  GcalWindow *window;
-  GcalEvent *event;
   GcalView *view;
-  GList *widgets;
 
   GCAL_ENTRY;
 
-  window = GCAL_WINDOW (user_data);
-  manager = gcal_context_get_manager (window->context);
-  edit_dialog = GCAL_EVENT_EDITOR_DIALOG (dialog);
-  event = gcal_event_editor_dialog_get_event (edit_dialog);
-  view = GCAL_VIEW (window->views[window->active_view]);
-  mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
-  calendar = gcal_event_get_calendar (event);
+  manager = gcal_context_get_manager (self->context);
+  view = GCAL_VIEW (self->views[self->active_view]);
 
-  if (!gcal_event_editor_dialog_get_recurrence_changed (edit_dialog) &&
-      gcal_event_has_recurrence (event) &&
-      (response != GCAL_RESPONSE_CREATE_EVENT &&
-       response != GTK_RESPONSE_CANCEL &&
-       response != GTK_RESPONSE_DELETE_EVENT &&
-       gcal_event_has_recurrence (event) &&
-       !ask_recurrence_modification_type (GTK_WIDGET (dialog), &mod, calendar)))
+  if (self->event_to_delete)
     {
-      return;
+      gcal_manager_remove_event (manager, self->event_to_delete, self->event_to_delete_mod);
+      g_clear_object (&self->event_to_delete);
+
+      create_notification (self, _("Another event deleted"), _("Undo"));
+    }
+  else
+    {
+      create_notification (self, _("Event deleted"), _("Undo"));
     }
 
+  gtk_revealer_set_reveal_child (GTK_REVEALER (self->notification), TRUE);
 
-  switch (response)
-    {
-    case GCAL_RESPONSE_CREATE_EVENT:
-      gcal_manager_create_event (manager, event);
-      break;
+  g_clear_handle_id (&self->notification_timeout, g_source_remove);
+  self->notification_timeout = g_timeout_add_seconds (5, hide_notification_scheduled, self);
 
-    case GCAL_RESPONSE_SAVE_EVENT:
-      gcal_manager_update_event (manager, event, mod);
-      break;
+  g_set_object (&self->event_to_delete, event);
+  self->event_to_delete_mod = modifier;
 
-    case GCAL_RESPONSE_DELETE_EVENT:
-      if (window->event_to_delete != NULL)
-        {
-          gcal_manager_remove_event (manager, window->event_to_delete, window->event_to_delete_mod);
-          g_clear_object (&window->event_to_delete);
+  /* hide widget of the event */
+  widgets = gcal_view_get_children_by_uuid (view, modifier, gcal_event_get_uid (event));
 
-          create_notification (GCAL_WINDOW (user_data), _("Another event deleted"), _("Undo"));
-        }
-      else
-        {
-          create_notification (GCAL_WINDOW (user_data), _("Event deleted"), _("Undo"));
-        }
-
-      gtk_revealer_set_reveal_child (GTK_REVEALER (window->notification), TRUE);
-
-      if (window->notification_timeout != 0)
-        g_source_remove (window->notification_timeout);
-
-      window->notification_timeout = g_timeout_add_seconds (5, hide_notification_scheduled, user_data);
-
-      g_set_object (&window->event_to_delete, event);
-
-      window->event_to_delete_mod = mod;
-
-      /* hide widget of the event */
-      widgets = gcal_view_get_children_by_uuid (view, mod, gcal_event_get_uid (event));
-
-      g_list_foreach (widgets, (GFunc) gtk_widget_hide, NULL);
-      g_list_free (widgets);
-      break;
-
-    case GTK_RESPONSE_CANCEL:
-    default:
-      break;
-
-    }
-
-  gtk_widget_hide (GTK_WIDGET (dialog));
-
-  gcal_event_editor_dialog_set_event (edit_dialog, NULL);
+  g_list_foreach (widgets, (GFunc) gtk_widget_hide, NULL);
 
   GCAL_EXIT;
 }
@@ -1102,7 +1055,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, window_state_changed);
 
   /* Edit dialog related */
-  gtk_widget_class_bind_template_callback (widget_class, edit_dialog_closed);
+  gtk_widget_class_bind_template_callback (widget_class, on_event_editor_dialog_remove_event_cb);
 }
 
 static void

@@ -25,10 +25,6 @@
 
 G_BEGIN_DECLS
 
-#define GCAL_RESPONSE_DELETE_EVENT 2
-#define GCAL_RESPONSE_SAVE_EVENT   4
-#define GCAL_RESPONSE_CREATE_EVENT 6
-
 #define GCAL_TYPE_EVENT_EDITOR_DIALOG (gcal_event_editor_dialog_get_type ())
 G_DECLARE_FINAL_TYPE (GcalEventEditorDialog, gcal_event_editor_dialog, GCAL, EVENT_EDITOR_DIALOG, GtkDialog);
 
@@ -37,13 +33,7 @@ GtkWidget*           gcal_event_editor_dialog_new                (void);
 void                 gcal_event_editor_dialog_set_event_is_new   (GcalEventEditorDialog *dialog,
                                                                   gboolean               event_is_new);
 
-GcalEvent*           gcal_event_editor_dialog_get_event          (GcalEventEditorDialog *self);
-
 void                 gcal_event_editor_dialog_set_event          (GcalEventEditorDialog *self,
                                                                   GcalEvent             *event);
-
-gboolean             gcal_event_editor_dialog_get_recurrence_changed   (GcalEventEditorDialog *self);
-
-GcalRecurrenceModType gcal_event_editor_dialog_get_recurrence_mod_type (GcalEventEditorDialog *self);
 
 G_END_DECLS

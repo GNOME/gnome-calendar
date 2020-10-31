@@ -17,7 +17,7 @@
             <property name="label" translatable="yes">Cancel</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <signal name="clicked" handler="on_action_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
+            <signal name="clicked" handler="on_cancel_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
           </object>
         </child>
         <child>
@@ -109,7 +109,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="on_action_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
+            <signal name="clicked" handler="on_done_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
             <style>
               <class name="suggested-action"/>
             </style>
@@ -218,7 +218,7 @@
                     <property name="visible">True</property>
                     <property name="halign">end</property>
                     <property name="can_focus">True</property>
-                    <signal name="clicked" handler="on_action_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
+                    <signal name="clicked" handler="on_delete_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
                     <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
                     <child>
                       <object class="GtkLabel" id="delete_label">
