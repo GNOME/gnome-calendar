@@ -28,6 +28,7 @@
 #include "gcal-event.h"
 #include "gcal-reminders-section.h"
 #include "gcal-schedule-section.h"
+#include "gcal-summary-section.h"
 
 #include <dazzle.h>
 #include <libecal/libecal.h>
@@ -62,6 +63,7 @@ struct _GcalEventEditorDialog
 
   GcalEventEditorSection *reminders_section;
   GcalEventEditorSection *schedule_section;
+  GcalEventEditorSection *summary_section;
 
   GtkWidget        *lock;
   GtkWidget        *source_image;
@@ -73,10 +75,9 @@ struct _GcalEventEditorDialog
   GtkWidget        *sources_button;
   GtkWidget        *sources_popover;
 
-  GtkWidget        *summary_entry;
-
-  GtkWidget        *location_entry;
   GtkWidget        *notes_text;
+
+  GBinding           *event_title_binding;
 
   /* actions */
   GMenu              *sources_menu;
@@ -95,14 +96,6 @@ struct _GcalEventEditorDialog
 static void          on_calendar_selected_action_cb              (GSimpleAction      *menu_item,
                                                                   GVariant           *value,
                                                                   gpointer            user_data);
-
-static void          on_summary_entry_changed_cb                 (GtkEntry              *entry,
-                                                                  GParamSpec            *pspec,
-                                                                  GcalEventEditorDialog *self);
-
-static void          on_location_entry_changed_cb                (GtkEntry              *entry,
-                                                                  GParamSpec            *pspec,
-                                                                  GcalEventEditorDialog *self);
 
 G_DEFINE_TYPE (GcalEventEditorDialog, gcal_event_editor_dialog, GTK_TYPE_DIALOG)
 
@@ -216,20 +209,6 @@ set_writable (GcalEventEditorDialog *self,
 static void
 gcal_event_editor_dialog_clear_data (GcalEventEditorDialog *self)
 {
-  /* summary */
-  g_signal_handlers_block_by_func (self->summary_entry, on_summary_entry_changed_cb, self);
-
-  gtk_entry_set_text (GTK_ENTRY (self->summary_entry), "");
-
-  g_signal_handlers_unblock_by_func (self->summary_entry, on_summary_entry_changed_cb, self);
-
-  /* location */
-  g_signal_handlers_block_by_func (self->location_entry, on_location_entry_changed_cb, self);
-
-  gtk_entry_set_text (GTK_ENTRY (self->location_entry), "");
-
-  g_signal_handlers_unblock_by_func (self->location_entry, on_location_entry_changed_cb, self);
-
   /* notes */
   gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->notes_text)), "", -1);
 }
@@ -238,9 +217,6 @@ static void
 apply_changes_to_event (GcalEventEditorDialog *self)
 {
   gchar *note_text;
-
-  /* Update summary */
-  gcal_event_set_summary (self->event, gtk_entry_get_text (GTK_ENTRY (self->summary_entry)));
 
   /* Update description */
   g_object_get (G_OBJECT (gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->notes_text))),
@@ -252,6 +228,7 @@ apply_changes_to_event (GcalEventEditorDialog *self)
 
   gcal_event_editor_section_apply (self->reminders_section);
   gcal_event_editor_section_apply (self->schedule_section);
+  gcal_event_editor_section_apply (self->summary_section);
 }
 
 
@@ -319,22 +296,6 @@ transient_size_allocate_cb (GcalEventEditorDialog *self)
 
   gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolled_window),
                                               MAX (400, (gint) (0.75 * alloc.height)));
-}
-
-static void
-on_location_entry_changed_cb (GtkEntry              *entry,
-                              GParamSpec            *pspec,
-                              GcalEventEditorDialog *self)
-{
-  gcal_event_set_location (self->event, gtk_entry_get_text (entry));
-}
-
-static void
-on_summary_entry_changed_cb (GtkEntry              *entry,
-                             GParamSpec            *pspec,
-                             GcalEventEditorDialog *self)
-{
-  gtk_widget_set_sensitive (self->done_button, gtk_entry_get_text_length (entry) > 0);
 }
 
 static void
@@ -520,6 +481,7 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
 
   g_type_ensure (GCAL_TYPE_REMINDERS_SECTION);
   g_type_ensure (GCAL_TYPE_SCHEDULE_SECTION);
+  g_type_ensure (GCAL_TYPE_SUMMARY_SECTION);
 
   object_class->finalize = gcal_event_editor_dialog_finalize;
   object_class->constructed = gcal_event_editor_dialog_constructed;
@@ -568,9 +530,6 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, delete_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_button);
-  /* Entries */
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, summary_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, location_entry);
   /* Other */
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, notes_text);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, titlebar);
@@ -582,13 +541,12 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, reminders_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, schedule_section);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, summary_section);
 
 
   /* callbacks */
   gtk_widget_class_bind_template_callback (widget_class, fix_reminders_label_height_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_action_button_clicked_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_summary_entry_changed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_location_entry_changed_cb);
 }
 
 static void
@@ -600,6 +558,7 @@ gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
 
   g_object_bind_property (self, "context", self->reminders_section, "context", G_BINDING_DEFAULT);
   g_object_bind_property (self, "context", self->schedule_section, "context", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "context", self->summary_section, "context", G_BINDING_DEFAULT);
 }
 
 /**
@@ -664,7 +623,6 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   GcalEventEditorFlags flags;
   GcalCalendar *calendar;
   cairo_surface_t *surface;
-  const gchar *summary;
 
   GCAL_ENTRY;
 
@@ -692,28 +650,25 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
 
   fill_sources_menu (self);
 
-  /* Load new event data */
-  /* summary */
-  summary = gcal_event_get_summary (cloned_event);
-
-  if (g_strcmp0 (summary, "") == 0)
-    gtk_entry_set_text (GTK_ENTRY (self->summary_entry), _("Unnamed event"));
-  else
-    gtk_entry_set_text (GTK_ENTRY (self->summary_entry), summary);
-
   /* dialog titlebar's title & subtitle */
   surface = get_circle_surface_from_color (gcal_event_get_color (cloned_event), 10);
   gtk_image_set_from_surface (GTK_IMAGE (self->source_image), surface);
   g_clear_pointer (&surface, cairo_surface_destroy);
+
+  g_clear_pointer (&self->event_title_binding, g_binding_unbind);
+  self->event_title_binding = g_object_bind_property (cloned_event,
+                                                      "summary",
+                                                      self->title_label,
+                                                      "label",
+                                                      G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_add_weak_pointer (G_OBJECT (self->event_title_binding),
+                             (gpointer*) &self->event_title_binding);
 
   gtk_label_set_label (GTK_LABEL (self->subtitle_label), gcal_calendar_get_name (calendar));
   self->selected_calendar = calendar;
 
   /* recurrence_changed */
   self->recurrence_changed = FALSE;
-
-  /* location */
-  gtk_entry_set_text (GTK_ENTRY (self->location_entry), gcal_event_get_location (cloned_event));
 
   /* notes */
   gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->notes_text)),
@@ -730,6 +685,7 @@ out:
 
   gcal_event_editor_section_set_event (self->reminders_section, cloned_event, flags);
   gcal_event_editor_section_set_event (self->schedule_section, cloned_event, flags);
+  gcal_event_editor_section_set_event (self->summary_section, cloned_event, flags);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
 

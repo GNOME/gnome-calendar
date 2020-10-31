@@ -56,7 +56,6 @@
                         <property name="can_focus">False</property>
                         <property name="ellipsize">middle</property>
                         <property name="max_width_chars">40</property>
-                        <property name="label" bind-source="summary_entry" bind-property="text" bind-flags="default" />
                         <style>
                           <class name="title"/>
                         </style>
@@ -139,59 +138,12 @@
                 <property name="margin">18</property>
                 <property name="spacing">12</property>
                 <property name="orientation">vertical</property>
+
+                <!-- Summary -->
                 <child>
-                  <object class="GtkListBox">
+                  <object class="GcalSummarySection" id="summary_section">
                     <property name="visible">True</property>
-                    <property name="selection-mode">none</property>
                     <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
-
-                    <style>
-                      <class name="frame" />
-                    </style>
-
-                    <!-- Summary -->
-                    <child>
-                      <object class="HdyActionRow">
-                        <property name="visible">True</property>
-                        <property name="title" translatable="yes">Title</property>
-                        <property name="activatable-widget">summary_entry</property>
-
-                        <child>
-                          <object class="GtkEntry" id="summary_entry">
-                            <property name="visible">True</property>
-                            <property name="valign">center</property>
-                            <property name="can_focus">True</property>
-                            <property name="editable" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
-                            <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
-                            <signal name="notify::text" handler="on_summary_entry_changed_cb" object="GcalEventEditorDialog" swapped="no"/>
-                          </object>
-                        </child>
-
-                      </object>
-                    </child>
-
-                    <!-- Location -->
-                    <child>
-                      <object class="HdyActionRow">
-                        <property name="visible">True</property>
-                        <property name="title" translatable="yes">Location</property>
-                        <property name="activatable-widget">location_entry</property>
-
-                        <child>
-                          <object class="GtkEntry" id="location_entry">
-                            <property name="visible">True</property>
-                            <property name="valign">center</property>
-                            <property name="can_focus">True</property>
-                            <property name="secondary_icon_name">find-location-symbolic</property>
-                            <property name="editable" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
-                            <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
-                            <signal name="notify::text" handler="on_location_entry_changed_cb" object="GcalEventEditorDialog" swapped="no"/>
-                          </object>
-                        </child>
-
-                      </object>
-                    </child>
-
                   </object>
                 </child>
 
