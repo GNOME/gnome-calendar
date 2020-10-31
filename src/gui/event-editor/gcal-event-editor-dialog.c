@@ -458,10 +458,6 @@ gcal_event_editor_dialog_set_property (GObject      *object,
 
   switch (prop_id)
     {
-    case PROP_EVENT:
-      gcal_event_editor_dialog_set_event (self, g_value_get_object (value), FALSE);
-      break;
-
     case PROP_CONTEXT:
       g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
@@ -511,7 +507,7 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
                                                 "event of the dialog",
                                                 "The event being edited",
                                                 GCAL_TYPE_EVENT,
-                                                G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+                                                G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEventEditorDialog::manager:
