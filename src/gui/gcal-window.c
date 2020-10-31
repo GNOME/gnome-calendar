@@ -392,8 +392,7 @@ on_window_new_event_cb (GSimpleAction *action,
   default_calendar = gcal_manager_get_default_calendar (manager);
   event = gcal_event_new (default_calendar, comp, NULL);
 
-  gcal_event_editor_dialog_set_event_is_new (GCAL_EVENT_EDITOR_DIALOG (self->event_editor), TRUE);
-  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (self->event_editor), event);
+  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (self->event_editor), event, TRUE);
 
   gtk_widget_show (self->event_editor);
 }
@@ -610,9 +609,7 @@ edit_event (GcalQuickAddPopover *popover,
             GcalEvent           *event,
             GcalWindow          *window)
 {
-  gcal_event_editor_dialog_set_event_is_new (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), TRUE);
-  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), event);
-
+  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), event, TRUE);
   gtk_widget_show (window->event_editor);
 }
 
@@ -633,9 +630,7 @@ create_event_detailed_cb (GcalView *view,
   default_calendar = gcal_manager_get_default_calendar (manager);
   event = gcal_event_new (default_calendar, comp, NULL);
 
-  gcal_event_editor_dialog_set_event_is_new (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), TRUE);
-  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), event);
-
+  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), event, TRUE);
   gtk_widget_show (window->event_editor);
 
   g_clear_object (&comp);
@@ -650,8 +645,7 @@ event_activated (GcalView        *view,
   GcalEvent *event;
 
   event = gcal_event_widget_get_event (event_widget);
-  gcal_event_editor_dialog_set_event_is_new (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), FALSE);
-  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), event);
+  gcal_event_editor_dialog_set_event (GCAL_EVENT_EDITOR_DIALOG (window->event_editor), event, FALSE);
 
   gtk_widget_show (window->event_editor);
 }

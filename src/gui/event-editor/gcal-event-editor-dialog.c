@@ -208,7 +208,7 @@ set_writable (GcalEventEditorDialog *self,
 static void
 clear_and_hide_dialog (GcalEventEditorDialog *self)
 {
-  gcal_event_editor_dialog_set_event (self, NULL);
+  gcal_event_editor_dialog_set_event (self, NULL, FALSE);
   gtk_widget_hide (GTK_WIDGET (self));
 }
 
@@ -459,7 +459,7 @@ gcal_event_editor_dialog_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_EVENT:
-      gcal_event_editor_dialog_set_event (self, g_value_get_object (value));
+      gcal_event_editor_dialog_set_event (self, g_value_get_object (value), FALSE);
       break;
 
     case PROP_CONTEXT:
@@ -594,23 +594,6 @@ gcal_event_editor_dialog_new (void)
 }
 
 /**
- * gcal_event_editor_dialog_set_event_is_new:
- * @dialog: a #GcalDialog
- * @event_is_new: %TRUE if the event is new, %FALSE otherwise
- *
- * Sets whether the currently edited event is a new event, or not.
- * The @dialog will adapt it's UI elements to reflect that.
- */
-void
-gcal_event_editor_dialog_set_event_is_new (GcalEventEditorDialog *self,
-                                           gboolean               event_is_new)
-{
-  self->event_is_new = event_is_new;
-
-  gtk_widget_set_visible (self->delete_button, !event_is_new);
-}
-
-/**
  * gcal_event_editor_dialog_set_event:
  * @dialog: a #GcalDialog
  * @event: (nullable): a #GcalEvent
@@ -620,7 +603,8 @@ gcal_event_editor_dialog_set_event_is_new (GcalEventEditorDialog *self,
  */
 void
 gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
-                                    GcalEvent             *event)
+                                    GcalEvent             *event,
+                                    gboolean               new_event)
 {
   g_autoptr (GcalEvent) cloned_event = NULL;
   GcalEventEditorFlags flags;
@@ -671,10 +655,13 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
 
   set_writable (self, !gcal_calendar_is_read_only (calendar));
 
+  self->event_is_new = new_event;
+  gtk_widget_set_visible (self->delete_button, !new_event);
+
 out:
   flags = GCAL_EVENT_EDITOR_FLAG_NONE;
 
-  if (self->event_is_new)
+  if (new_event)
     flags |= GCAL_EVENT_EDITOR_FLAG_NEW_EVENT;
 
   for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
