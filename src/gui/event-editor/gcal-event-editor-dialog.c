@@ -90,7 +90,6 @@ struct _GcalEventEditorDialog
   /* flags */
   gboolean          event_is_new;
   gboolean          recurrence_changed;
-  gboolean          setting_event;
 };
 
 static void          on_calendar_selected_action_cb              (GSimpleAction      *menu_item,
@@ -280,14 +279,6 @@ transient_size_allocate_cb (GcalEventEditorDialog *self)
 
   gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolled_window),
                                               MAX (400, (gint) (0.75 * alloc.height)));
-}
-
-static void
-fix_reminders_label_height_cb (GtkWidget    *summary_label,
-                               GdkRectangle *allocation,
-                               GtkWidget    *reminders_label)
-{
-  gtk_widget_set_size_request (reminders_label, -1, allocation->height);
 }
 
 static void
@@ -530,7 +521,6 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
 
 
   /* callbacks */
-  gtk_widget_class_bind_template_callback (widget_class, fix_reminders_label_height_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_action_button_clicked_cb);
 }
 
@@ -616,8 +606,6 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
 
   g_clear_object (&self->event);
 
-  self->setting_event = TRUE;
-
   /* If we just set the event to NULL, simply send a property notify */
   if (!event)
     GCAL_GOTO (out);
@@ -667,8 +655,6 @@ out:
   gcal_event_editor_section_set_event (self->summary_section, cloned_event, flags);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
-
-  self->setting_event = FALSE;
 
   GCAL_EXIT;
 }
