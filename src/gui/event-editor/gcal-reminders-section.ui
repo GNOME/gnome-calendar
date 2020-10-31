@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalRemindersSection" parent="GtkBox">
+    <property name="can_focus">False</property>
+    <property name="orientation">vertical</property>
+
+    <style>
+      <class name="frame" />
+    </style>
+
+    <child>
+      <object class="GtkListBox" id="alarms_listbox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="selection_mode">none</property>
+        <signal name="row-activated" handler="on_alarms_listbox_row_activated_cb" object="GcalRemindersSection" swapped="no" />
+
+        <child>
+          <object class="GtkListBoxRow" id="new_alarm_row">
+            <property name="visible">True</property>
+
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="expand">True</property>
+                <property name="margin">12</property>
+                <property name="label" translatable="yes">Add a Reminder…</property>
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+  </template>
+
+  <object class="GtkPopoverMenu" id="alarms_popover">
+    <property name="can_focus">False</property>
+    <property name="width_request">175</property>
+    <property name="relative-to">new_alarm_row</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="border_width">12</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkModelButton" id="five_minutes_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">5 minutes</property>
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalRemindersSection" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="ten_minutes_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">10 minutes</property>
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalRemindersSection" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="thirty_minutes_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">30 minutes</property>
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalRemindersSection" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="one_hour_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">1 hour</property>
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalRemindersSection" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="one_day_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="text" translatable="yes">1 day</property>
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalRemindersSection" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="two_days_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">2 days</property>
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalRemindersSection" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="three_days_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">3 days</property>
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalRemindersSection" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="one_week_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">1 week</property>
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalRemindersSection" swapped="no" />
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
