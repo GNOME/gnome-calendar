@@ -38,6 +38,7 @@ struct _GcalRemindersSection
 
   GtkWidget          *five_minutes_button;
   GtkWidget          *ten_minutes_button;
+  GtkWidget          *fifteen_minutes_button;
   GtkWidget          *thirty_minutes_button;
   GtkWidget          *one_hour_button;
   GtkWidget          *one_day_button;
@@ -81,6 +82,7 @@ struct
 } minutes_button[] = {
     { 5,     OFFSET (five_minutes_button) },
     { 10,    OFFSET (ten_minutes_button) },
+    { 15,    OFFSET (fifteen_minutes_button) },
     { 30,    OFFSET (thirty_minutes_button) },
     { 60,    OFFSET (one_hour_button) },
     { 1440,  OFFSET (one_day_button) },
@@ -441,6 +443,7 @@ gcal_reminders_section_class_init (GcalRemindersSectionClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, one_hour_button);
   gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, one_week_button);
   gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, ten_minutes_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, fifteen_minutes_button);
   gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, thirty_minutes_button);
   gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, three_days_button);
   gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, two_days_button);
