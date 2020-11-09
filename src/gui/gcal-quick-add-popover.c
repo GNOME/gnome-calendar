@@ -240,7 +240,7 @@ get_date_string_for_multiday (GDateTime *start,
   gint n_days;
   gchar *start_date_str, *end_date_str, *date_string;
 
-  gchar *start_date_weekdays_strings [] = {
+  const gchar *start_date_weekdays_strings[] = {
     N_("from next Monday"),
     N_("from next Tuesday"),
     N_("from next Wednesday"),
@@ -251,7 +251,7 @@ get_date_string_for_multiday (GDateTime *start,
     NULL
   };
 
-  gchar *end_date_weekdays_strings [] = {
+  const gchar *end_date_weekdays_strings[] = {
     N_("to next Monday"),
     N_("to next Tuesday"),
     N_("to next Wednesday"),
@@ -262,7 +262,7 @@ get_date_string_for_multiday (GDateTime *start,
     NULL
   };
 
-  gchar *month_names [] = {
+  const gchar *month_names[] = {
     N_("January"),
     N_("February"),
     N_("March"),
@@ -295,7 +295,7 @@ get_date_string_for_multiday (GDateTime *start,
     }
   else if (n_days < -1 && n_days > -8)
     {
-      gchar *start_weekday_str;
+      const gchar *start_weekday_str;
 
       start_weekday_str = start_date_weekdays_strings [g_date_time_get_day_of_week (start) - 1];
       start_date_str = g_strdup_printf ("%s", start_weekday_str);
@@ -332,7 +332,7 @@ get_date_string_for_multiday (GDateTime *start,
     }
   else if (n_days < -1 && n_days > -8)
     {
-      gchar *end_weekday_str;
+      const gchar *end_weekday_str;
 
       end_weekday_str = end_date_weekdays_strings [g_date_time_get_day_of_week (end) - 1];
       end_date_str = g_strdup_printf ("%s", end_weekday_str);
@@ -383,7 +383,7 @@ get_date_string_for_day (GDateTime *day)
   else if (n_days < -1 && n_days > -8)
     {
        gchar *event_weekday;
-       gchar *event_weekday_names [] = {
+       const gchar *event_weekday_names[] = {
          N_("New Event next Monday"),
          N_("New Event next Tuesday"),
          N_("New Event next Wednesday"),
@@ -400,7 +400,7 @@ get_date_string_for_day (GDateTime *day)
   else
     {
       const gchar *event_month;
-      gchar *event_month_names [] = {
+      const gchar *event_month_names[] = {
         /* Translators: %d is the numeric day of month */
         N_("New Event on January %d"),
         N_("New Event on February %d"),
