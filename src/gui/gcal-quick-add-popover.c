@@ -216,13 +216,16 @@ select_row (GcalQuickAddPopover *self,
 static gint
 get_number_of_days_from_today (GDateTime *day)
 {
+  g_autoptr (GDateTime) now = NULL;
   GDate today, event_day;
   gint n_days;
 
+  now = g_date_time_new_now_local ();
+
   g_date_set_dmy (&today,
-                  g_date_time_get_day_of_month (g_date_time_new_now_local ()),
-                  g_date_time_get_month (g_date_time_new_now_local ()),
-                  g_date_time_get_year (g_date_time_new_now_local ()));
+                  g_date_time_get_day_of_month (now),
+                  g_date_time_get_month (now),
+                  g_date_time_get_year (now));
 
   g_date_set_dmy (&event_day,
                   g_date_time_get_day_of_month (day),
