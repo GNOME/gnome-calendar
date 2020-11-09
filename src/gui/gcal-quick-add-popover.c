@@ -300,7 +300,7 @@ get_date_string_for_multiday (GDateTime *start,
     {
       const gchar *start_weekday_str;
 
-      start_weekday_str = start_date_weekdays_strings [g_date_time_get_day_of_week (start) - 1];
+      start_weekday_str = gettext (start_date_weekdays_strings[g_date_time_get_day_of_week (start) - 1]);
       start_date_str = g_strdup_printf ("%s", start_weekday_str);
     }
   else
@@ -313,7 +313,7 @@ get_date_string_for_multiday (GDateTime *start,
        * name and a date of month.
        */
       start_date_str = g_strdup_printf (_("from %1$s %2$s"),
-                                        month_names [g_date_time_get_month (start) - 1],
+                                        gettext (month_names[g_date_time_get_month (start) - 1]),
                                         day_number_str);
       g_free (day_number_str);
     }
@@ -337,7 +337,7 @@ get_date_string_for_multiday (GDateTime *start,
     {
       const gchar *end_weekday_str;
 
-      end_weekday_str = end_date_weekdays_strings [g_date_time_get_day_of_week (end) - 1];
+      end_weekday_str = gettext (end_date_weekdays_strings[g_date_time_get_day_of_week (end) - 1]);
       end_date_str = g_strdup_printf ("%s", end_weekday_str);
     }
   else
@@ -350,7 +350,7 @@ get_date_string_for_multiday (GDateTime *start,
        * name and a date of month.
        */
       end_date_str = g_strdup_printf (_("to %1$s %2$s"),
-                                      month_names [g_date_time_get_month (end) - 1],
+                                      gettext (month_names[g_date_time_get_month (end) - 1]),
                                       day_number_str);
       g_free (day_number_str);
     }
