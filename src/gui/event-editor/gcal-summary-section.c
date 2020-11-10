@@ -23,6 +23,7 @@
 #include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-event-editor-section.h"
+#include "gcal-expandable-entry.h"
 #include "gcal-summary-section.h"
 
 #include <glib/gi18n.h>
@@ -166,6 +167,8 @@ gcal_summary_section_class_init (GcalSummarySectionClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+
+  g_type_ensure (GCAL_TYPE_EXPANDABLE_ENTRY);
 
   object_class->finalize = gcal_summary_section_finalize;
   object_class->get_property = gcal_summary_section_get_property;
