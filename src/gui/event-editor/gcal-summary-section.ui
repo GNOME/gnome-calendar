@@ -22,8 +22,12 @@
             <child>
               <object class="GtkEntry" id="summary_entry">
                 <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="halign">end</property>
                 <property name="valign">center</property>
                 <property name="can_focus">True</property>
+                <property name="width-chars">20</property>
+                <property name="max-width-chars">30</property>
               </object>
             </child>
 
@@ -40,8 +44,12 @@
             <child>
               <object class="GtkEntry" id="location_entry">
                 <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="halign">end</property>
                 <property name="valign">center</property>
                 <property name="can_focus">True</property>
+                <property name="width-chars">20</property>
+                <property name="max-width-chars">30</property>
                 <property name="secondary_icon_name">find-location-symbolic</property>
               </object>
             </child>
