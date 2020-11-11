@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalEventPopover" parent="GtkPopover">
+
+    <style>
+      <class name="event-popover" />
+    </style>
+
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="spacing">0</property>
+            <property name="orientation">vertical</property>
+
+            <!-- Title -->
+            <child>
+              <object class="GtkLabel" id="summary_label">
+                <property name="visible">True</property>
+                <property name="margin">12</property>
+                <property name="ellipsize">end</property>
+                <property name="width-chars">30</property>
+                <property name="max-width-chars">40</property>
+                <attributes>
+                  <attribute name="weight" value="bold" />
+                </attributes>
+              </object>
+            </child>
+
+            <!-- Date & Time -->
+            <child>
+              <object class="GtkLabel" id="date_time_label">
+                <property name="visible">True</property>
+                <property name="ellipsize">end</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkSeparator">
+                <property name="visible">True</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="visible">True</property>
+                <property name="hscrollbar-policy">never</property>
+                <property name="propagate-natural-width">True</property>
+                <property name="propagate-natural-height">True</property>
+                <property name="max-content-height">400</property>
+
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="margin">12</property>
+                    <property name="spacing">12</property>
+                    <property name="orientation">vertical</property>
+
+
+                    <!-- Placeholder -->
+                    <child>
+                      <object class="GtkLabel" id="placeholder_label">
+                        <property name="visible">True</property>
+                        <property name="expand">True</property>
+                        <property name="valign">center</property>
+                        <property name="label" translatable="yes">No event information</property>
+                        <attributes>
+                          <attribute name="style" value="italic" />
+                        </attributes>
+                        <style>
+                          <class name="dim-label" />
+                        </style>
+                      </object>
+                    </child>
+
+                    <!-- Description -->
+                    <child>
+                      <object class="GtkLabel" id="description_label">
+                        <property name="use-markup">True</property>
+                        <property name="selectable">True</property>
+                        <property name="max-width-chars">50</property>
+                        <property name="xalign">0.0</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <style>
+                          <class name="dim-label" />
+                        </style>
+                      </object>
+                    </child>
+
+                    <!-- Location -->
+                    <child>
+                      <object class="GtkBox" id="location_box">
+                        <property name="orientation">vertical</property>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="xalign">0.0</property>
+                            <property name="label" translatable="yes">Location</property>
+                            <attributes>
+                              <attribute name="weight" value="bold" />
+                            </attributes>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkSeparator">
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkLabel" id="location_label">
+                            <property name="visible">True</property>
+                            <property name="selectable">True</property>
+                            <property name="xalign">0.0</property>
+                          </object>
+                        </child>
+
+                      </object>
+                    </child>
+
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+
+        <!-- Meetings -->
+        <child>
+          <object class="GtkSeparator">
+            <property name="visible" bind-source="meetings_listbox" bind-property="visible" bind-flags="default|sync-create" />
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkListBox" id="meetings_listbox">
+            <property name="selection-mode">none</property>
+            <style>
+              <class name="background" />
+            </style>
+          </object>
+        </child>
+
+
+        <!-- Edit button -->
+        <child>
+          <object class="GtkButton" id="edit_button">
+            <property name="visible">True</property>
+            <property name="can-default">True</property>
+            <property name="label" translatable="yes">Edit…</property>
+            <signal name="clicked" handler="on_edit_button_clicked_cb" object="GcalEventPopover" swapped="no" />
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+  </template>
+</interface>

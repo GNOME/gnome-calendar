@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.14"/>
+  <template class="GcalMeetingRow" parent="GtkListBoxRow">
+    <property name="visible">True</property>
+    <property name="activatable">False</property>
+    <focus-chain>
+      <widget name="url_label"/>
+      <widget name="join_button"/>
+    </focus-chain>
+
+    <child>
+      <object class="GtkGrid">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
+        <property name="column-spacing">18</property>
+
+        <child>
+          <object class="GtkLabel" id="service_label">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="xalign">0.0</property>
+            <style>
+              <class name="title" />
+            </style>
+          </object>
+          <packing>
+            <property name="top-attach">0</property>
+            <property name="left-attach">0</property>
+          </packing>
+        </child>
+
+        <child>
+          <object class="GtkLabel" id="url_label">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="xalign">0.0</property>
+            <style>
+              <class name="subtitle" />
+              <class name="dim-label" />
+            </style>
+          </object>
+          <packing>
+            <property name="top-attach">1</property>
+            <property name="left-attach">0</property>
+          </packing>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="join_button">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <!-- Translators: "Join" as in "Join meeting" -->
+            <property name="label" translatable="yes">Join</property>
+            <style>
+              <class name="suggested-action" />
+            </style>
+            <signal name="clicked" handler="on_join_button_clicked_cb" object="GcalMeetingRow" swapped="no" />
+          </object>
+          <packing>
+            <property name="top-attach">0</property>
+            <property name="left-attach">1</property>
+            <property name="height">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+
+  </template>
+</interface>

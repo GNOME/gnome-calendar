@@ -637,16 +637,33 @@ create_event_detailed_cb (GcalView *view,
 }
 
 static void
+event_preview_cb (GcalEventWidget        *event_widget,
+                  GcalEventPreviewAction  action,
+                  gpointer                user_data)
+{
+  GcalWindow *self = GCAL_WINDOW (user_data);
+  GcalEvent *event;
+
+  switch (action)
+    {
+    case GCAL_EVENT_PREVIEW_ACTION_EDIT:
+      event = gcal_event_widget_get_event (event_widget);
+      gcal_event_editor_dialog_set_event (self->event_editor, event, FALSE);
+      gtk_window_present (GTK_WINDOW (self->event_editor));
+      break;
+
+    case GCAL_EVENT_PREVIEW_ACTION_NONE:
+    default:
+      break;
+    }
+}
+
+static void
 event_activated (GcalView        *view,
                  GcalEventWidget *event_widget,
                  gpointer         user_data)
 {
-  GcalWindow *window = GCAL_WINDOW (user_data);
-  GcalEvent *event;
-
-  event = gcal_event_widget_get_event (event_widget);
-  gcal_event_editor_dialog_set_event (window->event_editor, event, FALSE);
-  gtk_widget_show (GTK_WIDGET (window->event_editor));
+  gcal_event_widget_show_preview (event_widget, event_preview_cb, user_data);
 }
 
 static void

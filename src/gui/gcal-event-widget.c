@@ -25,12 +25,21 @@
 #include "gcal-application.h"
 #include "gcal-context.h"
 #include "gcal-clock.h"
+#include "gcal-debug.h"
+#include "gcal-event-popover.h"
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 
 #define DESC_MAX_CHAR 200
 #define INTENSITY(c)  ((c->red) * 0.30 + (c->green) * 0.59 + (c->blue) * 0.11)
 #define ICON_SIZE     16
+
+typedef struct
+{
+  GcalEventWidget *event_widget;
+  GcalEventPreviewCallback callback;
+  gpointer user_data;
+} PreviewData;
 
 struct _GcalEventWidget
 {
@@ -525,6 +534,40 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
                           self->summary_label,
                           "label",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+}
+
+static void
+reply_preview_callback (GtkWidget              *event_popover,
+                        PreviewData            *data,
+                        GcalEventPreviewAction  action)
+{
+  if (data->callback)
+    data->callback (data->event_widget, action, data->user_data);
+
+  g_signal_handlers_disconnect_by_data (event_popover, data);
+
+  gtk_widget_destroy (event_popover);
+
+  g_clear_pointer (&data, g_free);
+}
+
+
+/*
+ * Callbacks
+ */
+
+static void
+on_event_popover_closed_cb (GtkWidget   *event_popover,
+                            PreviewData *data)
+{
+  reply_preview_callback (event_popover, data, GCAL_EVENT_PREVIEW_ACTION_NONE);
+}
+
+static void
+on_event_popover_edit_cb (GtkWidget   *event_popover,
+                               PreviewData *data)
+{
+  reply_preview_callback (event_popover, data, GCAL_EVENT_PREVIEW_ACTION_EDIT);
 }
 
 
@@ -1132,6 +1175,40 @@ gcal_event_widget_set_date_start (GcalEventWidget *self,
 
       g_object_notify (G_OBJECT (self), "date-start");
     }
+}
+
+/**
+ * gcal_event_widget_show_preview:
+ * @self: a #GcalEventWidget
+ * @callback: (nullable): callback for the event preview
+ * @user_data: (nullable): user data for @callback
+ *
+ * Shows an event preview popover for this event widget, and
+ * calls @callback when the popover is either dismissed, or
+ * the edit button is clicked.
+ */
+void
+gcal_event_widget_show_preview (GcalEventWidget          *self,
+                                GcalEventPreviewCallback  callback,
+                                gpointer                  user_data)
+{
+  PreviewData *data;
+  GtkWidget *event_popover;
+
+  GCAL_ENTRY;
+
+  data = g_new0 (PreviewData, 1);
+  data->event_widget = self;
+  data->callback = callback;
+  data->user_data = user_data;
+
+  event_popover = gcal_event_popover_new (self->context, self->event);
+  gtk_popover_set_relative_to (GTK_POPOVER (event_popover), GTK_WIDGET (self));
+  g_signal_connect (event_popover, "closed", G_CALLBACK (on_event_popover_closed_cb), data);
+  g_signal_connect (event_popover, "edit", G_CALLBACK (on_event_popover_edit_cb), data);
+  gtk_popover_popup (GTK_POPOVER (event_popover));
+
+  GCAL_EXIT;
 }
 
 /**

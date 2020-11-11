@@ -26,9 +26,18 @@
 
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_EVENT_WIDGET                    (gcal_event_widget_get_type ())
+typedef enum
+{
+  GCAL_EVENT_PREVIEW_ACTION_NONE,
+  GCAL_EVENT_PREVIEW_ACTION_EDIT,
+} GcalEventPreviewAction;
 
+#define GCAL_TYPE_EVENT_WIDGET                    (gcal_event_widget_get_type ())
 G_DECLARE_FINAL_TYPE (GcalEventWidget, gcal_event_widget, GCAL, EVENT_WIDGET, GtkBin)
+
+typedef void         (*GcalEventPreviewCallback)                 (GcalEventWidget        *event_widget,
+                                                                  GcalEventPreviewAction  action,
+                                                                  gpointer                user_data);
 
 GtkWidget*           gcal_event_widget_new                       (GcalContext        *context,
                                                                   GcalEvent          *event);
@@ -47,6 +56,10 @@ void                 gcal_event_widget_set_date_end              (GcalEventWidge
 
 void                 gcal_event_widget_set_read_only             (GcalEventWidget    *event,
                                                                   gboolean            read_only);
+
+void                 gcal_event_widget_show_preview              (GcalEventWidget          *self,
+                                                                  GcalEventPreviewCallback  callback,
+                                                                  gpointer                  user_data);
 
 /* Utilities */
 
