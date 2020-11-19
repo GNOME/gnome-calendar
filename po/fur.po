@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2020-11-07 10:58+0000\n"
-"PO-Revision-Date: 2020-11-19 03:49+0100\n"
+"PO-Revision-Date: 2020-11-19 04:20+0100\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
@@ -441,7 +441,7 @@ msgstr "1 setemane"
 #: src/gui/event-editor/gcal-schedule-section.c:241
 #, c-format
 msgid "Last %A"
-msgstr "%A passât"
+msgstr "%A passât(ade)"
 
 #: src/gui/event-editor/gcal-schedule-section.c:245
 msgid "Yesterday"
