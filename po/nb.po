@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-calendar 3.36.x\n"
+"Project-Id-Version: gnome-calendar 3.38.x\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-12-06 19:37+0000\n"
-"PO-Revision-Date: 2020-03-09 14:51+0100\n"
+"POT-Creation-Date: 2020-09-12 15:56+0000\n"
+"PO-Revision-Date: 2020-11-30 15:48+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: nb\n"
@@ -54,12 +54,8 @@ msgid "Week view"
 msgstr "Ukevisning"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Search for events"
-msgstr "Søk etter hendelser"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
-msgid "Calendar management"
-msgstr "Kalenderbehandling"
+msgid "Year view"
+msgstr "Årsvisning"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -123,7 +119,7 @@ msgid "Use GNOME night light setting to activate night-mode."
 msgstr "Bruk innstilling for GNOME nattlys for å aktivere nattmodus."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1878
+#: src/core/gcal-event.c:1882
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s – %2$s"
@@ -132,14 +128,14 @@ msgstr "%1$s – %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1886
+#: src/core/gcal-event.c:1890
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s – %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1902 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1906 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -193,7 +189,7 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "Kalender <b>%s</b> fjernet"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:705 src/gui/gcal-window.c:709
+#: src/gui/gcal-window.c:722 src/gui/gcal-window.c:726
 msgid "Undo"
 msgstr "Angre"
 
@@ -201,11 +197,11 @@ msgstr "Angre"
 msgid "Add Calendar…"
 msgstr "Legg til kalender …"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:491
+#: src/gui/calendar-management/gcal-new-calendar-page.c:505
 msgid "New Calendar"
 msgstr "Ny kalender"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:653
+#: src/gui/calendar-management/gcal-new-calendar-page.c:667
 msgid "Calendar files"
 msgstr "Kalenderfiler"
 
@@ -421,27 +417,27 @@ msgid "Done"
 msgstr "Ferdig"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:416
+#: src/gui/gcal-edit-dialog.c:417
 #, c-format
 msgid "Last %A"
 msgstr "Forrige %A"
 
-#: src/gui/gcal-edit-dialog.c:420
+#: src/gui/gcal-edit-dialog.c:421
 msgid "Yesterday"
 msgstr "I går"
 
-#: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
-#: src/views/gcal-year-view.c:279 src/views/gcal-year-view.c:557
+#: src/gui/gcal-edit-dialog.c:425 src/gui/gcal-window.ui:180
+#: src/views/gcal-year-view.c:282 src/views/gcal-year-view.c:560
 #: src/views/gcal-year-view.ui:88
 msgid "Today"
 msgstr "I dag"
 
-#: src/gui/gcal-edit-dialog.c:428
+#: src/gui/gcal-edit-dialog.c:429
 msgid "Tomorrow"
 msgstr "I morgen"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:438
+#: src/gui/gcal-edit-dialog.c:439
 #, c-format
 msgid "This %A"
 msgstr "Kommende %A"
@@ -450,12 +446,12 @@ msgstr "Kommende %A"
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
-#: src/gui/gcal-edit-dialog.c:468
+#: src/gui/gcal-edit-dialog.c:469
 #, c-format
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
-#: src/gui/gcal-edit-dialog.c:1512 src/gui/gcal-quick-add-popover.c:687
+#: src/gui/gcal-edit-dialog.c:1529 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
 msgstr "Hendelse uten navn"
 
@@ -868,19 +864,19 @@ msgstr "Rediger detaljer …"
 msgid ":"
 msgstr ":"
 
-#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:475
+#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:440
 msgid "AM"
 msgstr "AM"
 
-#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:475
+#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:440
 msgid "PM"
 msgstr "PM"
 
-#: src/gui/gcal-window.c:705
+#: src/gui/gcal-window.c:722
 msgid "Another event deleted"
 msgstr "Enda en hendelse slettet"
 
-#: src/gui/gcal-window.c:709
+#: src/gui/gcal-window.c:726
 msgid "Event deleted"
 msgstr "Hendelse slettet"
 
@@ -1034,11 +1030,11 @@ msgstr "_Alle hendelser"
 msgid "New Event…"
 msgstr "Ny hendelse …"
 
-#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:313
+#: src/views/gcal-week-grid.c:680 src/views/gcal-week-view.c:293
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/views/gcal-week-grid.c:756 src/views/gcal-week-view.c:316
+#: src/views/gcal-week-grid.c:683 src/views/gcal-week-view.c:296
 msgid "00:00"
 msgstr "00:00"
 
@@ -1057,14 +1053,14 @@ msgstr "uke %d"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:291
 msgid "%B %d…"
 msgstr "%d %B …"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:560
+#: src/views/gcal-year-view.c:297 src/views/gcal-year-view.c:563
 msgid "%B %d"
 msgstr "%d %B"
 
