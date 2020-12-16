@@ -45,6 +45,14 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2020-12-16" version="3.38.2">
+      <description>
+        <p>
+          This release includes bugfixes and brings new translations for various languages.
+        </p>
+      </description>
+    </release>
+
     <release date="2020-10-03" version="3.38.1">
       <description>
         <p>
