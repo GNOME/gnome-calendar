@@ -41,7 +41,7 @@ msgid ""
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "El Calendari del GNOME és una aplicació de calendari simple i bonica "
-"dissenyada per encaixar perfectament amb l'escriptori GNOME. Gràcies a la "
+"dissenyada per a encaixar perfectament amb l'escriptori GNOME. Gràcies a la "
 "reutilització dels components amb què s'ha construït l'escriptori GNOME, el "
 "calendari s'integra bé amb l'ecosistema GNOME."
 
@@ -124,7 +124,7 @@ msgstr "Segueix la llum nocturna del sistema"
 #: data/org.gnome.calendar.gschema.xml.in:32
 msgid "Use GNOME night light setting to activate night-mode."
 msgstr ""
-"Utilitza el paràmetre de llum nocturna del GNOME per activar el mode nocturn."
+"Utilitza el paràmetre de llum nocturna del GNOME per a activar el mode nocturn."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #: src/core/gcal-event.c:1882
@@ -383,7 +383,7 @@ msgstr "Fet"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:37
 msgid "Click to select the calendar"
-msgstr "Feu clic per seleccionar el calendari"
+msgstr "Feu clic per a seleccionar el calendari"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:157
 msgid "Schedule"
@@ -980,12 +980,12 @@ msgstr "Navegació"
 #: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Go back"
-msgstr "Vés enrere"
+msgstr "Ves enrere"
 
 #: src/gui/gtk/help-overlay.ui:65
 msgctxt "shortcut window"
 msgid "Go forward"
-msgstr "Vés endavant"
+msgstr "Ves endavant"
 
 #: src/gui/gtk/help-overlay.ui:72
 msgctxt "shortcut window"
