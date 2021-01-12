@@ -38,7 +38,11 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (ESource, g_object_unref)
 #endif
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ECalComponent, g_object_unref)
+
+#if !GWEATHER_CHECK_VERSION(3, 39, 0)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GWeatherLocation, gweather_location_unref)
+#endif
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ICalTime, g_object_unref)
 
 gchar*               gcal_get_weekday                            (gint                i);
