@@ -642,7 +642,7 @@ update_location (GcalWeatherService  *self,
        * https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/682
        */
       gweather_info_set_enabled_providers (self->gweather_info, GWEATHER_PROVIDER_METAR | GWEATHER_PROVIDER_OWM);
-      g_signal_connect_object (self->gweather_info, "updated", (GCallback) on_gqweather_update_cb, self, 0);
+      g_signal_connect_object (self->gweather_info, "updated", (GCallback) on_gweather_update_cb, self, 0);
 
       /*
        * gweather_info_update might or might not trigger a
