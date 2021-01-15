@@ -2,20 +2,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 98e6872775a91bf27122ff608b6db605\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-12-16 23:11+0000\n"
-"PO-Revision-Date: 2021-01-12 13:56\n"
-"Last-Translator: Yuras Shumovich <shumovichy@gmail.com>\n"
+"POT-Creation-Date: 2021-01-12 14:00+0000\n"
+"PO-Revision-Date: 2021-01-14 03:37+0300\n"
+"Last-Translator: Launchpad translators\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || n%10>=5 && n%10<=9 || n%100>=11 && n%100<=14 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || n%10>=5 && n%10<=9 || n"
+"%100>=11 && n%100<=14 ? 2 : 3);\n"
 "X-Generator: Poedit 2.4.2\n"
 "X-Crowdin-Project: 98e6872775a91bf27122ff608b6db605\n"
 "X-Crowdin-Project-ID: 2\n"
 "X-Crowdin-Language: be\n"
-"X-Crowdin-File: /Gnome 3.38/gnome-calendar-gnome-3-38-po-be-970268.merged.po\n"
+"X-Crowdin-File: /Gnome 3.38/gnome-calendar-gnome-3-38-po-be-970268.merged."
+"po\n"
 "X-Crowdin-File-ID: 2314\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
@@ -30,12 +33,25 @@ msgid "Calendar for GNOME"
 msgstr "Каляндар для GNOME"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
-msgid "GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME desktop. By reusing the components which the GNOME desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
-msgstr "Каляндар GNOME - гэта простая і прыгожая праграма, распрацаваная для працоўнага асяроддзя GNOME. Праграма распрацаваная з дапамогай кампанентаў, якія выкарыстоўваліся падчас стварэння працоўнага стала GNOME, таму каляндар выдатна інтэгруецца ў экасістэму GNOME."
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"Каляндар GNOME - гэта простая і прыгожая праграма, распрацаваная для "
+"працоўнага асяроддзя GNOME. Праграма распрацаваная з дапамогай кампанентаў, "
+"якія выкарыстоўваліся падчас стварэння працоўнага стала GNOME, таму каляндар "
+"выдатна інтэгруецца ў экасістэму GNOME."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
-msgid "We aim to find the perfect balance between nicely crafted features and user-centred usability. No excess, nothing missing. You’ll feel comfortable using Calendar, like you’ve been using it for ages!"
-msgstr "Нашай мэтай было знайсці ідэальны баланс паміж прыгожым выглядам і зручнасцю выкарыстання. Нічога лішняга, ніякіх недахопаў. Вам будзе камфортна, нібыта вы карысталіся ім заўсёды!"
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
+"Calendar, like you’ve been using it for ages!"
+msgstr ""
+"Нашай мэтай было знайсці ідэальны баланс паміж прыгожым выглядам і зручнасцю "
+"выкарыстання. Нічога лішняга, ніякіх недахопаў. Вам будзе камфортна, нібыта "
+"вы карысталіся ім заўсёды!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
 msgid "Week view"
@@ -91,8 +107,12 @@ msgid "Weather Service Configuration"
 msgstr "Канфігурацыя службы надвор'я"
 
 #: data/org.gnome.calendar.gschema.xml.in:27
-msgid "Whether weather reports are shown, automatic locations are used and a location-name"
-msgstr "Ці паказваецца надвор'е, аўтаматычна вызначаецца месцазнаходжання і назва мясціны"
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr ""
+"Ці паказваецца надвор'е, аўтаматычна вызначаецца месцазнаходжання і назва "
+"мясціны"
 
 #: data/org.gnome.calendar.gschema.xml.in:31
 msgid "Follow system night light"
@@ -100,7 +120,8 @@ msgstr "Прытрымлівацца налад сістэмы для начно
 
 #: data/org.gnome.calendar.gschema.xml.in:32
 msgid "Use GNOME night light setting to activate night-mode."
-msgstr "Ужываць начны рэжым у адпаведнасці з наладамі GNOME для начнога асвятлення."
+msgstr ""
+"Ужываць начны рэжым у адпаведнасці з наладамі GNOME для начнога асвятлення."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #: src/core/gcal-event.c:1882
@@ -199,8 +220,12 @@ msgid "Import a Calendar"
 msgstr "Імпартаваць каляндар"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:105
-msgid "Alternatively, enter the web address of an online calendar you want to import, or open a supported calendar file."
-msgstr "Увядзіце вэб-адрас календара, які хочаце імпартаваць з сеціва або адкрыйце прыдатны файл календара."
+msgid ""
+"Alternatively, enter the web address of an online calendar you want to "
+"import, or open a supported calendar file."
+msgstr ""
+"Увядзіце вэб-адрас календара, які хочаце імпартаваць з сеціва або адкрыйце "
+"прыдатны файл календара."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:137
 msgid "Open a File"
@@ -211,8 +236,12 @@ msgid "Calendars"
 msgstr "Календары"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:204
-msgid "If the calendar belongs to one of your online accounts, you can add it through the <a href=\"GOA\">online account settings</a>."
-msgstr "Калі каляндар знаходзіцца ў адным з вашых сеціўных акаўнтаў, яго можна дадаць праз <a href=\"GOA\">налады сеціўных акаўнтаў</a>."
+msgid ""
+"If the calendar belongs to one of your online accounts, you can add it "
+"through the <a href=\"GOA\">online account settings</a>."
+msgstr ""
+"Калі каляндар знаходзіцца ў адным з вашых сеціўных акаўнтаў, яго можна "
+"дадаць праз <a href=\"GOA\">налады сеціўных акаўнтаў</a>."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:240
 msgid "User"
@@ -393,7 +422,8 @@ msgstr "Аўтарскія правы © 2012–%d аўтары календар
 
 #: src/gui/gcal-application.c:288
 msgid "translator-credits"
-msgstr "Uladzimir Manulenka <vlma@tut.by>\n"
+msgstr ""
+"Uladzimir Manulenka <vlma@tut.by>\n"
 "Юрась Шумовіч <shumovichy@gmail.com>"
 
 #: src/gui/gcal-calendar-popover.ui:43
@@ -415,7 +445,7 @@ msgstr "Захаваць"
 
 #: src/gui/gcal-edit-dialog.c:374 src/gui/gcal-edit-dialog.ui:109
 msgid "Done"
-msgstr "Завершана"
+msgstr "Гатова"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
 #: src/gui/gcal-edit-dialog.c:417
@@ -462,7 +492,7 @@ msgstr "Націсніце, каб абраць каляндар"
 
 #: src/gui/gcal-edit-dialog.ui:156
 msgid "Title"
-msgstr "Загаловак"
+msgstr "Назва"
 
 #: src/gui/gcal-edit-dialog.ui:205
 msgid "Schedule"
@@ -478,7 +508,7 @@ msgstr "Пачатак"
 
 #: src/gui/gcal-edit-dialog.ui:254 src/gui/gcal-edit-dialog.ui:302
 msgid "Check this out!"
-msgstr "Праверыць"
+msgstr "Пазначыць"
 
 #: src/gui/gcal-edit-dialog.ui:295
 msgid "Ends"
@@ -522,11 +552,11 @@ msgstr "Паўтараць бясконца"
 
 #: src/gui/gcal-edit-dialog.ui:383
 msgid "No. of occurrences"
-msgstr "Колькасць паўтарэнняў"
+msgstr "Праз некалькі разоў"
 
 #: src/gui/gcal-edit-dialog.ui:384
 msgid "Until Date"
-msgstr "Да даты"
+msgstr "У пазначаную дату"
 
 #: src/gui/gcal-edit-dialog.ui:397
 msgid "Number of Occurrences"
@@ -1004,8 +1034,12 @@ msgid "Year view"
 msgstr "Прагляд года"
 
 #: src/utils/gcal-utils.c:958
-msgid "The event you are trying to modify is recurring. The changes you have selected should be applied to:"
-msgstr "Вы спрабуеце змяніць перыядычную падзею. Абраныя вамі змены ўжывуцца да наступных падзей:"
+msgid ""
+"The event you are trying to modify is recurring. The changes you have "
+"selected should be applied to:"
+msgstr ""
+"Вы спрабуеце змяніць перыядычную падзею. Абраныя вамі змены ўжывуцца да "
+"наступных падзей:"
 
 #: src/utils/gcal-utils.c:961
 msgid "_Cancel"
@@ -1207,4 +1241,3 @@ msgstr "Аўтаматычна вызначаць месцазнаходжанн
 
 #~ msgid "New Event on %s, %s – %s"
 #~ msgstr "Новая падзея на %s, %s – %s"
-
