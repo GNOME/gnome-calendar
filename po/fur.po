@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-11-07 10:58+0000\n"
-"PO-Revision-Date: 2020-11-19 04:20+0100\n"
+"POT-Creation-Date: 2021-01-15 08:07+0000\n"
+"PO-Revision-Date: 2021-01-17 15:06+0100\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -176,7 +176,7 @@ msgid "Settings"
 msgstr "Impostazions"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
-#: src/gui/event-editor/gcal-summary-section.ui:37
+#: src/gui/event-editor/gcal-summary-section.ui:42
 msgid "Location"
 msgstr "Posizion"
 
@@ -536,7 +536,7 @@ msgstr "Numar di ricorincis"
 msgid "End Repeat Date"
 msgstr "Date di fin de ripetizion"
 
-#: src/gui/event-editor/gcal-summary-section.c:78
+#: src/gui/event-editor/gcal-summary-section.c:79
 #: src/gui/gcal-quick-add-popover.c:689
 msgid "Unnamed event"
 msgstr "Event cence non"
@@ -599,7 +599,7 @@ msgstr "Gjestìs i calendaris…"
 #: src/gui/gcal-calendar-popover.ui:75
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
-msgstr "Daûr a sincronizâ i calendaris rimots…"
+msgstr "Daûr a sincronizâ i calendaris esternis…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
 #: src/gui/gcal-event-widget.c:428
