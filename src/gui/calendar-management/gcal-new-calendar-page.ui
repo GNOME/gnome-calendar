@@ -70,6 +70,7 @@
             <child>
               <object class="GtkColorButton" id="local_calendar_color_button">
                 <property name="visible">True</property>
+                <signal name="notify::color" handler="on_local_calendar_color_button_color_changed_cb" object="GcalNewCalendarPage" swapped="no" />
               </object>
             </child>
 

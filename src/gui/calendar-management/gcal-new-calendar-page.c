@@ -479,6 +479,14 @@ on_local_calendar_name_entry_text_changed_cb (GtkEntry            *entry,
 }
 
 static void
+on_local_calendar_color_button_color_changed_cb (GtkColorChooser     *chooser,
+                                                 GParamSpec          *pspec,
+                                                 GcalNewCalendarPage *self)
+{
+  update_local_source (self);
+}
+
+static void
 on_web_description_label_link_activated_cb (GtkLabel            *label,
                                             gchar               *uri,
                                             GcalNewCalendarPage *self)
@@ -653,6 +661,7 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_credential_entry_activate_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_file_chooser_button_file_set_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_name_entry_text_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_color_button_color_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_url_entry_text_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_web_description_label_link_activated_cb);
 }
