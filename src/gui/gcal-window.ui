@@ -45,6 +45,7 @@
                       <packing>
                         <property name="name">week</property>
                         <property name="title" translatable="yes">Week</property>
+                        <property name="icon_name">calendar-week-symbolic</property>
                       </packing>
                     </child>
                     <child>
@@ -60,6 +61,7 @@
                         <property name="position">1</property>
                         <property name="name">month</property>
                         <property name="title" translatable="yes">Month</property>
+                        <property name="icon_name">calendar-month-symbolic</property>
                       </packing>
                     </child>
                     <child>
@@ -74,6 +76,7 @@
                         <property name="position">2</property>
                         <property name="name">year</property>
                         <property name="title" translatable="yes">Year</property>
+                        <property name="icon_name">calendar-year-symbolic</property>
                       </packing>
                     </child>
                   </object>
@@ -234,7 +237,7 @@
               </object>
             </child>
             <child type="title">
-              <object class="GtkStackSwitcher" id="views_switcher">
+              <object class="HdyViewSwitcher" id="views_switcher">
                 <property name="visible">True</property>
                 <property name="stack">views_stack</property>
               </object>

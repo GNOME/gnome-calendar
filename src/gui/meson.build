@@ -1,6 +1,7 @@
 subdir('calendar-management')
 subdir('event-editor')
 subdir('gtk')
+subdir('icons')
 subdir('views')
 
 calendar_incs +=  include_directories('.')
