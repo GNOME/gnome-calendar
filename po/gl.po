@@ -1,24 +1,24 @@
 # Galician translations for PACKAGE package.
 # Copyright (C) 2012 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+#
 # Fran Diéguez <frandieguez@gnome.org>, 2012.
 # Marcos Lans <marcoslansgarza@gmail.com>, 2016.
 # Fran Dieguez <frandieguez@gnome.org>, 2012-2021.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: unnamed project\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2021-01-15 08:07+0000\n"
-"PO-Revision-Date: 2021-01-31 16:51+0100\n"
-"Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
-"Language-Team: Galician <proxecto@trasno.gal>\n"
+"POT-Creation-Date: 2021-01-31 15:52+0000\n"
+"PO-Revision-Date: 2021-02-24 13:02+0100\n"
+"Last-Translator: Fran Diéguez <frandieguez@gnome.org>\n"
+"Language-Team: Galician\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Generator: Gtranslator 3.38.0\n"
+"X-Generator: Lokalize 20.12.2\n"
 "X-Launchpad-Export-Date: 2016-03-03 10:20+0000\n"
 "X-Project-Style: gnome\n"
 
@@ -59,8 +59,6 @@ msgid "Week view"
 msgstr "Vista de semana"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-#| msgctxt "shortcut window"
-#| msgid "Year view"
 msgid "Year view"
 msgstr "Vista anual"
 
@@ -115,7 +113,7 @@ msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
-"Indica se se mostran os informes metereolóxicos, usanse localizacións "
+"Indica se se mostran os informes metereolóxicos, úsanse localizacións "
 "automáticas e un nome de localización"
 
 #: data/org.gnome.calendar.gschema.xml.in:31
@@ -414,7 +412,6 @@ msgid "10 minutes"
 msgstr "10 minutos"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:73
-#| msgid "5 minutes"
 msgid "15 minutes"
 msgstr "15 minutos"
 
@@ -729,7 +726,7 @@ msgstr "desde o Luns"
 #: src/gui/gcal-quick-add-popover.c:290
 #, c-format
 msgid "from Tomorrow"
-msgstr "desde mañán"
+msgstr "desde mañá"
 
 #: src/gui/gcal-quick-add-popover.c:294
 #, c-format
@@ -1072,8 +1069,8 @@ msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr ""
-"O evento que tenta modificar é recurrente. Os cambios que seleccione "
-"aplicaránse a:"
+"O evento que tenta modificar é recorrente. Os cambios que seleccione "
+"aplicaranse a:"
 
 #: src/utils/gcal-utils.c:961
 msgid "_Cancel"
