@@ -175,7 +175,7 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
       if (g_str_has_prefix (real_tzid, LIBICAL_TZID_PREFIX))
         real_tzid += strlen (LIBICAL_TZID_PREFIX);
 
-      tz = g_time_zone_new (real_tzid);
+      tz = g_time_zone_new_identifier (real_tzid);
     }
   else if (zone)
     {
@@ -184,14 +184,19 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
 
       offset = i_cal_timezone_get_utc_offset (zone, itt, NULL);
       tzid = format_utc_offset (offset);
-      tz = g_time_zone_new (tzid);
+      tz = g_time_zone_new_identifier (tzid);
     }
   else
     {
       tz = g_time_zone_new_utc ();
     }
 
-  g_assert (tz != NULL);
+  /*
+   * If tz is NULL, the timezone identifier is invalid. Fallback to UTC
+   * in this case.
+   */
+  if (!tz)
+    tz = g_time_zone_new_utc ();
 
   GCAL_TRACE_MSG ("%s (%p)", g_time_zone_get_identifier (tz), tz);
 
@@ -1716,14 +1721,14 @@ gcal_event_get_original_timezones (GcalEvent  *self,
       if (g_strcmp0 (i_cal_property_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-START") == 0)
         {
           value = i_cal_property_get_x (property);
-          original_start_tz = g_time_zone_new (value);
+          original_start_tz = g_time_zone_new_identifier (value);
 
           GCAL_TRACE_MSG ("Found X-GNOME-CALENDAR-ORIGINAL-TZ-START=%s", value);
         }
       else if (g_strcmp0 (i_cal_property_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-END") == 0)
         {
           value = i_cal_property_get_x (property);
-          original_end_tz = g_time_zone_new (value);
+          original_end_tz = g_time_zone_new_identifier (value);
 
           GCAL_TRACE_MSG ("Found X-GNOME-CALENDAR-ORIGINAL-TZ-END=%s", value);
         }
