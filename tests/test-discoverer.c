@@ -82,12 +82,10 @@ discoverer_file (void)
 
 /*********************************************************************************************************************/
 
-#if 0
-
 static void
-discovered_webdav_no_auth_cb (GObject      *source_object,
-                              GAsyncResult *result,
-                              gpointer      user_data)
+discovered_webdav_unauthorized_cb (GObject      *source_object,
+                                   GAsyncResult *result,
+                                   gpointer      user_data)
 {
   g_autoptr (GPtrArray) sources = NULL;
   g_autoptr (GError) error = NULL;
@@ -100,7 +98,7 @@ discovered_webdav_no_auth_cb (GObject      *source_object,
 }
 
 static void
-discoverer_webdav_no_auth (void)
+discoverer_webdav_unauthorized (void)
 {
   g_autoptr (GcalSimpleServer) server = NULL;
   g_autoptr (GMainLoop) mainloop = NULL;
@@ -119,13 +117,15 @@ discoverer_webdav_no_auth (void)
                                   NULL,
                                   NULL,
                                   NULL,
-                                  discovered_webdav_no_auth_cb,
+                                  discovered_webdav_unauthorized_cb,
                                   mainloop);
 
   g_main_loop_run (mainloop);
 }
 
 /*********************************************************************************************************************/
+
+#if 0
 
 // TODO: Implement raw CalDAV server in GcalSimpleServer
 
@@ -183,7 +183,7 @@ main (gint   argc,
   g_test_init (&argc, &argv, NULL);
 
   g_test_add_func ("/discoverer/file", discoverer_file);
-  //g_test_add_func ("/discoverer/webdav/no-auth", discoverer_webdav_no_auth);
+  g_test_add_func ("/discoverer/webdav/unauthorized", discoverer_webdav_unauthorized);
 
   return g_test_run ();
 }
