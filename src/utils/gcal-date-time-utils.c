@@ -223,7 +223,7 @@ gcal_date_time_from_icaltime (const ICalTime *date)
 
   zone = i_cal_time_get_timezone (date);
   identifier = zone ? i_cal_timezone_get_location (zone) : NULL;
-  tz = identifier ? g_time_zone_new (identifier) : g_time_zone_new_utc ();
+  tz = identifier ? g_time_zone_new_identifier (identifier) : g_time_zone_new_utc ();
   dt = g_date_time_new (tz,
                         i_cal_time_get_year (date),
                         i_cal_time_get_month (date),
