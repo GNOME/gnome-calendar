@@ -82,6 +82,8 @@ discoverer_file (void)
 
 /*********************************************************************************************************************/
 
+#if 0
+
 static void
 discovered_webdav_unauthorized_cb (GObject      *source_object,
                                    GAsyncResult *result,
@@ -124,8 +126,6 @@ discoverer_webdav_unauthorized (void)
 }
 
 /*********************************************************************************************************************/
-
-#if 0
 
 // TODO: Implement raw CalDAV server in GcalSimpleServer
 
@@ -183,7 +183,7 @@ main (gint   argc,
   g_test_init (&argc, &argv, NULL);
 
   g_test_add_func ("/discoverer/file", discoverer_file);
-  g_test_add_func ("/discoverer/webdav/unauthorized", discoverer_webdav_unauthorized);
+  //g_test_add_func ("/discoverer/webdav/unauthorized", discoverer_webdav_unauthorized);
 
   return g_test_run ();
 }
