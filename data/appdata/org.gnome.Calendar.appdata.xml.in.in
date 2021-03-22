@@ -45,6 +45,15 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2020-03-22" version="40.0">
+      <description>
+        <p>
+          GNOME Calendar 40.0 release brings stability improvements, updated translations,
+          and minor visual updates.
+        </p>
+      </description>
+    </release>
+
     <release date="2020-09-12" version="3.38.0">
       <description>
         <p>
