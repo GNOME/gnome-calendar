@@ -320,7 +320,25 @@ gcal_range_calculate_overlap (GcalRange         *a,
         }
       else if (a_end_b_end_diff == 0)
         {
-          if (a_start_b_start_diff < 0)
+          gint a_start_b_end_diff;
+          gint a_end_b_start_diff;
+
+          a_start_b_end_diff = compare_func (a->range_start, b->range_end);
+          a_end_b_start_diff = compare_func (a->range_end, b->range_start);
+
+          if (a_start_b_end_diff >= 0)
+            {
+              /* Case 5.i for zero length A */
+              overlap = GCAL_RANGE_NO_OVERLAP;
+              position = GCAL_RANGE_AFTER;
+            }
+          else if (a_end_b_start_diff <= 0)
+            {
+              /* Case 5.ii for zero length B */
+              overlap = GCAL_RANGE_NO_OVERLAP;
+              position = GCAL_RANGE_BEFORE;
+            }
+          else if (a_start_b_start_diff < 0)
             {
               /* Case 2.iii */
               overlap = GCAL_RANGE_SUPERSET;
