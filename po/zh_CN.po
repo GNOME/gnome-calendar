@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2021-01-22 12:11+0000\n"
-"PO-Revision-Date: 2021-01-26 18:20+0800\n"
+"POT-Creation-Date: 2021-02-26 22:27+0000\n"
+"PO-Revision-Date: 2021-02-22 23:03+0800\n"
 "Last-Translator: mars <gzhqyz@gmail.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -28,7 +28,7 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
-#: src/gui/gcal-window.ui:170
+#: src/gui/gcal-window.ui:173
 msgid "Calendar"
 msgstr "日历"
 
@@ -122,7 +122,7 @@ msgid "Use GNOME night light setting to activate night-mode."
 msgstr "使用 GNOME 夜光设置激活夜间模式。"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1882
+#: src/core/gcal-event.c:1887
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -131,14 +131,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1890
+#: src/core/gcal-event.c:1895
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1906 src/gui/gcal-quick-add-popover.c:472
+#: src/core/gcal-event.c:1911 src/gui/gcal-quick-add-popover.c:472
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s，%2$s – %3$s"
@@ -200,11 +200,11 @@ msgstr "默认情况下将新事件添加到该日历中"
 msgid "Remove Calendar"
 msgstr "移除日历"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:505
+#: src/gui/calendar-management/gcal-new-calendar-page.c:513
 msgid "New Calendar"
 msgstr "新建日历"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:667
+#: src/gui/calendar-management/gcal-new-calendar-page.c:676
 msgid "Calendar files"
 msgstr "日历文件"
 
@@ -213,50 +213,50 @@ msgstr "日历文件"
 msgid "Calendar Name"
 msgstr "日历名称"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:86
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:87
 msgid "Import a Calendar"
 msgstr "导入日历"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:106
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
 msgstr "此外，也可以输入您想导入的在线日历网址，或者打开支持的日历文件。"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:137
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:138
 msgid "Open a File"
 msgstr "打开文件"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:158
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:159
 msgid "Calendars"
 msgstr "日历"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:204
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:205
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
 "如果日历属于您的在线帐户，可以通过<a href=\"GOA\">在线帐号设置</a>来添加。"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:240
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
 msgid "User"
 msgstr "用户"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:254
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
 msgid "Password"
 msgstr "密码"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:302
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:341
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:303
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:342
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:17
 msgid "Cancel"
 msgstr "取消"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:311
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:312
 msgid "Connect"
 msgstr "连接"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:348
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:349
 #: src/gui/gcal-quick-add-popover.ui:130
 msgid "Add"
 msgstr "添加"
@@ -430,7 +430,7 @@ msgstr "上周的%A"
 msgid "Yesterday"
 msgstr "昨天"
 
-#: src/gui/event-editor/gcal-schedule-section.c:249 src/gui/gcal-window.ui:187
+#: src/gui/event-editor/gcal-schedule-section.c:249 src/gui/gcal-window.ui:190
 #: src/gui/views/gcal-year-view.c:282 src/gui/views/gcal-year-view.c:560
 #: src/gui/views/gcal-year-view.ui:88
 msgid "Today"
@@ -867,7 +867,7 @@ msgstr "为 12 月 %d 日新建事件"
 msgid "Edit Details…"
 msgstr "编辑细节…"
 
-#: src/gui/gcal-weather-settings.ui:12 src/gui/gcal-window.ui:327
+#: src/gui/gcal-weather-settings.ui:12 src/gui/gcal-window.ui:330
 msgid "_Weather"
 msgstr "天气(_W)"
 
@@ -889,46 +889,46 @@ msgstr "事件已删除"
 
 #: src/gui/gcal-window.ui:47
 msgid "Week"
-msgstr "星期"
+msgstr "周"
 
-#: src/gui/gcal-window.ui:62
+#: src/gui/gcal-window.ui:63
 msgid "Month"
-msgstr "月份"
+msgstr "月"
 
-#: src/gui/gcal-window.ui:76
+#: src/gui/gcal-window.ui:78
 msgid "Year"
-msgstr "年份"
+msgstr "年"
 
-#: src/gui/gcal-window.ui:176
+#: src/gui/gcal-window.ui:179
 msgctxt "tooltip"
 msgid "Add a new event"
 msgstr "添加新事件"
 
-#: src/gui/gcal-window.ui:265
+#: src/gui/gcal-window.ui:268
 msgid "Manage your calendars"
 msgstr "管理您的日历"
 
-#: src/gui/gcal-window.ui:276
+#: src/gui/gcal-window.ui:279
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "搜索事件"
 
-#: src/gui/gcal-window.ui:318
+#: src/gui/gcal-window.ui:321
 msgid "_Online Accounts…"
 msgstr "在线帐号(_O)…"
 
-#: src/gui/gcal-window.ui:342
+#: src/gui/gcal-window.ui:345
 msgid "_Keyboard Shortcuts"
 msgstr "键盘快捷键(_K)"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:354
 msgid "_About Calendar"
 msgstr "关于日历(_A)"
 
 #: src/gui/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
 msgid "General"
-msgstr "通用"
+msgstr "常规"
 
 #: src/gui/gtk/help-overlay.ui:17
 msgctxt "shortcut window"
