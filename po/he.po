@@ -2,14 +2,14 @@
 # Copyright (C) 2014 THE gnome-calendar'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # יוֹסֵף אוֹר בּוֹצְ׳קוֹ <yoseforb@gnome.org>, 2014.
-# Yosef Or Boczko <yoseforb@gmail.com>, 2014-2020.
+# Yosef Or Boczko <yoseforb@gmail.com>, 2014-2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-03-28 21:22+0000\n"
-"PO-Revision-Date: 2020-04-01 18:43+0300\n"
+"POT-Creation-Date: 2020-11-07 10:58+0000\n"
+"PO-Revision-Date: 2021-03-29 22:06+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: Hebrew <yoseforb@gmail.com>\n"
 "Language: he\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n>2||n==0) ? 1 : 2\n"
-"X-Generator: Gtranslator 3.36.0\n"
+"X-Generator: Gtranslator 3.38.0\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
-#: src/gui/gcal-window.ui:163
+#: src/gui/gcal-window.ui:170
 msgid "Calendar"
 msgstr "לוח שנה"
 
@@ -31,7 +31,6 @@ msgid "Calendar for GNOME"
 msgstr "לוח שנה עבור GNOME"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
-#, fuzzy
 #| msgid ""
 #| "GNOME Calendar is a simple and beautiful calendar application designed to "
 #| "perfectly fit the GNOME desktop. By reusing the components which the "
@@ -42,12 +41,11 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"לוח שנה GNOME הוא יישום לוח שנה פשוט ויפה שעוצב להתאים באופן מושלם לשולחן "
-"העבודה GNOME. באמצעות שימוש חוזר ברכיבים אשר עליהם בנוי שולחן העבודה GNOME, "
-"לוח השנה משתלב בצורה יפה עם GNOME."
+"לוח שנה מבית GNOME הוא יישום לוח שנה פשוט ויפה שעוצב להתאים באופן מושלם "
+"לשולחן העבודה GNOME. באמצעות שימוש חוזר ברכיבים אשר עליהם בנוי שולחן העבודה "
+"GNOME, לוח השנה משתלב בצורה יפה עם סביבת GNOME."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
-#, fuzzy
 #| msgid ""
 #| "We aim to find the perfect balance between nicely crafted features and "
 #| "user-centred usability. No excess, no lacks. You'll feel comfortable "
@@ -57,26 +55,21 @@ msgid ""
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
-"אנו שואפים למצוא את המאזן המושלם בין תכונות מעוצבות בצורה יפה לבין שימושיות "
-"ממוקדת משתמש. ללא עודף, ללא מחסור. תורגש נוחות בשימוש לוח השנה, כאילו הוא "
-"בשימוש על ידך כבר שנים!"
+"אנו שואפים למצוא את האיזון המושלם בין עיצוב יפה יפה לבין שימושיות ממוקדת "
+"משתמש. ללא עודף, ללא מחסור. תורגש נוחות בשימוש לוח השנה, כאילו הוא בשימוש על "
+"ידך כבר שנים!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
-#| msgctxt "shortcut window"
-#| msgid "Next view"
 msgid "Week view"
 msgstr "תצוגה שבועית"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Search for events"
-msgstr "חיפוש אירועים"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
-msgid "Calendar management"
-msgstr "ניהול לוח שנה"
+#| msgctxt "shortcut window"
+#| msgid "Year view"
+msgid "Year view"
+msgstr "תצוגה שנתית"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
-#| msgid "Access, and manage calendar"
 msgid "Access and manage your calendars"
 msgstr "גישה וניהול לוח השנה שלך"
 
@@ -138,7 +131,7 @@ msgid "Use GNOME night light setting to activate night-mode."
 msgstr "Use GNOME night light setting to activate night-mode."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1878
+#: src/core/gcal-event.c:1882
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "‏%1$s — %2$s"
@@ -147,14 +140,14 @@ msgstr "‏%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1886
+#: src/core/gcal-event.c:1890
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "‏%1$s ‏‎%2$s — ‏%3$s ‏‎%4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1902 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1906 src/gui/gcal-quick-add-popover.c:472
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "‏%1$s, ‏‎%2$s – ‏‎%3$s"
@@ -162,6 +155,25 @@ msgstr "‏%1$s, ‏‎%2$s – ‏‎%3$s"
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:42
 msgid "Calendar Settings"
 msgstr "הגדרות לוח שנה"
+
+#: src/gui/calendar-management/gcal-calendars-page.c:359
+msgid "Manage Calendars"
+msgstr "ניהול לוחות שנה"
+
+#. Update notification label
+#: src/gui/calendar-management/gcal-calendars-page.c:389
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "לוח שנה <b>%s</b> נמחק"
+
+#: src/gui/calendar-management/gcal-calendars-page.ui:31
+#: src/gui/gcal-window.c:672 src/gui/gcal-window.c:676
+msgid "Undo"
+msgstr "ביטול"
+
+#: src/gui/calendar-management/gcal-calendars-page.ui:97
+msgid "Add Calendar…"
+msgstr "הוספת לוח שנה…"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:18
 msgid "Account"
@@ -172,7 +184,7 @@ msgid "Settings"
 msgstr "הגדרות"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
-#: src/gui/gcal-edit-dialog.ui:177
+#: src/gui/event-editor/gcal-summary-section.ui:37
 msgid "Location"
 msgstr "מיקום"
 
@@ -197,44 +209,20 @@ msgstr "הוספת אירועים חדשים ללוח שנה זה בברירת �
 msgid "Remove Calendar"
 msgstr "מחיקת לוח שנה"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:359
-#| msgid "Manage your calendars"
-msgid "Manage Calendars"
-msgstr "ניהול לוחות שנה"
-
-#. Update notification label
-#: src/gui/calendar-management/gcal-calendars-page.c:389
-#, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "לוח שנה <b>%s</b> נמחק"
-
-#: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:705 src/gui/gcal-window.c:709
-msgid "Undo"
-msgstr "ביטול"
-
-#: src/gui/calendar-management/gcal-calendars-page.ui:97
-#| msgid "Add Calendar"
-msgid "Add Calendar…"
-msgstr "הוספת לוח שנה…"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:491
-#| msgid "Calendar"
+#: src/gui/calendar-management/gcal-new-calendar-page.c:505
 msgid "New Calendar"
 msgstr "לוח שנה חדש"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:653
+#: src/gui/calendar-management/gcal-new-calendar-page.c:667
 msgid "Calendar files"
 msgstr "קבצי לוח שנה"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:33
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:41
-#| msgid "Calendar name"
 msgid "Calendar Name"
 msgstr "שם לוח שנה"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:86
-#| msgid "Remove Calendar"
 msgid "Import a Calendar"
 msgstr "יבוא לוח שנה"
 
@@ -255,7 +243,6 @@ msgid "Calendars"
 msgstr "לוחות שנה"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:204
-#, fuzzy
 #| msgid ""
 #| "Enter the address of the calendar that you want to add. If the calendar "
 #| "belongs to one of your online accounts, you can add it through the <a "
@@ -264,9 +251,8 @@ msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"יש להזין את כתובת לוח השנה שברצונך להוסיף. אם לוח השנה שייך לאחד מהחשבונות "
-"המקוונים שלך, ניתן להוסיף אותו דרך <a href=\"GOA\">הגדרות חשבונות מקוונים</"
-"a>."
+"אם לוח השנה שייך לאחד מהחשבונות המקוונים שלך, ניתן להוסיף אותו דרך <a href="
+"\"GOA\">הגדרות חשבונות מקוונים</a>."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:240
 msgid "User"
@@ -278,7 +264,7 @@ msgstr "ססמה"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:302
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:341
-#: src/gui/gcal-edit-dialog.ui:17
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:17
 msgid "Cancel"
 msgstr "ביטול"
 
@@ -291,7 +277,7 @@ msgstr "התחברות"
 msgid "Add"
 msgstr "הוספה"
 
-#: src/gui/gcal-alarm-row.c:85
+#: src/gui/event-editor/gcal-alarm-row.c:85
 #, fuzzy, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
@@ -299,7 +285,7 @@ msgstr[0] "יום אחד, שעה אחת ודקה אחת לפני"
 msgstr[1] "‏%1$u ימים, %2$u ו־%3$u לפני"
 msgstr[2] "יומיים, שעתיים ושתי דקות לפני"
 
-#: src/gui/gcal-alarm-row.c:89
+#: src/gui/event-editor/gcal-alarm-row.c:89
 #, fuzzy, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
@@ -307,7 +293,7 @@ msgstr[0] "יום אחד, שעה אחת ודקה אחת לפני"
 msgstr[1] "‏%1$u ימים, %2$u ו־%3$u לפני"
 msgstr[2] "יומיים, שעתיים ושתי דקות לפני"
 
-#: src/gui/gcal-alarm-row.c:95
+#: src/gui/event-editor/gcal-alarm-row.c:95
 #, fuzzy, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
@@ -315,7 +301,7 @@ msgstr[0] "יום אחד, שעה אחת ודקה אחת לפני"
 msgstr[1] "‏%1$u ימים, %2$u ו־%3$u לפני"
 msgstr[2] "יומיים, שעתיים ושתי דקות לפני"
 
-#: src/gui/gcal-alarm-row.c:99
+#: src/gui/event-editor/gcal-alarm-row.c:99
 #, fuzzy, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
@@ -323,7 +309,7 @@ msgstr[0] "יום אחד, שעה אחת ודקה אחת לפני"
 msgstr[1] "‏%1$u ימים, %2$u ו־%3$u לפני"
 msgstr[2] "יומיים, שעתיים ושתי דקות לפני"
 
-#: src/gui/gcal-alarm-row.c:114
+#: src/gui/event-editor/gcal-alarm-row.c:114
 #, fuzzy, c-format
 #| msgid "%d hour before"
 #| msgid_plural "%d hours before"
@@ -333,7 +319,7 @@ msgstr[0] "יום אחד ושעה אחת לפני"
 msgstr[1] "‏%1$u ימים ו־%2$u שעות לפני"
 msgstr[2] "יומיים ושעתיים לפני"
 
-#: src/gui/gcal-alarm-row.c:118
+#: src/gui/event-editor/gcal-alarm-row.c:118
 #, fuzzy, c-format
 #| msgid "%d hour before"
 #| msgid_plural "%d hours before"
@@ -343,7 +329,7 @@ msgstr[0] "שעה לפני"
 msgstr[1] "%d שעות לפני"
 msgstr[2] "שעתיים לפני"
 
-#: src/gui/gcal-alarm-row.c:134
+#: src/gui/event-editor/gcal-alarm-row.c:134
 #, fuzzy, c-format
 #| msgid "%d minute before"
 #| msgid_plural "%d minutes before"
@@ -353,7 +339,7 @@ msgstr[0] "יום ודקה לפני"
 msgstr[1] "יום ו־%2$u דקות לפני"
 msgstr[2] "יום ו־%2$u דקות לפני"
 
-#: src/gui/gcal-alarm-row.c:138
+#: src/gui/event-editor/gcal-alarm-row.c:138
 #, fuzzy, c-format
 #| msgid "%d minute before"
 #| msgid_plural "%d minutes before"
@@ -363,70 +349,251 @@ msgstr[0] "יום לפני ודקה לפני"
 msgstr[1] "‏%1$u ימים ו־%2$u דקות לפני"
 msgstr[2] "יומיים ו־%2$u דקות לפני"
 
-#: src/gui/gcal-alarm-row.c:148
+#: src/gui/event-editor/gcal-alarm-row.c:148
 #, c-format
-#| msgid "%d day before"
-#| msgid_plural "%d days before"
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "יום לפני"
 msgstr[1] "‏%1$u ימים לפני"
 msgstr[2] "יומיים לפני"
 
-#: src/gui/gcal-alarm-row.c:166
+#: src/gui/event-editor/gcal-alarm-row.c:166
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "שעה ודקה לפני"
 msgstr[1] "‏%1$u שעות ו־%2$u דקות לפני"
 msgstr[2] "שעה ושתי דקות לפני"
 
-#: src/gui/gcal-alarm-row.c:170
+#: src/gui/event-editor/gcal-alarm-row.c:170
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "‏%1$u שעות ו־%2$u דקות לפני"
 msgstr[1] "‏%1$u שעות ו־%2$u דקות לפני"
 msgstr[2] "‏%1$u שעות ו־%2$u דקות לפני"
 
-#: src/gui/gcal-alarm-row.c:180
+#: src/gui/event-editor/gcal-alarm-row.c:180
 #, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "שעה לפני"
 msgstr[1] "‏%1$u שעות לפני"
 msgstr[2] "שעתיים לפני"
 
-#: src/gui/gcal-alarm-row.c:192
+#: src/gui/event-editor/gcal-alarm-row.c:192
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "דקה לפני"
 msgstr[1] "‏%1$u דקות לפני"
 msgstr[2] "שתי דקות לפני"
 
-#: src/gui/gcal-alarm-row.c:199
+#: src/gui/event-editor/gcal-alarm-row.c:199
 msgid "Event start time"
 msgstr "זמן תחילת אירוע"
 
-#: src/gui/gcal-alarm-row.ui:18
+#: src/gui/event-editor/gcal-alarm-row.ui:18
 msgid "Toggles the sound of the alarm"
 msgstr "הפעלת שמע ההתרעה"
 
-#: src/gui/gcal-alarm-row.ui:35
+#: src/gui/event-editor/gcal-alarm-row.ui:35
 msgid "Remove the alarm"
 msgstr "הסרת ההתראה"
 
+#: src/gui/event-editor/gcal-event-editor-dialog.c:201
+msgid "Save"
+msgstr "שמירה"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:201
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:108
+msgid "Done"
+msgstr "בוצע"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:37
+msgid "Click to select the calendar"
+msgstr "יש ללחוץ על מנת לבחור לוח שנה"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:157
+msgid "Schedule"
+msgstr "לוח זמנים"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:178
+msgid "Reminders"
+msgstr "תזכורות"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:201
+msgid "Notes"
+msgstr "הערות"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:226
+msgid "Delete Event"
+msgstr "מחיקת אירוע"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:28
+msgid "Add a Reminder…"
+msgstr "הוספת תזכורת…"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:55
+msgid "5 minutes"
+msgstr "חמש דקות"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:64
+msgid "10 minutes"
+msgstr "עשר דקות"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:73
+#| msgid "5 minutes"
+msgid "15 minutes"
+msgstr "15 דקות"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:82
+msgid "30 minutes"
+msgstr "חצי שעה"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:91
+msgid "1 hour"
+msgstr "שעה"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:99
+msgid "1 day"
+msgstr "יום"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:108
+msgid "2 days"
+msgstr "יומיים"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:117
+msgid "3 days"
+msgstr "שלושה ימים"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:126
+msgid "1 week"
+msgstr "שבוע"
+
+#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
+#: src/gui/event-editor/gcal-schedule-section.c:241
+#, c-format
+msgid "Last %A"
+msgstr "‏%A האחרון"
+
+#: src/gui/event-editor/gcal-schedule-section.c:245
+msgid "Yesterday"
+msgstr "אתמול"
+
+#: src/gui/event-editor/gcal-schedule-section.c:249 src/gui/gcal-window.ui:187
+#: src/gui/views/gcal-year-view.c:282 src/gui/views/gcal-year-view.c:560
+#: src/gui/views/gcal-year-view.ui:88
+msgid "Today"
+msgstr "היום"
+
+#: src/gui/event-editor/gcal-schedule-section.c:253
+msgid "Tomorrow"
+msgstr "מחר"
+
+#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
+#: src/gui/event-editor/gcal-schedule-section.c:263
+#, c-format
+msgid "This %A"
+msgstr "‏%A ה‏זה"
+
+#.
+#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
+#. * formatted time (e.g. 03:14 PM, or 21:29)
+#.
+#: src/gui/event-editor/gcal-schedule-section.c:293
+#, c-format
+msgid "%1$s, %2$s"
+msgstr "‏%1$s,‏ ‏‎%2$s"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:20
+msgid "All Day"
+msgstr "כל היום"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:40
+msgid "Starts"
+msgstr "התחלה"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:90
+msgid "Ends"
+msgstr "סיום"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:140
+msgid "Repeat"
+msgstr "חזרתיות"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:150
+msgid "No Repeat"
+msgstr "ללא חזרתיות"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:151
+msgid "Daily"
+msgstr "יומי"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:152
+msgid "Monday – Friday"
+msgstr "שני - שישי"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:153
+msgid "Weekly"
+msgstr "שבועי"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:154
+msgid "Monthly"
+msgstr "חודשי"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:155
+msgid "Yearly"
+msgstr "שנתי"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:168
+msgid "End Repeat"
+msgstr "הפסקת החזרתיות"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:178
+msgid "Forever"
+msgstr "לעד"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:179
+msgid "No. of occurrences"
+msgstr "מספר חזרות"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:180
+msgid "Until Date"
+msgstr "עד תאריך"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:193
+msgid "Number of Occurrences"
+msgstr "מספר חזרות"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:213
+msgid "End Repeat Date"
+msgstr "תאריך סיום החזרתיות"
+
+#: src/gui/event-editor/gcal-summary-section.c:78
+#: src/gui/gcal-quick-add-popover.c:689
+msgid "Unnamed event"
+msgstr "אירוע ללא שם"
+
+#: src/gui/event-editor/gcal-summary-section.ui:19
+msgid "Title"
+msgstr "כותרת"
+
+#: src/gui/event-editor/gcal-time-selector.ui:22
+msgid ":"
+msgstr ":"
+
+#: src/gui/event-editor/gcal-time-selector.ui:47
+#: src/gui/views/gcal-week-view.c:440
+msgid "AM"
+msgstr "לפנה״צ"
+
+#: src/gui/event-editor/gcal-time-selector.ui:48
+#: src/gui/views/gcal-week-view.c:440
+msgid "PM"
+msgstr "אחה״צ"
+
 #: src/gui/gcal-application.c:63
-#| msgid "Edit Calendar"
 msgid "Quit GNOME Calendar"
 msgstr "Quit GNOME Calendar"
 
@@ -448,7 +615,6 @@ msgstr "Open calendar showing the passed event"
 
 #: src/gui/gcal-application.c:234
 #, c-format
-#| msgid "Copyright © %d–%d The Calendar authors"
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "כל הזכויות שמורות © 2012–%d מחברי לוח השנה"
 
@@ -459,12 +625,10 @@ msgstr ""
 "<a href=\"https://l10n.gnome.org/teams/he/\">מיזם תרגום GNOME לעברית</a>"
 
 #: src/gui/gcal-calendar-popover.ui:43
-#| msgid "_Synchronize"
 msgid "_Synchronize Calendars"
 msgstr "_תזמון לוחות שנה"
 
 #: src/gui/gcal-calendar-popover.ui:51
-#| msgid "Manage your calendars"
 msgid "Manage Calendars…"
 msgstr "ניהול לוחות שנה…"
 
@@ -472,186 +636,6 @@ msgstr "ניהול לוחות שנה…"
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "תיאום לוחות שנה מרוחקים…"
-
-#: src/gui/gcal-edit-dialog.c:374
-msgid "Save"
-msgstr "שמירה"
-
-#: src/gui/gcal-edit-dialog.c:374 src/gui/gcal-edit-dialog.ui:109
-msgid "Done"
-msgstr "בוצע"
-
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:416
-#, c-format
-msgid "Last %A"
-msgstr "‏%A האחרון"
-
-#: src/gui/gcal-edit-dialog.c:420
-msgid "Yesterday"
-msgstr "אתמול"
-
-#: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
-#: src/views/gcal-year-view.c:279 src/views/gcal-year-view.c:557
-#: src/views/gcal-year-view.ui:88
-msgid "Today"
-msgstr "היום"
-
-#: src/gui/gcal-edit-dialog.c:428
-msgid "Tomorrow"
-msgstr "מחר"
-
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:438
-#, c-format
-msgid "This %A"
-msgstr "‏%A ה‏זה"
-
-#.
-#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
-#. * formatted time (e.g. 03:14 PM, or 21:29)
-#.
-#: src/gui/gcal-edit-dialog.c:468
-#, c-format
-msgid "%1$s, %2$s"
-msgstr "‏%1$s,‏ ‏‎%2$s"
-
-#: src/gui/gcal-edit-dialog.c:1512 src/gui/gcal-quick-add-popover.c:687
-msgid "Unnamed event"
-msgstr "אירוע ללא שם"
-
-#: src/gui/gcal-edit-dialog.ui:37
-#| msgid "Click to select the event's agenda"
-msgid "Click to select the calendar"
-msgstr "יש ללחוץ על מנת לבחור לוח שנה"
-
-#: src/gui/gcal-edit-dialog.ui:156
-msgid "Title"
-msgstr "כותרת"
-
-#: src/gui/gcal-edit-dialog.ui:205
-msgid "Schedule"
-msgstr "לוח זמנים"
-
-#: src/gui/gcal-edit-dialog.ui:226
-msgid "All Day"
-msgstr "כל היום"
-
-#: src/gui/gcal-edit-dialog.ui:247
-msgid "Starts"
-msgstr "התחלה"
-
-#: src/gui/gcal-edit-dialog.ui:254 src/gui/gcal-edit-dialog.ui:302
-msgid "Check this out!"
-msgstr "לבדוק את זה!"
-
-#: src/gui/gcal-edit-dialog.ui:295
-msgid "Ends"
-msgstr "סיום"
-
-#: src/gui/gcal-edit-dialog.ui:343
-msgid "Repeat"
-msgstr "חזרתיות"
-
-#: src/gui/gcal-edit-dialog.ui:354
-msgid "No Repeat"
-msgstr "ללא חזרתיות"
-
-#: src/gui/gcal-edit-dialog.ui:355
-msgid "Daily"
-msgstr "יומי"
-
-#: src/gui/gcal-edit-dialog.ui:356
-msgid "Monday – Friday"
-msgstr "שני - שישי"
-
-#: src/gui/gcal-edit-dialog.ui:357
-#| msgid "Week"
-msgid "Weekly"
-msgstr "שבועי"
-
-#: src/gui/gcal-edit-dialog.ui:358
-#| msgid "Month"
-msgid "Monthly"
-msgstr "חודשי"
-
-#: src/gui/gcal-edit-dialog.ui:359
-#| msgid "Year"
-msgid "Yearly"
-msgstr "שנתי"
-
-#: src/gui/gcal-edit-dialog.ui:372
-msgid "End Repeat"
-msgstr "הפסקת החזרתיות"
-
-#: src/gui/gcal-edit-dialog.ui:382
-msgid "Forever"
-msgstr "לעד"
-
-#: src/gui/gcal-edit-dialog.ui:383
-msgid "No. of occurrences"
-msgstr "מספר חזרות"
-
-#: src/gui/gcal-edit-dialog.ui:384
-msgid "Until Date"
-msgstr "עד תאריך"
-
-#: src/gui/gcal-edit-dialog.ui:397
-msgid "Number of Occurrences"
-msgstr "מספר חזרות"
-
-#: src/gui/gcal-edit-dialog.ui:415
-msgid "End Repeat Date"
-msgstr "תאריך סיום החזרתיות"
-
-#: src/gui/gcal-edit-dialog.ui:438
-msgid "Reminders"
-msgstr "תזכורות"
-
-#: src/gui/gcal-edit-dialog.ui:474
-#| msgid "Add reminder…"
-msgid "Add a Reminder…"
-msgstr "הוספת תזכורת…"
-
-#: src/gui/gcal-edit-dialog.ui:495
-msgid "Notes"
-msgstr "הערות"
-
-#: src/gui/gcal-edit-dialog.ui:539
-msgid "Delete Event"
-msgstr "מחיקת אירוע"
-
-#: src/gui/gcal-edit-dialog.ui:573
-msgid "5 minutes"
-msgstr "חמש דקות"
-
-#: src/gui/gcal-edit-dialog.ui:582
-msgid "10 minutes"
-msgstr "עשר דקות"
-
-#: src/gui/gcal-edit-dialog.ui:591
-msgid "30 minutes"
-msgstr "חצי שעה"
-
-#: src/gui/gcal-edit-dialog.ui:600
-msgid "1 hour"
-msgstr "שעה"
-
-#: src/gui/gcal-edit-dialog.ui:608
-msgid "1 day"
-msgstr "יום"
-
-#: src/gui/gcal-edit-dialog.ui:617
-msgid "2 days"
-msgstr "יומיים"
-
-#: src/gui/gcal-edit-dialog.ui:626
-msgid "3 days"
-msgstr "שלושה ימים"
-
-#: src/gui/gcal-edit-dialog.ui:635
-msgid "1 week"
-msgstr "שבוע"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
 #: src/gui/gcal-event-widget.c:428
@@ -729,8 +713,6 @@ msgid "February"
 msgstr "פברואר"
 
 #: src/gui/gcal-quick-add-popover.c:268
-#| msgctxt "shortcut window"
-#| msgid "Search"
 msgid "March"
 msgstr "מרץ"
 
@@ -739,7 +721,6 @@ msgid "April"
 msgstr "אפריל"
 
 #: src/gui/gcal-quick-add-popover.c:270
-#| msgid "Day"
 msgid "May"
 msgstr "מאי"
 
@@ -773,7 +754,6 @@ msgstr "דצמבר"
 
 #: src/gui/gcal-quick-add-popover.c:286
 #, c-format
-#| msgid "Today"
 msgid "from Today"
 msgstr "מהיום"
 
@@ -798,7 +778,6 @@ msgstr "מ־%2$s ב%1$s"
 
 #: src/gui/gcal-quick-add-popover.c:323
 #, c-format
-#| msgid "Today"
 msgid "to Today"
 msgstr "עד היום"
 
@@ -824,133 +803,110 @@ msgstr "עד %2$s ב%1$s"
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
 #: src/gui/gcal-quick-add-popover.c:356
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event %1$s %2$s"
 msgstr "אירוע חדש %1$s %2$s"
 
 #: src/gui/gcal-quick-add-popover.c:373
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event Today"
 msgstr "אירוע חדש היום"
 
 #: src/gui/gcal-quick-add-popover.c:377
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event Tomorrow"
 msgstr "אירוע חדש מחר"
 
 #: src/gui/gcal-quick-add-popover.c:381
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event Yesterday"
 msgstr "אירוע חדש אתמול"
 
 #: src/gui/gcal-quick-add-popover.c:387
-#| msgid "New Event on %s"
 msgid "New Event next Monday"
 msgstr "אירוע חדש בשני הקרוב"
 
 #: src/gui/gcal-quick-add-popover.c:388
-#| msgid "New Event on %s"
 msgid "New Event next Tuesday"
 msgstr "אירוע חדש בשלישי הקרוב"
 
 #: src/gui/gcal-quick-add-popover.c:389
-#| msgid "New Event on %s"
 msgid "New Event next Wednesday"
 msgstr "אירוע חדש ברביעי הקרוב"
 
 #: src/gui/gcal-quick-add-popover.c:390
-#| msgid "New Event on %s"
 msgid "New Event next Thursday"
 msgstr "אירוע חדש בחמישי הקרוב"
 
 #: src/gui/gcal-quick-add-popover.c:391
-#| msgid "New Event on %s"
 msgid "New Event next Friday"
 msgstr "אירוע חדש בשישי הקרוב"
 
 #: src/gui/gcal-quick-add-popover.c:392
-#| msgid "New Event on %s"
 msgid "New Event next Saturday"
 msgstr "אירוע חדש בשבת הקרובה"
 
 #: src/gui/gcal-quick-add-popover.c:393
-#| msgid "New Event on %s"
 msgid "New Event next Sunday"
 msgstr "אירוע חדש בראשון הקרוב"
 
 #. Translators: %d is the numeric day of month
 #: src/gui/gcal-quick-add-popover.c:405
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on January %d"
 msgstr "אירוע חדש ב־%d בינואר"
 
 #: src/gui/gcal-quick-add-popover.c:406
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on February %d"
 msgstr "אירוע חדש ב־%d בפברואר"
 
 #: src/gui/gcal-quick-add-popover.c:407
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on March %d"
 msgstr "אירוע חדש ב־%d במרץ"
 
 #: src/gui/gcal-quick-add-popover.c:408
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on April %d"
 msgstr "אירוע חדש ב־%d באפריל"
 
 #: src/gui/gcal-quick-add-popover.c:409
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on May %d"
 msgstr "אירוע חדש ב־%d במאי"
 
 #: src/gui/gcal-quick-add-popover.c:410
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on June %d"
 msgstr "אירוע חדש ב־%d ביוני"
 
 #: src/gui/gcal-quick-add-popover.c:411
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on July %d"
 msgstr "אירוע חדש ב־%d ביולי"
 
 #: src/gui/gcal-quick-add-popover.c:412
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on August %d"
 msgstr "אירוע חדש ב־%d באוגוסט"
 
 #: src/gui/gcal-quick-add-popover.c:413
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on September %d"
 msgstr "אירוע חדש ב־%d בסטמבר"
 
 #: src/gui/gcal-quick-add-popover.c:414
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on October %d"
 msgstr "אירוע חדש ב־%d באוקטובר"
 
 #: src/gui/gcal-quick-add-popover.c:415
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on November %d"
 msgstr "אירוע חדש ב־%d בנובמבר"
 
 #: src/gui/gcal-quick-add-popover.c:416
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on December %d"
 msgstr "אירוע חדש ב־%d בדצמבר"
 
@@ -958,154 +914,190 @@ msgstr "אירוע חדש ב־%d בדצמבר"
 msgid "Edit Details…"
 msgstr "עריכת פרטים…"
 
-#: src/gui/gcal-time-selector.ui:22
-msgid ":"
-msgstr ":"
+#: src/gui/gcal-weather-settings.ui:12 src/gui/gcal-window.ui:327
+msgid "_Weather"
+msgstr "_מזג אוויר"
 
-#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:475
-msgid "AM"
-msgstr "לפנה״צ"
+#: src/gui/gcal-weather-settings.ui:30
+msgid "Show Weather"
+msgstr "הצגת מזג אוויר"
 
-#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:475
-msgid "PM"
-msgstr "אחה״צ"
+#: src/gui/gcal-weather-settings.ui:53
+msgid "Automatic Location"
+msgstr "מיקום אוטומטי"
 
-#: src/gui/gcal-window.c:705
+#: src/gui/gcal-window.c:672
 msgid "Another event deleted"
 msgstr "אירוע נוסף נמחק"
 
-#: src/gui/gcal-window.c:709
+#: src/gui/gcal-window.c:676
 msgid "Event deleted"
 msgstr "מחיקת אירוע"
 
-#: src/gui/gcal-window.ui:43
+#: src/gui/gcal-window.ui:47
 msgid "Week"
 msgstr "שבוע"
 
-#: src/gui/gcal-window.ui:58
+#: src/gui/gcal-window.ui:62
 msgid "Month"
 msgstr "חודש"
 
-#: src/gui/gcal-window.ui:72
+#: src/gui/gcal-window.ui:76
 msgid "Year"
 msgstr "שנה"
 
-#: src/gui/gcal-window.ui:169
-#| msgctxt "shortcut window"
-#| msgid "New event"
+#: src/gui/gcal-window.ui:176
 msgctxt "tooltip"
 msgid "Add a new event"
 msgstr "הוספת אירוע חדש"
 
-#: src/gui/gcal-window.ui:258
+#: src/gui/gcal-window.ui:265
 msgid "Manage your calendars"
 msgstr "ניהול לוחות השנה שלך"
 
-#: src/gui/gcal-window.ui:269
-#| msgid "Search for events"
+#: src/gui/gcal-window.ui:276
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "חיפוש אירועים"
 
-#: src/gui/gcal-window.ui:309
-#| msgid "Online Accounts"
+#: src/gui/gcal-window.ui:318
 msgid "_Online Accounts…"
 msgstr "_חשבונות מקוונים…"
 
-#: src/gui/gcal-window.ui:318 src/weather/gcal-weather-settings.ui:12
-msgid "_Weather"
-msgstr "_מזג אוויר"
-
-#: src/gui/gcal-window.ui:333
+#: src/gui/gcal-window.ui:342
 msgid "_Keyboard Shortcuts"
 msgstr "_צירופי מקשים"
 
-#: src/gui/gcal-window.ui:342
-#| msgid "Add Calendar"
+#: src/gui/gcal-window.ui:351
 msgid "_About Calendar"
 msgstr "על אודות _לוח שנה"
 
-#: src/help-overlay.ui:13
+#: src/gui/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
 msgid "General"
 msgstr "כללי"
 
-#: src/help-overlay.ui:17
+#: src/gui/gtk/help-overlay.ui:17
 msgctxt "shortcut window"
 msgid "New event"
 msgstr "אירוע חדש"
 
-#: src/help-overlay.ui:24
+#: src/gui/gtk/help-overlay.ui:24
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "סגירת חלון"
 
-#: src/help-overlay.ui:31
+#: src/gui/gtk/help-overlay.ui:31
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "חיפוש"
 
-#: src/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "הצגת עזרה"
 
-#: src/help-overlay.ui:45
+#: src/gui/gtk/help-overlay.ui:45
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "צירופי מקשים"
 
-#: src/help-overlay.ui:54
+#: src/gui/gtk/help-overlay.ui:54
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "ניווט"
 
-#: src/help-overlay.ui:58
+#: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "חזרה"
 
-#: src/help-overlay.ui:65
+#: src/gui/gtk/help-overlay.ui:65
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "קדימה"
 
-#: src/help-overlay.ui:72
+#: src/gui/gtk/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "הצגת היום"
 
-#: src/help-overlay.ui:79
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "תצוגה הבאה"
 
-#: src/help-overlay.ui:86
+#: src/gui/gtk/help-overlay.ui:86
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "תצוגה קודמת"
 
-#: src/help-overlay.ui:95
+#: src/gui/gtk/help-overlay.ui:95
 msgctxt "shortcut window"
 msgid "View"
 msgstr "תצוגה"
 
-#: src/help-overlay.ui:99
-#| msgctxt "shortcut window"
-#| msgid "Next view"
+#: src/gui/gtk/help-overlay.ui:99
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "תצוגה שבועית"
 
-#: src/help-overlay.ui:106
+#: src/gui/gtk/help-overlay.ui:106
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "תצוגה חודשית"
 
-#: src/help-overlay.ui:113
+#: src/gui/gtk/help-overlay.ui:113
 msgctxt "shortcut window"
 msgid "Year view"
 msgstr "תצוגה שנתית"
+
+#: src/gui/views/gcal-month-popover.ui:91
+msgid "New Event…"
+msgstr "אירוע חדש…"
+
+#: src/gui/views/gcal-week-grid.c:681 src/gui/views/gcal-week-view.c:293
+msgid "00 AM"
+msgstr "00"
+
+#: src/gui/views/gcal-week-grid.c:684 src/gui/views/gcal-week-view.c:296
+msgid "00:00"
+msgstr "00:00"
+
+#: src/gui/views/gcal-week-header.c:465
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "אירוע אחר"
+msgstr[1] "%d אירועים אחרים"
+msgstr[2] "שני אירועים אחרים"
+
+#: src/gui/views/gcal-week-header.c:1004
+#, c-format
+msgid "week %d"
+msgstr "שבוע %d"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when the selection starts at the specified day and the
+#. * end is unspecified.
+#: src/gui/views/gcal-year-view.c:291
+msgid "%B %d…"
+msgstr "%d ב%B…"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: src/gui/views/gcal-year-view.c:297 src/gui/views/gcal-year-view.c:563
+msgid "%B %d"
+msgstr "%d ב%B"
+
+#: src/gui/views/gcal-year-view.ui:133
+msgid "No events"
+msgstr "אין אירועים"
+
+#: src/gui/views/gcal-year-view.ui:155
+msgid "Add Event…"
+msgstr "הוספת אירוע…"
 
 #: src/utils/gcal-utils.c:958
 msgid ""
@@ -1114,7 +1106,6 @@ msgid ""
 msgstr "האירוע שברצונך לשנות הוא מחזורי. השינויים שלך יחולו על:"
 
 #: src/utils/gcal-utils.c:961
-#| msgid "Cancel"
 msgid "_Cancel"
 msgstr "_ביטול"
 
@@ -1127,74 +1118,17 @@ msgid "_Subsequent events"
 msgstr "מאורעות _עוקבים"
 
 #: src/utils/gcal-utils.c:972
-#| msgid "No events"
 msgid "_All events"
 msgstr "_כל האירועים"
 
-#: src/views/gcal-month-popover.ui:91
-#| msgctxt "shortcut window"
-#| msgid "New event"
-msgid "New Event…"
-msgstr "אירוע חדש…"
+#~ msgid "Search for events"
+#~ msgstr "חיפוש אירועים"
 
-#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:313
-msgid "00 AM"
-msgstr "00"
+#~ msgid "Calendar management"
+#~ msgstr "ניהול לוח שנה"
 
-#: src/views/gcal-week-grid.c:756 src/views/gcal-week-view.c:316
-msgid "00:00"
-msgstr "00:00"
-
-#: src/views/gcal-week-header.c:462
-#, c-format
-msgid "Other event"
-msgid_plural "Other %d events"
-msgstr[0] "אירוע אחר"
-msgstr[1] "%d אירועים אחרים"
-msgstr[2] "שני אירועים אחרים"
-
-#: src/views/gcal-week-header.c:998
-#, c-format
-#| msgid "1 week"
-msgid "week %d"
-msgstr "שבוע %d"
-
-#. Translators: This is a date format in the sidebar of the year
-#. * view when the selection starts at the specified day and the
-#. * end is unspecified.
-#: src/views/gcal-year-view.c:288
-#| msgctxt "event date format"
-#| msgid "%B %d"
-msgid "%B %d…"
-msgstr "%d ב%B…"
-
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:560
-#| msgctxt "event date format"
-#| msgid "%B %d"
-msgid "%B %d"
-msgstr "%d ב%B"
-
-#: src/views/gcal-year-view.ui:133
-msgid "No events"
-msgstr "אין אירועים"
-
-#: src/views/gcal-year-view.ui:155
-msgid "Add Event…"
-msgstr "הוספת אירוע…"
-
-#: src/weather/gcal-weather-settings.ui:30
-#| msgctxt "shortcut window"
-#| msgid "Show help"
-msgid "Show Weather"
-msgstr "הצגת מזג אוויר"
-
-#: src/weather/gcal-weather-settings.ui:53
-#| msgid "Location"
-msgid "Automatic Location"
-msgstr "מיקום אוטומטי"
+#~ msgid "Check this out!"
+#~ msgstr "לבדוק את זה!"
 
 #~ msgid "List of the disabled sources"
 #~ msgstr "List of the disabled sources"
