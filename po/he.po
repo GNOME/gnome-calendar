@@ -8,21 +8,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-11-07 10:58+0000\n"
-"PO-Revision-Date: 2021-03-29 22:06+0300\n"
-"Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
+"POT-Creation-Date: 2021-03-29 19:07+0000\n"
+"PO-Revision-Date: 2021-03-31 01:18+0300\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <yoseforb@gmail.com>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n>2||n==0) ? 1 : 2\n"
-"X-Generator: Gtranslator 3.38.0\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
+"2 : 3);\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
-#: src/gui/gcal-window.ui:170
+#: src/gui/gcal-window.ui:173
 msgid "Calendar"
 msgstr "לוח שנה"
 
@@ -31,11 +32,6 @@ msgid "Calendar for GNOME"
 msgstr "לוח שנה עבור GNOME"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
-#| msgid ""
-#| "GNOME Calendar is a simple and beautiful calendar application designed to "
-#| "perfectly fit the GNOME desktop. By reusing the components which the "
-#| "GNOME desktop is build on, Calendar nicely integrates with the GNOME "
-#| "ecosystem."
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
@@ -46,10 +42,6 @@ msgstr ""
 "GNOME, לוח השנה משתלב בצורה יפה עם סביבת GNOME."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
-#| msgid ""
-#| "We aim to find the perfect balance between nicely crafted features and "
-#| "user-centred usability. No excess, no lacks. You'll feel comfortable "
-#| "using Calendar, like you've been using it for ages!"
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
@@ -64,8 +56,6 @@ msgid "Week view"
 msgstr "תצוגה שבועית"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-#| msgctxt "shortcut window"
-#| msgid "Year view"
 msgid "Year view"
 msgstr "תצוגה שנתית"
 
@@ -131,7 +121,7 @@ msgid "Use GNOME night light setting to activate night-mode."
 msgstr "Use GNOME night light setting to activate night-mode."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1882
+#: src/core/gcal-event.c:1887
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "‏%1$s — %2$s"
@@ -140,14 +130,14 @@ msgstr "‏%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1890
+#: src/core/gcal-event.c:1895
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "‏%1$s ‏‎%2$s — ‏%3$s ‏‎%4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1906 src/gui/gcal-quick-add-popover.c:472
+#: src/core/gcal-event.c:1911 src/gui/gcal-quick-add-popover.c:472
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "‏%1$s, ‏‎%2$s – ‏‎%3$s"
@@ -184,7 +174,7 @@ msgid "Settings"
 msgstr "הגדרות"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
-#: src/gui/event-editor/gcal-summary-section.ui:37
+#: src/gui/event-editor/gcal-summary-section.ui:42
 msgid "Location"
 msgstr "מיקום"
 
@@ -203,30 +193,30 @@ msgstr "הצגת לוח שנה"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:175
 msgid "Add new events to this calendar by default"
-msgstr "הוספת אירועים חדשים ללוח שנה זה בברירת מחדל"
+msgstr "הוספת אירועים חדשים ללוח שנה זה כבררת מחדל"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:190
 msgid "Remove Calendar"
 msgstr "מחיקת לוח שנה"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:505
+#: src/gui/calendar-management/gcal-new-calendar-page.c:513
 msgid "New Calendar"
 msgstr "לוח שנה חדש"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:667
+#: src/gui/calendar-management/gcal-new-calendar-page.c:676
 msgid "Calendar files"
-msgstr "קבצי לוח שנה"
+msgstr "קובצי לוח שנה"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:33
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:41
 msgid "Calendar Name"
 msgstr "שם לוח שנה"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:86
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:87
 msgid "Import a Calendar"
 msgstr "יבוא לוח שנה"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:106
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
@@ -234,19 +224,15 @@ msgstr ""
 "לחלופין, ניתן להזין את כתובת האתר של לוח השנה המקוון שלך לייבוא, או לפתוח "
 "קובץ לוח־שנה נתמך."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:137
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:138
 msgid "Open a File"
 msgstr "פתיחת קובץ"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:158
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:159
 msgid "Calendars"
 msgstr "לוחות שנה"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:204
-#| msgid ""
-#| "Enter the address of the calendar that you want to add. If the calendar "
-#| "belongs to one of your online accounts, you can add it through the <a "
-#| "href=\"GOA\">online account settings</a>."
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:205
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -254,140 +240,147 @@ msgstr ""
 "אם לוח השנה שייך לאחד מהחשבונות המקוונים שלך, ניתן להוסיף אותו דרך <a href="
 "\"GOA\">הגדרות חשבונות מקוונים</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:240
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
 msgid "User"
 msgstr "משתמה"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:254
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
 msgid "Password"
 msgstr "ססמה"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:302
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:341
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:303
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:342
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:17
 msgid "Cancel"
 msgstr "ביטול"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:311
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:312
 msgid "Connect"
 msgstr "התחברות"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:348
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:349
 #: src/gui/gcal-quick-add-popover.ui:130
 msgid "Add"
 msgstr "הוספה"
 
 #: src/gui/event-editor/gcal-alarm-row.c:85
-#, fuzzy, c-format
+#, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
-msgstr[0] "יום אחד, שעה אחת ודקה אחת לפני"
-msgstr[1] "‏%1$u ימים, %2$u ו־%3$u לפני"
-msgstr[2] "יומיים, שעתיים ושתי דקות לפני"
+msgstr[0] "יום, שעה ודקה לפני"
+msgstr[1] "‫יום, שעה ושתי דקות לפני"
+msgstr[2] "יום %1$u, שעה %2$u ו־%3$u דקות לפני"
+msgstr[3] "‫יום %1$u, שעה %2$u ו־%3$u דקות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:89
-#, fuzzy, c-format
+#, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
-msgstr[0] "יום אחד, שעה אחת ודקה אחת לפני"
-msgstr[1] "‏%1$u ימים, %2$u ו־%3$u לפני"
-msgstr[2] "יומיים, שעתיים ושתי דקות לפני"
+msgstr[0] "יום %1$u‏, %2$u שעות ודקה %3$u לפני"
+msgstr[1] "‫יום %1$u,‏ %2$u שעות ו־%3$u דקות לפני"
+msgstr[2] "‫‫יום %1$u,‏ %2$u שעות ו־%3$u דקות לפני"
+msgstr[3] "‫‫יום %1$u,‏ %2$u שעות ו־%3$u דקות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:95
-#, fuzzy, c-format
+#, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
-msgstr[0] "יום אחד, שעה אחת ודקה אחת לפני"
-msgstr[1] "‏%1$u ימים, %2$u ו־%3$u לפני"
-msgstr[2] "יומיים, שעתיים ושתי דקות לפני"
+msgstr[0] "‫%1$u ימים, שעה ודקה לפני"
+msgstr[1] "‫%1$u ימים, שעה %2$u ו־%3$u דקות לפני"
+msgstr[2] "‏‫%1$u ימים, שעה %2$u ו־%3$u דקות לפני"
+msgstr[3] "‏‫%1$u ימים, שעה %2$u ו־%3$u דקות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:99
-#, fuzzy, c-format
+#, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
-msgstr[0] "יום אחד, שעה אחת ודקה אחת לפני"
-msgstr[1] "‏%1$u ימים, %2$u ו־%3$u לפני"
-msgstr[2] "יומיים, שעתיים ושתי דקות לפני"
+msgstr[0] "‫%1$u ימים, %2$u שעות, ודקה לפני"
+msgstr[1] "‏‫%1$u ימים, %2$u שעות, ו־%3$u דקות לפני"
+msgstr[2] "‫‏‫%1$u ימים, %2$u שעות, ו־%3$u דקות לפני"
+msgstr[3] "‫‏‫%1$u ימים, %2$u שעות, ו־%3$u דקות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:114
-#, fuzzy, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
+#, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
-msgstr[0] "יום אחד ושעה אחת לפני"
-msgstr[1] "‏%1$u ימים ו־%2$u שעות לפני"
-msgstr[2] "יומיים ושעתיים לפני"
+msgstr[0] "יום ושעה לפני"
+msgstr[1] "יום ושעתיים לפני"
+msgstr[2] "‫יום %1$u ו־%2$u שעות לפני"
+msgstr[3] "‫‫יום %1$u ו־%2$u שעות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:118
-#, fuzzy, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
+#, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
-msgstr[0] "שעה לפני"
-msgstr[1] "%d שעות לפני"
-msgstr[2] "שעתיים לפני"
+msgstr[0] "‫%1$u ימים ושעה לפני"
+msgstr[1] "‏‫%1$u ימים ושעתיים לפני"
+msgstr[2] "‫%1$u ימים ו־%2$u שעות לפני"
+msgstr[3] "‏‫%1$u ימים ו־%2$u שעות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:134
-#, fuzzy, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
+#, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
-msgstr[0] "יום ודקה לפני"
-msgstr[1] "יום ו־%2$u דקות לפני"
-msgstr[2] "יום ו־%2$u דקות לפני"
+msgstr[0] "יום %1$u ודקה %2$u לפני"
+msgstr[1] "יום %1$u ו־%2$u דקות לפני"
+msgstr[2] "‫יום %1$u ו־%2$u דקות לפני"
+msgstr[3] "‫יום %1$u ו־%2$u דקות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:138
-#, fuzzy, c-format
+#, c-format
 #| msgid "%d minute before"
 #| msgid_plural "%d minutes before"
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
-msgstr[0] "יום לפני ודקה לפני"
-msgstr[1] "‏%1$u ימים ו־%2$u דקות לפני"
-msgstr[2] "יומיים ו־%2$u דקות לפני"
+msgstr[0] "‫%1$u ימים ודקה לפני"
+msgstr[1] "‫%1$u ימים ושתי דקות לפני"
+msgstr[2] "‫%1$u ימים ו־%2$u דקות לפני"
+msgstr[3] "‏‫%1$u ימים ו־%2$u דקות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:148
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "יום לפני"
-msgstr[1] "‏%1$u ימים לפני"
-msgstr[2] "יומיים לפני"
+msgstr[1] "יומיים לפני"
+msgstr[2] "‫‏%1$u ימים לפני"
+msgstr[3] "‫‏%1$u ימים לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:166
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "שעה ודקה לפני"
-msgstr[1] "‏%1$u שעות ו־%2$u דקות לפני"
-msgstr[2] "שעה ושתי דקות לפני"
+msgstr[1] "‫שעה ושתי דקות לפני"
+msgstr[2] "שעה %1$u ו־%2$u דקות לפני"
+msgstr[3] "שעה %1$u ו־%2$u דקות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:170
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
-msgstr[0] "‏%1$u שעות ו־%2$u דקות לפני"
-msgstr[1] "‏%1$u שעות ו־%2$u דקות לפני"
+msgstr[0] "‫%1$u שעות ודקה לפני"
+msgstr[1] "‫%1$u שעות ושתי דקות לפני"
 msgstr[2] "‏%1$u שעות ו־%2$u דקות לפני"
+msgstr[3] "‫‏%1$u שעות ו־%2$u דקות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:180
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "שעה לפני"
-msgstr[1] "‏%1$u שעות לפני"
-msgstr[2] "שעתיים לפני"
+msgstr[1] "שעתיים לפני"
+msgstr[2] "‫‏%1$u שעות לפני"
+msgstr[3] "‫‏%1$u שעות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:192
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "דקה לפני"
-msgstr[1] "‏%1$u דקות לפני"
-msgstr[2] "שתי דקות לפני"
+msgstr[1] "שתי דקות לפני"
+msgstr[2] "‫%1$u דקות לפני"
+msgstr[3] "‏‫%1$u דקות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:199
 msgid "Event start time"
@@ -443,7 +436,6 @@ msgid "10 minutes"
 msgstr "עשר דקות"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:73
-#| msgid "5 minutes"
 msgid "15 minutes"
 msgstr "15 דקות"
 
@@ -481,7 +473,7 @@ msgstr "‏%A האחרון"
 msgid "Yesterday"
 msgstr "אתמול"
 
-#: src/gui/event-editor/gcal-schedule-section.c:249 src/gui/gcal-window.ui:187
+#: src/gui/event-editor/gcal-schedule-section.c:249 src/gui/gcal-window.ui:190
 #: src/gui/views/gcal-year-view.c:282 src/gui/views/gcal-year-view.c:560
 #: src/gui/views/gcal-year-view.ui:88
 msgid "Today"
@@ -570,7 +562,7 @@ msgstr "מספר חזרות"
 msgid "End Repeat Date"
 msgstr "תאריך סיום החזרתיות"
 
-#: src/gui/event-editor/gcal-summary-section.c:78
+#: src/gui/event-editor/gcal-summary-section.c:79
 #: src/gui/gcal-quick-add-popover.c:689
 msgid "Unnamed event"
 msgstr "אירוע ללא שם"
@@ -914,7 +906,7 @@ msgstr "אירוע חדש ב־%d בדצמבר"
 msgid "Edit Details…"
 msgstr "עריכת פרטים…"
 
-#: src/gui/gcal-weather-settings.ui:12 src/gui/gcal-window.ui:327
+#: src/gui/gcal-weather-settings.ui:12 src/gui/gcal-window.ui:330
 msgid "_Weather"
 msgstr "_מזג אוויר"
 
@@ -938,37 +930,37 @@ msgstr "מחיקת אירוע"
 msgid "Week"
 msgstr "שבוע"
 
-#: src/gui/gcal-window.ui:62
+#: src/gui/gcal-window.ui:63
 msgid "Month"
 msgstr "חודש"
 
-#: src/gui/gcal-window.ui:76
+#: src/gui/gcal-window.ui:78
 msgid "Year"
 msgstr "שנה"
 
-#: src/gui/gcal-window.ui:176
+#: src/gui/gcal-window.ui:179
 msgctxt "tooltip"
 msgid "Add a new event"
 msgstr "הוספת אירוע חדש"
 
-#: src/gui/gcal-window.ui:265
+#: src/gui/gcal-window.ui:268
 msgid "Manage your calendars"
 msgstr "ניהול לוחות השנה שלך"
 
-#: src/gui/gcal-window.ui:276
+#: src/gui/gcal-window.ui:279
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "חיפוש אירועים"
 
-#: src/gui/gcal-window.ui:318
+#: src/gui/gcal-window.ui:321
 msgid "_Online Accounts…"
 msgstr "_חשבונות מקוונים…"
 
-#: src/gui/gcal-window.ui:342
+#: src/gui/gcal-window.ui:345
 msgid "_Keyboard Shortcuts"
 msgstr "_צירופי מקשים"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:354
 msgid "_About Calendar"
 msgstr "על אודות _לוח שנה"
 
@@ -1069,8 +1061,9 @@ msgstr "00:00"
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "אירוע אחר"
-msgstr[1] "%d אירועים אחרים"
-msgstr[2] "שני אירועים אחרים"
+msgstr[1] "‫שני אירועים אחרים"
+msgstr[2] "‏‫%d אירועים אחרים"
+msgstr[3] "‫‏‫%d אירועים אחרים"
 
 #: src/gui/views/gcal-week-header.c:1004
 #, c-format
