@@ -1480,31 +1480,43 @@ gcal_event_get_uid (GcalEvent *self)
 gboolean
 gcal_event_is_multiday (GcalEvent *self)
 {
-  g_autoptr (GDateTime) inclusive_end_date = NULL;
-  g_autoptr (GDateTime) local_start_date = NULL;
-  g_autoptr (GDateTime) local_end_date = NULL;
+  g_autoptr (GDateTime) start_date = NULL;
+  g_autoptr (GDateTime) end_date = NULL;
   GDate start_dt;
   GDate end_dt;
+  gint n_days;
 
   g_return_val_if_fail (GCAL_IS_EVENT (self), FALSE);
 
-  inclusive_end_date = g_date_time_add_seconds (gcal_event_get_date_end (self), -1);
-  local_start_date = g_date_time_to_local (self->dt_start);
-  local_end_date = g_date_time_to_local (inclusive_end_date);
+  if (self->all_day)
+    {
+      start_date = g_date_time_ref (self->dt_start);
+      end_date = g_date_time_ref (gcal_event_get_date_end (self));
+      n_days = 1;
+    }
+  else
+    {
+      g_autoptr (GDateTime) inclusive_end_date = NULL;
+
+      inclusive_end_date = g_date_time_add_seconds (gcal_event_get_date_end (self), -1);
+      start_date = g_date_time_to_local (self->dt_start);
+      end_date = g_date_time_to_local (inclusive_end_date);
+      n_days = 0;
+    }
 
   g_date_clear (&start_dt, 1);
   g_date_set_dmy (&start_dt,
-                  g_date_time_get_day_of_month (local_start_date),
-                  g_date_time_get_month (local_start_date),
-                  g_date_time_get_year (local_start_date));
+                  g_date_time_get_day_of_month (start_date),
+                  g_date_time_get_month (start_date),
+                  g_date_time_get_year (start_date));
 
   g_date_clear (&end_dt, 1);
   g_date_set_dmy (&end_dt,
-                  g_date_time_get_day_of_month (local_end_date),
-                  g_date_time_get_month (local_end_date),
-                  g_date_time_get_year (local_end_date));
+                  g_date_time_get_day_of_month (end_date),
+                  g_date_time_get_month (end_date),
+                  g_date_time_get_year (end_date));
 
-  return g_date_days_between (&start_dt, &end_dt) > 0;
+  return g_date_days_between (&start_dt, &end_dt) > n_days;
 }
 
 /**
