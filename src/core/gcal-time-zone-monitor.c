@@ -71,6 +71,7 @@ on_timedate1_proxy_properties_changed_cb (GcalTimeZoneMonitor *self,
   if (timezone_variant)
     timezone_identifier = g_variant_get_string (timezone_variant, NULL);
 
+  g_clear_pointer (&self->timezone, g_time_zone_unref);
   self->timezone = g_time_zone_new_identifier (timezone_identifier);
 
   g_debug ("System timezone is %s", g_time_zone_get_identifier (self->timezone));
