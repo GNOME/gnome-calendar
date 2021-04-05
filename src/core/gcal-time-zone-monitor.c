@@ -139,6 +139,8 @@ gcal_time_zone_monitor_init (GcalTimeZoneMonitor *self)
 
   GCAL_ENTRY;
 
+  self->timezone = g_time_zone_new_local ();
+
   connection = g_bus_get_sync (G_BUS_TYPE_SYSTEM, NULL, NULL);
 
   if (!connection)
