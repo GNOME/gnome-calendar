@@ -345,7 +345,7 @@ on_view_action_activated (GSimpleAction *action,
   else if (view == -2)
     view = --(window->active_view);
 
-  window->active_view = CLAMP (view, CLAMP(view, GCAL_WINDOW_VIEW_WEEK, GCAL_WINDOW_VIEW_MONTH), GCAL_WINDOW_VIEW_YEAR);
+  window->active_view = CLAMP (view, GCAL_WINDOW_VIEW_WEEK, GCAL_WINDOW_VIEW_YEAR);
   gtk_stack_set_visible_child (GTK_STACK (window->views_stack), window->views[window->active_view]);
 
   g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
