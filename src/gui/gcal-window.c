@@ -1104,9 +1104,9 @@ gcal_window_init (GcalWindow *self)
   app = g_application_get_default ();
   gcal_window_add_accelerator (app, "win.change-view(-1)",   "<Ctrl>Page_Down");
   gcal_window_add_accelerator (app, "win.change-view(-2)",   "<Ctrl>Page_Up");
-  gcal_window_add_accelerator (app, "win.change-view(1)",    "<Ctrl>1")
-  gcal_window_add_accelerator (app, "win.change-view(2)",    "<Ctrl>2");
-  gcal_window_add_accelerator (app, "win.change-view(3)",    "<Ctrl>3");
+  gcal_window_add_accelerator (app, "win.change-view(0)",    "<Ctrl>1");
+  gcal_window_add_accelerator (app, "win.change-view(1)",    "<Ctrl>2");
+  gcal_window_add_accelerator (app, "win.change-view(2)",    "<Ctrl>3");
   gcal_window_add_accelerator (app, "app.quit", "<Ctrl>q");
   gcal_window_add_accelerator (app, "win.new-event", "<Ctrl>n");
 }
