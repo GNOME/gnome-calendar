@@ -637,6 +637,8 @@ update_location (GcalWeatherService  *self,
                !location ? "<null>" : gweather_location_get_name (location));
 
       self->gweather_info = gweather_info_new (location);
+      gweather_info_set_contact_info (self->gweather_info,
+                                      "https://gitlab.gnome.org/GNOME/gnome-calendar/-/raw/master/gnome-calendar.doap");
 
       /* FIXME: Enable GWEATHER_PROVIDER_MET_NO if we can comply with their terms of service.
        * https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/682
