@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Gnome Nepali Translation Project\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2020-11-07 10:58+0000\n"
-"PO-Revision-Date: 2021-04-07 22:18+0545\n"
+"PO-Revision-Date: 2021-04-17 08:37+0545\n"
 "Last-Translator: Pawan Chitrakar <chautari@gmail.com>\n"
 "Language-Team: Nepali Translation Team <chautari@gmail.com>\n"
 "Language: ne\n"
@@ -18,9 +18,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.2\n"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7 data/org.gnome.Calendar.desktop.in.in:3
-#: src/main.c:35 src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
-#: src/gui/gcal-window.ui:170
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7 data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
+#: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187 src/gui/gcal-window.ui:170
 msgid "Calendar"
 msgstr "पात्रो"
 
@@ -30,27 +29,19 @@ msgstr "जिनोमको पात्रो"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
 msgid ""
-"GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the "
-"GNOME desktop. By reusing the components which the GNOME desktop is built on, Calendar nicely "
-"integrates with the GNOME ecosystem."
+"GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME desktop. By "
+"reusing the components which the GNOME desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"जिनोम पात्रो सजिलो र स्तरिय पात्रो हो, जुन जिनोम डेस्कटपमा उचित रुपले मिल्छ, यसले जिनोम डेस्कटपकै पाट्पुर्जा "
-"प्रयोग गरेर सही रुपले जिनोम ईकोसिस्टममा समावेश हुन्छ"
+"जिनोम पात्रो सजिलो र स्तरिय पात्रो हो, जुन जिनोम डेस्कटपमा पनि उचित रुपले मिल्छ, यसले जिनोम डेस्कटपकै पाट्पुर्जा प्रयोग गरेर सही रुपले "
+"जिनोम ईकोसिस्टममा समावेश हुन्छ."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
-#, fuzzy
-#| msgid ""
-#| "We aim to find the perfect balance between nicely crafted features and user-centred "
-#| "usability. No excess, no lacks. You’ll feel comfortable using Calendar, like you’ve been "
-#| "using it for ages!"
 msgid ""
-"We aim to find the perfect balance between nicely crafted features and user-centred usability. "
-"No excess, nothing missing. You’ll feel comfortable using Calendar, like you’ve been using it "
-"for ages!"
+"We aim to find the perfect balance between nicely crafted features and user-centred usability. No excess, nothing "
+"missing. You’ll feel comfortable using Calendar, like you’ve been using it for ages!"
 msgstr ""
-"हामी राम्रो तरिकाले तैयार गरिएका सुविधाहरू र प्रयोगकर्ता केन्द्रित प्रयोज्यता बीचको सही सन्तुलन पत्ता लगाउने "
-"उद्देश्य गर्दछौ। कुनै अतिरिक्त, कुनै कमी छैन। तपाईंलाई पात्रो प्रयोग गरेर सहज महसुस गर्नुहुनेछ, जस्तै तपाई कालान्तर "
-"देखि प्रयोग गर्दै हुनुहुन्छ!"
+"राम्ररी बनाइएका विशेषताहरू र प्रयोगकर्ता-केन्द्रीत उपयोगिताबीच सही सन्तुलन कायम गर्ने हामीले लक्ष्य राखेका छौं। अतिरिक्त छैन, केही पनि "
+"छुटेको छैन । तपाईँले पात्रो प्रयोग गर्न सहज महसुस गर्नुहुनेछ, जस्तै तपाईँले यसलाई युगौंयुगदेखि प्रयोग गर्दै हुनुहुन्छ!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
 msgid "Week view"
@@ -107,15 +98,15 @@ msgstr "मौसम सेवा अध्यावधिक"
 
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid "Whether weather reports are shown, automatic locations are used and a location-name"
-msgstr ""
+msgstr "मौसम प्रतिवेदन देखाउने या नदेखाउने, स्वचालित स्थान र स्थान-नाम प्रयोग गरिन्छ"
 
 #: data/org.gnome.calendar.gschema.xml.in:31
 msgid "Follow system night light"
-msgstr ""
+msgstr "प्रणालीको रात प्रकाश अनुगमन गर्नुहोस्"
 
 #: data/org.gnome.calendar.gschema.xml.in:32
 msgid "Use GNOME night light setting to activate night-mode."
-msgstr ""
+msgstr "रातको मोड सक्रिय पार्न जिनोम राति प्रकाश सेटिङ्ग प्रयोग गर्नुहोस् ।."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #: src/core/gcal-event.c:1882
@@ -155,8 +146,7 @@ msgstr "पात्रो ब्यवस्था गर्नुहोस"
 msgid "Calendar <b>%s</b> removed"
 msgstr "पात्रो<b>%s</b> हताईयो"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:31 src/gui/gcal-window.c:672
-#: src/gui/gcal-window.c:676
+#: src/gui/calendar-management/gcal-calendars-page.ui:31 src/gui/gcal-window.c:672 src/gui/gcal-window.c:676
 msgid "Undo"
 msgstr "पूर्वस्थितिमा फर्काउनुहोस्"
 
@@ -172,8 +162,7 @@ msgstr "खाता"
 msgid "Settings"
 msgstr "सेटिङ्"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
-#: src/gui/event-editor/gcal-summary-section.ui:37
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:64 src/gui/event-editor/gcal-summary-section.ui:37
 msgid "Location"
 msgstr "स्थान"
 
@@ -181,8 +170,7 @@ msgstr "स्थान"
 msgid "Calendar name"
 msgstr "पात्रो नाम"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:121
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:65
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:121 src/gui/calendar-management/gcal-new-calendar-page.ui:65
 msgid "Color"
 msgstr "रङ्ग"
 
@@ -206,8 +194,7 @@ msgstr "नयाँ पात्रो"
 msgid "Calendar files"
 msgstr "पात्रो फाईल"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:41
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:33 src/gui/calendar-management/gcal-new-calendar-page.ui:41
 msgid "Calendar Name"
 msgstr "पात्रो नाम"
 
@@ -217,9 +204,8 @@ msgstr "पात्रो भित्र्याउनुहोस्"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:105
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to import, or open a "
-"supported calendar file."
-msgstr ""
+"Alternatively, enter the web address of an online calendar you want to import, or open a supported calendar file."
+msgstr "वैकल्पिक रूपमा, तपाईँले आयात गर्न चाहेको अनलाइन पात्रोको वेब ठेगाना प्रविष्ट गर्नुहोस्, वा समर्थित पात्रो फाइल खोल्नुहोस् ।."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:137
 msgid "Open a File"
@@ -230,17 +216,11 @@ msgid "Calendars"
 msgstr "पात्रोहरू"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:204
-#, fuzzy
-#| msgid ""
-#| "Enter the address of the calendar that you want to add. If the calendar belongs to one of "
-#| "your online accounts, you can add it through the <a href=\"GOA\">online account settings</"
-#| "a>."
 msgid ""
-"If the calendar belongs to one of your online accounts, you can add it through the <a href="
-"\"GOA\">online account settings</a>."
+"If the calendar belongs to one of your online accounts, you can add it through the <a href=\"GOA\">online account "
+"settings</a>."
 msgstr ""
-"थप्ने पात्रोको ठेगाना प्रविष्ट गर्नुहोस् । यदि पात्रो तपाइँको अनलाईन खाताहरू मध्ये एक हो भने, तपाइँ यसलाई <a "
-"href=\"GOA\"> अनलाइन खाता सेटिङहरू </a> मार्फत थप्न सक्नुहुनेछ।"
+"यदि पात्रो तपाइँको अनलाईन खाताहरू मध्ये एक हो भने, तपाइँ यसलाई <a href=\"GOA\"> अनलाइन खाता सेटिङहरू </a> मार्फत थप्न सक्नुहुनेछ।"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:240
 msgid "User"
@@ -250,8 +230,7 @@ msgstr "प्रयोगकर्ता"
 msgid "Password"
 msgstr "पासवर्ड"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:302
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:341
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:302 src/gui/calendar-management/gcal-new-calendar-page.ui:341
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:17
 msgid "Cancel"
 msgstr "रद्द गर्नुहोस्"
@@ -260,8 +239,7 @@ msgstr "रद्द गर्नुहोस्"
 msgid "Connect"
 msgstr "जडान गर्नुहोस्"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:348
-#: src/gui/gcal-quick-add-popover.ui:130
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:348 src/gui/gcal-quick-add-popover.ui:130
 msgid "Add"
 msgstr "थप्नुहोस्"
 
@@ -384,8 +362,7 @@ msgstr "अलार्म हटाउनुहोस्"
 msgid "Save"
 msgstr "बचत गर्नुस"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:201
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:108
+#: src/gui/event-editor/gcal-event-editor-dialog.c:201 src/gui/event-editor/gcal-event-editor-dialog.ui:108
 msgid "Done"
 msgstr "गरियो"
 
@@ -459,9 +436,8 @@ msgstr "अन्तिम %A"
 msgid "Yesterday"
 msgstr "हिजो"
 
-#: src/gui/event-editor/gcal-schedule-section.c:249 src/gui/gcal-window.ui:187
-#: src/gui/views/gcal-year-view.c:282 src/gui/views/gcal-year-view.c:560
-#: src/gui/views/gcal-year-view.ui:88
+#: src/gui/event-editor/gcal-schedule-section.c:249 src/gui/gcal-window.ui:187 src/gui/views/gcal-year-view.c:282
+#: src/gui/views/gcal-year-view.c:560 src/gui/views/gcal-year-view.ui:88
 msgid "Today"
 msgstr "आज"
 
@@ -598,10 +574,9 @@ msgstr "प्रतिलिपि अधिकार © 2012–%d पात्
 #: src/gui/gcal-application.c:288
 msgid "translator-credits"
 msgstr ""
-"pawan chitrakar <chautari@gmail.com>,Jyotsna Shrestha <jyoshrestha@hotmail.com>,Ganesh Ghimire "
-"<gghimire@gmail.com>,Shiva  Pokharel <pokharelshiva@hotmail.com>,Jaydeep Bhusal "
-"<zaydeep@hotmail.com>,Mahesh Subedi <submanesh@hotmail.com>,Shyam Krishna Bal "
-"<shyamkrishna_bal@yahoo.com>.#"
+"pawan chitrakar <chautari@gmail.com>,Jyotsna Shrestha <jyoshrestha@hotmail.com>,Ganesh Ghimire <gghimire@gmail.com>,"
+"Shiva  Pokharel <pokharelshiva@hotmail.com>,Jaydeep Bhusal <zaydeep@hotmail.com>,Mahesh Subedi <submanesh@hotmail."
+"com>,Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>.#"
 
 #: src/gui/gcal-calendar-popover.ui:43
 msgid "_Synchronize Calendars"
@@ -1078,11 +1053,8 @@ msgid "Add Event…"
 msgstr "कार्यक्रम थप्नुहोस्…"
 
 #: src/utils/gcal-utils.c:958
-msgid ""
-"The event you are trying to modify is recurring. The changes you have selected should be "
-"applied to:"
-msgstr ""
-"तपाईंले परिमार्जन गर्न खोज्नु भएको घटना पुनरावर्ती हो। तपाईंले चयन गर्नुभएको परिवर्तनहरू यसमा लागू गर्नु पर्छ:"
+msgid "The event you are trying to modify is recurring. The changes you have selected should be applied to:"
+msgstr "तपाईंले परिमार्जन गर्न खोज्नु भएको घटना पुनरावर्ती हो। तपाईंले चयन गर्नुभएको परिवर्तनहरू यसमा लागू गर्नु पर्छ:"
 
 #: src/utils/gcal-utils.c:961
 msgid "_Cancel"
