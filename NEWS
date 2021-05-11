@@ -1,3 +1,10 @@
+Major changes in 40.1:
+* Fix a memory leak in the timezone monitoring code
+* Fix a crash when fetching the system timezone
+* Fix keyboard shortcuts and add missing accelerator
+* Fix multiday detection of all day events
+* Updated translations
+
 Major changes in 40.0:
 * Updated translations
 

@@ -45,6 +45,25 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2021-05-11" version="40.1">
+      <description>
+        <p>
+          GNOME Calendar 40.1 release brings stability improvements, updated translations.
+        </p>
+        <p>
+          With this release, the code to fetch the system timezone is more robust, and doesn't
+          crash if for some reason it fails to find the system timezone.
+        </p>
+        <p>
+          A couple of documented keyboard shortcuts weren't working, and with this release they
+          are functional again.
+        </p>
+        <p>
+          Thanks to the new contributors that helped with this release of GNOME Calendar!
+        </p>
+      </description>
+    </release>
+
     <release date="2021-03-22" version="40.0">
       <description>
         <p>
