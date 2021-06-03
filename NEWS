@@ -1,3 +1,7 @@
+Major changes in 40.2:
+* Enable the met.no weather forecast provider
+* Updated translations
+
 Major changes in 40.1:
 * Fix a memory leak in the timezone monitoring code
 * Fix a crash when fetching the system timezone

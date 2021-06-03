@@ -45,6 +45,15 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2021-06-03" version="40.2">
+      <description>
+        <p>
+          GNOME Calendar 40.2 release brings updated translations, and a fix to
+          weather forecast not showing.
+        </p>
+      </description>
+    </release>
+
     <release date="2021-05-11" version="40.1">
       <description>
         <p>
