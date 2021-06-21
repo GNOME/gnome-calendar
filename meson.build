@@ -1,7 +1,7 @@
 project(
   'gnome-calendar',
                'c',
-           version: '40.2',
+           version: '41.alpha',
            license: 'GPL3+',
      meson_version: '>= 0.53.0'
 )
