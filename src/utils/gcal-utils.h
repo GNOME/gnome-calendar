@@ -131,4 +131,8 @@ void                 gcal_utils_launch_online_accounts_panel     (GDBusConnectio
 
 gchar*               gcal_utils_format_filename_for_display      (const gchar         *filename);
 
+void                 gcal_utils_extract_google_section           (const gchar        *description,
+                                                                  gchar             **out_description,
+                                                                  gchar             **out_meeting_url);
+
 #endif /* __GCAL_UTILS_H__ */
