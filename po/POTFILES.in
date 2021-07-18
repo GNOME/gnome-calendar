@@ -23,7 +23,11 @@ src/gui/event-editor/gcal-summary-section.ui
 src/gui/event-editor/gcal-time-selector.ui
 src/gui/gcal-application.c
 src/gui/gcal-calendar-popover.ui
+src/gui/gcal-event-popover.c
+src/gui/gcal-event-popover.ui
 src/gui/gcal-event-widget.c
+src/gui/gcal-meeting-row.c
+src/gui/gcal-meeting-row.ui
 src/gui/gcal-quick-add-popover.c
 src/gui/gcal-quick-add-popover.ui
 src/gui/gcal-weather-settings.ui
