@@ -19,12 +19,11 @@
 
 #pragma once
 
-#include <glib-object.h>
 #include "gcal-application.h"
 #include "gcal-manager.h"
 
 #include <libecal/libecal.h>
-#include <gtk/gtk.h>
+#include <handy.h>
 
 G_BEGIN_DECLS
 
@@ -35,6 +34,8 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (GcalCalendarManagementDialog,
                       gcal_calendar_management_dialog,
                       GCAL, CALENDAR_MANAGEMENT_DIALOG,
-                      GtkDialog)
+                      HdyWindow)
+
+HdyHeaderBar*        gcal_calendar_management_dialog_get_titlebar (GcalCalendarManagementDialog *self);
 
 G_END_DECLS

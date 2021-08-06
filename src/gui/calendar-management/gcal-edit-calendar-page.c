@@ -307,11 +307,11 @@ gcal_edit_calendar_page_activate (GcalCalendarManagementPage *page,
                                   GcalCalendar               *calendar)
 {
   GcalEditCalendarPage *self;
-  GtkHeaderBar *headerbar;
+  HdyHeaderBar *headerbar;
 
   self = GCAL_EDIT_CALENDAR_PAGE (page);
   headerbar = gcal_calendar_management_page_get_titlebar (page);
-  gtk_header_bar_pack_start (headerbar, self->back_button);
+  hdy_header_bar_pack_start (headerbar, self->back_button);
 
   setup_calendar (self, calendar);
 }
@@ -320,7 +320,7 @@ static void
 gcal_edit_calendar_page_deactivate (GcalCalendarManagementPage *page)
 {
   GcalEditCalendarPage *self;
-  GtkHeaderBar *headerbar;
+  HdyHeaderBar *headerbar;
   GcalManager *manager;
 
   GCAL_ENTRY;

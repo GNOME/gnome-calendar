@@ -55,9 +55,9 @@ typedef enum
 
 struct _GcalCalendarManagementDialog
 {
-  GtkDialog           parent;
+  HdyWindow           parent;
 
-  GtkWidget          *headerbar;
+  HdyHeaderBar       *headerbar;
   GtkWidget          *notebook;
   GtkWidget          *stack;
 
@@ -77,7 +77,7 @@ static void          on_page_switched_cb                         (GcalCalendarMa
                                                                   GcalCalendar                 *calendar,
                                                                   GcalCalendarManagementDialog *self);
 
-G_DEFINE_TYPE (GcalCalendarManagementDialog, gcal_calendar_management_dialog, GTK_TYPE_DIALOG)
+G_DEFINE_TYPE (GcalCalendarManagementDialog, gcal_calendar_management_dialog, HDY_TYPE_WINDOW)
 
 enum
 {
@@ -115,7 +115,7 @@ set_page (GcalCalendarManagementDialog *self,
       gtk_stack_set_visible_child (GTK_STACK (self->stack), GTK_WIDGET (page));
       gcal_calendar_management_page_activate (page, calendar);
 
-      gtk_header_bar_set_title (GTK_HEADER_BAR (self->headerbar),
+      hdy_header_bar_set_title (self->headerbar,
                                 gcal_calendar_management_page_get_title (page));
       break;
     }
@@ -184,35 +184,25 @@ on_page_switched_cb (GcalCalendarManagementPage   *page,
   GCAL_EXIT;
 }
 
+
+/*
+ * GtkWidget overrides
+ */
+
 static void
-on_dialog_response_signal_cb (GtkDialog                    *dialog,
-                              gint                          response_id,
-                              GcalCalendarManagementDialog *self)
+gcal_calendar_management_dialog_hide (GtkWidget *widget)
 {
+  GcalCalendarManagementDialog *self = (GcalCalendarManagementDialog *) widget;
+
   set_page (self, "calendars", NULL);
-  gtk_widget_hide (GTK_WIDGET (dialog));
+
+  GTK_WIDGET_CLASS (gcal_calendar_management_dialog_parent_class)->hide (widget);
 }
 
 
 /*
  * GObject overrides
  */
-
-static void
-gcal_calendar_management_dialog_constructed (GObject *object)
-{
-  GcalCalendarManagementDialog *self;
-
-  self = GCAL_CALENDAR_MANAGEMENT_DIALOG (object);
-
-  G_OBJECT_CLASS (gcal_calendar_management_dialog_parent_class)->constructed (object);
-
-  /* widget responses */
-  gtk_dialog_set_default_response (GTK_DIALOG (object), GTK_RESPONSE_CANCEL);
-
-  /* setup titlebar */
-  gtk_window_set_titlebar (GTK_WINDOW (object), self->headerbar);
-}
 
 static void
 gcal_calendar_management_dialog_get_property (GObject    *object,
@@ -262,9 +252,10 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
 
   g_type_ensure (E_TYPE_SOURCE_LOCAL);
 
-  object_class->constructed = gcal_calendar_management_dialog_constructed;
   object_class->get_property = gcal_calendar_management_dialog_get_property;
   object_class->set_property = gcal_calendar_management_dialog_set_property;
+
+  widget_class->hide = gcal_calendar_management_dialog_hide;
 
   properties[PROP_CONTEXT] = g_param_spec_object ("context",
                                                   "Context",
@@ -278,12 +269,18 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, headerbar);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, stack);
-
-  gtk_widget_class_bind_template_callback (widget_class, on_dialog_response_signal_cb);
 }
 
 static void
 gcal_calendar_management_dialog_init (GcalCalendarManagementDialog *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
+}
+
+HdyHeaderBar*
+gcal_calendar_management_dialog_get_titlebar (GcalCalendarManagementDialog *self)
+{
+  g_return_val_if_fail (GCAL_IS_CALENDAR_MANAGEMENT_DIALOG (self), NULL);
+
+  return HDY_HEADER_BAR (self->headerbar);
 }

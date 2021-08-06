@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
+#include <handy.h>
 
 #include "gcal-calendar.h"
 
@@ -61,6 +61,6 @@ void                 gcal_calendar_management_page_switch_page   (GcalCalendarMa
                                                                   const gchar                *page_name,
                                                                   GcalCalendar               *calendar);
 
-GtkHeaderBar*        gcal_calendar_management_page_get_titlebar  (GcalCalendarManagementPage *self);
+HdyHeaderBar*        gcal_calendar_management_page_get_titlebar  (GcalCalendarManagementPage *self);
 
 G_END_DECLS

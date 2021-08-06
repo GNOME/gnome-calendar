@@ -20,6 +20,7 @@
 
 #define G_LOG_DOMAIN "GcalCalendarManagementPage"
 
+#include "gcal-calendar-management-dialog.h"
 #include "gcal-calendar-management-page.h"
 #include "gcal-context.h"
 
@@ -107,7 +108,7 @@ gcal_calendar_management_page_switch_page (GcalCalendarManagementPage *self,
   g_signal_emit (self, signals[SWITCH_PAGE], 0, page_name, calendar);
 }
 
-GtkHeaderBar*
+HdyHeaderBar*
 gcal_calendar_management_page_get_titlebar (GcalCalendarManagementPage *self)
 {
   GtkWidget *toplevel;
@@ -115,5 +116,5 @@ gcal_calendar_management_page_get_titlebar (GcalCalendarManagementPage *self)
   toplevel = gtk_widget_get_toplevel (GTK_WIDGET (self));
   g_assert (toplevel != NULL);
 
-  return GTK_HEADER_BAR (gtk_window_get_titlebar (GTK_WINDOW (toplevel)));
+  return gcal_calendar_management_dialog_get_titlebar (GCAL_CALENDAR_MANAGEMENT_DIALOG (toplevel));
 }
