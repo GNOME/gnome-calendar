@@ -67,36 +67,28 @@
             <property name="max_content_height">600</property>
             <property name="propagate_natural_height">True</property>
 
-
             <child>
-              <object class="GtkFrame">
+              <object class="GtkListBox" id="listbox">
                 <property name="visible">True</property>
-                <property name="margin-top">24</property>
-                <property name="margin-bottom">24</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
+                <property name="margin">24</property>
+                <property name="selection-mode">none</property>
+                <signal name="row-activated" handler="on_listbox_row_activated_cb" object="GcalCalendarsPage" swapped="no" />
+                <style>
+                  <class name="calendars-list"/>
+                  <class name="content"/>
+                </style>
+
                 <child>
-                  <object class="GtkListBox" id="listbox">
+                  <object class="GtkListBoxRow" id="add_calendar_row">
                     <property name="visible">True</property>
-                    <property name="selection-mode">none</property>
-                    <signal name="row-activated" handler="on_listbox_row_activated_cb" object="GcalCalendarsPage" swapped="no" />
-                    <style>
-                      <class name="calendars-list"/>
-                    </style>
 
                     <child>
-                      <object class="GtkListBoxRow" id="add_calendar_row">
+                      <object class="GtkLabel">
                         <property name="visible">True</property>
-
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="expand">True</property>
-                            <property name="xalign">0.5</property>
-                            <property name="yalign">0.5</property>
-                            <property name="label" translatable="yes">Add Calendar…</property>
-                          </object>
-                        </child>
+                        <property name="expand">True</property>
+                        <property name="xalign">0.5</property>
+                        <property name="yalign">0.5</property>
+                        <property name="label" translatable="yes">Add Calendar…</property>
                       </object>
                     </child>
                   </object>
