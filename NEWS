@@ -1,3 +1,7 @@
+Major changes in 41.beta:
+* Implement opening ICS files and importing events
+* Updated translations
+
 Major changes in 41.alpha:
 * Introduce the new event preview popover
 * Updated translations
