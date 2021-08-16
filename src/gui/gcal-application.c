@@ -391,6 +391,7 @@ gcal_application_activate (GApplication *application)
                                     NULL);
 
       g_signal_connect (self->window, "destroy", G_CALLBACK (gtk_widget_destroyed), &self->window);
+      g_object_add_weak_pointer (G_OBJECT (self->window), (gpointer*) &self->window);
       gtk_widget_show (self->window);
     }
 
