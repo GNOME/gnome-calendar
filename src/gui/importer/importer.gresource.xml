@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/gnome/calendar/ui/gui/importer">
+    <file compressed="true">gcal-import-dialog.ui</file>
+    <file compressed="true">gcal-import-file-row.ui</file>
+  </gresource>
+</gresources>

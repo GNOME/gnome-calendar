@@ -457,11 +457,14 @@ gcal_application_command_line (GApplication            *app,
                                GApplicationCommandLine *command_line)
 {
   g_autoptr (GVariant) option = NULL;
+  g_auto (GStrv) arguments = NULL;
   GcalApplication *self;
   GVariantDict *options;
   const gchar* date = NULL;
   const gchar* uuid = NULL;
   gsize length;
+  gint n_arguments;
+  gint i;
 
   GCAL_ENTRY;
 
@@ -509,6 +512,37 @@ gcal_application_command_line (GApplication            *app,
     }
 
   g_application_activate (app);
+
+  arguments = g_application_command_line_get_arguments (command_line, &n_arguments);
+  if (n_arguments > 1)
+    {
+      g_autoptr (GHashTable) unique_files = NULL;
+      g_autoptr (GPtrArray) files = NULL;
+      gint n_files = 0;
+
+      files = g_ptr_array_new_full (n_arguments - 1, g_object_unref);
+      unique_files = g_hash_table_new (g_file_hash, (GEqualFunc) g_file_equal);
+
+      for (i = 1; i < n_arguments; i++)
+        {
+          g_autoptr (GFile) file = NULL;
+          const gchar *arg;
+
+          arg = arguments[i];
+          file = g_application_command_line_create_file_for_arg (command_line, arg);
+
+          if (g_str_has_prefix (arg, "-") || g_hash_table_contains (unique_files, file))
+            continue;
+
+          g_hash_table_add (unique_files, file);
+          g_ptr_array_add (files, g_steal_pointer (&file));
+
+          n_files++;
+        }
+
+      if (n_files > 0)
+        g_application_open (app, (GFile **) files->pdata, n_files, "");
+    }
 
   GCAL_RETURN (0);
 }
@@ -575,6 +609,23 @@ gcal_application_dbus_unregister (GApplication    *application,
 }
 
 static void
+gcal_application_open (GApplication  *application,
+                       GFile        **files,
+                       gint           n_files,
+                       const gchar   *hint)
+{
+  GcalApplication *self;
+
+  GCAL_ENTRY;
+
+  self = GCAL_APPLICATION (application);
+
+  gcal_window_import_files (GCAL_WINDOW (self->window), files, n_files);
+
+  GCAL_EXIT;
+}
+
+static void
 gcal_application_class_init (GcalApplicationClass *klass)
 {
   GObjectClass *object_class;
@@ -588,6 +639,7 @@ gcal_application_class_init (GcalApplicationClass *klass)
   application_class->activate = gcal_application_activate;
   application_class->startup = gcal_application_startup;
   application_class->command_line = gcal_application_command_line;
+  application_class->open = gcal_application_open;
   application_class->handle_local_options = gcal_application_handle_local_options;
   application_class->dbus_register = gcal_application_dbus_register;
   application_class->dbus_unregister = gcal_application_dbus_unregister;
@@ -631,7 +683,7 @@ gcal_application_new (void)
   return g_object_new (gcal_application_get_type (),
                        "resource-base-path", "/org/gnome/calendar",
                        "application-id", APPLICATION_ID,
-                       "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
+                       "flags", G_APPLICATION_HANDLES_COMMAND_LINE | G_APPLICATION_HANDLES_OPEN,
                        NULL);
 }
 

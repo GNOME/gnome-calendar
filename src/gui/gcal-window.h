@@ -41,6 +41,10 @@ void                 gcal_window_set_search_query               (GcalWindow     
 void                 gcal_window_open_event_by_uuid             (GcalWindow          *self,
                                                                  const gchar         *uuid);
 
+void                 gcal_window_import_files                   (GcalWindow          *self,
+                                                                 GFile             **files,
+                                                                 gint                n_files);
+
 G_END_DECLS
 
 #endif /* __GCAL_WINDOW_H__ */

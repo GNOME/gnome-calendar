@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalImportDialog" parent="HdyWindow">
+    <property name="width_request">500</property>
+    <property name="can_focus">False</property>
+    <property name="border_width">0</property>
+    <property name="default_width">550</property>
+    <property name="default_height">500</property>
+    <property name="resizable">False</property>
+    <property name="type_hint">dialog</property>
+    <property name="modal">True</property>
+    <property name="destroy_with_parent">True</property>
+    <child>
+      <object class="HdyDeck">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+
+            <child>
+              <object class="HdyHeaderBar" id="headerbar">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes">Import Files…</property>
+                <property name="show_close_button">False</property>
+
+                <!-- Cancel button -->
+                <child>
+                  <object class="GtkButton" id="cancel_button">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">_Cancel</property>
+                    <property name="use-underline">True</property>
+                    <signal name="clicked" handler="on_cancel_button_clicked_cb" object="GcalImportDialog" swapped="no" />
+                  </object>
+                </child>
+
+                <!-- Import button -->
+                <child>
+                  <object class="GtkButton" id="import_button">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">_Import</property>
+                    <property name="use-underline">True</property>
+                    <signal name="clicked" handler="on_import_button_clicked_cb" object="GcalImportDialog" swapped="no" />
+                    <style>
+                      <class name="suggested-action" />
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="pack-type">end</property>
+                  </packing>
+                </child>
+
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="hscrollbar-policy">never</property>
+                <property name="propagate-natural-height">True</property>
+                <property name="min-content-height">400</property>
+                <property name="max-content-height">700</property>
+
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="spacing">12</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">24</property>
+                    <property name="margin-start">36</property>
+                    <property name="margin-end">36</property>
+                    <property name="orientation">vertical</property>
+
+                    <!-- Calendar row -->
+                    <child>
+                      <object class="GtkListBox">
+                        <property name="visible">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="selection-mode">none</property>
+                        <signal name="row-activated" handler="on_select_calendar_row_activated_cb" object="GcalImportDialog" swapped="no" />
+                        <style>
+                          <class name="content" />
+                        </style>
+
+                        <child>
+                          <object class="HdyActionRow" id="calendar_row">
+                            <property name="visible">True</property>
+                            <property name="activatable">True</property>
+                            <property name="title" translatable="yes">C_alendar</property>
+                            <property name="use-underline">True</property>
+
+                            <child>
+                              <object class="GtkBox" id="calendar_row_widgets_box">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="margin-start">12</property>
+                                <property name="spacing">12</property>
+
+                                <!-- Color -->
+                                <child>
+                                  <object class="GtkImage" id="calendar_color_image">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                  </object>
+                                </child>
+
+                                <!-- Calendar name -->
+                                <child>
+                                  <object class="GtkLabel" id="calendar_name_label">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="can-focus">False</property>
+                                  </object>
+                                </child>
+
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="pixel-size">16</property>
+                                    <property name="icon-name">pan-down-symbolic</property>
+                                  </object>
+                                </child>
+
+                              </object>
+                            </child>
+
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <!-- Files overview -->
+                    <child>
+                      <object class="GtkListBox" id="files_listbox">
+                        <property name="visible">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="selection-mode">none</property>
+
+                        <child type="placeholder">
+                          <object class="GtkSpinner">
+                            <property name="visible">True</property>
+                            <property name="halign">center</property>
+                            <property name="valign">center</property>
+                            <property name="active">True</property>
+                          </object>
+                        </child>
+
+                        <style>
+                          <class name="background" />
+                        </style>
+                      </object>
+                    </child>
+
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+          </object>
+        </child>
+      </object>
+    </child>
+
+  </template>
+
+  <!-- Calendars popover -->
+  <object class="GtkPopover" id="calendars_popover">
+    <property name="position">bottom</property>
+    <property name="relative-to">calendar_row_widgets_box</property>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="visible">True</property>
+        <property name="hscrollbar-policy">never</property>
+        <property name="max-content-height">350</property>
+        <property name="propagate-natural-width">True</property>
+        <property name="propagate-natural-height">True</property>
+        <child>
+          <object class="GtkListBox" id="calendars_listbox">
+            <property name="visible">True</property>
+            <property name="hexpand">True</property>
+            <property name="selection-mode">none</property>
+            <signal name="row-activated" handler="on_calendars_listbox_row_activated_cb" object="GcalImportDialog" swapped="no" />
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+
+  <object class="GtkSizeGroup" id="title_sizegroup">
+    <property name="mode">horizontal</property>
+  </object>
+
+</interface>

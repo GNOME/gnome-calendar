@@ -38,6 +38,8 @@
 #include "gcal-window.h"
 #include "gcal-year-view.h"
 
+#include "importer/gcal-import-dialog.h"
+
 #include <glib/gi18n.h>
 #include <libecal/libecal.h>
 
@@ -116,6 +118,7 @@ struct _GcalWindow
   GtkWidget          *views_switcher;
 
   GcalEventEditorDialog *event_editor;
+  GtkWidget          *import_dialog;
 
   DzlSuggestionButton *search_button;
 
@@ -1204,4 +1207,18 @@ gcal_window_open_event_by_uuid (GcalWindow  *self,
                                                                  (GSourceFunc) schedule_open_edit_dialog_by_uuid,
                                                                  edit_dialog_data);
     }
+}
+
+void
+gcal_window_import_files (GcalWindow  *self,
+                          GFile      **files,
+                          gint         n_files)
+{
+  g_return_if_fail (GCAL_IS_WINDOW (self));
+
+  g_clear_pointer (&self->import_dialog, gtk_widget_destroy);
+
+  self->import_dialog = gcal_import_dialog_new_for_files (self->context, files, n_files);
+  gtk_window_set_transient_for (GTK_WINDOW (self->import_dialog), GTK_WINDOW (self));
+  gtk_window_present (GTK_WINDOW (self->import_dialog));
 }

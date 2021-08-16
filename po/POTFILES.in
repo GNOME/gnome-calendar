@@ -34,6 +34,10 @@ src/gui/gcal-weather-settings.ui
 src/gui/gcal-window.c
 src/gui/gcal-window.ui
 src/gui/gtk/help-overlay.ui
+src/gui/importer/gcal-import-dialog.c
+src/gui/importer/gcal-import-dialog.ui
+src/gui/importer/gcal-importer.c
+src/gui/importer/gcal-import-file-row.c
 src/gui/views/gcal-month-popover.ui
 src/gui/views/gcal-week-grid.c
 src/gui/views/gcal-week-header.c
