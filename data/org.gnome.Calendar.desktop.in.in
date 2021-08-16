@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Calendar
 Comment=Access and manage your calendars
-Exec=gnome-calendar
+Exec=gnome-calendar %U
 # Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 Icon=@icon@
 Terminal=false
