@@ -621,6 +621,7 @@ gcal_application_open (GApplication  *application,
 
   self = GCAL_APPLICATION (application);
 
+  g_application_activate (G_APPLICATION (application));
   gcal_window_import_files (GCAL_WINDOW (self->window), files, n_files);
 
   GCAL_EXIT;
