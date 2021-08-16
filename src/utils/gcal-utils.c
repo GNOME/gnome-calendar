@@ -1292,6 +1292,9 @@ gcal_utils_extract_google_section (const gchar  *description,
   gchar *first_delimiter;
   gchar *last_delimiter;
 
+  if (!description)
+    goto out;
+
 #define GOOGLE_DELIMITER "-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-"
 
   description_len = strlen (description);
