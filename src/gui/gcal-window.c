@@ -1221,4 +1221,6 @@ gcal_window_import_files (GcalWindow  *self,
   self->import_dialog = gcal_import_dialog_new_for_files (self->context, files, n_files);
   gtk_window_set_transient_for (GTK_WINDOW (self->import_dialog), GTK_WINDOW (self));
   gtk_window_present (GTK_WINDOW (self->import_dialog));
+
+  g_object_add_weak_pointer (G_OBJECT (self->import_dialog), &self->import_dialog);
 }
