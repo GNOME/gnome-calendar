@@ -187,6 +187,7 @@ on_calendar_created_cb (GObject      *source_object,
                         GAsyncResult *result,
                         gpointer      user_data)
 {
+  g_autoptr (ESource) default_source = NULL;
   g_autoptr (GError) error = NULL;
   ESourceRefresh *refresh_extension;
   ESourceOffline *offline_extension;
@@ -246,6 +247,10 @@ on_calendar_created_cb (GObject      *source_object,
                                    NULL);
 
   g_signal_emit (self, signals[CALENDAR_ADDED], 0, calendar);
+
+  default_source = e_source_registry_ref_default_calendar (self->source_registry);
+  if (default_source == source)
+    g_object_notify (G_OBJECT (self->source_registry), "default-calendar");
 }
 
 static void
