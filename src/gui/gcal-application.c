@@ -369,16 +369,6 @@ gcal_application_activate (GApplication *application)
 
   self = GCAL_APPLICATION (application);
 
-  if (!self->provider)
-    load_css_provider (self);
-
-  if (self->colors_provider)
-    {
-      gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
-                                                 GTK_STYLE_PROVIDER (self->colors_provider),
-                                                 GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
-    }
-
   if (!self->window)
     {
       if (!self->initial_date)
@@ -438,17 +428,23 @@ gcal_application_startup (GApplication *app)
 
   G_APPLICATION_CLASS (gcal_application_parent_class)->startup (app);
 
-  self->colors_provider = gtk_css_provider_new ();
-
-  /* Startup the manager */
-  gcal_context_startup (self->context);
-
   /* We're assuming the application is called as a service only by the shell search system */
   if ((g_application_get_flags (app) & G_APPLICATION_IS_SERVICE) != 0)
     g_application_set_inactivity_timeout (app, 3 * 60 * 1000);
 
   /*  initialize libhandy */
   hdy_init();
+
+  /* CSS */
+  load_css_provider (self);
+
+  self->colors_provider = gtk_css_provider_new ();
+  gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
+                                             GTK_STYLE_PROVIDER (self->colors_provider),
+                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
+
+  /* Startup the manager */
+  gcal_context_startup (self->context);
 
   GCAL_EXIT;
 }
