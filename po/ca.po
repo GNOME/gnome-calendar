@@ -601,7 +601,7 @@ msgstr "Copyright © 2012–%d els autors del Calendari"
 #: src/gui/gcal-application.c:288
 msgid "translator-credits"
 msgstr ""
-"Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2020\n"
+"Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2021\n"
 "Miquel-Àngel Burgos i Fradeja <miquel.angel.burgos@gmail.com>, 2020"
 
 #: src/gui/gcal-calendar-popover.ui:43
@@ -1048,7 +1048,7 @@ msgstr "Any"
 #: src/gui/gcal-window.ui:179
 msgctxt "tooltip"
 msgid "Add a new event"
-msgstr "Afegeix un esdeveniment nou"
+msgstr "Afegeix una cita nova"
 
 #: src/gui/gcal-window.ui:269
 msgid "Manage your calendars"
@@ -1155,8 +1155,8 @@ msgstr "Vista anual"
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
-msgstr[0] "Importa %d esdeveniment"
-msgstr[1] "Importa %d esdeveniments"
+msgstr[0] "Importa %d cita"
+msgstr[1] "Importa %d cites"
 
 #: src/gui/importer/gcal-import-dialog.ui:24
 msgid "Import Files…"
