@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2021-08-31 10:22+0000\n"
-"PO-Revision-Date: 2021-08-31 14:24+0200\n"
+"PO-Revision-Date: 2021-08-31 21:35+0200\n"
 "Last-Translator: Matej Urbančič <mateju@src.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -242,7 +242,7 @@ msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"Koledarje, ki so dostopni prek storitev, ki zahtevajo prijavo, je mogoče "
+"Koledarje, ki so dostopni prek storitev in zahtevajo prijavo, je mogoče "
 "dodati med nastavitvami <a href=\"GOA\">spletnih računov</a>."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:241
