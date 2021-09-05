@@ -21,7 +21,6 @@
 
 #include "config.h"
 
-#include "css-code.h"
 #include "gcal-application.h"
 #include "gcal-context.h"
 #include "gcal-debug.h"
@@ -40,9 +39,6 @@ struct _GcalApplication
   DzlApplication      parent;
 
   GtkWidget          *window;
-
-  GtkCssProvider     *provider;
-  GtkCssProvider     *colors_provider;
 
   gchar              *uuid;
   GDateTime          *initial_date;
@@ -94,73 +90,6 @@ enum
 };
 
 static GParamSpec* properties[N_PROPS] = { NULL, };
-
-static void
-process_sources (GcalApplication *self)
-{
-  g_autoptr (GError) error = NULL;
-  g_autofree gchar *new_css_data = NULL;
-  g_auto (GStrv) new_css_snippets = NULL;
-  GcalManager *manager;
-  GList *calendars, *l;
-  GQuark color_id;
-  gint arr_length;
-  gint i = 0;
-
-  manager = gcal_context_get_manager (self->context);
-  calendars = gcal_manager_get_calendars (manager);
-  arr_length = g_list_length (calendars);
-  new_css_snippets = g_new0 (gchar*, arr_length + 2);
-  for (l = calendars; l; l = l->next, i++)
-    {
-      g_autofree gchar* color_str = NULL;
-      const GdkRGBA *color;
-      GcalCalendar *calendar;
-
-      calendar = GCAL_CALENDAR (l->data);
-
-      color = gcal_calendar_get_color (calendar);
-      color_str = gdk_rgba_to_string (color);
-      color_id = g_quark_from_string (color_str);
-
-      new_css_snippets[i] = g_strdup_printf (CSS_TEMPLATE, color_id, color_str);
-    }
-
-  g_list_free (calendars);
-
-  new_css_data = g_strjoinv ("\n", new_css_snippets);
-
-  gtk_css_provider_load_from_data (self->colors_provider, new_css_data, -1, &error);
-
-  if (error)
-    g_warning ("Error creating custom stylesheet. %s", error->message);
-}
-
-static void
-load_css_provider (GcalApplication *self)
-{
-  g_autoptr (GFile) css_file = NULL;
-  g_autofree gchar *theme_name = NULL;
-  g_autofree gchar *theme_uri = NULL;
-
-  /* Apply the CSS provider */
-  self->provider = gtk_css_provider_new ();
-  gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
-                                             GTK_STYLE_PROVIDER (self->provider),
-                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
-
-  /* Retrieve the theme name */
-  g_object_get (gtk_settings_get_default (), "gtk-theme-name", &theme_name, NULL);
-  theme_uri = g_strconcat ("resource:///org/gnome/calendar/theme/", theme_name, ".css", NULL);
-
-  /* Try and load the CSS file */
-  css_file = g_file_new_for_uri (theme_uri);
-
-  if (g_file_query_exists (css_file, NULL))
-    gtk_css_provider_load_from_file (self->provider, css_file, NULL);
-  else
-    gtk_css_provider_load_from_resource (self->provider, "/org/gnome/calendar/theme/Adwaita.css");
-}
 
 /*
  * Callbacks
@@ -324,8 +253,6 @@ gcal_application_finalize (GObject *object)
   gcal_clear_date_time (&self->initial_date);
   g_clear_pointer (&self->uuid, g_free);
   g_clear_object (&self->context);
-  g_clear_object (&self->colors_provider);
-  g_clear_object (&self->provider);
   g_clear_object (&self->search_provider);
 
   G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
@@ -434,14 +361,6 @@ gcal_application_startup (GApplication *app)
 
   /*  initialize libhandy */
   hdy_init();
-
-  /* CSS */
-  load_css_provider (self);
-
-  self->colors_provider = gtk_css_provider_new ();
-  gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
-                                             GTK_STYLE_PROVIDER (self->colors_provider),
-                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
 
   /* Startup the manager */
   gcal_context_startup (self->context);
@@ -660,17 +579,9 @@ gcal_application_class_init (GcalApplicationClass *klass)
 static void
 gcal_application_init (GcalApplication *self)
 {
-  GcalManager *manager;
-
   g_application_add_main_option_entries (G_APPLICATION (self), gcal_application_goptions);
 
   self->context = gcal_context_new ();
-
-  manager = gcal_context_get_manager (self->context);
-  g_signal_connect_swapped (manager, "calendar-added", G_CALLBACK (process_sources), self);
-  g_signal_connect_swapped (manager, "calendar-changed", G_CALLBACK (process_sources), self);
-  g_signal_connect_swapped (manager, "calendar-removed", G_CALLBACK (process_sources), self);
-
   self->search_provider = gcal_shell_search_provider_new (self->context);
 }
 

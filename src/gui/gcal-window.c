@@ -19,6 +19,7 @@
 
 #define G_LOG_DOMAIN "GcalWindow"
 
+#include "css-code.h"
 #include "gcal-calendar-management-dialog.h"
 #include "gcal-calendar-popover.h"
 #include "config.h"
@@ -158,6 +159,10 @@ struct _GcalWindow
 
   /* handler for the searh_view */
   gint                click_outside_handler_id;
+
+  /* CSS */
+  GtkCssProvider     *provider;
+  GtkCssProvider     *colors_provider;
 
   /* Window states */
   gint                width;
@@ -314,6 +319,80 @@ save_geometry (GcalWindow *self)
   g_settings_set (settings, "window-position", "(ii)", self->pos_x, self->pos_y);
 
   GCAL_EXIT;
+}
+
+static void
+recalculate_calendar_colors_css (GcalWindow *self)
+{
+  g_autoptr (GError) error = NULL;
+  g_autoptr (GList) calendars = NULL;
+  g_autofree gchar *new_css_data = NULL;
+  g_auto (GStrv) new_css_snippets = NULL;
+  GcalManager *manager;
+  GQuark color_id;
+  GList *l;
+  gint arr_length;
+  gint i = 0;
+
+  manager = gcal_context_get_manager (self->context);
+  calendars = gcal_manager_get_calendars (manager);
+  arr_length = g_list_length (calendars);
+  new_css_snippets = g_new0 (gchar*, arr_length + 2);
+  for (l = calendars; l; l = l->next, i++)
+    {
+      g_autofree gchar* color_str = NULL;
+      const GdkRGBA *color;
+      GcalCalendar *calendar;
+
+      calendar = GCAL_CALENDAR (l->data);
+
+      color = gcal_calendar_get_color (calendar);
+      color_str = gdk_rgba_to_string (color);
+      color_id = g_quark_from_string (color_str);
+
+      new_css_snippets[i] = g_strdup_printf (CSS_TEMPLATE, color_id, color_str);
+    }
+
+  new_css_data = g_strjoinv ("\n", new_css_snippets);
+  gtk_css_provider_load_from_data (self->colors_provider, new_css_data, -1, &error);
+
+  if (error)
+    g_warning ("Error creating custom stylesheet. %s", error->message);
+}
+
+static void
+load_css_providers (GcalWindow *self)
+{
+  g_autoptr (GFile) css_file = NULL;
+  g_autofree gchar *theme_name = NULL;
+  g_autofree gchar *theme_uri = NULL;
+  GdkScreen *screen;
+
+  screen = gtk_widget_get_screen (GTK_WIDGET (self));
+
+  /* Theme */
+  self->provider = gtk_css_provider_new ();
+  gtk_style_context_add_provider_for_screen (screen,
+                                             GTK_STYLE_PROVIDER (self->provider),
+                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
+
+  /* Retrieve the theme name */
+  g_object_get (gtk_settings_get_default (), "gtk-theme-name", &theme_name, NULL);
+  theme_uri = g_strconcat ("resource:///org/gnome/calendar/theme/", theme_name, ".css", NULL);
+
+  /* Try and load the CSS file */
+  css_file = g_file_new_for_uri (theme_uri);
+
+  if (g_file_query_exists (css_file, NULL))
+    gtk_css_provider_load_from_file (self->provider, css_file, NULL);
+  else
+    gtk_css_provider_load_from_resource (self->provider, "/org/gnome/calendar/theme/Adwaita.css");
+
+  /* Calendar olors */
+  self->colors_provider = gtk_css_provider_new ();
+  gtk_style_context_add_provider_for_screen (screen,
+                                             GTK_STYLE_PROVIDER (self->colors_provider),
+                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
 }
 
 
@@ -817,6 +896,9 @@ gcal_window_finalize (GObject *object)
 
   gcal_clear_date_time (&window->active_date);
 
+  g_clear_object (&window->colors_provider);
+  g_clear_object (&window->provider);
+
   G_OBJECT_CLASS (gcal_window_parent_class)->finalize (object);
 
   GCAL_EXIT;
@@ -849,6 +931,16 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->event_editor, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->search_button, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+
+  /* CSS */
+  load_css_providers (self);
+
+  g_object_connect (gcal_context_get_manager (self->context),
+                    "swapped-object-signal::calendar-added", recalculate_calendar_colors_css, self,
+                    "swapped-object-signal::calendar-changed", recalculate_calendar_colors_css, self,
+                    "swapped-object-signal::calendar-removed", recalculate_calendar_colors_css, self,
+                    NULL);
+  recalculate_calendar_colors_css (self);
 
   GCAL_EXIT;
 }
