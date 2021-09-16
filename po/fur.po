@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2021-08-16 21:39+0000\n"
-"PO-Revision-Date: 2021-09-16 17:16+0200\n"
+"PO-Revision-Date: 2021-09-16 17:20+0200\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
@@ -787,15 +787,15 @@ msgstr "Google Meet"
 
 #: src/gui/gcal-meeting-row.c:69
 msgid "Jitsi"
-msgstr ""
+msgstr "Jitsi"
 
 #: src/gui/gcal-meeting-row.c:70
 msgid "Whereby"
-msgstr ""
+msgstr "Whereby"
 
 #: src/gui/gcal-meeting-row.c:71
 msgid "Zoom"
-msgstr ""
+msgstr "Zoom"
 
 #: src/gui/gcal-meeting-row.c:81
 msgid "Unknown Service"
@@ -804,7 +804,7 @@ msgstr "Servizi no cognossût"
 #. Translators: "Join" as in "Join meeting"
 #: src/gui/gcal-meeting-row.ui:62
 msgid "Join"
-msgstr ""
+msgstr "Jentre"
 
 #: src/gui/gcal-quick-add-popover.c:117
 #, c-format
@@ -1197,7 +1197,7 @@ msgstr "Nissun erôr"
 
 #: src/gui/importer/gcal-importer.c:36
 msgid "Bad argument to function"
-msgstr ""
+msgstr "Argoment sbaliât pe funzion"
 
 #: src/gui/importer/gcal-importer.c:40
 msgid "Failed to allocate a new object in memory"
