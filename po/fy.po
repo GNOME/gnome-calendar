@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2021-08-16 21:39+0000\n"
-"PO-Revision-Date: 2021-09-01 13:58+0200\n"
+"POT-Creation-Date: 2021-09-25 01:56+0000\n"
+"PO-Revision-Date: 2021-10-01 20:35+0200\n"
 "Last-Translator: Tjipke van der Heide <tjipke@tutanota.com>\n"
 "Language-Team: Western Frisian <tjipke@tutanota.com>\n"
 "Language: fy\n"
@@ -23,14 +23,14 @@ msgstr ""
 "X-DL-Module: gnome-calendar\n"
 "X-DL-Branch: master\n"
 "X-DL-Domain: po\n"
-"X-DL-State: Translating\n"
+"X-DL-State: None\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
+#: src/gui/gcal-application.c:206 src/gui/gcal-quick-add-popover.ui:187
 #: src/gui/gcal-window.ui:173
 msgid "Calendar"
-msgstr "Calendar"
+msgstr "Kalinder"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
 msgid "Calendar for GNOME"
@@ -42,7 +42,7 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"GNOME Calendar is in maklik te brûken en moaie kalinder applikaasje "
+"GNOME Kalinder is in maklik te brûken en moaie kalinder applikaasje "
 "ûntwurpen om perfekt by de GNOME desktop te passen. Troch de komponinten wer "
 "de GNOME desktop út bestiet wer opnij te brûken, kin Calendar goed "
 "yntegrearre yn it GNOME ekosysteem."
@@ -165,7 +165,7 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "Kalinder <b>%s</b> fuortsmiten"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:692 src/gui/gcal-window.c:696
+#: src/gui/gcal-window.c:771 src/gui/gcal-window.c:775
 msgid "Undo"
 msgstr "Ûngedien meitsje"
 
@@ -418,7 +418,6 @@ msgid "10 minutes"
 msgstr "10 minúten"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:73
-#| msgid "5 minutes"
 msgid "15 minutes"
 msgstr "15 minúten"
 
@@ -574,32 +573,32 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: src/gui/gcal-application.c:63
+#: src/gui/gcal-application.c:59
 msgid "Quit GNOME Calendar"
-msgstr "GNOME Calender ferlitte"
+msgstr "GNOME Kalinder ferlitte"
 
-#: src/gui/gcal-application.c:68
+#: src/gui/gcal-application.c:64
 msgid "Display version number"
 msgstr "Ferzje nûmer sjen litte"
 
-#: src/gui/gcal-application.c:73
+#: src/gui/gcal-application.c:69
 msgid "Enable debug messages"
 msgstr "Debug berjochten ynskeakelje"
 
-#: src/gui/gcal-application.c:78
+#: src/gui/gcal-application.c:74
 msgid "Open calendar on the passed date"
 msgstr "Kalinder op de passearre datum iepenje"
 
-#: src/gui/gcal-application.c:83
+#: src/gui/gcal-application.c:79
 msgid "Open calendar showing the passed event"
 msgstr "De kalinder iepenje en it passearre evenemint sjen litte"
 
-#: src/gui/gcal-application.c:234
+#: src/gui/gcal-application.c:163
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
-msgstr "Copyright © 2012–%d De Calendar ûntwikkelders"
+msgstr "Copyright © 2012–%d De Kalinder ûntwikkelders"
 
-#: src/gui/gcal-application.c:288
+#: src/gui/gcal-application.c:217
 msgid "translator-credits"
 msgstr "Tjipke van der Heide"
 
@@ -666,19 +665,16 @@ msgstr "Desimber"
 
 #: src/gui/gcal-event-popover.c:159
 #, c-format
-#| msgid "Today"
 msgid "Today %s"
 msgstr "Hjoed %s"
 
 #: src/gui/gcal-event-popover.c:163
 #, c-format
-#| msgid "Tomorrow"
 msgid "Tomorrow %s"
 msgstr "Moarn %s"
 
 #: src/gui/gcal-event-popover.c:167
 #, c-format
-#| msgid "Yesterday"
 msgid "Yesterday %s"
 msgstr "Juster %s"
 
@@ -689,7 +685,6 @@ msgstr "Juster %s"
 #.
 #: src/gui/gcal-event-popover.c:176
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s %2$d, %3$s"
 msgstr "%2$d %1$s, %3$s"
 
@@ -700,7 +695,6 @@ msgstr "%2$d %1$s, %3$s"
 #.
 #: src/gui/gcal-event-popover.c:188
 #, c-format
-#| msgid "%1$s %2$s — %3$s %4$s"
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%2$d %1$s, %3$d, %4$s"
 
@@ -711,7 +705,6 @@ msgstr "%2$d %1$s, %3$d, %4$s"
 #.
 #: src/gui/gcal-event-popover.c:217 src/gui/gcal-event-popover.c:331
 #, c-format
-#| msgid "%1$s, %2$s"
 msgid "%1$s %2$d"
 msgstr "%2$d %1$s"
 
@@ -722,7 +715,6 @@ msgstr "%2$d %1$s"
 #.
 #: src/gui/gcal-event-popover.c:228 src/gui/gcal-event-popover.c:342
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s %2$d, %3$d"
 msgstr "%2$d %1$s, %3$d"
 
@@ -732,7 +724,6 @@ msgstr "%2$d %1$s, %3$d"
 #.
 #: src/gui/gcal-event-popover.c:262
 #, c-format
-#| msgid "%1$s — %2$s"
 msgid "Today, %1$s — %2$s"
 msgstr "Hjoed, %1$s — %2$s"
 
@@ -742,7 +733,6 @@ msgstr "Hjoed, %1$s — %2$s"
 #.
 #: src/gui/gcal-event-popover.c:270
 #, c-format
-#| msgid "%1$s — %2$s"
 msgid "Tomorrow, %1$s – %2$s"
 msgstr "Moarn, %1$s – %2$s"
 
@@ -752,7 +742,6 @@ msgstr "Moarn, %1$s – %2$s"
 #.
 #: src/gui/gcal-event-popover.c:278
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "Yesterday, %1$s – %2$s"
 msgstr "Juster, %1$s – %2$s"
 
@@ -763,7 +752,6 @@ msgstr "Juster, %1$s – %2$s"
 #.
 #: src/gui/gcal-event-popover.c:287
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s %2$d, %3$s – %4$s"
 msgstr "%2$d %1$s, %3$s – %4$s"
 
@@ -776,7 +764,6 @@ msgstr "%2$d %1$s, %3$s – %4$s"
 #.
 #: src/gui/gcal-event-popover.c:302
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%2$d %1$s, %3$d, %4$s – %5$s"
 
@@ -785,7 +772,6 @@ msgid "No event information"
 msgstr "Gjin ynformaasje oer evenemint"
 
 #: src/gui/gcal-event-popover.ui:160
-#| msgid "Edit Details…"
 msgid "Edit…"
 msgstr "Feroarje…"
 
@@ -1055,11 +1041,11 @@ msgstr "Waar sjen litte"
 msgid "Automatic Location"
 msgstr "Automatyske Lokaasje "
 
-#: src/gui/gcal-window.c:692
+#: src/gui/gcal-window.c:771
 msgid "Another event deleted"
 msgstr "In oar evenemint fuortsmiten"
 
-#: src/gui/gcal-window.c:696
+#: src/gui/gcal-window.c:775
 msgid "Event deleted"
 msgstr "Evenemint fuortsmiten"
 
@@ -1099,7 +1085,7 @@ msgstr "Toetseboerd _Koartkaaien"
 
 #: src/gui/gcal-window.ui:355
 msgid "_About Calendar"
-msgstr "_Oer Calendar"
+msgstr "_Oer Kalinder"
 
 #: src/gui/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -1183,7 +1169,6 @@ msgstr "Jier oersjoch"
 
 #: src/gui/importer/gcal-import-dialog.c:345
 #, c-format
-#| msgid "Import a Calendar"
 msgid "Import %d event"
 msgid_plural "Import %d events"
 msgstr[0] "Ymportear %d evenemint"
@@ -1202,7 +1187,6 @@ msgid "_Import"
 msgstr "_Ymportearre"
 
 #: src/gui/importer/gcal-import-dialog.ui:91
-#| msgid "Calendar"
 msgid "C_alendar"
 msgstr "K_alinder"
 
@@ -1223,12 +1207,10 @@ msgid "File is malformed, invalid, or corrupted"
 msgstr "Triem is misfoarme, ûnjildich of korrupt"
 
 #: src/gui/importer/gcal-importer.c:46
-#| msgid "Click to select the calendar"
 msgid "Failed to parse the calendar contents"
 msgstr "Koe de ynhâld fan de kalinder net ferwurkje"
 
 #: src/gui/importer/gcal-importer.c:49
-#| msgid "Calendar files"
 msgid "Failed to read file"
 msgstr "Koe triem net lêze"
 
