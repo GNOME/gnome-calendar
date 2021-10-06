@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-05-26 14:15+0000\n"
+"POT-Creation-Date: 2020-09-12 15:56+0000\n"
 "PO-Revision-Date: 2020-09-09 12:12+0000\n"
 "Last-Translator: Arash Mousavi <mousavi.arash@gmail.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
@@ -37,9 +37,9 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"تقویم گنوم یک برنامه ساده و زیبای تقویم است که به گونه‌ای طراحی شده است تا کاملاً "
-"مطابق میزکار گنوم باشد. با استفاده از اجزایی که میزکار گنوم از آن‌ها تشکیل شده، "
-"تقویم کاملاً با زیست‌بوم گنوم سازگار است."
+"تقویم گنوم یک برنامه ساده و زیبای تقویم است که به گونه‌ای طراحی شده است تا "
+"کاملاً مطابق میزکار گنوم باشد. با استفاده از اجزایی که میزکار گنوم از آن‌ها "
+"تشکیل شده، تقویم کاملاً با زیست‌بوم گنوم سازگار است."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
@@ -48,19 +48,16 @@ msgid ""
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "هدف ما پیدا کردن نقطهٔ عطف خوش‌ساختی و کاربردپذیری است. جامع و مانع .هنگام "
-"استفاده از تقویم چنان راحتی خواهید بود که انگار که سال‌هاست از آن استفاده می‌کنید!"
+"استفاده از تقویم چنان راحتی خواهید بود که انگار که سال‌هاست از آن استفاده "
+"می‌کنید!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
 msgid "Week view"
 msgstr "نمای هفتگی"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Search for events"
-msgstr "جست‌وجوی رویدادها"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
-msgid "Calendar management"
-msgstr "مدیریت تقویم"
+msgid "Year view"
+msgstr "نمای سالانه"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -109,11 +106,11 @@ msgstr "پیکربندی خدمت آب‌وهوا"
 
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid ""
-"Whether weather reports are shown, automatic locations are used and a location-"
-"name"
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
 msgstr ""
-"این که گزارش‌های آب‌وهوا نشان داده شوند، موقعیت‌های خودکار استفاده شوند و یک نام "
-"موقعیت"
+"این که گزارش‌های آب‌وهوا نشان داده شوند، موقعیت‌های خودکار استفاده شوند و یک "
+"نام موقعیت"
 
 #: data/org.gnome.calendar.gschema.xml.in:31
 msgid "Follow system night light"
@@ -124,7 +121,7 @@ msgid "Use GNOME night light setting to activate night-mode."
 msgstr "استفاده از نور شب گنوم برای فعّال کردن حالت شب."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1849
+#: src/core/gcal-event.c:1882
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -133,14 +130,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1857
+#: src/core/gcal-event.c:1890
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1873 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1906 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -193,8 +190,8 @@ msgstr "مدیریت تقویم‌ها"
 msgid "Calendar <b>%s</b> removed"
 msgstr "تقویم <b>%s</b> حذف شد"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:31 src/gui/gcal-window.c:722
-#: src/gui/gcal-window.c:726
+#: src/gui/calendar-management/gcal-calendars-page.ui:31
+#: src/gui/gcal-window.c:722 src/gui/gcal-window.c:726
 msgid "Undo"
 msgstr "برگردان"
 
@@ -221,11 +218,11 @@ msgstr "درون‌ریزی یک تقویم"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:105
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to import, "
-"or open a supported calendar file."
+"Alternatively, enter the web address of an online calendar you want to "
+"import, or open a supported calendar file."
 msgstr ""
-"به عنوان جایگزین، نشانی وب تقویم برخطی را که می‌خواهید درون‌ریزی کنید وارد کرده "
-"یا یک پروندهٔ پشتیبانی‌شدهٔ تقویم را بگشایید."
+"به عنوان جایگزین، نشانی وب تقویم برخطی را که می‌خواهید درون‌ریزی کنید وارد "
+"کرده یا یک پروندهٔ پشتیبانی‌شدهٔ تقویم را بگشایید."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:137
 msgid "Open a File"
@@ -237,11 +234,11 @@ msgstr "تقویم‌ها"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:204
 msgid ""
-"If the calendar belongs to one of your online accounts, you can add it through "
-"the <a href=\"GOA\">online account settings</a>."
+"If the calendar belongs to one of your online accounts, you can add it "
+"through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"اگر تقویم مربوط به یکی از حساب‌های برخطتان است، می‌توانید آن را از طریق <a href="
-"\"GOA\">تنظیمات حساب‌های برخط</a> بیفزایید."
+"اگر تقویم مربوط به یکی از حساب‌های برخطتان است، می‌توانید آن را از طریق <a "
+"href=\"GOA\">تنظیمات حساب‌های برخط</a> بیفزایید."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:240
 msgid "User"
@@ -410,27 +407,27 @@ msgid "Done"
 msgstr "انجام شد"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:416
+#: src/gui/gcal-edit-dialog.c:417
 #, c-format
 msgid "Last %A"
 msgstr "%Aٔ پیش"
 
-#: src/gui/gcal-edit-dialog.c:420
+#: src/gui/gcal-edit-dialog.c:421
 msgid "Yesterday"
 msgstr "دیروز"
 
-#: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
+#: src/gui/gcal-edit-dialog.c:425 src/gui/gcal-window.ui:180
 #: src/views/gcal-year-view.c:282 src/views/gcal-year-view.c:560
 #: src/views/gcal-year-view.ui:88
 msgid "Today"
 msgstr "امروز"
 
-#: src/gui/gcal-edit-dialog.c:428
+#: src/gui/gcal-edit-dialog.c:429
 msgid "Tomorrow"
 msgstr "فردا"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/gcal-edit-dialog.c:438
+#: src/gui/gcal-edit-dialog.c:439
 #, c-format
 msgid "This %A"
 msgstr "این %A"
@@ -439,12 +436,12 @@ msgstr "این %A"
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
-#: src/gui/gcal-edit-dialog.c:468
+#: src/gui/gcal-edit-dialog.c:469
 #, c-format
 msgid "%1$s, %2$s"
 msgstr "%2$s %1$s"
 
-#: src/gui/gcal-edit-dialog.c:1512 src/gui/gcal-quick-add-popover.c:687
+#: src/gui/gcal-edit-dialog.c:1529 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
 msgstr "رویداد بی‌نام"
 
@@ -997,8 +994,8 @@ msgstr "نمای سالانه"
 
 #: src/utils/gcal-utils.c:958
 msgid ""
-"The event you are trying to modify is recurring. The changes you have selected "
-"should be applied to:"
+"The event you are trying to modify is recurring. The changes you have "
+"selected should be applied to:"
 msgstr ""
 "رویدادی که می‌خواهید ویرایش کنید تکرار می‌شود. تغییراتی که انتخاب کرده‌اید باید "
 "اعمال شود به:"
@@ -1071,6 +1068,12 @@ msgstr "نمایش آب‌وهوا"
 #: src/weather/gcal-weather-settings.ui:53
 msgid "Automatic Location"
 msgstr "موقعیت خودکار"
+
+#~ msgid "Search for events"
+#~ msgstr "جست‌وجوی رویدادها"
+
+#~ msgid "Calendar management"
+#~ msgstr "مدیریت تقویم"
 
 #~ msgid "Date"
 #~ msgstr "تاریخ"
