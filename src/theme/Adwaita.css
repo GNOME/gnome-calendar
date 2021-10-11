@@ -498,3 +498,18 @@ monthpopover > box {
   padding: 12px;
   background: @theme_bg_color;
 }
+
+.notes-section .frame {
+  border-radius: 8px;
+  -gtk-outline-radius: 7px;
+  border-color: alpha(@borders, 0.7);
+}
+
+.notes-section .frame > textview.view {
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.notes-section .frame > textview.view > text {
+  background: none;
+}

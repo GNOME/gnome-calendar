@@ -4,16 +4,16 @@
     <property name="can_focus">False</property>
     <property name="orientation">vertical</property>
 
-    <style>
-      <class name="frame" />
-    </style>
-
     <child>
       <object class="GtkListBox" id="alarms_listbox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="selection_mode">none</property>
         <signal name="row-activated" handler="on_alarms_listbox_row_activated_cb" object="GcalRemindersSection" swapped="no" />
+
+        <style>
+          <class name="content" />
+        </style>
 
         <child>
           <object class="GtkListBoxRow" id="new_alarm_row">

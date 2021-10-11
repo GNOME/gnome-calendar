@@ -9,7 +9,7 @@
         <property name="selection-mode">none</property>
 
         <style>
-          <class name="frame" />
+          <class name="content" />
         </style>
 
         <!-- Summary -->

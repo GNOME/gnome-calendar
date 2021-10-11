@@ -2,6 +2,10 @@
 <interface>
   <template class="GcalNotesSection" parent="GtkBin">
     <property name="can_focus">False</property>
+    <style>
+      <class name="notes-section" />
+    </style>
+
 
     <child>
       <object class="GtkBox">
