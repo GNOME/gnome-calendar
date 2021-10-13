@@ -28,7 +28,6 @@
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
-#include <goa/goa.h>
 #include <libedataserverui/libedataserverui.h>
 #include <libsoup/soup.h>
 

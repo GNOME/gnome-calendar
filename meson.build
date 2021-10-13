@@ -131,7 +131,6 @@ common_flags = [
   '-DPACKAGE_DATA_DIR="@0@"'.format(calendar_pkgdatadir),
   '-DUI_DATA_DIR="@0@"'.format(join_paths(calendar_datadir), 'style'),
   '-DEDS_DISABLE_DEPRECATED',
-  '-DGOA_API_IS_SUBJECT_TO_CHANGE',
   '-DGWEATHER_I_KNOW_THIS_IS_UNSTABLE'
 ]
 
@@ -169,7 +168,6 @@ libhandy_dep = dependency('libhandy-1', version: '>= 1.0.0')
 glib_dep = dependency('glib-2.0', version: '>= 2.67.5')
 gtk_dep = dependency('gtk+-3.0', version: '>= 3.22.20')
 gio_dep = dependency('gio-2.0', version: '>= 2.58.0')
-goa_dep = dependency('goa-1.0', version: '>= 3.2.0')
 gweather_dep = dependency('gweather-3.0', version: '>= 40.0')
 geoclue_dep = dependency('libgeoclue-2.0', version: '>=2.4')
 geocode_dep = dependency('geocode-glib-1.0', version: '>=3.23')

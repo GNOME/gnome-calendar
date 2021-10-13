@@ -39,19 +39,6 @@
     ],
     "modules" : [
         {
-            "name" : "gnome-online-accounts",
-            "buildsystem" : "meson",
-            "config-opts" : [
-                "-Dgoabackend=false"
-            ],
-            "sources" : [
-                {
-                    "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/gnome-online-accounts.git"
-                }
-            ]
-        },
-        {
             "name" : "geocode-glib",
             "buildsystem" : "meson",
             "config-opts" : [
@@ -119,6 +106,7 @@
             "buildsystem" : "cmake-ninja",
             "config-opts" : [
                 "-DENABLE_CANBERRA=OFF",
+                "-DENABLE_GOA=OFF",
                 "-DENABLE_DOT_LOCKING=OFF",
                 "-DENABLE_FILE_LOCKING=fcntl",
                 "-DENABLE_GTK=ON",

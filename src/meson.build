@@ -12,7 +12,6 @@ gcal_deps = [
   glib_dep,
   gtk_dep,
   gio_dep,
-  goa_dep,
   gweather_dep,
   geoclue_dep,
   geocode_dep,
