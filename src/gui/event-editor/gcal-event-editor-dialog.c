@@ -58,7 +58,6 @@ struct _GcalEventEditorDialog
   GcalEventEditorSection *notes_section;
   GcalEventEditorSection *reminders_section;
   GcalEventEditorSection *schedule_section;
-  GtkWidget              *scrolled_window;
   GtkWidget              *sources_button;
   GtkWidget              *sources_popover;
   GtkWidget              *source_image;
@@ -272,9 +271,6 @@ transient_size_allocate_cb (GcalEventEditorDialog *self)
 
   transient = gtk_window_get_transient_for (GTK_WINDOW (self));
   gtk_widget_get_allocation (GTK_WIDGET (transient), &alloc);
-
-  gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolled_window),
-                                              MAX (400, (gint) (0.75 * alloc.height)));
 }
 
 static void
@@ -542,7 +538,6 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, notes_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, reminders_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, schedule_section);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, scrolled_window);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, source_image);

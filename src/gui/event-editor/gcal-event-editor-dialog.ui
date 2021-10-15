@@ -2,9 +2,9 @@
 <interface>
   <template class="GcalEventEditorDialog" parent="GtkDialog">
     <property name="can_focus">False</property>
-    <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="default-width">450</property>
+    <property name="default-height">500</property>
     <property name="window_position">center-on-parent</property>
     <property name="use_header_bar">1</property>
     <property name="destroy_with_parent">True</property>
