@@ -1322,7 +1322,7 @@ gcal_utils_extract_google_section (const gchar  *description,
                                      first_delimiter - description - delimiter_len,
                                      "https://meet.google.com");
       if (meet_url_start)
-        meeting_url = g_utf8_substring (meet_url_start, 0, strlen ("https://meet.google.com/xxx-xxx-xxx"));
+        meeting_url = g_utf8_substring (meet_url_start, 0, strlen ("https://meet.google.com/xxx-xxxx-xxx"));
     }
 
 out:
