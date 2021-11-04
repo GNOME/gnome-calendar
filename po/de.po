@@ -16,9 +16,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2021-08-16 21:39+0000\n"
-"PO-Revision-Date: 2021-08-21 22:56+0200\n"
-"Last-Translator: Philipp Kiemle <philipp.kiemle@gmail.com>\n"
+"POT-Creation-Date: 2021-10-13 17:01+0000\n"
+"PO-Revision-Date: 2021-10-26 00:37+0200\n"
+"Last-Translator: Christian Kirbach <christian.kirbach@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
+#: src/gui/gcal-application.c:206 src/gui/gcal-quick-add-popover.ui:187
 #: src/gui/gcal-window.ui:173
 msgid "Calendar"
 msgstr "Kalender"
@@ -169,7 +169,7 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "Kalendar <b>%s</b> wurde entfernt"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:692 src/gui/gcal-window.c:696
+#: src/gui/gcal-window.c:771 src/gui/gcal-window.c:775
 msgid "Undo"
 msgstr "Rückgängig"
 
@@ -578,32 +578,32 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: src/gui/gcal-application.c:63
+#: src/gui/gcal-application.c:59
 msgid "Quit GNOME Calendar"
 msgstr "GNOME Kalender beenden"
 
-#: src/gui/gcal-application.c:68
+#: src/gui/gcal-application.c:64
 msgid "Display version number"
 msgstr "Versionsnummer anzeigen"
 
-#: src/gui/gcal-application.c:73
+#: src/gui/gcal-application.c:69
 msgid "Enable debug messages"
 msgstr "Fehlerdiagnosemeldungen aktivieren"
 
-#: src/gui/gcal-application.c:78
+#: src/gui/gcal-application.c:74
 msgid "Open calendar on the passed date"
 msgstr "Kalender am vergangenen Datum öffnen"
 
-#: src/gui/gcal-application.c:83
+#: src/gui/gcal-application.c:79
 msgid "Open calendar showing the passed event"
 msgstr "Kalender am vergangenen Termin öffnen"
 
-#: src/gui/gcal-application.c:234
+#: src/gui/gcal-application.c:163
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d Die Kalender-Autoren"
 
-#: src/gui/gcal-application.c:288
+#: src/gui/gcal-application.c:217
 msgid "translator-credits"
 msgstr ""
 "Franco Della-Monica <franco.della.monica@gmail.com>\n"
@@ -612,7 +612,8 @@ msgstr ""
 "Bernd Homuth <dev@hmt.im>\n"
 "Paul Seyfert <pseyfert@mathphys.fsk.uni-heidelberg.de>\n"
 "Tim Sabsch <tim@sabsch.com>\n"
-"Philipp Kiemle <philipp.kiemle@gmail.com>"
+"Philipp Kiemle <philipp.kiemle@gmail.com>\n"
+"Christian Kirbach <christian.kirbach@gmail.com>"
 
 #: src/gui/gcal-calendar-popover.ui:43
 msgid "_Synchronize Calendars"
@@ -795,7 +796,6 @@ msgid "At %s"
 msgstr "In %s"
 
 #: src/gui/gcal-meeting-row.c:68
-#| msgid "Google"
 msgid "Google Meet"
 msgstr "Google Meet"
 
@@ -1056,11 +1056,11 @@ msgstr "Wetter anzeigen"
 msgid "Automatic Location"
 msgstr "Automatische Ortsbestimmung"
 
-#: src/gui/gcal-window.c:692
+#: src/gui/gcal-window.c:771
 msgid "Another event deleted"
 msgstr "Weiteren Termin gelöscht"
 
-#: src/gui/gcal-window.c:696
+#: src/gui/gcal-window.c:775
 msgid "Event deleted"
 msgstr "Termin gelöscht"
 
@@ -1211,11 +1211,11 @@ msgstr "Kein Fehler"
 
 #: src/gui/importer/gcal-importer.c:36
 msgid "Bad argument to function"
-msgstr ""
+msgstr "Ungültiges Argument für Funktion"
 
 #: src/gui/importer/gcal-importer.c:40
 msgid "Failed to allocate a new object in memory"
-msgstr ""
+msgstr "Reservieren eines neuen Objekts im Speicher ist fehlgeschlagen"
 
 #: src/gui/importer/gcal-importer.c:43
 msgid "File is malformed, invalid, or corrupted"
