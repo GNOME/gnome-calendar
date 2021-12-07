@@ -220,6 +220,7 @@ format_datetime_for_display (GDateTime      *date,
                              gboolean        all_day)
 {
   g_autofree gchar *formatted_date = NULL;
+  g_autoptr (GDateTime) local_dt = NULL;
   g_autoptr (GDateTime) now = NULL;
   GString *string;
   gint days_diff;
@@ -227,7 +228,8 @@ format_datetime_for_display (GDateTime      *date,
   string = g_string_new ("");
 
   now = g_date_time_new_now_local ();
-  days_diff = gcal_date_time_compare_date (date, now);
+  local_dt = all_day ? g_date_time_ref (date) : g_date_time_to_local (date);
+  days_diff = gcal_date_time_compare_date (local_dt, now);
 
   switch (days_diff)
     {
@@ -238,7 +240,7 @@ format_datetime_for_display (GDateTime      *date,
     case -3:
     case -2:
       /* Translators: %A is the weekday name (e.g. Sunday, Monday, etc) */
-      formatted_date = g_date_time_format (date, _("Last %A"));
+      formatted_date = g_date_time_format (local_dt, _("Last %A"));
       break;
 
     case -1:
@@ -260,11 +262,11 @@ format_datetime_for_display (GDateTime      *date,
     case 6:
     case 7:
       /* Translators: %A is the weekday name (e.g. Sunday, Monday, etc) */
-      formatted_date = g_date_time_format (date, _("This %A"));
+      formatted_date = g_date_time_format (local_dt, _("This %A"));
       break;
 
     default:
-      formatted_date = g_date_time_format (date, "%x");
+      formatted_date = g_date_time_format (local_dt, "%x");
       break;
     }
 
@@ -275,11 +277,11 @@ format_datetime_for_display (GDateTime      *date,
       switch (format)
         {
         case GCAL_TIME_FORMAT_12H:
-          formatted_time = g_date_time_format (date, "%I:%M %P");
+          formatted_time = g_date_time_format (local_dt, "%I:%M %P");
           break;
 
         case GCAL_TIME_FORMAT_24H:
-          formatted_time = g_date_time_format (date, "%R");
+          formatted_time = g_date_time_format (local_dt, "%R");
           break;
 
         default:
