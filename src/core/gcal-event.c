@@ -148,11 +148,12 @@ clear_range (GcalEvent *self)
 }
 
 static GTimeZone*
-get_timezone_from_ical (ECalComponentDateTime *comp)
+get_timezone_from_ical (GcalEvent             *self,
+                        ECalComponentDateTime *comp)
 {
+  g_autoptr (GTimeZone) tz = NULL;
   ICalTimezone *zone;
   ICalTime *itt;
-  GTimeZone *tz;
 
   itt = e_cal_component_datetime_get_value (comp);
   zone = i_cal_time_get_timezone (itt);
@@ -168,16 +169,29 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
     }
   else if (e_cal_component_datetime_get_tzid (comp))
     {
-      const gchar *real_tzid;
+      const gchar *original_tzid, *tzid;
 
-      real_tzid = e_cal_component_datetime_get_tzid (comp);
+      tzid = e_cal_component_datetime_get_tzid (comp);
+      original_tzid = tzid;
 
-      if (g_str_has_prefix (real_tzid, LIBICAL_TZID_PREFIX))
-        real_tzid += strlen (LIBICAL_TZID_PREFIX);
+      if (g_str_has_prefix (tzid, LIBICAL_TZID_PREFIX))
+        tzid += strlen (LIBICAL_TZID_PREFIX);
 
-      tz = g_time_zone_new_identifier (real_tzid);
+      tz = g_time_zone_new_identifier (tzid);
+
+      if (!tz && self->calendar)
+        {
+          ICalTimezone *tzone = NULL;
+          ECalClient *client;
+
+          client = gcal_calendar_get_client (self->calendar);
+
+          if (client && e_cal_client_get_timezone_sync (client, original_tzid, &tzone, NULL, NULL))
+            zone = tzone;
+        }
     }
-  else if (zone)
+
+  if (!tz && zone)
     {
       g_autofree gchar *tzid = NULL;
       gint offset;
@@ -185,10 +199,6 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
       offset = i_cal_timezone_get_utc_offset (zone, itt, NULL);
       tzid = format_utc_offset (offset);
       tz = g_time_zone_new_identifier (tzid);
-    }
-  else
-    {
-      tz = g_time_zone_new_utc ();
     }
 
   /*
@@ -200,7 +210,7 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
 
   GCAL_TRACE_MSG ("%s (%p)", g_time_zone_get_identifier (tz), tz);
 
-  return tz;
+  return g_steal_pointer (&tz);
 }
 
 static ECalComponentDateTime*
@@ -340,7 +350,7 @@ gcal_event_set_component_internal (GcalEvent     *self,
   GCAL_TRACE_MSG ("Retrieving start timezone");
 
   date = i_cal_time_normalize (e_cal_component_datetime_get_value (start));
-  zone_start = get_timezone_from_ical (start);
+  zone_start = get_timezone_from_ical (self, start);
   date_start = g_date_time_new (zone_start,
                                 i_cal_time_get_year (date),
                                 i_cal_time_get_month (date),
@@ -366,7 +376,7 @@ gcal_event_set_component_internal (GcalEvent     *self,
       GCAL_TRACE_MSG ("Retrieving end timezone");
 
       date = i_cal_time_normalize (e_cal_component_datetime_get_value (end));
-      zone_end = get_timezone_from_ical (end);
+      zone_end = get_timezone_from_ical (self, end);
       date_end = g_date_time_new (zone_end,
                                   i_cal_time_get_year (date),
                                   i_cal_time_get_month (date),
