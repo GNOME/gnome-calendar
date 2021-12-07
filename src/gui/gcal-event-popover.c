@@ -352,9 +352,9 @@ format_single_day (GcalEventPopover *self,
 static void
 update_date_time_label (GcalEventPopover *self)
 {
+  g_autoptr (GDateTime) start_dt = NULL;
+  g_autoptr (GDateTime) end_dt = NULL;
   g_autoptr (GString) string = NULL;
-  GDateTime *end_dt;
-  GDateTime *start_dt;
   gboolean show_hours;
   gboolean multiday;
   gboolean all_day;
@@ -364,8 +364,16 @@ update_date_time_label (GcalEventPopover *self)
   multiday = gcal_event_is_multiday (self->event);
   show_hours = !all_day;
 
-  end_dt = gcal_event_get_date_end (self->event);
-  start_dt = gcal_event_get_date_start (self->event);
+  if (all_day)
+    {
+      start_dt = g_date_time_ref (gcal_event_get_date_start (self->event));
+      end_dt = g_date_time_ref (gcal_event_get_date_end (self->event));
+    }
+  else
+    {
+      start_dt = g_date_time_to_local (gcal_event_get_date_start (self->event));
+      end_dt = g_date_time_to_local (gcal_event_get_date_end (self->event));
+    }
 
   if (multiday)
     {
