@@ -38,6 +38,7 @@ struct _GcalImportFileRow
   GCancellable       *cancellable;
   GFile              *file;
   GPtrArray          *ical_components;
+  GPtrArray          *ical_timezones;
 };
 
 static void          read_calendar_finished_cb                   (GObject            *source_object,
@@ -212,6 +213,37 @@ filter_event_components (ICalComponent *component)
   return g_steal_pointer (&event_components);
 }
 
+static GPtrArray*
+filter_timezones (ICalComponent *component)
+{
+  g_autoptr (GPtrArray) timezones = NULL;
+  ICalComponent *aux;
+
+  if (!component || i_cal_component_isa (component) != I_CAL_VCALENDAR_COMPONENT)
+    return NULL;
+
+  timezones = g_ptr_array_new_full (2, g_object_unref);
+  for (aux = i_cal_component_get_first_component (component, I_CAL_VTIMEZONE_COMPONENT);
+       aux;
+       aux = i_cal_component_get_next_component (component, I_CAL_VTIMEZONE_COMPONENT))
+    {
+      ICalTimezone *zone = i_cal_timezone_new ();
+      ICalComponent *clone = i_cal_component_clone (aux);
+
+      if (i_cal_timezone_set_component (zone, clone))
+         g_ptr_array_add (timezones, g_steal_pointer (&zone));
+
+      g_clear_object (&clone);
+      g_clear_object (&zone);
+      g_clear_object (&aux);
+    }
+
+  if (!timezones->len)
+    return NULL;
+
+  return g_steal_pointer (&timezones);
+}
+
 static void
 setup_file (GcalImportFileRow *self)
 {
@@ -237,6 +269,7 @@ read_calendar_finished_cb (GObject      *source_object,
                            gpointer      user_data)
 {
   g_autoptr (GPtrArray) event_components = NULL;
+  g_autoptr (GPtrArray) timezones = NULL;
   g_autoptr (GError) error = NULL;
   g_autofree gchar *subtitle = NULL;
   ICalComponent *component;
@@ -245,6 +278,7 @@ read_calendar_finished_cb (GObject      *source_object,
   self = GCAL_IMPORT_FILE_ROW (user_data);
   component = gcal_importer_import_file_finish (res, &error);
   event_components = filter_event_components (component);
+  timezones = filter_timezones (component);
 
   gtk_widget_set_sensitive (GTK_WIDGET (self), !error && event_components && event_components->len > 0);
 
@@ -254,6 +288,7 @@ read_calendar_finished_cb (GObject      *source_object,
   add_events_to_listbox (self, event_components);
 
   self->ical_components = g_ptr_array_ref (event_components);
+  self->ical_timezones = g_ptr_array_ref (timezones);
 
   g_signal_emit (self, signals[FILE_LOADED], 0, event_components);
 }
@@ -272,6 +307,7 @@ gcal_import_file_row_finalize (GObject *object)
   g_clear_object (&self->cancellable);
   g_clear_object (&self->file);
   g_clear_pointer (&self->ical_components, g_ptr_array_unref);
+  g_clear_pointer (&self->ical_timezones, g_ptr_array_unref);
 
   G_OBJECT_CLASS (gcal_import_file_row_parent_class)->finalize (object);
 }
@@ -385,4 +421,12 @@ gcal_import_file_row_get_ical_components (GcalImportFileRow *self)
   g_return_val_if_fail (GCAL_IS_IMPORT_FILE_ROW (self), NULL);
 
   return self->ical_components;
+}
+
+GPtrArray*
+gcal_import_file_row_get_timezones (GcalImportFileRow *self)
+{
+  g_return_val_if_fail (GCAL_IS_IMPORT_FILE_ROW (self), NULL);
+
+  return self->ical_timezones;
 }
