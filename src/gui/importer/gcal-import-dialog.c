@@ -29,6 +29,13 @@
 
 #include <glib/gi18n.h>
 
+typedef struct
+{
+  ECalClient         *client;
+  GSList             *components;
+  GSList             *zones;
+} ImportData;
+
 struct _GcalImportDialog
 {
   HdyWindow           parent;
@@ -83,6 +90,20 @@ static GParamSpec *properties [N_PROPS];
 /*
  * Auxiliary methods
  */
+
+static void
+import_data_free (gpointer data)
+{
+  ImportData *import_data = data;
+
+  if (!import_data)
+    return;
+
+  g_clear_object (&import_data->client);
+  g_slist_free_full (import_data->components, g_object_unref);
+  g_slist_free_full (import_data->zones, g_object_unref);
+  g_free (import_data);
+}
 
 static GtkWidget*
 create_calendar_row (GcalManager  *manager,
@@ -252,7 +273,7 @@ on_events_created_cb (GObject      *source_object,
 
   self = GCAL_IMPORT_DIALOG (user_data);
 
-  e_cal_client_create_objects_finish (E_CAL_CLIENT (source_object), result, NULL, &error);
+  g_task_propagate_boolean (G_TASK (result), &error);
   if (error)
     g_warning ("Error creating events: %s", error->message);
 
@@ -282,13 +303,53 @@ on_cancel_button_clicked_cb (GtkButton        *button,
 }
 
 static void
+import_data_thread (GTask        *task,
+                    gpointer      source_object,
+                    gpointer      task_data,
+                    GCancellable *cancellable)
+{
+  ImportData *id = task_data;
+  GError *error = NULL;
+  GSList *uids = NULL;
+  GSList *l = NULL;
+
+  for (l = id->zones; l && !g_cancellable_is_cancelled (cancellable); l = l->next)
+    {
+      g_autoptr (GError) local_error = NULL;
+      ICalTimezone *zone = l->data;
+
+      e_cal_client_add_timezone_sync (id->client, zone, cancellable, &local_error);
+
+      if (local_error)
+        g_warning ("Import: Failed to add timezone: %s", local_error->message);
+    }
+
+  e_cal_client_create_objects_sync (id->client,
+                                    id->components,
+                                    E_CAL_OPERATION_FLAG_NONE,
+                                    &uids,
+                                    cancellable,
+                                    &error);
+
+  g_slist_free_full (uids, g_free);
+
+  if (error)
+    g_task_return_error (task, error);
+  else
+    g_task_return_boolean (task, TRUE);
+}
+
+static void
 on_import_button_clicked_cb (GtkButton        *button,
                              GcalImportDialog *self)
 {
   g_autoptr (GList) children = NULL;
+  g_autoptr (GTask) task = NULL;
   GcalCalendar *calendar;
+  ImportData *import_data;
   ECalClient *client;
-  GSList *slist;
+  GSList *slist = NULL;
+  GSList *zones = NULL;
   GList *l;
 
   GCAL_ENTRY;
@@ -302,6 +363,7 @@ on_import_button_clicked_cb (GtkButton        *button,
     {
       GcalImportFileRow *row = l->data;
       GPtrArray *ical_components;
+      GPtrArray *ical_timezones;
       guint i;
 
       ical_components = gcal_import_file_row_get_ical_components (row);
@@ -309,7 +371,20 @@ on_import_button_clicked_cb (GtkButton        *button,
         continue;
 
       for (i = 0; i < ical_components->len; i++)
-        slist = g_slist_prepend (slist, g_ptr_array_index (ical_components, i));
+        {
+          ICalComponent *comp = g_ptr_array_index (ical_components, i);
+          slist = g_slist_prepend (slist, g_object_ref (comp));
+        }
+
+      ical_timezones = gcal_import_file_row_get_timezones (row);
+      if (!ical_timezones)
+        continue;
+
+      for (i = 0; i < ical_timezones->len; i++)
+        {
+          ICalTimezone *zone = g_ptr_array_index (ical_timezones, i);
+          zones = g_slist_prepend (zones, g_object_ref (zone));
+        }
     }
 
   if (!slist)
@@ -320,12 +395,16 @@ on_import_button_clicked_cb (GtkButton        *button,
   gtk_widget_set_sensitive (GTK_WIDGET (self), FALSE);
 
   client = gcal_calendar_get_client (calendar);
-  e_cal_client_create_objects (client,
-                               slist,
-                               E_CAL_OPERATION_FLAG_NONE,
-                               self->cancellable,
-                               on_events_created_cb,
-                               self);
+
+  import_data = g_new0 (ImportData, 1);
+  import_data->client = g_object_ref (client);
+  import_data->components = g_slist_reverse (slist);
+  import_data->zones = g_slist_reverse (zones);
+
+  task = g_task_new (NULL, self->cancellable, on_events_created_cb, self);
+  g_task_set_task_data (task, import_data, import_data_free);
+  g_task_set_source_tag (task, on_import_button_clicked_cb);
+  g_task_run_in_thread (task, import_data_thread);
 
   GCAL_EXIT;
 }
