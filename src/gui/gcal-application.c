@@ -412,7 +412,7 @@ gcal_application_command_line (GApplication            *app,
           g_autoptr (GDateTime) initial_date = NULL;
 
           initial_date = g_date_time_new (gcal_context_get_timezone (self->context),
-                                          result.tm_year,
+                                          result.tm_year + 1900,
                                           result.tm_mon,
                                           result.tm_mday,
                                           result.tm_hour,
