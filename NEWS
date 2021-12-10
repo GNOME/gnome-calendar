@@ -1,3 +1,7 @@
+Major changes in 41.2:
+* Various fixes to timezone handling
+* Updated translations
+
 Major changes in 41.1:
 * Fix Google Meet URL detection
 * Updated translations
