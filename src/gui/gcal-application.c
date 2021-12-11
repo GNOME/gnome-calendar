@@ -362,6 +362,9 @@ gcal_application_startup (GApplication *app)
   /*  initialize libhandy */
   hdy_init();
 
+  hdy_style_manager_set_color_scheme (hdy_style_manager_get_default (),
+                                      HDY_COLOR_SCHEME_PREFER_LIGHT);
+
   /* Startup the manager */
   gcal_context_startup (self->context);
 

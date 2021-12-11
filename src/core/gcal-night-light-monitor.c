@@ -67,10 +67,12 @@ on_night_light_proxy_properties_changed_cb (GcalNightLightMonitor *self,
       activev = g_dbus_proxy_get_cached_property (proxy, "NightLightActive");
       active = g_variant_get_boolean (activev);
 
-      g_object_set (gtk_settings_get_default (),
-                    "gtk-application-prefer-dark-theme",
-                    active,
-                    NULL);
+      if (active)
+        hdy_style_manager_set_color_scheme (hdy_style_manager_get_default (),
+                                            HDY_COLOR_SCHEME_PREFER_DARK);
+      else
+        hdy_style_manager_set_color_scheme (hdy_style_manager_get_default (),
+                                            HDY_COLOR_SCHEME_PREFER_LIGHT);
     }
 }
 
