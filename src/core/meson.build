@@ -8,7 +8,6 @@ sources += files(
   'gcal-event.c',
   'gcal-log.c',
   'gcal-manager.c',
-  'gcal-night-light-monitor.c',
   'gcal-range.c',
   'gcal-range-tree.c',
   'gcal-recurrence.c',

@@ -21,7 +21,6 @@
 #define G_LOG_DOMAIN "GcalContext"
 
 #include "gcal-context.h"
-#include "gcal-night-light-monitor.h"
 #include "gcal-time-zone-monitor.h"
 
 struct _GcalContext
@@ -37,7 +36,6 @@ struct _GcalContext
   GcalTimeFormat      time_format;
   GcalWeatherService *weather_service;
 
-  GcalNightLightMonitor *night_light_monitor;
   GcalTimeZoneMonitor   *timezone_monitor;
 };
 
@@ -121,7 +119,6 @@ gcal_context_finalize (GObject *object)
   g_clear_object (&self->clock);
   g_clear_object (&self->desktop_settings);
   g_clear_object (&self->manager);
-  g_clear_object (&self->night_light_monitor);
   g_clear_object (&self->timezone_monitor);
   g_clear_object (&self->weather_service);
 
@@ -394,9 +391,6 @@ void
 gcal_context_startup (GcalContext *self)
 {
   g_return_if_fail (GCAL_IS_CONTEXT (self));
-
-  /* Night Light requires GTK to be initialized */
-  self->night_light_monitor = gcal_night_light_monitor_new (self);
 
   gcal_manager_startup (self->manager);
 }
