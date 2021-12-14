@@ -416,7 +416,7 @@ gcal_application_command_line (GApplication            *app,
 
           initial_date = g_date_time_new (gcal_context_get_timezone (self->context),
                                           result.tm_year + 1900,
-                                          result.tm_mon,
+                                          result.tm_mon + 1,
                                           result.tm_mday,
                                           result.tm_hour,
                                           result.tm_min,
