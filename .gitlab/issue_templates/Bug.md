@@ -1,20 +1,54 @@
-Detailed description of the issue. Put as much information as you can, potentially
-with images showing the issue.
+<!-- 
+Please read https://wiki.gnome.org/Community/GettingInTouch/BugReportingGuidelines
+first to ensure that you create a clear and specific issue.
+-->
 
-Steps to reproduce:
+### Affected version
 
-1. Open GNOME Calendar
-2. Create an event
+<!--
+Provide at least the following information:
+* Your OS and version
+* Affected GNOME Calendar version
+-->
+
+### Bug summary
+
+<!-- 
+Provide a short summary of the bug you encountered.
+-->
+
+### Steps to reproduce
+
+<!-- 
+1. Step one
+2. Step two
 3. ...
+-->
 
-## Design Tasks
+### What happened
 
-* [ ]  design tasks
+<!-- 
+What did GNOME Calendar do that was unexpected?
+-->
 
-## Development Tasks
+### What did you expect to happen
 
-* [ ]  development tasks
+<!-- 
+What did you expect GNOME Calendar to do?
+-->
 
-## QA Tasks
+### Relevant logs, screenshots, screencasts etc.
 
-* [ ]  qa (quality assurance) tasks
+<!-- 
+If you have further information, such as technical documentation, logs,
+screenshots or screencasts related, please provide them here.
+
+If the bug is a crash, please obtain a stack trace with installed debug
+symbols (at least for GNOME Calendar) and attach it to
+this issue following the instructions on
+https://wiki.gnome.org/Community/GettingInTouch/Bugzilla/GettingTraces.
+-->
+
+
+<!-- Do not remove the following line. -->
+/label ~"1. Bug"

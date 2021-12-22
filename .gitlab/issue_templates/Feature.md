@@ -1,17 +1,30 @@
-Detailed description of the feature. Put as much information as you can.
+<!-- 
+Please read https://wiki.gnome.org/Community/GettingInTouch/BugReportingGuidelines
+first to ensure that you create a clear and specific issue.
+-->
 
-Proposed Mockups:
+### Feature summary
 
-(Add mockups of the proposed feature)
+<!-- 
+Describe what you would like to be able to do with GNOME Calendar
+that you currently cannot do.
+-->
 
-## Design Tasks
+### How would you like it to work
 
-* [ ]  design tasks
+<!-- 
+If you can think of a way GNOME Calendar might be able to do this,
+let us know here.
+-->
 
-## Development Tasks
+### Relevant links, screenshots, screencasts etc.
 
-* [ ]  development tasks
+<!-- 
+If you have further information, such as technical documentation,
+code, mockups or a similar feature in another desktop environments,
+please provide them here.
+-->
 
-## QA Tasks
 
-* [ ]  qa (quality assurance) tasks
+<!-- Do not remove the following line. -->
+/label ~"1. Feature"
