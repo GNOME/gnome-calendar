@@ -8,20 +8,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2021-08-16 21:39+0000\n"
-"PO-Revision-Date: 2021-08-26 13:51+0700\n"
-"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
+"POT-Creation-Date: 2021-12-11 19:29+0000\n"
+"PO-Revision-Date: 2021-12-23 10:00+0700\n"
+"Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnomed@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.3\n"
-"Plural-Forms: nplurals=2; plural= n!=1;\n"
+"X-Generator: Poedit 3.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
+#: src/gui/gcal-application.c:206 src/gui/gcal-quick-add-popover.ui:187
 #: src/gui/gcal-window.ui:173
 msgid "Calendar"
 msgstr "Kalender"
@@ -113,17 +113,9 @@ msgid ""
 msgstr ""
 "Apakah laporan cuaca ditampilkan, lokasi otomatis digunakan dan nama-lokasi"
 
-#: data/org.gnome.calendar.gschema.xml.in:31
-msgid "Follow system night light"
-msgstr "Ikuti cahaya malam sistem"
-
-#: data/org.gnome.calendar.gschema.xml.in:32
-msgid "Use GNOME night light setting to activate night-mode."
-msgstr "Gunakan pengaturan cahaya malam GNOME untuk mengaktifkan mode malam."
-
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1899 src/gui/gcal-event-popover.c:381
+#: src/core/gcal-event.c:1909 src/gui/gcal-event-popover.c:389
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -132,14 +124,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1907
+#: src/core/gcal-event.c:1917
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1923 src/gui/gcal-quick-add-popover.c:475
+#: src/core/gcal-event.c:1933 src/gui/gcal-quick-add-popover.c:475
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -159,7 +151,7 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "Kalender <b>%s</b> dihapus"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:692 src/gui/gcal-window.c:696
+#: src/gui/gcal-window.c:771 src/gui/gcal-window.c:775
 msgid "Undo"
 msgstr "Tak jadi"
 
@@ -178,7 +170,7 @@ msgstr "Pengaturan"
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
 #: src/gui/event-editor/gcal-summary-section.ui:42
 #: src/gui/gcal-event-popover.ui:104
-#: src/gui/importer/gcal-import-file-row.c:151
+#: src/gui/importer/gcal-import-file-row.c:152
 msgid "Location"
 msgstr "Lokasi"
 
@@ -272,91 +264,78 @@ msgstr "Tambah"
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u hari, %2$u jam, %3$u menit sebelumnya"
-msgstr[1] "%1$u hari, %2$u jam, %3$u menit sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:89
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u hari, %2$u jam, %3$u menit sebelumnya"
-msgstr[1] "%1$u hari, %2$u jam, %3$u menit sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:95
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u hari, %2$u jam, %3$u menit sebelumnya"
-msgstr[1] "%1$u hari, %2$u jam, %3$u menit sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:99
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u hari, %2$u jam, %3$u menit sebelumnya"
-msgstr[1] "%1$u hari, %2$u jam, %3$u menit sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:114
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
 msgstr[0] "%1$u hari %2$u jam sebelumnya"
-msgstr[1] "%1$u hari %2$u jam sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:118
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
 msgstr[0] "%1$u hari %2$u jam sebelumnya"
-msgstr[1] "%1$u hari %2$u jam sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:134
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
 msgstr[0] "%1$u hari %2$u menit sebelumnya"
-msgstr[1] "%1$u hari %2$u menit sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:138
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
 msgstr[0] "%1$u hari %2$u menit sebelumnya"
-msgstr[1] "%1$u hari %2$u menit sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:148
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "%1$u hari sebelumnya"
-msgstr[1] "%1$u hari sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:166
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "%1$u jam %2$u menit sebelumnya"
-msgstr[1] "%1$u jam %2$u menit sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:170
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "%1$u jam %2$u menit sebelumnya"
-msgstr[1] "%1$u jam %2$u menit sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:180
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "%1$u jam sebelumnya"
-msgstr[1] "%1$u jam sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:192
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "%1$u menit sebelumnya"
-msgstr[1] "%1$u menit sebelumnya"
 
 #: src/gui/event-editor/gcal-alarm-row.c:199
 msgid "Event start time"
@@ -370,11 +349,11 @@ msgstr "Jungkitkan suara alarm"
 msgid "Remove the alarm"
 msgstr "Hapus alarm"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:201
+#: src/gui/event-editor/gcal-event-editor-dialog.c:200
 msgid "Save"
 msgstr "Simpan"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:201
+#: src/gui/event-editor/gcal-event-editor-dialog.c:200
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:108
 msgid "Done"
 msgstr "Selesai"
@@ -383,19 +362,19 @@ msgstr "Selesai"
 msgid "Click to select the calendar"
 msgstr "Klik untuk memilih kalender"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:157
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:150
 msgid "Schedule"
 msgstr "Skedul"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:178
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:164
 msgid "Reminders"
 msgstr "Pengingat"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:201
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:178
 msgid "Notes"
 msgstr "Catatan"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:226
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:202
 msgid "Delete Event"
 msgstr "Hapus Acara"
 
@@ -440,30 +419,30 @@ msgid "1 week"
 msgstr "1 minggu"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:241
+#: src/gui/event-editor/gcal-schedule-section.c:243
 #, c-format
 msgid "Last %A"
 msgstr "%A yang lalu"
 
-#: src/gui/event-editor/gcal-schedule-section.c:245
+#: src/gui/event-editor/gcal-schedule-section.c:247
 #: src/gui/gcal-event-popover.c:208 src/gui/gcal-event-popover.c:322
 msgid "Yesterday"
 msgstr "Kemarin"
 
-#: src/gui/event-editor/gcal-schedule-section.c:249
+#: src/gui/event-editor/gcal-schedule-section.c:251
 #: src/gui/gcal-event-popover.c:200 src/gui/gcal-event-popover.c:314
 #: src/gui/gcal-window.ui:190 src/gui/views/gcal-year-view.c:282
 #: src/gui/views/gcal-year-view.c:560 src/gui/views/gcal-year-view.ui:88
 msgid "Today"
 msgstr "Hari ini"
 
-#: src/gui/event-editor/gcal-schedule-section.c:253
+#: src/gui/event-editor/gcal-schedule-section.c:255
 #: src/gui/gcal-event-popover.c:204 src/gui/gcal-event-popover.c:318
 msgid "Tomorrow"
 msgstr "Besok"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:263
+#: src/gui/event-editor/gcal-schedule-section.c:265
 #, c-format
 msgid "This %A"
 msgstr "%A ini"
@@ -472,7 +451,7 @@ msgstr "%A ini"
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
-#: src/gui/event-editor/gcal-schedule-section.c:293
+#: src/gui/event-editor/gcal-schedule-section.c:295
 #, c-format
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
@@ -482,12 +461,12 @@ msgid "All Day"
 msgstr "Sepanjang Hari"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:40
-#: src/gui/importer/gcal-import-file-row.c:152
+#: src/gui/importer/gcal-import-file-row.c:153
 msgid "Starts"
 msgstr "Mulai"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:90
-#: src/gui/importer/gcal-import-file-row.c:153
+#: src/gui/importer/gcal-import-file-row.c:154
 msgid "Ends"
 msgstr "Berakhir"
 
@@ -549,7 +528,7 @@ msgid "Unnamed event"
 msgstr "Acara tanpa nama"
 
 #: src/gui/event-editor/gcal-summary-section.ui:19
-#: src/gui/importer/gcal-import-file-row.c:150
+#: src/gui/importer/gcal-import-file-row.c:151
 msgid "Title"
 msgstr "Judul"
 
@@ -567,32 +546,32 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: src/gui/gcal-application.c:63
+#: src/gui/gcal-application.c:59
 msgid "Quit GNOME Calendar"
 msgstr "Keluar Kalender GNOME"
 
-#: src/gui/gcal-application.c:68
+#: src/gui/gcal-application.c:64
 msgid "Display version number"
 msgstr "Tampilkan nomor versi"
 
-#: src/gui/gcal-application.c:73
+#: src/gui/gcal-application.c:69
 msgid "Enable debug messages"
 msgstr "Aktifkan pesan awakutu"
 
-#: src/gui/gcal-application.c:78
+#: src/gui/gcal-application.c:74
 msgid "Open calendar on the passed date"
 msgstr "Buka kalender pada tanggal yang diberikan"
 
-#: src/gui/gcal-application.c:83
+#: src/gui/gcal-application.c:79
 msgid "Open calendar showing the passed event"
 msgstr "Buka kalender yang menampilkan acara yang telah lewat"
 
-#: src/gui/gcal-application.c:234
+#: src/gui/gcal-application.c:163
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Hak Cipta © 2012–%d para penulis Kalender"
 
-#: src/gui/gcal-application.c:288
+#: src/gui/gcal-application.c:217
 msgid "translator-credits"
 msgstr ""
 "Andika Triwidada <andika@gmail.com>, 2013, 2016, 2019, 2021.\n"
@@ -681,7 +660,6 @@ msgstr "Kemarin %s"
 #.
 #: src/gui/gcal-event-popover.c:176
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s %2$d, %3$s"
 msgstr "%2$d %1$s, %3$s"
 
@@ -692,7 +670,6 @@ msgstr "%2$d %1$s, %3$s"
 #.
 #: src/gui/gcal-event-popover.c:188
 #, c-format
-#| msgid "%1$s %2$s — %3$s %4$s"
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%2$d %1$s %3$d, %4$s"
 
@@ -740,7 +717,6 @@ msgstr "Besok, %1$s — %2$s"
 #.
 #: src/gui/gcal-event-popover.c:278
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "Yesterday, %1$s – %2$s"
 msgstr "Kemarin, %1$s – %2$s"
 
@@ -751,7 +727,6 @@ msgstr "Kemarin, %1$s – %2$s"
 #.
 #: src/gui/gcal-event-popover.c:287
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s %2$d, %3$s – %4$s"
 msgstr "%2$d %1$s, %3$s – %4$s"
 
@@ -764,7 +739,6 @@ msgstr "%2$d %1$s, %3$s – %4$s"
 #.
 #: src/gui/gcal-event-popover.c:302
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%2$d %1$s %3$d, %4$s – %5$s"
 
@@ -1042,11 +1016,11 @@ msgstr "Tampilkan Cuaca"
 msgid "Automatic Location"
 msgstr "Lokasi Otomatis"
 
-#: src/gui/gcal-window.c:692
+#: src/gui/gcal-window.c:771
 msgid "Another event deleted"
 msgstr "Acara lain dihapus"
 
-#: src/gui/gcal-window.c:696
+#: src/gui/gcal-window.c:775
 msgid "Event deleted"
 msgstr "Acara dihapus"
 
@@ -1168,12 +1142,11 @@ msgctxt "shortcut window"
 msgid "Year view"
 msgstr "Tilikan tahun"
 
-#: src/gui/importer/gcal-import-dialog.c:345
+#: src/gui/importer/gcal-import-dialog.c:424
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
 msgstr[0] "Impor %d acara"
-msgstr[1] "Impor %d acara"
 
 #: src/gui/importer/gcal-import-dialog.ui:24
 msgid "Import Files…"
@@ -1223,7 +1196,7 @@ msgstr "Galat internal"
 msgid "File is not an iCalendar (.ics) file"
 msgstr "Berkas bukan berkas iCalendar (.ics)"
 
-#: src/gui/importer/gcal-import-file-row.c:154
+#: src/gui/importer/gcal-import-file-row.c:155
 msgid "Description"
 msgstr "Deskripsi"
 
@@ -1244,7 +1217,6 @@ msgstr "00:00"
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "%d acara lain"
-msgstr[1] "%d acara lain"
 
 #: src/gui/views/gcal-week-header.c:1004
 #, c-format
@@ -1292,3 +1264,10 @@ msgstr "A_cara berikutnya"
 #: src/utils/gcal-utils.c:972
 msgid "_All events"
 msgstr "Semu_a acara"
+
+#~ msgid "Follow system night light"
+#~ msgstr "Ikuti cahaya malam sistem"
+
+#~ msgid "Use GNOME night light setting to activate night-mode."
+#~ msgstr ""
+#~ "Gunakan pengaturan cahaya malam GNOME untuk mengaktifkan mode malam."
