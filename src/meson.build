@@ -2,7 +2,7 @@ src_inc = include_directories('.')
 
 gcal_deps = [
   gsettings_desktop_schemas_dep,
-  libedataserverui_dep,
+  #libedataserverui_dep,
   libedataserver_dep,
   libecal_dep,
   libdazzle_dep,
