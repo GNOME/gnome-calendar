@@ -20,14 +20,14 @@
 
 #pragma once
 
-#include <handy.h>
+#include <adwaita.h>
 #include <libecal/libecal.h>
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_ALARM_ROW (gcal_alarm_row_get_type())
 
-G_DECLARE_FINAL_TYPE (GcalAlarmRow, gcal_alarm_row, GCAL, ALARM_ROW, HdyActionRow)
+G_DECLARE_FINAL_TYPE (GcalAlarmRow, gcal_alarm_row, GCAL, ALARM_ROW, AdwActionRow)
 
 GtkWidget*           gcal_alarm_row_new                          (ECalComponentAlarm *alarm);
 

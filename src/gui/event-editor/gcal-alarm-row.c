@@ -28,15 +28,14 @@
 
 struct _GcalAlarmRow
 {
-  HdyActionRow        parent;
+  AdwActionRow        parent;
 
   GtkToggleButton    *volume_button;
-  GtkImage           *volume_icon;
 
   ECalComponentAlarm *alarm;
 };
 
-G_DEFINE_TYPE (GcalAlarmRow, gcal_alarm_row, HDY_TYPE_ACTION_ROW)
+G_DEFINE_TYPE (GcalAlarmRow, gcal_alarm_row, ADW_TYPE_ACTION_ROW)
 
 enum
 {
@@ -214,7 +213,7 @@ setup_alarm (GcalAlarmRow *self)
   duration = e_cal_component_alarm_trigger_get_duration (trigger);
   formatted_duration = format_alarm_duration (duration);
 
-  hdy_preferences_row_set_title (HDY_PREFERENCES_ROW (self), formatted_duration);
+  adw_preferences_row_set_title (ADW_PREFERENCES_ROW (self), formatted_duration);
 
   action = e_cal_component_alarm_get_action (self->alarm);
   gtk_toggle_button_set_active (self->volume_button, action == E_CAL_COMPONENT_ALARM_AUDIO);
@@ -248,9 +247,8 @@ on_sound_toggle_changed_cb (GtkToggleButton *button,
   e_cal_component_alarm_set_action (self->alarm, action);
 
   /* Update the volume icon */
-  gtk_image_set_from_icon_name (self->volume_icon,
-                                has_sound ? "audio-volume-high-symbolic" : "audio-volume-muted-symbolic",
-                                GTK_ICON_SIZE_BUTTON);
+  gtk_button_set_icon_name (GTK_BUTTON (self->volume_button),
+                            has_sound ? "audio-volume-high-symbolic" : "audio-volume-muted-symbolic");
 
 }
 
@@ -338,7 +336,6 @@ gcal_alarm_row_class_init (GcalAlarmRowClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-alarm-row.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalAlarmRow, volume_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalAlarmRow, volume_icon);
 
   gtk_widget_class_bind_template_callback (widget_class, on_remove_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_sound_toggle_changed_cb);
