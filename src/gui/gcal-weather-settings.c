@@ -33,12 +33,14 @@ struct _GcalWeatherSettings
   GtkSwitch          *weather_auto_location_switch;
   GtkWidget          *weather_location_entry;
 
+  GWeatherLocation   *location;
+
   GcalContext        *context;
 };
 
 
-static void          on_weather_location_searchbox_changed_cb    (GWeatherLocationEntry *entry,
-                                                                  GcalWeatherSettings   *self);
+static void          on_weather_location_searchbox_changed_cb    (GtkEntry            *entry,
+                                                                  GcalWeatherSettings *self);
 
 static void          on_show_weather_changed_cb                  (GtkSwitch           *wswitch,
                                                                   GParamSpec          *pspec,
@@ -111,7 +113,9 @@ load_weather_settings (GcalWeatherSettings *self)
       world = gweather_location_get_world ();
       weather_location = location ? gweather_location_deserialize (world, location) : NULL;
 
-      gweather_location_entry_set_location (GWEATHER_LOCATION_ENTRY (self->weather_location_entry), weather_location);
+      self->location = weather_location ? g_object_ref (weather_location) : NULL;
+      gtk_entry_set_text (GTK_ENTRY (self->weather_location_entry),
+                          self->location ? gweather_location_get_name (self->location) : "");
     }
 
   g_signal_handlers_unblock_by_func (self->show_weather_switch, on_show_weather_changed_cb, self);
@@ -124,7 +128,6 @@ load_weather_settings (GcalWeatherSettings *self)
 static void
 save_weather_settings (GcalWeatherSettings *self)
 {
-  g_autoptr (GWeatherLocation) location = NULL;
   GSettings *settings;
   GVariant *value;
   GVariant *vlocation;
@@ -135,8 +138,7 @@ save_weather_settings (GcalWeatherSettings *self)
   if (!self->context)
     GCAL_RETURN ();
 
-  location = gweather_location_entry_get_location (GWEATHER_LOCATION_ENTRY (self->weather_location_entry));
-  vlocation = location ? gweather_location_serialize (location) : NULL;
+  vlocation = self->location ? gweather_location_serialize (self->location) : NULL;
 
   settings = gcal_context_get_settings (self->context);
   value = g_variant_new ("(bbsmv)",
@@ -170,17 +172,13 @@ update_menu_weather_sensitivity (GcalWeatherSettings *self)
 static GWeatherLocation*
 get_checked_fixed_location (GcalWeatherSettings *self)
 {
-  g_autoptr (GWeatherLocation) location = NULL;
-
-  location = gweather_location_entry_get_location (GWEATHER_LOCATION_ENTRY (self->weather_location_entry));
-
   /*
    * NOTE: This check feels shabby. However, I couldn't find a better
    * one without iterating the model. has-custom-text does not work
    * properly. Lets go with it for now.
    */
-  if (location && gweather_location_get_name (location))
-    return g_steal_pointer (&location);
+  if (self->location && gweather_location_get_name (self->location))
+    return g_object_ref (self->location);
 
   return NULL;
 }
@@ -243,8 +241,8 @@ on_weather_auto_location_changed_cb (GtkSwitch           *lswitch,
 }
 
 static void
-on_weather_location_searchbox_changed_cb (GWeatherLocationEntry *entry,
-                                          GcalWeatherSettings   *self)
+on_weather_location_searchbox_changed_cb (GtkEntry            *entry,
+                                          GcalWeatherSettings *self)
 {
   GtkStyleContext  *context;
   GWeatherLocation *location;
@@ -264,7 +262,7 @@ on_weather_location_searchbox_changed_cb (GWeatherLocationEntry *entry,
     {
       gtk_style_context_remove_class (context, "error");
       manage_weather_service (self);
-      gweather_location_unref (location);
+      g_object_unref (location);
     }
 }
 
@@ -278,6 +276,7 @@ gcal_weather_settings_finalize (GObject *object)
 {
   GcalWeatherSettings *self = (GcalWeatherSettings *)object;
 
+  g_clear_object (&self->location);
   g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_weather_settings_parent_class)->finalize (object);

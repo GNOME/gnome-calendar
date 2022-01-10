@@ -665,7 +665,7 @@ static void
 update_gclue_location (GcalWeatherService  *self,
                        GClueLocation       *location)
 {
-  GWeatherLocation *wlocation = NULL; /* owned */
+  g_autoptr (GWeatherLocation) wlocation = NULL; /* owned */
 
   if (location)
     {
@@ -682,8 +682,6 @@ update_gclue_location (GcalWeatherService  *self,
     }
 
   update_location (self, wlocation);
-
-  g_clear_pointer (&wlocation, gweather_location_unref);
 }
 
 

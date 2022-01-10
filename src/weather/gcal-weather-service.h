@@ -20,8 +20,7 @@
 #define GCAL_WEATHER_SERVICE_H
 
 #include <libgweather/gweather.h>
-#include <glib-object.h>
-#include <glib.h>
+#include <gtk/gtk.h>
 
 #include "gcal-weather-info.h"
 

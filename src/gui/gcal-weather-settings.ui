@@ -63,7 +63,7 @@
       </object>
     </child>
     <child>
-      <object class="GWeatherLocationEntry" id="weather_location_entry">
+      <object class="GtkEntry" id="weather_location_entry">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="primary_icon_name">edit-find-symbolic</property>
