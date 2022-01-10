@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.16"/>
-  <template class="GcalDateChooser" parent="GtkBin">
+  <template class="GcalDateChooser" parent="AdwBin">
     <child>
       <object class="GtkGrid">
-        <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GcalMultiChoice" id="month_choice">
@@ -15,11 +14,11 @@
             <property name="animate">False</property>
             <property name="value">0</property>
             <signal name="notify::value" handler="multi_choice_changed" swapped="yes"/>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">0</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
           <object class="GcalMultiChoice" id="year_choice">
@@ -30,23 +29,22 @@
             <property name="animate">False</property>
             <property name="value">0</property>
             <signal name="notify::value" handler="multi_choice_changed" swapped="yes"/>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">0</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkGrid" id="grid">
-            <property name="visible">True</property>
             <property name="row-homogeneous">True</property>
             <property name="column-homogeneous">True</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="column-span">2</property>
+              <property name="row">1</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-            <property name="width">2</property>
-          </packing>
         </child>
       </object>
     </child>

@@ -18,7 +18,7 @@
 #ifndef __GCAL_DATE_CHOOSER_H__
 #define __GCAL_DATE_CHOOSER_H__
 
-#include <gtk/gtk.h>
+#include <adwaita.h>
 
 G_BEGIN_DECLS
 
@@ -32,7 +32,7 @@ typedef enum
 
 #define GCAL_TYPE_DATE_CHOOSER (gcal_date_chooser_get_type ())
 
-G_DECLARE_FINAL_TYPE (GcalDateChooser, gcal_date_chooser, GCAL, DATE_CHOOSER, GtkBin)
+G_DECLARE_FINAL_TYPE (GcalDateChooser, gcal_date_chooser, GCAL, DATE_CHOOSER, AdwBin)
 
 typedef GcalDateChooserDayOptions (*GcalDateChooserDayOptionsCallback) (GcalDateChooser *self,
                                                                         GDateTime       *date,

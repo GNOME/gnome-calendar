@@ -30,7 +30,7 @@
 
 struct _GcalDateChooser
 {
-  GtkBin              parent;
+  AdwBin              parent;
 
   GtkWidget          *month_choice;
   GtkWidget          *year_choice;
@@ -57,7 +57,7 @@ struct _GcalDateChooser
   GDestroyNotify      day_options_destroy;
 };
 
-G_DEFINE_TYPE (GcalDateChooser, gcal_date_chooser, GTK_TYPE_BIN)
+G_DEFINE_TYPE (GcalDateChooser, gcal_date_chooser, ADW_TYPE_BIN)
 
 enum
 {
@@ -410,49 +410,38 @@ multi_choice_changed (GcalDateChooser *self)
   gcal_date_chooser_set_date (self, date);
 }
 
-static void
-calendar_drag_data_received (GtkWidget        *widget,
-                             GdkDragContext   *context,
-                             gint              x,
-                             gint              y,
-                             GtkSelectionData *selection_data,
-                             guint             info,
-                             guint             time)
+static gboolean
+on_drop_target_drop_cb (GtkDropTarget   *target,
+                        const GValue    *value,
+                        double           x,
+                        double           y,
+                        GcalDateChooser *self)
 {
-  GcalDateChooser *self = GCAL_DATE_CHOOSER (widget);
-  gchar *text;
-  GDate *gdate;
+  g_autoptr (GDateTime) date = NULL;
+  g_autoptr (GDate) gdate = NULL;
+  const gchar *text;
   gint year, month, day;
-  GDateTime *date;
 
   gdate = g_date_new ();
-  text = (gchar *)gtk_selection_data_get_text (selection_data);
+  text = g_value_get_string (value);
+
   if (text)
-    {
-      g_date_set_parse (gdate, text);
-      g_free (text);
-    }
+    g_date_set_parse (gdate, text);
+
   if (!g_date_valid (gdate))
-    {
-      g_date_free (gdate);
-      gtk_drag_finish (context, FALSE, FALSE, time);
-      return;
-    }
+    return FALSE;
 
   year = g_date_get_year (gdate);
   month = g_date_get_month (gdate);
   day = g_date_get_day (gdate);
-
-  g_date_free (gdate);
-
-  gtk_drag_finish (context, TRUE, FALSE, time);
 
   if (!self->show_heading || self->no_month_change)
     g_date_time_get_ymd (self->date, &year, &month, NULL);
 
   date = g_date_time_new_local (year, month, day, 1, 1, 1);
   gcal_date_chooser_set_date (self, date);
-  g_date_time_unref (date);
+
+  return TRUE;
 }
 
 static void
@@ -482,8 +471,6 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
   object_class->finalize = gcal_date_chooser_finalize;
   object_class->set_property = calendar_set_property;
   object_class->get_property = calendar_get_property;
-
-  widget_class->drag_data_received = calendar_drag_data_received;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-date-chooser.ui");
 
@@ -548,6 +535,7 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
 static void
 gcal_date_chooser_init (GcalDateChooser *self)
 {
+  GtkDropTarget *drop_target;
   GtkWidget *label;
   gint row, col;
   gint year, month;
@@ -599,14 +587,14 @@ gcal_date_chooser_init (GcalDateChooser *self)
    */
   self->corner = gtk_stack_new ();
   gtk_grid_attach (GTK_GRID (self->grid), self->corner, -1, -1, 1, 1);
+
   label = gtk_label_new ("");
-  gtk_widget_show (label);
-  gtk_style_context_add_class (gtk_widget_get_style_context (label), "weekday");
-  gtk_container_add (GTK_CONTAINER (self->corner), label);
+  gtk_widget_add_css_class (label, "weekday");
+  gtk_stack_add_named (GTK_STACK (self->corner), label, "weekday");
 
   label = gtk_label_new ("99");
-  gtk_style_context_add_class (gtk_widget_get_style_context (label), "weeknum");
-  gtk_container_add (GTK_CONTAINER (self->corner), label);
+  gtk_widget_add_css_class (label, "weeknum");
+  gtk_stack_add_named (GTK_STACK (self->corner), label, "weeknum");
 
   self->day_grid = g_object_new (GTK_TYPE_GRID,
                                  "valign", GTK_ALIGN_FILL,
@@ -643,8 +631,10 @@ gcal_date_chooser_init (GcalDateChooser *self)
   gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->month_choice), month - 1);
   calendar_update_selected_day_display (self);
 
-  gtk_drag_dest_set (GTK_WIDGET (self), GTK_DEST_DEFAULT_ALL, NULL, 0, GDK_ACTION_COPY);
-  gtk_drag_dest_add_text_targets (GTK_WIDGET (self));
+  drop_target = gtk_drop_target_new (G_TYPE_STRING, GDK_ACTION_COPY);
+  gtk_drop_target_set_preload (drop_target, TRUE);
+  g_signal_connect (drop_target, "drop", G_CALLBACK (on_drop_target_drop_cb), NULL);
+  gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
 }
 
 GtkWidget*
