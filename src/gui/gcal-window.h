@@ -16,21 +16,18 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __GCAL_WINDOW_H__
-#define __GCAL_WINDOW_H__
+#pragma once
 
 #include "gcal-application.h"
 #include "gcal-enums.h"
 #include "gcal-utils.h"
-
-#include <handy.h>
 
 G_BEGIN_DECLS
 
 
 #define GCAL_TYPE_WINDOW                    (gcal_window_get_type ())
 
-G_DECLARE_FINAL_TYPE (GcalWindow, gcal_window, GCAL, WINDOW, HdyApplicationWindow)
+G_DECLARE_FINAL_TYPE (GcalWindow, gcal_window, GCAL, WINDOW, AdwApplicationWindow)
 
 GtkWidget*           gcal_window_new_with_date                  (GcalApplication     *app,
                                                                  GDateTime           *date);
@@ -46,5 +43,3 @@ void                 gcal_window_import_files                   (GcalWindow     
                                                                  gint                n_files);
 
 G_END_DECLS
-
-#endif /* __GCAL_WINDOW_H__ */

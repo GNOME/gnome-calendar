@@ -91,24 +91,17 @@ typedef struct
 
 struct _GcalWindow
 {
-  HdyApplicationWindow parent;
-
-  /* timeout ids */
-  guint               notification_timeout;
+  AdwApplicationWindow parent;
 
   /* upper level widgets */
   GtkWidget          *main_box;
 
   GtkWidget          *header_bar;
-  GtkWidget          *views_overlay;
-  GtkWidget          *views_stack;
+  AdwToastOverlay    *overlay;
+  AdwViewStack       *views_stack;
   GtkWidget          *week_view;
   GtkWidget          *month_view;
   GtkWidget          *year_view;
-  GtkWidget          *notification;
-  GtkWidget          *notification_label;
-  GtkWidget          *notification_action_button;
-  GtkWidget          *notification_close_button;
 
   /* header_bar widets */
   GtkWidget          *back_button;
@@ -119,9 +112,9 @@ struct _GcalWindow
   GtkWidget          *views_switcher;
 
   GcalEventEditorDialog *event_editor;
-  GtkWidget          *import_dialog;
+  GtkWindow             *import_dialog;
 
-  DzlSuggestionButton *search_button;
+  GcalSearchButton   *search_button;
 
   /* new event popover widgets */
   GtkWidget          *quick_add_popover;
@@ -142,8 +135,7 @@ struct _GcalWindow
 
   NewEventData       *event_creation_data;
 
-  GcalEvent          *event_to_delete;
-  GcalRecurrenceModType event_to_delete_mod;
+  AdwToast           *delete_event_toast;
 
   /* calendar management */
   GtkWidget          *calendar_popover;
@@ -165,11 +157,6 @@ struct _GcalWindow
   GtkCssProvider     *colors_provider;
 
   /* Window states */
-  gint                width;
-  gint                height;
-  gint                pos_x;
-  gint                pos_y;
-  gboolean            is_maximized;
   gboolean            in_key_press;
 };
 
@@ -183,12 +170,7 @@ enum
   N_PROPS
 };
 
-#define gcal_window_add_accelerator(app,action,...) {\
-  const gchar *tmp[] = {__VA_ARGS__, NULL};\
-  gtk_application_set_accels_for_action (GTK_APPLICATION (app), action, tmp);\
-}
-
-G_DEFINE_TYPE (GcalWindow, gcal_window, HDY_TYPE_APPLICATION_WINDOW)
+G_DEFINE_TYPE (GcalWindow, gcal_window, ADW_TYPE_APPLICATION_WINDOW)
 
 static GParamSpec* properties[N_PROPS] = { NULL, };
 
@@ -279,49 +261,6 @@ update_active_date (GcalWindow *window,
 }
 
 static void
-load_geometry (GcalWindow *self)
-{
-  GSettings *settings;
-
-  GCAL_ENTRY;
-
-  settings = gcal_context_get_settings (self->context);
-
-  self->is_maximized = g_settings_get_boolean (settings, "window-maximized");
-  g_settings_get (settings, "window-size", "(ii)", &self->width, &self->height);
-  g_settings_get (settings, "window-position", "(ii)", &self->pos_x, &self->pos_y);
-
-  if (self->is_maximized)
-    {
-      gtk_window_maximize (GTK_WINDOW (self));
-    }
-  else
-    {
-      gtk_window_set_default_size (GTK_WINDOW (self), self->width, self->height);
-      if (self->pos_x >= 0)
-        gtk_window_move (GTK_WINDOW (self), self->pos_x, self->pos_y);
-    }
-
-  GCAL_EXIT;
-}
-
-static void
-save_geometry (GcalWindow *self)
-{
-  GSettings *settings;
-
-  GCAL_ENTRY;
-
-  settings = gcal_context_get_settings (self->context);
-
-  g_settings_set_boolean (settings, "window-maximized", self->is_maximized);
-  g_settings_set (settings, "window-size", "(ii)", self->width, self->height);
-  g_settings_set (settings, "window-position", "(ii)", self->pos_x, self->pos_y);
-
-  GCAL_EXIT;
-}
-
-static void
 recalculate_calendar_colors_css (GcalWindow *self)
 {
   g_autoptr (GError) error = NULL;
@@ -354,7 +293,7 @@ recalculate_calendar_colors_css (GcalWindow *self)
     }
 
   new_css_data = g_strjoinv ("\n", new_css_snippets);
-  gtk_css_provider_load_from_data (self->colors_provider, new_css_data, -1, &error);
+  gtk_css_provider_load_from_data (self->colors_provider, new_css_data, -1);
 
   if (error)
     g_warning ("Error creating custom stylesheet. %s", error->message);
@@ -366,15 +305,15 @@ load_css_providers (GcalWindow *self)
   g_autoptr (GFile) css_file = NULL;
   g_autofree gchar *theme_name = NULL;
   g_autofree gchar *theme_uri = NULL;
-  GdkScreen *screen;
+  GdkDisplay *display;
 
-  screen = gtk_widget_get_screen (GTK_WIDGET (self));
+  display = gtk_widget_get_display (GTK_WIDGET (self));
 
   /* Theme */
   self->provider = gtk_css_provider_new ();
-  gtk_style_context_add_provider_for_screen (screen,
-                                             GTK_STYLE_PROVIDER (self->provider),
-                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
+  gtk_style_context_add_provider_for_display (display,
+                                              GTK_STYLE_PROVIDER (self->provider),
+                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
 
   /* Retrieve the theme name */
   g_object_get (gtk_settings_get_default (), "gtk-theme-name", &theme_name, NULL);
@@ -384,15 +323,15 @@ load_css_providers (GcalWindow *self)
   css_file = g_file_new_for_uri (theme_uri);
 
   if (g_file_query_exists (css_file, NULL))
-    gtk_css_provider_load_from_file (self->provider, css_file, NULL);
+    gtk_css_provider_load_from_file (self->provider, css_file);
   else
     gtk_css_provider_load_from_resource (self->provider, "/org/gnome/calendar/theme/Adwaita.css");
 
   /* Calendar olors */
   self->colors_provider = gtk_css_provider_new ();
-  gtk_style_context_add_provider_for_screen (screen,
-                                             GTK_STYLE_PROVIDER (self->colors_provider),
-                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
+  gtk_style_context_add_provider_for_display (display,
+                                              GTK_STYLE_PROVIDER (self->colors_provider),
+                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
 }
 
 
@@ -428,7 +367,7 @@ on_view_action_activated (GSimpleAction *action,
     view = --(window->active_view);
 
   window->active_view = CLAMP (view, GCAL_WINDOW_VIEW_WEEK, GCAL_WINDOW_VIEW_YEAR);
-  gtk_stack_set_visible_child (GTK_STACK (window->views_stack), window->views[window->active_view]);
+  adw_view_stack_set_visible_child (window->views_stack, window->views[window->active_view]);
 
   g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
 }
@@ -520,6 +459,39 @@ on_window_today_activated_cb (GSimpleAction *action,
 }
 
 static void
+on_window_undo_delete_event_cb (GSimpleAction *action,
+                                GVariant      *param,
+                                gpointer       user_data)
+{
+  g_autoptr (GList) widgets = NULL;
+  GcalRecurrenceModType modifier;
+  GcalWindow *self;
+  GcalEvent *event;
+
+  GCAL_ENTRY;
+
+  self = GCAL_WINDOW (user_data);
+
+  if (!self->delete_event_toast)
+    GCAL_RETURN ();
+
+  event = g_object_get_data (G_OBJECT (self->delete_event_toast), "event");
+  modifier = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (self->delete_event_toast), "modifier"));
+
+  g_assert (event != NULL);
+
+  /* Show the hidden to-be-deleted events */
+  widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (self->views[self->active_view]),
+                                            modifier,
+                                            gcal_event_get_uid (event));
+  g_list_foreach (widgets, (GFunc) gtk_widget_show, NULL);
+
+  g_clear_object (&self->delete_event_toast);
+
+  GCAL_EXIT;
+}
+
+static void
 view_changed (GObject    *object,
               GParamSpec *pspec,
               gpointer    user_data)
@@ -532,11 +504,11 @@ view_changed (GObject    *object,
   window = GCAL_WINDOW (user_data);
 
   /* XXX: this is the destruction process */
-  if (!gtk_widget_get_visible (window->views_stack))
+  if (!gtk_widget_get_visible (GTK_WIDGET (window->views_stack)))
     return;
 
   eklass = g_type_class_ref (GCAL_TYPE_WINDOW_VIEW);
-  eval = g_enum_get_value_by_nick (eklass, gtk_stack_get_visible_child_name (GTK_STACK (window->views_stack)));
+  eval = g_enum_get_value_by_nick (eklass, adw_view_stack_get_visible_child_name (window->views_stack));
 
   view_type = eval->value;
 
@@ -579,7 +551,8 @@ show_new_event_widget (GcalView   *view,
                        GcalWindow *window)
 {
   GdkRectangle rect;
-  gint out_x, out_y;
+  gdouble out_x;
+  gdouble out_y;
 
   GCAL_ENTRY;
 
@@ -606,7 +579,11 @@ show_new_event_widget (GcalView   *view,
   gcal_quick_add_popover_set_date_end (GCAL_QUICK_ADD_POPOVER (window->quick_add_popover), end_span);
 
   /* Position and place the quick add popover */
-  gtk_widget_translate_coordinates (window->views[window->active_view], window->views_stack, x, y, &out_x, &out_y);
+  gtk_widget_translate_coordinates (window->views[window->active_view],
+                                    GTK_WIDGET (window),
+                                    x, y,
+                                    &out_x,
+                                    &out_y);
 
   /* Place popover over the given (x,y) position */
   rect.x = out_x;
@@ -625,65 +602,6 @@ close_new_event_widget (GtkButton *button,
                         gpointer   user_data)
 {
   set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
-}
-
-/**
- * create_notification: Internal method for creating a notification
- * @window:
- * @message: The label it goes into the message part
- * @button_label: (allow-none): The label of the actionable button
- *
- **/
-static void
-create_notification (GcalWindow *window,
-                     gchar      *message,
-                     gchar      *button_label)
-{
-  /* notification content */
-  gtk_label_set_markup (GTK_LABEL (window->notification_label), message);
-  gtk_widget_show_all (window->notification);
-
-  if (button_label != NULL)
-    {
-      gtk_button_set_label (GTK_BUTTON (window->notification_action_button),
-                            button_label);
-      gtk_widget_show (window->notification_action_button);
-    }
-  else
-    {
-      gtk_widget_hide (window->notification_action_button);
-    }
-}
-
-static void
-hide_notification (GcalWindow *window,
-                   GtkWidget  *button)
-{
-  gtk_revealer_set_reveal_child (GTK_REVEALER (window->notification), FALSE);
-  window->notification_timeout = 0;
-}
-
-static gboolean
-hide_notification_scheduled (gpointer window)
-{
-  hide_notification (GCAL_WINDOW (window), NULL);
-  return FALSE;
-}
-
-static gboolean
-window_state_changed (GtkWidget *widget,
-                      GdkEvent  *event,
-                      gpointer   user_data)
-{
-  GcalWindow *window;
-  GdkEventWindowState *state;
-
-  window = GCAL_WINDOW (widget);
-  state = (GdkEventWindowState*) event;
-
-  window->is_maximized = state->new_window_state & GDK_WINDOW_STATE_MAXIMIZED;
-
-  return FALSE;
 }
 
 static void
@@ -749,89 +667,65 @@ event_activated (GcalView        *view,
 }
 
 static void
-on_event_editor_dialog_remove_event_cb (GcalEventEditorDialog *edit_dialog,
-                                        GcalEvent             *event,
-                                        GcalRecurrenceModType  modifier,
-                                        GcalWindow            *self)
+on_toast_dismissed_cb (AdwToast   *toast,
+                       GcalWindow *self)
 {
-  g_autoptr (GList) widgets = NULL;
+  GcalRecurrenceModType modifier;
   GcalManager *manager;
-  GcalView *view;
+  GcalEvent *event;
 
   GCAL_ENTRY;
 
+  /* If we undid the removal, the stored toast is gone at this point */
+  if (!self->delete_event_toast)
+    GCAL_RETURN();
+
   manager = gcal_context_get_manager (self->context);
-  view = GCAL_VIEW (self->views[self->active_view]);
+  event = g_object_get_data (G_OBJECT (toast), "event");
+  modifier = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (toast), "modifier"));
 
-  if (self->event_to_delete)
-    {
-      gcal_manager_remove_event (manager, self->event_to_delete, self->event_to_delete_mod);
-      g_clear_object (&self->event_to_delete);
+  g_assert (event != NULL);
 
-      create_notification (self, _("Another event deleted"), _("Undo"));
-    }
-  else
-    {
-      create_notification (self, _("Event deleted"), _("Undo"));
-    }
-
-  gtk_revealer_set_reveal_child (GTK_REVEALER (self->notification), TRUE);
-
-  g_clear_handle_id (&self->notification_timeout, g_source_remove);
-  self->notification_timeout = g_timeout_add_seconds (5, hide_notification_scheduled, self);
-
-  g_set_object (&self->event_to_delete, event);
-  self->event_to_delete_mod = modifier;
-
-  /* hide widget of the event */
-  widgets = gcal_view_get_children_by_uuid (view, modifier, gcal_event_get_uid (event));
-
-  g_list_foreach (widgets, (GFunc) gtk_widget_hide, NULL);
+  gcal_manager_remove_event (manager, event, modifier);
+  g_clear_object (&self->delete_event_toast);
 
   GCAL_EXIT;
 }
 
 static void
-remove_event (GtkWidget  *notification,
-              GParamSpec *spec,
-              gpointer    user_data)
+on_event_editor_dialog_remove_event_cb (GcalEventEditorDialog *edit_dialog,
+                                        GcalEvent             *event,
+                                        GcalRecurrenceModType  modifier,
+                                        GcalWindow            *self)
 {
-  GcalWindow *window = GCAL_WINDOW (user_data);
+  g_autoptr (AdwToast) toast = NULL;
+  g_autoptr (GList) widgets = NULL;
+  GcalView *view;
+  gboolean has_deleted_event;
 
-  if (gtk_revealer_get_child_revealed (GTK_REVEALER (notification)))
-      return;
+  GCAL_ENTRY;
 
-  if (window->event_to_delete != NULL)
-    {
-      GcalManager *manager = gcal_context_get_manager (window->context);
+  has_deleted_event = self->delete_event_toast != NULL;
+  g_clear_pointer (&self->delete_event_toast, adw_toast_dismiss);
 
-      gcal_manager_remove_event (manager, window->event_to_delete, window->event_to_delete_mod);
-      g_clear_object (&window->event_to_delete);
-    }
-}
+  toast = adw_toast_new (has_deleted_event ? _("Another event deleted") : _("Event deleted"));
+  adw_toast_set_timeout (toast, 5);
+  adw_toast_set_button_label (toast, _("_Undo"));
+  adw_toast_set_action_name (toast, "win.undo-delete-event");
+  g_object_set_data_full (G_OBJECT (toast), "event", g_object_ref (event), g_object_unref);
+  g_object_set_data (G_OBJECT (toast), "modifier", GINT_TO_POINTER (modifier));
+  g_signal_connect (toast, "dismissed", G_CALLBACK (on_toast_dismissed_cb), self);
 
-static void
-undo_remove_action (GtkButton *button,
-                    gpointer   user_data)
-{
-  GcalWindow *window;
-  GList *widgets;
+  adw_toast_overlay_add_toast (self->overlay, toast);
+  self->delete_event_toast = g_steal_pointer (&toast);
 
-  window = GCAL_WINDOW (user_data);
-  widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (window->views[window->active_view]),
-                                            window->event_to_delete_mod,
-                                            gcal_event_get_uid (window->event_to_delete));
+  /* hide widget of the event */
+  view = GCAL_VIEW (self->views[self->active_view]);
+  widgets = gcal_view_get_children_by_uuid (view, modifier, gcal_event_get_uid (event));
 
-  /* Show the hidden to-be-deleted events */
-  g_list_foreach (widgets, (GFunc) gtk_widget_show, NULL);
+  g_list_foreach (widgets, (GFunc) gtk_widget_hide, NULL);
 
-  /* Clear the event to delete */
-  g_clear_object (&window->event_to_delete);
-
-  /* Hide the notification */
-  hide_notification (window, NULL);
-
-  g_list_free (widgets);
+  GCAL_EXIT;
 }
 
 static gboolean
@@ -871,18 +765,7 @@ gcal_window_finalize (GObject *object)
 
   GCAL_ENTRY;
 
-  save_geometry (window);
-
   gcal_clear_timeout (&window->open_edit_dialog_timeout_id);
-
-  /* If we have a queued event to delete, remove it now */
-  if (window->event_to_delete)
-    {
-      GcalManager *manager = gcal_context_get_manager (window->context);
-
-      gcal_manager_remove_event (manager, window->event_to_delete, window->event_to_delete_mod);
-      g_clear_object (&window->event_to_delete);
-    }
 
   if (window->event_creation_data)
     {
@@ -905,9 +788,34 @@ gcal_window_finalize (GObject *object)
 }
 
 static void
+gcal_window_dispose (GObject *object)
+{
+  GcalTimeline *timeline;
+  GcalWindow *self;
+
+  self = GCAL_WINDOW (object);
+
+  timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
+  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
+  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
+  //gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->year_view));
+
+  g_clear_pointer (&self->quick_add_popover, gtk_widget_unparent);
+
+  if (self->delete_event_toast)
+    adw_toast_dismiss (self->delete_event_toast);
+
+  G_OBJECT_CLASS (gcal_window_parent_class)->dispose (object);
+}
+
+static void
 gcal_window_constructed (GObject *object)
 {
   GcalWindow *self;
+  GSettings *settings;
+  gboolean maximized;
+  gint height;
+  gint width;
 
   GCAL_ENTRY;
 
@@ -916,7 +824,15 @@ gcal_window_constructed (GObject *object)
   G_OBJECT_CLASS (gcal_window_parent_class)->constructed (object);
 
   /* Load saved geometry *after* the construct-time properties are set */
-  load_geometry (self);
+  settings = gcal_context_get_settings (self->context);
+
+  maximized = g_settings_get_boolean (settings, "window-maximized");
+  g_settings_get (settings, "window-size", "(ii)", &width, &height);
+
+  gtk_window_set_default_size (GTK_WINDOW (self), width, height);
+
+  if (maximized)
+    gtk_window_maximize (GTK_WINDOW (self));
 
   /*
    * FIXME: this is a hack around the issue that happens when trying to bind
@@ -960,7 +876,7 @@ gcal_window_set_property (GObject      *object,
     case PROP_ACTIVE_VIEW:
       self->active_view = g_value_get_enum (value);
       gtk_widget_show (self->views[self->active_view]);
-      gtk_stack_set_visible_child (GTK_STACK (self->views_stack), self->views[self->active_view]);
+      adw_view_stack_set_visible_child (self->views_stack, self->views[self->active_view]);
       break;
 
     case PROP_ACTIVE_DATE:
@@ -1027,36 +943,26 @@ gcal_window_get_property (GObject    *object,
  */
 
 static void
-gcal_window_destroy (GtkWidget *widget)
+gcal_window_unmap (GtkWidget *widget)
 {
-  GcalTimeline *timeline;
   GcalWindow *self;
+  GSettings *settings;
+  gint height;
+  gint width;
+
+  GCAL_ENTRY;
 
   self = GCAL_WINDOW (widget);
+  settings = gcal_context_get_settings (self->context);
 
-  timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
-  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
-  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
-  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->year_view));
+  gtk_window_get_default_size (GTK_WINDOW (self), &width, &height);
 
-  GTK_WIDGET_CLASS (gcal_window_parent_class)->destroy (widget);
-}
+  g_settings_set_boolean (settings, "window-maximized", gtk_window_is_maximized (GTK_WINDOW (self)));
+  g_settings_set (settings, "window-size", "(ii)", width, height);
 
-static gboolean
-gcal_window_configure_event (GtkWidget         *widget,
-                             GdkEventConfigure *event)
-{
-  GcalWindow *window;
-  gboolean retval;
+  GTK_WIDGET_CLASS (gcal_window_parent_class)->unmap (widget);
 
-  window = GCAL_WINDOW (widget);
-
-  gtk_window_get_size (GTK_WINDOW (window), &window->width, &window->height);
-  gtk_window_get_position (GTK_WINDOW (window), &window->pos_x, &window->pos_y);
-
-  retval = GTK_WIDGET_CLASS (gcal_window_parent_class)->configure_event (widget, event);
-
-  return retval;
+  GCAL_EXIT;
 }
 
 static void
@@ -1079,12 +985,12 @@ gcal_window_class_init (GcalWindowClass *klass)
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = gcal_window_finalize;
   object_class->constructed = gcal_window_constructed;
+  object_class->dispose = gcal_window_dispose;
   object_class->set_property = gcal_window_set_property;
   object_class->get_property = gcal_window_get_property;
 
   widget_class = GTK_WIDGET_CLASS (klass);
-  widget_class->configure_event = gcal_window_configure_event;
-  widget_class->destroy = gcal_window_destroy;
+  widget_class->unmap = gcal_window_unmap;
 
 
   properties[PROP_ACTIVE_DATE] = g_param_spec_boxed ("active-date",
@@ -1130,24 +1036,14 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_management_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, today_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_overlay);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, weather_settings);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, week_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, year_view);
 
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_action_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_close_button);
-
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
-
-  /* Event removal related */
-  gtk_widget_class_bind_template_callback (widget_class, hide_notification);
-  gtk_widget_class_bind_template_callback (widget_class, remove_event);
-  gtk_widget_class_bind_template_callback (widget_class, undo_remove_action);
 
   /* Event creation related */
   gtk_widget_class_bind_template_callback (widget_class, edit_event);
@@ -1155,9 +1051,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, show_new_event_widget);
   gtk_widget_class_bind_template_callback (widget_class, close_new_event_widget);
   gtk_widget_class_bind_template_callback (widget_class, event_activated);
-
-  /* Syncronization related */
-  gtk_widget_class_bind_template_callback (widget_class, window_state_changed);
 
   /* Edit dialog related */
   gtk_widget_class_bind_template_callback (widget_class, on_event_editor_dialog_remove_event_cb);
@@ -1173,10 +1066,9 @@ gcal_window_init (GcalWindow *self)
     {"open-online-accounts", on_window_open_online_accounts_cb },
     {"previous-date", on_window_previous_date_activated_cb },
     {"show-calendars", on_show_calendars_action_activated },
-    {"today", on_window_today_activated_cb }
+    {"today", on_window_today_activated_cb },
+    {"undo-delete-event", on_window_undo_delete_event_cb },
   };
-
-  GApplication *app;
 
   /* Setup actions */
   g_action_map_add_action_entries (G_ACTION_MAP (self),
@@ -1187,8 +1079,8 @@ gcal_window_init (GcalWindow *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 
   /* Calendar icon */
-  gtk_container_add (GTK_CONTAINER (self->calendars_button),
-                     gcal_calendar_popover_get_icon (GCAL_CALENDAR_POPOVER (self->calendar_popover)));
+  gtk_menu_button_set_child (GTK_MENU_BUTTON (self->calendars_button),
+                             gcal_calendar_popover_get_icon (GCAL_CALENDAR_POPOVER (self->calendar_popover)));
 
   self->views[GCAL_WINDOW_VIEW_WEEK] = self->week_view;
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;
@@ -1197,12 +1089,6 @@ gcal_window_init (GcalWindow *self)
   self->active_date = g_date_time_new_from_unix_local (0);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
-  /* Dzl shortcut support */
-  g_signal_connect_object (self,
-                           "key-press-event",
-                           G_CALLBACK (dzl_shortcut_manager_handle_event),
-                           NULL,
-                           G_CONNECT_SWAPPED);
   /* devel styling */
   if (g_strcmp0 (PROFILE, "Devel") == 0)
   {
@@ -1212,15 +1098,7 @@ gcal_window_init (GcalWindow *self)
       gtk_style_context_add_class (style_context, "devel");
   }
 
-  /* setup accels */
-  app = g_application_get_default ();
-  gcal_window_add_accelerator (app, "win.change-view(-1)",   "<Ctrl>Page_Down");
-  gcal_window_add_accelerator (app, "win.change-view(-2)",   "<Ctrl>Page_Up");
-  gcal_window_add_accelerator (app, "win.change-view(0)",    "<Ctrl>1");
-  gcal_window_add_accelerator (app, "win.change-view(1)",    "<Ctrl>2");
-  gcal_window_add_accelerator (app, "win.change-view(2)",    "<Ctrl>3");
-  gcal_window_add_accelerator (app, "app.quit", "<Ctrl>q");
-  gcal_window_add_accelerator (app, "win.new-event", "<Ctrl>n");
+  gtk_widget_set_parent (self->quick_add_popover, GTK_WIDGET (self));
 }
 
 /**
@@ -1256,12 +1134,13 @@ void
 gcal_window_set_search_query (GcalWindow  *self,
                               const gchar *query)
 {
-  DzlSuggestionEntry *entry;
+  //GtkEntry *entry;
 
   g_return_if_fail (GCAL_IS_WINDOW (self));
 
-  entry = dzl_suggestion_button_get_entry (self->search_button);
-  gtk_entry_set_text (GTK_ENTRY (entry), query);
+  // TODO
+  //entry = gcal_search_button_get_entry (self->search_button);
+  //gtk_entry_set_text (GTK_ENTRY (entry), query);
 }
 
 /**
@@ -1279,7 +1158,7 @@ gcal_window_open_event_by_uuid (GcalWindow  *self,
   GList *widgets;
 
   /* XXX: show events on month view */
-  gtk_stack_set_visible_child (GTK_STACK (self->views_stack), self->month_view);
+  adw_view_stack_set_visible_child (self->views_stack, self->month_view);
 
   widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (self->month_view),
                                             GCAL_RECURRENCE_MOD_THIS_ONLY,
@@ -1308,11 +1187,11 @@ gcal_window_import_files (GcalWindow  *self,
 {
   g_return_if_fail (GCAL_IS_WINDOW (self));
 
-  g_clear_pointer (&self->import_dialog, gtk_widget_destroy);
+  g_clear_pointer (&self->import_dialog, gtk_window_destroy);
 
-  self->import_dialog = gcal_import_dialog_new_for_files (self->context, files, n_files);
-  gtk_window_set_transient_for (GTK_WINDOW (self->import_dialog), GTK_WINDOW (self));
-  gtk_window_present (GTK_WINDOW (self->import_dialog));
+  self->import_dialog = GTK_WINDOW (gcal_import_dialog_new_for_files (self->context, files, n_files));
+  gtk_window_set_transient_for (self->import_dialog, GTK_WINDOW (self));
+  gtk_window_present (self->import_dialog);
 
   g_object_add_weak_pointer (G_OBJECT (self->import_dialog), (gpointer *)&self->import_dialog);
 }
