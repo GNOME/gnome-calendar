@@ -24,12 +24,12 @@
 #include "gcal-context.h"
 #include "gcal-manager.h"
 
-#include <dazzle.h>
+#include <adwaita.h>
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_APPLICATION (gcal_application_get_type ())
-G_DECLARE_FINAL_TYPE (GcalApplication, gcal_application, GCAL, APPLICATION, DzlApplication)
+G_DECLARE_FINAL_TYPE (GcalApplication, gcal_application, GCAL, APPLICATION, AdwApplication)
 
 GcalApplication*     gcal_application_new                        (void);
 

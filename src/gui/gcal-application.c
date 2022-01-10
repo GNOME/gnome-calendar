@@ -32,11 +32,10 @@
 #include <glib-object.h>
 #include <gio/gio.h>
 #include <glib/gi18n.h>
-#include <handy.h>
 
 struct _GcalApplication
 {
-  DzlApplication      parent;
+  AdwApplication      parent;
 
   GtkWidget          *window;
 
@@ -48,7 +47,7 @@ struct _GcalApplication
   GcalContext        *context;
 };
 
-G_DEFINE_TYPE (GcalApplication, gcal_application, DZL_TYPE_APPLICATION);
+G_DEFINE_TYPE (GcalApplication, gcal_application, ADW_TYPE_APPLICATION);
 
 static gboolean show_version = FALSE;
 
@@ -135,18 +134,6 @@ gcal_application_launch_search (GSimpleAction *search,
 {
 }
 
-static void
-on_about_response (GtkAboutDialog *about,
-                   int             response_id,
-                   gpointer        user_data)
-{
-  g_return_if_fail (GTK_IS_ABOUT_DIALOG (about));
-  g_return_if_fail (user_data == NULL);
-
-  if (response_id == GTK_RESPONSE_CANCEL)
-    gtk_widget_destroy (GTK_WIDGET (about));
-}
-
 static gchar*
 build_about_copyright (GcalApplication *self)
 {
@@ -222,10 +209,8 @@ gcal_application_show_about (GSimpleAction *simple,
                                                               GTK_TYPE_ABOUT_DIALOG,
                                                               "copyright_label"));
   gtk_label_set_markup (copyright_label, copyright);
-  gtk_widget_show (GTK_WIDGET (copyright_label));
 
-  g_signal_connect (dialog, "response", G_CALLBACK (on_about_response), NULL);
-  gtk_widget_show (dialog);
+  gtk_window_present (GTK_WINDOW (dialog));
 }
 
 static void
@@ -235,7 +220,7 @@ gcal_application_quit (GSimpleAction *simple,
 {
   GcalApplication *self = GCAL_APPLICATION (user_data);
 
-  gtk_widget_destroy (self->window);
+  gtk_window_destroy (GTK_WINDOW (self->window));
 }
 
 
@@ -307,7 +292,6 @@ gcal_application_activate (GApplication *application)
                                     "active-date", self->initial_date,
                                     NULL);
 
-      g_signal_connect (self->window, "destroy", G_CALLBACK (gtk_widget_destroyed), &self->window);
       g_object_add_weak_pointer (G_OBJECT (self->window), (gpointer*) &self->window);
       gtk_widget_show (self->window);
     }
@@ -358,12 +342,6 @@ gcal_application_startup (GApplication *app)
   /* We're assuming the application is called as a service only by the shell search system */
   if ((g_application_get_flags (app) & G_APPLICATION_IS_SERVICE) != 0)
     g_application_set_inactivity_timeout (app, 3 * 60 * 1000);
-
-  /*  initialize libhandy */
-  hdy_init();
-
-  hdy_style_manager_set_color_scheme (hdy_style_manager_get_default (),
-                                      HDY_COLOR_SCHEME_PREFER_LIGHT);
 
   /* Startup the manager */
   gcal_context_startup (self->context);
