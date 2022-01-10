@@ -16,9 +16,9 @@
  * License along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
-
 #define G_LOG_DOMAIN "GcalMultiChoice"
+
+#include "config.h"
 
 #include "gcal-multi-choice.h"
 
@@ -26,7 +26,7 @@ struct _GcalMultiChoice
 {
   GtkBox parent;
   GtkWidget *down_button;
-  GtkWidget *stack;
+  GtkStack *stack;
   GtkWidget *up_button;
   gint value;
   gint min_value;
@@ -35,7 +35,6 @@ struct _GcalMultiChoice
   gboolean animate;
   GtkWidget **choices;
   gint n_choices;
-  guint click_id;
   GtkWidget *active;
   GtkWidget *label1;
   GtkWidget *label2;
@@ -173,9 +172,9 @@ go_down (GcalMultiChoice *self)
     g_signal_emit (self, signals[WRAPPED], 0);
 }
 
-static gboolean
-button_activate (GcalMultiChoice *self,
-                 GtkWidget      *button)
+static void
+button_clicked_cb (GtkWidget      *button,
+                   GcalMultiChoice *self)
 {
   if (button == self->down_button)
     go_down (self);
@@ -183,90 +182,6 @@ button_activate (GcalMultiChoice *self,
     go_up (self);
   else
     g_assert_not_reached ();
-
-  return TRUE;
-}
-
-static gboolean
-button_timeout (gpointer user_data)
-{
-  GcalMultiChoice *self = GCAL_MULTI_CHOICE (user_data);
-  gboolean res;
-
-  if (self->click_id == 0)
-    return G_SOURCE_REMOVE;
-
-  if (!gtk_widget_get_mapped (self->down_button) && !gtk_widget_get_mapped (self->up_button))
-    {
-      if (self->click_id)
-        g_source_remove (self->click_id);
-      self->click_id = 0;
-      self->active = NULL;
-      return G_SOURCE_REMOVE;
-    }
-
-  res = button_activate (self, self->active);
-  if (!res)
-    {
-      g_source_remove (self->click_id);
-      self->click_id = 0;
-    }
-
-  return res;
-}
-
-static gboolean
-button_press_cb (GtkWidget      *widget,
-                 GdkEventButton *button,
-                 GcalMultiChoice *self)
-{
-  gint double_click_time;
-
-  if (button->type != GDK_BUTTON_PRESS)
-    return TRUE;
-
-  g_object_get (gtk_widget_get_settings (widget),
-                "gtk-double-click-time", &double_click_time,
-                NULL);
-
-  if (self->click_id != 0)
-    g_source_remove (self->click_id);
-
-  self->active = widget;
-
-  self->click_id = gdk_threads_add_timeout (double_click_time,
-                                            button_timeout,
-                                            self);
-  g_source_set_name_by_id (self->click_id, "[gtk+] button_timeout");
-  button_timeout (self);
-
-  return TRUE;
-}
-
-static gboolean
-button_release_cb (GtkWidget      *widget,
-                   GdkEventButton *event,
-                   GcalMultiChoice *self)
-{
-  if (self->click_id != 0)
-    {
-      g_source_remove (self->click_id);
-      self->click_id = 0;
-    }
-
-  self->active = NULL;
-
-  return TRUE;
-}
-
-static void
-button_clicked_cb (GtkWidget      *button,
-                   GcalMultiChoice *self)
-{
-  if (self->click_id != 0)
-    return;
-
-  button_activate (self, button);
 }
 
 static void
@@ -279,12 +194,6 @@ static void
 gcal_multi_choice_dispose (GObject *object)
 {
   GcalMultiChoice *self = GCAL_MULTI_CHOICE (object);
-
-  if (self->click_id != 0)
-    {
-      g_source_remove (self->click_id);
-      self->click_id = 0;
-    }
 
   g_free (self->choices);
   self->choices = NULL;
@@ -435,8 +344,6 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, label2);
 
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_cb);
-  gtk_widget_class_bind_template_callback (widget_class, button_press_cb);
-  gtk_widget_class_bind_template_callback (widget_class, button_release_cb);
 
   gtk_widget_class_set_css_name (widget_class, "navigator");
 }
@@ -467,7 +374,7 @@ gcal_multi_choice_set_choices (GcalMultiChoice  *self,
   gint i;
 
   for (i = 0; i < self->n_choices; i++)
-    gtk_container_remove (GTK_CONTAINER (self->stack), self->choices[i]);
+    gtk_stack_remove (self->stack, self->choices[i]);
   g_free (self->choices);
 
   self->n_choices = g_strv_length ((gchar **)choices);

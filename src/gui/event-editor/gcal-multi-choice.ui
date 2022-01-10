@@ -1,70 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface domain="gtk30">
-  <requires lib="gtk+" version="3.16"/>
+<interface>
   <template class="GcalMultiChoice" parent="GtkBox">
-    <property name="visible">True</property>
     <child>
       <object class="GtkButton" id="down_button">
-        <property name="visible">True</property>
-        <property name="relief">none</property>
-        <signal name="button-press-event" handler="button_press_cb"/>
-        <signal name="button-release-event" handler="button_release_cb"/>
+        <property name="icon-name">pan-start-symbolic</property>
         <signal name="clicked" handler="button_clicked_cb"/>
         <style>
-          <class name="image-button"/>
           <class name="back-button"/>
           <class name="circular"/>
+          <class name="flat"/>
         </style>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="icon_name">pan-start-symbolic</property>
-          </object>
-        </child>
       </object>
     </child>
     <child>
       <object class="GtkStack" id="stack">
-        <property name="visible">True</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
+
         <child>
-          <object class="GtkLabel" id="label1">
-            <property name="visible">True</property>
-          </object>
-          <packing>
+          <object class="GtkStackPage">
             <property name="name">label1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="label2">
-            <property name="visible">True</property>
+            <property name="child">
+              <object class="GtkLabel" id="label1" />
+            </property>
           </object>
-          <packing>
-            <property name="name">label2</property>
-          </packing>
         </child>
+
+        <child>
+          <object class="GtkStackPage">
+            <property name="name">label2</property>
+            <property name="child">
+              <object class="GtkLabel" id="label2" />
+            </property>
+          </object>
+        </child>
+
       </object>
-      <packing>
-        <property name="expand">True</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="up_button">
-        <property name="visible">True</property>
-        <property name="relief">none</property>
-        <signal name="button-press-event" handler="button_press_cb"/>
-        <signal name="button-release-event" handler="button_release_cb"/>
+        <property name="icon-name">pan-end-symbolic</property>
         <signal name="clicked" handler="button_clicked_cb"/>
         <style>
-          <class name="image-button"/>
-          <class name="forward-button"/>
           <class name="circular"/>
+          <class name="flat"/>
+          <class name="forward-button"/>
         </style>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="icon_name">pan-end-symbolic</property>
-          </object>
-        </child>
       </object>
     </child>
   </template>
