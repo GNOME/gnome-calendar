@@ -15,19 +15,16 @@
  * License along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __GCAL_DATE_CHOOSER_DAY_PRIVATE_H__
-#define __GCAL_DATE_CHOOSER_DAY_PRIVATE_H__
+#pragma once
 
 #include "gcal-date-chooser.h"
 
-#include <glib-object.h>
-#include <gtk/gtk.h>
+#include <adwaita.h>
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_DATE_CHOOSER_DAY (gcal_date_chooser_day_get_type())
-
-G_DECLARE_FINAL_TYPE (GcalDateChooserDay, gcal_date_chooser_day, GCAL, DATE_CHOOSER_DAY, GtkBin)
+G_DECLARE_FINAL_TYPE (GcalDateChooserDay, gcal_date_chooser_day, GCAL, DATE_CHOOSER_DAY, AdwBin)
 
 GtkWidget*           gcal_date_chooser_day_new                   (void);
 
@@ -46,5 +43,3 @@ void                 gcal_date_chooser_day_set_options           (GcalDateChoose
                                                                   GcalDateChooserDayOptions options);
 
 G_END_DECLS
-
-#endif /* __GCAL_DATE_CHOOSER_DAY_PRIVATE_H__ */
