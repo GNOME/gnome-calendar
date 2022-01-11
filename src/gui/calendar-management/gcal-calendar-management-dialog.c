@@ -54,11 +54,12 @@ typedef enum
 
 struct _GcalCalendarManagementDialog
 {
-  HdyWindow           parent;
+  AdwWindow           parent;
 
-  HdyHeaderBar       *headerbar;
+  GtkHeaderBar       *headerbar;
   GtkWidget          *notebook;
   GtkWidget          *stack;
+  AdwWindowTitle    *window_title;
 
   /* flags */
   ESource            *source;
@@ -76,7 +77,7 @@ static void          on_page_switched_cb                         (GcalCalendarMa
                                                                   GcalCalendar                 *calendar,
                                                                   GcalCalendarManagementDialog *self);
 
-G_DEFINE_TYPE (GcalCalendarManagementDialog, gcal_calendar_management_dialog, HDY_TYPE_WINDOW)
+G_DEFINE_TYPE (GcalCalendarManagementDialog, gcal_calendar_management_dialog, ADW_TYPE_WINDOW)
 
 enum
 {
@@ -114,8 +115,8 @@ set_page (GcalCalendarManagementDialog *self,
       gtk_stack_set_visible_child (GTK_STACK (self->stack), GTK_WIDGET (page));
       gcal_calendar_management_page_activate (page, calendar);
 
-      hdy_header_bar_set_title (self->headerbar,
-                                gcal_calendar_management_page_get_title (page));
+      adw_window_title_set_title (self->window_title,
+                                  gcal_calendar_management_page_get_title (page));
       break;
     }
 
@@ -268,6 +269,7 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, headerbar);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, stack);
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, window_title);
 }
 
 static void
@@ -276,10 +278,10 @@ gcal_calendar_management_dialog_init (GcalCalendarManagementDialog *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
-HdyHeaderBar*
+GtkHeaderBar*
 gcal_calendar_management_dialog_get_titlebar (GcalCalendarManagementDialog *self)
 {
   g_return_val_if_fail (GCAL_IS_CALENDAR_MANAGEMENT_DIALOG (self), NULL);
 
-  return HDY_HEADER_BAR (self->headerbar);
+  return self->headerbar;
 }

@@ -518,16 +518,16 @@ gcal_new_calendar_page_activate (GcalCalendarManagementPage *page,
                                  GcalCalendar               *calendar)
 {
   GcalNewCalendarPage *self;
-  HdyHeaderBar *headerbar;
+  GtkHeaderBar *headerbar;
 
   GCAL_ENTRY;
 
   self = GCAL_NEW_CALENDAR_PAGE (page);
   headerbar = gcal_calendar_management_page_get_titlebar (page);
 
-  hdy_header_bar_pack_start (headerbar, self->cancel_button);
-  hdy_header_bar_pack_end (headerbar, self->add_button);
-  hdy_header_bar_set_show_close_button (headerbar, FALSE);
+  gtk_header_bar_pack_start (headerbar, self->cancel_button);
+  gtk_header_bar_pack_end (headerbar, self->add_button);
+  gtk_header_bar_set_show_title_buttons (headerbar, FALSE);
 
   GCAL_EXIT;
 }
@@ -535,16 +535,16 @@ static void
 gcal_new_calendar_page_deactivate (GcalCalendarManagementPage *page)
 {
   GcalNewCalendarPage *self;
-  HdyHeaderBar *headerbar;
+  GtkHeaderBar *headerbar;
 
   GCAL_ENTRY;
 
   self = GCAL_NEW_CALENDAR_PAGE (page);
   headerbar = gcal_calendar_management_page_get_titlebar (page);
 
-  gtk_container_remove (GTK_CONTAINER (headerbar), self->cancel_button);
-  gtk_container_remove (GTK_CONTAINER (headerbar), self->add_button);
-  hdy_header_bar_set_show_close_button (headerbar, TRUE);
+  gtk_header_bar_remove (headerbar, self->cancel_button);
+  gtk_header_bar_remove (headerbar, self->add_button);
+  gtk_header_bar_set_show_title_buttons (headerbar, TRUE);
 
   g_clear_object (&self->local_source);
   g_clear_pointer (&self->remote_sources, g_ptr_array_unref);

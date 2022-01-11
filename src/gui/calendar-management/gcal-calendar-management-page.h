@@ -61,6 +61,6 @@ void                 gcal_calendar_management_page_switch_page   (GcalCalendarMa
                                                                   const gchar                *page_name,
                                                                   GcalCalendar               *calendar);
 
-HdyHeaderBar*        gcal_calendar_management_page_get_titlebar  (GcalCalendarManagementPage *self);
+GtkHeaderBar*        gcal_calendar_management_page_get_titlebar  (GcalCalendarManagementPage *self);
 
 G_END_DECLS

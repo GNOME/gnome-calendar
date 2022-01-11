@@ -108,13 +108,13 @@ gcal_calendar_management_page_switch_page (GcalCalendarManagementPage *self,
   g_signal_emit (self, signals[SWITCH_PAGE], 0, page_name, calendar);
 }
 
-HdyHeaderBar*
+GtkHeaderBar*
 gcal_calendar_management_page_get_titlebar (GcalCalendarManagementPage *self)
 {
-  GtkWidget *toplevel;
+  GtkNative *native;
 
-  toplevel = gtk_widget_get_toplevel (GTK_WIDGET (self));
-  g_assert (toplevel != NULL);
+  native = gtk_widget_get_native (GTK_WIDGET (self));
+  g_assert (native != NULL);
 
-  return gcal_calendar_management_dialog_get_titlebar (GCAL_CALENDAR_MANAGEMENT_DIALOG (toplevel));
+  return gcal_calendar_management_dialog_get_titlebar (GCAL_CALENDAR_MANAGEMENT_DIALOG (native));
 }

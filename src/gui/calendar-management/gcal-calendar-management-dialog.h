@@ -23,7 +23,7 @@
 #include "gcal-manager.h"
 
 #include <libecal/libecal.h>
-#include <handy.h>
+#include <adwaita.h>
 
 G_BEGIN_DECLS
 
@@ -34,8 +34,8 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (GcalCalendarManagementDialog,
                       gcal_calendar_management_dialog,
                       GCAL, CALENDAR_MANAGEMENT_DIALOG,
-                      HdyWindow)
+                      AdwWindow)
 
-HdyHeaderBar*        gcal_calendar_management_dialog_get_titlebar (GcalCalendarManagementDialog *self);
+GtkHeaderBar*        gcal_calendar_management_dialog_get_titlebar (GcalCalendarManagementDialog *self);
 
 G_END_DECLS
