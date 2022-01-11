@@ -25,6 +25,7 @@
 #include "gcal-context.h"
 #include "gcal-calendar-management-page.h"
 #include "gcal-debug.h"
+#include "gcal-file-chooser-button.h"
 #include "gcal-new-calendar-page.h"
 #include "gcal-source-discoverer.h"
 #include "gcal-utils.h"
@@ -46,13 +47,13 @@ struct _GcalNewCalendarPage
   GtkWidget          *add_button;
   GtkEntry           *calendar_address_entry;
   EntryState          calendar_address_entry_state;
-  GtkFileChooser     *calendar_file_chooser_button;
+  GcalFileChooserButton *calendar_file_chooser_button;
   GtkFileFilter      *calendar_file_filter;
   GtkWidget          *cancel_button;
   GtkWidget          *credentials_cancel_button;
   GtkWidget          *credentials_connect_button;
   GtkEntry           *credentials_password_entry;
-  GtkPopover         *credentials_popover;
+  GtkWidget          *credentials_popover;
   GtkEntry           *credentials_user_entry;
   GtkColorChooser    *local_calendar_color_button;
   GtkEntry           *local_calendar_name_entry;
@@ -153,7 +154,7 @@ update_local_source (GcalNewCalendarPage *self)
 
   g_clear_object (&self->local_source);
 
-  calendar_name = g_strdup (gtk_entry_get_text (self->local_calendar_name_entry));
+  calendar_name = g_strdup (gtk_editable_get_text (GTK_EDITABLE (self->local_calendar_name_entry)));
   calendar_name = g_strstrip (calendar_name);
 
   if (calendar_name && g_utf8_strlen (calendar_name, -1) > 0)
@@ -224,9 +225,9 @@ discover_sources (GcalNewCalendarPage *self)
 
   self->validate_url_resource_id = 0;
 
-  url = gtk_entry_get_text (self->calendar_address_entry);
-  username = gtk_entry_get_text (self->credentials_user_entry);
-  password = gtk_entry_get_text (self->credentials_password_entry);
+  url = gtk_editable_get_text (GTK_EDITABLE (self->calendar_address_entry));
+  username = gtk_editable_get_text (GTK_EDITABLE (self->credentials_user_entry));
+  password = gtk_editable_get_text (GTK_EDITABLE (self->credentials_password_entry));
 
   gcal_discover_sources_from_uri (url,
                                   username,
@@ -242,10 +243,10 @@ discover_sources (GcalNewCalendarPage *self)
 static void
 popdown_credentials_popover (GcalNewCalendarPage *self)
 {
-  gtk_entry_set_text (self->credentials_user_entry, "");
-  gtk_entry_set_text (self->credentials_password_entry, "");
+  gtk_editable_set_text (GTK_EDITABLE (self->credentials_user_entry), "");
+  gtk_editable_set_text (GTK_EDITABLE (self->credentials_password_entry), "");
 
-  gtk_popover_popdown (self->credentials_popover);
+  gtk_popover_popdown (GTK_POPOVER (self->credentials_popover));
 }
 
 /*
@@ -253,8 +254,9 @@ popdown_credentials_popover (GcalNewCalendarPage *self)
  */
 
 static void
-on_file_chooser_button_file_set_cb (GtkFileChooser      *chooser,
-                                    GcalNewCalendarPage *self)
+on_file_chooser_button_file_changed_cb (GcalFileChooserButton *chooser,
+                                        GParamSpec            *pspec,
+                                        GcalNewCalendarPage   *self)
 {
   g_autofree gchar *display_name = NULL;
   g_autoptr (ESource) source = NULL;
@@ -263,7 +265,7 @@ on_file_chooser_button_file_set_cb (GtkFileChooser      *chooser,
 
   GCAL_ENTRY;
 
-  file = gtk_file_chooser_get_file (chooser);
+  file = gcal_file_chooser_button_get_file (chooser);
 
   if (!file)
     GCAL_RETURN ();
@@ -289,7 +291,7 @@ on_file_chooser_button_file_set_cb (GtkFileChooser      *chooser,
                                              "calendars",
                                              NULL);
 
-  gtk_file_chooser_unselect_all (self->calendar_file_chooser_button);
+  gcal_file_chooser_button_set_file (self->calendar_file_chooser_button, NULL);
 
   GCAL_EXIT;
 }
@@ -324,7 +326,7 @@ sources_discovered_cb (GObject      *source_object,
                            GCAL_SOURCE_DISCOVERER_ERROR_UNAUTHORIZED))
         {
           g_debug ("Unauthorized, asking for credentials...");
-          gtk_popover_popup (self->credentials_popover);
+          gtk_popover_popup (GTK_POPOVER (self->credentials_popover));
         }
       else
         {
@@ -352,7 +354,7 @@ validate_url_cb (gpointer data)
 
   self->validate_url_resource_id = 0;
 
-  uri = soup_uri_new (gtk_entry_get_text (self->calendar_address_entry));
+  uri = soup_uri_new (gtk_editable_get_text (GTK_EDITABLE (self->calendar_address_entry)));
 
   if (uri != NULL && SOUP_URI_IS_VALID (uri))
     {
@@ -431,7 +433,7 @@ on_url_entry_text_changed_cb (GtkEntry            *entry,
 
   GCAL_ENTRY;
 
-  text = gtk_entry_get_text (entry);
+  text = gtk_editable_get_text (GTK_EDITABLE (entry));
 
   if (self->calendar_address_id != 0)
     {
@@ -550,8 +552,8 @@ gcal_new_calendar_page_deactivate (GcalCalendarManagementPage *page)
   g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
   update_add_button (self);
 
-  gtk_entry_set_text (self->local_calendar_name_entry, "");
-  gtk_entry_set_text (self->calendar_address_entry, "");
+  gtk_editable_set_text (GTK_EDITABLE (self->local_calendar_name_entry), "");
+  gtk_editable_set_text (GTK_EDITABLE (self->calendar_address_entry), "");
 
   toggle_url_entry_pulsing (self, FALSE);
 
@@ -570,6 +572,16 @@ gcal_calendar_management_page_iface_init (GcalCalendarManagementPageInterface *i
 /*
  * GObject overrides
  */
+
+static void
+gcal_new_calendar_page_dispose (GObject *object)
+{
+  GcalNewCalendarPage *self = (GcalNewCalendarPage *)object;
+
+  g_clear_pointer (&self->credentials_popover, gtk_widget_unparent);
+
+  G_OBJECT_CLASS (gcal_new_calendar_page_parent_class)->dispose (object);
+}
 
 static void
 gcal_new_calendar_page_finalize (GObject *object)
@@ -631,11 +643,14 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
+  object_class->dispose = gcal_new_calendar_page_dispose;
   object_class->finalize = gcal_new_calendar_page_finalize;
   object_class->get_property = gcal_new_calendar_page_get_property;
   object_class->set_property = gcal_new_calendar_page_set_property;
 
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
+
+  g_type_ensure (GCAL_TYPE_FILE_CHOOSER_BUTTON);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-new-calendar-page.ui");
 
@@ -659,7 +674,7 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_cancel_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_credential_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_credential_entry_activate_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_file_chooser_button_file_set_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_file_chooser_button_file_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_name_entry_text_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_color_button_color_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_url_entry_text_changed_cb);
@@ -669,9 +684,16 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
 static void
 gcal_new_calendar_page_init (GcalNewCalendarPage *self)
 {
+  GtkFileChooser *chooser;
+
   self->cancellable = g_cancellable_new ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
   gtk_file_filter_set_name (self->calendar_file_filter, _("Calendar files"));
+
+  chooser = gcal_file_chooser_button_get_filechooser (self->calendar_file_chooser_button);
+  gtk_file_chooser_add_filter (chooser, self->calendar_file_filter);
+
+  gtk_widget_set_parent (self->credentials_popover, GTK_WIDGET (self->calendar_address_entry));
 }
