@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <handy.h>
+#include <adwaita.h>
 
 #include "gcal-calendar.h"
 
