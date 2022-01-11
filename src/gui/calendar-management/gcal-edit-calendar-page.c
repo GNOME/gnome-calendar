@@ -35,9 +35,9 @@ struct _GcalEditCalendarPage
   GtkWidget          *account_dim_label;
   GtkWidget          *back_button;
   GtkColorChooser    *calendar_color_button;
-  GtkToggleButton    *calendar_visible_check;
+  GtkCheckButton     *calendar_visible_check;
   GtkWidget          *calendar_url_button;
-  GtkToggleButton    *default_check;
+  GtkCheckButton     *default_check;
   GtkWidget          *location_dim_label;
   GtkEntry           *name_entry;
   GtkWidget          *remove_button;
@@ -193,10 +193,10 @@ setup_calendar (GcalEditCalendarPage *self,
     }
 
   gtk_color_chooser_set_rgba (self->calendar_color_button, gcal_calendar_get_color (calendar));
-  gtk_entry_set_text (self->name_entry, gcal_calendar_get_name (calendar));
-  gtk_toggle_button_set_active (self->calendar_visible_check, gcal_calendar_get_visible (calendar));
+  gtk_editable_set_text (GTK_EDITABLE (self->name_entry), gcal_calendar_get_name (calendar));
+  gtk_check_button_set_active (self->calendar_visible_check, gcal_calendar_get_visible (calendar));
 
-  gtk_toggle_button_set_active (self->default_check, source == default_source);
+  gtk_check_button_set_active (self->default_check, source == default_source);
   gtk_widget_set_visible (GTK_WIDGET (self->default_check), !gcal_calendar_is_read_only (calendar));
   gtk_widget_set_visible (self->remove_button, e_source_get_removable (source));
 }
@@ -214,10 +214,10 @@ update_calendar (GcalEditCalendarPage *self)
   manager = gcal_context_get_manager (self->context);
   gtk_color_chooser_get_rgba (self->calendar_color_button, &color);
 
-  gcal_calendar_set_name (self->calendar, gtk_entry_get_text (self->name_entry));
+  gcal_calendar_set_name (self->calendar, gtk_editable_get_text (GTK_EDITABLE (self->name_entry)));
   gcal_calendar_set_color (self->calendar, &color);
 
-  if (gtk_toggle_button_get_active (self->default_check))
+  if (gtk_check_button_get_active (self->default_check))
     gcal_manager_set_default_calendar (manager, self->calendar);
 
   GCAL_EXIT;
