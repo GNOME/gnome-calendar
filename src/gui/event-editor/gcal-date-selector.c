@@ -59,7 +59,7 @@ update_text (GcalDateSelector *self)
   /* rebuild the date label */
   label = g_date_time_format (date, "%x");
 
-  gtk_entry_set_text (GTK_ENTRY (self), label);
+  gtk_editable_set_text (GTK_EDITABLE (self), label);
   g_free (label);
 }
 
@@ -78,7 +78,7 @@ parse_date (GcalDateSelector *self)
   GDate parsed_date;
 
   g_date_clear (&parsed_date, 1);
-  g_date_set_parse (&parsed_date, gtk_entry_get_text (GTK_ENTRY (self)));
+  g_date_set_parse (&parsed_date, gtk_editable_get_text (GTK_EDITABLE (self)));
 
   if (!g_date_valid (&parsed_date))
     {
@@ -105,20 +105,64 @@ icon_pressed_cb (GcalDateSelector     *self,
 
   gtk_entry_get_icon_area (GTK_ENTRY (self), position, &icon_bounds);
 
-  gtk_popover_set_relative_to (GTK_POPOVER (self->date_selector_popover), GTK_WIDGET (self));
   gtk_popover_set_pointing_to (GTK_POPOVER (self->date_selector_popover), &icon_bounds);
 
-  gtk_widget_show (self->date_selector_popover);
+  gtk_popover_popup (GTK_POPOVER (self->date_selector_popover));
 }
 
 static void
-gcal_date_selector_finalize (GObject *object)
+on_contains_focus_changed_cb (GtkEventControllerFocus *focus_controller,
+                              GParamSpec              *pspec,
+                              GcalDateSelector        *self)
+{
+  parse_date (self);
+}
+
+/*
+ * GtkWidget overrides
+ */
+
+static gboolean
+gcal_date_selector_focus (GtkWidget        *widget,
+                          GtkDirectionType  direction)
+{
+  GcalDateSelector *self= GCAL_DATE_SELECTOR (widget);
+
+  if (gtk_widget_get_visible (self->date_selector_popover))
+    return gtk_widget_child_focus (self->date_selector_popover, direction);
+  else
+    return GTK_WIDGET_CLASS (gcal_date_selector_parent_class)->focus (widget, direction);
+}
+
+static void
+gcal_date_selector_size_allocate (GtkWidget *widget,
+                                  gint       width,
+                                  gint       height,
+                                  gint       baseline)
+{
+  GcalDateSelector *self= GCAL_DATE_SELECTOR (widget);
+
+  GTK_WIDGET_CLASS (gcal_date_selector_parent_class)->size_allocate (widget,
+                                                                     width,
+                                                                     height,
+                                                                     baseline);
+
+  gtk_popover_present (GTK_POPOVER (self->date_selector_popover));
+}
+
+/*
+ * GObject overrides
+ */
+
+static void
+gcal_date_selector_dispose (GObject *object)
 {
   GcalDateSelector *self = GCAL_DATE_SELECTOR (object);
 
+  g_clear_pointer (&self->date_selector_popover, gtk_widget_unparent);
   g_clear_object (&self->settings);
 
-  G_OBJECT_CLASS (gcal_date_selector_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gcal_date_selector_parent_class)->dispose (object);
 }
 
 static void
@@ -159,24 +203,6 @@ gcal_date_selector_set_property (GObject      *object,
     }
 }
 
-static gboolean
-gcal_date_selector_focus_in_event (GtkWidget     *widget,
-                                   GdkEventFocus *event)
-{
-  parse_date (GCAL_DATE_SELECTOR (widget));
-
-  return GTK_WIDGET_CLASS (gcal_date_selector_parent_class)->focus_in_event (widget, event);
-}
-
-static gboolean
-gcal_date_selector_focus_out_event (GtkWidget     *widget,
-                                    GdkEventFocus *event)
-{
-  parse_date (GCAL_DATE_SELECTOR (widget));
-
-  return GTK_WIDGET_CLASS (gcal_date_selector_parent_class)->focus_out_event (widget, event);
-}
-
 static void
 gcal_date_selector_activate (GtkEntry *entry)
 {
@@ -192,12 +218,12 @@ gcal_date_selector_class_init (GcalDateSelectorClass *klass)
 
   g_type_ensure (GCAL_TYPE_DATE_CHOOSER);
 
-  object_class->finalize = gcal_date_selector_finalize;
+  object_class->dispose = gcal_date_selector_dispose;
   object_class->get_property = gcal_date_selector_get_property;
   object_class->set_property = gcal_date_selector_set_property;
 
-  widget_class->focus_in_event = gcal_date_selector_focus_in_event;
-  widget_class->focus_out_event = gcal_date_selector_focus_out_event;
+  widget_class->focus = gcal_date_selector_focus;
+  widget_class->size_allocate = gcal_date_selector_size_allocate;
 
   entry_class->activate = gcal_date_selector_activate;
 
@@ -221,13 +247,12 @@ gcal_date_selector_class_init (GcalDateSelectorClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, calendar_day_selected);
   gtk_widget_class_bind_template_callback (widget_class, icon_pressed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_contains_focus_changed_cb);
 }
 
 static void
 gcal_date_selector_init (GcalDateSelector *self)
 {
-  gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
-
   gtk_widget_init_template (GTK_WIDGET (self));
 
   self->settings = g_settings_new ("org.gnome.desktop.calendar");

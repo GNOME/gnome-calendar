@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="3.12"/>
   <template class="GcalDateSelector" parent="GtkEntry">
-    <property name="visible">True</property>
     <property name="width-chars">11</property>
     <property name="max-width-chars">11</property>
     <property name="secondary-icon-name">pan-down-symbolic</property>
     <property name="input-hints">no-emoji</property>
     <signal name="icon-press" handler="icon_pressed_cb" object="GcalDateSelector" swapped="no"/>
-  </template>
-  <object class="GtkPopover" id="date_selector_popover">
-    <property name="position">bottom</property>
-    <property name="border_width">12</property>
+
     <child>
-      <object class="GcalDateChooser" id="date_chooser">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="show_week_numbers">True</property>
-        <signal name="day-selected" handler="calendar_day_selected" object="GcalDateSelector" swapped="yes"/>
+      <object class="GtkEventControllerFocus">
+        <signal name="notify::contains-focus" handler="on_contains_focus_changed_cb" object="GcalDateSelector" swapped="no" />
       </object>
     </child>
-  </object>
+
+    <child>
+      <object class="GtkPopover" id="date_selector_popover">
+        <property name="position">bottom</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">12</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <child>
+          <object class="GcalDateChooser" id="date_chooser">
+            <property name="show_week_numbers">True</property>
+            <signal name="day-selected" handler="calendar_day_selected" object="GcalDateSelector" swapped="yes"/>
+          </object>
+        </child>
+      </object>
+    </child>
+
+  </template>
 </interface>
