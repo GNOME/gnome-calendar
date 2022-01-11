@@ -70,9 +70,9 @@ static GtkWidget*
 make_calendar_row (GcalCalendarsPage *self,
                    GcalCalendar      *calendar)
 {
+  g_autoptr (GdkPaintable) color_paintable = NULL;
   g_autofree gchar *parent_name = NULL;
   g_autoptr (GtkBuilder) builder = NULL;
-  cairo_surface_t *surface;
   const GdkRGBA *color;
   GcalManager *manager;
   GtkWidget *bottom_label;
@@ -95,9 +95,9 @@ make_calendar_row (GcalCalendarsPage *self,
 
   /* source color icon */
   color = gcal_calendar_get_color (calendar);
-  surface = get_circle_surface_from_color (color, 24);
+  color_paintable = get_circle_paintable_from_color (color, 24);
   icon = GTK_WIDGET (gtk_builder_get_object (builder, "icon"));
-  gtk_image_set_from_surface (GTK_IMAGE (icon), surface);
+  gtk_image_set_from_paintable (GTK_IMAGE (icon), color_paintable);
 
   /* source name label */
   top_label = GTK_WIDGET (gtk_builder_get_object (builder, "title"));
@@ -123,8 +123,6 @@ make_calendar_row (GcalCalendarsPage *self,
   bottom_label = GTK_WIDGET (gtk_builder_get_object (builder, "subtitle"));
   gtk_label_set_label (GTK_LABEL (bottom_label), parent_name);
 
-  g_clear_pointer (&surface, cairo_surface_destroy);
-
   gtk_size_group_add_widget (self->sizegroup, row);
 
   return row;
@@ -134,16 +132,15 @@ static void
 add_calendar (GcalCalendarsPage *self,
               GcalCalendar      *calendar)
 {
-  g_autoptr (GList) children = NULL;
+  GtkWidget *child;
   GtkWidget *row;
   ESource *source;
-  GList *l;
 
-  children = gtk_container_get_children (GTK_CONTAINER (self->listbox));
-
-  for (l = children; l; l = l->next)
+  for (child = gtk_widget_get_first_child (GTK_WIDGET (self->listbox));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
     {
-      if (g_object_get_data (l->data, "calendar") == calendar)
+      if (g_object_get_data (G_OBJECT (child), "calendar") == calendar)
         return;
     }
 
@@ -152,7 +149,7 @@ add_calendar (GcalCalendarsPage *self,
   row = make_calendar_row (self, calendar);
   g_object_set_data (G_OBJECT (row), "source", source);
   g_object_set_data (G_OBJECT (row), "calendar", calendar);
-  gtk_container_add (GTK_CONTAINER (self->listbox), row);
+  gtk_list_box_append (self->listbox, row);
 }
 
 
@@ -160,18 +157,17 @@ static void
 remove_calendar (GcalCalendarsPage *self,
                  GcalCalendar      *calendar)
 {
-  g_autoptr (GList) children = NULL;
-  GList *aux;
+  GtkWidget *child;
 
-  children = gtk_container_get_children (GTK_CONTAINER (self->listbox));
-
-  for (aux = children; aux != NULL; aux = aux->next)
+  for (child = gtk_widget_get_first_child (GTK_WIDGET (self->listbox));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
     {
-      GcalCalendar *row_calendar = g_object_get_data (G_OBJECT (aux->data), "calendar");
+      GcalCalendar *row_calendar = g_object_get_data (G_OBJECT (child), "calendar");
 
       if (row_calendar && row_calendar == calendar)
         {
-          gtk_widget_destroy (aux->data);
+          gtk_list_box_remove (self->listbox, child);
           break;
         }
     }
@@ -269,13 +265,12 @@ on_calendar_color_changed_cb (GcalCalendar *calendar,
                               GParamSpec   *pspec,
                               GtkImage     *icon)
 {
-  cairo_surface_t *surface;
+  g_autoptr (GdkPaintable) color_paintable = NULL;
   const GdkRGBA *color;
 
   color = gcal_calendar_get_color (calendar);
-  surface = get_circle_surface_from_color (color, 24);
-  gtk_image_set_from_surface (GTK_IMAGE (icon), surface);
-  g_clear_pointer (&surface, cairo_surface_destroy);
+  color_paintable = get_circle_paintable_from_color (color, 24);
+  gtk_image_set_from_paintable (GTK_IMAGE (icon), color_paintable);
 }
 
 static void

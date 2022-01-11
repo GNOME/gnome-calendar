@@ -132,39 +132,27 @@ gcal_get_month_name (gint i)
 }
 
 /**
- * gcal_get_surface_from_color:
+ * gcal_get_paintable_from_color:
  * @color: a #GdkRGBA
  * @size: the size of the surface
  *
  * Creates a squared surface filled with @color. The
  * surface is always @size x @size.
  *
- * Returns: (transfer full): a #cairo_surface_t
+ * Returns: (transfer full): a #GdkPaintable
  */
-cairo_surface_t*
-gcal_get_surface_from_color (const GdkRGBA *color,
-                             gint           size)
+GdkPaintable*
+gcal_get_paintable_from_color (const GdkRGBA *color,
+                               gint           size)
 {
-  cairo_surface_t *surface;
-  cairo_t *cr;
+  g_autoptr (GtkSnapshot) snapshot = gtk_snapshot_new ();
 
-  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, size, size);
-  cr = cairo_create (surface);
-
-  cairo_set_source_rgba (cr,
-                         color->red,
-                         color->green,
-                         color->blue,
-                         color->alpha);
-  cairo_rectangle (cr, 0, 0, size, size);
-  cairo_fill (cr);
-  cairo_destroy (cr);
-
-  return surface;
+  gtk_snapshot_append_color (snapshot, color, &GRAPHENE_RECT_INIT (0, 0, size, size));
+  return gtk_snapshot_to_paintable (snapshot, &GRAPHENE_SIZE_INIT (size, size));
 }
 
 /**
- * get_circle_surface_from_color:
+ * get_circle_paintable_from_color:
  * @color: a #GdkRGBA
  * @size: the size of the surface
  *
@@ -173,26 +161,25 @@ gcal_get_surface_from_color (const GdkRGBA *color,
  *
  * Returns: (transfer full): a #cairo_surface_t
  */
-cairo_surface_t*
-get_circle_surface_from_color (const GdkRGBA *color,
-                               gint           size)
+GdkPaintable*
+get_circle_paintable_from_color (const GdkRGBA *color,
+                                 gint           size)
 {
-  cairo_surface_t *surface;
-  cairo_t *cr;
+  g_autoptr (GtkSnapshot) snapshot = NULL;
+  GskRoundedRect rect;
 
-  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, size, size);
-  cr = cairo_create (surface);
+  snapshot = gtk_snapshot_new ();
 
-  cairo_set_source_rgba (cr,
-                         color->red,
-                         color->green,
-                         color->blue,
-                         color->alpha);
-  cairo_arc (cr, size / 2.0, size / 2.0, size / 2.0, 0., 2 * M_PI);
-  cairo_fill (cr);
-  cairo_destroy (cr);
+  gtk_snapshot_push_rounded_clip (snapshot,
+                                  gsk_rounded_rect_init_from_rect (&rect,
+                                                                   &GRAPHENE_RECT_INIT (0, 0, size, size),
+                                                                   size / 2.0));
 
-  return surface;
+  gtk_snapshot_append_color (snapshot, color, &GRAPHENE_RECT_INIT (0, 0, size, size));
+
+  gtk_snapshot_pop (snapshot);
+
+  return gtk_snapshot_to_paintable (snapshot, &GRAPHENE_SIZE_INIT (size, size));
 }
 
 /**
