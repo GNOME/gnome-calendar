@@ -15,7 +15,6 @@
         "--socket=wayland",
         "--system-talk-name=org.freedesktop.login1",
         "--system-talk-name=org.freedesktop.timedate1",
-        "--system-talk-name=org.freedesktop.GeoClue2",
         "--talk-name=org.gnome.ControlCenter",
         "--talk-name=org.gnome.evolution.dataserver.AddressBook9",
         "--talk-name=org.gnome.evolution.dataserver.Calendar8",
@@ -39,6 +38,22 @@
         "*.a"
     ],
     "modules" : [
+        {
+            "name": "libgeoclue",
+            "buildsystem": "meson",
+            "config-opts" : [
+                "-Denable-backend=false",
+                "-Dlibgeoclue=true",
+                "-Dintrospection=true",
+                "-Dgtk-doc=false"
+            ],
+            "sources": [
+                {
+                    "type" : "git",
+                    "url": "https://gitlab.freedesktop.org/geoclue/geoclue.git"
+                }
+            ]
+        },
         {
             "name" : "geocode-glib",
             "buildsystem" : "meson",

@@ -762,13 +762,14 @@ on_gclue_simple_creation_cb (GClueSimple        *_source,
                                self,
                                0);
     }
-
-  g_signal_connect_object (client,
-                           "notify::active",
-                           G_CALLBACK (on_gclue_client_activity_changed_cb),
-                           self,
-                           0);
-
+  if (client)
+    {
+      g_signal_connect_object (client,
+                               "notify::active",
+                               G_CALLBACK (on_gclue_client_activity_changed_cb),
+                               self,
+                               0);
+    }
   GCAL_EXIT;
 }
 
@@ -1141,6 +1142,7 @@ void
 gcal_weather_service_stop (GcalWeatherService *self)
 {
   GCAL_ENTRY;
+  GClueClient *client;
 
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
@@ -1162,11 +1164,14 @@ gcal_weather_service_stop (GcalWeatherService *self)
     }
   else
     {
-      gclue_client_call_stop (gclue_simple_get_client (self->location_service),
-                              self->location_cancellable,
-                              (GAsyncReadyCallback) on_gclue_client_stopped_cb,
-                              self->location_service);
-
+      client = gclue_simple_get_client (self->location_service);
+      if (client)
+        {
+          gclue_client_call_stop (client,
+                                  self->location_cancellable,
+                                  (GAsyncReadyCallback) on_gclue_client_stopped_cb,
+                                  self->location_service);
+        }
       self->location_service = NULL;
     }
 
