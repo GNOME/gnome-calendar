@@ -20,13 +20,13 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
+#include <adwaita.h>
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_MEETING_ROW (gcal_meeting_row_get_type())
 
-G_DECLARE_FINAL_TYPE (GcalMeetingRow, gcal_meeting_row, GCAL, MEETING_ROW, GtkListBoxRow)
+G_DECLARE_FINAL_TYPE (GcalMeetingRow, gcal_meeting_row, GCAL, MEETING_ROW, AdwActionRow)
 
 GtkWidget*           gcal_meeting_row_new                        (const gchar        *url);
 
