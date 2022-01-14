@@ -103,7 +103,7 @@ on_output (GtkWidget        *widget,
   adjustment = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (widget));
   value = (gint) gtk_adjustment_get_value (adjustment);
   text = g_strdup_printf ("%02d", value);
-  gtk_entry_set_text (GTK_ENTRY (widget), text);
+  gtk_editable_set_text (GTK_EDITABLE (widget), text);
 
   g_free (text);
 
