@@ -710,64 +710,53 @@ fix_popover_menu_icons (GtkPopover *popover)
   GtkWidget *popover_stack;
   GtkWidget *menu_section;
   GtkWidget *menu_section_box;
-  GList *stack_children;
-  GList *menu_section_children;
-  GList *menu_section_box_children, *aux;
+  GtkWidget *widget;
+  GtkWidget *child;
 
-  popover_stack = gtk_bin_get_child (GTK_BIN (popover));
-  stack_children = gtk_container_get_children (GTK_CONTAINER (popover_stack));
+  /* GtkScrolledWindow */
+  widget = gtk_popover_get_child (GTK_POPOVER (popover));
 
-  /**
-   * At the moment, the popover stack surely contains only
-   * one child of type GtkMenuSectionBox, which contains
-   * a single GtkBox.
-   */
-  menu_section = stack_children->data;
-  menu_section_children = gtk_container_get_children (GTK_CONTAINER (menu_section));
+  /* GtkViewport */
+  widget = gtk_scrolled_window_get_child (GTK_SCROLLED_WINDOW (widget));
+
+  /* GtkStack */
+  popover_stack = gtk_viewport_get_child (GTK_VIEWPORT (widget));
+
+  menu_section = gtk_widget_get_first_child (popover_stack);
 
 	/**
 	 * Get the unique box's children.
 	 */
-  menu_section_box = menu_section_children->data;
-  menu_section_box_children = gtk_container_get_children (GTK_CONTAINER (menu_section_box));
+  menu_section_box = gtk_widget_get_first_child (menu_section);
 
-  gtk_style_context_add_class (gtk_widget_get_style_context (menu_section_box), "calendars-list");
+  gtk_widget_add_css_class (menu_section_box, "calendars-list");
 
   /**
    * Iterate through the GtkModelButtons inside the menu section box.
    */
-  for (aux = menu_section_box_children; aux != NULL; aux = aux->next)
+  for (child = gtk_widget_get_first_child (menu_section_box);
+       child;
+       child = gtk_widget_get_next_sibling (child))
     {
-      GtkWidget *button_box;
-      GList *button_box_children, *aux2;
-
-      button_box = gtk_bin_get_child (GTK_BIN (aux->data));
-      button_box_children = gtk_container_get_children (GTK_CONTAINER (button_box));
+      GtkWidget *child2;
 
       /**
        * Since there is no guarantee that the first child is
        * the GtkImage we're looking for, we have to iterate
        * through the children and check if the types match.
        */
-      for (aux2 = button_box_children; aux2 != NULL; aux2 = aux2->next)
+      for (child2 = gtk_widget_get_first_child (child);
+           child2;
+           child2 = gtk_widget_get_next_sibling (child2))
         {
-          GtkWidget *button_box_child;
-          button_box_child = aux2->data;
-
-          if (g_type_is_a (G_OBJECT_TYPE (button_box_child), GTK_TYPE_IMAGE))
+          if (GTK_IS_IMAGE (child2))
             {
-              gtk_style_context_add_class (gtk_widget_get_style_context (button_box_child), "calendar-color-image");
-              gtk_widget_show (button_box_child);
+              gtk_widget_add_css_class (child2, "calendar-color-image");
+              gtk_widget_show (child2);
               break;
             }
         }
-
-      g_list_free (button_box_children);
     }
-
-  g_list_free (stack_children);
-  g_list_free (menu_section_children);
-  g_list_free (menu_section_box_children);
 }
 
 /**
@@ -952,6 +941,14 @@ is_source_enabled (ESource *source)
   return e_source_selectable_get_selected (selectable);
 }
 
+static void
+on_dialog_response_cb (GtkDialog *dialog,
+                       gint       response,
+                       gint      *out_response)
+{
+  *out_response = response;
+}
+
 /**
  * ask_recurrence_modification_type:
  * @parent: a #GtkWidget
@@ -976,12 +973,12 @@ ask_recurrence_modification_type (GtkWidget             *parent,
   ECalClient *client;
   GtkWidget *dialog;
   gboolean is_set;
-  gint result;
+  gint result = 0;
 
   flags = GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT;
   *modtype = GCAL_RECURRENCE_MOD_THIS_ONLY;
 
-  dialog = gtk_message_dialog_new (GTK_WINDOW (gtk_widget_get_toplevel (parent)),
+  dialog = gtk_message_dialog_new (GTK_WINDOW (gtk_widget_get_native (parent)),
                                    flags,
                                    GTK_MESSAGE_QUESTION,
                                    GTK_BUTTONS_NONE,
@@ -1000,10 +997,13 @@ ask_recurrence_modification_type (GtkWidget             *parent,
     gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Subsequent events"), GTK_RESPONSE_OK);
 
   gtk_dialog_add_button (GTK_DIALOG (dialog), _("_All events"), GTK_RESPONSE_YES);
+  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gtk_widget_get_native (parent)));
+  g_signal_connect (dialog, "response", G_CALLBACK (on_dialog_response_cb), &result);
 
-  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gtk_widget_get_toplevel (parent)));
+  gtk_window_present (GTK_WINDOW (dialog));
 
-  result = gtk_dialog_run (GTK_DIALOG (dialog));
+  while (result == 0)
+    g_main_context_iteration (NULL, TRUE);
 
   switch (result)
     {
@@ -1027,7 +1027,7 @@ ask_recurrence_modification_type (GtkWidget             *parent,
         break;
     }
 
-  gtk_widget_destroy (GTK_WIDGET (dialog));
+  gtk_window_destroy (GTK_WINDOW (dialog));
 
   return is_set;
 }

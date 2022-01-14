@@ -1,37 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GcalEventEditorDialog" parent="GtkDialog">
-    <property name="can_focus">False</property>
     <property name="modal">True</property>
     <property name="default-width">450</property>
     <property name="default-height">500</property>
-    <property name="window_position">center-on-parent</property>
     <property name="use_header_bar">1</property>
     <property name="destroy_with_parent">True</property>
-    <property name="type_hint">dialog</property>
+    <property name="hide-on-close">True</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="titlebar">
-        <property name="visible">True</property>
+        <property name="show-title-buttons">False</property>
         <child>
           <object class="GtkButton" id="cancel_button">
             <property name="label" translatable="yes">Cancel</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
             <signal name="clicked" handler="on_cancel_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
           </object>
         </child>
         <child>
           <object class="GtkImage" id="lock">
-            <property name="visible" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|invert-boolean" />
+            <property name="visible" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|invert-boolean|sync-create" />
             <property name="icon_name">changes-prevent-symbolic</property>
-            <property name="icon_size">1</property>
           </object>
         </child>
         <child type="title">
           <object class="GtkMenuButton" id="sources_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
             <property name="popover">sources_popover</property>
             <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
             <property name="tooltip-text" translatable="yes">Click to select the calendar</property>
@@ -41,19 +33,13 @@
             </style>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkBox" id="title_label_box">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
                     <property name="valign">center</property>
                     <child>
                       <object class="GtkLabel" id="title_label">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="ellipsize">middle</property>
                         <property name="max_width_chars">40</property>
                         <style>
@@ -63,14 +49,10 @@
                     </child>
                     <child>
                       <object class="GtkBox" id="subtitle_box">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="orientation">horizontal</property>
                         <property name="halign">center</property>
                         <child>
                           <object class="GtkImage" id="source_image">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
                             <style>
                               <class name="calendar-color-image"/>
                             </style>
@@ -78,8 +60,6 @@
                         </child>
                         <child>
                           <object class="GtkLabel" id="subtitle_label">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
                             <style>
                               <class name="subtitle"/>
                             </style>
@@ -94,8 +74,6 @@
                 </child>
                 <child>
                   <object class="GtkImage" id="pan_down_image">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <property name="icon_name">pan-down-symbolic</property>
                   </object>
                 </child>
@@ -103,40 +81,28 @@
             </child>
           </object>
         </child>
-        <child>
+        <child type="end">
           <object class="GtkButton" id="done_button">
             <property name="label" translatable="yes">Done</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
             <signal name="clicked" handler="on_done_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
             <style>
               <class name="suggested-action"/>
             </style>
           </object>
-          <packing>
-            <property name="pack_type">end</property>
-          </packing>
         </child>
       </object>
     </child>
-    <child internal-child="vbox">
-      <object class="GtkBox" id="dialog-vbox">
-        <property name="visible">true</property>
-        <property name="spacing">0</property>
-        <property name="border_width">0</property>
+    <child>
+      <object class="GtkBox">
         <child>
-          <object class="HdyPreferencesPage">
-            <property name="visible">True</property>
+          <object class="AdwPreferencesPage">
             <property name="vexpand">True</property>
 
             <!-- Summary -->
             <child>
-              <object class="HdyPreferencesGroup">
-                <property name="visible">True</property>
+              <object class="AdwPreferencesGroup">
                 <child>
                   <object class="GcalSummarySection" id="summary_section">
-                    <property name="visible">True</property>
                     <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
                   </object>
                 </child>
@@ -145,12 +111,10 @@
 
             <!-- Schedule -->
             <child>
-              <object class="HdyPreferencesGroup">
-                <property name="visible">True</property>
+              <object class="AdwPreferencesGroup">
                 <property name="title" translatable="yes">Schedule</property>
                 <child>
                   <object class="GcalScheduleSection" id="schedule_section">
-                    <property name="visible">True</property>
                     <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
                   </object>
                 </child>
@@ -159,12 +123,10 @@
 
             <!-- Reminders -->
             <child>
-              <object class="HdyPreferencesGroup">
-                <property name="visible">True</property>
+              <object class="AdwPreferencesGroup">
                 <property name="title" translatable="yes">Reminders</property>
                 <child>
                   <object class="GcalRemindersSection" id="reminders_section">
-                    <property name="visible">True</property>
                     <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
                   </object>
                 </child>
@@ -173,12 +135,10 @@
 
             <!-- Notes -->
             <child>
-              <object class="HdyPreferencesGroup">
-                <property name="visible">True</property>
+              <object class="AdwPreferencesGroup">
                 <property name="title" translatable="yes">Notes</property>
                 <child>
                   <object class="GcalNotesSection" id="notes_section">
-                    <property name="visible">True</property>
                     <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
                   </object>
                 </child>
@@ -187,18 +147,14 @@
 
             <!-- Delete Button -->
             <child>
-              <object class="HdyPreferencesGroup">
-                <property name="visible">True</property>
+              <object class="AdwPreferencesGroup">
                 <child>
                   <object class="GtkButton" id="delete_button">
-                    <property name="visible">True</property>
                     <property name="halign">end</property>
-                    <property name="can_focus">True</property>
                     <signal name="clicked" handler="on_delete_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
                     <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
                     <child>
                       <object class="GtkLabel" id="delete_label">
-                        <property name="visible">True</property>
                         <property name="label" translatable="yes">Delete Event</property>
                       </object>
                     </child>
@@ -215,7 +171,7 @@
       </object>
     </child>
   </template>
-  <object class="GtkPopover" id="sources_popover">
+  <object class="GtkPopoverMenu" id="sources_popover">
   </object>
   <object class="GtkSizeGroup">
     <property name="mode">vertical</property>

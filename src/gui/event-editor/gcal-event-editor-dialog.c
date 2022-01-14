@@ -31,7 +31,6 @@
 #include "gcal-schedule-section.h"
 #include "gcal-summary-section.h"
 
-#include <dazzle.h>
 #include <libecal/libecal.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -59,7 +58,7 @@ struct _GcalEventEditorDialog
   GcalEventEditorSection *reminders_section;
   GcalEventEditorSection *schedule_section;
   GtkWidget              *sources_button;
-  GtkWidget              *sources_popover;
+  GtkPopoverMenu         *sources_popover;
   GtkWidget              *source_image;
   GtkWidget              *source_label;
   GtkWidget              *subtitle_label;
@@ -182,7 +181,8 @@ fill_sources_menu (GcalEventEditorDialog *self)
       g_menu_append_item (self->sources_menu, item);
     }
 
-  gtk_popover_bind_model (GTK_POPOVER (self->sources_popover), G_MENU_MODEL (self->sources_menu), "edit");
+  gtk_popover_menu_set_menu_model (self->sources_popover,
+                                   G_MENU_MODEL (self->sources_menu));
 
   /* HACK: show the popover menu icons */
   fix_popover_menu_icons (GTK_POPOVER (self->sources_popover));
