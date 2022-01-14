@@ -20,11 +20,11 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
+#include <adwaita.h>
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_NOTES_SECTION (gcal_notes_section_get_type())
-G_DECLARE_FINAL_TYPE (GcalNotesSection, gcal_notes_section, GCAL, NOTES_SECTION, GtkBin)
+G_DECLARE_FINAL_TYPE (GcalNotesSection, gcal_notes_section, GCAL, NOTES_SECTION, AdwBin)
 
 G_END_DECLS
