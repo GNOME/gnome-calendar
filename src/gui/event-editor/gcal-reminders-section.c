@@ -33,7 +33,7 @@ struct _GcalRemindersSection
   GtkBox              parent;
 
   GtkListBox         *alarms_listbox;
-  GtkPopover         *alarms_popover;
+  GtkWidget          *alarms_popover;
   GtkListBoxRow      *new_alarm_row;
 
   GtkWidget          *five_minutes_button;
@@ -132,16 +132,19 @@ create_alarm (guint minutes)
 static void
 clear_alarms (GcalRemindersSection *self)
 {
-  g_autoptr (GList) children = NULL;
-  GList *l;
+  GtkWidget *child;
 
   g_ptr_array_set_size (self->alarms, 0);
 
-  children = gtk_container_get_children (GTK_CONTAINER (self->alarms_listbox));
-  for (l = children; l != NULL; l = l->next)
+  child = gtk_widget_get_first_child (GTK_WIDGET (self->alarms_listbox));
+  while (child)
     {
-      if (l->data != self->new_alarm_row)
-        gtk_widget_destroy (l->data);
+      GtkWidget *next = gtk_widget_get_next_sibling (child);
+
+      if (child != GTK_WIDGET (self->new_alarm_row))
+        gtk_list_box_remove (self->alarms_listbox, child);
+
+      child = next;
     }
 }
 
@@ -201,7 +204,7 @@ setup_alarms (GcalRemindersSection *self)
 
       /* Add the row */
       row = create_alarm_row (self, alarm);
-      gtk_container_add (GTK_CONTAINER (self->alarms_listbox), row);
+      gtk_list_box_append (self->alarms_listbox, row);
     }
 
   GCAL_EXIT;
@@ -273,7 +276,7 @@ on_remove_alarm_cb (GcalAlarmRow         *alarm_row,
         }
     }
 
-  gtk_container_remove (GTK_CONTAINER (self->alarms_listbox), GTK_WIDGET (alarm_row));
+  gtk_list_box_remove (self->alarms_listbox, GTK_WIDGET (alarm_row));
 
   GCAL_EXIT;
 }
@@ -304,7 +307,7 @@ on_add_alarm_button_clicked_cb (GtkWidget            *button,
   alarm = create_alarm (minutes);
 
   row = create_alarm_row (self, alarm);
-  gtk_container_add (GTK_CONTAINER (self->alarms_listbox), row);
+  gtk_list_box_append (self->alarms_listbox, row);
 
   g_ptr_array_add (self->alarms, alarm);
 
@@ -317,7 +320,7 @@ on_alarms_listbox_row_activated_cb (GtkListBox           *alarms_listbox,
                                     GcalRemindersSection *self)
 {
   if (row == self->new_alarm_row)
-    gtk_popover_popup (self->alarms_popover);
+    gtk_popover_popup (GTK_POPOVER (self->alarms_popover));
 }
 
 
@@ -369,6 +372,16 @@ gcal_event_editor_section_iface_init (GcalEventEditorSectionInterface *iface)
 /*
  * GObject overrides
  */
+
+static void
+gcal_reminders_section_dispose (GObject *object)
+{
+  GcalRemindersSection *self = (GcalRemindersSection *)object;
+
+  g_clear_pointer (&self->alarms_popover, gtk_widget_unparent);
+
+  G_OBJECT_CLASS (gcal_reminders_section_parent_class)->dispose (object);
+}
 
 static void
 gcal_reminders_section_finalize (GObject *object)
@@ -427,6 +440,7 @@ gcal_reminders_section_class_init (GcalRemindersSectionClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
+  object_class->dispose = gcal_reminders_section_dispose;
   object_class->finalize = gcal_reminders_section_finalize;
   object_class->get_property = gcal_reminders_section_get_property;
   object_class->set_property = gcal_reminders_section_set_property;
@@ -460,4 +474,5 @@ gcal_reminders_section_init (GcalRemindersSection *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 
   gtk_list_box_set_sort_func (self->alarms_listbox, sort_alarms_func, self, NULL);
+  gtk_widget_set_parent (GTK_WIDGET (self->alarms_popover), GTK_WIDGET (self->new_alarm_row));
 }
