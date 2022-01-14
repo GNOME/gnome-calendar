@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2021-08-16 21:39+0000\n"
-"PO-Revision-Date: 2021-10-08 18:52+0200\n"
+"POT-Creation-Date: 2021-10-13 17:01+0000\n"
+"PO-Revision-Date: 2022-01-14 19:01+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
+#: src/gui/gcal-application.c:206 src/gui/gcal-quick-add-popover.ui:187
 #: src/gui/gcal-window.ui:173
 msgid "Calendar"
 msgstr "Agenda"
@@ -143,7 +143,7 @@ msgstr "%1$s %2$s — %3$s %4$s"
 #: src/core/gcal-event.c:1923 src/gui/gcal-quick-add-popover.c:475
 #, c-format
 msgid "%1$s, %2$s – %3$s"
-msgstr "%1$s, de %2$s à %3$s"
+msgstr "%1$s, de %2$s a %3$s"
 
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:26
 msgid "Calendar Settings"
@@ -160,7 +160,7 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "Agenda <b>%s</b> suprimit"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:692 src/gui/gcal-window.c:696
+#: src/gui/gcal-window.c:771 src/gui/gcal-window.c:775
 msgid "Undo"
 msgstr "Anullar"
 
@@ -485,7 +485,7 @@ msgstr "Tota la jornada"
 #: src/gui/event-editor/gcal-schedule-section.ui:40
 #: src/gui/importer/gcal-import-file-row.c:152
 msgid "Starts"
-msgstr "S'àvia"
+msgstr "S'avia"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:90
 #: src/gui/importer/gcal-import-file-row.c:153
@@ -568,32 +568,32 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: src/gui/gcal-application.c:63
+#: src/gui/gcal-application.c:59
 msgid "Quit GNOME Calendar"
-msgstr "Modificar l’agenda"
+msgstr "Quitar l’agenda GNOME"
 
-#: src/gui/gcal-application.c:68
+#: src/gui/gcal-application.c:64
 msgid "Display version number"
 msgstr "Afichar lo numèro de version"
 
-#: src/gui/gcal-application.c:73
+#: src/gui/gcal-application.c:69
 msgid "Enable debug messages"
 msgstr "Activar los messatges de desbugatge"
 
-#: src/gui/gcal-application.c:78
+#: src/gui/gcal-application.c:74
 msgid "Open calendar on the passed date"
 msgstr "Dobrir l'agenda sus la data transmesa"
 
-#: src/gui/gcal-application.c:83
+#: src/gui/gcal-application.c:79
 msgid "Open calendar showing the passed event"
 msgstr "Dobrir l'agenda en afichant l'eveniment transmés"
 
-#: src/gui/gcal-application.c:234
+#: src/gui/gcal-application.c:163
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d Los autors d’Agenda"
 
-#: src/gui/gcal-application.c:288
+#: src/gui/gcal-application.c:217
 msgid "translator-credits"
 msgstr ""
 "Cédric Valmary <cvalmary@yahoo.fr>, 2016-2018\n"
@@ -916,7 +916,7 @@ msgstr "fins al %1$s %2$s"
 #: src/gui/gcal-quick-add-popover.c:359
 #, c-format
 msgid "New Event %1$s %2$s"
-msgstr "Novèl eveniment de %1$s à %2$s"
+msgstr "Novèl eveniment de %1$s a %2$s"
 
 #: src/gui/gcal-quick-add-popover.c:376
 #, c-format
@@ -1032,17 +1032,17 @@ msgstr "_Metèo"
 
 #: src/gui/gcal-weather-settings.ui:30
 msgid "Show Weather"
-msgstr "Afichar l’ajuda"
+msgstr "Afichar la metèo"
 
 #: src/gui/gcal-weather-settings.ui:53
 msgid "Automatic Location"
 msgstr "Emplaçament automatic"
 
-#: src/gui/gcal-window.c:692
+#: src/gui/gcal-window.c:771
 msgid "Another event deleted"
 msgstr "Autre eveniment suprimit"
 
-#: src/gui/gcal-window.c:696
+#: src/gui/gcal-window.c:775
 msgid "Event deleted"
 msgstr "Eveniment suprimit"
 
