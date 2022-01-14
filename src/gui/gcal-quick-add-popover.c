@@ -88,7 +88,7 @@ create_calendar_row (GcalManager  *manager,
   paintable = get_circle_paintable_from_color (color, 16);
   icon = gtk_image_new_from_paintable (paintable);
 
-  gtk_container_add (GTK_CONTAINER (box), icon);
+  gtk_box_append (GTK_BOX (box), icon);
 
   gtk_style_context_add_class (gtk_widget_get_style_context (icon), "calendar-color-image");
 
@@ -96,11 +96,12 @@ create_calendar_row (GcalManager  *manager,
   label = gtk_label_new (gcal_calendar_get_name (calendar));
   gtk_widget_set_margin_end (label, 12);
 
-  gtk_container_add (GTK_CONTAINER (box), label);
+  gtk_box_append (GTK_BOX (box), label);
 
   /* Selected icon */
-  selected_icon = gtk_image_new_from_icon_name ("emblem-ok-symbolic", GTK_ICON_SIZE_BUTTON);
-  gtk_container_add (GTK_CONTAINER (box), selected_icon);
+  selected_icon = gtk_image_new_from_icon_name ("emblem-ok-symbolic");
+  gtk_widget_hide (selected_icon);
+  gtk_box_append (GTK_BOX (box), selected_icon);
 
   /* The row itself */
   row = gtk_list_box_row_new ();
@@ -108,7 +109,7 @@ create_calendar_row (GcalManager  *manager,
   read_only = gcal_calendar_is_read_only (calendar);
   gtk_widget_set_sensitive (row, !read_only);
 
-  gtk_container_add (GTK_CONTAINER (row), box);
+  gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), box);
 
   /* Setup also a cool tooltip */
   get_source_parent_name_color (manager, gcal_calendar_get_source (calendar), &parent_name, NULL);
@@ -130,11 +131,6 @@ create_calendar_row (GcalManager  *manager,
   g_object_set_data (G_OBJECT (row), "color-icon", icon);
   g_object_set_data (G_OBJECT (row), "name-label", label);
 
-  gtk_widget_show (label);
-  gtk_widget_show (icon);
-  gtk_widget_show (box);
-  gtk_widget_show (row);
-
   g_free (parent_name);
   g_free (tooltip);
 
@@ -149,26 +145,19 @@ static GtkWidget*
 get_row_for_calendar (GcalQuickAddPopover *self,
                       GcalCalendar        *calendar)
 {
-  GList *children, *l;
   GtkWidget *row;
 
-  row = NULL;
-  children = gtk_container_get_children (GTK_CONTAINER (self->calendars_listbox));
-
-  for (l = children; l != NULL; l = g_list_next (l))
+  for (row = gtk_widget_get_first_child (self->calendars_listbox);
+       row;
+       row = gtk_widget_get_next_sibling (row))
     {
-      GcalCalendar *row_calendar = g_object_get_data (l->data, "calendar");
+      GcalCalendar *row_calendar = g_object_get_data (G_OBJECT (row), "calendar");
 
       if (row_calendar == calendar)
-        {
-          row = l->data;
-          break;
-        }
+        return row;
     }
 
-  g_list_free (children);
-
-  return row;
+  return NULL;
 }
 
 static void
@@ -521,9 +510,9 @@ on_calendar_added (GcalManager         *manager,
   default_calendar = gcal_manager_get_default_calendar (manager);
   row = create_calendar_row (manager, calendar);
 
-  gtk_container_add (GTK_CONTAINER (self->calendars_listbox), row);
+  gtk_list_box_append (GTK_LIST_BOX (self->calendars_listbox), row);
 
-  /* Select the default source whe first adding events */
+  /* Select the default source when first adding events */
   if (calendar == default_calendar && !self->selected_row)
     select_row (self, GTK_LIST_BOX_ROW (row));
 }
@@ -545,7 +534,7 @@ on_calendar_changed (GcalManager         *manager,
   if (read_only)
     {
       if (row)
-        gtk_container_remove (GTK_CONTAINER (self->calendars_listbox), row);
+        gtk_list_box_remove (GTK_LIST_BOX (self->calendars_listbox), row);
 
       return;
     }
@@ -592,7 +581,7 @@ on_calendar_removed (GcalManager         *manager,
   if (!row)
     return;
 
-  gtk_container_remove (GTK_CONTAINER (self->calendars_listbox), row);
+  gtk_list_box_remove (GTK_LIST_BOX (self->calendars_listbox), row);
 }
 
 /* Sort the calendars by their display name */
@@ -682,7 +671,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
 
   /* Gather the summary */
   if (gtk_entry_get_text_length (GTK_ENTRY (self->summary_entry)) > 0)
-    summary = gtk_entry_get_text (GTK_ENTRY (self->summary_entry));
+    summary = gtk_editable_get_text (GTK_EDITABLE (self->summary_entry));
   else
     summary = _("Unnamed event");
 
@@ -825,7 +814,7 @@ gcal_quick_add_popover_closed (GtkPopover *popover)
   self = GCAL_QUICK_ADD_POPOVER (popover);
 
   /* Clear text */
-  gtk_entry_set_text (GTK_ENTRY (self->summary_entry), "");
+  gtk_editable_set_text (GTK_EDITABLE (self->summary_entry), "");
 
   /* Select the default row again */
   update_default_calendar_row (self);
@@ -852,7 +841,7 @@ gcal_quick_add_popover_class_init (GcalQuickAddPopoverClass *klass)
    * @self: a #GcalQuickAddPopover
    * @event: the new #GcalEvent
    *
-   * Emited when the user clicks 'Edit event' button.
+   * Emitted when the user clicks 'Edit event' button.
    */
   signals[EDIT_EVENT] = g_signal_new ("edit-event",
                                       GCAL_TYPE_QUICK_ADD_POPOVER,
