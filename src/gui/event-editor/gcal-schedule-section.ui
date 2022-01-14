@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GcalScheduleSection" parent="GtkBox">
-    <property name="can_focus">False</property>
     <property name="orientation">vertical</property>
 
     <child>
       <object class="GtkListBox">
-        <property name="visible">True</property>
         <property name="selection-mode">none</property>
 
         <style>
-          <class name="content" />
+          <class name="boxed-list" />
         </style>
 
         <!-- All Day -->
         <child>
-          <object class="HdyActionRow">
-            <property name="visible">True</property>
+          <object class="AdwActionRow">
             <property name="title" translatable="yes">All Day</property>
             <property name="activatable-widget">all_day_switch</property>
 
             <child>
               <object class="GtkSwitch" id="all_day_switch">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
                 <property name="valign">center</property>
                 <property name="halign">end</property>
                 <signal name="notify::active" handler="on_all_day_switch_active_changed_cb" object="GcalScheduleSection" swapped="no"/>
@@ -35,14 +30,11 @@
 
         <!-- Start -->
         <child>
-          <object class="HdyExpanderRow">
-            <property name="visible">True</property>
+          <object class="AdwExpanderRow">
             <property name="title" translatable="yes">Starts</property>
 
             <child type="action">
               <object class="GtkLabel" id="event_start_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="xalign">1.0</property>
                 <style>
                   <class name="dim-label" />
@@ -52,27 +44,23 @@
 
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="hexpand">True</property>
                 <property name="halign">center</property>
-                <property name="margin">12</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
                 <property name="spacing">6</property>
 
                 <child>
                   <object class="GcalDateSelector" id="start_date_selector">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
                     <property name="valign">center</property>
-                    <property name="input-hints">no-emoji</property>
                     <signal name="notify::date" handler="sync_datetimes" object="GcalScheduleSection" swapped="yes" />
                   </object>
                 </child>
 
                 <child>
                   <object class="GcalTimeSelector" id="start_time_selector">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
                     <signal name="notify::time" handler="sync_datetimes" object="GcalScheduleSection" swapped="yes" />
                   </object>
                 </child>
@@ -85,14 +73,11 @@
 
         <!-- End -->
         <child>
-          <object class="HdyExpanderRow">
-            <property name="visible">True</property>
+          <object class="AdwExpanderRow">
             <property name="title" translatable="yes">Ends</property>
 
             <child type="action">
               <object class="GtkLabel" id="event_end_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="xalign">1.0</property>
                 <style>
                   <class name="dim-label" />
@@ -102,27 +87,23 @@
 
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="hexpand">True</property>
                 <property name="halign">center</property>
-                <property name="margin">12</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
                 <property name="spacing">6</property>
 
                 <child>
                   <object class="GcalDateSelector" id="end_date_selector">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
                     <property name="valign">center</property>
-                    <property name="input-hints">no-emoji</property>
                     <signal name="notify::date" handler="sync_datetimes" object="GcalScheduleSection" swapped="yes" />
                   </object>
                 </child>
 
                 <child>
                   <object class="GcalTimeSelector" id="end_time_selector">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
                     <signal name="notify::time" handler="sync_datetimes" object="GcalScheduleSection" swapped="yes" />
                   </object>
                 </child>
@@ -135,15 +116,12 @@
 
         <!-- Repeat -->
         <child>
-          <object class="HdyActionRow">
-            <property name="visible">True</property>
+          <object class="AdwActionRow">
             <property name="title" translatable="yes">Repeat</property>
             <property name="activatable-widget">repeat_combo</property>
 
             <child>
               <object class="GtkComboBoxText" id="repeat_combo">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="valign">center</property>
                 <signal name="changed" handler="on_repeat_type_changed_cb" object="GcalScheduleSection" swapped="no"/>
                 <items>
@@ -163,15 +141,13 @@
 
         <!-- End Repeat -->
         <child>
-          <object class="HdyActionRow">
+          <object class="AdwActionRow">
             <property name="visible" bind-source="repeat_duration_combo" bind-property="visible" bind-flags="default" />
             <property name="title" translatable="yes">End Repeat</property>
             <property name="activatable-widget">repeat_combo</property>
 
             <child>
               <object class="GtkComboBoxText" id="repeat_duration_combo">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="valign">center</property>
                 <signal name="changed" handler="on_repeat_duration_changed_cb" object="GcalScheduleSection" swapped="no"/>
                 <items>
@@ -188,17 +164,16 @@
 
         <!-- Number of Occurrences -->
         <child>
-          <object class="HdyActionRow">
-            <property name="visible" bind-source="number_of_occurrences_spin" bind-property="visible" bind-flags="default" />
+          <object class="AdwActionRow">
+            <property name="visible" bind-source="number_of_occurrences_spin" bind-property="visible" bind-flags="default|sync-create" />
             <property name="title" translatable="yes">Number of Occurrences</property>
             <property name="activatable-widget">number_of_occurrences_spin</property>
 
             <child>
               <object class = "GtkSpinButton" id="number_of_occurrences_spin">
+                <property name="visible">False</property>
                 <property name="numeric">True</property>
                 <property name="adjustment">number_of_occurrences_adjustment</property>
-                <property name="input_purpose">number</property>
-                <property name="input-hints">no-emoji</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -208,13 +183,14 @@
 
         <!-- End Repeat Date -->
         <child>
-          <object class="HdyActionRow">
-            <property name="visible" bind-source="until_date_selector" bind-property="visible" bind-flags="default" />
+          <object class="AdwActionRow">
+            <property name="visible" bind-source="until_date_selector" bind-property="visible" bind-flags="default|sync-create" />
             <property name="title" translatable="yes">End Repeat Date</property>
             <property name="activatable-widget">until_date_selector</property>
 
             <child>
               <object class = "GcalDateSelector" id="until_date_selector">
+                <property name="visible">False</property>
                 <property name="valign">center</property>
               </object>
             </child>
