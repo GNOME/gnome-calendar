@@ -59,9 +59,9 @@ static GParamSpec *properties [N_PROPS];
 static GtkWidget*
 make_calendar_row (GcalCalendar *calendar)
 {
+  g_autoptr (GdkPaintable) paintable = NULL;
   GtkWidget *label, *icon, *checkbox, *box, *row;
   GtkStyleContext *context;
-  cairo_surface_t *surface;
   const GdkRGBA *color;
 
   row = gtk_list_box_row_new ();
@@ -78,8 +78,8 @@ make_calendar_row (GcalCalendar *calendar)
 
   /* source color icon */
   color = gcal_calendar_get_color (calendar);
-  surface = get_circle_surface_from_color (color, 16);
-  icon = gtk_image_new_from_surface (surface);
+  paintable = get_circle_paintable_from_color (color, 16);
+  icon = gtk_image_new_from_paintable (paintable);
 
   gtk_style_context_add_class (gtk_widget_get_style_context (icon), "calendar-color-image");
 
@@ -105,8 +105,6 @@ make_calendar_row (GcalCalendar *calendar)
   g_object_set_data (G_OBJECT (row), "calendar", calendar);
 
   gtk_widget_show_all (row);
-
-  g_clear_pointer (&surface, cairo_surface_destroy);
 
   return row;
 }

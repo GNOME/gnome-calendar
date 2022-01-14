@@ -109,21 +109,21 @@ static GtkWidget*
 create_calendar_row (GcalManager  *manager,
                      GcalCalendar *calendar)
 {
+  g_autoptr (GdkPaintable) paintable = NULL;
   g_autofree gchar *parent_name = NULL;
-  cairo_surface_t *surface;
   const GdkRGBA *color;
   GtkWidget *icon;
   GtkWidget *row;
 
   color = gcal_calendar_get_color (calendar);
-  surface = get_circle_surface_from_color (color, 16);
+  paintable = get_circle_paintable_from_color (color, 16);
   get_source_parent_name_color (manager,
                                 gcal_calendar_get_source (calendar),
                                 &parent_name,
                                 NULL);
 
   /* The icon with the source color */
-  icon = gtk_image_new_from_surface (surface);
+  icon = gtk_image_new_from_paintable (paintable);
   gtk_style_context_add_class (gtk_widget_get_style_context (icon), "calendar-color-image");
   gtk_widget_show (icon);
 
@@ -140,8 +140,6 @@ create_calendar_row (GcalManager  *manager,
 
   g_object_set_data_full (G_OBJECT (row), "calendar", g_object_ref (calendar), g_object_unref);
   g_object_set_data (G_OBJECT (row), "color-icon", icon);
-
-  g_clear_pointer (&surface, cairo_surface_destroy);
 
   return row;
 }
@@ -175,7 +173,7 @@ static void
 select_row (GcalImportDialog *self,
             GtkListBoxRow    *row)
 {
-  cairo_surface_t *surface;
+  g_autoptr (GdkPaintable) paintable = NULL;
   const GdkRGBA *color;
   GcalCalendar *calendar;
 
@@ -187,10 +185,8 @@ select_row (GcalImportDialog *self,
   gtk_label_set_label (self->calendar_name_label, gcal_calendar_get_name (calendar));
 
   color = gcal_calendar_get_color (calendar);
-  surface = get_circle_surface_from_color (color, 16);
-  gtk_image_set_from_surface (self->calendar_color_image, surface);
-
-  g_clear_pointer (&surface, cairo_surface_destroy);
+  paintable = get_circle_paintable_from_color (color, 16);
+  gtk_image_set_from_paintable (self->calendar_color_image, paintable);
 }
 
 static void
@@ -449,7 +445,7 @@ on_manager_calendar_changed_cb (GcalManager      *manager,
                                 GcalCalendar     *calendar,
                                 GcalImportDialog *self)
 {
-  cairo_surface_t *surface;
+  g_autoptr (GdkPaintable) paintable = NULL;
   const GdkRGBA *color;
   GtkWidget *row, *color_icon;
   gboolean read_only;
@@ -475,13 +471,11 @@ on_manager_calendar_changed_cb (GcalManager      *manager,
 
   /* Setup the source color, in case it changed */
   color = gcal_calendar_get_color (calendar);
-  surface = get_circle_surface_from_color (color, 16);
+  paintable = get_circle_paintable_from_color (color, 16);
   color_icon = g_object_get_data (G_OBJECT (row), "color-icon");
-  gtk_image_set_from_surface (GTK_IMAGE (color_icon), surface);
+  gtk_image_set_from_paintable (GTK_IMAGE (color_icon), paintable);
 
   gtk_list_box_invalidate_sort (GTK_LIST_BOX (self->calendars_listbox));
-
-  g_clear_pointer (&surface, cairo_surface_destroy);
 }
 
 static void

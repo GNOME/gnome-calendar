@@ -70,7 +70,7 @@ static GtkWidget*
 create_calendar_row (GcalManager  *manager,
                      GcalCalendar *calendar)
 {
-  cairo_surface_t *surface;
+  g_autoptr (GdkPaintable) paintable = NULL;
   const GdkRGBA *color;
   GtkWidget *row, *box, *icon, *label, *selected_icon;
   gboolean read_only;
@@ -85,8 +85,8 @@ create_calendar_row (GcalManager  *manager,
 
   /* The icon with the source color */
   color = gcal_calendar_get_color (calendar);
-  surface = get_circle_surface_from_color (color, 16);
-  icon = gtk_image_new_from_surface (surface);
+  paintable = get_circle_paintable_from_color (color, 16);
+  icon = gtk_image_new_from_paintable (paintable);
 
   gtk_container_add (GTK_CONTAINER (box), icon);
 
@@ -135,7 +135,6 @@ create_calendar_row (GcalManager  *manager,
   gtk_widget_show (box);
   gtk_widget_show (row);
 
-  g_clear_pointer (&surface, cairo_surface_destroy);
   g_free (parent_name);
   g_free (tooltip);
 
@@ -176,7 +175,7 @@ static void
 select_row (GcalQuickAddPopover *self,
             GtkListBoxRow       *row)
 {
-  cairo_surface_t *surface;
+  g_autoptr (GdkPaintable) paintable = NULL;
   const GdkRGBA *color;
   GcalCalendar *calendar;
   GtkWidget *icon;
@@ -200,8 +199,8 @@ select_row (GcalQuickAddPopover *self,
   gtk_label_set_label (GTK_LABEL (self->calendar_name_label), gcal_calendar_get_name (calendar));
 
   color = gcal_calendar_get_color (calendar);
-  surface = get_circle_surface_from_color (color, 16);
-  gtk_image_set_from_surface (GTK_IMAGE (self->color_image), surface);
+  paintable = get_circle_paintable_from_color (color, 16);
+  gtk_image_set_from_paintable (GTK_IMAGE (self->color_image), paintable);
 
   /* Return to the events page */
   gtk_stack_set_visible_child_name (GTK_STACK (self->stack), "events");
@@ -209,8 +208,6 @@ select_row (GcalQuickAddPopover *self,
   /* Focus back the event Entry */
   if (gtk_widget_get_visible (GTK_WIDGET (self)))
     gtk_entry_grab_focus_without_selecting (GTK_ENTRY (self->summary_entry));
-
-  g_clear_pointer (&surface, cairo_surface_destroy);
 }
 
 static gint
@@ -536,7 +533,7 @@ on_calendar_changed (GcalManager         *manager,
                      GcalCalendar        *calendar,
                      GcalQuickAddPopover *self)
 {
-  cairo_surface_t *surface;
+  g_autoptr (GdkPaintable) paintable = NULL;
   const GdkRGBA *color;
   GtkWidget *row, *color_icon, *name_label;
   gboolean read_only;
@@ -567,10 +564,8 @@ on_calendar_changed (GcalManager         *manager,
 
   /* Setup the source color, in case it changed */
   color = gcal_calendar_get_color (calendar);
-  surface = get_circle_surface_from_color (color, 16);
-  gtk_image_set_from_surface (GTK_IMAGE (color_icon), surface);
-
-  g_clear_pointer (&surface, cairo_surface_destroy);
+  paintable = get_circle_paintable_from_color (color, 16);
+  gtk_image_set_from_paintable (GTK_IMAGE (color_icon), paintable);
 
   /* Also setup the row name, in case we just changed the source name */
   gtk_label_set_text (GTK_LABEL (name_label), gcal_calendar_get_name (calendar));

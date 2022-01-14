@@ -183,6 +183,49 @@ get_circle_paintable_from_color (const GdkRGBA *color,
 }
 
 /**
+ * paintable_to_pixbuf:
+ * @color: a #GdkRGBA
+ * @size: the size of the surface
+ *
+ * Creates a circular surface filled with @color. The
+ * surface is always @size x @size.
+ *
+ * Returns: (transfer full): a #cairo_surface_t
+ */
+GdkPixbuf*
+paintable_to_pixbuf (GdkPaintable *paintable)
+{
+  g_autoptr (GtkSnapshot) snapshot = NULL;
+  g_autoptr (GskRenderNode) node = NULL;
+  g_autoptr (GskRenderer) renderer = NULL;
+  g_autoptr (GdkTexture) texture = NULL;
+  g_autoptr (GError) error = NULL;
+  graphene_rect_t viewport;
+
+  snapshot = gtk_snapshot_new ();
+  gdk_paintable_snapshot (paintable, snapshot,
+                          gdk_paintable_get_intrinsic_width (paintable),
+                          gdk_paintable_get_intrinsic_height (paintable));
+  node = gtk_snapshot_free_to_node (g_steal_pointer (&snapshot));
+
+  renderer = gsk_cairo_renderer_new ();
+  gsk_renderer_realize (renderer, NULL, &error);
+  if (error)
+    {
+      g_warning ("Couldn't realize Cairo renderer: %s", error->message);
+      return NULL;
+    }
+
+  viewport = GRAPHENE_RECT_INIT (0, 0,
+                                 gdk_paintable_get_intrinsic_width (paintable),
+                                 gdk_paintable_get_intrinsic_height (paintable));
+  texture = gsk_renderer_render_texture (renderer, node, &viewport);
+  gsk_renderer_unrealize (renderer);
+
+  return gdk_pixbuf_get_from_texture (texture);
+}
+
+/**
  * get_color_name_from_source:
  * @source: an #ESource
  * @out_color: return value for the color

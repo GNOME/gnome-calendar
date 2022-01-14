@@ -71,12 +71,12 @@ set_event (GcalSearchHitEvent *self,
  * DzlSuggestion overrides
  */
 
-static cairo_surface_t*
-gcal_search_hit_event_get_icon_surface (DzlSuggestion *suggestion,
-                                        GtkWidget     *widget)
+static GdkPaintable*
+gcal_search_hit_event_get_paintable (DzlSuggestion *suggestion,
+                                     GtkWidget     *widget)
 {
+  g_autoptr (GdkPaintable) paintable = NULL;
   GcalSearchHitEvent *self;
-  cairo_surface_t *surface;
   const GdkRGBA *color;
   GcalCalendar *calendar;
 
@@ -84,12 +84,12 @@ gcal_search_hit_event_get_icon_surface (DzlSuggestion *suggestion,
   calendar = gcal_event_get_calendar (self->event);
 
   color = gcal_calendar_get_color (calendar);
-  surface = get_circle_surface_from_color (color, 16);
+  paintable = get_circle_paintable_from_color (color, 16);
 
   /* Inject our custom style class into the given widget */
   gtk_style_context_add_class (gtk_widget_get_style_context (widget), "calendar-color-image");
 
-  return surface;
+  return g_steal_pointer (&paintable);
 }
 
 

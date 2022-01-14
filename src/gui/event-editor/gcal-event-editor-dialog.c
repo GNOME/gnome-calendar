@@ -151,18 +151,18 @@ fill_sources_menu (GcalEventEditorDialog *self)
 
   for (aux = list; aux != NULL; aux = aux->next)
     {
+      g_autoptr (GdkPaintable) paintable = NULL;
       g_autoptr (GMenuItem) item = NULL;
       g_autoptr (GdkPixbuf) pix = NULL;
       GcalCalendar *calendar;
       const GdkRGBA *color;
-      cairo_surface_t *surface;
 
       calendar = GCAL_CALENDAR (aux->data);
 
       /* retrieve color */
       color = gcal_calendar_get_color (calendar);
-      surface = get_circle_surface_from_color (color, 16);
-      pix = gdk_pixbuf_get_from_surface (surface, 0, 0, 16, 16);
+      paintable = get_circle_paintable_from_color (color, 16);
+      pix = paintable_to_pixbuf (paintable);
 
       /* menu item */
       item = g_menu_item_new (gcal_calendar_get_name (calendar), "select-calendar");
@@ -180,8 +180,6 @@ fill_sources_menu (GcalEventEditorDialog *self)
         }
 
       g_menu_append_item (self->sources_menu, item);
-
-      g_clear_pointer (&surface, cairo_surface_destroy);
     }
 
   gtk_popover_bind_model (GTK_POPOVER (self->sources_popover), G_MENU_MODEL (self->sources_menu), "edit");
@@ -243,19 +241,17 @@ on_calendar_selected_action_cb (GSimpleAction *action,
 
       if (g_strcmp0 (gcal_calendar_get_id (calendar), uid) == 0)
         {
-          cairo_surface_t *surface;
+          g_autoptr (GdkPaintable) paintable = NULL;
           const GdkRGBA *color;
 
           /* retrieve color */
           color = gcal_calendar_get_color (calendar);
-          surface = get_circle_surface_from_color (color, 16);
-          gtk_image_set_from_surface (GTK_IMAGE (self->source_image), surface);
+          paintable = get_circle_paintable_from_color (color, 16);
+          gtk_image_set_from_paintable (GTK_IMAGE (self->source_image), paintable);
 
           self->selected_calendar = calendar;
 
           gtk_label_set_label (GTK_LABEL (self->subtitle_label), gcal_calendar_get_name (calendar));
-
-          g_clear_pointer (&surface, cairo_surface_destroy);
           break;
         }
     }
@@ -597,10 +593,10 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
                                     GcalEvent             *event,
                                     gboolean               new_event)
 {
+  g_autoptr (GdkPaintable) paintable = NULL;
   g_autoptr (GcalEvent) cloned_event = NULL;
   GcalEventEditorFlags flags;
   GcalCalendar *calendar;
-  cairo_surface_t *surface;
   gint i;
 
   GCAL_ENTRY;
@@ -625,9 +621,8 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   fill_sources_menu (self);
 
   /* dialog titlebar's title & subtitle */
-  surface = get_circle_surface_from_color (gcal_event_get_color (cloned_event), 10);
-  gtk_image_set_from_surface (GTK_IMAGE (self->source_image), surface);
-  g_clear_pointer (&surface, cairo_surface_destroy);
+  paintable = get_circle_paintable_from_color (gcal_event_get_color (cloned_event), 10);
+  gtk_image_set_from_paintable (GTK_IMAGE (self->source_image), paintable);
 
   g_clear_pointer (&self->event_title_binding, g_binding_unbind);
   self->event_title_binding = g_object_bind_property (cloned_event,
