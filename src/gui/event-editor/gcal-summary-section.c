@@ -23,17 +23,16 @@
 #include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-event-editor-section.h"
-#include "gcal-expandable-entry.h"
 #include "gcal-summary-section.h"
 
 #include <glib/gi18n.h>
 
 struct _GcalSummarySection
 {
-  GtkBin              parent;
+  AdwBin              parent;
 
-  GtkEntry           *summary_entry;
-  GtkEntry           *location_entry;
+  GtkEditable        *summary_entry;
+  GtkEditable        *location_entry;
 
   GcalContext        *context;
   GcalEvent          *event;
@@ -42,7 +41,7 @@ struct _GcalSummarySection
 
 static void          gcal_event_editor_section_iface_init        (GcalEventEditorSectionInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GcalSummarySection, gcal_summary_section, GTK_TYPE_BIN,
+G_DEFINE_TYPE_WITH_CODE (GcalSummarySection, gcal_summary_section, ADW_TYPE_BIN,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_iface_init))
 
 enum
@@ -51,6 +50,27 @@ enum
   PROP_CONTEXT,
   N_PROPS
 };
+
+/*
+ * Auxiliary methods
+ */
+
+static void
+make_entry_expandable (GtkEditable *entry)
+{
+  GtkWidget *child;
+
+  for (child = gtk_widget_get_first_child (GTK_WIDGET (entry));
+       child;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      if (!GTK_IS_TEXT (child))
+        continue;
+
+      gtk_text_set_propagate_text_width (GTK_TEXT (child), TRUE);
+    }
+}
+
 
 /*
  * GcalEventEditorSection interface
@@ -76,11 +96,11 @@ gcal_reminders_section_set_event (GcalEventEditorSection *section,
   summary = gcal_event_get_summary (event);
 
   if (g_strcmp0 (summary, "") == 0)
-    gtk_entry_set_text (GTK_ENTRY (self->summary_entry), _("Unnamed event"));
+    gtk_editable_set_text (self->summary_entry, _("Unnamed event"));
   else
-    gtk_entry_set_text (GTK_ENTRY (self->summary_entry), summary);
+    gtk_editable_set_text (self->summary_entry, summary);
 
-  gtk_entry_set_text (self->location_entry, gcal_event_get_location (event));
+  gtk_editable_set_text (self->location_entry, gcal_event_get_location (event));
 
   GCAL_EXIT;
 }
@@ -94,8 +114,8 @@ gcal_reminders_section_apply (GcalEventEditorSection *section)
 
   self = GCAL_SUMMARY_SECTION (section);
 
-  gcal_event_set_summary (self->event, gtk_entry_get_text (self->summary_entry));
-  gcal_event_set_location (self->event, gtk_entry_get_text (self->location_entry));
+  gcal_event_set_summary (self->event, gtk_editable_get_text (self->summary_entry));
+  gcal_event_set_location (self->event, gtk_editable_get_text (self->location_entry));
 
   GCAL_EXIT;
 }
@@ -168,8 +188,6 @@ gcal_summary_section_class_init (GcalSummarySectionClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  g_type_ensure (GCAL_TYPE_EXPANDABLE_ENTRY);
-
   object_class->finalize = gcal_summary_section_finalize;
   object_class->get_property = gcal_summary_section_get_property;
   object_class->set_property = gcal_summary_section_set_property;
@@ -186,4 +204,7 @@ static void
 gcal_summary_section_init (GcalSummarySection *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  make_entry_expandable (self->location_entry);
+  make_entry_expandable (self->summary_entry);
 }
