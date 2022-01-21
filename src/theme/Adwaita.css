@@ -200,29 +200,33 @@ event {
     font-size: 0.9rem;
 }
 
+event.vertical.timed {
+  padding: 3px 6px;
+}
+
 event.color-dark.horizontal.timed,
 event.color-light.horizontal.timed {
     margin-bottom: 0;
     border-radius: 0;
-    color: @theme_fg_color;
+    color: inherit;
 }
 
 event.color-dark {
-    color: white;
+    color: @light_1;
     outline-color: rgba(0, 0, 0, 0.3);
 }
 
 event.color-dark:backdrop {
-    color: rgba(255, 255, 255, 0.3);
+    color: @light_3;
 }
 
 event.color-light {
-    color: @theme_fg_color;
+    color: alpha(@dark_5, 0.8);
     outline-color: rgba(255, 255, 255, 0.5);
 }
 
 event.color-light:backdrop {
-    color: rgba(0, 0, 0, 0.3);
+    color: @dark_3;
 }
 
 /* Event Popover */

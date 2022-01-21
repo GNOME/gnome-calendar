@@ -33,7 +33,7 @@ typedef enum
 } GcalEventPreviewAction;
 
 #define GCAL_TYPE_EVENT_WIDGET                    (gcal_event_widget_get_type ())
-G_DECLARE_FINAL_TYPE (GcalEventWidget, gcal_event_widget, GCAL, EVENT_WIDGET, GtkBin)
+G_DECLARE_FINAL_TYPE (GcalEventWidget, gcal_event_widget, GCAL, EVENT_WIDGET, GtkWidget)
 
 typedef void         (*GcalEventPreviewCallback)                 (GcalEventWidget        *event_widget,
                                                                   GcalEventPreviewAction  action,
