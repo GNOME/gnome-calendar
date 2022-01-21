@@ -27,6 +27,7 @@
 #include "gcal-import-file-row.h"
 #include "gcal-utils.h"
 
+#include <adwaita.h>
 #include <glib/gi18n.h>
 
 typedef struct
@@ -38,19 +39,19 @@ typedef struct
 
 struct _GcalImportDialog
 {
-  HdyWindow           parent;
+  GtkDialog           parent;
 
-  GtkImage           *calendar_color_image;
-  GtkLabel           *calendar_name_label;
-  GtkListBox         *calendars_listbox;
-  GtkPopover         *calendars_popover;
   GtkWidget          *cancel_button;
-  GtkListBox         *files_listbox;
-  HdyHeaderBar       *headerbar;
+  AdwComboRow        *calendar_combo_row;
+  AdwPreferencesGroup *files_group;
+  GtkHeaderBar       *headerbar;
   GtkWidget          *import_button;
+  GtkWidget          *placeholder_spinner;
+  AdwPreferencesPage *preferences_page;
   GtkSizeGroup       *title_sizegroup;
 
-  GtkWidget          *selected_row;
+  GList              *groups;
+  GcalCalendar       *selected_calendar;
 
   GCancellable       *cancellable;
   GcalContext        *context;
@@ -63,19 +64,7 @@ static void          on_import_row_file_loaded_cb                 (GcalImportFil
                                                                    GPtrArray         *events,
                                                                    GcalImportDialog  *self);
 
-static void          on_manager_calendar_added_cb                (GcalManager        *manager,
-                                                                  GcalCalendar       *calendar,
-                                                                  GcalImportDialog   *self);
-
-static void          on_manager_calendar_changed_cb              (GcalManager        *manager,
-                                                                  GcalCalendar       *calendar,
-                                                                  GcalImportDialog   *self);
-
-static void          on_manager_calendar_removed_cb              (GcalManager        *manager,
-                                                                  GcalCalendar       *calendar,
-                                                                  GcalImportDialog   *self);
-
-G_DEFINE_TYPE (GcalImportDialog, gcal_import_dialog, HDY_TYPE_WINDOW)
+G_DEFINE_TYPE (GcalImportDialog, gcal_import_dialog, GTK_TYPE_DIALOG)
 
 enum
 {
@@ -105,124 +94,37 @@ import_data_free (gpointer data)
   g_free (import_data);
 }
 
-static GtkWidget*
-create_calendar_row (GcalManager  *manager,
-                     GcalCalendar *calendar)
-{
-  g_autoptr (GdkPaintable) paintable = NULL;
-  g_autofree gchar *parent_name = NULL;
-  const GdkRGBA *color;
-  GtkWidget *icon;
-  GtkWidget *row;
-
-  color = gcal_calendar_get_color (calendar);
-  paintable = get_circle_paintable_from_color (color, 16);
-  get_source_parent_name_color (manager,
-                                gcal_calendar_get_source (calendar),
-                                &parent_name,
-                                NULL);
-
-  /* The icon with the source color */
-  icon = gtk_image_new_from_paintable (paintable);
-  gtk_style_context_add_class (gtk_widget_get_style_context (icon), "calendar-color-image");
-  gtk_widget_show (icon);
-
-  /* The row itself */
-  row = g_object_new (HDY_TYPE_ACTION_ROW,
-                      "title", gcal_calendar_get_name (calendar),
-                      "subtitle", parent_name,
-                      "sensitive", !gcal_calendar_is_read_only (calendar),
-                      "activatable", TRUE,
-                      "width-request", 300,
-                      NULL);
-  hdy_action_row_add_prefix (HDY_ACTION_ROW (row), icon);
-  gtk_widget_show (row);
-
-  g_object_set_data_full (G_OBJECT (row), "calendar", g_object_ref (calendar), g_object_unref);
-  g_object_set_data (G_OBJECT (row), "color-icon", icon);
-
-  return row;
-}
-
-static GtkWidget*
-get_row_for_calendar (GcalImportDialog *self,
-                      GcalCalendar     *calendar)
-{
-  g_autoptr (GList) children = NULL;
-  GtkWidget *row;
-  GList *l;
-
-  row = NULL;
-  children = gtk_container_get_children (GTK_CONTAINER (self->calendars_listbox));
-
-  for (l = children; l != NULL; l = g_list_next (l))
-    {
-      GcalCalendar *row_calendar = g_object_get_data (l->data, "calendar");
-
-      if (row_calendar == calendar)
-        {
-          row = l->data;
-          break;
-        }
-    }
-
-  return row;
-}
-
 static void
-select_row (GcalImportDialog *self,
-            GtkListBoxRow    *row)
-{
-  g_autoptr (GdkPaintable) paintable = NULL;
-  const GdkRGBA *color;
-  GcalCalendar *calendar;
-
-  self->selected_row = GTK_WIDGET (row);
-
-  /* Setup the event page's source name and color */
-  calendar = g_object_get_data (G_OBJECT (row), "calendar");
-
-  gtk_label_set_label (self->calendar_name_label, gcal_calendar_get_name (calendar));
-
-  color = gcal_calendar_get_color (calendar);
-  paintable = get_circle_paintable_from_color (color, 16);
-  gtk_image_set_from_paintable (self->calendar_color_image, paintable);
-}
-
-static void
-update_default_calendar_row (GcalImportDialog *self)
+update_default_calendar (GcalImportDialog *self)
 {
   GcalCalendar *default_calendar;
   GcalManager *manager;
-  GtkWidget *row;
+  GListModel *calendars;
+  guint position;
 
   manager = gcal_context_get_manager (self->context);
+  calendars = gcal_manager_get_calendars_model (manager);
   default_calendar = gcal_manager_get_default_calendar (manager);
 
-  row = get_row_for_calendar (self, default_calendar);
-  if (row != NULL)
-    select_row (self, GTK_LIST_BOX_ROW (row));
+  if (g_list_store_find (G_LIST_STORE (calendars), default_calendar, &position))
+    adw_combo_row_set_selected (self->calendar_combo_row, position);
 }
 
 static void
 setup_calendars (GcalImportDialog *self)
 {
-  g_autoptr (GList) calendars = NULL;
   GcalManager *manager;
-  GList *l;
+
+  g_assert (self->context != NULL);
 
   manager = gcal_context_get_manager (self->context);
-  calendars = gcal_manager_get_calendars (manager);
 
-  for (l = calendars; l; l = l->next)
-    on_manager_calendar_added_cb (manager, l->data, self);
+  // TODO: sort model
 
-  update_default_calendar_row (self);
+  adw_combo_row_set_model (self->calendar_combo_row, gcal_manager_get_calendars_model (manager));
+  update_default_calendar (self);
 
-  g_signal_connect_object (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), self, 0);
-  g_signal_connect_object (manager, "calendar-changed", G_CALLBACK (on_manager_calendar_changed_cb), self, 0);
-  g_signal_connect_object (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), self, 0);
-  g_signal_connect_object (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self, G_CONNECT_SWAPPED);
+  g_signal_connect_object (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar), self, G_CONNECT_SWAPPED);
 }
 
 static void
@@ -238,15 +140,25 @@ setup_files (GcalImportDialog  *self,
 
   for (i = 0; i < n_files; i++)
     {
+      AdwPreferencesGroup *group;
       GtkWidget *row;
 
       row = gcal_import_file_row_new (files[i], self->title_sizegroup);
       g_signal_connect (row, "file-loaded", G_CALLBACK (on_import_row_file_loaded_cb), self);
 
-      if (n_files > 1)
-        gcal_import_file_row_show_filename (GCAL_IMPORT_FILE_ROW (row));
+      group = ADW_PREFERENCES_GROUP (adw_preferences_group_new ());
+      adw_preferences_group_add (group, row);
 
-      gtk_list_box_insert (self->files_listbox, row, -1);
+      if (n_files > 1)
+        {
+          g_autofree gchar *basename = g_file_get_basename (files[i]);
+          adw_preferences_group_set_title (group, basename);
+        }
+
+      adw_preferences_page_add (self->preferences_page, group);
+      self->groups = g_list_prepend (self->groups, group);
+
+      gtk_widget_hide (self->placeholder_spinner);
     }
 
   GCAL_EXIT;
@@ -273,20 +185,19 @@ on_events_created_cb (GObject      *source_object,
   if (error)
     g_warning ("Error creating events: %s", error->message);
 
-  gtk_widget_destroy (GTK_WIDGET (self));
+  gtk_window_destroy (GTK_WINDOW (self));
 
   GCAL_EXIT;
 }
 
 static void
-on_calendars_listbox_row_activated_cb (GtkListBox       *listbox,
-                                       GtkListBoxRow    *row,
-                                       GcalImportDialog *self)
+on_calendar_combo_row_selected_item_changed_cb (AdwComboRow      *combo_row,
+                                                GParamSpec       *pspec,
+                                                GcalImportDialog *self)
 {
   GCAL_ENTRY;
 
-  select_row (self, row);
-  gtk_popover_popdown (self->calendars_popover);
+  self->selected_calendar = adw_combo_row_get_selected_item (combo_row);
 
   GCAL_EXIT;
 }
@@ -295,7 +206,76 @@ static void
 on_cancel_button_clicked_cb (GtkButton        *button,
                              GcalImportDialog *self)
 {
-  gtk_widget_destroy (GTK_WIDGET (self));
+  gtk_window_destroy (GTK_WINDOW (self));
+}
+
+static void
+on_combo_row_signal_factory_setup_cb (GtkSignalListItemFactory *factory,
+                                      GtkListItem              *item,
+                                      GcalImportDialog         *self)
+{
+  GtkWidget *label;
+  GtkWidget *icon;
+  GtkWidget *grid;
+
+  grid = gtk_grid_new ();
+  gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
+
+  icon = gtk_image_new ();
+  gtk_widget_add_css_class (icon, "calendar-color-image");
+  g_object_set_data (G_OBJECT (grid), "icon", icon);
+  gtk_grid_attach (GTK_GRID (grid), icon, 0, 0, 1, 2);
+
+  label = gtk_label_new (NULL);
+  gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+  g_object_set_data (G_OBJECT (grid), "title", label);
+  gtk_grid_attach (GTK_GRID (grid), label, 1, 0, 1, 1);
+
+  label = gtk_label_new (NULL);
+  gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+  gtk_widget_add_css_class (label, "caption");
+  gtk_widget_add_css_class (label, "dim-label");
+  g_object_set_data (G_OBJECT (grid), "subtitle", label);
+  gtk_grid_attach (GTK_GRID (grid), label, 1, 1, 1, 1);
+
+  gtk_list_item_set_child (item, grid);
+}
+
+static void
+on_combo_row_signal_factory_bind_cb (GtkSignalListItemFactory *factory,
+                                     GtkListItem              *item,
+                                     GcalImportDialog         *self)
+{
+  g_autoptr (GdkPaintable) color_paintable = NULL;
+  g_autofree gchar *parent_name = NULL;
+  GcalCalendar *calendar;
+  GtkWidget *label;
+  GtkWidget *icon;
+  GtkWidget *grid;
+
+  calendar = gtk_list_item_get_item (item);
+
+  grid = gtk_list_item_get_child (item);
+
+  color_paintable = get_circle_paintable_from_color (gcal_calendar_get_color (calendar), 16);
+  get_source_parent_name_color (gcal_context_get_manager (self->context),
+                                gcal_calendar_get_source (calendar),
+                                &parent_name,
+                                NULL);
+
+  icon = g_object_get_data (G_OBJECT (grid), "icon");
+  gtk_image_set_from_paintable (GTK_IMAGE (icon), color_paintable);
+
+  label = g_object_get_data (G_OBJECT (grid), "title");
+  gtk_label_set_label (GTK_LABEL (label), gcal_calendar_get_name (calendar));
+
+  label = g_object_get_data (G_OBJECT (grid), "subtitle");
+  gtk_label_set_label (GTK_LABEL (label), parent_name);
+
+  if (gtk_widget_get_ancestor (grid, GTK_TYPE_POPOVER) != NULL)
+    gtk_widget_set_size_request (grid, 250, -1);
+  else
+    gtk_widget_set_size_request (grid, -1, -1);
 }
 
 static void
@@ -339,9 +319,7 @@ static void
 on_import_button_clicked_cb (GtkButton        *button,
                              GcalImportDialog *self)
 {
-  g_autoptr (GList) children = NULL;
   g_autoptr (GTask) task = NULL;
-  GcalCalendar *calendar;
   ImportData *import_data;
   ECalClient *client;
   GSList *slist = NULL;
@@ -350,14 +328,12 @@ on_import_button_clicked_cb (GtkButton        *button,
 
   GCAL_ENTRY;
 
-  calendar = g_object_get_data (G_OBJECT (self->selected_row), "calendar");
-  g_assert (self->selected_row != NULL);
+  g_assert (self->selected_calendar != NULL);
 
   slist = NULL;
-  children = gtk_container_get_children (GTK_CONTAINER (self->files_listbox));
-  for (l = children; l; l = l->next)
+  for (l = self->groups; l; l = l->next)
     {
-      GcalImportFileRow *row = l->data;
+      GcalImportFileRow *row = GCAL_IMPORT_FILE_ROW (l->data);
       GPtrArray *ical_components;
       GPtrArray *ical_timezones;
       guint i;
@@ -390,7 +366,7 @@ on_import_button_clicked_cb (GtkButton        *button,
 
   gtk_widget_set_sensitive (GTK_WIDGET (self), FALSE);
 
-  client = gcal_calendar_get_client (calendar);
+  client = gcal_calendar_get_client (self->selected_calendar);
 
   import_data = g_new0 (ImportData, 1);
   import_data->client = g_object_ref (client);
@@ -421,102 +397,11 @@ on_import_row_file_loaded_cb (GcalImportFileRow *row,
                                         "Import %d events",
                                         self->n_events),
                            self->n_events);
-  hdy_header_bar_set_title (self->headerbar, title);
+  gtk_window_set_title (GTK_WINDOW (self), title);
 
   gtk_widget_show (GTK_WIDGET (row));
 
   GCAL_EXIT;
-}
-
-static void
-on_manager_calendar_added_cb (GcalManager      *manager,
-                              GcalCalendar     *calendar,
-                              GcalImportDialog *self)
-{
-  if (gcal_calendar_is_read_only (calendar))
-    return;
-
-  gtk_container_add (GTK_CONTAINER (self->calendars_listbox),
-                     create_calendar_row (manager, calendar));
-}
-
-static void
-on_manager_calendar_changed_cb (GcalManager      *manager,
-                                GcalCalendar     *calendar,
-                                GcalImportDialog *self)
-{
-  g_autoptr (GdkPaintable) paintable = NULL;
-  const GdkRGBA *color;
-  GtkWidget *row, *color_icon;
-  gboolean read_only;
-
-  read_only = gcal_calendar_is_read_only (calendar);
-  row = get_row_for_calendar (self, calendar);
-
-  /* If the calendar changed from/to read-only, we add or remove it here */
-  if (read_only)
-    {
-      if (row)
-        gtk_container_remove (GTK_CONTAINER (self->calendars_listbox), row);
-      return;
-    }
-  else if (!row)
-    {
-      on_manager_calendar_added_cb (manager, calendar, self);
-      row = get_row_for_calendar (self, calendar);
-    }
-
-  hdy_preferences_row_set_title (HDY_PREFERENCES_ROW (row), gcal_calendar_get_name (calendar));
-  gtk_widget_set_sensitive (row, !read_only);
-
-  /* Setup the source color, in case it changed */
-  color = gcal_calendar_get_color (calendar);
-  paintable = get_circle_paintable_from_color (color, 16);
-  color_icon = g_object_get_data (G_OBJECT (row), "color-icon");
-  gtk_image_set_from_paintable (GTK_IMAGE (color_icon), paintable);
-
-  gtk_list_box_invalidate_sort (GTK_LIST_BOX (self->calendars_listbox));
-}
-
-static void
-on_manager_calendar_removed_cb (GcalManager      *manager,
-                                GcalCalendar     *calendar,
-                                GcalImportDialog *self)
-{
-  GtkWidget *row;
-
-  row = get_row_for_calendar (self, calendar);
-
-  if (!row)
-    return;
-
-  gtk_container_remove (GTK_CONTAINER (self->calendars_listbox), row);
-}
-
-static void
-on_select_calendar_row_activated_cb (GtkListBox       *listbox,
-                                     GtkListBoxRow    *row,
-                                     GcalImportDialog *self)
-{
-  gtk_popover_popup (self->calendars_popover);
-}
-
-static gint
-sort_func (GtkListBoxRow *row1,
-           GtkListBoxRow *row2,
-           gpointer       user_data)
-{
-  GcalCalendar *calendar1, *calendar2;
-  g_autofree gchar *name1 = NULL;
-  g_autofree gchar *name2 = NULL;
-
-  calendar1 = g_object_get_data (G_OBJECT (row1), "calendar");
-  calendar2 = g_object_get_data (G_OBJECT (row2), "calendar");
-
-  name1 = g_utf8_casefold (gcal_calendar_get_name (calendar1), -1);
-  name2 = g_utf8_casefold (gcal_calendar_get_name (calendar2), -1);
-
-  return g_strcmp0 (name1, name2);
 }
 
 
@@ -532,6 +417,8 @@ gcal_import_dialog_finalize (GObject *object)
   g_cancellable_cancel (self->cancellable);
   g_clear_object (&self->cancellable);
   g_clear_object (&self->context);
+
+  g_clear_pointer (&self->groups, g_list_free);
 
   G_OBJECT_CLASS (gcal_import_dialog_parent_class)->finalize (object);
 }
@@ -601,28 +488,26 @@ gcal_import_dialog_class_init (GcalImportDialogClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/importer/gcal-import-dialog.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, calendar_color_image);
-  gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, calendar_name_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, calendars_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, calendars_popover);
+  gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, calendar_combo_row);
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, cancel_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, files_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, files_group);
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, headerbar);
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, import_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, placeholder_spinner);
+  gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, preferences_page);
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, title_sizegroup);
 
-  gtk_widget_class_bind_template_callback (widget_class, on_calendars_listbox_row_activated_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_calendar_combo_row_selected_item_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_cancel_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_import_button_clicked_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_select_calendar_row_activated_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_combo_row_signal_factory_bind_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_combo_row_signal_factory_setup_cb);
 }
 
 static void
 gcal_import_dialog_init (GcalImportDialog *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
-
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendars_listbox), sort_func, NULL, NULL);
 }
 
 GtkWidget*
@@ -634,6 +519,7 @@ gcal_import_dialog_new_for_files (GcalContext  *context,
 
   self =  g_object_new (GCAL_TYPE_IMPORT_DIALOG,
                         "context", context,
+                        "use-header-bar", TRUE,
                         NULL);
 
   setup_files (self, files, n_files);

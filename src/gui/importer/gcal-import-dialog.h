@@ -22,12 +22,10 @@
 
 #include "gcal-context.h"
 
-#include <handy.h>
-
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_IMPORT_DIALOG (gcal_import_dialog_get_type())
-G_DECLARE_FINAL_TYPE (GcalImportDialog, gcal_import_dialog, GCAL, IMPORT_DIALOG, HdyWindow)
+G_DECLARE_FINAL_TYPE (GcalImportDialog, gcal_import_dialog, GCAL, IMPORT_DIALOG, GtkDialog)
 
 GtkWidget*           gcal_import_dialog_new_for_files            (GcalContext        *context,
                                                                   GFile             **files,

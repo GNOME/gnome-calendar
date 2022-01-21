@@ -64,6 +64,7 @@ struct _GcalManager
    * And each key is the source uid
    */
   GHashTable         *clients;
+  GListStore         *calendars_model;
 
   ESourceRegistry    *source_registry;
   //ECredentialsPrompter *credentials_prompter;
@@ -111,6 +112,7 @@ remove_source (GcalManager  *self,
                ESource      *source)
 {
   g_autoptr (GcalCalendar) calendar = NULL;
+  guint position;
 
   GCAL_ENTRY;
 
@@ -130,6 +132,10 @@ remove_source (GcalManager  *self,
 
   gcal_timeline_remove_calendar (self->timeline, calendar);
   g_hash_table_remove (self->clients, source);
+
+  g_list_store_find (self->calendars_model, calendar, &position);
+  g_list_store_remove (self->calendars_model, position);
+
   g_signal_emit (self, signals[CALENDAR_REMOVED], 0, calendar);
 
   GCAL_EXIT;
@@ -182,6 +188,37 @@ on_client_refreshed (GObject      *source_object,
   GCAL_EXIT;
 }
 
+static gint
+sort_calendar_by_name_cb (gconstpointer a,
+                          gconstpointer b,
+                          gpointer      user_data)
+{
+  GcalCalendar *calendar_a = GCAL_CALENDAR ((gpointer) a);
+  GcalCalendar *calendar_b = GCAL_CALENDAR ((gpointer) b);
+  g_autofree gchar *parent_name_a = NULL;
+  g_autofree gchar *parent_name_b = NULL;
+  GcalManager *self;
+  gint retval;
+
+  retval = g_utf8_collate (gcal_calendar_get_name (calendar_a), gcal_calendar_get_name (calendar_b));
+  if (retval != 0)
+    return retval;
+
+  self = GCAL_MANAGER (user_data);
+  get_source_parent_name_color (self, gcal_calendar_get_source (calendar_a), &parent_name_a, NULL);
+  get_source_parent_name_color (self, gcal_calendar_get_source (calendar_b), &parent_name_b, NULL);
+
+  return g_utf8_collate (parent_name_a, parent_name_b);
+}
+
+static void
+on_calendar_name_changed_cb (GcalCalendar *calendar,
+                             GParamSpec   *pspec,
+                             GcalManager  *self)
+{
+  g_list_store_sort (self->calendars_model, sort_calendar_by_name_cb, self);
+}
+
 static void
 on_calendar_created_cb (GObject      *source_object,
                         GAsyncResult *result,
@@ -219,6 +256,8 @@ on_calendar_created_cb (GObject      *source_object,
   source = gcal_calendar_get_source (calendar);
 
   g_hash_table_insert (self->clients, g_object_ref (source), calendar);
+  g_list_store_insert_sorted (self->calendars_model, calendar, sort_calendar_by_name_cb, self);
+  g_signal_connect (calendar, "notify::name", G_CALLBACK (on_calendar_name_changed_cb), self);
 
   gcal_timeline_add_calendar (self->timeline, calendar);
 
@@ -559,6 +598,7 @@ gcal_manager_finalize (GObject *object)
       self->context = NULL;
     }
 
+  g_clear_object (&self->calendars_model);
   g_clear_pointer (&self->clients, g_hash_table_destroy);
 
   G_OBJECT_CLASS (gcal_manager_parent_class)->finalize (object);
@@ -703,6 +743,7 @@ gcal_manager_class_init (GcalManagerClass *klass)
 static void
 gcal_manager_init (GcalManager *self)
 {
+  self->calendars_model = g_list_store_new (GCAL_TYPE_CALENDAR);
 }
 
 /* Public API */
@@ -748,6 +789,23 @@ gcal_manager_get_calendars (GcalManager *self)
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
   return g_hash_table_get_values (self->clients);
+}
+
+/**
+ * gcal_manager_get_calendars_model:
+ * @self: a #GcalManager
+ *
+ * Retrieves a model with all available #GcalCalendar. This is useful
+ * for binding to combo rows.
+ *
+ * Returns: (transfer none): a #GListModel with all available #GcalCalendar
+ */
+GListModel*
+gcal_manager_get_calendars_model (GcalManager *self)
+{
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
+
+  return G_LIST_MODEL (self->calendars_model);
 }
 
 /**

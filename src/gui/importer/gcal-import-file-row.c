@@ -29,10 +29,9 @@
 
 struct _GcalImportFileRow
 {
-  GtkListBoxRow       parent;
+  AdwBin              parent;
 
   GtkListBox         *events_listbox;
-  GtkLabel           *filename_label;
   GtkSizeGroup       *title_sizegroup;
 
   GCancellable       *cancellable;
@@ -45,7 +44,7 @@ static void          read_calendar_finished_cb                   (GObject       
                                                                   GAsyncResult       *res,
                                                                   gpointer            user_data);
 
-G_DEFINE_TYPE (GcalImportFileRow, gcal_import_file_row, GTK_TYPE_LIST_BOX_ROW)
+G_DEFINE_TYPE (GcalImportFileRow, gcal_import_file_row, ADW_TYPE_BIN)
 
 enum
 {
@@ -187,7 +186,7 @@ add_events_to_listbox (GcalImportFileRow *self,
                            "margin-end", 24,
                            NULL);
       fill_grid_with_event_data (self, GTK_GRID (grid), ical_component);
-      gtk_container_add (GTK_CONTAINER (row), grid);
+      gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), grid);
 
       gtk_list_box_insert (self->events_listbox, row, -1);
     }
@@ -247,11 +246,6 @@ filter_timezones (ICalComponent *component)
 static void
 setup_file (GcalImportFileRow *self)
 {
-  g_autofree gchar *basename = NULL;
-
-  basename = g_file_get_basename (self->file);
-  gtk_label_set_label (self->filename_label, basename);
-
   gcal_importer_import_file (self->file,
                              self->cancellable,
                              read_calendar_finished_cb,
@@ -271,7 +265,6 @@ read_calendar_finished_cb (GObject      *source_object,
   g_autoptr (GPtrArray) event_components = NULL;
   g_autoptr (GPtrArray) timezones = NULL;
   g_autoptr (GError) error = NULL;
-  g_autofree gchar *subtitle = NULL;
   ICalComponent *component;
   GcalImportFileRow *self;
 
@@ -382,7 +375,6 @@ gcal_import_file_row_class_init (GcalImportFileRowClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/importer/gcal-import-file-row.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalImportFileRow, events_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalImportFileRow, filename_label);
 }
 
 static void
@@ -405,14 +397,6 @@ gcal_import_file_row_new (GFile        *file,
   self->title_sizegroup = title_sizegroup;
 
   return (GtkWidget*) self;
-}
-
-void
-gcal_import_file_row_show_filename (GcalImportFileRow *self)
-{
-  g_return_if_fail (GCAL_IS_IMPORT_FILE_ROW (self));
-
-  gtk_widget_show (GTK_WIDGET (self->filename_label));
 }
 
 GPtrArray*

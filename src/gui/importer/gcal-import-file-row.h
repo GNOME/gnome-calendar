@@ -20,17 +20,15 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
+#include <adwaita.h>
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_IMPORT_FILE_ROW (gcal_import_file_row_get_type())
-G_DECLARE_FINAL_TYPE (GcalImportFileRow, gcal_import_file_row, GCAL, IMPORT_FILE_ROW, GtkListBoxRow)
+G_DECLARE_FINAL_TYPE (GcalImportFileRow, gcal_import_file_row, GCAL, IMPORT_FILE_ROW, AdwBin)
 
 GtkWidget*           gcal_import_file_row_new                    (GFile              *file,
                                                                   GtkSizeGroup       *title_sizegroup);
-
-void                 gcal_import_file_row_show_filename          (GcalImportFileRow  *self);
 
 GPtrArray*           gcal_import_file_row_get_ical_components    (GcalImportFileRow  *self);
 GPtrArray*           gcal_import_file_row_get_timezones          (GcalImportFileRow  *self);
