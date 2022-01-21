@@ -1,6 +1,6 @@
-/* gcal-search-hit-event.h
+/* gcal-search-hit-row.h
  *
- * Copyright 2019 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ * Copyright 2022 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,17 @@
 
 #pragma once
 
-#include "gcal-event.h"
+#include <gtk/gtk.h>
+
 #include "gcal-search-hit.h"
 
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_SEARCH_HIT_EVENT (gcal_search_hit_event_get_type())
-G_DECLARE_FINAL_TYPE (GcalSearchHitEvent, gcal_search_hit_event, GCAL, SEARCH_HIT_EVENT, GcalSearchHit)
+#define GCAL_TYPE_SEARCH_HIT_ROW (gcal_search_hit_row_get_type())
+G_DECLARE_FINAL_TYPE (GcalSearchHitRow, gcal_search_hit_row, GCAL, SEARCH_HIT_ROW, GtkListBoxRow)
 
-GcalSearchHitEvent*  gcal_search_hit_event_new                   (GcalEvent          *event);
+GtkWidget *          gcal_search_hit_row_new                     (GcalSearchHit      *search_hit);
 
-GcalEvent*           gcal_search_hit_event_get_event             (GcalSearchHitEvent *self);
+GcalSearchHit *      gcal_search_hit_row_get_search_hit          (GcalSearchHitRow   *self);
 
 G_END_DECLS

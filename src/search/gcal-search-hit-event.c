@@ -26,15 +26,12 @@
 
 struct _GcalSearchHitEvent
 {
-  DzlSuggestion       parent;
+  GcalSearchHit       parent;
 
   GcalEvent          *event;
 };
 
-static void          gcal_search_hit_interface_init              (GcalSearchHitInterface *iface);
-
-G_DEFINE_TYPE_WITH_CODE (GcalSearchHitEvent, gcal_search_hit_event, DZL_TYPE_SUGGESTION,
-                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_SEARCH_HIT,  gcal_search_hit_interface_init))
+G_DEFINE_TYPE (GcalSearchHitEvent, gcal_search_hit_event, GCAL_TYPE_SEARCH_HIT)
 
 enum
 {
@@ -53,48 +50,30 @@ static void
 set_event (GcalSearchHitEvent *self,
            GcalEvent          *event)
 {
-  g_autofree gchar *date_string = NULL;
-  DzlSuggestion *suggestion;
-
-  self->event = g_object_ref (event);
-
-  suggestion = DZL_SUGGESTION (self);
-  dzl_suggestion_set_id (suggestion, gcal_event_get_uid (event));
-  dzl_suggestion_set_title (suggestion, gcal_event_get_summary (event));
-
-  date_string = gcal_event_format_date (event);
-  dzl_suggestion_set_subtitle (suggestion, date_string);
-}
-
-
-/*
- * DzlSuggestion overrides
- */
-
-static GdkPaintable*
-gcal_search_hit_event_get_paintable (DzlSuggestion *suggestion,
-                                     GtkWidget     *widget)
-{
   g_autoptr (GdkPaintable) paintable = NULL;
-  GcalSearchHitEvent *self;
+  g_autofree gchar *date_string = NULL;
+  GcalSearchHit *search_hit;
   const GdkRGBA *color;
   GcalCalendar *calendar;
 
-  self = GCAL_SEARCH_HIT_EVENT (suggestion);
-  calendar = gcal_event_get_calendar (self->event);
+  self->event = g_object_ref (event);
 
+  search_hit = GCAL_SEARCH_HIT (self);
+  gcal_search_hit_set_id (search_hit, gcal_event_get_uid (event));
+  gcal_search_hit_set_title (search_hit, gcal_event_get_summary (event));
+
+  date_string = gcal_event_format_date (event);
+  gcal_search_hit_set_subtitle (search_hit, date_string);
+
+  calendar = gcal_event_get_calendar (self->event);
   color = gcal_calendar_get_color (calendar);
   paintable = get_circle_paintable_from_color (color, 16);
-
-  /* Inject our custom style class into the given widget */
-  gtk_style_context_add_class (gtk_widget_get_style_context (widget), "calendar-color-image");
-
-  return g_steal_pointer (&paintable);
+  gcal_search_hit_set_primary_icon (search_hit, paintable);
 }
 
 
 /*
- * GcalSearchHit interface
+ * GcalSearchHit overrides
  */
 
 static void
@@ -138,14 +117,6 @@ gcal_search_hit_event_compare (GcalSearchHit *a,
   now_utc = time (NULL);
 
   return -gcal_event_compare_with_current (event_a, event_b, now_utc);
-}
-
-static void
-gcal_search_hit_interface_init (GcalSearchHitInterface *iface)
-{
-  iface->activate = gcal_search_hit_event_activate;
-  iface->get_priority = gcal_search_hit_event_get_priority;
-  iface->compare = gcal_search_hit_event_compare;
 }
 
 
@@ -206,13 +177,15 @@ static void
 gcal_search_hit_event_class_init (GcalSearchHitEventClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-  DzlSuggestionClass *suggestion_class = DZL_SUGGESTION_CLASS (klass);
+  GcalSearchHitClass *search_hit_class = GCAL_SEARCH_HIT_CLASS (klass);
 
   object_class->finalize = gcal_search_hit_event_finalize;
   object_class->get_property = gcal_search_hit_event_get_property;
   object_class->set_property = gcal_search_hit_event_set_property;
 
-  suggestion_class->get_icon_surface = gcal_search_hit_event_get_icon_surface;
+  search_hit_class->activate = gcal_search_hit_event_activate;
+  search_hit_class->get_priority = gcal_search_hit_event_get_priority;
+  search_hit_class->compare = gcal_search_hit_event_compare;
 
   properties[PROP_EVENT] = g_param_spec_object ("event",
                                                 "Event",

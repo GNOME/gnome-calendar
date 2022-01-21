@@ -21,8 +21,10 @@
 #define G_LOG_DOMAIN "GcalSearchButton"
 
 #include "gcal-context.h"
+#include "gcal-debug.h"
 #include "gcal-search-button.h"
 #include "gcal-search-hit.h"
+#include "gcal-search-hit-row.h"
 
 #include <math.h>
 
@@ -30,14 +32,22 @@
 
 struct _GcalSearchButton
 {
-  DzlSuggestionButton  parent;
+  AdwBin               parent;
+
+  GtkEditable         *entry;
+  GtkWidget           *popover;
+  GtkListBox          *results_listbox;
+  GtkRevealer         *results_revealer;
+  GtkStack            *stack;
 
   GCancellable        *cancellable;
+  gint                 max_width_chars;
+  GListModel          *model;
 
   GcalContext         *context;
 };
 
-G_DEFINE_TYPE (GcalSearchButton, gcal_search_button, DZL_TYPE_SUGGESTION_BUTTON)
+G_DEFINE_TYPE (GcalSearchButton, gcal_search_button, ADW_TYPE_BIN)
 
 enum
 {
@@ -50,28 +60,93 @@ static GParamSpec *properties [N_PROPS];
 
 
 /*
+ * Auxiliary methods
+ */
+
+static void
+show_suggestions (GcalSearchButton *self)
+{
+  gtk_popover_popup (GTK_POPOVER (self->popover));
+  gtk_revealer_set_reveal_child (self->results_revealer, TRUE);
+}
+
+static void
+hide_suggestions (GcalSearchButton *self)
+{
+  gtk_revealer_set_reveal_child (self->results_revealer, FALSE);
+  gtk_editable_set_text (self->entry, "");
+}
+
+static GtkWidget *
+create_widget_func (gpointer item,
+                    gpointer user_data)
+{
+  return gcal_search_hit_row_new (item);
+}
+
+static void
+set_model (GcalSearchButton *self,
+           GListModel       *model)
+{
+  GCAL_ENTRY;
+
+  gtk_list_box_bind_model (self->results_listbox,
+                           model,
+                           create_widget_func,
+                           self,
+                           NULL);
+
+  if (model)
+    show_suggestions (self);
+  else
+    hide_suggestions (self);
+
+  GCAL_EXIT;
+}
+
+
+/*
  * Callbacks
  */
 
 static void
-position_suggestion_popover_func (DzlSuggestionEntry *entry,
-                                  GdkRectangle       *area,
-                                  gboolean           *is_absolute,
-                                  gpointer            user_data)
+on_button_clicked_cb (GtkButton        *button,
+                      GcalSearchButton *self)
 {
-  gint new_width;
+  gint max_width_chars;
 
-#define RIGHT_MARGIN 6
 
-  dzl_suggestion_entry_window_position_func (entry, area, is_absolute, NULL);
+  max_width_chars = gtk_editable_get_max_width_chars (self->entry);
 
-  new_width = MAX (area->width * 2 / 5, MIN_WIDTH);
-  area->x += area->width - new_width;
-  area->width = new_width - RIGHT_MARGIN;
-  area->y -= 3;
+  if (max_width_chars)
+    self->max_width_chars = max_width_chars;
 
-#undef RIGHT_MARGIN
+  gtk_editable_set_width_chars (self->entry, 1);
+  gtk_editable_set_max_width_chars (self->entry, self->max_width_chars ?: 20);
+  gtk_stack_set_visible_child_name (self->stack, "entry");
+  gtk_widget_grab_focus (GTK_WIDGET (self->entry));
+}
 
+static void
+on_focus_controller_leave_cb (GtkEventControllerFocus *focus_controller,
+                              GcalSearchButton        *self)
+{
+  gtk_editable_set_width_chars (self->entry, 0);
+  gtk_editable_set_max_width_chars (self->entry, 0);
+  gtk_stack_set_visible_child_name (self->stack, "button");
+
+  hide_suggestions (self);
+
+  gtk_editable_set_text (self->entry, "");
+}
+
+static void
+on_entry_icon_pressed_cb (GtkEntry             *entry,
+                          GtkEntryIconPosition  position,
+                          GcalSearchButton     *self)
+{
+  if (position == GTK_ENTRY_ICON_PRIMARY)
+    gtk_stack_set_visible_child_name (self->stack, "button");
 }
 
 static void
@@ -81,36 +156,34 @@ on_search_finished_cb (GObject      *source_object,
 {
   g_autoptr (GListModel) model = NULL;
   g_autoptr (GError) error = NULL;
-  DzlSuggestionEntry *entry;
   GcalSearchButton *self;
 
   self = GCAL_SEARCH_BUTTON (user_data);
   model = gcal_search_engine_search_finish (GCAL_SEARCH_ENGINE (source_object), result, &error);
 
-  entry = dzl_suggestion_button_get_entry (DZL_SUGGESTION_BUTTON (self));
-  dzl_suggestion_entry_set_model (entry, model);
+  set_model (self, model);
 }
 
 static void
-on_search_entry_changed_cb (GcalSearchButton *self)
+on_entry_text_changed_cb (GtkEntry         *entry,
+                          GParamSpec       *pspec,
+                          GcalSearchButton *self)
 {
   g_autofree gchar *sexp_query = NULL;
-  DzlSuggestionEntry *entry;
   GcalSearchEngine *search_engine;
-  const gchar *typed_text;
+  const gchar *text;
 
-  entry = dzl_suggestion_button_get_entry (DZL_SUGGESTION_BUTTON (self));
-  typed_text = dzl_suggestion_entry_get_typed_text (entry);
+  text = gtk_editable_get_text (self->entry);
 
   g_cancellable_cancel (self->cancellable);
 
-  if (dzl_str_empty0 (typed_text))
+  if (!text || *text == '\0')
     {
-      dzl_suggestion_entry_set_model (entry, NULL);
+      set_model (self, NULL);
       return;
     }
 
-  sexp_query = g_strdup_printf ("(contains? \"summary\" \"%s\")", typed_text);
+  sexp_query = g_strdup_printf ("(contains? \"summary\" \"%s\")", text);
   search_engine = gcal_context_get_search_engine (self->context);
   gcal_search_engine_search (search_engine,
                              sexp_query,
@@ -121,43 +194,63 @@ on_search_entry_changed_cb (GcalSearchButton *self)
 }
 
 static void
-on_search_entry_suggestion_activated_cb (DzlSuggestionEntry *entry,
-                                         GcalSearchHit      *search_hit,
-                                         GcalSearchButton   *self)
+on_popover_closed_cb (GtkPopover       *popover,
+                      GcalSearchButton *self)
 {
+  gtk_editable_set_width_chars (self->entry, 0);
+  gtk_editable_set_max_width_chars (self->entry, 0);
+  gtk_editable_set_text (self->entry, "");
+  gtk_stack_set_visible_child_name (self->stack, "button");
+}
+
+static void
+on_results_listbox_row_activated_cb (GtkListBox       *listbox,
+                                     GcalSearchHitRow *row,
+                                     GcalSearchButton *self)
+{
+  GcalSearchHit *search_hit;
+
+  search_hit = gcal_search_hit_row_get_search_hit (row);
   gcal_search_hit_activate (search_hit, GTK_WIDGET (self));
+
+  hide_suggestions (self);
 }
 
 static void
-on_unfocus_action_activated_cb (GSimpleAction *action,
-                                GVariant      *param,
-                                gpointer       user_data)
+on_results_revealer_child_reveal_state_changed_cb (GtkRevealer      *revealer,
+                                                   GParamSpec       *pspec,
+                                                   GcalSearchButton *self)
 {
-  DzlSuggestionEntry *entry;
-  GcalSearchButton *self;
-  GtkWidget *toplevel;
-
-  g_assert (GCAL_IS_SEARCH_BUTTON (user_data));
-  g_assert (G_IS_SIMPLE_ACTION (action));
-
-  g_debug ("Unfocusing search button");
-
-  self = GCAL_SEARCH_BUTTON (user_data);
-  entry = dzl_suggestion_button_get_entry (DZL_SUGGESTION_BUTTON (self));
-  g_signal_emit_by_name (entry, "hide-suggestions");
-
-  toplevel = gtk_widget_get_toplevel (GTK_WIDGET (self));
-  gtk_widget_grab_focus (toplevel);
-  gtk_entry_set_text (GTK_ENTRY (entry), "");
+  if (!gtk_revealer_get_child_revealed (revealer) && !gtk_revealer_get_reveal_child (revealer))
+    gtk_popover_popdown (GTK_POPOVER (self->popover));
 }
 
-static void
-on_shortcut_grab_focus_cb (GtkWidget *widget,
-                           gpointer   user_data)
-{
-  g_debug ("Focusing search button");
 
-  gtk_widget_grab_focus (GTK_WIDGET (user_data));
+/*
+ * GtkWidget overrides
+ */
+
+static gboolean
+gcal_search_button_focus (GtkWidget        *widget,
+                          GtkDirectionType  direction)
+{
+  GcalSearchButton *self = GCAL_SEARCH_BUTTON (widget);
+
+  if (!gtk_widget_get_visible (GTK_WIDGET (self->popover)))
+    return gtk_widget_child_focus (GTK_WIDGET (self->stack), direction);
+
+  if (direction == GTK_DIR_DOWN)
+    {
+      GtkListBoxRow *first_row = gtk_list_box_get_row_at_index (self->results_listbox, 0);
+
+      if (!first_row)
+        return gtk_widget_child_focus (GTK_WIDGET (self->stack), direction);
+
+      gtk_widget_grab_focus (GTK_WIDGET (first_row));
+      return TRUE;
+    }
+
+  return gtk_widget_child_focus (GTK_WIDGET (self->stack), direction);
 }
 
 
@@ -165,6 +258,15 @@ on_shortcut_grab_focus_cb (GtkWidget *widget,
  * GObject overrides
  */
 
+static void
+gcal_search_button_dispose (GObject *object)
+{
+  GcalSearchButton *self = (GcalSearchButton *)object;
+
+  g_clear_pointer (&self->popover, gtk_widget_unparent);
+
+  G_OBJECT_CLASS (gcal_search_button_parent_class)->dispose (object);
+}
 
 static void
 gcal_search_button_finalize (GObject *object)
@@ -222,10 +324,14 @@ static void
 gcal_search_button_class_init (GcalSearchButtonClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
+  object_class->dispose = gcal_search_button_dispose;
   object_class->finalize = gcal_search_button_finalize;
   object_class->get_property = gcal_search_button_get_property;
   object_class->set_property = gcal_search_button_set_property;
+
+  widget_class->focus = gcal_search_button_focus;
 
   /**
    * GcalSearchButton::context:
@@ -239,56 +345,30 @@ gcal_search_button_class_init (GcalSearchButtonClass *klass)
                                                   G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
+
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-search-button.ui");
+
+  gtk_widget_class_bind_template_child (widget_class, GcalSearchButton, entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalSearchButton, popover);
+  gtk_widget_class_bind_template_child (widget_class, GcalSearchButton, results_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalSearchButton, results_revealer);
+  gtk_widget_class_bind_template_child (widget_class, GcalSearchButton, stack);
+
+  gtk_widget_class_bind_template_callback (widget_class, on_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_focus_controller_leave_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_entry_icon_pressed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_entry_text_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_popover_closed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_results_listbox_row_activated_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_results_revealer_child_reveal_state_changed_cb);
+
+  gtk_widget_class_set_css_name (widget_class, "searchbutton");
 }
 
 static void
 gcal_search_button_init (GcalSearchButton *self)
 {
-  g_autoptr (GSimpleActionGroup) group = NULL;
-  DzlShortcutController *controller;
-  DzlSuggestionEntry *entry;
+  gtk_widget_init_template (GTK_WIDGET (self));
 
-  static GActionEntry actions[] = {
-    { "unfocus", on_unfocus_action_activated_cb },
-  };
-
-  group = g_simple_action_group_new ();
-  g_action_map_add_action_entries (G_ACTION_MAP (group),
-                                   actions,
-                                   G_N_ELEMENTS (actions),
-                                   self);
-
-  gtk_widget_insert_action_group (GTK_WIDGET (self), "search", G_ACTION_GROUP (group));
-
-  entry = dzl_suggestion_button_get_entry (DZL_SUGGESTION_BUTTON (self));
-  g_signal_connect_object (entry,
-                           "changed",
-                           G_CALLBACK (on_search_entry_changed_cb),
-                           self,
-                           G_CONNECT_SWAPPED);
-  g_signal_connect_object (entry,
-                           "suggestion-activated",
-                           G_CALLBACK (on_search_entry_suggestion_activated_cb),
-                           self,
-                           0);
-
-  dzl_suggestion_entry_set_position_func (entry,
-                                          position_suggestion_popover_func,
-                                          self,
-                                          NULL);
-
-  controller = dzl_shortcut_controller_find (GTK_WIDGET (entry));
-  dzl_shortcut_controller_add_command_callback (controller,
-                                                "org.gnome.calendar.search",
-                                                "<Primary>f",
-                                                DZL_SHORTCUT_PHASE_CAPTURE | DZL_SHORTCUT_PHASE_GLOBAL,
-                                                on_shortcut_grab_focus_cb,
-                                                self,
-                                                NULL);
-
-  dzl_shortcut_controller_add_command_action (controller,
-                                              "org.gnome.calendar.search-button.unfocus",
-                                              "Escape",
-                                              DZL_SHORTCUT_PHASE_CAPTURE,
-                                              "search.unfocus");
+  gtk_widget_set_parent (GTK_WIDGET (self->popover), GTK_WIDGET (self));
 }

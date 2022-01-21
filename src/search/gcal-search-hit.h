@@ -20,16 +20,16 @@
 
 #pragma once
 
-#include <dazzle.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_SEARCH_HIT (gcal_search_hit_get_type ())
-G_DECLARE_INTERFACE (GcalSearchHit, gcal_search_hit, GCAL, SEARCH_HIT, DzlSuggestion)
+G_DECLARE_DERIVABLE_TYPE (GcalSearchHit, gcal_search_hit, GCAL, SEARCH_HIT, GObject)
 
-struct _GcalSearchHitInterface
+struct _GcalSearchHitClass
 {
-  GTypeInterface parent;
+  GObjectClass parent_class;
 
   void               (*activate)                                 (GcalSearchHit      *self,
                                                                   GtkWidget          *for_widget);
@@ -39,6 +39,28 @@ struct _GcalSearchHitInterface
   gint               (*compare)                                  (GcalSearchHit      *a,
                                                                   GcalSearchHit      *b);
 };
+
+GcalSearchHit *      gcal_search_hit_new                         (void);
+
+const gchar *        gcal_search_hit_get_id                      (GcalSearchHit      *self);
+
+void                 gcal_search_hit_set_id                      (GcalSearchHit      *self,
+                                                                  const gchar        *id);
+
+const gchar *        gcal_search_hit_get_title                   (GcalSearchHit      *self);
+
+void                 gcal_search_hit_set_title                   (GcalSearchHit      *self,
+                                                                  const gchar        *title);
+
+const gchar *        gcal_search_hit_get_subtitle                (GcalSearchHit      *self);
+
+void                 gcal_search_hit_set_subtitle                (GcalSearchHit      *self,
+                                                                  const gchar        *subtitle);
+
+GdkPaintable *       gcal_search_hit_get_primary_icon            (GcalSearchHit      *self);
+
+void                 gcal_search_hit_set_primary_icon            (GcalSearchHit      *self,
+                                                                  GdkPaintable       *paintable);
 
 void                 gcal_search_hit_activate                    (GcalSearchHit      *self,
                                                                   GtkWidget          *for_widget);

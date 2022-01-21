@@ -29,8 +29,6 @@
 #include "gcal-search-model.h"
 #include "gcal-utils.h"
 
-#include <dazzle.h>
-
 #define MIN_RESULTS         5
 #define WAIT_FOR_RESULTS_MS 0.150
 
@@ -155,7 +153,7 @@ gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
 static GType
 gcal_search_model_get_item_type (GListModel *model)
 {
-  return DZL_TYPE_SUGGESTION;
+  return GCAL_TYPE_SEARCH_HIT;
 }
 
 static guint
@@ -212,7 +210,7 @@ gcal_search_model_class_init (GcalSearchModelClass *klass)
 static void
 gcal_search_model_init (GcalSearchModel *self)
 {
-  self->model = (GListModel*) g_list_store_new (DZL_TYPE_SUGGESTION);
+  self->model = (GListModel*) g_list_store_new (GCAL_TYPE_SEARCH_HIT);
   g_signal_connect_object (self->model, "items-changed", G_CALLBACK (on_model_items_changed_cb), self, 0);
 }
 

@@ -507,3 +507,12 @@ monthpopover > box {
 .notes-section box > textview > text {
   background: none;
 }
+
+/*
+ * Search
+ */
+
+searchbutton > popover > arrow {
+  background: none;
+  border: none;
+}

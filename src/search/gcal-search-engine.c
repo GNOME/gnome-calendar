@@ -27,8 +27,6 @@
 #include "gcal-timeline.h"
 #include "gcal-timeline-subscriber.h"
 
-#include <dazzle.h>
-
 typedef struct
 {
   GcalSearchEngine   *engine;
