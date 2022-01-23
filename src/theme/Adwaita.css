@@ -386,16 +386,10 @@ label.month-name {
     color: alpha(@theme_fg_color, 0.25);
 }
 
-.week-header.week-names, .week-header.week-temperature {
+.week-header.week-temperature {
     font-size: 10pt;
     font-weight: bold;
     color: alpha(@theme_fg_color, 0.55);
-}
-
-.week-header.week-dates {
-    font-size: 16pt;
-    font-weight: bold;
-    color: alpha(@theme_fg_color, 0.70);
 }
 
 .week-header.lines {
@@ -406,37 +400,24 @@ label.month-name {
     color: alpha(@theme_fg_color, 0.6);
 }
 
-.week-header .today {
-    color: @theme_selected_bg_color;
-}
-
-.week-view {
-    padding: 0px;
-}
-
-.week-view .hours {
+weekhourbar > label {
     font-size: 10pt;
-    color: alpha(@theme_fg_color, 0.8);
-    padding: 8px 12px;
+    padding: 4px 6px;
 }
 
 .week-view .lines {
-    color: alpha(@theme_fg_color, 0.30);
+    color: alpha(@window_fg_color, 0.30);
 }
 
-weekgrid.now-strip {
-    background-color: alpha(@theme_selected_bg_color, 0.8);
+weekgrid > widget.now-strip {
+    background-color: alpha(@accent_bg_color, 0.8);
     margin: 0 0 0 1px;
     min-height: 2px;
 }
 
 weekgrid:selected,
 .week-header:selected {
-    background-color: alpha(@theme_selected_bg_color, 0.25);
-}
-
-.week-header:selected {
-    border: solid 1px alpha(@theme_selected_bg_color, 0.8);
+    background-color: alpha(@accent_bg_color, 0.25);
 }
 
 

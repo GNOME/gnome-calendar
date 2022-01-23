@@ -116,7 +116,7 @@ gboolean             ask_recurrence_modification_type            (GtkWidget     
 
 gboolean             is_workday                                  (guint	              day);
 
-GList*               filter_event_list_by_uid_and_modtype        (GList                 *widgets,
+GList*               filter_children_by_uid_and_modtype          (GtkWidget             *widget,
                                                                   GcalRecurrenceModType  mod,
                                                                   const gchar           *uid);
 

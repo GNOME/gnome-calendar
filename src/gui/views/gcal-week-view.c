@@ -25,27 +25,21 @@
 #include "gcal-utils.h"
 #include "gcal-view.h"
 #include "gcal-week-header.h"
+#include "gcal-week-hour-bar.h"
 #include "gcal-week-grid.h"
 #include "gcal-week-view.h"
 
+#include <adwaita.h>
 #include <glib/gi18n.h>
 
 #include <math.h>
-
-#define ALL_DAY_CELLS_HEIGHT 40
-
-static const double dashed [] =
-{
-  5.0,
-  6.0
-};
 
 struct _GcalWeekView
 {
   GtkBox              parent;
 
   GtkWidget          *header;
-  GtkWidget          *hours_bar;
+  GcalWeekHourBar    *hours_bar;
   GtkWidget          *scrolled_window;
   GtkWidget          *week_grid;
 
@@ -54,6 +48,7 @@ struct _GcalWeekView
   GcalContext        *context;
 
   guint               scroll_grid_timeout_id;
+  gulong              stack_page_changed_id;
 
   gint                clicked_cell;
 };
@@ -87,16 +82,16 @@ on_event_activated (GcalWeekView *self,
 }
 
 static void
-stack_visible_child_changed_cb (GtkStack     *stack,
+stack_visible_child_changed_cb (AdwViewStack *stack,
                                 GParamSpec   *pspec,
                                 GcalWeekView *self)
 {
-  if (gtk_stack_get_visible_child (stack) != (GtkWidget*) self)
+  if (adw_view_stack_get_visible_child (stack) != (GtkWidget*) self)
     return;
 
   schedule_position_scroll (self);
 
-  g_signal_handlers_disconnect_by_func (stack, stack_visible_child_changed_cb, self);
+  g_clear_signal_handler (&self->stack_page_changed_id, stack);
 }
 
 /* Auxiliary methods */
@@ -115,15 +110,16 @@ update_grid_scroll_position (GcalWeekView *self)
   if (!gtk_widget_get_realized (self->scrolled_window) ||
       !gtk_widget_get_mapped (self->scrolled_window))
     {
-      GtkWidget *stack;
+      if (self->stack_page_changed_id == 0)
+        {
+          GtkWidget *stack = gtk_widget_get_ancestor (GTK_WIDGET (self), ADW_TYPE_VIEW_STACK);
 
-      stack = gtk_widget_get_ancestor (GTK_WIDGET (self), GTK_TYPE_STACK);
-
-      g_signal_connect_object (stack,
-                               "notify::visible-child",
-                               G_CALLBACK (stack_visible_child_changed_cb),
-                               self,
-                               0);
+          self->stack_page_changed_id = g_signal_connect_object (stack,
+                                                                 "notify::visible-child",
+                                                                 G_CALLBACK (stack_visible_child_changed_cb),
+                                                                 self,
+                                                                 0);
+        }
 
       self->scroll_grid_timeout_id = 0;
 
@@ -260,59 +256,6 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->get_previous_date = gcal_week_view_get_previous_date;
 }
 
-static void
-update_hours_sidebar_size (GcalWeekView *self)
-{
-  GtkStyleContext *context;
-  GtkStateFlags state;
-  GtkSizeGroup *sidebar_sizegroup;
-  GtkWidget *widget;
-  GtkBorder padding;
-
-  PangoLayout *layout;
-  PangoFontDescription *font_desc;
-
-  gint hours_12_width, hours_24_width, sidebar_width;
-  gint hours_12_height, hours_24_height, cell_height;
-
-  widget = GTK_WIDGET (self);
-  context = gtk_widget_get_style_context (widget);
-  state = gtk_style_context_get_state (context);
-
-  gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "hours");
-
-  gtk_style_context_get (context, state,
-                         "font", &font_desc,
-                         NULL);
-  gtk_style_context_get_padding (context, state, &padding);
-
-  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
-  pango_layout_set_font_description (layout, font_desc);
-
-  pango_layout_set_text (layout, _("00 AM"), -1);
-  pango_layout_get_pixel_size (layout, &hours_12_width, &hours_12_height);
-
-  pango_layout_set_text (layout, _("00:00"), -1);
-  pango_layout_get_pixel_size (layout, &hours_24_width, &hours_24_height);
-
-  sidebar_width = MAX (hours_12_width, hours_24_width) + padding.left + padding.right;
-  cell_height = MAX (hours_12_height, hours_24_height) + padding.top + padding.bottom + 1;
-
-  gtk_style_context_restore (context);
-
-  /* Update the size requests */
-  gtk_widget_set_size_request (self->hours_bar,
-                               sidebar_width,
-                               48 * cell_height);
-
-  /* Sync with the week header sidebar */
-  sidebar_sizegroup = gcal_week_header_get_sidebar_size_group (GCAL_WEEK_HEADER (self->header));
-  gtk_size_group_add_widget (sidebar_sizegroup, self->hours_bar);
-
-  pango_font_description_free (font_desc);
-  g_object_unref (layout);
-}
 
 /*
  * GcalTimelineSubscriber iface
@@ -386,114 +329,10 @@ gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
   iface->remove_event = gcal_week_view_remove_event;
 }
 
-static gboolean
-gcal_week_view_draw_hours (GcalWeekView *self,
-                           cairo_t      *cr,
-                           GtkWidget    *widget)
-{
-  GtkStyleContext *context;
-  GcalTimeFormat time_format;
-  GtkStateFlags state;
-  GtkBorder padding;
-  GdkRGBA color;
 
-  gboolean ltr;
-  gint i, width, height;
-  gint font_width;
-
-  PangoLayout *layout;
-  PangoFontDescription *font_desc;
-
-  time_format = gcal_context_get_time_format (self->context);
-  context = gtk_widget_get_style_context (widget);
-  state = gtk_widget_get_state_flags (widget);
-  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
-
-  gtk_style_context_save (context);
-
-  gtk_style_context_add_class (context, "hours");
-  gtk_style_context_get_color (context, state, &color);
-  gtk_style_context_get_padding (context, state, &padding);
-  gtk_style_context_get (context, state, "font", &font_desc, NULL);
-
-  layout = pango_cairo_create_layout (cr);
-  pango_layout_set_font_description (layout, font_desc);
-  gdk_cairo_set_source_rgba (cr, &color);
-
-  /* Gets the size of the widget */
-  width = gtk_widget_get_allocated_width (widget);
-  height = gtk_widget_get_allocated_height (widget);
-
-  /* Draws the hours in the sidebar */
-  for (i = 0; i < 24; i++)
-    {
-      gchar *hours;
-
-      if (time_format == GCAL_TIME_FORMAT_24H)
-        {
-          hours = g_strdup_printf ("%02d:00", i);
-        }
-      else
-        {
-          hours = g_strdup_printf ("%d %s",
-                                   i % 12 == 0 ? 12 : i % 12,
-                                   i >= 12 ? _("PM") : _("AM"));
-        }
-
-      pango_layout_set_text (layout, hours, -1);
-      pango_layout_get_pixel_size (layout, &font_width, NULL);
-
-      gtk_render_layout (context,
-                         cr,
-                         ltr ? padding.left : width - font_width - padding.right,
-                         (height / 24) * i + padding.top,
-                         layout);
-
-      g_free (hours);
-    }
-
-  gtk_style_context_restore (context);
-
-  gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "lines");
-  gtk_style_context_get_color (context, state, &color);
-
-  gdk_cairo_set_source_rgba (cr, &color);
-  cairo_set_line_width (cr, 0.65);
-
-  if (!ltr)
-    {
-      cairo_move_to (cr, 0.5, 0);
-      cairo_rel_line_to (cr, 0, height);
-    }
-
-  /* Draws the horizontal complete lines */
-  for (i = 1; i < 24; i++)
-    {
-      cairo_move_to (cr, 0, (height / 24) * i + 0.4);
-      cairo_rel_line_to (cr, width, 0);
-    }
-
-  cairo_stroke (cr);
-
-  cairo_set_dash (cr, dashed, 2, 0);
-
-  /* Draws the horizontal dashed lines */
-  for (i = 0; i < 24; i++)
-    {
-      cairo_move_to (cr, 0, (height / 24) * i + (height / 48) + 0.4);
-      cairo_rel_line_to (cr, width, 0);
-    }
-
-  cairo_stroke (cr);
-
-  gtk_style_context_restore (context);
-
-  pango_font_description_free (font_desc);
-  g_object_unref (layout);
-
-  return FALSE;
-}
+/*
+ * GObject overrides
+ */
 
 static void
 gcal_week_view_finalize (GObject       *object)
@@ -530,12 +369,7 @@ gcal_week_view_set_property (GObject       *object,
 
       gcal_week_grid_set_context (GCAL_WEEK_GRID (self->week_grid), self->context);
       gcal_week_header_set_context (GCAL_WEEK_HEADER (self->header), self->context);
-
-      g_signal_connect_object (self->context,
-                               "notify::time-format",
-                               G_CALLBACK (gtk_widget_queue_draw),
-                               self->hours_bar,
-                               G_CONNECT_SWAPPED);
+      gcal_week_hour_bar_set_context (self->hours_bar, self->context);
       break;
 
     default:
@@ -579,6 +413,7 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   g_type_ensure (GCAL_TYPE_WEEK_GRID);
   g_type_ensure (GCAL_TYPE_WEEK_HEADER);
+  g_type_ensure (GCAL_TYPE_WEEK_HOUR_BAR);
 
   object_class->finalize = gcal_week_view_finalize;
   object_class->set_property = gcal_week_view_set_property;
@@ -594,7 +429,6 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, scrolled_window);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, week_grid);
 
-  gtk_widget_class_bind_template_callback (widget_class, gcal_week_view_draw_hours);
   gtk_widget_class_bind_template_callback (widget_class, on_event_activated);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
@@ -603,8 +437,11 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 static void
 gcal_week_view_init (GcalWeekView *self)
 {
+  GtkSizeGroup *size_group;
+
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  update_hours_sidebar_size (self);
+  size_group = gcal_week_header_get_sidebar_size_group (GCAL_WEEK_HEADER (self->header));
+  gtk_size_group_add_widget (size_group, GTK_WIDGET (self->hours_bar));
 }
 

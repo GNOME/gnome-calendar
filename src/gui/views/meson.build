@@ -13,6 +13,8 @@ sources += files(
   'gcal-view.c',
   'gcal-week-grid.c',
   'gcal-week-header.c',
+  'gcal-week-hour-bar.c',
   'gcal-week-view.c',
+  'gcal-week-view-common.c',
   'gcal-year-view.c',
 )

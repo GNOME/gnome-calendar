@@ -1112,29 +1112,30 @@ is_workday (guint day)
 }
 
 GList*
-filter_event_list_by_uid_and_modtype (GList                 *widgets,
-                                      GcalRecurrenceModType  mod,
-                                      const gchar           *uid)
+filter_children_by_uid_and_modtype (GtkWidget             *widget,
+                                    GcalRecurrenceModType  mod,
+                                    const gchar           *uid)
 {
+  GtkWidget *child;
   GcalEvent *event;
   GList *result;
-  GList *l;
 
   event = NULL;
   result = NULL;
 
   /* First pass: find the GcalEvent */
-  for (l = widgets; l != NULL; l = l->next)
+  for (child = gtk_widget_get_first_child (widget);
+       child;
+       child = gtk_widget_get_next_sibling (child))
     {
       GcalEventWidget *event_widget;
       GcalEvent *ev;
 
-      event_widget = l->data;
-
       /* Safeguard against stray widgets */
-      if (!GCAL_IS_EVENT_WIDGET (event_widget))
+      if (!GCAL_IS_EVENT_WIDGET (child))
         continue;
 
+      event_widget = GCAL_EVENT_WIDGET (child);
       ev = gcal_event_widget_get_event (event_widget);
 
       /*
@@ -1161,17 +1162,18 @@ filter_event_list_by_uid_and_modtype (GList                 *widgets,
       id = e_cal_component_get_id (component);
       id_prefix = g_strdup_printf ("%s:%s", gcal_calendar_get_id (calendar), e_cal_component_id_get_uid (id));
 
-      for (l = widgets; l != NULL; l = l->next)
+      for (child = gtk_widget_get_first_child (widget);
+           child;
+           child = gtk_widget_get_next_sibling (child))
         {
           GcalEventWidget *event_widget;
           GcalEvent *ev;
 
-          event_widget = l->data;
-
           /* Safeguard against stray widgets */
-          if (!GCAL_IS_EVENT_WIDGET (event_widget))
+          if (!GCAL_IS_EVENT_WIDGET (child))
             continue;
 
+          event_widget = GCAL_EVENT_WIDGET (child);
           ev = gcal_event_widget_get_event (event_widget);
 
           if (g_str_equal (gcal_event_get_uid (ev), uid))

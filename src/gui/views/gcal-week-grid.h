@@ -28,7 +28,7 @@ G_BEGIN_DECLS
 
 #define GCAL_TYPE_WEEK_GRID (gcal_week_grid_get_type())
 
-G_DECLARE_FINAL_TYPE (GcalWeekGrid, gcal_week_grid, GCAL, WEEK_GRID, GtkContainer)
+G_DECLARE_FINAL_TYPE (GcalWeekGrid, gcal_week_grid, GCAL, WEEK_GRID, GtkWidget)
 
 void                 gcal_week_grid_set_context                  (GcalWeekGrid       *week_grid,
                                                                   GcalContext        *context);
