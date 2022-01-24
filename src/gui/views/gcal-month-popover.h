@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GCAL_MONTH_POPOVER_H
-#define GCAL_MONTH_POPOVER_H
+#pragma once
 
 #include "gcal-manager.h"
 
@@ -26,8 +25,7 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_MONTH_POPOVER (gcal_month_popover_get_type())
-
-G_DECLARE_FINAL_TYPE (GcalMonthPopover, gcal_month_popover, GCAL, MONTH_POPOVER, GtkWindow)
+G_DECLARE_FINAL_TYPE (GcalMonthPopover, gcal_month_popover, GCAL, MONTH_POPOVER, GtkWidget)
 
 GtkWidget*           gcal_month_popover_new                      (void);
 
@@ -45,6 +43,3 @@ void                 gcal_month_popover_set_date                 (GcalMonthPopov
                                                                   GDateTime          *date);
 
 G_END_DECLS
-
-#endif /* GCAL_MONTH_POPOVER_H */
-

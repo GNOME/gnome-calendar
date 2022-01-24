@@ -26,7 +26,7 @@ G_BEGIN_DECLS
 
 #define GCAL_TYPE_MONTH_VIEW  (gcal_month_view_get_type ())
 
-G_DECLARE_FINAL_TYPE (GcalMonthView, gcal_month_view, GCAL, MONTH_VIEW, GtkContainer)
+G_DECLARE_FINAL_TYPE (GcalMonthView, gcal_month_view, GCAL, MONTH_VIEW, GtkWidget)
 
 G_END_DECLS
 

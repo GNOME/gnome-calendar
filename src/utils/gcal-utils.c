@@ -877,7 +877,7 @@ get_alarm_trigger_minutes (GcalEvent          *event,
 /**
  * should_change_date_for_scroll:
  * @scroll_value: the current scroll value
- * @scroll_event: the #GdkEventScroll that is being parsed
+ * @scroll_event: the #GdkEvent that is being parsed
  *
  * Utility function to check if the date should change based
  * on the scroll. The date is changed when the user scrolls
@@ -887,12 +887,14 @@ get_alarm_trigger_minutes (GcalEvent          *event,
  * Returns: %TRUE if the date should change, %FALSE otherwise.
  */
 gboolean
-should_change_date_for_scroll (gdouble        *scroll_value,
-                               GdkEventScroll *scroll_event)
+should_change_date_for_scroll (gdouble  *scroll_value,
+                               GdkEvent *scroll_event)
 {
-  gdouble delta_y;
+  gdouble dx, dy;
 
-  switch (scroll_event->direction)
+  g_return_val_if_fail (gdk_event_get_event_type (scroll_event) == GDK_SCROLL, FALSE);
+
+  switch (gdk_scroll_event_get_direction (scroll_event))
     {
     case GDK_SCROLL_DOWN:
       *scroll_value = SCROLL_HARDNESS;
@@ -903,8 +905,8 @@ should_change_date_for_scroll (gdouble        *scroll_value,
       break;
 
     case GDK_SCROLL_SMOOTH:
-      gdk_event_get_scroll_deltas ((GdkEvent*) scroll_event, NULL, &delta_y);
-      *scroll_value += delta_y;
+      gdk_scroll_event_get_deltas (scroll_event, &dx, &dy);
+      *scroll_value += dy;
       break;
 
     /* Ignore horizontal scrolling for now */

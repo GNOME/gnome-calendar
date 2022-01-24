@@ -40,7 +40,7 @@ gcal_view_default_init (GcalViewInterface *iface)
   g_object_interface_install_property (iface,
                                        g_param_spec_boxed ("active-date",
                                                            "The active date",
-                                                           "The active/selecetd date in the view",
+                                                           "The active/selected date in the view",
                                                            G_TYPE_DATE_TIME,
                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 

@@ -106,7 +106,7 @@ gint                 get_alarm_trigger_minutes                   (GcalEvent     
                                                                   ECalComponentAlarm *alarm);
 
 gboolean             should_change_date_for_scroll               (gdouble            *scroll_value,
-                                                                  GdkEventScroll     *scroll_event);
+                                                                  GdkEvent           *scroll_event);
 
 gboolean             is_source_enabled                           (ESource            *source);
 

@@ -22,13 +22,13 @@
 #include "gcal-context.h"
 #include "gcal-weather-info.h"
 
-#include <gtk/gtk.h>
+#include <adwaita.h>
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_MONTH_CELL (gcal_month_cell_get_type())
 
-G_DECLARE_FINAL_TYPE (GcalMonthCell, gcal_month_cell, GCAL, MONTH_CELL, GtkEventBox)
+G_DECLARE_FINAL_TYPE (GcalMonthCell, gcal_month_cell, GCAL, MONTH_CELL, AdwBin)
 
 GtkWidget*           gcal_month_cell_new                         (void);
 

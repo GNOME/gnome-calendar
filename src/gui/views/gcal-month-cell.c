@@ -29,7 +29,7 @@
 
 struct _GcalMonthCell
 {
-  GtkEventBox         parent;
+  AdwBin              parent;
 
   GDateTime          *date;
   guint               n_overflow;
@@ -46,16 +46,12 @@ struct _GcalMonthCell
   gboolean            different_month;
   gboolean            selected;
 
-  /* internal fields */
-  gboolean            hovered : 1;
-  gboolean            pressed : 1;
-
   GcalContext        *context;
 
   GcalWeatherInfo    *weather_info;
 };
 
-G_DEFINE_TYPE (GcalMonthCell, gcal_month_cell, GTK_TYPE_EVENT_BOX)
+G_DEFINE_TYPE (GcalMonthCell, gcal_month_cell, ADW_TYPE_BIN)
 
 enum
 {
@@ -82,52 +78,14 @@ static void
 update_style_flags (GcalMonthCell *self)
 {
   g_autoptr (GDateTime) today = NULL;
-  GtkStyleContext *context;
-  GtkStateFlags flags;
-  GtkWidget *widget;
-
-  widget = GTK_WIDGET (self);
-  flags = gtk_widget_get_state_flags (widget);
-
-  if (self->hovered)
-    flags |= GTK_STATE_FLAG_PRELIGHT;
-  else
-    flags &= ~GTK_STATE_FLAG_PRELIGHT;
-
-  gtk_widget_set_state_flags (widget, flags, TRUE);
 
   /* Today */
   today = g_date_time_new_now_local ();
-  context = gtk_widget_get_style_context (GTK_WIDGET (self));
 
   if (gcal_date_time_compare_date (self->date, today) == 0)
-    gtk_style_context_add_class (context, "today");
+    gtk_widget_add_css_class (GTK_WIDGET (self), "today");
   else
-    gtk_style_context_remove_class (context, "today");
-}
-
-static gboolean
-should_propagate_button_event (GtkWidget      *widget,
-                               GdkEventButton *event_button)
-{
-  GcalMonthCell *self;
-  gdouble x, y;
-  gint button_height, height;
-
-  self = GCAL_MONTH_CELL (widget);
-  height = gtk_widget_get_allocated_height (widget);
-  button_height = gtk_widget_get_allocated_height (self->overflow_button);
-
-  x = event_button->x;
-  y = event_button->y;
-
-  if (!gcal_translate_child_window_position (widget, event_button->window, x, y, &x, &y))
-    return GDK_EVENT_PROPAGATE;
-
-  if (self->n_overflow > 0 && y > height - button_height)
-    return GDK_EVENT_STOP;
-
-  return GDK_EVENT_PROPAGATE;
+    gtk_widget_remove_css_class (GTK_WIDGET (self), "today");
 }
 
 
@@ -142,30 +100,6 @@ day_changed_cb (GcalClock     *clock,
   update_style_flags (self);
 }
 
-static gboolean
-enter_notify_event_cb (GtkWidget        *widget,
-                       GdkEventCrossing *event_crossing,
-                       GcalMonthCell    *self)
-{
-  self->hovered = TRUE;
-
-  update_style_flags (self);
-
-  return GDK_EVENT_PROPAGATE;
-}
-
-static gboolean
-leave_notify_event_cb (GtkWidget        *widget,
-                       GdkEventCrossing *event_crossing,
-                       GcalMonthCell    *self)
-{
-  self->hovered = FALSE;
-
-  update_style_flags (self);
-
-  return GDK_EVENT_PROPAGATE;
-}
-
 static void
 overflow_button_clicked_cb (GtkWidget     *button,
                             GcalMonthCell *self)
@@ -176,6 +110,9 @@ overflow_button_clicked_cb (GtkWidget     *button,
 /*
  * GtkWidget overrides
  */
+
+#if 0 // TODO: DND
+
 static gboolean
 gcal_month_cell_drag_motion (GtkWidget      *widget,
                              GdkDragContext *context,
@@ -297,51 +234,7 @@ gcal_month_cell_drag_leave (GtkWidget      *widget,
   gtk_drag_unhighlight (widget);
 }
 
-static gboolean
-gcal_month_cell_button_press_event (GtkWidget      *widget,
-                                    GdkEventButton *event_button)
-{
-  GcalMonthCell *self = GCAL_MONTH_CELL (widget);
-
-  self->pressed = TRUE;
-
-  return should_propagate_button_event (widget, event_button);
-}
-
-static gboolean
-gcal_month_cell_button_release_event (GtkWidget      *widget,
-                                      GdkEventButton *event_button)
-{
-  GcalMonthCell *self = GCAL_MONTH_CELL (widget);
-
-  if (!self->pressed)
-    return GDK_EVENT_STOP;
-
-  self->pressed = FALSE;
-
-  return should_propagate_button_event (widget, event_button);
-}
-
-static gboolean
-gcal_month_cell_draw (GtkWidget *widget,
-                      cairo_t   *cr)
-{
-  GtkStyleContext *context;
-  gint width, height;
-
-  width = gtk_widget_get_allocated_width (widget);
-  height = gtk_widget_get_allocated_height (widget);
-  context = gtk_widget_get_style_context (widget);
-
-  gtk_render_background (context, cr, 0, 0, width, height);
-  gtk_render_frame (context, cr, 0, 0, width, height);
-
-  if (gtk_widget_has_focus (widget))
-    gtk_render_focus (context, cr, 0, 0, width, height);
-
-  return GTK_WIDGET_CLASS (gcal_month_cell_parent_class)->draw (widget, cr);
-}
-
+#endif
 
 /*
  * GObject overrides
@@ -409,12 +302,11 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
   object_class->set_property = gcal_month_cell_set_property;
   object_class->get_property = gcal_month_cell_get_property;
 
-  widget_class->button_press_event = gcal_month_cell_button_press_event;
-  widget_class->button_release_event = gcal_month_cell_button_release_event;
+#if 0 // TODO: DND
   widget_class->drag_motion = gcal_month_cell_drag_motion;
   widget_class->drag_drop = gcal_month_cell_drag_drop;
   widget_class->drag_leave = gcal_month_cell_drag_leave;
-  widget_class->draw = gcal_month_cell_draw;
+#endif
 
   signals[SHOW_OVERFLOW] = g_signal_new ("show-overflow",
                                          GCAL_TYPE_MONTH_CELL,
@@ -442,8 +334,6 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, temp_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, weather_icon);
 
-  gtk_widget_class_bind_template_callback (widget_class, enter_notify_event_cb);
-  gtk_widget_class_bind_template_callback (widget_class, leave_notify_event_cb);
   gtk_widget_class_bind_template_callback (widget_class, overflow_button_clicked_cb);
 
   gtk_widget_class_set_css_name (widget_class, "monthcell");
@@ -454,12 +344,14 @@ gcal_month_cell_init (GcalMonthCell *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
 
+#if 0 // TODO: DND
   /* Setup the month cell as a drag n' drop destination */
   gtk_drag_dest_set (GTK_WIDGET (self),
                      0,
                      NULL,
                      0,
                      GDK_ACTION_MOVE);
+#endif
 }
 
 GtkWidget*
@@ -533,7 +425,7 @@ gcal_month_cell_set_weather (GcalMonthCell   *self,
       icon_name = gcal_weather_info_get_icon_name (info);
       temp_str = gcal_weather_info_get_temperature (info);
 
-      gtk_image_set_from_icon_name (self->weather_icon, icon_name, GTK_ICON_SIZE_SMALL_TOOLBAR);
+      gtk_image_set_from_icon_name (self->weather_icon, icon_name);
       gtk_label_set_text (self->temp_label, temp_str);
     }
 }
@@ -631,8 +523,8 @@ gcal_month_cell_get_content_space (GcalMonthCell *self)
   g_return_val_if_fail (GCAL_IS_MONTH_CELL (self), -1);
 
   context = gtk_widget_get_style_context (GTK_WIDGET (self));
-  gtk_style_context_get_padding (context, gtk_style_context_get_state (context), &padding);
-  gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
+  gtk_style_context_get_padding (context, &padding);
+  gtk_style_context_get_border (context, &border);
 
   return gtk_widget_get_allocated_height (GTK_WIDGET (self)) -
          gcal_month_cell_get_header_height (self) -
@@ -650,8 +542,8 @@ gcal_month_cell_get_header_height (GcalMonthCell *self)
   g_return_val_if_fail (GCAL_IS_MONTH_CELL (self), -1);
 
   context = gtk_widget_get_style_context (GTK_WIDGET (self->header_box));
-  gtk_style_context_get_padding (context, gtk_style_context_get_state (context), &padding);
-  gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
+  gtk_style_context_get_padding (context, &padding);
+  gtk_style_context_get_border (context, &border);
 
   return gtk_widget_get_allocated_height (self->header_box) +
          gtk_widget_get_margin_top (self->header_box) +
