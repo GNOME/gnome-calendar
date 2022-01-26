@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GcalCalendarPopover" parent="GtkPopover">
-    <property name="can_focus">False</property>
     <property name="position">bottom</property>
-    <property name="constrain_to">none</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="orientation">vertical</property>
-        <property name="margin">6</property>
         <child>
           <object class="GtkScrolledWindow">
-            <property name="visible">True</property>
             <property name="hscrollbar_policy">never</property>
             <property name="max_content_height">450</property>
             <property name="propagate-natural-height">True</property>
             <child>
               <object class="GtkListBox" id="calendar_listbox">
-                <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="selection_mode">none</property>
                 <signal name="row-activated" handler="on_listbox_row_activated_cb" object="GcalCalendarPopover" swapped="no"/>
@@ -31,14 +25,12 @@
 
         <child>
           <object class="GtkSeparator">
-            <property name="visible">True</property>
           </object>
         </child>
 
         <!-- Synchronize -->
         <child>
           <object class="GtkModelButton" id="synchronize_button">
-            <property name="visible">True</property>
             <property name="action-name">app.sync</property>
             <property name="text" translatable="yes">_Synchronize Calendars</property>
           </object>
@@ -46,7 +38,6 @@
 
         <child>
           <object class="GtkModelButton" id="calendar_settings_button">
-            <property name="visible">True</property>
             <property name="action_name">win.show-calendars</property>
             <property name="text" translatable="yes">Manage Calendars…</property>
           </object>
@@ -57,35 +48,38 @@
 
   <!-- Icon -->
   <object class="GtkStack" id="icon_stack">
-    <property name="visible">True</property>
     <property name="transition-type">crossfade</property>
     <property name="transition-duration">250</property>
     <child>
-      <object class="GtkImage" id="calendar_image">
-        <property name="visible">True</property>
-        <property name="icon_name">x-office-calendar-symbolic</property>
-      </object>
-      <packing>
+      <object class="GtkStackPage">
         <property name="name">icon</property>
-      </packing>
+        <property name="child">
+          <object class="GtkImage" id="calendar_image">
+            <property name="icon_name">x-office-calendar-symbolic</property>
+          </object>
+        </property>
+      </object>
     </child>
     <child>
-      <object class="GtkSpinner" id="refreshing_spinner">
-        <property name="active">True</property>
-        <property name="tooltip_text" translatable="yes" context="tooltip">Synchronizing remote calendars…</property>
-      </object>
-      <packing>
+      <object class="GtkStackPage">
         <property name="name">spinner</property>
-      </packing>
+        <property name="child">
+          <object class="GtkSpinner" id="refreshing_spinner">
+            <property name="spinning">True</property>
+            <property name="tooltip_text" translatable="yes" context="tooltip">Synchronizing remote calendars…</property>
+          </object>
+        </property>
+      </object>
     </child>
     <child>
-      <object class="GtkImage" id="success_image">
-        <property name="visible">True</property>
-        <property name="icon_name">emblem-ok-symbolic</property>
-      </object>
-      <packing>
+      <object class="GtkStackPage">
         <property name="name">success</property>
-      </packing>
+        <property name="child">
+          <object class="GtkImage" id="success_image">
+            <property name="icon_name">emblem-ok-symbolic</property>
+          </object>
+        </property>
+      </object>
     </child>
   </object>
 </interface>

@@ -61,20 +61,19 @@ make_calendar_row (GcalCalendar *calendar)
 {
   g_autoptr (GdkPaintable) paintable = NULL;
   GtkWidget *label, *icon, *checkbox, *box, *row;
-  GtkStyleContext *context;
   const GdkRGBA *color;
 
   row = gtk_list_box_row_new ();
 
   /* apply some nice styling */
-  context = gtk_widget_get_style_context (row);
-  gtk_style_context_add_class (context, "button");
-  gtk_style_context_add_class (context, "flat");
-  gtk_style_context_add_class (context, "menuitem");
+  gtk_widget_add_css_class (row, "button");
+  gtk_widget_add_css_class (row, "flat");
+  gtk_widget_add_css_class (row, "menuitem");
 
   /* main box */
   box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
-  gtk_container_set_border_width (GTK_CONTAINER (box), 6);
+  gtk_widget_set_margin_start (box, 6);
+  gtk_widget_set_margin_end (box, 6);
 
   /* source color icon */
   color = gcal_calendar_get_color (calendar);
@@ -96,15 +95,13 @@ make_calendar_row (GcalCalendar *calendar)
                           "active",
                           G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
 
-  gtk_container_add (GTK_CONTAINER (box), icon);
-  gtk_container_add (GTK_CONTAINER (box), label);
-  gtk_container_add (GTK_CONTAINER (box), checkbox);
-  gtk_container_add (GTK_CONTAINER (row), box);
+  gtk_box_append (GTK_BOX (box), icon);
+  gtk_box_append (GTK_BOX (box), label);
+  gtk_box_append (GTK_BOX (box), checkbox);
+  gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), box);
 
   g_object_set_data (G_OBJECT (row), "check", checkbox);
   g_object_set_data (G_OBJECT (row), "calendar", calendar);
-
-  gtk_widget_show_all (row);
 
   return row;
 }
@@ -116,25 +113,24 @@ add_calendar (GcalCalendarPopover *self,
   GtkWidget *row;
 
   row = make_calendar_row (calendar);
-  gtk_container_add (GTK_CONTAINER (self->calendar_listbox), row);
+  gtk_list_box_append (GTK_LIST_BOX (self->calendar_listbox), row);
 }
 
 static void
 remove_calendar (GcalCalendarPopover *self,
                  GcalCalendar        *calendar)
 {
-  g_autoptr (GList) children = NULL;
-  GList *aux;
+  GtkWidget *child;
 
-  children = gtk_container_get_children (GTK_CONTAINER (self->calendar_listbox));
-
-  for (aux = children; aux != NULL; aux = aux->next)
+  for (child = gtk_widget_get_first_child (self->calendar_listbox);
+       child;
+       child = gtk_widget_get_next_sibling (child))
     {
-      GcalCalendar *row_calendar = g_object_get_data (G_OBJECT (aux->data), "calendar");
+      GcalCalendar *row_calendar = g_object_get_data (G_OBJECT (child), "calendar");
 
       if (row_calendar && row_calendar == calendar)
         {
-          gtk_widget_destroy (aux->data);
+          gtk_list_box_remove (GTK_LIST_BOX (self->calendar_listbox), child);
           break;
         }
     }
@@ -248,11 +244,9 @@ on_listbox_row_activated_cb (GtkListBox          *listbox,
                              GtkListBoxRow       *row,
                              GcalCalendarPopover *self)
 {
-  GtkToggleButton *check;
+  GtkCheckButton *check = g_object_get_data (G_OBJECT (row), "check");
 
-  check = (GtkToggleButton *) g_object_get_data (G_OBJECT (row), "check");
-
-  gtk_toggle_button_set_active (check, !gtk_toggle_button_get_active (check));
+  gtk_check_button_set_active (check, !gtk_check_button_get_active (check));
 }
 
 
