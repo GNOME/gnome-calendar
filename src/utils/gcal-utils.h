@@ -120,13 +120,6 @@ GList*               filter_children_by_uid_and_modtype          (GtkWidget     
                                                                   GcalRecurrenceModType  mod,
                                                                   const gchar           *uid);
 
-gboolean             gcal_translate_child_window_position        (GtkWidget           *target,
-                                                                  GdkWindow           *child_window,
-                                                                  gdouble              src_x,
-                                                                  gdouble              src_y,
-                                                                  gdouble             *real_x,
-                                                                  gdouble             *real_y);
-
 void                 gcal_utils_launch_online_accounts_panel     (GDBusConnection     *connection,
                                                                   const gchar         *action,
                                                                   const gchar         *arg);
