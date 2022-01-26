@@ -276,7 +276,7 @@ popover.event-popover textview.view text {
 
 /* defeats the ugly hover effect of the calendar color dot on buttons */
 .calendar-color-image {
-    -gtk-icon-effect: none;
+    -gtk-icon-filter: none;
 }
 
 /* adds a subtle shadow to the calendar color dot when it makes sense */

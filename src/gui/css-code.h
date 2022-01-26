@@ -21,7 +21,7 @@
 
 #define CSS_TEMPLATE \
 ".color-%1$d {"\
-"  background-color: %2$s"\
+"  background-color: %2$s;"\
 "}"\
 ".color-%1$d.horizontal.timed {"\
 "  background-color: transparent;"\
@@ -158,10 +158,6 @@
 "  background-origin: padding-box, border-box;"\
 "  background-clip: padding-box, border-box;"\
 "  border-radius: 0 2px 2px 0;"\
-"  padding-right: 4px;"\
-"  padding-left: 24px;"\
-"  padding-top: 3px;"\
-"  padding-bottom: 4px;"\
 "}"\
 ".color-%1$d.slanted-start:backdrop {"\
 "  background-image: linear-gradient(100deg, /* left edge */"\
@@ -190,8 +186,6 @@
 "  border-bottom: 1px solid transparent; /* for the shadow displacement */"\
 "  background-position: right bottom, right bottom;"\
 "  border-radius: 2px 0 0 2px;"\
-"  padding-right: 24px;"\
-"  padding-left: 4px;"\
 "}"\
 ".color-%1$d.slanted-start:dir(rtl):backdrop {"\
 "  background-image: linear-gradient(260deg, /* right edge */"\
@@ -224,10 +218,6 @@
 "  background-origin: padding-box, border-box;"\
 "  background-clip: padding-box, border-box;"\
 "  border-radius: 2px 0 0 2px;"\
-"  padding-right: 24px;"\
-"  padding-left: 4px;"\
-"  padding-top: 3px;"\
-"  padding-bottom: 4px;"\
 "}"\
 ".color-%1$d.slanted-end:backdrop {"\
 "  background-image: linear-gradient(280deg, /* right edge */"\
@@ -255,8 +245,6 @@
 "                                    @event_shadow_color	17px);"\
 "  background-position: left bottom, left bottom;"\
 "  border-radius: 0 2px 2px 0;"\
-"  padding-right: 4px;"\
-"  padding-left: 24px;"\
 "}"\
 ".color-%1$d.slanted-end:dir(rtl):backdrop {"\
 "  background-image: linear-gradient(80deg, /* left edge */"\
@@ -267,11 +255,11 @@
 "                                    alpha(%2$s, 0) 16px,"\
 "                                    %2$s	   17px);"\
 "}"\
-".color-%1$d.slanted box { margin: 0 16px 0 16px; }"\
-".color-%1$d.slanted-start box { margin-left: 16px; }"\
-".color-%1$d.slanted-start:dir(rtl) box { margin-right: 16px; }"\
-".color-%1$d.slanted-end box { margin-right: 16px; }"\
-".color-%1$d.slanted-end:dir(rtl) box { margin-left: 16px; }"
+".color-%1$d.slanted > stack { margin: 0 16px 0 16px; }"\
+".color-%1$d.slanted-start > stack { margin-left: 16px; }"\
+".color-%1$d.slanted-start:dir(rtl) > stack { margin-right: 16px; }"\
+".color-%1$d.slanted-end > stack { margin-right: 16px; }"\
+".color-%1$d.slanted-end:dir(rtl) > stack { margin-left: 16px; }"
 
 #endif /* CSS_CODE_H */
 
