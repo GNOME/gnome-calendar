@@ -26,7 +26,6 @@
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
-#include <handy.h>
 
 struct _GcalEventPopover
 {
@@ -416,7 +415,7 @@ add_meeting (GcalEventPopover *self,
 
   row = gcal_meeting_row_new (url);
   g_signal_connect (row, "join-meeting", G_CALLBACK (on_join_meeting_cb), self);
-  gtk_container_add (GTK_CONTAINER (self->meetings_listbox), row);
+  gtk_list_box_append (self->meetings_listbox, row);
 
   gtk_widget_show (GTK_WIDGET (self->meetings_listbox));
 }
@@ -510,18 +509,12 @@ on_join_meeting_cb (GcalMeetingRow   *meeting_row,
                     const gchar      *url,
                     GcalEventPopover *self)
 {
-  g_autoptr (GError) error = NULL;
   GtkWindow *window;
 
-  window = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (self)));
+  window = GTK_WINDOW (gtk_widget_get_native (GTK_WIDGET (self)));
   g_assert (window != NULL);
 
-  gtk_show_uri_on_window (window, url, GDK_CURRENT_TIME, &error);
-  if (error)
-    {
-      g_warning ("Error opening URL: %s", error->message);
-      return;
-    }
+  gtk_show_uri (window, url, GDK_CURRENT_TIME);
 
   /* For some reason, gtk_popover_popdown() crashes when called here */
   gtk_widget_hide (GTK_WIDGET (self));

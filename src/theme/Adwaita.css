@@ -156,21 +156,8 @@ event.color-light:backdrop {
 
 /* Event Popover */
 popover.event-popover,
-popover.event-popover > box {
+popover.event-popover > contents {
   padding: 0;
-}
-
-popover.event-popover > box > button {
-  border-left-width: 0;
-  border-right-width: 0;
-  border-bottom-width: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-
-popover.event-popover textview.view,
-popover.event-popover textview.view text {
-  background-color: transparent;
 }
 
 .search-viewport {
