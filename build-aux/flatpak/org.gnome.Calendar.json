@@ -8,6 +8,7 @@
         "devel"
     ],
     "finish-args" : [
+        "--device=dri",
         "--share=ipc",
         "--share=network",
         "--socket=fallback-x11",
