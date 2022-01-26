@@ -31,7 +31,7 @@ struct _GcalWeatherSettings
 
   GtkSwitch          *show_weather_switch;
   GtkSwitch          *weather_auto_location_switch;
-  GtkWidget          *weather_location_entry;
+  GtkEditable        *weather_location_entry;
 
   GWeatherLocation   *location;
 
@@ -99,11 +99,8 @@ load_weather_settings (GcalWeatherSettings *self)
 
   if (!location && !auto_location)
     {
-      GtkStyleContext *context;
-
-      context = gtk_widget_get_style_context (GTK_WIDGET (self->weather_location_entry));
-      gtk_entry_set_text (GTK_ENTRY (self->weather_location_entry), location_name);
-      gtk_style_context_add_class (context, "error");
+      gtk_editable_set_text (self->weather_location_entry, location_name);
+      gtk_widget_add_css_class (GTK_WIDGET (self->weather_location_entry), "error");
     }
   else
     {
@@ -114,8 +111,8 @@ load_weather_settings (GcalWeatherSettings *self)
       weather_location = location ? gweather_location_deserialize (world, location) : NULL;
 
       self->location = weather_location ? g_object_ref (weather_location) : NULL;
-      gtk_entry_set_text (GTK_ENTRY (self->weather_location_entry),
-                          self->location ? gweather_location_get_name (self->location) : "");
+      gtk_editable_set_text (self->weather_location_entry,
+                             self->location ? gweather_location_get_name (self->location) : "");
     }
 
   g_signal_handlers_unblock_by_func (self->show_weather_switch, on_show_weather_changed_cb, self);
@@ -144,7 +141,7 @@ save_weather_settings (GcalWeatherSettings *self)
   value = g_variant_new ("(bbsmv)",
                          gtk_switch_get_active (self->show_weather_switch),
                          gtk_switch_get_active (self->weather_auto_location_switch),
-                         gtk_entry_get_text (GTK_ENTRY (self->weather_location_entry)),
+                         gtk_editable_get_text (self->weather_location_entry),
                          vlocation);
 
   res = g_settings_set_value (settings, "weather-settings", value);
@@ -201,7 +198,7 @@ manage_weather_service (GcalWeatherSettings *self)
           location = get_checked_fixed_location (self);
 
           if (!location)
-            g_warning ("Unknown location '%s' selected", gtk_entry_get_text (GTK_ENTRY (self->weather_location_entry)));
+            g_warning ("Unknown location '%s' selected", gtk_editable_get_text (self->weather_location_entry));
         }
 
       gcal_weather_service_run (weather_service, location);
@@ -244,23 +241,21 @@ static void
 on_weather_location_searchbox_changed_cb (GtkEntry            *entry,
                                           GcalWeatherSettings *self)
 {
-  GtkStyleContext  *context;
   GWeatherLocation *location;
   gboolean auto_location;
 
   save_weather_settings (self);
 
-  context = gtk_widget_get_style_context (self->weather_location_entry);
   auto_location = gtk_switch_get_active (self->weather_auto_location_switch);
   location = get_checked_fixed_location (self);
 
   if (!location && !auto_location)
     {
-      gtk_style_context_add_class (context, "error");
+      gtk_widget_add_css_class (GTK_WIDGET (self->weather_location_entry), "error");
     }
   else
     {
-      gtk_style_context_remove_class (context, "error");
+      gtk_widget_remove_css_class (GTK_WIDGET (self->weather_location_entry), "error");
       manage_weather_service (self);
       g_object_unref (location);
     }
