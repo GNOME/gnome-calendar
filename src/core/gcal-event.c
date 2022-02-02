@@ -192,8 +192,10 @@ get_timezone_from_ical (GcalEvent             *self,
     {
       g_autofree gchar *tzid = NULL;
       gint offset;
+      gint is_daylight = 0;
 
-      offset = i_cal_timezone_get_utc_offset (zone, itt, NULL);
+      /* libical-glib prior to 3.0.12 fails if no return location for is_daylight is passed */
+      offset = i_cal_timezone_get_utc_offset (zone, itt, &is_daylight);
       tzid = format_utc_offset (offset);
       tz = g_time_zone_new_identifier (tzid);
     }
