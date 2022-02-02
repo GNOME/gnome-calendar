@@ -103,9 +103,6 @@ struct _GcalEvent
   GcalCalendar       *calendar;
 
   GcalRecurrence     *recurrence;
-
-  gboolean            is_valid : 1;
-  GError             *initialization_error;
 };
 
 static void          gcal_event_initable_iface_init              (GInitableIface *iface);
@@ -118,13 +115,13 @@ G_DEFINE_QUARK (GcalEvent, gcal_event_error);
 enum {
   PROP_0,
   PROP_ALL_DAY,
+  PROP_CALENDAR,
   PROP_COLOR,
   PROP_COMPONENT,
   PROP_DESCRIPTION,
   PROP_DATE_END,
   PROP_DATE_START,
   PROP_LOCATION,
-  PROP_CALENDAR,
   PROP_RANGE,
   PROP_SUMMARY,
   PROP_TIMEZONE,
@@ -309,9 +306,9 @@ load_alarms (GcalEvent *self)
   g_slist_free_full (alarm_uids, g_free);
 }
 
-static void
-gcal_event_set_component_internal (GcalEvent     *self,
-                                   ECalComponent *component)
+static gboolean
+setup_component (GcalEvent  *self,
+                 GError    **error)
 {
   g_autoptr (GTimeZone) zone_start = NULL;
   g_autoptr (GTimeZone) zone_end = NULL;
@@ -324,12 +321,10 @@ gcal_event_set_component_internal (GcalEvent     *self,
   gboolean start_is_all_day, end_is_all_day;
   gchar *description, *location;
 
-  g_assert (self->component == NULL);
-
-  self->component = e_cal_component_clone (component);
+  g_assert (self->component != NULL);
 
   /* Setup start date */
-  start = e_cal_component_get_dtstart (component);
+  start = e_cal_component_get_dtstart (self->component);
 
   /*
    * A NULL start date is invalid. We set something bogus to proceed, and make
@@ -337,14 +332,15 @@ gcal_event_set_component_internal (GcalEvent     *self,
    */
   if (!start || !e_cal_component_datetime_get_value (start))
     {
-      self->is_valid = FALSE;
-      g_set_error (&self->initialization_error,
+      g_set_error (error,
                    GCAL_EVENT_ERROR,
                    GCAL_EVENT_ERROR_INVALID_START_DATE,
                    "Event '%s' has an invalid start date", gcal_event_get_uid (self));
 
       e_cal_component_datetime_free (start);
       start = e_cal_component_datetime_new_take (i_cal_time_new_today (), NULL);
+      g_clear_pointer (&start, e_cal_component_datetime_free);
+      return FALSE;
     }
 
   GCAL_TRACE_MSG ("Retrieving start timezone");
@@ -365,7 +361,7 @@ gcal_event_set_component_internal (GcalEvent     *self,
   g_clear_object (&date);
 
   /* Setup end date */
-  end = e_cal_component_get_dtend (component);
+  end = e_cal_component_get_dtend (self->component);
 
   if (!end || !e_cal_component_datetime_get_value (end))
     {
@@ -395,35 +391,34 @@ gcal_event_set_component_internal (GcalEvent     *self,
     }
 
   /* Summary */
-  text = e_cal_component_get_summary (component);
+  text = e_cal_component_get_summary (self->component);
   if (text && e_cal_component_text_get_value (text))
     gcal_event_set_summary (self, e_cal_component_text_get_value (text));
   else
     gcal_event_set_summary (self, "");
 
   /* Location */
-  location = e_cal_component_get_location (component);
+  location = e_cal_component_get_location (self->component);
   gcal_event_set_location (self, location ? location : "");
 
   /* Setup description */
-  description = get_desc_from_component (component, "\n\n");
+  description = get_desc_from_component (self->component, "\n\n");
   gcal_event_set_description (self, description);
 
   /* Setup UID */
   gcal_event_update_uid_internal (self);
 
   /* Set has-recurrence to check if the component has recurrence or not */
-  self->has_recurrence = e_cal_component_has_recurrences(component);
+  self->has_recurrence = e_cal_component_has_recurrences(self->component);
 
   /* Load the recurrence-rules in GcalRecurrence struct */
-  self->recurrence = gcal_recurrence_parse_recurrence_rules (component);
+  self->recurrence = gcal_recurrence_parse_recurrence_rules (self->component);
 
   /* Load and setup the alarms */
   load_alarms (self);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_HAS_RECURRENCE]);
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_RECURRENCE]);
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPONENT]);
 
   g_clear_pointer (&description, g_free);
   g_clear_pointer (&location, g_free);
@@ -431,31 +426,32 @@ gcal_event_set_component_internal (GcalEvent     *self,
   e_cal_component_text_free (text);
   e_cal_component_datetime_free (start);
   e_cal_component_datetime_free (end);
+
+  return TRUE;
+}
+
+
+static void
+gcal_event_set_component_internal (GcalEvent     *self,
+                                   ECalComponent *component)
+{
+  g_assert (self->component == NULL);
+  self->component = e_cal_component_clone (component);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPONENT]);
 }
 
 /*
  * GInitable iface implementation
  */
 
-G_LOCK_DEFINE_STATIC (init_lock);
-
 static gboolean
 gcal_event_initable_init (GInitable     *initable,
                           GCancellable  *cancellable,
                           GError       **error)
 {
-  GcalEvent *self;
+  GcalEvent *self = GCAL_EVENT (initable);
 
-  self = GCAL_EVENT (initable);
-
-  G_LOCK (init_lock);
-
-  if (!self->is_valid)
-    g_propagate_error (error, g_error_copy (self->initialization_error));
-
-  G_UNLOCK (init_lock);
-
-  return self->is_valid;
+  return setup_component (self, error);
 }
 
 static void
@@ -785,8 +781,6 @@ gcal_event_init (GcalEvent *self)
 
   /* Alarms */
   self->alarms = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, g_free);
-
-  self->is_valid = TRUE;
 }
 
 /**
@@ -1393,7 +1387,8 @@ gcal_event_set_calendar (GcalEvent    *self,
 
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CALENDAR]);
 
-      gcal_event_update_uid_internal (self);
+      if (self->component != NULL)
+        gcal_event_update_uid_internal (self);
     }
 }
 
