@@ -1,4 +1,4 @@
-/* gcal-calendar-popover.h
+/* gcal-calendar-button.h
  *
  * Copyright 2019 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
@@ -20,13 +20,11 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
+#include <adwaita.h>
 
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_CALENDAR_POPOVER (gcal_calendar_popover_get_type())
-G_DECLARE_FINAL_TYPE (GcalCalendarPopover, gcal_calendar_popover, GCAL, CALENDAR_POPOVER, GtkPopover)
-
-GtkWidget*           gcal_calendar_popover_get_icon              (GcalCalendarPopover *self);
+#define GCAL_TYPE_CALENDAR_BUTTON (gcal_calendar_button_get_type())
+G_DECLARE_FINAL_TYPE (GcalCalendarButton, gcal_calendar_button, GCAL, CALENDAR_BUTTON, AdwBin)
 
 G_END_DECLS

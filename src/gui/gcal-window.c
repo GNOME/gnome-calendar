@@ -21,7 +21,7 @@
 
 #include "css-code.h"
 #include "gcal-calendar-management-dialog.h"
-#include "gcal-calendar-popover.h"
+#include "gcal-calendar-button.h"
 #include "config.h"
 #include "gcal-debug.h"
 #include "gcal-event-editor-dialog.h"
@@ -138,7 +138,6 @@ struct _GcalWindow
   AdwToast           *delete_event_toast;
 
   /* calendar management */
-  GtkWidget          *calendar_popover;
   GtkWidget          *calendar_management_dialog;
 
   gint                open_edit_dialog_timeout_id;
@@ -346,7 +345,6 @@ on_show_calendars_action_activated (GSimpleAction *action,
 {
   GcalWindow *window = GCAL_WINDOW (user_data);
 
-  gtk_widget_hide (window->calendar_popover);
   gtk_widget_show (window->calendar_management_dialog);
 }
 
@@ -838,7 +836,7 @@ gcal_window_constructed (GObject *object)
    * FIXME: this is a hack around the issue that happens when trying to bind
    * these properties using the GtkBuilder .ui file.
    */
-  g_object_bind_property (self, "context", self->calendar_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->calendars_button, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->weather_settings, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->calendar_management_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->week_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
@@ -972,7 +970,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   GtkWidgetClass *widget_class;
 
   g_type_ensure (GCAL_TYPE_CALENDAR_MANAGEMENT_DIALOG);
-  g_type_ensure (GCAL_TYPE_CALENDAR_POPOVER);
+  g_type_ensure (GCAL_TYPE_CALENDAR_BUTTON);
   g_type_ensure (GCAL_TYPE_EVENT_EDITOR_DIALOG);
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
@@ -1025,7 +1023,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   /* widgets */
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, back_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, event_editor);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, forward_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);
@@ -1077,10 +1074,6 @@ gcal_window_init (GcalWindow *self)
                                    self);
 
   gtk_widget_init_template (GTK_WIDGET (self));
-
-  /* Calendar icon */
-  gtk_menu_button_set_child (GTK_MENU_BUTTON (self->calendars_button),
-                             gcal_calendar_popover_get_icon (GCAL_CALENDAR_POPOVER (self->calendar_popover)));
 
   self->views[GCAL_WINDOW_VIEW_WEEK] = self->week_view;
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;

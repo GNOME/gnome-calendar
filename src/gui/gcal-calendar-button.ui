@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalCalendarButton" parent="AdwBin">
+    <child>
+      <object class="GtkMenuButton">
+        <property name="tooltip_text" translatable="yes">Manage your calendars</property>
+        <property name="popover">popover</property>
+        <style>
+          <class name="image-button" />
+        </style>
+
+        <child>
+          <object class="GtkStack" id="icon_stack">
+            <property name="transition-type">crossfade</property>
+            <property name="transition-duration">250</property>
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">icon</property>
+                <property name="child">
+                  <object class="GtkImage" id="calendar_image">
+                    <property name="icon_name">x-office-calendar-symbolic</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">spinner</property>
+                <property name="child">
+                  <object class="GtkSpinner" id="refreshing_spinner">
+                    <property name="spinning">True</property>
+                    <property name="tooltip_text" translatable="yes" context="tooltip">Synchronizing remote calendars…</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">success</property>
+                <property name="child">
+                  <object class="GtkImage" id="success_image">
+                    <property name="icon_name">emblem-ok-symbolic</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+      </object>
+    </child>
+  </template>
+
+  <menu id='menu'>
+    <section>
+      <item>
+        <attribute name="custom">list</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Synchronize Calendars</attribute>
+        <attribute name="action">app.sync</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Manage Calendars…</attribute>
+        <attribute name="action">win.show-calendars</attribute>
+      </item>
+    </section>
+  </menu>
+
+  <object class="GtkPopoverMenu" id="popover">
+    <property name="position">bottom</property>
+    <property name="menu-model">menu</property>
+
+    <child type="list">
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="hscrollbar_policy">never</property>
+            <property name="max_content_height">450</property>
+            <property name="propagate-natural-height">True</property>
+            <child>
+              <object class="GtkListBox" id="calendar_listbox">
+                <property name="hexpand">True</property>
+                <property name="selection_mode">none</property>
+                <signal name="row-activated" handler="on_listbox_row_activated_cb" object="GcalCalendarButton" swapped="no"/>
+                <style>
+                  <class name="calendar-list"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+
+      </object>
+    </child>
+  </object>
+
+</interface>

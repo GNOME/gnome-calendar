@@ -1,4 +1,4 @@
-/* gcal-calendar-popover.c
+/* gcal-calendar-button.c
  *
  * Copyright 2019 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
@@ -18,20 +18,19 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#define G_LOG_DOMAIN "GcalCalendarPopover"
+#define G_LOG_DOMAIN "GcalCalendarButton"
 
 #include "gcal-calendar.h"
-#include "gcal-calendar-popover.h"
+#include "gcal-calendar-button.h"
 #include "gcal-context.h"
 #include "gcal-utils.h"
 
-struct _GcalCalendarPopover
+struct _GcalCalendarButton
 {
-  GtkPopover          parent;
+  AdwBin              parent;
 
   GtkWidget          *calendar_listbox;
   GtkStack           *icon_stack;
-  GtkWidget          *synchronize_button;
 
   GcalContext        *context;
 
@@ -40,7 +39,7 @@ struct _GcalCalendarPopover
 
 static gboolean      icon_change_timeout_cb                      (gpointer           data);
 
-G_DEFINE_TYPE (GcalCalendarPopover, gcal_calendar_popover, GTK_TYPE_POPOVER)
+G_DEFINE_TYPE (GcalCalendarButton, gcal_calendar_button, ADW_TYPE_BIN)
 
 enum
 {
@@ -107,7 +106,7 @@ make_calendar_row (GcalCalendar *calendar)
 }
 
 static void
-add_calendar (GcalCalendarPopover *self,
+add_calendar (GcalCalendarButton *self,
               GcalCalendar        *calendar)
 {
   GtkWidget *row;
@@ -117,7 +116,7 @@ add_calendar (GcalCalendarPopover *self,
 }
 
 static void
-remove_calendar (GcalCalendarPopover *self,
+remove_calendar (GcalCalendarButton *self,
                  GcalCalendar        *calendar)
 {
   GtkWidget *child;
@@ -137,7 +136,7 @@ remove_calendar (GcalCalendarPopover *self,
 }
 
 static void
-schedule_switch_to_spinner (GcalCalendarPopover *self)
+schedule_switch_to_spinner (GcalCalendarButton *self)
 {
   if (self->icon_changed_source_id > 0)
     return;
@@ -148,7 +147,7 @@ schedule_switch_to_spinner (GcalCalendarPopover *self)
 }
 
 static void
-schedule_switch_to_success (GcalCalendarPopover *self)
+schedule_switch_to_success (GcalCalendarButton *self)
 {
   g_clear_handle_id (&self->icon_changed_source_id, g_source_remove);
 
@@ -167,10 +166,10 @@ schedule_switch_to_success (GcalCalendarPopover *self)
 static gboolean
 icon_change_timeout_cb (gpointer data)
 {
-  GcalCalendarPopover *self;
+  GcalCalendarButton *self;
   GcalManager *manager;
 
-  self = GCAL_CALENDAR_POPOVER (data);
+  self = GCAL_CALENDAR_BUTTON (data);
   manager = gcal_context_get_manager (self->context);
 
   g_debug ("Updating calendar icon to spinner");
@@ -206,7 +205,7 @@ listbox_sort_func (GtkListBoxRow *row1,
 static void
 on_manager_calendar_added_cb (GcalManager         *manager,
                               GcalCalendar        *calendar,
-                              GcalCalendarPopover *self)
+                              GcalCalendarButton *self)
 {
   add_calendar (self, calendar);
 }
@@ -214,7 +213,7 @@ on_manager_calendar_added_cb (GcalManager         *manager,
 static void
 on_manager_calendar_changed_cb (GcalManager         *manager,
                                 GcalCalendar        *calendar,
-                                GcalCalendarPopover *self)
+                                GcalCalendarButton *self)
 {
   remove_calendar (self, calendar);
   add_calendar (self, calendar);
@@ -223,7 +222,7 @@ on_manager_calendar_changed_cb (GcalManager         *manager,
 static void
 on_manager_calendar_removed_cb (GcalManager         *manager,
                                 GcalCalendar        *calendar,
-                                GcalCalendarPopover *self)
+                                GcalCalendarButton *self)
 {
   remove_calendar (self, calendar);
 }
@@ -231,7 +230,7 @@ on_manager_calendar_removed_cb (GcalManager         *manager,
 static void
 on_manager_synchronizing_changed_cb (GcalManager         *manager,
                                      GParamSpec          *pspec,
-                                     GcalCalendarPopover *self)
+                                     GcalCalendarButton *self)
 {
   if (gcal_manager_get_synchronizing (manager))
     schedule_switch_to_spinner (self);
@@ -242,7 +241,7 @@ on_manager_synchronizing_changed_cb (GcalManager         *manager,
 static void
 on_listbox_row_activated_cb (GtkListBox          *listbox,
                              GtkListBoxRow       *row,
-                             GcalCalendarPopover *self)
+                             GcalCalendarButton *self)
 {
   GtkCheckButton *check = g_object_get_data (G_OBJECT (row), "check");
 
@@ -255,23 +254,23 @@ on_listbox_row_activated_cb (GtkListBox          *listbox,
  */
 
 static void
-gcal_calendar_popover_finalize (GObject *object)
+gcal_calendar_button_finalize (GObject *object)
 {
-  GcalCalendarPopover *self = (GcalCalendarPopover *)object;
+  GcalCalendarButton *self = (GcalCalendarButton *)object;
 
   g_clear_handle_id (&self->icon_changed_source_id, g_source_remove);
   g_clear_object (&self->context);
 
-  G_OBJECT_CLASS (gcal_calendar_popover_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gcal_calendar_button_parent_class)->finalize (object);
 }
 
 static void
-gcal_calendar_popover_get_property (GObject    *object,
+gcal_calendar_button_get_property (GObject    *object,
                                     guint       prop_id,
                                     GValue     *value,
                                     GParamSpec *pspec)
 {
-  GcalCalendarPopover *self = GCAL_CALENDAR_POPOVER (object);
+  GcalCalendarButton *self = GCAL_CALENDAR_BUTTON (object);
 
   switch (prop_id)
     {
@@ -285,12 +284,12 @@ gcal_calendar_popover_get_property (GObject    *object,
 }
 
 static void
-gcal_calendar_popover_set_property (GObject      *object,
+gcal_calendar_button_set_property (GObject      *object,
                                     guint         prop_id,
                                     const GValue *value,
                                     GParamSpec   *pspec)
 {
-  GcalCalendarPopover *self = GCAL_CALENDAR_POPOVER (object);
+  GcalCalendarButton *self = GCAL_CALENDAR_BUTTON (object);
 
   switch (prop_id)
     {
@@ -309,11 +308,13 @@ gcal_calendar_popover_set_property (GObject      *object,
         for (l = calendars; l; l = l->next)
           add_calendar (self, l->data);
 
+        /*
         g_object_bind_property (manager,
                                 "synchronizing",
                                 self->synchronize_button,
                                 "sensitive",
                                 G_BINDING_INVERT_BOOLEAN | G_BINDING_SYNC_CREATE);
+         */
 
         g_signal_connect_object (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), object, 0);
         g_signal_connect_object (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), object, 0);
@@ -328,17 +329,17 @@ gcal_calendar_popover_set_property (GObject      *object,
 }
 
 static void
-gcal_calendar_popover_class_init (GcalCalendarPopoverClass *klass)
+gcal_calendar_button_class_init (GcalCalendarButtonClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  object_class->finalize = gcal_calendar_popover_finalize;
-  object_class->get_property = gcal_calendar_popover_get_property;
-  object_class->set_property = gcal_calendar_popover_set_property;
+  object_class->finalize = gcal_calendar_button_finalize;
+  object_class->get_property = gcal_calendar_button_get_property;
+  object_class->set_property = gcal_calendar_button_set_property;
 
   /**
-   * GcalCalendarPopover::context:
+   * GcalCalendarButton::context:
    *
    * The #GcalContext of the application.
    */
@@ -350,17 +351,16 @@ gcal_calendar_popover_class_init (GcalCalendarPopoverClass *klass)
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-calendar-popover.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-calendar-button.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarPopover, calendar_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarPopover, icon_stack);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarPopover, synchronize_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarButton, calendar_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarButton, icon_stack);
 
   gtk_widget_class_bind_template_callback (widget_class, on_listbox_row_activated_cb);
 }
 
 static void
-gcal_calendar_popover_init (GcalCalendarPopover *self)
+gcal_calendar_button_init (GcalCalendarButton *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
 
@@ -368,12 +368,4 @@ gcal_calendar_popover_init (GcalCalendarPopover *self)
                               (GtkListBoxSortFunc) listbox_sort_func,
                               self,
                               NULL);
-}
-
-GtkWidget*
-gcal_calendar_popover_get_icon (GcalCalendarPopover *self)
-{
-  g_return_val_if_fail (GCAL_IS_CALENDAR_POPOVER (self), NULL);
-
-  return GTK_WIDGET (self->icon_stack);
 }

@@ -141,13 +141,7 @@
               </object>
             </child>
             <child type="end">
-              <object class="GtkMenuButton" id="calendars_button">
-                <property name="popover">calendar_popover</property>
-                <property name="tooltip_text" translatable="yes">Manage your calendars</property>
-                <style>
-                  <class name="image-button"/>
-                </style>
-              </object>
+              <object class="GcalCalendarButton" id="calendars_button" />
             </child>
             <child type="end">
               <object class="GcalSearchButton" id="search_button">
@@ -227,7 +221,6 @@
       </object>
     </child>
   </template>
-  <object class="GcalCalendarPopover" id="calendar_popover" />
   <object class="GcalQuickAddPopover" id="quick_add_popover">
     <signal name="edit-event" handler="edit_event" object="GcalWindow" swapped="no"/>
     <signal name="closed" handler="close_new_event_widget" object="GcalWindow" swapped="no"/>
