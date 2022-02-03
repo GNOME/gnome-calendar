@@ -233,12 +233,7 @@ format_datetime_for_display (GDateTime      *date,
 
   switch (days_diff)
     {
-    case -7:
-    case -6:
-    case -5:
-    case -4:
-    case -3:
-    case -2:
+    case -7 ... -2:
       /* Translators: %A is the weekday name (e.g. Sunday, Monday, etc) */
       formatted_date = g_date_time_format (local_dt, _("Last %A"));
       break;
@@ -255,12 +250,7 @@ format_datetime_for_display (GDateTime      *date,
       formatted_date = g_strdup (_("Tomorrow"));
       break;
 
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-    case 7:
+    case 2 ... 7:
       /* Translators: %A is the weekday name (e.g. Sunday, Monday, etc) */
       formatted_date = g_date_time_format (local_dt, _("This %A"));
       break;
