@@ -135,4 +135,6 @@ void                 gcal_utils_ask_recurrence_modification_type (GtkWidget     
                                                                   GcalAskRecurrenceCallback  callback,
                                                                   gpointer                   user_data);
 
+const gchar *        gcal_util_translate_time_string             (const gchar          *str);
+
 #endif /* __GCAL_UTILS_H__ */

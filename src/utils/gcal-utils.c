@@ -1325,3 +1325,38 @@ gcal_utils_ask_recurrence_modification_type (GtkWidget                 *parent,
 
   gtk_window_present (GTK_WINDOW (dialog));
 }
+
+/**
+ * gcal_util_translate_time_string:
+ * @str: String to translate
+ *
+ * Translate @str according to the locale defined by LC_TIME; unlike
+ * dcgettext(), the translations is still taken from the LC_MESSAGES
+ * catalogue and not the LC_TIME one.
+ *
+ * Returns: the translated string
+ */
+const gchar *
+gcal_util_translate_time_string (const gchar *str)
+{
+  const gchar *locale = g_getenv ("LC_TIME");
+  const gchar *res;
+  gchar *sep;
+  locale_t old_loc;
+  locale_t loc = (locale_t) 0;
+
+  if (locale)
+    loc = newlocale (LC_MESSAGES_MASK, locale, (locale_t) 0);
+
+  old_loc = uselocale (loc);
+
+  sep = strchr (str, '\004');
+  res = g_dpgettext (NULL, str, sep ? sep - str + 1 : 0);
+
+  uselocale (old_loc);
+
+  if (loc != (locale_t) 0)
+    freelocale (loc);
+
+  return res;
+}

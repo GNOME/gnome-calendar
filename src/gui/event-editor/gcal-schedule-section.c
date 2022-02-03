@@ -235,7 +235,7 @@ format_datetime_for_display (GDateTime      *date,
     {
     case -7 ... -2:
       /* Translators: %A is the weekday name (e.g. Sunday, Monday, etc) */
-      formatted_date = g_date_time_format (local_dt, _("Last %A"));
+      formatted_date = g_date_time_format (local_dt, gcal_util_translate_time_string (_("Last %A")));
       break;
 
     case -1:
@@ -252,7 +252,7 @@ format_datetime_for_display (GDateTime      *date,
 
     case 2 ... 7:
       /* Translators: %A is the weekday name (e.g. Sunday, Monday, etc) */
-      formatted_date = g_date_time_format (local_dt, _("This %A"));
+      formatted_date = g_date_time_format (local_dt, gcal_util_translate_time_string (_("This %A")));
       break;
 
     default:
