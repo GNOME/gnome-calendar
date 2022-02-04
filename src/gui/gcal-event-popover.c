@@ -379,10 +379,17 @@ update_date_time_label (GcalEventPopover *self)
       g_autofree gchar *start_str = NULL;
       g_autofree gchar *end_str = NULL;
       gboolean show_year;
+      g_autoptr (GDateTime) real_end_dt = NULL;
 
       show_year = g_date_time_get_year (start_dt) != g_date_time_get_year (end_dt);
       start_str = format_multiday_date (self, start_dt, show_year, show_hours);
-      end_str = format_multiday_date (self, end_dt, show_year, show_hours);
+
+      if (!show_hours)
+        real_end_dt = g_date_time_add_days (end_dt, -1);
+      else
+        real_end_dt = g_date_time_ref (end_dt);
+      
+      end_str = format_multiday_date (self, real_end_dt, show_year, show_hours);
 
       /* Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022 */
       g_string_printf (string, _("%1$s — %2$s"), start_str, end_str);
