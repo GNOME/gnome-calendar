@@ -1,5 +1,5 @@
 # Japanese translation for gnome-calendar.
-# Copyright (C) 2015-2020 gnome-calendar's COPYRIGHT HOLDER
+# Copyright (C) 2015-2016, 2018-2020, 2022 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Hajime Taira <htaira@redhat.com>, 2015.
 # Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2015-2016, 2018.
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2021-10-13 17:01+0000\n"
-"PO-Revision-Date: 2020-01-17 00:00+0900\n"
+"PO-Revision-Date: 2022-02-05 18:00+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -56,9 +56,6 @@ msgid "Week view"
 msgstr "週表示"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Year view"
 msgid "Year view"
 msgstr "年表示"
 
@@ -401,10 +398,8 @@ msgid "10 minutes"
 msgstr "10 分"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:73
-#, fuzzy
-#| msgid "5 minutes"
 msgid "15 minutes"
-msgstr "5 分"
+msgstr "15 分"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:82
 msgid "30 minutes"
@@ -652,22 +647,19 @@ msgid "December"
 msgstr "12月"
 
 #: src/gui/gcal-event-popover.c:159
-#, fuzzy, c-format
-#| msgid "Today"
+#, c-format
 msgid "Today %s"
-msgstr "今日"
+msgstr "今日 %s"
 
 #: src/gui/gcal-event-popover.c:163
-#, fuzzy, c-format
-#| msgid "Tomorrow"
+#, c-format
 msgid "Tomorrow %s"
-msgstr "明日"
+msgstr "明日 %s"
 
 #: src/gui/gcal-event-popover.c:167
-#, fuzzy, c-format
-#| msgid "Yesterday"
+#, c-format
 msgid "Yesterday %s"
-msgstr "昨日"
+msgstr "昨日 %s"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
@@ -675,10 +667,9 @@ msgstr "昨日"
 #. * like "November 21, 22:00".
 #.
 #: src/gui/gcal-event-popover.c:176
-#, fuzzy, c-format
-#| msgid "%1$s, %2$s – %3$s"
+#, c-format
 msgid "%1$s %2$d, %3$s"
-msgstr "%1$s, %2$s〜%3$s"
+msgstr "%1$s%2$d日 %3$s"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
@@ -686,10 +677,9 @@ msgstr "%1$s, %2$s〜%3$s"
 #. * results in dates like "November 21, 2020, 22:00".
 #.
 #: src/gui/gcal-event-popover.c:188
-#, fuzzy, c-format
-#| msgid "%1$s %2$s — %3$s %4$s"
+#, c-format
 msgid "%1$s %2$d, %3$d, %4$s"
-msgstr "%1$s %2$s 〜 %3$s %4$s"
+msgstr "%3$d年%1$s%2$d日 %4$s"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), and %2$d is
@@ -697,10 +687,9 @@ msgstr "%1$s %2$s 〜 %3$s %4$s"
 #. * "November 21".
 #.
 #: src/gui/gcal-event-popover.c:217 src/gui/gcal-event-popover.c:331
-#, fuzzy, c-format
-#| msgid "%1$s, %2$s"
+#, c-format
 msgid "%1$s %2$d"
-msgstr "%1$sの%2$s"
+msgstr "%1$s%2$d日"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
@@ -708,40 +697,36 @@ msgstr "%1$sの%2$s"
 #. * like "November 21, 2020".
 #.
 #: src/gui/gcal-event-popover.c:228 src/gui/gcal-event-popover.c:342
-#, fuzzy, c-format
-#| msgid "%1$s, %2$s – %3$s"
+#, c-format
 msgid "%1$s %2$d, %3$d"
-msgstr "%1$s, %2$s〜%3$s"
+msgstr "%3$d年%1$s%2$d日"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Today, 19:00 — 22:00"
 #.
 #: src/gui/gcal-event-popover.c:262
-#, fuzzy, c-format
-#| msgid "%1$s — %2$s"
+#, c-format
 msgid "Today, %1$s — %2$s"
-msgstr "%1$s 〜 %2$s"
+msgstr "今日 %1$s — %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
 #.
 #: src/gui/gcal-event-popover.c:270
-#, fuzzy, c-format
-#| msgid "%1$s — %2$s"
+#, c-format
 msgid "Tomorrow, %1$s – %2$s"
-msgstr "%1$s 〜 %2$s"
+msgstr "明日 %1$s — %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
 #.
 #: src/gui/gcal-event-popover.c:278
-#, fuzzy, c-format
-#| msgid "%1$s, %2$s – %3$s"
+#, c-format
 msgid "Yesterday, %1$s – %2$s"
-msgstr "%1$s, %2$s〜%3$s"
+msgstr "昨日 %1$s — %2$s"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
@@ -749,10 +734,9 @@ msgstr "%1$s, %2$s〜%3$s"
 #. * format string results in dates like "November 21, 19:00 — 22:00".
 #.
 #: src/gui/gcal-event-popover.c:287
-#, fuzzy, c-format
-#| msgid "%1$s, %2$s – %3$s"
+#, c-format
 msgid "%1$s %2$d, %3$s – %4$s"
-msgstr "%1$s, %2$s〜%3$s"
+msgstr "%1$s%2$d日 %3$s — %4$s"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
@@ -762,20 +746,17 @@ msgstr "%1$s, %2$s〜%3$s"
 #. * "November 21, 2021, 19:00 — 22:00".
 #.
 #: src/gui/gcal-event-popover.c:302
-#, fuzzy, c-format
-#| msgid "%1$s, %2$s – %3$s"
+#, c-format
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
-msgstr "%1$s, %2$s〜%3$s"
+msgstr "%3$d年%1$s%2$d日 %4$s — %5$s"
 
 #: src/gui/gcal-event-popover.ui:70
 msgid "No event information"
-msgstr ""
+msgstr "イベント情報なし"
 
 #: src/gui/gcal-event-popover.ui:160
-#, fuzzy
-#| msgid "Edit Details…"
 msgid "Edit…"
-msgstr "詳細を編集…"
+msgstr "編集…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
 #: src/gui/gcal-event-widget.c:437
@@ -784,31 +765,29 @@ msgid "At %s"
 msgstr "場所: %s"
 
 #: src/gui/gcal-meeting-row.c:68
-#, fuzzy
-#| msgid "Google"
 msgid "Google Meet"
-msgstr "Google"
+msgstr "Google Meet"
 
 #: src/gui/gcal-meeting-row.c:69
 msgid "Jitsi"
-msgstr ""
+msgstr "Jitsi"
 
 #: src/gui/gcal-meeting-row.c:70
 msgid "Whereby"
-msgstr ""
+msgstr "Whereby"
 
 #: src/gui/gcal-meeting-row.c:71
 msgid "Zoom"
-msgstr ""
+msgstr "Zoom"
 
 #: src/gui/gcal-meeting-row.c:81
 msgid "Unknown Service"
-msgstr ""
+msgstr "不明なサービス"
 
 #. Translators: "Join" as in "Join meeting"
 #: src/gui/gcal-meeting-row.ui:62
 msgid "Join"
-msgstr ""
+msgstr "参加"
 
 #: src/gui/gcal-quick-add-popover.c:117
 #, c-format
@@ -1173,17 +1152,14 @@ msgid "Year view"
 msgstr "年表示"
 
 #: src/gui/importer/gcal-import-dialog.c:345
-#, fuzzy, c-format
-#| msgid "Import a Calendar"
+#, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
-msgstr[0] "カレンダーのインポート"
+msgstr[0] "%d 個のイベントをインポート"
 
 #: src/gui/importer/gcal-import-dialog.ui:24
-#, fuzzy
-#| msgid "From File…"
 msgid "Import Files…"
-msgstr "ファイルから…"
+msgstr "ファイルをインポート…"
 
 #: src/gui/importer/gcal-import-dialog.ui:31 src/utils/gcal-utils.c:961
 msgid "_Cancel"
@@ -1191,55 +1167,49 @@ msgstr "キャンセル(_C)"
 
 #: src/gui/importer/gcal-import-dialog.ui:41
 msgid "_Import"
-msgstr ""
+msgstr "インポート(_I)"
 
 #: src/gui/importer/gcal-import-dialog.ui:91
-#, fuzzy
-#| msgid "Calendar"
 msgid "C_alendar"
-msgstr "カレンダー"
+msgstr "カレンダー(_A)"
 
 #: src/gui/importer/gcal-importer.c:33
 msgid "No error"
-msgstr ""
+msgstr "エラーなし"
 
 #: src/gui/importer/gcal-importer.c:36
 msgid "Bad argument to function"
-msgstr ""
+msgstr "関数の引数が不正です"
 
 #: src/gui/importer/gcal-importer.c:40
 msgid "Failed to allocate a new object in memory"
-msgstr ""
+msgstr "新しいオブジェクトのためのメモリ確保に失敗しました"
 
 #: src/gui/importer/gcal-importer.c:43
 msgid "File is malformed, invalid, or corrupted"
 msgstr ""
+"問題のあるファイルです (未対応のファイルまたは破損したファイルの可能性が"
+"あります)"
 
 #: src/gui/importer/gcal-importer.c:46
-#, fuzzy
-#| msgid "Click to select the calendar"
 msgid "Failed to parse the calendar contents"
-msgstr "クリックして予定を選択する"
+msgstr "カレンダーの内容の解析に失敗しました"
 
 #: src/gui/importer/gcal-importer.c:49
-#, fuzzy
-#| msgid "Calendar files"
 msgid "Failed to read file"
-msgstr "カレンダーファイル"
+msgstr "ファイルの読み取りに失敗しました"
 
 #: src/gui/importer/gcal-importer.c:56
 msgid "Internal error"
-msgstr ""
+msgstr "内部エラー"
 
 #: src/gui/importer/gcal-importer.c:94
-#, fuzzy
-#| msgid "Select a calendar file"
 msgid "File is not an iCalendar (.ics) file"
-msgstr "カレンダーファイルの選択"
+msgstr "iCalendar (.ics) ファイルではありません"
 
 #: src/gui/importer/gcal-import-file-row.c:154
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #: src/gui/views/gcal-month-popover.ui:91
 msgid "New Event…"
