@@ -108,10 +108,15 @@
           <object class="GtkHeaderBar" id="header_bar">
             <property name="show-title-buttons">True</property>
             <child>
-              <object class="GtkButton" id="new_event_button">
-                <property name="icon-name">list-add-symbolic</property>
-                <property name="action-name">win.new-event</property>
-                <property name="tooltip_text" translatable="yes" context="tooltip">Add a new event</property>
+              <object class="GtkButton" id="back_button">
+                <property name="icon_name">go-previous-symbolic</property>
+                <property name="action-name">win.previous-date</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="forward_button">
+                <property name="icon_name">go-next-symbolic</property>
+                <property name="action-name">win.next-date</property>
               </object>
             </child>
             <child>
@@ -121,22 +126,10 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox" id="button_box">
-                <child>
-                  <object class="GtkButton" id="back_button">
-                    <property name="icon_name">go-previous-symbolic</property>
-                    <property name="action-name">win.previous-date</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="forward_button">
-                    <property name="icon_name">go-next-symbolic</property>
-                    <property name="action-name">win.next-date</property>
-                  </object>
-                </child>
-                <style>
-                  <class name="linked"/>
-                </style>
+              <object class="GtkButton" id="new_event_button">
+                <property name="icon-name">list-add-symbolic</property>
+                <property name="action-name">win.new-event</property>
+                <property name="tooltip_text" translatable="yes" context="tooltip">Add a new event</property>
               </object>
             </child>
             <child type="title">
