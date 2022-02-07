@@ -37,128 +37,54 @@ calendar-view:selected {
 }
 
 /* Year View CSS */
-.year-view {
-    padding: 0px;
+
+.year-navigator grid.month {
+  padding: 12px;
 }
 
-/* Header the padding if for sizing, on drawing the spacing between cells,
- * and the padding will be automatically calculated
- * Because of year-view widget internals, the color property should be the same
- * of .start-header selector */
-.year-navigator {
-    padding: 12px;
-    color: @theme_selected_bg_color;
-}
-
-.year-navigator.header {
-    color: @theme_selected_bg_color;
-    font-weight: bold;
-}
-
-.year-navigator.lines {
-    color: alpha(@theme_fg_color, 0.4);
-}
-
-.year-navigator.days {
+.year-navigator label.days {
     padding: 5px;
     color: @theme_fg_color;
     font-size: 9pt;
+    min-width: 18px;
+    min-height: 18px;
 }
 
-.year-navigator.non-workday {
+.year-navigator label.non-workday {
     color: alpha(@theme_fg_color, 0.5);
 }
 
-.year-navigator.week-numbers {
-    font-size: 70%;
-    font-weight: bold;
-    border-radius: 2px;
+.year-navigator label.week-number {
+    font-size: 0.5rem;
+    border-radius: 50%;
     background-color: alpha(@theme_fg_color, 0.05);
     color: alpha(@theme_fg_color, 0.4);
+    min-width: 18px;
+    min-height: 18px;
 }
 
-/* these two are supposed be changed in sync with .calendar-view */
-.year-navigator.current {
-    background-color: black;
-    border-radius: 2px;
-    color: white;
-    font-weight: bold;
-}
-.year-navigator:selected {
-    color: @theme_selected_bg_color;
+.year-navigator .current label {
+    color: @accent_fg_color;
+    background-color: @accent_bg_color;
+    border-radius: 50%;
     font-weight: bold;
 }
 
-.year-navigator:hover {
-    background-color: alpha(@theme_fg_color, 0.1);
-    border-radius: 2px;
-}
-
-.year-navigator.dnd {
-    border: solid 1px #4e9a06;
-    box-shadow: inset 0 0 0 1px #4e9a06;
-}
-
-.year-navigator.with-events {
+.year-navigator dot {
+    transform: translateX(-1px) translateY(-3px);
     background-color: @theme_fg_color;
     border-radius: 3px;
+    min-width: 3px;
+    min-height: 3px;
 }
 
-.year-navigator.with-events-selected {
-    background-color: @theme_selected_bg_color;
+.year-navigator .current dot {
+    background-color: @accent_fg_color;
 }
 
-.year-navigator.with-events-non-workday {
+
+.year-navigator .non-workday dot {
     background-color: alpha(@theme_fg_color, 0.5);
-}
-
-.sidebar-header {
-    font-weight: bold;
-    font-size: 11pt;
-}
-
-.italic-label {
-    font-style: italic;
-}
-
-.year-view .sidebar {
-    padding: 4px;
-    border: 1px none @borders;
-}
-
-.year-view .sidebar:backdrop {
-    border-color: @unfocused_borders;
-}
-
-.year-view .sidebar:dir(ltr) {
-    border-left-style: solid;
-}
-.year-view .sidebar:dir(rtl) {
-    border-right-style: solid;
-}
-
-/* no events label */
-.year-view box.sidebar label:nth-child(2) {
-    margin-top: 4px;
-}
-
-.year-view button {
-    border-radius: 0;
-    border-bottom-style: none;
-}
-
-.year-view button:dir(ltr) {
-    border-right-style: none;
-}
-
-.year-view button:dir(rtl) {
-    border-left-style: none;
-}
-
-
-.year-view scrolledwindow {
-    border-top-width: 0;
-    border-bottom-width: 0;
 }
 
 popover.events {
