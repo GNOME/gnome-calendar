@@ -121,8 +121,13 @@
             </child>
             <child>
               <object class="GtkButton" id="today_button">
-                <property name="label" translatable="yes">Today</property>
                 <property name="action-name">win.today</property>
+                <property name="child">
+                  <object class="AdwButtonContent">
+                    <property name="label" translatable="yes">Today</property>
+                    <property name="icon-name">calendar-today-symbolic</property>
+                  </object>
+                </property>
               </object>
             </child>
             <child>
