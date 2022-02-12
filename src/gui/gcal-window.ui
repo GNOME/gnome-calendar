@@ -11,7 +11,7 @@
       <object class="GtkShortcutController">
         <child>
           <object class="GtkShortcut">
-            <property name="trigger">&lt;Ctrl&gt;t</property>
+            <property name="trigger">&lt;Control&gt;t</property>
             <property name="action">action(win.today)</property>
           </object>
         </child>
