@@ -153,6 +153,7 @@ fill_sources_menu (GcalEventEditorDialog *self)
       g_autoptr (GdkPaintable) paintable = NULL;
       g_autoptr (GMenuItem) item = NULL;
       g_autoptr (GdkPixbuf) pix = NULL;
+      g_autoptr (GVariant) target = NULL;
       GcalCalendar *calendar;
       const GdkRGBA *color;
 
@@ -168,15 +169,12 @@ fill_sources_menu (GcalEventEditorDialog *self)
       g_menu_item_set_icon (item, G_ICON (pix));
 
       /* set insensitive for read-only calendars */
-      if (gcal_calendar_is_read_only (calendar))
-        {
-          g_menu_item_set_action_and_target_value (item, "select-calendar", NULL);
-        }
-      else
-        {
-          const gchar *id = gcal_calendar_get_id (calendar);
-          g_menu_item_set_action_and_target_value (item, "select-calendar", g_variant_new_string (id));
-        }
+      if (!gcal_calendar_is_read_only (calendar))
+        target = g_variant_new_string (gcal_calendar_get_id (calendar));
+
+      g_menu_item_set_action_and_target_value (item,
+                                               "event-editor-dialog.select-calendar",
+                                               g_steal_pointer (&target));
 
       g_menu_append_item (self->sources_menu, item);
     }
@@ -433,7 +431,7 @@ gcal_event_editor_dialog_constructed (GObject* object)
                                    self);
 
   gtk_widget_insert_action_group (GTK_WIDGET (self),
-                                  "edit",
+                                  "event-editor-dialog",
                                   G_ACTION_GROUP (self->action_group));
 
   /* Watch the main window and adapt the maximum size */
