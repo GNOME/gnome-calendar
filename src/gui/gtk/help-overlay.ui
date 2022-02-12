@@ -82,19 +82,19 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Week view</property>
-                <property name="accelerator">&lt;Primary&gt;1</property>
+                <property name="accelerator">&lt;Alt&gt;1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Month view</property>
-                <property name="accelerator">&lt;Primary&gt;2</property>
+                <property name="accelerator">&lt;Alt&gt;2</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Year view</property>
-                <property name="accelerator">&lt;Primary&gt;3</property>
+                <property name="accelerator">&lt;Alt&gt;3</property>
               </object>
             </child>
           </object>

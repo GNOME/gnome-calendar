@@ -67,21 +67,21 @@
         </child>
         <child>
           <object class="GtkShortcut">
-            <property name="trigger">&lt;Control&gt;1</property>
+            <property name="trigger">&lt;Alt&gt;1</property>
             <property name="action">action(win.change-view)</property>
             <property name="arguments">0</property>
           </object>
         </child>
         <child>
           <object class="GtkShortcut">
-            <property name="trigger">&lt;Control&gt;2</property>
+            <property name="trigger">&lt;Alt&gt;2</property>
             <property name="action">action(win.change-view)</property>
             <property name="arguments">1</property>
           </object>
         </child>
         <child>
           <object class="GtkShortcut">
-            <property name="trigger">&lt;Control&gt;3</property>
+            <property name="trigger">&lt;Alt&gt;3</property>
             <property name="action">action(win.change-view)</property>
             <property name="arguments">2</property>
           </object>
