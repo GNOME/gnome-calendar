@@ -114,10 +114,6 @@ gboolean             should_change_date_for_scroll               (gdouble       
 
 gboolean             is_source_enabled                           (ESource            *source);
 
-gboolean             ask_recurrence_modification_type            (GtkWidget             *parent,
-                                                                  GcalRecurrenceModType *modtype,
-                                                                  GcalCalendar          *calendar);
-
 gboolean             is_workday                                  (guint	              day);
 
 GList*               filter_children_by_uid_and_modtype          (GtkWidget             *widget,

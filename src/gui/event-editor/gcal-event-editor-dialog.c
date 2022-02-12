@@ -281,24 +281,55 @@ on_cancel_button_clicked_cb (GtkButton             *button,
 }
 
 static void
+on_ask_recurrence_response_delete_cb (GcalEvent             *event,
+                                      GcalRecurrenceModType  mod_type,
+                                      gpointer               user_data)
+{
+  GcalEventEditorDialog *self = GCAL_EVENT_EDITOR_DIALOG (user_data);
+
+  g_signal_emit (self, signals[REMOVE_EVENT], 0, event, mod_type);
+  clear_and_hide_dialog (self);
+}
+
+static void
 on_delete_button_clicked_cb (GtkButton             *button,
                              GcalEventEditorDialog *self)
 {
   GcalRecurrenceModType mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
-  GcalCalendar *calendar;
 
   GCAL_ENTRY;
 
-  calendar = gcal_event_get_calendar (self->event);
-  if (!gcal_event_has_recurrence (self->event) ||
-      ask_recurrence_modification_type (GTK_WIDGET (self), &mod, calendar))
+  if (gcal_event_has_recurrence (self->event))
+    {
+      gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
+                                                   self->event,
+                                                   on_ask_recurrence_response_delete_cb,
+                                                   self);
+    }
+  else
     {
       g_signal_emit (self, signals[REMOVE_EVENT], 0, self->event, mod);
+      clear_and_hide_dialog (self);
+    }
+
+  GCAL_EXIT;
+}
+
+static void
+on_ask_recurrence_response_save_cb (GcalEvent             *event,
+                                    GcalRecurrenceModType  mod_type,
+                                    gpointer               user_data)
+{
+  GcalEventEditorDialog *self = GCAL_EVENT_EDITOR_DIALOG (user_data);
+
+  if (mod_type != GCAL_RECURRENCE_MOD_NONE)
+    {
+      GcalManager *manager = gcal_context_get_manager (self->context);
+
+      gcal_manager_update_event (manager, self->event, GCAL_RECURRENCE_MOD_THIS_ONLY);
     }
 
   clear_and_hide_dialog (self);
-
-  GCAL_EXIT;
 }
 
 static void
@@ -339,17 +370,17 @@ on_done_button_clicked_cb (GtkButton             *button,
     {
       gcal_manager_create_event (manager, self->event);
     }
+  else if (gcal_event_has_recurrence (self->event))
+    {
+      gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
+                                                   self->event,
+                                                   on_ask_recurrence_response_save_cb,
+                                                   self);
+      return;
+    }
   else
     {
-      GcalRecurrenceModType mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
-
-      if (gcal_event_has_recurrence (self->event) &&
-          !ask_recurrence_modification_type (GTK_WIDGET (self), &mod, calendar))
-        {
-          goto out;
-        }
-
-      gcal_manager_update_event (manager, self->event, mod);
+      gcal_manager_update_event (manager, self->event, GCAL_RECURRENCE_MOD_THIS_ONLY);
     }
 
 out:
