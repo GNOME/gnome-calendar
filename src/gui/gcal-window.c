@@ -356,6 +356,8 @@ on_view_action_activated (GSimpleAction *action,
   GcalWindow *window = GCAL_WINDOW (user_data);
   gint32 view;
 
+  GCAL_ENTRY;
+
   view = g_variant_get_int32 (param);
 
   /* -1 means next view */
@@ -368,6 +370,8 @@ on_view_action_activated (GSimpleAction *action,
   adw_view_stack_set_visible_child (window->views_stack, window->views[window->active_view]);
 
   g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
+
+  GCAL_EXIT;
 }
 
 static void
