@@ -60,6 +60,13 @@ typedef struct
   GtkWidget          *weekday_name_label;
 } WeekdayHeader;
 
+typedef struct
+{
+  GcalWeekHeader     *self;
+  GcalEvent          *event;
+  gint                drop_cell;
+} DropData;
+
 struct _GcalWeekHeader
 {
   GtkBox              parent;
@@ -1144,6 +1151,171 @@ on_expand_action_activated (GcalWeekHeader *self,
     header_expand (self);
 }
 
+static gint
+get_dnd_cell (GcalWeekHeader *self,
+              gint            x,
+              gint            y)
+{
+  gdouble column_width;
+
+  column_width = gtk_widget_get_allocated_width (GTK_WIDGET (self)) / 7.0;
+
+  return x / column_width;
+}
+
+static void
+move_event_to_cell (GcalWeekHeader        *self,
+                    GcalEvent             *event,
+                    guint                  cell,
+                    GcalRecurrenceModType  mod_type)
+{
+  g_autoptr (GDateTime) week_start = NULL;
+  g_autoptr (GDateTime) dnd_date = NULL;
+  g_autoptr (GDateTime) new_end = NULL;
+  g_autoptr (GDateTime) tmp_dt = NULL;
+  g_autoptr (GcalEvent) changed_event = NULL;
+  GDateTime *start_date;
+  GDateTime *end_date;
+  GTimeSpan difference;
+  gboolean turn_all_day;
+
+  GCAL_ENTRY;
+
+  /* RTL languages swap the drop cell column */
+  if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
+    cell = 6 - cell;
+
+  changed_event = gcal_event_new_from_event (event);
+  start_date = gcal_event_get_date_start (changed_event);
+  end_date = gcal_event_get_date_end (changed_event);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
+
+  turn_all_day = !gcal_event_is_multiday (changed_event) || gcal_event_get_all_day (changed_event);
+
+  if (!turn_all_day)
+    {
+      /*
+       * The only case where we don't touch the timezone is for
+       * timed, multiday events.
+       */
+      tmp_dt = g_date_time_new (g_date_time_get_timezone (start_date),
+                                g_date_time_get_year (week_start),
+                                g_date_time_get_month (week_start),
+                                g_date_time_get_day_of_month (week_start),
+                                g_date_time_get_hour (start_date),
+                                g_date_time_get_minute (start_date),
+                                0);
+    }
+  else
+    {
+      tmp_dt = g_date_time_new_utc (g_date_time_get_year (week_start),
+                                    g_date_time_get_month (week_start),
+                                    g_date_time_get_day_of_month (week_start),
+                                    0, 0, 0);
+    }
+  dnd_date = g_date_time_add_days (tmp_dt, cell);
+
+  /* End date */
+  difference = turn_all_day ? 24 : g_date_time_difference (end_date, start_date) / G_TIME_SPAN_HOUR;
+
+  new_end = g_date_time_add_hours (dnd_date, difference);
+  gcal_event_set_date_end (changed_event, new_end);
+
+  /*
+   * Set the start date ~after~ the end date, so we can compare
+   * the event's start and end dates above
+   */
+  gcal_event_set_date_start (changed_event, dnd_date);
+
+  if (turn_all_day)
+    gcal_event_set_all_day (changed_event, TRUE);
+
+  /* Commit the changes */
+  gcal_manager_update_event (gcal_context_get_manager (self->context), changed_event, mod_type);
+}
+
+static void
+on_ask_recurrence_response_cb (GcalEvent             *event,
+                               GcalRecurrenceModType  mod_type,
+                               gpointer               user_data)
+{
+  DropData *data = user_data;
+
+  if (mod_type != GCAL_RECURRENCE_MOD_NONE)
+    move_event_to_cell (data->self, data->event, data->drop_cell, mod_type);
+
+  g_clear_object (&data->event);
+  g_clear_pointer (&data, g_free);
+}
+
+static gboolean
+on_drop_target_drop_cb (GtkDropTarget  *drop_target,
+                        const GValue   *value,
+                        gdouble         x,
+                        gdouble         y,
+                        GcalWeekHeader *self)
+{
+  GcalEventWidget *event_widget;
+  GcalEvent *event;
+  gint cell;
+
+  GCAL_ENTRY;
+
+  if (!G_VALUE_HOLDS (value, GCAL_TYPE_EVENT_WIDGET))
+    GCAL_RETURN (FALSE);
+
+  cell = get_dnd_cell (self, x, y);
+  event_widget = g_value_get_object (value);
+  event = gcal_event_widget_get_event (event_widget);
+
+  if (gcal_event_has_recurrence (event))
+    {
+      DropData *data;
+
+      data = g_new0 (DropData, 1);
+      data->self = self;
+      data->event = g_object_ref (event);
+      data->drop_cell = cell;
+
+      gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
+                                                   event,
+                                                   on_ask_recurrence_response_cb,
+                                                   data);
+    }
+  else
+    {
+      move_event_to_cell (self, event, cell, GCAL_RECURRENCE_MOD_THIS_ONLY);
+    }
+
+  GCAL_RETURN (TRUE);
+}
+
+static void
+on_drop_target_leave_cb (GtkDropTarget  *drop_target,
+                         GcalWeekHeader *self)
+{
+  GCAL_ENTRY;
+
+  self->dnd_cell = -1;
+  gtk_widget_queue_draw (GTK_WIDGET (self));
+
+  GCAL_EXIT;
+}
+
+static GdkDragAction
+on_drop_target_motion_cb (GtkDropTarget  *drop_target,
+                          gdouble         x,
+                          gdouble         y,
+                          GcalWeekHeader *self)
+{
+  GCAL_ENTRY;
+
+  self->dnd_cell = get_dnd_cell (self, x, y);
+  gtk_widget_queue_draw (GTK_WIDGET (self));
+
+  GCAL_RETURN (self->dnd_cell != -1 ? GDK_ACTION_COPY : 0);
+}
+
 /* Drawing area content and size */
 
 static void
@@ -1264,154 +1436,6 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   g_clear_pointer (&week_end, g_date_time_unref);
 }
 
-#if 0 // TODO: DND
-static gint
-get_dnd_cell (GtkWidget *widget,
-              gint       x,
-              gint       y)
-{
-  gdouble column_width;
-
-  column_width = gtk_widget_get_allocated_width (widget) / 7.0;
-
-  return x / column_width;
-}
-
-static gboolean
-gcal_week_header_drag_motion (GtkWidget      *widget,
-                              GdkDragContext *context,
-                              gint            x,
-                              gint            y,
-                              guint           time)
-{
-  GcalWeekHeader *self;
-
-  self = GCAL_WEEK_HEADER (widget);
-  self->dnd_cell = get_dnd_cell (widget, x, y);
-
-  /*
-   * Sets the status of the drag - if it fails, sets the action to 0 and
-   * aborts the drag with FALSE.
-   */
-  gdk_drag_status (context,
-                   self->dnd_cell == -1 ? 0 : GDK_ACTION_MOVE,
-                   time);
-
-  gtk_widget_queue_draw (widget);
-
-  return self->dnd_cell != -1;
-}
-
-static gboolean
-gcal_week_header_drag_drop (GtkWidget      *widget,
-                            GdkDragContext *context,
-                            gint            x,
-                            gint            y,
-                            guint           time)
-{
-  g_autoptr (GDateTime) week_start = NULL;
-  g_autoptr (GDateTime) dnd_date = NULL;
-  g_autoptr (GDateTime) new_end = NULL;
-  g_autoptr (GDateTime) tmp_dt = NULL;
-  g_autoptr (GcalEvent) changed_event = NULL;
-  GcalWeekHeader *self;
-  GDateTime *start_date;
-  GDateTime *end_date;
-  GTimeSpan difference;
-  GtkWidget *event_widget;
-  GcalEvent *event;
-  gboolean turn_all_day;
-  gboolean ltr;
-  gint drop_cell;
-
-  GCAL_ENTRY;
-
-  self = GCAL_WEEK_HEADER (widget);
-  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
-  drop_cell = get_dnd_cell (widget, x, y);
-  event_widget = gtk_drag_get_source_widget (context);
-
-  if (!GCAL_IS_EVENT_WIDGET (event_widget))
-    return FALSE;
-
-  /* RTL languages swap the drop cell column */
-  if (!ltr)
-    drop_cell = 6 - drop_cell;
-
-  event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
-  changed_event = gcal_event_new_from_event (event);
-  start_date = gcal_event_get_date_start (changed_event);
-  end_date = gcal_event_get_date_end (changed_event);
-  week_start = gcal_date_time_get_start_of_week (self->active_date);
-
-  turn_all_day = !gcal_event_is_multiday (changed_event) || gcal_event_get_all_day (changed_event);
-
-  if (!turn_all_day)
-    {
-      /*
-       * The only case where we don't touch the timezone is for
-       * timed, multiday events.
-       */
-      tmp_dt = g_date_time_new (g_date_time_get_timezone (start_date),
-                                g_date_time_get_year (week_start),
-                                g_date_time_get_month (week_start),
-                                g_date_time_get_day_of_month (week_start),
-                                g_date_time_get_hour (start_date),
-                                g_date_time_get_minute (start_date),
-                                0);
-    }
-  else
-    {
-      tmp_dt = g_date_time_new_utc (g_date_time_get_year (week_start),
-                                    g_date_time_get_month (week_start),
-                                    g_date_time_get_day_of_month (week_start),
-                                    0, 0, 0);
-    }
-  dnd_date = g_date_time_add_days (tmp_dt, drop_cell);
-
-  /* End date */
-  difference = turn_all_day ? 24 : g_date_time_difference (end_date, start_date) / G_TIME_SPAN_HOUR;
-
-  new_end = g_date_time_add_hours (dnd_date, difference);
-  gcal_event_set_date_end (changed_event, new_end);
-
-  /*
-   * Set the start date ~after~ the end date, so we can compare
-   * the event's start and end dates above
-   */
-  gcal_event_set_date_start (changed_event, dnd_date);
-
-  if (turn_all_day)
-    gcal_event_set_all_day (changed_event, TRUE);
-
-  /* Commit the changes */
-  gcal_manager_update_event (gcal_context_get_manager (self->context),
-                             changed_event,
-                             GCAL_RECURRENCE_MOD_THIS_ONLY);
-
-  /* Cancel the DnD */
-  self->dnd_cell = -1;
-
-  gtk_drag_finish (context, TRUE, FALSE, time);
-
-  gtk_widget_queue_draw (widget);
-
-  GCAL_RETURN (TRUE);
-}
-
-static void
-gcal_week_header_drag_leave (GtkWidget      *widget,
-                             GdkDragContext *context,
-                             guint           time)
-{
-  GcalWeekHeader *self = GCAL_WEEK_HEADER (widget);
-
-  /* Cancel the drag */
-  self->dnd_cell = -1;
-
-  gtk_widget_queue_draw (widget);
-}
-#endif
 
 /*
  * GObject overrides
@@ -1477,6 +1501,7 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
 static void
 gcal_week_header_init (GcalWeekHeader *self)
 {
+  GtkDropTarget *drop_target;
   gint i;
 
   self->expanded = FALSE;
@@ -1515,14 +1540,11 @@ gcal_week_header_init (GcalWeekHeader *self)
       gtk_grid_attach (self->grid, gtk_box_new (GTK_ORIENTATION_VERTICAL, 0), i, 0, 1, 1);
     }
 
-#if 0 // TODO: DND
-  /* Setup the week header as a drag n' drop destination */
-  gtk_drag_dest_set (GTK_WIDGET (self),
-                     0,
-                     NULL,
-                     0,
-                     GDK_ACTION_MOVE);
-#endif
+  drop_target = gtk_drop_target_new (GCAL_TYPE_EVENT_WIDGET, GDK_ACTION_COPY);
+  g_signal_connect (drop_target, "drop", G_CALLBACK (on_drop_target_drop_cb), self);
+  g_signal_connect (drop_target, "leave", G_CALLBACK (on_drop_target_leave_cb), self);
+  g_signal_connect (drop_target, "motion", G_CALLBACK (on_drop_target_motion_cb), self);
+  gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
 }
 
 void

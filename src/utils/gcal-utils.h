@@ -43,6 +43,10 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (ECalComponent, g_object_unref)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GWeatherLocation, gweather_location_unref)
 #endif
 
+typedef void (*GcalAskRecurrenceCallback) (GcalEvent             *event,
+                                           GcalRecurrenceModType  modtype,
+                                           gpointer               user_data);
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ICalTime, g_object_unref)
 
 gchar*               gcal_get_weekday                            (gint                i);
@@ -129,5 +133,10 @@ gchar*               gcal_utils_format_filename_for_display      (const gchar   
 void                 gcal_utils_extract_google_section           (const gchar        *description,
                                                                   gchar             **out_description,
                                                                   gchar             **out_meeting_url);
+
+void                 gcal_utils_ask_recurrence_modification_type (GtkWidget                 *parent,
+                                                                  GcalEvent                 *event,
+                                                                  GcalAskRecurrenceCallback  callback,
+                                                                  gpointer                   user_data);
 
 #endif /* __GCAL_UTILS_H__ */

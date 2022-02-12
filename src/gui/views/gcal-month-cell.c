@@ -88,92 +88,23 @@ update_style_flags (GcalMonthCell *self)
     gtk_widget_remove_css_class (GTK_WIDGET (self), "today");
 }
 
-
-/*
- * Callbacks
- */
-
 static void
-day_changed_cb (GcalClock     *clock,
-                GcalMonthCell *self)
+move_event (GcalMonthCell         *self,
+            GcalEvent             *event,
+            GcalRecurrenceModType  mod_type)
 {
-  update_style_flags (self);
-}
 
-static void
-overflow_button_clicked_cb (GtkWidget     *button,
-                            GcalMonthCell *self)
-{
-  g_signal_emit (self, signals[SHOW_OVERFLOW], 0, button);
-}
-
-/*
- * GtkWidget overrides
- */
-
-#if 0 // TODO: DND
-
-static gboolean
-gcal_month_cell_drag_motion (GtkWidget      *widget,
-                             GdkDragContext *context,
-                             gint            x,
-                             gint            y,
-                             guint           time)
-{
-  GcalMonthCell *self;
-
-  self = GCAL_MONTH_CELL (widget);
-
-  if (self->different_month)
-    gtk_drag_unhighlight (widget);
-  else
-    gtk_drag_highlight (widget);
-
-  gdk_drag_status (context, self->different_month ? 0 : GDK_ACTION_MOVE, time);
-
-  return !self->different_month;
-}
-
-static gboolean
-gcal_month_cell_drag_drop (GtkWidget      *widget,
-                           GdkDragContext *context,
-                           gint            x,
-                           gint            y,
-                           guint           time)
-{
   g_autoptr (GcalEvent) changed_event = NULL;
-  GcalRecurrenceModType mod;
-  GcalMonthCell *self;
-  GcalCalendar *calendar;
-  GtkWidget *event_widget;
-  GDateTime *start_dt, *end_dt;
-  GcalEvent *event;
+  g_autoptr (GDateTime) start_dt = NULL;
+  GTimeSpan timespan = 0;
+  GDateTime *end_dt;
   gint diff;
   gint start_month, current_month;
   gint start_year, current_year;
-  GTimeSpan timespan = 0;
-
-  self = GCAL_MONTH_CELL (widget);
-  event_widget = gtk_drag_get_source_widget (context);
-  mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
 
   GCAL_ENTRY;
 
-  if (!GCAL_IS_EVENT_WIDGET (event_widget))
-    GCAL_RETURN (FALSE);
-
-  if (self->different_month)
-    GCAL_RETURN (FALSE);
-
-  event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
   changed_event = gcal_event_new_from_event (event);
-  calendar = gcal_event_get_calendar (changed_event);
-
-  if (gcal_event_has_recurrence (changed_event) &&
-      !ask_recurrence_modification_type (widget, &mod, calendar))
-    {
-      GCAL_GOTO (out);
-    }
 
   /* Move the event's date */
   start_dt = gcal_event_get_date_start (changed_event);
@@ -194,47 +125,107 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
 
   diff = g_date_time_get_day_of_month (self->date) - g_date_time_get_day_of_month (start_dt);
 
-  if (diff != 0 ||
-      current_month != start_month ||
-      current_year != start_year)
+  if (diff != 0 || current_month != start_month || current_year != start_year)
     {
-      g_autoptr (GDateTime) new_start = NULL;
-
-       new_start = g_date_time_add_days (start_dt, diff);
+      g_autoptr (GDateTime) new_start = g_date_time_add_days (start_dt, diff);
 
       gcal_event_set_date_start (changed_event, new_start);
 
       /* The event may have a NULL end date, so we have to check it here */
       if (end_dt)
         {
-          GDateTime *new_end = g_date_time_add (new_start, timespan);
+          g_autoptr (GDateTime) new_end = g_date_time_add (new_start, timespan);
 
           gcal_event_set_date_end (changed_event, new_end);
-          g_clear_pointer (&new_end, g_date_time_unref);
         }
 
-      gcal_manager_update_event (gcal_context_get_manager (self->context), changed_event, mod);
+      gcal_manager_update_event (gcal_context_get_manager (self->context), changed_event, mod_type);
     }
+}
 
-  g_clear_pointer (&start_dt, g_date_time_unref);
 
-out:
-  /* Cancel the DnD */
-  gtk_drag_unhighlight (widget);
-  gtk_drag_finish (context, TRUE, FALSE, time);
+/*
+ * Callbacks
+ */
+
+static void
+day_changed_cb (GcalClock     *clock,
+                GcalMonthCell *self)
+{
+  update_style_flags (self);
+}
+
+static void
+overflow_button_clicked_cb (GtkWidget     *button,
+                            GcalMonthCell *self)
+{
+  g_signal_emit (self, signals[SHOW_OVERFLOW], 0, button);
+}
+
+static gboolean
+on_drop_target_accept_cb (GtkDropTarget *drop_target,
+                          GdkDrop       *drop,
+                          GcalMonthCell *self)
+{
+  GCAL_ENTRY;
+
+  if ((gdk_drop_get_actions (drop) & gtk_drop_target_get_actions (drop_target)) == 0)
+    GCAL_RETURN (FALSE);
+
+  if (!gdk_content_formats_contain_gtype (gdk_drop_get_formats (drop), GCAL_TYPE_EVENT_WIDGET))
+    GCAL_RETURN (FALSE);
+
+  GCAL_RETURN (!self->different_month);
+}
+
+static void
+on_ask_recurrence_response_cb (GcalEvent             *event,
+                               GcalRecurrenceModType  mod_type,
+                               gpointer               user_data)
+{
+  GcalMonthCell *self = GCAL_MONTH_CELL (user_data);
+
+  if (mod_type != GCAL_RECURRENCE_MOD_NONE)
+    move_event (self, event, mod_type);
+}
+
+static gboolean
+on_drop_target_drop_cb (GtkDropTarget *drop_target,
+                        const GValue  *value,
+                        gdouble        x,
+                        gdouble        y,
+                        GcalMonthCell *self)
+{
+  GcalEventWidget *event_widget;
+  GcalEvent *event;
+
+  GCAL_ENTRY;
+
+  if (self->different_month)
+    GCAL_RETURN (FALSE);
+
+  if (!G_VALUE_HOLDS (value, GCAL_TYPE_EVENT_WIDGET))
+    GCAL_RETURN (FALSE);
+
+  event_widget = g_value_get_object (value);
+
+  event = gcal_event_widget_get_event (event_widget);
+
+  if (gcal_event_has_recurrence (event))
+    {
+      gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
+                                                   event,
+                                                   on_ask_recurrence_response_cb,
+                                                   self);
+    }
+  else
+    {
+      move_event (self, event, GCAL_RECURRENCE_MOD_THIS_ONLY);
+    }
 
   GCAL_RETURN (TRUE);
 }
 
-static void
-gcal_month_cell_drag_leave (GtkWidget      *widget,
-                            GdkDragContext *context,
-                            guint           time)
-{
-  gtk_drag_unhighlight (widget);
-}
-
-#endif
 
 /*
  * GObject overrides
@@ -302,12 +293,6 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
   object_class->set_property = gcal_month_cell_set_property;
   object_class->get_property = gcal_month_cell_get_property;
 
-#if 0 // TODO: DND
-  widget_class->drag_motion = gcal_month_cell_drag_motion;
-  widget_class->drag_drop = gcal_month_cell_drag_drop;
-  widget_class->drag_leave = gcal_month_cell_drag_leave;
-#endif
-
   signals[SHOW_OVERFLOW] = g_signal_new ("show-overflow",
                                          GCAL_TYPE_MONTH_CELL,
                                          G_SIGNAL_RUN_LAST,
@@ -342,16 +327,14 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
 static void
 gcal_month_cell_init (GcalMonthCell *self)
 {
+  GtkDropTarget *drop_target;
+
   gtk_widget_init_template (GTK_WIDGET (self));
 
-#if 0 // TODO: DND
-  /* Setup the month cell as a drag n' drop destination */
-  gtk_drag_dest_set (GTK_WIDGET (self),
-                     0,
-                     NULL,
-                     0,
-                     GDK_ACTION_MOVE);
-#endif
+  drop_target = gtk_drop_target_new (GCAL_TYPE_EVENT_WIDGET, GDK_ACTION_COPY);
+  g_signal_connect (drop_target, "accept", G_CALLBACK (on_drop_target_accept_cb), self);
+  g_signal_connect (drop_target, "drop", G_CALLBACK (on_drop_target_drop_cb), self);
+  gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
 }
 
 GtkWidget*

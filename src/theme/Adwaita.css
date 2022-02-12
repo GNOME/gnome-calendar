@@ -328,6 +328,9 @@ weekgrid:selected,
     background-color: alpha(@accent_bg_color, 0.25);
 }
 
+weekgrid.dnd, .week-header.dnd {
+    background-color: alpha(@accent_bg_color, 0.25);
+}
 
 /*
  * Month cell
