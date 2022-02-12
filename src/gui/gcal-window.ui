@@ -8,83 +8,94 @@
 
     <!-- Shortcuts -->
     <child>
-      <object class='GtkShortcutController'>
+      <object class="GtkShortcutController">
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>&lt;Ctrl&gt;t</property>
-            <property name='action'>win.today</property>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Ctrl&gt;t</property>
+            <property name="action">action(win.today)</property>
           </object>
         </child>
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>&lt;Alt&gt;Down</property>
-            <property name='action'>win.today</property>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Alt&gt;Down</property>
+            <property name="action">action(win.today)</property>
           </object>
         </child>
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>Home</property>
-            <property name='action'>win.today</property>
+          <object class="GtkShortcut">
+            <property name="trigger">Home</property>
+            <property name="action">action(win.today)</property>
           </object>
         </child>
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>&lt;Alt&gt;Left</property>
-            <property name='action'>win.previous-date</property>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Alt&gt;Left</property>
+            <property name="action">action(win.previous-date)</property>
           </object>
         </child>
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>Page_Up</property>
-            <property name='action'>win.previous-date</property>
+          <object class="GtkShortcut">
+            <property name="trigger">Page_Up</property>
+            <property name="action">action(win.previous-date)</property>
           </object>
         </child>
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>&lt;Alt&gt;Right</property>
-            <property name='action'>win.next-date</property>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Alt&gt;Right</property>
+            <property name="action">action(win.next-date)</property>
           </object>
         </child>
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>Page_Down</property>
-            <property name='action'>win.next-date</property>
+          <object class="GtkShortcut">
+            <property name="trigger">Page_Down</property>
+            <property name="action">action(win.next-date)</property>
           </object>
         </child>
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>&lt;Control&gt;Page_Down</property>
-            <property name='action'>win.change-view(-1)</property>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;Page_Down</property>
+            <property name="action">action(win.change-view)</property>
+            <property name="arguments">-1</property>
           </object>
         </child>
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>&lt;Control&gt;Page_Up</property>
-            <property name='action'>win.change-view(-2)</property>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;Page_Up</property>
+            <property name="action">action(win.change-view)</property>
+            <property name="arguments">-2</property>
           </object>
         </child>
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>&lt;Control&gt;1</property>
-            <property name='action'>win.change-view(0)</property>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;1</property>
+            <property name="action">action(win.change-view)</property>
+            <property name="arguments">0</property>
           </object>
         </child>
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>&lt;Control&gt;2</property>
-            <property name='action'>win.change-view(1)</property>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;2</property>
+            <property name="action">action(win.change-view)</property>
+            <property name="arguments">1</property>
           </object>
         </child>
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>&lt;Ctrl&gt;n</property>
-            <property name='action'>win.new-event</property>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;3</property>
+            <property name="action">action(win.change-view)</property>
+            <property name="arguments">2</property>
           </object>
         </child>
         <child>
-          <object class='GtkShortcut'>
-            <property name='trigger'>&lt;Control&gt;q</property>
-            <property name='action'>app.quit</property>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Ctrl&gt;n</property>
+            <property name="action">action(win.new-event)</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;q</property>
+            <property name="action">action(app.quit)</property>
           </object>
         </child>
       </object>
