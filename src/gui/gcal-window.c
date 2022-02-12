@@ -796,7 +796,7 @@ gcal_window_dispose (GObject *object)
   timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
-  //gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->year_view));
+  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->year_view));
 
   g_clear_pointer (&self->quick_add_popover, gtk_widget_unparent);
 
