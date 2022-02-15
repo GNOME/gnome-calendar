@@ -1,6 +1,6 @@
 Major changes in 42.beta:
 * Port to GTK4
-* Rewrite the Year view to be a month nagivator
+* Rewrite the Year view to be a month navigator
 * Various improvements to timezone handling
 * Update Ctrl+1/2/3 shortcuts to use Alt instead
 * Updated translations
