@@ -1,3 +1,10 @@
+Major changes in 41.beta:
+* Port to GTK4
+* Rewrite the Year view to be a month nagivator
+* Various improvements to timezone handling
+* Update Ctrl+1/2/3 shortcuts to use Alt instead
+* Updated translations
+
 Major changes in 41.0:
 * Updated translations
 
