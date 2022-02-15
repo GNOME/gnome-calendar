@@ -1,4 +1,4 @@
-Major changes in 41.beta:
+Major changes in 42.beta:
 * Port to GTK4
 * Rewrite the Year view to be a month nagivator
 * Various improvements to timezone handling
