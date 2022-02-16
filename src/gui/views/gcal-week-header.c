@@ -1032,11 +1032,15 @@ update_title (GcalWeekHeader *self)
         {
           gtk_widget_add_css_class (header->weekday_name_label, "accent");
           gtk_widget_add_css_class (header->day_number_label, "accent");
+          gtk_widget_remove_css_class (header->weekday_name_label, "dim-label");
+          gtk_widget_remove_css_class (header->day_number_label, "dim-label");
         }
       else
         {
           gtk_widget_remove_css_class (header->weekday_name_label, "accent");
           gtk_widget_remove_css_class (header->day_number_label, "accent");
+          gtk_widget_add_css_class (header->weekday_name_label, "dim-label");
+          gtk_widget_add_css_class (header->day_number_label, "dim-label");
         }
 
       weekday_date = g_strdup_printf ("%d", n_day);
