@@ -4,7 +4,7 @@
 label.primary-label {
     font-size: 16pt;
     font-weight: bold;
-    color: @theme_selected_bg_color;
+    color: @accent_color;
     padding: 12px;
 }
 
@@ -28,11 +28,11 @@ label.header {
 
 calendar-view.current,
 weekgrid.current {
-    background-color: alpha(@theme_selected_bg_color, 0.3);
+    background-color: alpha(@accent_bg_color, 0.3);
 }
 
 calendar-view:selected {
-    color: @theme_selected_bg_color;
+    color: @accent_color;
     font-weight: bold;
 }
 
@@ -272,15 +272,15 @@ datechooser day.other-month:hover:not(:backdrop) {
 
 datechooser day:selected,
 datechooser day:selected:hover {
-  color: @theme_selected_fg_color;
-  background-color: @theme_selected_bg_color;
+  color: @accent_fg_color;
+  background-color: @accent_bg_color;
   font-weight: bold;
 }
 
 label.month-name {
     font-size: 16pt;
     font-weight: bold;
-    color: @theme_selected_bg_color;
+    color: @accent_color;
     padding: 12px;
 }
 
@@ -343,13 +343,13 @@ monthcell {
     transition: background-color 200ms;
 }
 
-monthcell:selected { background-color: alpha(@theme_selected_bg_color, 0.1); }
+monthcell:selected { background-color: alpha(@accent_bg_color, 0.1); }
 monthcell:selected label.day-label { font-weight: bold; }
 
 monthcell:nth-child(7n + 1) { border-left-width: 0; }
 
-monthcell.today { background-color: alpha(@theme_selected_bg_color, 0.25); }
-monthcell:selected.today { background-color: alpha(@theme_selected_bg_color, 0.33); }
+monthcell.today { background-color: alpha(@accent_bg_color, 0.25); }
+monthcell:selected.today { background-color: alpha(@accent_bg_color, 0.33); }
 
 monthcell.out-of-month {
     background-color: alpha(@theme_bg_color, 0.4);
