@@ -3,7 +3,7 @@ project(
                'c',
            version: '42.rc',
            license: 'GPL3+',
-     meson_version: '>= 0.53.0'
+     meson_version: '>= 0.57.0'
 )
 
 
@@ -187,7 +187,6 @@ src_dir = join_paths(meson.source_root(), 'src')
 # Subdirs #
 ###########
 
-subdir('build-aux')
 subdir('data')
 subdir('src')
 subdir('po')
@@ -206,3 +205,13 @@ summary({
   'Debug': calendar_debug,
   'Tracing': enable_tracing,
 }, section: 'Development')
+
+
+###########
+# Scripts #
+###########
+
+gnome.post_install(
+  glib_compile_schemas: true,
+  gtk_update_icon_cache: true,
+)
