@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2021-08-16 21:39+0000\n"
-"PO-Revision-Date: 2021-08-27 21:34+0300\n"
+"POT-Creation-Date: 2022-02-13 13:34+0000\n"
+"PO-Revision-Date: 2022-02-23 19:05+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -16,12 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
-#: src/gui/gcal-window.ui:173
+#: src/gui/gcal-application.c:193 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4
 msgid "Calendar"
 msgstr "Kalenteri"
 
@@ -109,17 +109,9 @@ msgstr ""
 "Näytetäänkö sääilmoitukset, käytetäänkö automaattista sijaintia ja paikan "
 "nimi"
 
-#: data/org.gnome.calendar.gschema.xml.in:31
-msgid "Follow system night light"
-msgstr "Seuraa järjestelmän yövaloa"
-
-#: data/org.gnome.calendar.gschema.xml.in:32
-msgid "Use GNOME night light setting to activate night-mode."
-msgstr "Käytä Gnomen yövaloasetusta yötilan aktivointiin."
-
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1899 src/gui/gcal-event-popover.c:381
+#: src/core/gcal-event.c:1909 src/gui/gcal-event-popover.c:388
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -128,95 +120,109 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1907
+#: src/core/gcal-event.c:1917
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1923 src/gui/gcal-quick-add-popover.c:475
+#: src/core/gcal-event.c:1933 src/gui/gcal-quick-add-popover.c:461
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
-#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:26
+#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
 msgstr "Kalenterin asetukset"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:359
+#: src/gui/calendar-management/gcal-calendars-page.c:354
 msgid "Manage Calendars"
 msgstr "Hallitse kalentereita"
 
 #. Update notification label
-#: src/gui/calendar-management/gcal-calendars-page.c:389
+#: src/gui/calendar-management/gcal-calendars-page.c:384
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalenteri <b>%s</b> poistettu"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:692 src/gui/gcal-window.c:696
+#: src/gui/calendar-management/gcal-calendars-page.ui:24
 msgid "Undo"
 msgstr "Kumoa"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:91
+#: src/gui/calendar-management/gcal-calendars-page.ui:78
 msgid "Add Calendar…"
 msgstr "Lisää kalenteri…"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:18
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:19
 msgid "Account"
 msgstr "Tili"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:43
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:46
 msgid "Settings"
 msgstr "Asetukset"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
-#: src/gui/event-editor/gcal-summary-section.ui:42
-#: src/gui/gcal-event-popover.ui:104
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
+#: src/gui/event-editor/gcal-summary-section.ui:35
+#: src/gui/gcal-event-popover.ui:111
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "Sijainti"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:84
 msgid "Calendar name"
 msgstr "Kalenterin nimi"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:121
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:65
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
 msgid "Color"
 msgstr "Väri"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:155
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:134
 msgid "Display calendar"
 msgstr "Näytä kalenteri"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:175
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:146
 msgid "Add new events to this calendar by default"
 msgstr "Lisää uudet tapahtumat oletuksena tähän kalenteriin"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:190
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:158
 msgid "Remove Calendar"
 msgstr "Poista kalenteri"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:513
+#: src/gui/calendar-management/gcal-file-chooser-button.c:49
+msgid "Select a file"
+msgstr "Valitse tiedosto"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:94
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:284
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
+msgid "Cancel"
+msgstr "Peru"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:96
+msgid "Open"
+msgstr "Avaa"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:515
 msgid "New Calendar"
 msgstr "Uusi kalenteri"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:676
+#: src/gui/calendar-management/gcal-new-calendar-page.c:693
 msgid "Calendar files"
 msgstr "Kalenteritiedostot"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:41
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:16
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:22
 msgid "Calendar Name"
 msgstr "Kalenterin nimi"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:87
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:55
 msgid "Import a Calendar"
 msgstr "Tuo kalenteri"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:106
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:72
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
@@ -224,15 +230,15 @@ msgstr ""
 "Vaihtoehtoisesti kirjoita verkkokalenterin osoite tai avaa tuettu "
 "verkkokalenteritiedosto."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:138
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:100
 msgid "Open a File"
 msgstr "Avaa tiedosto"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:159
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:124
 msgid "Calendars"
 msgstr "Kalenterit"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:205
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:148
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -240,226 +246,219 @@ msgstr ""
 "Jos kalenteri kuuluu johonkin verkkotileistäsi, voit lisätä kalenterin <a "
 "href=\"GOA\">verkkotilien asetuksissa</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
 msgid "User"
 msgstr "Käyttäjä"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 msgid "Password"
 msgstr "Salasana"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:303
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:342
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:17
-msgid "Cancel"
-msgstr "Peru"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:312
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
 msgid "Connect"
 msgstr "Yhdistä"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:349
-#: src/gui/gcal-quick-add-popover.ui:130
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:288
+#: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Lisää"
 
-#: src/gui/event-editor/gcal-alarm-row.c:85
+#: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u päivä, %2$u tunti ja %3$u minuutti ennen"
 msgstr[1] "%1$u päivä, %2$u tunti ja %3$u minuuttia ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:89
+#: src/gui/event-editor/gcal-alarm-row.c:88
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u päivä, %2$u tuntia ja %3$u minuutti ennen"
 msgstr[1] "%1$u päivä, %2$u tuntia ja %3$u minuuttia ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:95
+#: src/gui/event-editor/gcal-alarm-row.c:94
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u päivää, %2$u tunti ja %3$u minuutti ennen"
 msgstr[1] "%1$u päivää, %2$u tunti ja %3$u minuuttia ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:99
+#: src/gui/event-editor/gcal-alarm-row.c:98
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u päivää, %2$u tuntia ja %3$u minuutti ennen"
 msgstr[1] "%1$u päivää, %2$u tuntia ja %3$u minuuttia ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:114
+#: src/gui/event-editor/gcal-alarm-row.c:113
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
 msgstr[0] "%1$u päivä ja %2$u tunti ennen"
 msgstr[1] "%1$u päivä ja %2$u tuntia ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:118
+#: src/gui/event-editor/gcal-alarm-row.c:117
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
 msgstr[0] "%1$u päivää ja %2$u tunti ennen"
 msgstr[1] "%1$u päivää ja %2$u tuntia ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:134
+#: src/gui/event-editor/gcal-alarm-row.c:133
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
 msgstr[0] "%1$u päivä ja %2$u minuutti ennen"
 msgstr[1] "%1$u päivä ja %2$u minuuttia ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:138
+#: src/gui/event-editor/gcal-alarm-row.c:137
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
 msgstr[0] "%1$u päivää ja %2$u minuutti ennen"
 msgstr[1] "%1$u päivää ja %2$u minuuttia ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:148
+#: src/gui/event-editor/gcal-alarm-row.c:147
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "%1$u päivä ennen"
 msgstr[1] "%1$u päivää ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:166
+#: src/gui/event-editor/gcal-alarm-row.c:165
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "%1$u tunti ja %2$u minuutti ennen"
 msgstr[1] "%1$u tunti ja %2$u minuuttia ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:170
+#: src/gui/event-editor/gcal-alarm-row.c:169
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "%1$u tuntia ja %2$u minuutti ennen"
 msgstr[1] "%1$u tuntia ja %2$u minuuttia ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:180
+#: src/gui/event-editor/gcal-alarm-row.c:179
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "%1$u tunti ennen"
 msgstr[1] "%1$u tuntia ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:192
+#: src/gui/event-editor/gcal-alarm-row.c:191
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "%1$u minuutti ennen"
 msgstr[1] "%1$u minuuttia ennen"
 
-#: src/gui/event-editor/gcal-alarm-row.c:199
+#: src/gui/event-editor/gcal-alarm-row.c:198
 msgid "Event start time"
 msgstr "Tapahtuman alkuaika"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:18
+#: src/gui/event-editor/gcal-alarm-row.ui:11
 msgid "Toggles the sound of the alarm"
 msgstr "Hälytyksen ääni päälle/pois"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:35
+#: src/gui/event-editor/gcal-alarm-row.ui:21
 msgid "Remove the alarm"
 msgstr "Poista hälytys"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:201
+#: src/gui/event-editor/gcal-event-editor-dialog.c:196
 msgid "Save"
 msgstr "Tallenna"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:201
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:108
+#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:86
 msgid "Done"
 msgstr "Valmis"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:37
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
 msgid "Click to select the calendar"
 msgstr "Napsauta valitaksesi kalenterin"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:157
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:115
 msgid "Schedule"
 msgstr "Aikataulu"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:178
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
 msgid "Reminders"
 msgstr "Muistutukset"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:201
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
 msgid "Notes"
 msgstr "Kommentit"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:226
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
 msgid "Delete Event"
 msgstr "Poista tapahtuma"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:28
+#: src/gui/event-editor/gcal-reminders-section.ui:26
 msgid "Add a Reminder…"
 msgstr "Lisää muistutus…"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:55
+#: src/gui/event-editor/gcal-reminders-section.ui:52
 msgid "5 minutes"
 msgstr "5 minuuttia"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:64
+#: src/gui/event-editor/gcal-reminders-section.ui:58
 msgid "10 minutes"
 msgstr "10 minuuttia"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:73
+#: src/gui/event-editor/gcal-reminders-section.ui:64
 msgid "15 minutes"
 msgstr "15 minuuttia"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:82
+#: src/gui/event-editor/gcal-reminders-section.ui:70
 msgid "30 minutes"
 msgstr "30 minuuttia"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:91
+#: src/gui/event-editor/gcal-reminders-section.ui:76
 msgid "1 hour"
 msgstr "1 tunti"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:99
+#: src/gui/event-editor/gcal-reminders-section.ui:82
 msgid "1 day"
 msgstr "1 päivä"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:108
+#: src/gui/event-editor/gcal-reminders-section.ui:88
 msgid "2 days"
 msgstr "2 päivää"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:117
+#: src/gui/event-editor/gcal-reminders-section.ui:94
 msgid "3 days"
 msgstr "3 päivää"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:126
+#: src/gui/event-editor/gcal-reminders-section.ui:100
 msgid "1 week"
 msgstr "1 viikko"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:241
+#: src/gui/event-editor/gcal-schedule-section.c:238
 #, c-format
 msgid "Last %A"
 msgstr "Viimeinen %A"
 
-#: src/gui/event-editor/gcal-schedule-section.c:245
-#: src/gui/gcal-event-popover.c:208 src/gui/gcal-event-popover.c:322
+#: src/gui/event-editor/gcal-schedule-section.c:242
+#: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
 msgid "Yesterday"
 msgstr "Eilen"
 
-#: src/gui/event-editor/gcal-schedule-section.c:249
-#: src/gui/gcal-event-popover.c:200 src/gui/gcal-event-popover.c:314
-#: src/gui/gcal-window.ui:190 src/gui/views/gcal-year-view.c:282
-#: src/gui/views/gcal-year-view.c:560 src/gui/views/gcal-year-view.ui:88
+#: src/gui/event-editor/gcal-schedule-section.c:246
+#: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
+#: src/gui/gcal-window.ui:119
 msgid "Today"
 msgstr "Tänään"
 
-#: src/gui/event-editor/gcal-schedule-section.c:253
-#: src/gui/gcal-event-popover.c:204 src/gui/gcal-event-popover.c:318
+#: src/gui/event-editor/gcal-schedule-section.c:250
+#: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
 msgid "Tomorrow"
 msgstr "Huomenna"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:263
+#: src/gui/event-editor/gcal-schedule-section.c:255
 #, c-format
 msgid "This %A"
 msgstr "Tämä %A"
@@ -468,206 +467,207 @@ msgstr "Tämä %A"
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
-#: src/gui/event-editor/gcal-schedule-section.c:293
+#: src/gui/event-editor/gcal-schedule-section.c:285
 #, c-format
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:20
+#: src/gui/event-editor/gcal-schedule-section.ui:17
 msgid "All Day"
 msgstr "Koko päivä"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:40
+#: src/gui/event-editor/gcal-schedule-section.ui:34
 #: src/gui/importer/gcal-import-file-row.c:152
 msgid "Starts"
 msgstr "Alkaa"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:90
+#: src/gui/event-editor/gcal-schedule-section.ui:77
 #: src/gui/importer/gcal-import-file-row.c:153
 msgid "Ends"
 msgstr "Päättyy"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:140
+#: src/gui/event-editor/gcal-schedule-section.ui:120
 msgid "Repeat"
 msgstr "Toisto"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:150
+#: src/gui/event-editor/gcal-schedule-section.ui:128
 msgid "No Repeat"
 msgstr "Ei toistoa"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:151
+#: src/gui/event-editor/gcal-schedule-section.ui:129
 msgid "Daily"
 msgstr "Päivittäin"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:152
+#: src/gui/event-editor/gcal-schedule-section.ui:130
 msgid "Monday – Friday"
 msgstr "Maanantai – perjantai"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:153
+#: src/gui/event-editor/gcal-schedule-section.ui:131
 msgid "Weekly"
 msgstr "Viikoittain"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:154
+#: src/gui/event-editor/gcal-schedule-section.ui:132
 msgid "Monthly"
 msgstr "Kuukausittain"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:155
+#: src/gui/event-editor/gcal-schedule-section.ui:133
 msgid "Yearly"
 msgstr "Vuosittain"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:168
+#: src/gui/event-editor/gcal-schedule-section.ui:146
 msgid "End Repeat"
 msgstr "Toiston lopetus"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:178
+#: src/gui/event-editor/gcal-schedule-section.ui:154
 msgid "Forever"
 msgstr "Ei lopetusta"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:179
+#: src/gui/event-editor/gcal-schedule-section.ui:155
 msgid "No. of occurrences"
 msgstr "Toistokertojen mukaan"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:180
+#: src/gui/event-editor/gcal-schedule-section.ui:156
 msgid "Until Date"
 msgstr "Tiettyyn päivään asti"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:193
+#: src/gui/event-editor/gcal-schedule-section.ui:169
 msgid "Number of Occurrences"
 msgstr "Toistokertojen määrä"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:213
+#: src/gui/event-editor/gcal-schedule-section.ui:188
 msgid "End Repeat Date"
 msgstr "Toiston lopetuspäivä"
 
-#: src/gui/event-editor/gcal-summary-section.c:79
-#: src/gui/gcal-quick-add-popover.c:692
+#: src/gui/event-editor/gcal-summary-section.c:99
+#: src/gui/gcal-quick-add-popover.c:676
 msgid "Unnamed event"
 msgstr "Nimetön tapahtuma"
 
-#: src/gui/event-editor/gcal-summary-section.ui:19
+#: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
 msgid "Title"
 msgstr "Nimi"
 
-#: src/gui/event-editor/gcal-time-selector.ui:22
+#: src/gui/event-editor/gcal-time-selector.ui:18
 msgid ":"
 msgstr ":"
 
-#: src/gui/event-editor/gcal-time-selector.ui:47
-#: src/gui/views/gcal-week-view.c:440
+#: src/gui/event-editor/gcal-time-selector.ui:41
+#: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "AM"
 
-#: src/gui/event-editor/gcal-time-selector.ui:48
-#: src/gui/views/gcal-week-view.c:440
+#: src/gui/event-editor/gcal-time-selector.ui:42
+#: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "PM"
 
-#: src/gui/gcal-application.c:63
+#: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
 msgstr "Lopeta Gnomen kalenteri"
 
-#: src/gui/gcal-application.c:68
+#: src/gui/gcal-application.c:63
 msgid "Display version number"
 msgstr "Näytä versionumero"
 
-#: src/gui/gcal-application.c:73
+#: src/gui/gcal-application.c:68
 msgid "Enable debug messages"
 msgstr "Ota vianjäljitysviestit käyttöön"
 
-#: src/gui/gcal-application.c:78
+#: src/gui/gcal-application.c:73
 msgid "Open calendar on the passed date"
 msgstr "Avaa kalenteri menneeseen päivään"
 
-#: src/gui/gcal-application.c:83
+#: src/gui/gcal-application.c:78
 msgid "Open calendar showing the passed event"
 msgstr "Avaa kalenteri näyttäen mennyt tapahtuma"
 
-#: src/gui/gcal-application.c:234
+#: src/gui/gcal-application.c:150
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Tekijänoikeus © 2012–%d Kalenterisovelluksen tekijät"
 
-#: src/gui/gcal-application.c:288
+#: src/gui/gcal-application.c:204
 msgid "translator-credits"
 msgstr "Jiri Grönroos"
 
-#: src/gui/gcal-calendar-popover.ui:43
-msgid "_Synchronize Calendars"
-msgstr "_Synkronoi kalenterit"
+#: src/gui/gcal-calendar-button.ui:6
+msgid "Manage your calendars"
+msgstr "Hallitse kalentereitasi"
 
-#: src/gui/gcal-calendar-popover.ui:51
-msgid "Manage Calendars…"
-msgstr "Hallitse kalentereita…"
-
-#: src/gui/gcal-calendar-popover.ui:75
+#: src/gui/gcal-calendar-button.ui:32
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Synkronoidaan etäkalentereita…"
 
-#: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:269
+#: src/gui/gcal-calendar-button.ui:62
+msgid "_Synchronize Calendars"
+msgstr "_Synkronoi kalenterit"
+
+#: src/gui/gcal-calendar-button.ui:66
+msgid "Manage Calendars…"
+msgstr "Hallitse kalentereita…"
+
+#: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:255
 msgid "January"
 msgstr "Tammikuu"
 
-#: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:270
+#: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:256
 msgid "February"
 msgstr "Helmikuu"
 
-#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:271
+#: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:257
 msgid "March"
 msgstr "Maaliskuu"
 
-#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:272
+#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:258
 msgid "April"
 msgstr "Huhtikuu"
 
-#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:273
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:259
 msgid "May"
 msgstr "Toukokuu"
 
-#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:274
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:260
 msgid "June"
 msgstr "Kesäkuu"
 
-#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:275
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:261
 msgid "July"
 msgstr "Heinäkuu"
 
-#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:276
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:262
 msgid "August"
 msgstr "Elokuu"
 
-#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:277
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:263
 msgid "September"
 msgstr "Syyskuu"
 
-#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:278
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:264
 msgid "October"
 msgstr "Lokakuu"
 
-#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:279
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:265
 msgid "November"
 msgstr "Marraskuu"
 
-#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:280
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:266
 msgid "December"
 msgstr "Joulukuu"
 
-#: src/gui/gcal-event-popover.c:159
+#: src/gui/gcal-event-popover.c:158
 #, c-format
-#| msgid "Today"
 msgid "Today %s"
 msgstr "Tänään %s"
 
-#: src/gui/gcal-event-popover.c:163
+#: src/gui/gcal-event-popover.c:162
 #, c-format
-#| msgid "Tomorrow"
 msgid "Tomorrow %s"
 msgstr "Huomenna %s"
 
-#: src/gui/gcal-event-popover.c:167
+#: src/gui/gcal-event-popover.c:166
 #, c-format
-#| msgid "Yesterday"
 msgid "Yesterday %s"
 msgstr "Eilen %s"
 
@@ -676,9 +676,8 @@ msgstr "Eilen %s"
 #. * of month, and %3$ is the hour. This format string results in dates
 #. * like "November 21, 22:00".
 #.
-#: src/gui/gcal-event-popover.c:176
+#: src/gui/gcal-event-popover.c:175
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s %2$d, %3$s"
 msgstr "%1$s %2$d, %3$s"
 
@@ -687,9 +686,8 @@ msgstr "%1$s %2$d, %3$s"
 #. * of month, %3$d is the year, and %4$s is the hour. This format string
 #. * results in dates like "November 21, 2020, 22:00".
 #.
-#: src/gui/gcal-event-popover.c:188
+#: src/gui/gcal-event-popover.c:187
 #, c-format
-#| msgid "%1$s %2$s — %3$s %4$s"
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%1$s %2$d, %3$d, %4$s"
 
@@ -698,9 +696,8 @@ msgstr "%1$s %2$d, %3$d, %4$s"
 #. * the day of month. This format string results in dates like
 #. * "November 21".
 #.
-#: src/gui/gcal-event-popover.c:217 src/gui/gcal-event-popover.c:331
+#: src/gui/gcal-event-popover.c:216 src/gui/gcal-event-popover.c:330
 #, c-format
-#| msgid "%1$s, %2$s"
 msgid "%1$s %2$d"
 msgstr "%1$s %2$d"
 
@@ -709,9 +706,8 @@ msgstr "%1$s %2$d"
 #. * of month, and %3$d is the year. This format string results in dates
 #. * like "November 21, 2020".
 #.
-#: src/gui/gcal-event-popover.c:228 src/gui/gcal-event-popover.c:342
+#: src/gui/gcal-event-popover.c:227 src/gui/gcal-event-popover.c:341
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s %2$d, %3$d"
 msgstr "%1$s %2$d, %3$d"
 
@@ -719,9 +715,8 @@ msgstr "%1$s %2$d, %3$d"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Today, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:262
+#: src/gui/gcal-event-popover.c:261
 #, c-format
-#| msgid "%1$s — %2$s"
 msgid "Today, %1$s — %2$s"
 msgstr "Tänään, %1$s — %2$s"
 
@@ -729,9 +724,8 @@ msgstr "Tänään, %1$s — %2$s"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:270
+#: src/gui/gcal-event-popover.c:269
 #, c-format
-#| msgid "%1$s — %2$s"
 msgid "Tomorrow, %1$s – %2$s"
 msgstr "Huomenna, %1$s – %2$s"
 
@@ -739,9 +733,8 @@ msgstr "Huomenna, %1$s – %2$s"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:278
+#: src/gui/gcal-event-popover.c:277
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "Yesterday, %1$s – %2$s"
 msgstr "Eilen, %1$s – %2$s"
 
@@ -750,9 +743,8 @@ msgstr "Eilen, %1$s – %2$s"
 #. * of month, %3$s is the start hour, and %4$s is the end hour. This
 #. * format string results in dates like "November 21, 19:00 — 22:00".
 #.
-#: src/gui/gcal-event-popover.c:287
+#: src/gui/gcal-event-popover.c:286
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s %2$d, %3$s – %4$s"
 msgstr "%1$s %2$d, %3$s – %4$s"
 
@@ -763,124 +755,122 @@ msgstr "%1$s %2$d, %3$s – %4$s"
 #. *
 #. * "November 21, 2021, 19:00 — 22:00".
 #.
-#: src/gui/gcal-event-popover.c:302
+#: src/gui/gcal-event-popover.c:301
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%1$s %2$d, %3$d, %4$s – %5$s"
 
-#: src/gui/gcal-event-popover.ui:70
+#: src/gui/gcal-event-popover.ui:71
 msgid "No event information"
 msgstr "Ei tapahtuman tietoja"
 
-#: src/gui/gcal-event-popover.ui:160
+#: src/gui/gcal-event-popover.ui:169
 msgid "Edit…"
 msgstr "Muokkaa…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:437
+#: src/gui/gcal-event-widget.c:409
 #, c-format
 msgid "At %s"
 msgstr "Tapahtuman sijainti %s"
 
-#: src/gui/gcal-meeting-row.c:68
-#| msgid "Google"
+#: src/gui/gcal-meeting-row.c:65
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/gui/gcal-meeting-row.c:69
+#: src/gui/gcal-meeting-row.c:66
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/gui/gcal-meeting-row.c:70
+#: src/gui/gcal-meeting-row.c:67
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/gui/gcal-meeting-row.c:71
+#: src/gui/gcal-meeting-row.c:68
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:81
+#: src/gui/gcal-meeting-row.c:78
 msgid "Unknown Service"
 msgstr "Tuntematon palvelu"
 
 #. Translators: "Join" as in "Join meeting"
-#: src/gui/gcal-meeting-row.ui:62
+#: src/gui/gcal-meeting-row.ui:12
 msgid "Join"
 msgstr "Liity"
 
-#: src/gui/gcal-quick-add-popover.c:117
+#: src/gui/gcal-quick-add-popover.c:118
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (tämä kalenteri on vain lukumuodossa)"
 
-#: src/gui/gcal-quick-add-popover.c:247
+#: src/gui/gcal-quick-add-popover.c:233
 msgid "from next Monday"
 msgstr "seuraavasta maanantaista"
 
-#: src/gui/gcal-quick-add-popover.c:248
+#: src/gui/gcal-quick-add-popover.c:234
 msgid "from next Tuesday"
 msgstr "seuraavasta tiistaista"
 
-#: src/gui/gcal-quick-add-popover.c:249
+#: src/gui/gcal-quick-add-popover.c:235
 msgid "from next Wednesday"
 msgstr "seuraavasta keskiviikosta"
 
-#: src/gui/gcal-quick-add-popover.c:250
+#: src/gui/gcal-quick-add-popover.c:236
 msgid "from next Thursday"
 msgstr "seuraavasta torstaista"
 
-#: src/gui/gcal-quick-add-popover.c:251
+#: src/gui/gcal-quick-add-popover.c:237
 msgid "from next Friday"
 msgstr "seuraavasta perjantaista"
 
-#: src/gui/gcal-quick-add-popover.c:252
+#: src/gui/gcal-quick-add-popover.c:238
 msgid "from next Saturday"
 msgstr "seuraavasta lauantaista"
 
-#: src/gui/gcal-quick-add-popover.c:253
+#: src/gui/gcal-quick-add-popover.c:239
 msgid "from next Sunday"
 msgstr "seuraavasta sunnuntaista"
 
-#: src/gui/gcal-quick-add-popover.c:258
+#: src/gui/gcal-quick-add-popover.c:244
 msgid "to next Monday"
 msgstr "seuraavaan maanantaihin"
 
-#: src/gui/gcal-quick-add-popover.c:259
+#: src/gui/gcal-quick-add-popover.c:245
 msgid "to next Tuesday"
 msgstr "seuraavaan tiistaihin"
 
-#: src/gui/gcal-quick-add-popover.c:260
+#: src/gui/gcal-quick-add-popover.c:246
 msgid "to next Wednesday"
 msgstr "seuraavaan keskiviikkoon"
 
-#: src/gui/gcal-quick-add-popover.c:261
+#: src/gui/gcal-quick-add-popover.c:247
 msgid "to next Thursday"
 msgstr "seuraavaan torstaihin"
 
-#: src/gui/gcal-quick-add-popover.c:262
+#: src/gui/gcal-quick-add-popover.c:248
 msgid "to next Friday"
 msgstr "seuraavaan perjantaihin"
 
-#: src/gui/gcal-quick-add-popover.c:263
+#: src/gui/gcal-quick-add-popover.c:249
 msgid "to next Saturday"
 msgstr "seuraavaan lauantaihin"
 
-#: src/gui/gcal-quick-add-popover.c:264
+#: src/gui/gcal-quick-add-popover.c:250
 msgid "to next Sunday"
 msgstr "seuraavaan sunnuntaihin"
 
-#: src/gui/gcal-quick-add-popover.c:289
+#: src/gui/gcal-quick-add-popover.c:275
 #, c-format
 msgid "from Today"
 msgstr "tästä päivästä"
 
-#: src/gui/gcal-quick-add-popover.c:293
+#: src/gui/gcal-quick-add-popover.c:279
 #, c-format
 msgid "from Tomorrow"
 msgstr "huomisesta"
 
-#: src/gui/gcal-quick-add-popover.c:297
+#: src/gui/gcal-quick-add-popover.c:283
 #, c-format
 msgid "from Yesterday"
 msgstr "eilisestä"
@@ -889,22 +879,22 @@ msgstr "eilisestä"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:315
+#: src/gui/gcal-quick-add-popover.c:301
 #, c-format
 msgid "from %1$s %2$s"
 msgstr "ajankohdasta %1$s %2$s"
 
-#: src/gui/gcal-quick-add-popover.c:326
+#: src/gui/gcal-quick-add-popover.c:312
 #, c-format
 msgid "to Today"
 msgstr "kuluvaan päivään"
 
-#: src/gui/gcal-quick-add-popover.c:330
+#: src/gui/gcal-quick-add-popover.c:316
 #, c-format
 msgid "to Tomorrow"
 msgstr "huomiseen"
 
-#: src/gui/gcal-quick-add-popover.c:334
+#: src/gui/gcal-quick-add-popover.c:320
 #, c-format
 msgid "to Yesterday"
 msgstr "eiliseen"
@@ -913,285 +903,283 @@ msgstr "eiliseen"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:352
+#: src/gui/gcal-quick-add-popover.c:338
 #, c-format
 msgid "to %1$s %2$s"
 msgstr "ajankohtaan %1$s %2$s"
 
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
-#: src/gui/gcal-quick-add-popover.c:359
+#: src/gui/gcal-quick-add-popover.c:345
 #, c-format
 msgid "New Event %1$s %2$s"
 msgstr "Uusi tapahtuma %1$s %2$s"
 
-#: src/gui/gcal-quick-add-popover.c:376
+#: src/gui/gcal-quick-add-popover.c:362
 #, c-format
 msgid "New Event Today"
 msgstr "Uusi tapahtuma tänään"
 
-#: src/gui/gcal-quick-add-popover.c:380
+#: src/gui/gcal-quick-add-popover.c:366
 #, c-format
 msgid "New Event Tomorrow"
 msgstr "Uusi tapahtuma huomenna"
 
-#: src/gui/gcal-quick-add-popover.c:384
+#: src/gui/gcal-quick-add-popover.c:370
 #, c-format
 msgid "New Event Yesterday"
 msgstr "Uusi tapahtuma eilen"
 
-#: src/gui/gcal-quick-add-popover.c:390
+#: src/gui/gcal-quick-add-popover.c:376
 msgid "New Event next Monday"
 msgstr "Uusi tapahtuma seuraavana maanantaina"
 
-#: src/gui/gcal-quick-add-popover.c:391
+#: src/gui/gcal-quick-add-popover.c:377
 msgid "New Event next Tuesday"
 msgstr "Uusi tapahtuma seuraavana tiistaina"
 
-#: src/gui/gcal-quick-add-popover.c:392
+#: src/gui/gcal-quick-add-popover.c:378
 msgid "New Event next Wednesday"
 msgstr "Uusi tapahtuma seuraavana keskiviikkona"
 
-#: src/gui/gcal-quick-add-popover.c:393
+#: src/gui/gcal-quick-add-popover.c:379
 msgid "New Event next Thursday"
 msgstr "Uusi tapahtuma seuraavana torstaina"
 
-#: src/gui/gcal-quick-add-popover.c:394
+#: src/gui/gcal-quick-add-popover.c:380
 msgid "New Event next Friday"
 msgstr "Uusi tapahtuma seuraavana perjantaina"
 
-#: src/gui/gcal-quick-add-popover.c:395
+#: src/gui/gcal-quick-add-popover.c:381
 msgid "New Event next Saturday"
 msgstr "Uusi tapahtuma seuraavana lauantaina"
 
-#: src/gui/gcal-quick-add-popover.c:396
+#: src/gui/gcal-quick-add-popover.c:382
 msgid "New Event next Sunday"
 msgstr "Uusi tapahtuma seuraavana sunnuntaina"
 
 #. Translators: %d is the numeric day of month
-#: src/gui/gcal-quick-add-popover.c:408
+#: src/gui/gcal-quick-add-popover.c:394
 #, c-format
 msgid "New Event on January %d"
 msgstr "Uusi tapahtuma %-d. tammikuuta"
 
-#: src/gui/gcal-quick-add-popover.c:409
+#: src/gui/gcal-quick-add-popover.c:395
 #, c-format
 msgid "New Event on February %d"
 msgstr "Uusi tapahtuma %-d. helmikuuta"
 
-#: src/gui/gcal-quick-add-popover.c:410
+#: src/gui/gcal-quick-add-popover.c:396
 #, c-format
 msgid "New Event on March %d"
 msgstr "Uusi tapahtuma %-d. maaliskuuta"
 
-#: src/gui/gcal-quick-add-popover.c:411
+#: src/gui/gcal-quick-add-popover.c:397
 #, c-format
 msgid "New Event on April %d"
 msgstr "Uusi tapahtuma %-d. huhtikuuta"
 
-#: src/gui/gcal-quick-add-popover.c:412
+#: src/gui/gcal-quick-add-popover.c:398
 #, c-format
 msgid "New Event on May %d"
 msgstr "Uusi tapahtuma %-d. toukokuuta"
 
-#: src/gui/gcal-quick-add-popover.c:413
+#: src/gui/gcal-quick-add-popover.c:399
 #, c-format
 msgid "New Event on June %d"
 msgstr "Uusi tapahtuma %-d. kesäkuuta"
 
-#: src/gui/gcal-quick-add-popover.c:414
+#: src/gui/gcal-quick-add-popover.c:400
 #, c-format
 msgid "New Event on July %d"
 msgstr "Uusi tapahtuma %-d. heinäkuuta"
 
-#: src/gui/gcal-quick-add-popover.c:415
+#: src/gui/gcal-quick-add-popover.c:401
 #, c-format
 msgid "New Event on August %d"
 msgstr "Uusi tapahtuma %-d. elokuuta"
 
-#: src/gui/gcal-quick-add-popover.c:416
+#: src/gui/gcal-quick-add-popover.c:402
 #, c-format
 msgid "New Event on September %d"
 msgstr "Uusi tapahtuma %-d. syyskuuta"
 
-#: src/gui/gcal-quick-add-popover.c:417
+#: src/gui/gcal-quick-add-popover.c:403
 #, c-format
 msgid "New Event on October %d"
 msgstr "Uusi tapahtuma %-d. lokakuuta"
 
-#: src/gui/gcal-quick-add-popover.c:418
+#: src/gui/gcal-quick-add-popover.c:404
 #, c-format
 msgid "New Event on November %d"
 msgstr "Uusi tapahtuma %-d. marraskuuta"
 
-#: src/gui/gcal-quick-add-popover.c:419
+#: src/gui/gcal-quick-add-popover.c:405
 #, c-format
 msgid "New Event on December %d"
 msgstr "Uusi tapahtuma %-d. joulukuuta"
 
-#: src/gui/gcal-quick-add-popover.ui:117
+#: src/gui/gcal-quick-add-popover.ui:87
 msgid "Edit Details…"
 msgstr "Muokkaa tietoja…"
 
-#: src/gui/gcal-weather-settings.ui:12 src/gui/gcal-window.ui:331
-msgid "_Weather"
-msgstr "_Sää"
-
-#: src/gui/gcal-weather-settings.ui:30
+#: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
 msgstr "Näytä sää"
 
-#: src/gui/gcal-weather-settings.ui:53
+#: src/gui/gcal-weather-settings.ui:34
 msgid "Automatic Location"
 msgstr "Automaattinen sijainti"
 
-#: src/gui/gcal-window.c:692
+#: src/gui/gcal-window.c:713
 msgid "Another event deleted"
 msgstr "Toinen tapahtuma poistettu"
 
-#: src/gui/gcal-window.c:696
+#: src/gui/gcal-window.c:713
 msgid "Event deleted"
 msgstr "Tapahtuma poistettu"
 
-#: src/gui/gcal-window.ui:47
-msgid "Week"
-msgstr "Viikko"
+#: src/gui/gcal-window.c:715
+msgid "_Undo"
+msgstr "_Kumoa"
 
-#: src/gui/gcal-window.ui:63
-msgid "Month"
-msgstr "Kuukausi"
-
-#: src/gui/gcal-window.ui:78
-msgid "Year"
-msgstr "Vuosi"
-
-#: src/gui/gcal-window.ui:179
+#: src/gui/gcal-window.ui:114
 msgctxt "tooltip"
 msgid "Add a new event"
 msgstr "Lisää uusi tapahtuma"
 
-#: src/gui/gcal-window.ui:269
-msgid "Manage your calendars"
-msgstr "Hallitse kalentereitasi"
-
-#: src/gui/gcal-window.ui:280
+#: src/gui/gcal-window.ui:159
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Etsi tapahtumia"
 
-#: src/gui/gcal-window.ui:322
+#: src/gui/gcal-window.ui:184
+msgid "Week"
+msgstr "Viikko"
+
+#: src/gui/gcal-window.ui:198
+msgid "Month"
+msgstr "Kuukausi"
+
+#: src/gui/gcal-window.ui:213
+msgid "Year"
+msgstr "Vuosi"
+
+#: src/gui/gcal-window.ui:252
 msgid "_Online Accounts…"
 msgstr "_Verkkotilit…"
 
-#: src/gui/gcal-window.ui:346
+#: src/gui/gcal-window.ui:256
+msgid "Weather"
+msgstr "Sää"
+
+#: src/gui/gcal-window.ui:264
 msgid "_Keyboard Shortcuts"
 msgstr "_Pikanäppäimet"
 
-#: src/gui/gcal-window.ui:355
+#: src/gui/gcal-window.ui:268
 msgid "_About Calendar"
 msgstr "_Tietoja - Kalenteri"
 
-#: src/gui/gtk/help-overlay.ui:13
+#: src/gui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Yleiset"
 
-#: src/gui/gtk/help-overlay.ui:17
+#: src/gui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "New event"
 msgstr "Uusi tapahtuma"
 
-#: src/gui/gtk/help-overlay.ui:24
+#: src/gui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Sulje ikkuna"
 
-#: src/gui/gtk/help-overlay.ui:31
+#: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Etsi"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:32
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Näytä ohje"
 
-#: src/gui/gtk/help-overlay.ui:45
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Pikanäppäimet"
 
-#: src/gui/gtk/help-overlay.ui:54
+#: src/gui/gtk/help-overlay.ui:46
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Liikkuminen"
 
-#: src/gui/gtk/help-overlay.ui:58
+#: src/gui/gtk/help-overlay.ui:49
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "Takaisin"
 
-#: src/gui/gtk/help-overlay.ui:65
+#: src/gui/gtk/help-overlay.ui:55
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "Seuraava"
 
-#: src/gui/gtk/help-overlay.ui:72
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "Näytä kuluva päivä"
 
-#: src/gui/gtk/help-overlay.ui:79
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "Seuraava näkymä"
 
-#: src/gui/gtk/help-overlay.ui:86
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "Edellinen näkymä"
 
-#: src/gui/gtk/help-overlay.ui:95
+#: src/gui/gtk/help-overlay.ui:81
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Näkymä"
 
-#: src/gui/gtk/help-overlay.ui:99
+#: src/gui/gtk/help-overlay.ui:84
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Viikkonäkymä"
 
-#: src/gui/gtk/help-overlay.ui:106
+#: src/gui/gtk/help-overlay.ui:90
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Kuukausinäkymä"
 
-#: src/gui/gtk/help-overlay.ui:113
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Year view"
 msgstr "Vuosinäkymä"
 
-#: src/gui/importer/gcal-import-dialog.c:345
+#: src/gui/importer/gcal-import-dialog.c:396
 #, c-format
-#| msgid "Import a Calendar"
 msgid "Import %d event"
 msgid_plural "Import %d events"
 msgstr[0] "Tuo %d tapahtuma"
 msgstr[1] "Tuo %d tapahtumaa"
 
-#: src/gui/importer/gcal-import-dialog.ui:24
-#| msgid "From File…"
+#: src/gui/importer/gcal-import-dialog.ui:4
 msgid "Import Files…"
 msgstr "Tuo tiedostot…"
 
-#: src/gui/importer/gcal-import-dialog.ui:31 src/utils/gcal-utils.c:961
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1311
 msgid "_Cancel"
 msgstr "_Peru"
 
-#: src/gui/importer/gcal-import-dialog.ui:41
+#: src/gui/importer/gcal-import-dialog.ui:29
 msgid "_Import"
 msgstr "_Tuo"
 
-#: src/gui/importer/gcal-import-dialog.ui:91
+#: src/gui/importer/gcal-import-dialog.ui:50
 msgid "C_alendar"
 msgstr "_Kalenteri"
 
@@ -1224,7 +1212,6 @@ msgid "Internal error"
 msgstr "Sisäinen virhe"
 
 #: src/gui/importer/gcal-importer.c:94
-#| msgid "Select a calendar file"
 msgid "File is not an iCalendar (.ics) file"
 msgstr "Tiedosto ei ole iCalendar-tiedosto (.ics)"
 
@@ -1232,53 +1219,31 @@ msgstr "Tiedosto ei ole iCalendar-tiedosto (.ics)"
 msgid "Description"
 msgstr "Kuvaus"
 
-#: src/gui/views/gcal-month-popover.ui:91
+#: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "Uusi tapahtuma…"
 
-#: src/gui/views/gcal-week-grid.c:681 src/gui/views/gcal-week-view.c:293
+#: src/gui/views/gcal-week-grid.c:580
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:684 src/gui/views/gcal-week-view.c:296
+#: src/gui/views/gcal-week-grid.c:583
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:465
+#: src/gui/views/gcal-week-header.c:478
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Muu tapahtuma"
 msgstr[1] "Muut %d tapahtumaa"
 
-#: src/gui/views/gcal-week-header.c:1004
+#: src/gui/views/gcal-week-header.c:1006
 #, c-format
 msgid "week %d"
 msgstr "viikko %d"
 
-#. Translators: This is a date format in the sidebar of the year
-#. * view when the selection starts at the specified day and the
-#. * end is unspecified.
-#: src/gui/views/gcal-year-view.c:291
-msgid "%B %d…"
-msgstr "%e. %Bta…"
-
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/gui/views/gcal-year-view.c:297 src/gui/views/gcal-year-view.c:563
-msgid "%B %d"
-msgstr "%e. %Bta"
-
-#: src/gui/views/gcal-year-view.ui:133
-msgid "No events"
-msgstr "Ei tapahtumia"
-
-#: src/gui/views/gcal-year-view.ui:155
-msgid "Add Event…"
-msgstr "Lisää tapahtuma…"
-
-#: src/utils/gcal-utils.c:958
+#: src/utils/gcal-utils.c:1308
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1286,17 +1251,35 @@ msgstr ""
 "Tapahtuma, jota koetat muokata, on toistuva. Tekemäsi muutokset tulee "
 "toteuttaa:"
 
-#: src/utils/gcal-utils.c:963
+#: src/utils/gcal-utils.c:1313
 msgid "_Only This Event"
 msgstr "_Vain tähän tapahtumaan"
 
-#: src/utils/gcal-utils.c:970
+#: src/utils/gcal-utils.c:1320
 msgid "_Subsequent events"
 msgstr "_Myöhempiin tapahtumiin"
 
-#: src/utils/gcal-utils.c:972
+#: src/utils/gcal-utils.c:1322
 msgid "_All events"
 msgstr "_Kaikkiin tapahtumiin"
+
+#~ msgid "Follow system night light"
+#~ msgstr "Seuraa järjestelmän yövaloa"
+
+#~ msgid "Use GNOME night light setting to activate night-mode."
+#~ msgstr "Käytä Gnomen yövaloasetusta yötilan aktivointiin."
+
+#~ msgid "%B %d…"
+#~ msgstr "%e. %Bta…"
+
+#~ msgid "%B %d"
+#~ msgstr "%e. %Bta"
+
+#~ msgid "No events"
+#~ msgstr "Ei tapahtumia"
+
+#~ msgid "Add Event…"
+#~ msgstr "Lisää tapahtuma…"
 
 #~ msgid "Check this out!"
 #~ msgstr "Tutustu tähän!"
@@ -1368,9 +1351,6 @@ msgstr "_Kaikkiin tapahtumiin"
 
 #~ msgid "Use the entry above to search for events."
 #~ msgstr "Etsi tapahtumia yläpuolelta."
-
-#~ msgid "Open"
-#~ msgstr "Avaa"
 
 #~ msgid "Unnamed Calendar"
 #~ msgstr "Nimetön kalenteri"
