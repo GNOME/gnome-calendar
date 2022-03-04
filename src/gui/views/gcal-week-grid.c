@@ -776,6 +776,10 @@ gcal_week_grid_button_release (GtkWidget      *widget,
   gint out_y;
 
   self = GCAL_WEEK_GRID (widget);
+
+  if (self->selection_start == -1 || self->selection_end == -1)
+    return GDK_EVENT_STOP;
+
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   gtk_widget_get_allocation (widget, &alloc);
