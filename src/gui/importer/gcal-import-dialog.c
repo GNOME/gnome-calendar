@@ -50,7 +50,7 @@ struct _GcalImportDialog
   AdwPreferencesPage *preferences_page;
   GtkSizeGroup       *title_sizegroup;
 
-  GList              *groups;
+  GList              *rows;
   GcalCalendar       *selected_calendar;
 
   GCancellable       *cancellable;
@@ -156,7 +156,7 @@ setup_files (GcalImportDialog  *self,
         }
 
       adw_preferences_page_add (self->preferences_page, group);
-      self->groups = g_list_prepend (self->groups, group);
+      self->rows = g_list_prepend (self->rows, row);
 
       gtk_widget_hide (self->placeholder_spinner);
     }
@@ -331,7 +331,7 @@ on_import_button_clicked_cb (GtkButton        *button,
   g_assert (self->selected_calendar != NULL);
 
   slist = NULL;
-  for (l = self->groups; l; l = l->next)
+  for (l = self->rows; l; l = l->next)
     {
       GcalImportFileRow *row = GCAL_IMPORT_FILE_ROW (l->data);
       GPtrArray *ical_components;
@@ -418,7 +418,7 @@ gcal_import_dialog_finalize (GObject *object)
   g_clear_object (&self->cancellable);
   g_clear_object (&self->context);
 
-  g_clear_pointer (&self->groups, g_list_free);
+  g_clear_pointer (&self->rows, g_list_free);
 
   G_OBJECT_CLASS (gcal_import_dialog_parent_class)->finalize (object);
 }
