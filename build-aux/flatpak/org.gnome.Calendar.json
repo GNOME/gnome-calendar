@@ -144,24 +144,6 @@
             ]
         },
         {
-            "name" : "libdazzle",
-            "config-opts" : [
-                "--buildtype=debugoptimized",
-                "-Denable_gtk_doc=false",
-                "-Denable_tests=false",
-                "-Dwith_introspection=false",
-                "-Dwith_vapi=false"
-            ],
-            "buildsystem" : "meson",
-            "builddir" : true,
-            "sources" : [
-                {
-                    "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/libdazzle.git"
-                }
-            ]
-        },
-        {
             "name" : "gnome-calendar",
             "buildsystem" : "meson",
             "sources" : [
