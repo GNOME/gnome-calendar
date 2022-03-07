@@ -106,7 +106,7 @@ update_default_calendar (GcalImportDialog *self)
   calendars = gcal_manager_get_calendars_model (manager);
   default_calendar = gcal_manager_get_default_calendar (manager);
 
-  if (g_list_store_find (G_LIST_STORE (calendars), default_calendar, &position))
+  if (default_calendar && g_list_store_find (G_LIST_STORE (calendars), default_calendar, &position))
     adw_combo_row_set_selected (self->calendar_combo_row, position);
 }
 
