@@ -1,3 +1,9 @@
+Major changes in 42.rc:
+* Fix a couple of regressions in the event importer dialog
+* More timezone fixes when importing events (Milan Crha)
+* Fix event times in event popover (Björn Daase)
+* Updated translations
+
 Major changes in 42.beta:
 * Port to GTK4
 * Rewrite the Year view to be a month navigator
