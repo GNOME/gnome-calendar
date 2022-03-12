@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the gnome-calendar package.
 # Hajime Taira <htaira@redhat.com>, 2015.
 # Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2015-2016, 2018.
-# sicklylife <translation@sicklylife.jp>, 2019-2020.
+# sicklylife <translation@sicklylife.jp>, 2019-2020, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2021-10-13 17:01+0000\n"
-"PO-Revision-Date: 2022-02-05 18:00+0900\n"
+"PO-Revision-Date: 2022-03-12 17:40+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -201,6 +201,10 @@ msgstr "新規作成したイベントをデフォルトでこのカレンダー
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:190
 msgid "Remove Calendar"
 msgstr "カレンダーを削除"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:49
+msgid "Select a file"
+msgstr "ファイルを選択"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:513
 msgid "New Calendar"
@@ -1033,6 +1037,10 @@ msgstr "他のイベントも削除しました"
 msgid "Event deleted"
 msgstr "イベントを削除しました"
 
+#: src/gui/gcal-window.c:715
+msgid "_Undo"
+msgstr "元に戻す(_U)"
+
 #: src/gui/gcal-window.ui:47
 msgid "Week"
 msgstr "週"
@@ -1062,6 +1070,10 @@ msgstr "イベントの検索"
 #: src/gui/gcal-window.ui:322
 msgid "_Online Accounts…"
 msgstr "オンラインアカウント(_O)…"
+
+#: src/gui/gcal-window.ui:256
+msgid "Weather"
+msgstr "天気"
 
 #: src/gui/gcal-window.ui:346
 msgid "_Keyboard Shortcuts"
