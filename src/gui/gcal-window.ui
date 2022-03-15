@@ -106,6 +106,15 @@
                 <child>
                   <object class="AdwHeaderBar">
                     <property name="show-end-title-buttons">False</property>
+                    <property name="title-widget">
+                      <object class="GcalCalendarButton" id="calendars_button" />
+                    </property>
+                    <child type="end">
+                      <object class="GtkMenuButton" id="menu_button">
+                        <property name="icon-name">open-menu-symbolic</property>
+                        <property name="popover">win_menu</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
@@ -155,13 +164,6 @@
                 </property>
               </object>
             </child>
-            <child>
-              <object class="GtkButton" id="new_event_button">
-                <property name="icon-name">list-add-symbolic</property>
-                <property name="action-name">win.new-event</property>
-                <property name="tooltip_text" translatable="yes" context="tooltip">Add a new event</property>
-              </object>
-            </child>
             <child type="title">
               <object class="AdwViewSwitcher" id="views_switcher">
                 <property name="stack">views_stack</property>
@@ -169,13 +171,11 @@
               </object>
             </child>
             <child type="end">
-              <object class="GtkMenuButton" id="menu_button">
-                <property name="icon-name">open-menu-symbolic</property>
-                <property name="popover">win_menu</property>
+              <object class="GtkButton" id="new_event_button">
+                <property name="icon-name">list-add-symbolic</property>
+                <property name="action-name">win.new-event</property>
+                <property name="tooltip_text" translatable="yes" context="tooltip">Add a new event</property>
               </object>
-            </child>
-            <child type="end">
-              <object class="GcalCalendarButton" id="calendars_button" />
             </child>
             <child type="end">
               <object class="GcalSearchButton" id="search_button">

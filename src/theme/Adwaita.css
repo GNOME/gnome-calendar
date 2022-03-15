@@ -184,11 +184,6 @@ datechooser .weekday {
   font-size: smaller;
 }
 
-datechooser .weeknum:backdrop,
-datechooser .weekday:backdrop {
-  color: @unfocused_insensitive_color;
-}
-
 /* days */
 datechooser button.day {
   font-size: 10pt;
@@ -394,4 +389,22 @@ label.no-events {
 searchbutton > popover > arrow {
   background: none;
   border: none;
+}
+
+/*
+ * Month selector
+ */
+
+datechooser {
+  padding: 6px;
+}
+
+datechooser .current-week {
+  background: alpha(@headerbar_bg_color, 0.7);
+  color: @headerbar_fg_color;
+  border-radius: 6px;
+}
+
+menubutton stack > box {
+  border-spacing: 4px;
 }
