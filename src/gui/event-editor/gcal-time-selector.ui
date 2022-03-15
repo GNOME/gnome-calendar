@@ -3,32 +3,37 @@
   <template class="GcalTimeSelector" parent="GtkBox">
     <property name="spacing">6</property>
 
-    <!-- Hour -->
     <child>
-      <object class="GtkSpinButton" id="hour_spin">
-        <property name="xalign">0.5</property>
-        <property name="orientation">vertical</property>
-        <property name="adjustment">hour_adjustment</property>
-        <signal name="output" handler="on_output" object="GcalTimeSelector" swapped="no"/>
+      <object class="GtkBox" id="time_box">
+        <property name="spacing">6</property>
+
+        <!-- Hour -->
+        <child>
+          <object class="GtkSpinButton" id="hour_spin">
+            <property name="xalign">0.5</property>
+            <property name="orientation">vertical</property>
+            <property name="adjustment">hour_adjustment</property>
+            <signal name="output" handler="on_output" object="GcalTimeSelector" swapped="no"/>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel" id="label1">
+            <property name="label" translatable="yes">:</property>
+          </object>
+        </child>
+
+        <!-- Minute -->
+        <child>
+          <object class="GtkSpinButton" id="minute_spin">
+            <property name="xalign">0.5</property>
+            <property name="orientation">vertical</property>
+            <property name="adjustment">minute_adjustment</property>
+            <signal name="output" handler="on_output" object="GcalTimeSelector" swapped="no"/>
+          </object>
+        </child>
       </object>
     </child>
-
-    <child>
-      <object class="GtkLabel" id="label1">
-        <property name="label" translatable="yes">:</property>
-      </object>
-    </child>
-
-    <!-- Minute -->
-    <child>
-      <object class="GtkSpinButton" id="minute_spin">
-        <property name="xalign">0.5</property>
-        <property name="orientation">vertical</property>
-        <property name="adjustment">minute_adjustment</property>
-        <signal name="output" handler="on_output" object="GcalTimeSelector" swapped="no"/>
-      </object>
-    </child>
-
 
     <!-- AM/PM -->
     <child>

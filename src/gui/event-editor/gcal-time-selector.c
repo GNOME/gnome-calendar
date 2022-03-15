@@ -30,6 +30,7 @@ struct _GcalTimeSelector
   GtkAdjustment *hour_adjustment;
   GtkAdjustment *minute_adjustment;
 
+  GtkWidget *time_box;
   GtkWidget *hour_spin;
   GtkWidget *minute_spin;
   GtkWidget *period_combo;
@@ -210,6 +211,7 @@ gcal_time_selector_class_init (GcalTimeSelectorClass *klass)
 
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/ui/event-editor/gcal-time-selector.ui");
 
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, time_box);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, hour_adjustment);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, hour_spin);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, minute_adjustment);
@@ -226,6 +228,9 @@ gcal_time_selector_init (GcalTimeSelector *self)
   self->time = g_date_time_new_now_local ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
+    gtk_widget_set_direction (self->time_box, GTK_TEXT_DIR_LTR);
 }
 
 /* Public API */
