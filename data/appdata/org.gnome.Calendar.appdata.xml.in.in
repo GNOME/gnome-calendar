@@ -45,6 +45,18 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2022-03-18" version="42.0">
+      <description>
+        <p>
+          <ul>
+            <li>Port to GTK4</li>
+            <li>Various UI tweaks</li>
+            <li>Much improved timezone handling</li>
+          </ul>
+        </p>
+      </description>
+    </release>
+
     <release date="2021-09-17" version="41.0">
       <description>
         <p>
