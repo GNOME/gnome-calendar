@@ -33,12 +33,9 @@ typedef enum
 
 /**
  * GcalWindowViewType:
- * @GCAL_WINDOW_VIEW_DAY: Day view (not implemented)
  * @GCAL_WINDOW_VIEW_WEEK: Week view
  * @GCAL_WINDOW_VIEW_MONTH: Month view
  * @GCAL_WINDOW_VIEW_YEAR: Year view
- * @GCAL_WINDOW_VIEW_LIST: List (not implemented)
- * @GCAL_WINDOW_VIEW_SEARCH: Search view (partially implemented)
  *
  * Enum with the available views.
  */
