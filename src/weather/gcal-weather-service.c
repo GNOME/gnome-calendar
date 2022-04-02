@@ -1117,7 +1117,7 @@ gcal_weather_service_run (GcalWeatherService *self,
       g_cancellable_reset (self->location_cancellable);
 
       gclue_simple_new (APPLICATION_ID,
-                        GCLUE_ACCURACY_LEVEL_EXACT,
+                        GCLUE_ACCURACY_LEVEL_CITY,
                         self->location_cancellable,
                         (GAsyncReadyCallback) on_gclue_simple_creation_cb,
                         self);
