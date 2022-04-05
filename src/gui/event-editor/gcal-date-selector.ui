@@ -22,6 +22,7 @@
         <property name="margin-end">12</property>
         <child>
           <object class="GcalDateChooser" id="date_chooser">
+            <property name="show_selected_week">False</property>
             <property name="show_week_numbers">True</property>
             <signal name="day-selected" handler="calendar_day_selected" object="GcalDateSelector" swapped="yes"/>
           </object>

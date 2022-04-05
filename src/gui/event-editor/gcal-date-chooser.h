@@ -48,6 +48,11 @@ gboolean             gcal_date_chooser_get_show_week_numbers     (GcalDateChoose
 void                 gcal_date_chooser_set_show_week_numbers     (GcalDateChooser    *self,
                                                                   gboolean            setting);
 
+gboolean             gcal_date_chooser_get_show_selected_week    (GcalDateChooser    *self);
+
+void                 gcal_date_chooser_set_show_selected_week    (GcalDateChooser    *self,
+                                                                  gboolean            setting);
+
 G_END_DECLS
 
 #endif /* __GCAL_DATE_CHOOSER_H__ */

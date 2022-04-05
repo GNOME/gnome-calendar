@@ -44,6 +44,7 @@ struct _GcalDateChooser
   GtkWidget          *cols[COLS];
   GtkWidget          *rows[ROWS];
   GtkWidget          *days[ROWS][COLS];
+  GtkWidget          *week[ROWS];
 
   GDateTime          *date;
 
@@ -53,6 +54,7 @@ struct _GcalDateChooser
   gboolean            show_heading;
   gboolean            show_day_names;
   gboolean            show_week_numbers;
+  gboolean            show_selected_week;
 };
 
 G_DEFINE_TYPE (GcalDateChooser, gcal_date_chooser, ADW_TYPE_BIN)
@@ -70,6 +72,7 @@ enum
   PROP_SHOW_HEADING,
   PROP_SHOW_DAY_NAMES,
   PROP_SHOW_WEEK_NUMBERS,
+  PROP_SHOW_SELECTED_WEEK,
   NUM_PROPERTIES
 };
 
@@ -276,12 +279,20 @@ calendar_update_selected_day_display (GcalDateChooser *self)
 
   for (row = 0; row < ROWS; row++)
     {
+      gboolean row_selected = FALSE;
+
       for (col = 0; col < COLS; col++)
       {
+        gboolean day_selected;
+
         d = GCAL_DATE_CHOOSER_DAY (self->days[row][col]);
         date = gcal_date_chooser_day_get_date (d);
-        gcal_date_chooser_day_set_selected (d, gcal_date_time_compare_date (date, self->date) == 0);
+        day_selected = gcal_date_time_compare_date (date, self->date) == 0;
+        gcal_date_chooser_day_set_selected (d, day_selected);
+        row_selected |= day_selected;
       }
+
+      gtk_widget_set_visible (self->week[row], row_selected && self->show_selected_week);
     }
 }
 
@@ -341,6 +352,10 @@ calendar_set_property (GObject      *obj,
       gcal_date_chooser_set_show_week_numbers (self, g_value_get_boolean (value));
       break;
 
+    case PROP_SHOW_SELECTED_WEEK:
+      gcal_date_chooser_set_show_selected_week (self, g_value_get_boolean (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, property_id, pspec);
       break;
@@ -371,6 +386,10 @@ calendar_get_property (GObject    *obj,
 
     case PROP_SHOW_WEEK_NUMBERS:
       g_value_set_boolean (value, self->show_week_numbers);
+      break;
+
+    case PROP_SHOW_SELECTED_WEEK:
+      g_value_set_boolean (value, self->show_selected_week);
       break;
 
     default:
@@ -484,6 +503,17 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
                                                              TRUE,
                                                              G_PARAM_READWRITE);
 
+  /**
+   * GcalDateChooser:show-selected-week:
+   *
+   * Whether the selected week is highlighted or not.
+   */
+  properties[PROP_SHOW_SELECTED_WEEK] = g_param_spec_boolean ("show-selected-week",
+                                                              "Show Selected Week",
+                                                              "If TRUE, week numbers are displayed",
+                                                              TRUE,
+                                                              G_PARAM_READWRITE);
+
   g_object_class_install_properties (object_class, NUM_PROPERTIES, properties);
 
   signals[DAY_SELECTED] = g_signal_new ("day-selected",
@@ -504,6 +534,30 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
 }
 
 
+static gboolean
+show_week_number_to_column_cb (GBinding     *binding,
+                               const GValue *from_value,
+                               GValue       *to_value,
+                               gpointer      user_data)
+{
+  g_value_set_int (to_value, g_value_get_boolean (from_value) ? -1 : 0);
+
+  return TRUE;
+}
+
+
+static gboolean
+show_week_number_to_column_span_cb (GBinding     *binding,
+                                    const GValue *from_value,
+                                    GValue       *to_value,
+                                    gpointer      user_data)
+{
+  g_value_set_int (to_value, g_value_get_boolean (from_value) ? COLS + 1 : COLS);
+
+  return TRUE;
+}
+
+
 static void
 gcal_date_chooser_init (GcalDateChooser *self)
 {
@@ -511,10 +565,12 @@ gcal_date_chooser_init (GcalDateChooser *self)
   GtkWidget *label;
   gint row, col;
   gint year, month;
+  GtkLayoutManager *layout_manager;
 
   self->show_heading = TRUE;
   self->show_day_names = TRUE;
   self->show_week_numbers = TRUE;
+  self->show_selected_week = TRUE;
 
   self->date = g_date_time_new_now_local ();
   g_date_time_get_ymd (self->date, &self->this_year, NULL, NULL);
@@ -538,8 +594,12 @@ gcal_date_chooser_init (GcalDateChooser *self)
       gtk_grid_attach (GTK_GRID (self->grid), self->cols[col], col, -1, 1, 1);
     }
 
+  layout_manager = gtk_widget_get_layout_manager (self->grid);
+
   for (row = 0; row < ROWS; row++)
     {
+      GtkLayoutChild *layout_child;
+
       self->rows[row] = gtk_label_new ("");
 
       g_object_bind_property (self,
@@ -550,6 +610,33 @@ gcal_date_chooser_init (GcalDateChooser *self)
 
       gtk_widget_add_css_class (self->rows[row], "weeknum");
       gtk_grid_attach (GTK_GRID (self->grid), self->rows[row], -1, row, 1, 1);
+
+      self->week[row] = adw_bin_new ();
+      gtk_widget_hide (self->week[row]);
+      gtk_widget_add_css_class (self->week[row], "current-week");
+      gtk_grid_attach (GTK_GRID (self->grid), self->week[row], -1, row, 8, 1);
+
+      layout_child = gtk_layout_manager_get_layout_child (layout_manager, self->week[row]);
+
+      g_object_bind_property_full (self,
+                                   "show-week-numbers",
+                                   layout_child,
+                                   "column",
+                                   G_BINDING_SYNC_CREATE,
+                                   show_week_number_to_column_cb,
+                                   NULL,
+                                   NULL,
+                                   NULL);
+
+      g_object_bind_property_full (self,
+                                   "show-week-numbers",
+                                   layout_child,
+                                   "column-span",
+                                   G_BINDING_SYNC_CREATE,
+                                   show_week_number_to_column_span_cb,
+                                   NULL,
+                                   NULL,
+                                   NULL);
     }
 
   /* We are using a stack here to keep the week number column from shrinking
@@ -668,6 +755,39 @@ gboolean
 gcal_date_chooser_get_show_week_numbers (GcalDateChooser *self)
 {
   return self->show_week_numbers;
+}
+
+/**
+ * gcal_date_chooser_set_show_selected_week:
+ * @self: a #GcalDateChooser
+ * @setting: whether the selected week is highlighted or not.
+ *
+ * Sets the selected week is highlighted or not.
+ */
+void
+gcal_date_chooser_set_show_selected_week (GcalDateChooser *self,
+                                          gboolean         setting)
+{
+  if (self->show_selected_week == setting)
+    return;
+
+  self->show_selected_week = setting;
+
+  calendar_update_selected_day_display (self);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SHOW_SELECTED_WEEK]);
+}
+
+/**
+ * gcal_date_chooser_get_show_selected_week:
+ * @self: a #GcalDateChooser
+ *
+ * Returns: whether the selected week is highlighted or not.
+ */
+gboolean
+gcal_date_chooser_get_show_selected_week (GcalDateChooser *self)
+{
+  return self->show_selected_week;
 }
 
 void
