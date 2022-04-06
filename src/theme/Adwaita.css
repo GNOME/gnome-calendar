@@ -191,10 +191,21 @@ datechooser button.day {
   transition: none;
 }
 
+datechooser button.day dot {
+  background-color: @theme_fg_color;
+  border-radius: 50%;
+  min-height: 3px;
+  min-width: 3px;
+}
+
 datechooser button.day:selected {
   background-color: @accent_bg_color;
   color: @accent_fg_color;
   font-weight: bold;
+}
+
+datechooser button.day:selected dot {
+  background-color: @accent_fg_color;
 }
 
 datechooser button.day.other-month:not(:hover),
@@ -202,8 +213,17 @@ datechooser button.day.other-month:backdrop {
   color: alpha(currentColor, 0.1);
 }
 
+datechooser button.day.other-month:not(:hover) dot,
+datechooser button.day.other-month:backdrop dot {
+  background-color: alpha(currentColor, 0.1);
+}
+
 datechooser button.day.other-month:hover:not(:backdrop) {
   color: @insensitive_fg_color;
+}
+
+datechooser button.day.other-month:hover:not(:backdrop) dot {
+  background-color: @insensitive_fg_color;
 }
 
 label.month-name {

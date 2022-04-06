@@ -32,6 +32,16 @@ GDateTime*           gcal_date_chooser_day_get_date              (GcalDateChoose
 void                 gcal_date_chooser_day_set_date              (GcalDateChooserDay *day,
                                                                   GDateTime          *date);
 
+gboolean             gcal_date_chooser_day_get_has_dot           (GcalDateChooserDay *day);
+
+void                 gcal_date_chooser_day_set_has_dot           (GcalDateChooserDay *day,
+                                                                  gboolean            has_dot);
+
+gboolean             gcal_date_chooser_day_get_dot_visible       (GcalDateChooserDay *day);
+
+void                 gcal_date_chooser_day_set_dot_visible       (GcalDateChooserDay *day,
+                                                                  gboolean            dot_visible);
+
 void                 gcal_date_chooser_day_set_other_month       (GcalDateChooserDay *day,
                                                                   gboolean            other_month);
 
