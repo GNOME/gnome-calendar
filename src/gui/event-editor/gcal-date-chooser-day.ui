@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<interface>
+  <template class="GcalDateChooserDay" parent="GtkButton">
+    <property name="halign">center</property>
+    <property name="valign">center</property>
+    <style>
+      <class name="circular"/>
+      <class name="day"/>
+      <class name="flat"/>
+    </style>
+    <child>
+      <object class="GtkLabel" id="label">
+        <property name="halign">center</property>
+        <property name="hexpand">True</property>
+        <property name="valign">center</property>
+        <property name="vexpand">True</property>
+      </object>
+    </child>
+  </template>
+</interface>

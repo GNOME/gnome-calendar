@@ -50,30 +50,19 @@ static void
 gcal_date_chooser_day_class_init (GcalDateChooserDayClass *class)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (class);
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
 
   object_class->dispose = gcal_date_chooser_day_dispose;
+
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-date-chooser-day.ui");
+
+  gtk_widget_class_bind_template_child (widget_class, GcalDateChooserDay, label);
 }
 
 static void
 gcal_date_chooser_day_init (GcalDateChooserDay *self)
 {
-  GtkWidget *widget = GTK_WIDGET (self);
-
-  gtk_widget_set_halign (widget, GTK_ALIGN_CENTER);
-  gtk_widget_set_valign (widget, GTK_ALIGN_CENTER);
-
-  gtk_widget_set_can_focus (widget, TRUE);
-  gtk_widget_add_css_class (widget, "circular");
-  gtk_widget_add_css_class (widget, "day");
-  gtk_widget_add_css_class (widget, "flat");
-
-  self->label = gtk_label_new ("");
-  gtk_widget_set_halign (self->label, GTK_ALIGN_CENTER);
-  gtk_widget_set_valign (self->label, GTK_ALIGN_CENTER);
-  gtk_widget_set_hexpand (self->label, TRUE);
-  gtk_widget_set_vexpand (self->label, TRUE);
-
-  gtk_button_set_child (GTK_BUTTON (self), self->label);
+  gtk_widget_init_template (GTK_WIDGET (self));
 }
 
 GtkWidget*
