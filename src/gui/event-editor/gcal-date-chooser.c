@@ -579,7 +579,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
           self->days[row][col] = gcal_date_chooser_day_new ();
 
           g_signal_connect_object (self->days[row][col],
-                                   "selected",
+                                   "clicked",
                                    G_CALLBACK (day_selected_cb),
                                    self,
                                    0);

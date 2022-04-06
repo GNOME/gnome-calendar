@@ -1,5 +1,6 @@
 /* GTK - The GIMP Toolkit
  * Copyright (C) 2015 Red Hat, Inc.
+ * Copyright (C) 2022 Purism SPC
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,12 +18,12 @@
 
 #pragma once
 
-#include <adwaita.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_DATE_CHOOSER_DAY (gcal_date_chooser_day_get_type())
-G_DECLARE_FINAL_TYPE (GcalDateChooserDay, gcal_date_chooser_day, GCAL, DATE_CHOOSER_DAY, AdwBin)
+G_DECLARE_FINAL_TYPE (GcalDateChooserDay, gcal_date_chooser_day, GCAL, DATE_CHOOSER_DAY, GtkButton)
 
 GtkWidget*           gcal_date_chooser_day_new                   (void);
 

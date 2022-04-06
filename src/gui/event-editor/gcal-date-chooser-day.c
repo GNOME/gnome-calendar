@@ -1,6 +1,7 @@
 /* GTK - The GIMP Toolkit
  *
  * Copyright (C) 2015 Red Hat, Inc.
+ * Copyright (C) 2022 Purism SPC
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,33 +26,15 @@
 #include <stdlib.h>
 #include <langinfo.h>
 
-enum {
-  SELECTED,
-  LAST_DAY_SIGNAL
-};
-
-static guint signals[LAST_DAY_SIGNAL] = { 0, };
-
 struct _GcalDateChooserDay
 {
-  AdwBin              parent;
+  GtkButton           parent;
 
   GtkWidget          *label;
   GDateTime          *date;
 };
 
-G_DEFINE_TYPE (GcalDateChooserDay, gcal_date_chooser_day, ADW_TYPE_BIN)
-
-static void
-day_pressed (GtkGestureClick    *click_gesture,
-             gint                n_press,
-             gdouble             x,
-             gdouble             y,
-             GcalDateChooserDay *self)
-{
-  if (n_press == 1)
-    g_signal_emit (self, signals[SELECTED], 0);
-}
+G_DEFINE_TYPE (GcalDateChooserDay, gcal_date_chooser_day, GTK_TYPE_BUTTON)
 
 static void
 gcal_date_chooser_day_dispose (GObject *object)
@@ -66,40 +49,23 @@ gcal_date_chooser_day_dispose (GObject *object)
 static void
 gcal_date_chooser_day_class_init (GcalDateChooserDayClass *class)
 {
-  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
   GObjectClass *object_class = G_OBJECT_CLASS (class);
 
   object_class->dispose = gcal_date_chooser_day_dispose;
-
-  signals[SELECTED] = g_signal_new ("selected",
-                                    GCAL_TYPE_DATE_CHOOSER_DAY,
-                                    G_SIGNAL_RUN_FIRST,
-                                    0,
-                                    NULL,
-                                    NULL,
-                                    NULL,
-                                    G_TYPE_NONE, 0);
-
-  gtk_widget_class_set_css_name (widget_class, "day");
-
-  gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_space, 0, "selected", NULL);
-  gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_Return, 0, "selected", NULL);
-  gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_ISO_Enter, 0, "selected", NULL);
-  gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_KP_Enter, 0, "selected", NULL);
-  gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_KP_Space, 0, "selected", NULL);
 }
 
 static void
 gcal_date_chooser_day_init (GcalDateChooserDay *self)
 {
-  GtkGesture *click_gesture;
   GtkWidget *widget = GTK_WIDGET (self);
 
   gtk_widget_set_halign (widget, GTK_ALIGN_CENTER);
   gtk_widget_set_valign (widget, GTK_ALIGN_CENTER);
 
   gtk_widget_set_can_focus (widget, TRUE);
+  gtk_widget_add_css_class (widget, "circular");
   gtk_widget_add_css_class (widget, "day");
+  gtk_widget_add_css_class (widget, "flat");
 
   self->label = gtk_label_new ("");
   gtk_widget_set_halign (self->label, GTK_ALIGN_CENTER);
@@ -107,17 +73,7 @@ gcal_date_chooser_day_init (GcalDateChooserDay *self)
   gtk_widget_set_hexpand (self->label, TRUE);
   gtk_widget_set_vexpand (self->label, TRUE);
 
-  adw_bin_set_child (ADW_BIN (self), self->label);
-
-  click_gesture = gtk_gesture_click_new ();
-  gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click_gesture), 0);
-  gtk_widget_add_controller (widget, GTK_EVENT_CONTROLLER (click_gesture));
-
-  g_signal_connect_object (click_gesture,
-                           "pressed",
-                           G_CALLBACK (day_pressed),
-                           self,
-                           0);
+  gtk_button_set_child (GTK_BUTTON (self), self->label);
 }
 
 GtkWidget*
@@ -160,8 +116,16 @@ void
 gcal_date_chooser_day_set_selected (GcalDateChooserDay *self,
                                     gboolean            selected)
 {
-  if (selected)
-    gtk_widget_set_state_flags (GTK_WIDGET (self), GTK_STATE_FLAG_SELECTED, FALSE);
+  GtkWidget *widget = GTK_WIDGET (self);
+
+  if (G_UNLIKELY (selected))
+    {
+      gtk_widget_set_state_flags (widget, GTK_STATE_FLAG_SELECTED, FALSE);
+      gtk_widget_remove_css_class (widget, "flat");
+    }
   else
-    gtk_widget_unset_state_flags (GTK_WIDGET (self), GTK_STATE_FLAG_SELECTED);
+    {
+      gtk_widget_unset_state_flags (widget, GTK_STATE_FLAG_SELECTED);
+      gtk_widget_add_css_class (widget, "flat");
+    }
 }

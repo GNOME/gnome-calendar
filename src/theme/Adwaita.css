@@ -182,48 +182,28 @@ datechooser .weekday:backdrop {
 }
 
 /* days */
-datechooser day {
-  transition-property: background-color;
-  transition-duration: 200ms;
+datechooser button.day {
+  font-size: 10pt;
+  font-weight: normal;
+  margin: 3px;
+  min-height: 28px;
+  min-width: 28px;
+  transition: none;
 }
 
-datechooser day label {
-  transition-property: color;
-  transition-duration: 200ms;
+datechooser button.day:selected {
+  background-color: @accent_bg_color;
+  color: @accent_fg_color;
+  font-weight: bold;
 }
 
-datechooser day {
-  min-height: 32px;
-  min-width: 32px;
-  border-radius: 50%;
-}
-
-datechooser day.other-month:not(:hover),
-datechooser day.other-month:backdrop {
+datechooser button.day.other-month:not(:hover),
+datechooser button.day.other-month:backdrop {
   color: alpha(currentColor, 0.1);
 }
 
-/* avoid the theme interfering with label colors */
-datechooser day:selected label,
-datechooser day.other-month label:hover,
-datechooser day.other-month label:backdrop {
-  color: currentColor;
-}
-
-/* hovered days style */
-datechooser day:hover:not(:backdrop) {
-  background-color: alpha(currentColor, 0.1);
-}
-
-datechooser day.other-month:hover:not(:backdrop) {
+datechooser button.day.other-month:hover:not(:backdrop) {
   color: @insensitive_fg_color;
-}
-
-datechooser day:selected,
-datechooser day:selected:hover {
-  color: @accent_fg_color;
-  background-color: @accent_bg_color;
-  font-weight: bold;
 }
 
 label.month-name {
