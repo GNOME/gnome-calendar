@@ -14,6 +14,7 @@
         <property name="hexpand">True</property>
         <property name="valign">center</property>
         <property name="vexpand">True</property>
+        <property name="width-chars">2</property>
         <style>
           <class name="numeric"/>
         </style>
