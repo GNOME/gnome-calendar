@@ -166,14 +166,13 @@ void
 gcal_date_chooser_day_set_date (GcalDateChooserDay *self,
                                 GDateTime          *date)
 {
-  gchar *text;
+  g_autofree gchar *text = NULL;
 
   g_clear_pointer (&self->date, g_date_time_unref);
   self->date = g_date_time_ref (date);
 
   text = g_strdup_printf ("%d", g_date_time_get_day_of_month (date));
   gtk_label_set_label (GTK_LABEL (self->label), text);
-  g_free (text);
 }
 
 GDateTime*
