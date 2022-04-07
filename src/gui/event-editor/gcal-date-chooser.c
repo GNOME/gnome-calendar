@@ -57,6 +57,7 @@ struct _GcalDateChooser
   gboolean            show_day_names;
   gboolean            show_week_numbers;
   gboolean            show_selected_week;
+  gboolean            show_events;
 
   GcalRangeTree      *events;
 
@@ -84,6 +85,7 @@ enum
   PROP_SHOW_DAY_NAMES,
   PROP_SHOW_WEEK_NUMBERS,
   PROP_SHOW_SELECTED_WEEK,
+  PROP_SHOW_EVENTS,
   NUM_PROPERTIES
 };
 
@@ -477,6 +479,10 @@ calendar_set_property (GObject      *obj,
       gcal_date_chooser_set_show_selected_week (self, g_value_get_boolean (value));
       break;
 
+    case PROP_SHOW_EVENTS:
+      gcal_date_chooser_set_show_events (self, g_value_get_boolean (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, property_id, pspec);
       break;
@@ -511,6 +517,10 @@ calendar_get_property (GObject    *obj,
 
     case PROP_SHOW_SELECTED_WEEK:
       g_value_set_boolean (value, self->show_selected_week);
+      break;
+
+    case PROP_SHOW_EVENTS:
+      g_value_set_boolean (value, self->show_events);
       break;
 
     default:
@@ -637,6 +647,12 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
                                                               TRUE,
                                                               G_PARAM_READWRITE);
 
+  properties[PROP_SHOW_EVENTS] = g_param_spec_boolean ("show-events",
+                                                       "Show Events",
+                                                       "If TRUE, events are displayed",
+                                                       TRUE,
+                                                       G_PARAM_READWRITE);
+
   g_object_class_install_properties (object_class, NUM_PROPERTIES, properties);
 
   signals[DAY_SELECTED] = g_signal_new ("day-selected",
@@ -694,6 +710,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
   self->show_day_names = TRUE;
   self->show_week_numbers = TRUE;
   self->show_selected_week = TRUE;
+  self->show_events = TRUE;
 
   self->date = g_date_time_new_now_local ();
   g_date_time_get_ymd (self->date, &self->this_year, NULL, NULL);
@@ -792,6 +809,12 @@ gcal_date_chooser_init (GcalDateChooser *self)
       for (col = 0; col < COLS; col++)
         {
           self->days[row][col] = gcal_date_chooser_day_new ();
+
+          g_object_bind_property (self,
+                                  "show-events",
+                                  self->days[row][col],
+                                  "has-dot",
+                                  G_BINDING_SYNC_CREATE);
 
           g_signal_connect_object (self->days[row][col],
                                    "clicked",
@@ -913,6 +936,26 @@ gboolean
 gcal_date_chooser_get_show_selected_week (GcalDateChooser *self)
 {
   return self->show_selected_week;
+}
+
+void
+gcal_date_chooser_set_show_events (GcalDateChooser *self,
+                                   gboolean         setting)
+{
+  if (self->show_events == setting)
+    return;
+
+  self->show_events = setting;
+
+  calendar_update_selected_day_display (self);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SHOW_EVENTS]);
+}
+
+gboolean
+gcal_date_chooser_get_show_events (GcalDateChooser *self)
+{
+  return self->show_events;
 }
 
 void
