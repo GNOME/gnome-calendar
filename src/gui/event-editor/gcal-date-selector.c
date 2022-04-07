@@ -20,6 +20,7 @@
 
 #include "gcal-date-chooser.h"
 #include "gcal-date-selector.h"
+#include "gcal-view.h"
 
 #include <locale.h>
 #include <langinfo.h>
@@ -54,7 +55,7 @@ update_text (GcalDateSelector *self)
   GDateTime *date;
   gchar *label;
 
-  date = gcal_date_chooser_get_date (GCAL_DATE_CHOOSER (self->date_chooser));
+  date = gcal_view_get_date (GCAL_VIEW (self->date_chooser));
 
   /* rebuild the date label */
   label = g_date_time_format (date, "%x");
@@ -176,7 +177,7 @@ gcal_date_selector_get_property (GObject    *object,
   switch (prop_id)
     {
     case PROP_DATE:
-      g_value_set_boxed (value, gcal_date_chooser_get_date (GCAL_DATE_CHOOSER (self->date_chooser)));
+      g_value_set_boxed (value, gcal_view_get_date (GCAL_VIEW (self->date_chooser)));
       break;
 
     default:
@@ -285,7 +286,7 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
   g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
 
   /* set calendar's date */
-  gcal_date_chooser_set_date (GCAL_DATE_CHOOSER (selector->date_chooser), date);
+  gcal_view_set_date (GCAL_VIEW (selector->date_chooser), date);
   update_text (selector);
 
   /* emit the MODIFIED signal */
@@ -305,5 +306,5 @@ gcal_date_selector_get_date (GcalDateSelector *selector)
 {
   g_return_val_if_fail (GCAL_IS_DATE_SELECTOR (selector), NULL);
 
-  return gcal_date_chooser_get_date (GCAL_DATE_CHOOSER (selector->date_chooser));
+  return gcal_view_get_date (GCAL_VIEW (selector->date_chooser));
 }

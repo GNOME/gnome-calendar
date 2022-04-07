@@ -26,12 +26,14 @@
 #include "gcal-multi-choice.h"
 #include "gcal-range-tree.h"
 #include "gcal-timeline-subscriber.h"
+#include "gcal-view.h"
 
 #include <stdlib.h>
 #include <langinfo.h>
 
 #define ROWS 6
 #define COLS 7
+#define DAYS 42
 
 struct _GcalDateChooser
 {
@@ -49,6 +51,7 @@ struct _GcalDateChooser
   GtkWidget          *week[ROWS];
 
   GDateTime          *date;
+  GcalContext        *context;
 
   gint                this_year;
   gint                week_start;
@@ -64,10 +67,16 @@ struct _GcalDateChooser
   gulong              update_indicators_idle_id;
 };
 
+static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
+
 static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSubscriberInterface *iface);
 static gboolean      update_event_indicators_in_idle_cb          (gpointer           data);
 
+static void          gcal_date_chooser_set_date                  (GcalView  *view,
+                                                                  GDateTime *date);
+
 G_DEFINE_TYPE_WITH_CODE (GcalDateChooser, gcal_date_chooser, ADW_TYPE_BIN,
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
                                                 gcal_timeline_subscriber_interface_init));
 
@@ -80,13 +89,14 @@ enum
 enum
 {
   PROP_0,
-  PROP_DATE,
   PROP_SHOW_HEADING,
   PROP_SHOW_DAY_NAMES,
   PROP_SHOW_WEEK_NUMBERS,
   PROP_SHOW_SELECTED_WEEK,
   PROP_SHOW_EVENTS,
-  NUM_PROPERTIES
+  PROP_DATE,
+  PROP_CONTEXT,
+  NUM_PROPERTIES = PROP_SHOW_EVENTS + 1,
 };
 
 static guint signals[LAST_SIGNAL] = { 0, };
@@ -323,7 +333,7 @@ calendar_update_selected_day (GcalDateChooser *self)
   if (month_len < day)
     {
       date = g_date_time_new_local (year, month, month_len, 1, 1, 1);
-      gcal_date_chooser_set_date (self, date);
+      gcal_date_chooser_set_date (GCAL_VIEW (self), date);
       g_date_time_unref (date);
     }
   else
@@ -371,7 +381,13 @@ static void
 day_selected_cb (GcalDateChooserDay *d,
                  GcalDateChooser    *self)
 {
-  gcal_date_chooser_set_date (self, gcal_date_chooser_day_get_date (d));
+  gcal_date_chooser_set_date (GCAL_VIEW (self), gcal_date_chooser_day_get_date (d));
+}
+
+static void
+on_clock_day_changed_cb (GcalDateChooser *self)
+{
+  /* FIXME Update the widget to the new day. */
 }
 
 static gboolean
@@ -383,6 +399,87 @@ update_event_indicators_in_idle_cb (gpointer data)
   self->update_indicators_idle_id = 0;
 
   return G_SOURCE_REMOVE;
+}
+
+/*
+ * GcalView interface
+ */
+
+static void
+gcal_date_chooser_set_date (GcalView  *view,
+                            GDateTime *date)
+{
+  GcalDateChooser *self = GCAL_DATE_CHOOSER (view);
+  gint y1, m1, d1, y2, m2, d2;
+
+  g_object_freeze_notify (G_OBJECT (self));
+
+  g_date_time_get_ymd (self->date, &y1, &m1, &d1);
+  g_date_time_get_ymd (date, &y2, &m2, &d2);
+
+  g_date_time_unref (self->date);
+  self->date = g_date_time_ref (date);
+
+  if (y1 != y2 || m1 != m2)
+    {
+      gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->year_choice), y2);
+      gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->month_choice), m2 - 1);
+      calendar_compute_days (self);
+      gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (self));
+    }
+
+  if (y1 != y2 || m1 != m2 || d1 != d2)
+    {
+      calendar_update_selected_day (self);
+      g_signal_emit (self, signals[DAY_SELECTED], 0);
+      g_object_notify (G_OBJECT (self), "active-date");
+    }
+
+  g_object_thaw_notify (G_OBJECT (self));
+}
+
+static GDateTime*
+gcal_date_chooser_get_date (GcalView *view)
+{
+  GcalDateChooser *self = GCAL_DATE_CHOOSER (view);
+
+  return self->date;
+}
+
+static GList*
+gcal_date_chooser_get_children_by_uuid (GcalView              *view,
+                                        GcalRecurrenceModType  mod,
+                                        const gchar           *uuid)
+{
+  return NULL;
+}
+
+static GDateTime*
+gcal_date_chooser_get_next_date (GcalView *view)
+{
+  GcalDateChooser *self = GCAL_DATE_CHOOSER (view);
+
+  g_assert (self->date != NULL);
+  return g_date_time_add_months (self->date, 1);
+}
+
+static GDateTime*
+gcal_date_chooser_get_previous_date (GcalView *view)
+{
+  GcalDateChooser *self = GCAL_DATE_CHOOSER (view);
+
+  g_assert (self->date != NULL);
+  return g_date_time_add_months (self->date, -1);
+}
+
+static void
+gcal_view_interface_init (GcalViewInterface *iface)
+{
+  iface->get_date = gcal_date_chooser_get_date;
+  iface->set_date = gcal_date_chooser_set_date;
+  iface->get_children_by_uuid = gcal_date_chooser_get_children_by_uuid;
+  iface->get_next_date = gcal_date_chooser_get_next_date;
+  iface->get_previous_date = gcal_date_chooser_get_previous_date;
 }
 
 
@@ -460,7 +557,18 @@ calendar_set_property (GObject      *obj,
   switch (property_id)
     {
     case PROP_DATE:
-      gcal_date_chooser_set_date (self, g_value_get_boxed (value));
+      gcal_date_chooser_set_date (GCAL_VIEW (self), g_value_get_boxed (value));
+      break;
+
+    case PROP_CONTEXT:
+      g_assert (self->context == NULL);
+      self->context = g_value_dup_object (value);
+
+      g_signal_connect_object (gcal_context_get_clock (self->context),
+                               "day-changed",
+                               G_CALLBACK (on_clock_day_changed_cb),
+                               self,
+                               G_CONNECT_SWAPPED);
       break;
 
     case PROP_SHOW_HEADING:
@@ -503,6 +611,10 @@ calendar_get_property (GObject    *obj,
       g_value_set_boxed (value, self->date);
       break;
 
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
+      break;
+
     case PROP_SHOW_HEADING:
       g_value_set_boolean (value, self->show_heading);
       break;
@@ -543,7 +655,7 @@ multi_choice_changed (GcalDateChooser *self)
   day = MIN (day, month_length[leap (year)][month]);
 
   date = g_date_time_new_local (year, month, day, 1, 1, 1);
-  gcal_date_chooser_set_date (self, date);
+  gcal_date_chooser_set_date (GCAL_VIEW (self), date);
 }
 
 static gboolean
@@ -575,7 +687,7 @@ on_drop_target_drop_cb (GtkDropTarget   *target,
     g_date_time_get_ymd (self->date, &year, &month, NULL);
 
   date = g_date_time_new_local (year, month, day, 1, 1, 1);
-  gcal_date_chooser_set_date (self, date);
+  gcal_date_chooser_set_date (GCAL_VIEW (self), date);
 
   return TRUE;
 }
@@ -585,6 +697,7 @@ gcal_date_chooser_finalize (GObject *object)
 {
   GcalDateChooser *self = GCAL_DATE_CHOOSER (object);
 
+  g_clear_object (&self->context);
   g_clear_pointer (&self->date, g_date_time_unref);
   g_clear_pointer (&self->events, gcal_range_tree_unref);
 
@@ -611,12 +724,6 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
   object_class->get_property = calendar_get_property;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-date-chooser.ui");
-
-  properties[PROP_DATE] = g_param_spec_boxed ("date",
-                                              "Date",
-                                              "The selected date",
-                                              G_TYPE_DATE_TIME,
-                                              G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
   properties[PROP_SHOW_HEADING] = g_param_spec_boolean ("show-heading",
                                                         "Show Heading",
@@ -654,6 +761,9 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
                                                        G_PARAM_READWRITE);
 
   g_object_class_install_properties (object_class, NUM_PROPERTIES, properties);
+
+  g_object_class_override_property (object_class, PROP_DATE, "active-date");
+  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
 
   signals[DAY_SELECTED] = g_signal_new ("day-selected",
                                         G_OBJECT_CLASS_TYPE (object_class),
@@ -956,42 +1066,4 @@ gboolean
 gcal_date_chooser_get_show_events (GcalDateChooser *self)
 {
   return self->show_events;
-}
-
-void
-gcal_date_chooser_set_date (GcalDateChooser *self,
-                            GDateTime       *date)
-{
-  gint y1, m1, d1, y2, m2, d2;
-
-  g_object_freeze_notify (G_OBJECT (self));
-
-  g_date_time_get_ymd (self->date, &y1, &m1, &d1);
-  g_date_time_get_ymd (date, &y2, &m2, &d2);
-
-  g_date_time_unref (self->date);
-  self->date = g_date_time_ref (date);
-
-  if (y1 != y2 || m1 != m2)
-    {
-      gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->year_choice), y2);
-      gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->month_choice), m2 - 1);
-      calendar_compute_days (self);
-      gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (self));
-    }
-
-  if (y1 != y2 || m1 != m2 || d1 != d2)
-    {
-      calendar_update_selected_day (self);
-      g_signal_emit (self, signals[DAY_SELECTED], 0);
-      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DATE]);
-    }
-
-  g_object_thaw_notify (G_OBJECT (self));
-}
-
-GDateTime *
-gcal_date_chooser_get_date (GcalDateChooser *self)
-{
-  return self->date;
 }

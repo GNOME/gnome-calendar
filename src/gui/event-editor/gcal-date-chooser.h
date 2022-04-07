@@ -28,11 +28,6 @@ G_DECLARE_FINAL_TYPE (GcalDateChooser, gcal_date_chooser, GCAL, DATE_CHOOSER, Ad
 
 GtkWidget*           gcal_date_chooser_new                       (void);
 
-GDateTime*           gcal_date_chooser_get_date                  (GcalDateChooser    *self);
-
-void                 gcal_date_chooser_set_date                  (GcalDateChooser    *self,
-                                                                  GDateTime          *date);
-
 gboolean             gcal_date_chooser_get_show_heading          (GcalDateChooser    *self);
 
 void                 gcal_date_chooser_set_show_heading          (GcalDateChooser    *self,
