@@ -577,7 +577,6 @@ gcal_date_chooser_init (GcalDateChooser *self)
                               "visible",
                               G_BINDING_SYNC_CREATE);
 
-      gtk_widget_show (self->rows[row]);
       gtk_style_context_add_class (gtk_widget_get_style_context (self->rows[row]), "weeknum");
       gtk_grid_attach (GTK_GRID (self->grid), self->rows[row], -1, row, 1, 1);
     }
