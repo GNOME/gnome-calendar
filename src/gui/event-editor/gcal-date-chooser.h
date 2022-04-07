@@ -22,14 +22,6 @@
 
 G_BEGIN_DECLS
 
-typedef enum
-{
-  GCAL_DATE_CHOOSER_DAY_NONE    = 1 << 0,
-  GCAL_DATE_CHOOSER_DAY_WEEKEND = 1 << 1,
-  GCAL_DATE_CHOOSER_DAY_HOLIDAY = 1 << 2,
-  GCAL_DATE_CHOOSER_DAY_MARKED  = 1 << 3
-} GcalDateChooserDayOptions;
-
 #define GCAL_TYPE_DATE_CHOOSER (gcal_date_chooser_get_type ())
 
 G_DECLARE_FINAL_TYPE (GcalDateChooser, gcal_date_chooser, GCAL, DATE_CHOOSER, AdwBin)
