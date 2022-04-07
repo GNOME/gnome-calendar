@@ -24,6 +24,8 @@
 #include "gcal-date-chooser.h"
 #include "gcal-date-chooser-day.h"
 #include "gcal-multi-choice.h"
+#include "gcal-range-tree.h"
+#include "gcal-timeline-subscriber.h"
 
 #include <stdlib.h>
 #include <langinfo.h>
@@ -55,9 +57,18 @@ struct _GcalDateChooser
   gboolean            show_day_names;
   gboolean            show_week_numbers;
   gboolean            show_selected_week;
+
+  GcalRangeTree      *events;
+
+  gulong              update_indicators_idle_id;
 };
 
-G_DEFINE_TYPE (GcalDateChooser, gcal_date_chooser, ADW_TYPE_BIN)
+static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSubscriberInterface *iface);
+static gboolean      update_event_indicators_in_idle_cb          (gpointer           data);
+
+G_DEFINE_TYPE_WITH_CODE (GcalDateChooser, gcal_date_chooser, ADW_TYPE_BIN,
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
+                                                gcal_timeline_subscriber_interface_init));
 
 enum
 {
@@ -320,10 +331,120 @@ calendar_update_selected_day (GcalDateChooser *self)
 }
 
 static void
+update_event_indicators (GcalDateChooser *self)
+{
+  gint row, col;
+
+  for (row = 0; row < ROWS; row++)
+    {
+      for (col = 0; col < COLS; col++)
+      {
+          GDateTime *date;
+          g_autoptr (GcalRange) range = NULL;
+
+          date = gcal_date_chooser_day_get_date (GCAL_DATE_CHOOSER_DAY (self->days[row][col]));
+          range = gcal_range_new_take (g_date_time_ref (date),
+                                       g_date_time_add_days (date, 1),
+                                       GCAL_RANGE_DEFAULT);
+
+          gcal_date_chooser_day_set_dot_visible (GCAL_DATE_CHOOSER_DAY (self->days[row][col]),
+                                                 gcal_range_tree_count_entries_at_range (self->events, range) > 0);
+      }
+    }
+}
+
+static void
+queue_update_event_indicators (GcalDateChooser *self)
+{
+  if (self->update_indicators_idle_id > 0)
+    return;
+
+  self->update_indicators_idle_id = g_idle_add_full (G_PRIORITY_LOW,
+                                                     update_event_indicators_in_idle_cb,
+                                                     self,
+                                                     NULL);
+}
+
+static void
 day_selected_cb (GcalDateChooserDay *d,
                  GcalDateChooser    *self)
 {
   gcal_date_chooser_set_date (self, gcal_date_chooser_day_get_date (d));
+}
+
+static gboolean
+update_event_indicators_in_idle_cb (gpointer data)
+{
+  GcalDateChooser *self = GCAL_DATE_CHOOSER (data);
+
+  update_event_indicators (self);
+  self->update_indicators_idle_id = 0;
+
+  return G_SOURCE_REMOVE;
+}
+
+
+/*
+ * GcalTimelineSubscriber implementation
+ */
+
+static GcalRange*
+gcal_date_chooser_get_range (GcalTimelineSubscriber *subscriber)
+{
+  GcalDateChooser *self;
+  GDateTime *start;
+  g_autoptr (GDateTime) end = NULL;
+
+  self = GCAL_DATE_CHOOSER (subscriber);
+  start = gcal_date_chooser_day_get_date (GCAL_DATE_CHOOSER_DAY (self->days[0][0]));
+  end = g_date_time_add_days (start, G_N_ELEMENTS (self->days) * G_N_ELEMENTS (self->days[0]));
+
+  return gcal_range_new (start, end, GCAL_RANGE_DEFAULT);
+}
+
+static void
+gcal_date_chooser_add_event (GcalTimelineSubscriber *subscriber,
+                             GcalEvent              *event)
+{
+  GcalDateChooser *self;
+
+  self = GCAL_DATE_CHOOSER (subscriber);
+
+  g_debug ("Caching event '%s' in %s", gcal_event_get_uid (event), G_OBJECT_TYPE_NAME (self));
+  gcal_range_tree_add_range (self->events, gcal_event_get_range (event), g_object_ref (event));
+
+  queue_update_event_indicators (self);
+}
+
+static void
+gcal_date_chooser_remove_event (GcalTimelineSubscriber *subscriber,
+                                GcalEvent              *event)
+{
+  GcalDateChooser *self;
+
+  self = GCAL_DATE_CHOOSER (subscriber);
+
+  g_debug ("Removing event '%s' from %s's cache", gcal_event_get_uid (event), G_OBJECT_TYPE_NAME (self));
+  gcal_range_tree_remove_range (self->events, gcal_event_get_range (event), event);
+
+  queue_update_event_indicators (self);
+}
+
+static void
+gcal_date_chooser_update_event (GcalTimelineSubscriber *subscriber,
+                                GcalEvent              *event)
+{
+  gcal_date_chooser_remove_event (subscriber, event);
+  gcal_date_chooser_add_event (subscriber, event);
+}
+
+static void
+gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
+{
+  iface->get_range = gcal_date_chooser_get_range;
+  iface->add_event = gcal_date_chooser_add_event;
+  iface->remove_event = gcal_date_chooser_remove_event;
+  iface->update_event = gcal_date_chooser_update_event;
 }
 
 static void
@@ -455,6 +576,8 @@ gcal_date_chooser_finalize (GObject *object)
   GcalDateChooser *self = GCAL_DATE_CHOOSER (object);
 
   g_clear_pointer (&self->date, g_date_time_unref);
+  g_clear_pointer (&self->events, gcal_range_tree_unref);
+
   G_OBJECT_CLASS (gcal_date_chooser_parent_class)->finalize (object);
 }
 
@@ -576,6 +699,8 @@ gcal_date_chooser_init (GcalDateChooser *self)
   g_date_time_get_ymd (self->date, &self->this_year, NULL, NULL);
 
   self->week_start = get_first_weekday ();
+
+  self->events = gcal_range_tree_new_with_free_func (g_object_unref);
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
@@ -809,6 +934,7 @@ gcal_date_chooser_set_date (GcalDateChooser *self,
       gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->year_choice), y2);
       gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->month_choice), m2 - 1);
       calendar_compute_days (self);
+      gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (self));
     }
 
   if (y1 != y2 || m1 != m2 || d1 != d2)
