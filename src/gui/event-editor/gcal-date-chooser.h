@@ -34,23 +34,12 @@ typedef enum
 
 G_DECLARE_FINAL_TYPE (GcalDateChooser, gcal_date_chooser, GCAL, DATE_CHOOSER, AdwBin)
 
-typedef GcalDateChooserDayOptions (*GcalDateChooserDayOptionsCallback) (GcalDateChooser *self,
-                                                                        GDateTime       *date,
-                                                                        gpointer         user_data);
-
 GtkWidget*           gcal_date_chooser_new                       (void);
 
 GDateTime*           gcal_date_chooser_get_date                  (GcalDateChooser    *self);
 
 void                 gcal_date_chooser_set_date                  (GcalDateChooser    *self,
                                                                   GDateTime          *date);
-
-void                 gcal_date_chooser_set_day_options_callback  (GcalDateChooser    *self,
-                                                                  GcalDateChooserDayOptionsCallback callback,
-                                                                  gpointer            data,
-                                                                  GDestroyNotify      destroy);
-
-void                 gcal_date_chooser_invalidate_day_options    (GcalDateChooser    *self);
 
 gboolean             gcal_date_chooser_get_no_month_change       (GcalDateChooser    *self);
 

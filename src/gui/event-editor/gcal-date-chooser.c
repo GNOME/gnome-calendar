@@ -51,10 +51,6 @@ struct _GcalDateChooser
   gboolean            show_day_names;
   gboolean            show_week_numbers;
   gboolean            no_month_change;
-
-  GcalDateChooserDayOptionsCallback day_options_cb;
-  gpointer            day_options_data;
-  GDestroyNotify      day_options_destroy;
 };
 
 G_DEFINE_TYPE (GcalDateChooser, gcal_date_chooser, ADW_TYPE_BIN)
@@ -198,8 +194,6 @@ calendar_compute_days (GcalDateChooser *self)
       gtk_label_set_label (GTK_LABEL (self->rows[row]), text);
       g_free (text);
     }
-
-  gcal_date_chooser_invalidate_day_options (self);
 }
 
 /* 0 == sunday */
@@ -752,46 +746,4 @@ GDateTime *
 gcal_date_chooser_get_date (GcalDateChooser *self)
 {
   return self->date;
-}
-
-void
-gcal_date_chooser_set_day_options_callback (GcalDateChooser                   *self,
-                                            GcalDateChooserDayOptionsCallback  callback,
-                                            gpointer                           data,
-                                            GDestroyNotify                     destroy)
-{
-  if (self->day_options_destroy)
-    self->day_options_destroy (self->day_options_data);
-
-  self->day_options_cb = callback;
-  self->day_options_data = data;
-  self->day_options_destroy = destroy;
-
-  gcal_date_chooser_invalidate_day_options (self);
-}
-
-
-void
-gcal_date_chooser_invalidate_day_options (GcalDateChooser *self)
-{
-  GcalDateChooserDayOptions options;
-  GcalDateChooserDay *d;
-  GDateTime *date;
-  gint row, col;
-
-  for (row = 0; row < 6; row++)
-    {
-      for (col = 0; col < 7; col++)
-        {
-          d = GCAL_DATE_CHOOSER_DAY (self->days[row][col]);
-          date = gcal_date_chooser_day_get_date (d);
-
-          if (self->day_options_cb)
-            options = self->day_options_cb (self, date, self->day_options_data);
-          else
-            options = GCAL_DATE_CHOOSER_DAY_NONE;
-
-          gcal_date_chooser_day_set_options (d, options);
-        }
-    }
 }
