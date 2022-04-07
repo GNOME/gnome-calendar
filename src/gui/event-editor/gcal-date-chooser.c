@@ -56,7 +56,6 @@ G_DEFINE_TYPE (GcalDateChooser, gcal_date_chooser, ADW_TYPE_BIN)
 
 enum
 {
-  MONTH_CHANGED,
   DAY_SELECTED,
   LAST_SIGNAL
 };
@@ -483,14 +482,6 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
                                                              G_PARAM_READWRITE);
 
   g_object_class_install_properties (object_class, NUM_PROPERTIES, properties);
-
-  signals[MONTH_CHANGED] = g_signal_new ("month-changed",
-                                         G_OBJECT_CLASS_TYPE (object_class),
-                                         G_SIGNAL_RUN_FIRST,
-                                         0,
-                                         NULL, NULL,
-                                         NULL,
-                                         G_TYPE_NONE, 0);
 
   signals[DAY_SELECTED] = g_signal_new ("day-selected",
                                         G_OBJECT_CLASS_TYPE (object_class),
