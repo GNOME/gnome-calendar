@@ -165,23 +165,3 @@ gcal_date_chooser_day_set_selected (GcalDateChooserDay *self,
   else
     gtk_widget_unset_state_flags (GTK_WIDGET (self), GTK_STATE_FLAG_SELECTED);
 }
-
-void
-gcal_date_chooser_day_set_options (GcalDateChooserDay        *self,
-                                   GcalDateChooserDayOptions  options)
-{
-  if (options & GCAL_DATE_CHOOSER_DAY_WEEKEND)
-    gtk_widget_add_css_class (GTK_WIDGET (self), "weekend");
-  else
-    gtk_widget_remove_css_class (GTK_WIDGET (self), "weekend");
-
-  if (options & GCAL_DATE_CHOOSER_DAY_HOLIDAY)
-    gtk_widget_add_css_class (GTK_WIDGET (self), "holiday");
-  else
-    gtk_widget_remove_css_class (GTK_WIDGET (self), "holiday");
-
-  if (options & GCAL_DATE_CHOOSER_DAY_MARKED)
-    gtk_widget_add_css_class (GTK_WIDGET (self), "marked");
-  else
-    gtk_widget_remove_css_class (GTK_WIDGET (self), "marked");
-}

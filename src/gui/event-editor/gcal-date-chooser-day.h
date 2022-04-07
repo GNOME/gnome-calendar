@@ -17,8 +17,6 @@
 
 #pragma once
 
-#include "gcal-date-chooser.h"
-
 #include <adwaita.h>
 
 G_BEGIN_DECLS
@@ -38,8 +36,5 @@ void                 gcal_date_chooser_day_set_other_month       (GcalDateChoose
 
 void                 gcal_date_chooser_day_set_selected          (GcalDateChooserDay *day,
                                                                   gboolean            selected);
-
-void                 gcal_date_chooser_day_set_options           (GcalDateChooserDay *day,
-                                                                  GcalDateChooserDayOptions options);
 
 G_END_DECLS
