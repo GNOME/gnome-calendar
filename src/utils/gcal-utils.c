@@ -1112,6 +1112,21 @@ filter_children_by_uid_and_modtype (GtkWidget             *widget,
   return result;
 }
 
+static GDBusProxy *
+create_dbus_proxy (GDBusConnection *connection,
+                   const gchar     *name,
+                   const gchar     *object_path)
+{
+  return g_dbus_proxy_new_sync (connection,
+                                G_DBUS_PROXY_FLAGS_NONE,
+                                NULL,
+                                name,
+                                object_path,
+                                "org.gtk.Actions",
+                                NULL,
+                                NULL);
+}
+
 void
 gcal_utils_launch_online_accounts_panel (GDBusConnection *connection,
                                          const gchar     *action,
@@ -1143,14 +1158,11 @@ gcal_utils_launch_online_accounts_panel (GDBusConnection *connection,
   params[1] = g_variant_new_array (G_VARIANT_TYPE ("v"), array, 1);
   params[2] = g_variant_new_array (G_VARIANT_TYPE ("{sv}"), NULL, 0);
 
-  proxy = g_dbus_proxy_new_sync (connection,
-                                 G_DBUS_PROXY_FLAGS_NONE,
-                                 NULL,
-                                 "org.gnome.ControlCenter",
-                                 "/org/gnome/ControlCenter",
-                                 "org.gtk.Actions",
-                                 NULL,
-                                 NULL);
+  proxy = create_dbus_proxy (connection, "org.gnome.Settings", "/org/gnome/Settings");
+
+  /* Fallback for old GNOME versions */
+  if (!proxy)
+    proxy = create_dbus_proxy (connection, "org.gnome.ControlCenter", "/org/gnome/ControlCenter");
 
   if (!proxy)
     {
