@@ -22,6 +22,7 @@
 #include "config.h"
 
 #include "gcal-date-chooser-day.h"
+#include "gcal-date-time-utils.h"
 
 #include <stdlib.h>
 #include <langinfo.h>
@@ -166,10 +167,21 @@ void
 gcal_date_chooser_day_set_date (GcalDateChooserDay *self,
                                 GDateTime          *date)
 {
+  GtkWidget *widget = GTK_WIDGET (self);
+  g_autoptr (GDateTime) now = NULL;
   g_autofree gchar *text = NULL;
+  gboolean today;
 
   g_clear_pointer (&self->date, g_date_time_unref);
   self->date = g_date_time_ref (date);
+
+  now = g_date_time_new_now (g_date_time_get_timezone (date));
+  today = gcal_date_time_compare_date (date, now) == 0;
+
+  if (G_UNLIKELY (today))
+    gtk_widget_add_css_class (widget, "today");
+  else
+    gtk_widget_remove_css_class (widget, "today");
 
   text = g_strdup_printf ("%d", g_date_time_get_day_of_month (date));
   gtk_label_set_label (GTK_LABEL (self->label), text);

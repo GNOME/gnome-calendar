@@ -208,6 +208,23 @@ datechooser button.day:selected dot {
   background-color: @accent_fg_color;
 }
 
+datechooser button.day.today {
+  color: @accent_color;
+}
+
+datechooser button.day.today dot {
+  background-color: @accent_color;
+}
+
+datechooser button.day.today:selected {
+  background-color: @accent_bg_color;
+  color: @accent_fg_color;
+}
+
+datechooser button.day.today:selected dot {
+  background-color: @accent_fg_color;
+}
+
 datechooser button.day.other-month:not(:hover),
 datechooser button.day.other-month:backdrop {
   color: alpha(currentColor, 0.1);
