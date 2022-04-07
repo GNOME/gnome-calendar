@@ -50,7 +50,6 @@ struct _GcalDateChooser
   gboolean            show_heading;
   gboolean            show_day_names;
   gboolean            show_week_numbers;
-  gboolean            no_month_change;
 };
 
 G_DEFINE_TYPE (GcalDateChooser, gcal_date_chooser, ADW_TYPE_BIN)
@@ -69,7 +68,6 @@ enum
   PROP_SHOW_HEADING,
   PROP_SHOW_DAY_NAMES,
   PROP_SHOW_WEEK_NUMBERS,
-  PROP_NO_MONTH_CHANGE,
   NUM_PROPERTIES
 };
 
@@ -341,10 +339,6 @@ calendar_set_property (GObject      *obj,
       gcal_date_chooser_set_show_week_numbers (self, g_value_get_boolean (value));
       break;
 
-    case PROP_NO_MONTH_CHANGE:
-      gcal_date_chooser_set_no_month_change (self, g_value_get_boolean (value));
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, property_id, pspec);
       break;
@@ -375,10 +369,6 @@ calendar_get_property (GObject    *obj,
 
     case PROP_SHOW_WEEK_NUMBERS:
       g_value_set_boolean (value, self->show_week_numbers);
-      break;
-
-    case PROP_NO_MONTH_CHANGE:
-      g_value_set_boolean (value, self->no_month_change);
       break;
 
     default:
@@ -429,7 +419,7 @@ on_drop_target_drop_cb (GtkDropTarget   *target,
   month = g_date_get_month (gdate);
   day = g_date_get_day (gdate);
 
-  if (!self->show_heading || self->no_month_change)
+  if (!self->show_heading)
     g_date_time_get_ymd (self->date, &year, &month, NULL);
 
   date = g_date_time_new_local (year, month, day, 1, 1, 1);
@@ -492,12 +482,6 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
                                                              TRUE,
                                                              G_PARAM_READWRITE);
 
-  properties[PROP_NO_MONTH_CHANGE] = g_param_spec_boolean ("no-month-change",
-                                                           "No Month Change",
-                                                           "If TRUE, the selected month cannot be changed",
-                                                           FALSE,
-                                                           G_PARAM_READWRITE);
-
   g_object_class_install_properties (object_class, NUM_PROPERTIES, properties);
 
   signals[MONTH_CHANGED] = g_signal_new ("month-changed",
@@ -537,7 +521,6 @@ gcal_date_chooser_init (GcalDateChooser *self)
   self->show_heading = TRUE;
   self->show_day_names = TRUE;
   self->show_week_numbers = TRUE;
-  self->no_month_change = FALSE;
 
   self->date = g_date_time_new_now_local ();
   g_date_time_get_ymd (self->date, &self->this_year, NULL, NULL);
@@ -691,24 +674,6 @@ gboolean
 gcal_date_chooser_get_show_week_numbers (GcalDateChooser *self)
 {
   return self->show_week_numbers;
-}
-
-void
-gcal_date_chooser_set_no_month_change (GcalDateChooser *self,
-                                       gboolean         setting)
-{
-  if (self->no_month_change == setting)
-    return;
-
-  self->no_month_change = setting;
-
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_NO_MONTH_CHANGE]);
-}
-
-gboolean
-gcal_date_chooser_get_no_month_change (GcalDateChooser *self)
-{
-  return self->no_month_change;
 }
 
 void

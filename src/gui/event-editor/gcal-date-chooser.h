@@ -33,11 +33,6 @@ GDateTime*           gcal_date_chooser_get_date                  (GcalDateChoose
 void                 gcal_date_chooser_set_date                  (GcalDateChooser    *self,
                                                                   GDateTime          *date);
 
-gboolean             gcal_date_chooser_get_no_month_change       (GcalDateChooser    *self);
-
-void                 gcal_date_chooser_set_no_month_change       (GcalDateChooser    *self,
-                                                                  gboolean            setting);
-
 gboolean             gcal_date_chooser_get_show_heading          (GcalDateChooser    *self);
 
 void                 gcal_date_chooser_set_show_heading          (GcalDateChooser    *self,
