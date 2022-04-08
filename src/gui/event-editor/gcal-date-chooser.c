@@ -40,7 +40,9 @@ struct _GcalDateChooser
   AdwBin              parent;
 
   GtkWidget          *month_choice;
+  GtkWidget          *popover_month_choice;
   GtkWidget          *year_choice;
+  GtkWidget          *combined_choice;
   GtkWidget          *grid;
 
   GtkWidget          *day_grid;
@@ -61,6 +63,7 @@ struct _GcalDateChooser
   gboolean            show_week_numbers;
   gboolean            show_selected_week;
   gboolean            show_events;
+  gboolean            split_month_year;
 
   GcalRangeTree      *events;
 
@@ -94,9 +97,10 @@ enum
   PROP_SHOW_WEEK_NUMBERS,
   PROP_SHOW_SELECTED_WEEK,
   PROP_SHOW_EVENTS,
+  PROP_SPLIT_MONTH_YEAR,
   PROP_DATE,
   PROP_CONTEXT,
-  NUM_PROPERTIES = PROP_SHOW_EVENTS + 1,
+  NUM_PROPERTIES = PROP_SPLIT_MONTH_YEAR + 1,
 };
 
 static guint signals[LAST_SIGNAL] = { 0, };
@@ -107,6 +111,22 @@ static const guint month_length[2][13] =
   { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
   { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
 };
+
+static gboolean
+get_combined_choice_visible (gpointer user_data,
+                             gboolean show_heading,
+                             gboolean split_month_year)
+{
+  return show_heading && !split_month_year;
+}
+
+static gboolean
+get_split_choice_visible (gpointer user_data,
+                          gboolean show_heading,
+                          gboolean split_month_year)
+{
+  return show_heading && split_month_year;
+}
 
 static gboolean
 leap (guint year)
@@ -266,6 +286,24 @@ format_month (GcalMultiChoice *choice,
   return g_strdup (gcal_get_month_name (value));
 }
 
+static gchar *
+format_month_year (GcalMultiChoice *choice,
+                   gint             value,
+                   gpointer         data)
+{
+  GcalDateChooser *self = GCAL_DATE_CHOOSER (data);
+  g_autoptr (GDateTime) now = g_date_time_new_now (g_date_time_get_timezone (self->date));
+  gint year, month;
+
+  year = value / 12;
+  month = value % 12;
+
+  if (g_date_time_get_year (now) == year)
+    return g_strdup (gcal_get_month_name (month));
+  else
+    return g_strdup_printf ("%s %d", gcal_get_month_name (month), year);
+}
+
 static void
 calendar_init_month_display (GcalDateChooser *self)
 {
@@ -283,12 +321,23 @@ calendar_init_month_display (GcalDateChooser *self)
 
   gcal_multi_choice_set_choices (GCAL_MULTI_CHOICE (self->month_choice),
                                 (const gchar**) months);
+  gcal_multi_choice_set_choices (GCAL_MULTI_CHOICE (self->popover_month_choice),
+                                (const gchar**) months);
 
   for (i = 0; i < 12; i++)
     g_free (months[i]);
 
   gcal_multi_choice_set_format_callback (GCAL_MULTI_CHOICE (self->month_choice),
                                          format_month,
+                                         self,
+                                         NULL);
+  gcal_multi_choice_set_format_callback (GCAL_MULTI_CHOICE (self->popover_month_choice),
+                                         format_month,
+                                         self,
+                                         NULL);
+
+  gcal_multi_choice_set_format_callback (GCAL_MULTI_CHOICE (self->combined_choice),
+                                         format_month_year,
                                          self,
                                          NULL);
 }
@@ -591,6 +640,10 @@ calendar_set_property (GObject      *obj,
       gcal_date_chooser_set_show_events (self, g_value_get_boolean (value));
       break;
 
+    case PROP_SPLIT_MONTH_YEAR:
+      gcal_date_chooser_set_split_month_year (self, g_value_get_boolean (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, property_id, pspec);
       break;
@@ -635,6 +688,10 @@ calendar_get_property (GObject    *obj,
       g_value_set_boolean (value, self->show_events);
       break;
 
+    case PROP_SPLIT_MONTH_YEAR:
+      g_value_set_boolean (value, self->split_month_year);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, property_id, pspec);
       break;
@@ -642,13 +699,13 @@ calendar_get_property (GObject    *obj,
 }
 
 static void
-multi_choice_changed (GcalDateChooser *self)
+multi_choice_changed (GcalDateChooser *self,
+                      gint             year,
+                      gint             month)
 {
   g_autoptr (GDateTime) date = NULL;
-  gint year, month, day;
+  gint day;
 
-  year = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->year_choice));
-  month = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->month_choice)) + 1;
   day = g_date_time_get_day_of_month (self->date);
 
   /* Make sure the day is valid at that month */
@@ -656,6 +713,28 @@ multi_choice_changed (GcalDateChooser *self)
 
   date = g_date_time_new_local (year, month, day, 1, 1, 1);
   gcal_date_chooser_set_date (GCAL_VIEW (self), date);
+}
+
+static void
+combined_multi_choice_changed (GcalDateChooser *self)
+{
+  gint year, month;
+
+  year = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->combined_choice)) / 12;
+  month = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->combined_choice)) % 12 + 1;
+
+  multi_choice_changed (self, year, month);
+}
+
+static void
+split_multi_choice_changed (GcalDateChooser *self)
+{
+  gint year, month;
+
+  year = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->year_choice));
+  month = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->month_choice)) + 1;
+
+  multi_choice_changed (self, year, month);
 }
 
 static gboolean
@@ -723,8 +802,6 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
   object_class->set_property = calendar_set_property;
   object_class->get_property = calendar_get_property;
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-date-chooser.ui");
-
   properties[PROP_SHOW_HEADING] = g_param_spec_boolean ("show-heading",
                                                         "Show Heading",
                                                         "If TRUE, a heading is displayed",
@@ -760,6 +837,12 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
                                                        TRUE,
                                                        G_PARAM_READWRITE);
 
+  properties[PROP_SPLIT_MONTH_YEAR] = g_param_spec_boolean ("split-month-year",
+                                                            "Split Month Year",
+                                                            "If TRUE, the month and year selectors are split",
+                                                            TRUE,
+                                                            G_PARAM_READWRITE);
+
   g_object_class_install_properties (object_class, NUM_PROPERTIES, properties);
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
@@ -773,11 +856,18 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
                                         NULL,
                                         G_TYPE_NONE, 0);
 
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-date-chooser.ui");
+
+  gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, combined_choice);
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, month_choice);
+  gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, popover_month_choice);
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, year_choice);
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, grid);
 
-  gtk_widget_class_bind_template_callback (widget_class, multi_choice_changed);
+  gtk_widget_class_bind_template_callback (widget_class, combined_multi_choice_changed);
+  gtk_widget_class_bind_template_callback (widget_class, get_combined_choice_visible);
+  gtk_widget_class_bind_template_callback (widget_class, get_split_choice_visible);
+  gtk_widget_class_bind_template_callback (widget_class, split_multi_choice_changed);
 
   gtk_widget_class_set_css_name (widget_class, "datechooser");
 }
@@ -821,6 +911,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
   self->show_week_numbers = TRUE;
   self->show_selected_week = TRUE;
   self->show_events = TRUE;
+  self->split_month_year = TRUE;
 
   self->date = g_date_time_new_now_local ();
   g_date_time_get_ymd (self->date, &self->this_year, NULL, NULL);
@@ -943,6 +1034,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
   g_date_time_get_ymd (self->date, &year, &month, NULL);
   gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->year_choice), year);
   gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->month_choice), month - 1);
+  gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->combined_choice), year * 12 + month - 1);
   calendar_update_selected_day_display (self);
 
   drop_target = gtk_drop_target_new (G_TYPE_STRING, GDK_ACTION_COPY);
@@ -1066,4 +1158,22 @@ gboolean
 gcal_date_chooser_get_show_events (GcalDateChooser *self)
 {
   return self->show_events;
+}
+
+void
+gcal_date_chooser_set_split_month_year (GcalDateChooser *self,
+                                        gboolean         setting)
+{
+  if (self->split_month_year == setting)
+    return;
+
+  self->split_month_year = setting;
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SPLIT_MONTH_YEAR]);
+}
+
+gboolean
+gcal_date_chooser_get_split_month_year (GcalDateChooser *self)
+{
+  return self->split_month_year;
 }

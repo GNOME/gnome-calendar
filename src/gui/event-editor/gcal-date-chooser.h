@@ -53,6 +53,11 @@ gboolean             gcal_date_chooser_get_show_events           (GcalDateChoose
 void                 gcal_date_chooser_set_show_events           (GcalDateChooser    *self,
                                                                   gboolean            setting);
 
+gboolean             gcal_date_chooser_get_split_month_year      (GcalDateChooser    *self);
+
+void                 gcal_date_chooser_set_split_month_year      (GcalDateChooser    *self,
+                                                                  gboolean            setting);
+
 G_END_DECLS
 
 #endif /* __GCAL_DATE_CHOOSER_H__ */
