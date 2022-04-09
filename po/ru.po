@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-02-13 13:34+0000\n"
-"PO-Revision-Date: 2022-02-13 18:39+0300\n"
+"POT-Creation-Date: 2022-03-17 08:24+0000\n"
+"PO-Revision-Date: 2022-04-07 20:32+0300\n"
 "Last-Translator: Aleksandr Melman <Alexmelman88@gmail.com>\n"
 "Language-Team: Russian <Alexmelman88@gmail.com>\n"
 "Language: ru\n"
@@ -124,7 +124,7 @@ msgstr ""
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1909 src/gui/gcal-event-popover.c:388
+#: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -133,14 +133,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1917
+#: src/core/gcal-event.c:1914
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1933 src/gui/gcal-quick-add-popover.c:461
+#: src/core/gcal-event.c:1930 src/gui/gcal-quick-add-popover.c:461
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s — %3$s"
@@ -399,7 +399,7 @@ msgstr "Сохранить"
 #: src/gui/event-editor/gcal-event-editor-dialog.c:196
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:86
 msgid "Done"
-msgstr "Выполнено"
+msgstr "Готово"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:29
 msgid "Click to select the calendar"
@@ -474,7 +474,7 @@ msgstr "Вчера"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:119
+#: src/gui/gcal-window.ui:127
 msgid "Today"
 msgstr "Сегодня"
 
@@ -618,7 +618,8 @@ msgid "translator-credits"
 msgstr ""
 "Юрий Мясоедов <ymyasoedov@yandex.ru>, 2012-2017.\n"
 "Станислав Соловей <whats_up@tut.by>, 2014-2019.\n"
-"Роман Верменко <dargodet@gmail.com>, 2017."
+"Роман Верменко <dargodet@gmail.com>, 2017\n"
+"Aleksandr Melman <alexmelman88@gmail.com>, 2022"
 
 #: src/gui/gcal-calendar-button.ui:6
 msgid "Manage your calendars"
@@ -1071,41 +1072,41 @@ msgstr "Событие удалено"
 msgid "_Undo"
 msgstr "_Вернуть"
 
-#: src/gui/gcal-window.ui:114
+#: src/gui/gcal-window.ui:137
 msgctxt "tooltip"
 msgid "Add a new event"
 msgstr "Добавить новое событие"
 
-#: src/gui/gcal-window.ui:159
+#: src/gui/gcal-window.ui:157
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Поиск событий"
 
-#: src/gui/gcal-window.ui:184
+#: src/gui/gcal-window.ui:182
 msgid "Week"
 msgstr "Неделя"
 
-#: src/gui/gcal-window.ui:198
+#: src/gui/gcal-window.ui:196
 msgid "Month"
 msgstr "Месяц"
 
-#: src/gui/gcal-window.ui:213
+#: src/gui/gcal-window.ui:211
 msgid "Year"
 msgstr "Год"
 
-#: src/gui/gcal-window.ui:252
+#: src/gui/gcal-window.ui:250
 msgid "_Online Accounts…"
 msgstr "_Сетевые учётные записи…"
 
-#: src/gui/gcal-window.ui:256
+#: src/gui/gcal-window.ui:254
 msgid "Weather"
 msgstr "Погода"
 
-#: src/gui/gcal-window.ui:264
+#: src/gui/gcal-window.ui:262
 msgid "_Keyboard Shortcuts"
 msgstr "_Комбинации клавиш"
 
-#: src/gui/gcal-window.ui:268
+#: src/gui/gcal-window.ui:266
 msgid "_About Calendar"
 msgstr "_О приложении"
 
@@ -1293,4 +1294,3 @@ msgstr "_Последующие события"
 #: src/utils/gcal-utils.c:1322
 msgid "_All events"
 msgstr "_Все события"
-
