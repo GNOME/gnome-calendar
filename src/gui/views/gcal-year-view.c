@@ -664,7 +664,7 @@ gcal_year_view_set_property (GObject      *object,
                                "day-changed",
                                G_CALLBACK (on_clock_day_changed_cb),
                                self,
-                               G_CONNECT_SWAPPED);
+                               0);
       break;
 
     default:
