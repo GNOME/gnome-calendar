@@ -34,6 +34,11 @@ gint                 gcal_multi_choice_get_value                 (GcalMultiChoic
 void                 gcal_multi_choice_set_value                 (GcalMultiChoice    *self,
                                                                   gint                value);
 
+GtkPopover*          gcal_multi_choice_get_popover               (GcalMultiChoice    *self);
+
+void                 gcal_multi_choice_set_popover               (GcalMultiChoice    *self,
+                                                                  GtkWidget          *popover);
+
 void                 gcal_multi_choice_set_choices               (GcalMultiChoice     *self,
                                                                   const gchar        **selfs);
 

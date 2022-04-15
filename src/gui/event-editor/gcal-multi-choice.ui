@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GcalMultiChoice" parent="GtkBox">
+    <property name="spacing">6</property>
     <child>
       <object class="GtkButton" id="down_button">
         <property name="icon-name">pan-start-symbolic</property>
@@ -12,6 +13,18 @@
         </style>
       </object>
     </child>
+    <child>
+      <object class="GtkToggleButton" id="button">
+        <signal name="toggled" handler="button_toggled_cb" swapped="yes"/>
+        <style>
+          <class name="flat"/>
+          <class name="pill"/>
+          <class name="popup"/>
+        </style>
+        <accessibility>
+          <relation name="labelled-by">GcalMultiChoice</relation>
+          <relation name="described-by">GcalMultiChoice</relation>
+        </accessibility>
     <child>
       <object class="GtkStack" id="stack">
         <property name="hexpand">True</property>
@@ -35,6 +48,8 @@
           </object>
         </child>
 
+      </object>
+    </child>
       </object>
     </child>
     <child>
