@@ -373,6 +373,20 @@ monthpopover > box {
   background: none;
 }
 
+/* Agenda View CSS */
+
+agenda-view list > row {
+  padding: 2px 12px;
+}
+
+agenda-view list > label {
+  padding: 6px 12px;
+}
+
+label.no-events {
+  font-style: italic;
+}
+
 /*
  * Search
  */
