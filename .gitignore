@@ -1,9 +1,0 @@
-_build/
-tags*
-src/tags
-src/views/tags
-src/views/.dirstamp
-*.goutputstream*
-.gitlab
-.flatpak-builder
-**/*~
