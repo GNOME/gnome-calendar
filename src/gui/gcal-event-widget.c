@@ -53,7 +53,7 @@ struct _GcalEventWidget
   GtkWidget          *color_box;
   GtkWidget          *horizontal_box;
   GtkWidget          *hour_label;
-  GtkWidget          *stack;
+  GtkWidget          *squeezer;
   GtkWidget          *summary_label;
   GtkWidget          *vertical_box;
   GtkEventController *drag_source;
@@ -66,10 +66,6 @@ struct _GcalEventWidget
   GcalEvent          *event;
 
   GtkOrientation      orientation;
-
-  guint               vertical_label_source_id;
-  gboolean            vertical_value_to_set;
-  gboolean            vertical_labels;
 
   gint                old_width;
   gint                old_height;
@@ -111,59 +107,11 @@ G_DEFINE_TYPE_WITH_CODE (GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET,
  */
 
 static gboolean
-can_hold_vertical_labels_with_height (GcalEventWidget *self,
-                                      gint             height)
+get_vertical_enabled (gpointer        user_data,
+                      GcalEvent      *event,
+                      GtkOrientation  orientation)
 {
-  gint total_height;
-
-  gtk_widget_measure (self->vertical_box,
-                      GTK_ORIENTATION_VERTICAL,
-                      -1,
-                      &total_height,
-                      NULL,
-                      NULL,
-                      NULL);
-
-  return height >= total_height;
-}
-
-static void
-set_vertical_labels (GcalEventWidget *self,
-                     gboolean         vertical)
-{
-  if (self->vertical_labels == vertical)
-    return;
-
-  gtk_stack_set_visible_child (GTK_STACK (self->stack), vertical ? self->vertical_box : self->horizontal_box);
-  self->vertical_labels = vertical;
-}
-
-static gboolean
-set_vertical_labels_in_idle_cb (gpointer data)
-{
-  GcalEventWidget *self = (GcalEventWidget*) data;
-
-  set_vertical_labels (self, self->vertical_value_to_set);
-
-  self->vertical_label_source_id = 0;
-  return G_SOURCE_REMOVE;
-}
-
-static void
-queue_set_vertical_labels (GcalEventWidget *self,
-                           gboolean         vertical)
-{
-  if (self->vertical_label_source_id > 0)
-    {
-      g_source_remove (self->vertical_label_source_id);
-      self->vertical_label_source_id = 0;
-    }
-
-  if (self->vertical_labels == vertical)
-    return;
-
-  self->vertical_value_to_set = vertical;
-  self->vertical_label_source_id = g_idle_add (set_vertical_labels_in_idle_cb, self);
+  return orientation == GTK_ORIENTATION_VERTICAL && !gcal_event_get_all_day (event);
 }
 
 static void
@@ -225,8 +173,8 @@ gcal_event_widget_update_style (GcalEventWidget *self)
 
       if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
         {
-          gtk_widget_set_margin_start (self->stack, 0);
-          gtk_widget_set_margin_end (self->stack, 2);
+          gtk_widget_set_margin_start (self->squeezer, 0);
+          gtk_widget_set_margin_end (self->squeezer, 2);
         }
       else
         {
@@ -586,53 +534,6 @@ on_event_popover_edit_cb (GtkWidget   *event_popover,
 
 
 /*
- * GtkWidget overrides
- */
-
-static void
-gcal_event_widget_size_allocate (GtkWidget *widget,
-                                 gint       width,
-                                 gint       height,
-                                 gint       baseline)
-{
-  GcalEventWidget *self = GCAL_EVENT_WIDGET (widget);
-
-  gtk_widget_allocate (GTK_WIDGET (self->stack), width, height, baseline, NULL);
-
-  if (self->old_width != width || self->old_height != height)
-    {
-      if (self->orientation == GTK_ORIENTATION_HORIZONTAL || gcal_event_get_all_day (self->event))
-        return;
-
-      queue_set_vertical_labels (self, can_hold_vertical_labels_with_height (self, height));
-
-      self->old_width = width;
-      self->old_height = height;
-    }
-}
-
-static void
-gcal_event_widget_measure (GtkWidget      *widget,
-                           GtkOrientation  orientation,
-                           gint            for_size,
-                           gint           *minimum,
-                           gint           *natural,
-                           gint           *minimum_baseline,
-                           gint           *natural_baseline)
-{
-  GcalEventWidget *self = GCAL_EVENT_WIDGET (widget);
-
-  gtk_widget_measure (GTK_WIDGET (self->stack),
-                      orientation,
-                      for_size,
-                      minimum,
-                      natural,
-                      minimum_baseline,
-                      natural_baseline);
-}
-
-
-/*
  * GObject overrides
  */
 
@@ -721,8 +622,7 @@ gcal_event_widget_dispose (GObject *object)
 {
   GcalEventWidget *self = GCAL_EVENT_WIDGET (object);
 
-  g_clear_handle_id (&self->vertical_label_source_id, g_source_remove);
-  g_clear_pointer (&self->stack, gtk_widget_unparent);
+  g_clear_pointer (&self->squeezer, gtk_widget_unparent);
 
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->dispose (object);
 }
@@ -756,9 +656,6 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   object_class->get_property = gcal_event_widget_get_property;
   object_class->dispose = gcal_event_widget_dispose;
   object_class->finalize = gcal_event_widget_finalize;
-
-  widget_class->measure = gcal_event_widget_measure;
-  widget_class->size_allocate = gcal_event_widget_size_allocate;
 
   /**
    * GcalEventWidget::context:
@@ -839,16 +736,19 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, drag_source);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, horizontal_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, hour_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, stack);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, squeezer);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, vertical_box);
 
+  gtk_widget_class_bind_template_callback (widget_class, get_vertical_enabled);
   gtk_widget_class_bind_template_callback (widget_class, on_click_gesture_pressed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_click_gesture_release_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_drag_source_begin_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_drag_source_prepare_cb);
 
   gtk_widget_class_set_css_name (widget_class, "event");
+
+  gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
 }
 
 static void

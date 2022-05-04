@@ -21,14 +21,45 @@
 
     <!-- Main Stack -->
     <child>
-      <object class="GtkStack" id="stack">
+      <object class="AdwSqueezer" id="squeezer">
         <property name="hexpand">False</property>
+        <property name="homogeneous">False</property>
         <property name="margin-top">1</property>
         <property name="margin-bottom">1</property>
         <property name="margin-start">6</property>
         <property name="margin-end">4</property>
-        <property name="hhomogeneous">False</property>
-        <property name="vhomogeneous">False</property>
+        <property name="orientation">vertical</property>
+
+        <!-- Vertical page -->
+        <child>
+          <object class="GtkBox" id="vertical_box">
+            <binding name="visible">
+              <closure type="gboolean" function="get_vertical_enabled">
+                <lookup name="event">GcalEventWidget</lookup>
+                <lookup name="orientation">GcalEventWidget</lookup>
+              </closure>
+            </binding>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" bind-source="hour_label" bind-property="label" bind-flags="default" />
+                <property name="xalign">0.0</property>
+                <style>
+                  <class name="dim-label" />
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" bind-source="summary_label" bind-property="label" bind-flags="default" />
+                <property name="wrap">True</property>
+                <property name="hexpand">True</property>
+                <property name="xalign">0.0</property>
+                <property name="ellipsize">end</property>
+              </object>
+            </child>
+          </object>
+        </child>
 
         <!-- Horizontal page -->
         <child>
@@ -57,31 +88,6 @@
                 <style>
                   <class name="dim-label" />
                 </style>
-              </object>
-            </child>
-          </object>
-        </child>
-
-        <!-- Vertical page -->
-        <child>
-          <object class="GtkBox" id="vertical_box">
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="label" bind-source="hour_label" bind-property="label" bind-flags="default" />
-                <property name="xalign">0.0</property>
-                <style>
-                  <class name="dim-label" />
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="label" bind-source="summary_label" bind-property="label" bind-flags="default" />
-                <property name="wrap">True</property>
-                <property name="hexpand">True</property>
-                <property name="xalign">0.0</property>
-                <property name="ellipsize">end</property>
               </object>
             </child>
           </object>
