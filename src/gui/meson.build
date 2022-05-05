@@ -19,6 +19,8 @@ sources += files(
   'gcal-event-popover.c',
   'gcal-event-widget.c',
   'gcal-meeting-row.c',
+  'gcal-overflow-bin.c',
+  'gcal-overflow-bin-layout.c',
   'gcal-quick-add-popover.c',
   'gcal-search-button.c',
   'gcal-search-hit-row.c',
