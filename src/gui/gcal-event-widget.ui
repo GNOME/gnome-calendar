@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GcalEventWidget" parent="GtkWidget">
+    <property name="overflow">hidden</property>
 
     <!-- Drag Source -->
     <child>
@@ -18,6 +19,11 @@
         <signal name="released" handler="on_click_gesture_release_cb" object="GcalEventWidget" swapped="no" />
       </object>
     </child>
+
+    <!-- Overflow Bin -->
+    <child>
+      <object class="GcalOverflowBin">
+        <property name="request-mode">width-for-height</property>
 
     <!-- Main Stack -->
     <child>
@@ -41,12 +47,17 @@
             </binding>
             <property name="orientation">vertical</property>
             <child>
+              <object class="GcalOverflowBin">
+                <property name="request-mode">width-for-height</property>
+            <child>
               <object class="GtkLabel">
                 <property name="label" bind-source="hour_label" bind-property="label" bind-flags="default" />
                 <property name="xalign">0.0</property>
                 <style>
                   <class name="dim-label" />
                 </style>
+              </object>
+            </child>
               </object>
             </child>
             <child>
@@ -93,6 +104,8 @@
           </object>
         </child>
 
+      </object>
+    </child>
       </object>
     </child>
   </template>

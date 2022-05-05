@@ -28,6 +28,7 @@
 #include "gcal-debug.h"
 #include "gcal-event-popover.h"
 #include "gcal-event-widget.h"
+#include "gcal-overflow-bin.h"
 #include "gcal-utils.h"
 
 #define DESC_MAX_CHAR 200
@@ -758,6 +759,8 @@ gcal_event_widget_init (GcalEventWidget *self)
 
   widget = GTK_WIDGET (self);
   self->clock_format_24h = is_clock_format_24h ();
+
+  g_type_ensure (GCAL_TYPE_OVERFLOW_BIN);
 
   gtk_widget_init_template (widget);
 
