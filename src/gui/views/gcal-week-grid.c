@@ -753,7 +753,8 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
           ChildData *data;
           guint64 events_at_range;
           gint event_minutes;
-          gint natural_height;
+          gint minimum_width;
+          gint minimum_height;
           gint widget_index;
           gint offset;
           gint event_height;
@@ -775,12 +776,18 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
           /* The real horizontal position of this event */
           widget_index = get_event_index (overlaps, event_range);
 
-          /* Gtk complains about that */
-          gtk_widget_measure (event_widget, GTK_ORIENTATION_VERTICAL, -1, NULL, &natural_height, NULL, NULL);
-
           event_minutes = g_date_time_difference (event_end, event_start) / G_TIME_SPAN_MINUTE;
-          event_width = column_width / events_at_range;
+
+          /* Compute the height of the widget */
+          gtk_widget_measure (event_widget, GTK_ORIENTATION_VERTICAL, -1, &minimum_height, NULL, NULL, NULL);
           event_height = event_minutes * minutes_height;
+          event_height = MAX (minimum_height, event_height);
+
+          /* Compute the width of the widget */
+          gtk_widget_measure (event_widget, GTK_ORIENTATION_HORIZONTAL, event_height, &minimum_width, NULL, NULL, NULL);
+          event_width = column_width / events_at_range;
+          event_width = MAX (minimum_width, event_width);
+
           offset = event_width * widget_index;
           y = (g_date_time_get_hour (event_start) * 60 + g_date_time_get_minute (event_start)) * minutes_height;
 
