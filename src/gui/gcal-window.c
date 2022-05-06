@@ -37,7 +37,6 @@
 #include "gcal-weather-settings.h"
 #include "gcal-week-view.h"
 #include "gcal-window.h"
-#include "gcal-year-view.h"
 
 #include "importer/gcal-import-dialog.h"
 
@@ -101,7 +100,6 @@ struct _GcalWindow
   AdwViewStack       *views_stack;
   GtkWidget          *week_view;
   GtkWidget          *month_view;
-  GtkWidget          *year_view;
 
   /* header_bar widets */
   GtkWidget          *back_button;
@@ -204,10 +202,6 @@ update_today_button_sensitive (GcalWindow *window)
                   g_date_time_get_month (window->active_date) != g_date_time_get_month (now);
       break;
 
-    case GCAL_WINDOW_VIEW_YEAR:
-      sensitive = g_date_time_get_year (window->active_date) != g_date_time_get_year (now);
-      break;
-
     default:
       sensitive = TRUE;
       break;
@@ -230,7 +224,6 @@ maybe_add_subscribers_to_timeline (GcalWindow *self)
   timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
-  gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->year_view));
 
   self->subscribed = TRUE;
 }
@@ -249,7 +242,7 @@ update_active_date (GcalWindow *window,
 
   gcal_set_date_time (&window->active_date, new_date);
 
-  for (i = GCAL_WINDOW_VIEW_WEEK; i <= GCAL_WINDOW_VIEW_YEAR; i++)
+  for (i = GCAL_WINDOW_VIEW_WEEK; i <= GCAL_WINDOW_VIEW_MONTH; i++)
     gcal_view_set_date (GCAL_VIEW (window->views[i]), new_date);
 
   update_today_button_sensitive (window);
@@ -366,7 +359,7 @@ on_view_action_activated (GSimpleAction *action,
   else if (view == -2)
     view = --(window->active_view);
 
-  window->active_view = CLAMP (view, GCAL_WINDOW_VIEW_WEEK, GCAL_WINDOW_VIEW_YEAR);
+  window->active_view = CLAMP (view, GCAL_WINDOW_VIEW_WEEK, GCAL_WINDOW_VIEW_MONTH);
   adw_view_stack_set_visible_child (window->views_stack, window->views[window->active_view]);
 
   g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
@@ -800,7 +793,6 @@ gcal_window_dispose (GObject *object)
   timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
-  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->year_view));
 
   g_clear_pointer (&self->quick_add_popover, gtk_widget_unparent);
 
@@ -845,7 +837,6 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->calendar_management_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->week_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "context", self->year_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->event_editor, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->search_button, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
@@ -982,7 +973,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   g_type_ensure (GCAL_TYPE_SEARCH_BUTTON);
   g_type_ensure (GCAL_TYPE_WEATHER_SETTINGS);
   g_type_ensure (GCAL_TYPE_WEEK_VIEW);
-  g_type_ensure (GCAL_TYPE_YEAR_VIEW);
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = gcal_window_finalize;
@@ -1042,7 +1032,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, weather_settings);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, week_view);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, year_view);
 
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
 
@@ -1081,7 +1070,6 @@ gcal_window_init (GcalWindow *self)
 
   self->views[GCAL_WINDOW_VIEW_WEEK] = self->week_view;
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;
-  self->views[GCAL_WINDOW_VIEW_YEAR] = self->year_view;
 
   self->active_date = g_date_time_new_from_unix_local (0);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
