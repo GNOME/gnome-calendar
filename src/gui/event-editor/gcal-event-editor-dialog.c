@@ -258,16 +258,6 @@ on_calendar_selected_action_cb (GSimpleAction *action,
 }
 
 static void
-transient_size_allocate_cb (GcalEventEditorDialog *self)
-{
-  GtkAllocation alloc;
-  GtkWindow *transient;
-
-  transient = gtk_window_get_transient_for (GTK_WINDOW (self));
-  gtk_widget_get_allocation (GTK_WIDGET (transient), &alloc);
-}
-
-static void
 on_cancel_button_clicked_cb (GtkButton             *button,
                              GcalEventEditorDialog *self)
 {
@@ -433,13 +423,6 @@ gcal_event_editor_dialog_constructed (GObject* object)
   gtk_widget_insert_action_group (GTK_WIDGET (self),
                                   "event-editor-dialog",
                                   G_ACTION_GROUP (self->action_group));
-
-  /* Watch the main window and adapt the maximum size */
-  g_signal_connect_object (gtk_window_get_transient_for (GTK_WINDOW (self)),
-                           "size-allocate",
-                           G_CALLBACK (transient_size_allocate_cb),
-                           self,
-                           G_CONNECT_SWAPPED);
 }
 
 static void
