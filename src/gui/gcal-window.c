@@ -106,9 +106,7 @@ struct _GcalWindow
   GtkWidget          *date_chooser;
 
   /* header_bar widets */
-  GtkWidget          *back_button;
   GtkWidget          *calendars_button;
-  GtkWidget          *forward_button;
   GtkWidget          *menu_button;
   GtkWidget          *today_button;
   GtkWidget          *views_switcher;
@@ -1043,12 +1041,10 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-window.ui");
 
   /* widgets */
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, back_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, agenda_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, date_chooser);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, event_editor);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, forward_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, main_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, menu_button);
