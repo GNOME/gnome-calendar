@@ -147,89 +147,89 @@
             <child>
               <object class="GtkSeparator"/>
             </child>
-    <child>
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkHeaderBar" id="header_bar">
-            <property name="show-title-buttons">True</property>
             <child>
-              <object class="GtkButton" id="today_button">
-                <property name="action-name">win.today</property>
-                <property name="child">
-                  <object class="AdwButtonContent">
-                    <property name="label" translatable="yes">Today</property>
-                    <property name="icon-name">calendar-today-symbolic</property>
-                  </object>
-                </property>
-              </object>
-            </child>
-            <child type="title">
-              <object class="AdwViewSwitcher" id="views_switcher">
-                <property name="stack">views_stack</property>
-                <property name="policy">wide</property>
-              </object>
-            </child>
-            <child type="end">
-              <object class="GtkButton" id="new_event_button">
-                <property name="icon-name">list-add-symbolic</property>
-                <property name="action-name">win.new-event</property>
-                <property name="tooltip_text" translatable="yes" context="tooltip">Add a new event</property>
-              </object>
-            </child>
-            <child type="end">
-              <object class="GcalSearchButton" id="search_button">
-                <property name="tooltip_text" translatable="yes" context="tooltip">Search for events</property>
-              </object>
-            </child>
-          </object>
-        </child>
-            <child>
-              <object class="GtkBox" id="main_box">
-                <property name="hexpand">True</property>
-                <property name="vexpand">True</property>
+              <object class="GtkBox">
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="AdwViewStack" id="views_stack">
-                    <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
-                    <signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no"/>
-                    <style>
-                      <class name="view"/>
-                    </style>
+                  <object class="GtkHeaderBar" id="header_bar">
+                    <property name="show-title-buttons">True</property>
                     <child>
-                      <object class="AdwViewStackPage">
-                        <property name="name">week</property>
-                        <property name="title" translatable="yes">Week</property>
-                        <property name="icon_name">calendar-week-symbolic</property>
+                      <object class="GtkButton" id="today_button">
+                        <property name="action-name">win.today</property>
                         <property name="child">
-                          <object class="GcalWeekView" id="week_view">
-                            <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
-                            <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
-                            <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
+                          <object class="AdwButtonContent">
+                            <property name="label" translatable="yes">Today</property>
+                            <property name="icon-name">calendar-today-symbolic</property>
                           </object>
                         </property>
                       </object>
                     </child>
-                    <child>
-                      <object class="AdwViewStackPage">
-                        <property name="name">month</property>
-                        <property name="title" translatable="yes">Month</property>
-                        <property name="icon_name">calendar-month-symbolic</property>
-                        <property name="child">
-                          <object class="GcalMonthView" id="month_view">
-                            <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
-                            <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
-                            <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
-                            <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
-                          </object>
-                        </property>
+                    <child type="title">
+                      <object class="AdwViewSwitcher" id="views_switcher">
+                        <property name="stack">views_stack</property>
+                        <property name="policy">wide</property>
+                      </object>
+                    </child>
+                    <child type="end">
+                      <object class="GtkButton" id="new_event_button">
+                        <property name="icon-name">list-add-symbolic</property>
+                        <property name="action-name">win.new-event</property>
+                        <property name="tooltip_text" translatable="yes" context="tooltip">Add a new event</property>
+                      </object>
+                    </child>
+                    <child type="end">
+                      <object class="GcalSearchButton" id="search_button">
+                        <property name="tooltip_text" translatable="yes" context="tooltip">Search for events</property>
                       </object>
                     </child>
                   </object>
                 </child>
-              </object>
-            </child>
+                <child>
+                  <object class="GtkBox" id="main_box">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="AdwViewStack" id="views_stack">
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no"/>
+                        <style>
+                          <class name="view"/>
+                        </style>
+                        <child>
+                          <object class="AdwViewStackPage">
+                            <property name="name">week</property>
+                            <property name="title" translatable="yes">Week</property>
+                            <property name="icon_name">calendar-week-symbolic</property>
+                            <property name="child">
+                              <object class="GcalWeekView" id="week_view">
+                                <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
+                                <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
+                                <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwViewStackPage">
+                            <property name="name">month</property>
+                            <property name="title" translatable="yes">Month</property>
+                            <property name="icon_name">calendar-month-symbolic</property>
+                            <property name="child">
+                              <object class="GcalMonthView" id="month_view">
+                                <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
+                                <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
+                                <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
+                                <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
