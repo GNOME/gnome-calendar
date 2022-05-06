@@ -20,9 +20,11 @@
 #define G_LOG_DOMAIN "GcalWindow"
 
 #include "css-code.h"
+#include "gcal-agenda-view.h"
 #include "gcal-calendar-management-dialog.h"
 #include "gcal-calendar-button.h"
 #include "config.h"
+#include "gcal-date-chooser.h"
 #include "gcal-debug.h"
 #include "gcal-event-editor-dialog.h"
 #include "gcal-event-widget.h"
@@ -100,6 +102,8 @@ struct _GcalWindow
   AdwViewStack       *views_stack;
   GtkWidget          *week_view;
   GtkWidget          *month_view;
+  GtkWidget          *agenda_view;
+  GtkWidget          *date_chooser;
 
   /* header_bar widets */
   GtkWidget          *back_button;
@@ -224,6 +228,8 @@ maybe_add_subscribers_to_timeline (GcalWindow *self)
   timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
+  gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->agenda_view));
+  gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->date_chooser));
 
   self->subscribed = TRUE;
 }
@@ -244,6 +250,8 @@ update_active_date (GcalWindow *window,
 
   for (i = GCAL_WINDOW_VIEW_WEEK; i <= GCAL_WINDOW_VIEW_MONTH; i++)
     gcal_view_set_date (GCAL_VIEW (window->views[i]), new_date);
+  gcal_view_set_date (GCAL_VIEW (window->agenda_view), new_date);
+  gcal_view_set_date (GCAL_VIEW (window->date_chooser), new_date);
 
   update_today_button_sensitive (window);
 
@@ -654,6 +662,12 @@ event_preview_cb (GcalEventWidget        *event_widget,
 }
 
 static void
+day_selected (GcalWindow *self)
+{
+  update_active_date (self, gcal_view_get_date (GCAL_VIEW (self->date_chooser)));
+}
+
+static void
 event_activated (GcalView        *view,
                  GcalEventWidget *event_widget,
                  gpointer         user_data)
@@ -695,6 +709,8 @@ on_event_editor_dialog_remove_event_cb (GcalEventEditorDialog *edit_dialog,
 {
   g_autoptr (AdwToast) toast = NULL;
   g_autoptr (GList) widgets = NULL;
+  g_autoptr (GList) agenda_view_widgets = NULL;
+  g_autoptr (GList) date_chooser_widgets = NULL;
   GcalView *view;
   gboolean has_deleted_event;
 
@@ -717,8 +733,12 @@ on_event_editor_dialog_remove_event_cb (GcalEventEditorDialog *edit_dialog,
   /* hide widget of the event */
   view = GCAL_VIEW (self->views[self->active_view]);
   widgets = gcal_view_get_children_by_uuid (view, modifier, gcal_event_get_uid (event));
+  agenda_view_widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (self->agenda_view), modifier, gcal_event_get_uid (event));
+  date_chooser_widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (self->date_chooser), modifier, gcal_event_get_uid (event));
 
   g_list_foreach (widgets, (GFunc) gtk_widget_hide, NULL);
+  g_list_foreach (agenda_view_widgets, (GFunc) gtk_widget_hide, NULL);
+  g_list_foreach (date_chooser_widgets, (GFunc) gtk_widget_hide, NULL);
 
   GCAL_EXIT;
 }
@@ -728,6 +748,8 @@ schedule_open_edit_dialog_by_uuid (OpenEditDialogData *edit_dialog_data)
 {
   GcalWindow *window;
   GList *widgets;
+
+  /* FIXME Do that in the date chooser too? */
 
   window = edit_dialog_data->window;
   widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (window->month_view),
@@ -793,6 +815,8 @@ gcal_window_dispose (GObject *object)
   timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
+  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->agenda_view));
+  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->date_chooser));
 
   g_clear_pointer (&self->quick_add_popover, gtk_widget_unparent);
 
@@ -837,6 +861,8 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->calendar_management_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->week_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->agenda_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->date_chooser, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->event_editor, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->search_button, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
@@ -964,8 +990,10 @@ gcal_window_class_init (GcalWindowClass *klass)
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
 
+  g_type_ensure (GCAL_TYPE_AGENDA_VIEW);
   g_type_ensure (GCAL_TYPE_CALENDAR_MANAGEMENT_DIALOG);
   g_type_ensure (GCAL_TYPE_CALENDAR_BUTTON);
+  g_type_ensure (GCAL_TYPE_DATE_CHOOSER);
   g_type_ensure (GCAL_TYPE_EVENT_EDITOR_DIALOG);
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
@@ -1016,7 +1044,9 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   /* widgets */
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, back_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, agenda_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, date_chooser);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, event_editor);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, forward_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);
@@ -1040,6 +1070,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, create_event_detailed_cb);
   gtk_widget_class_bind_template_callback (widget_class, show_new_event_widget);
   gtk_widget_class_bind_template_callback (widget_class, close_new_event_widget);
+  gtk_widget_class_bind_template_callback (widget_class, day_selected);
   gtk_widget_class_bind_template_callback (widget_class, event_activated);
 
   /* Edit dialog related */

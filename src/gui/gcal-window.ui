@@ -97,6 +97,47 @@
     <!-- Main Overlay -->
     <child>
       <object class="AdwToastOverlay" id="overlay">
+        <child>
+          <object class="GtkBox" id="box">
+            <child>
+              <object class="GtkBox">
+                <property name="hexpand">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="AdwHeaderBar">
+                    <property name="show-end-title-buttons">False</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GcalDateChooser" id="date_chooser">
+                    <property name="split-month-year">False</property>
+                    <property name="vexpand">False</property>
+                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
+                    <signal name="day-selected" handler="day_selected" object="GcalWindow" swapped="yes"/>
+                    <style>
+                      <class name="view"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSeparator"/>
+                </child>
+                <child>
+                  <object class="GcalAgendaView" id="agenda_view">
+                    <property name="vexpand">True</property>
+                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
+                    <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
+                    <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
+                    <style>
+                      <class name="view"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSeparator"/>
+            </child>
     <child>
       <object class="GtkBox">
         <property name="orientation">vertical</property>
@@ -199,6 +240,8 @@
                     </child>
                   </object>
                 </child>
+              </object>
+            </child>
               </object>
             </child>
           </object>
