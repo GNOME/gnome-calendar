@@ -94,6 +94,9 @@
       </object>
     </child>
 
+    <!-- Main Overlay -->
+    <child>
+      <object class="AdwToastOverlay" id="overlay">
     <child>
       <object class="GtkBox">
         <property name="orientation">vertical</property>
@@ -152,10 +155,6 @@
             </child>
           </object>
         </child>
-
-        <!-- Main Overlay -->
-        <child>
-          <object class="AdwToastOverlay" id="overlay">
             <child>
               <object class="GtkBox" id="main_box">
                 <property name="hexpand">True</property>
@@ -204,7 +203,6 @@
             </child>
           </object>
         </child>
-
       </object>
     </child>
   </template>
