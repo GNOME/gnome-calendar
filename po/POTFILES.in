@@ -44,6 +44,4 @@ src/gui/views/gcal-week-grid.c
 src/gui/views/gcal-week-header.c
 src/gui/views/gcal-week-hour-bar.c
 src/gui/views/gcal-week-view.c
-src/gui/views/gcal-year-view.c
-src/gui/views/gcal-year-view.ui
 src/utils/gcal-utils.c

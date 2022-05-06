@@ -36,57 +36,6 @@ calendar-view:selected {
     font-weight: bold;
 }
 
-/* Year View CSS */
-
-.year-navigator grid.month {
-  padding: 12px;
-}
-
-.year-navigator label.days {
-    padding: 5px;
-    color: @theme_fg_color;
-    font-size: 9pt;
-    min-width: 18px;
-    min-height: 18px;
-}
-
-.year-navigator label.non-workday {
-    color: alpha(@theme_fg_color, 0.5);
-}
-
-.year-navigator label.week-number {
-    font-size: 0.5rem;
-    border-radius: 50%;
-    background-color: alpha(@theme_fg_color, 0.05);
-    color: alpha(@theme_fg_color, 0.4);
-    min-width: 18px;
-    min-height: 18px;
-}
-
-.year-navigator .current label {
-    color: @accent_fg_color;
-    background-color: @accent_bg_color;
-    border-radius: 50%;
-    font-weight: bold;
-}
-
-.year-navigator dot {
-    transform: translateX(-1px) translateY(-3px);
-    background-color: @theme_fg_color;
-    border-radius: 3px;
-    min-width: 3px;
-    min-height: 3px;
-}
-
-.year-navigator .current dot {
-    background-color: @accent_fg_color;
-}
-
-
-.year-navigator .non-workday dot {
-    background-color: alpha(@theme_fg_color, 0.5);
-}
-
 popover.events {
     background-color: @theme_bg_color;
     padding: 0;

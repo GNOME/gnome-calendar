@@ -16,5 +16,4 @@ sources += files(
   'gcal-week-hour-bar.c',
   'gcal-week-view.c',
   'gcal-week-view-common.c',
-  'gcal-year-view.c',
 )
