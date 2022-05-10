@@ -55,3 +55,10 @@ typedef enum
   GCAL_WEEK_DAY_FRIDAY    = 1 << 5,
   GCAL_WEEK_DAY_SATURDAY  = 1 << 6
 } GcalWeekDay;
+
+typedef enum
+{
+  GCAL_TIMESTAMP_POLICY_NONE,
+  GCAL_TIMESTAMP_POLICY_START,
+  GCAL_TIMESTAMP_POLICY_END,
+} GcalTimestampPolicy;
