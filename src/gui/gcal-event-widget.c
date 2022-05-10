@@ -53,7 +53,7 @@ struct _GcalEventWidget
   /* widgets */
   GtkWidget          *color_box;
   GtkWidget          *horizontal_box;
-  GtkWidget          *hour_label;
+  GtkWidget          *timestamp_label;
   GtkWidget          *squeezer;
   GtkWidget          *summary_label;
   GtkWidget          *vertical_box;
@@ -68,6 +68,8 @@ struct _GcalEventWidget
 
   GtkOrientation      orientation;
 
+  GcalTimestampPolicy timestamp_policy;
+
   gint                old_width;
   gint                old_height;
 
@@ -81,6 +83,7 @@ enum
   PROP_DATE_END,
   PROP_DATE_START,
   PROP_EVENT,
+  PROP_TIMESTAMP_POLICY,
   PROP_ORIENTATION,
   NUM_PROPS
 };
@@ -376,25 +379,37 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
   g_string_free (tooltip_mesg, TRUE);
 }
 
-static gchar*
-get_hour_label (GcalEventWidget *self)
+static void
+gcal_event_widget_update_timestamp (GcalEventWidget *self)
 {
-  g_autoptr (GDateTime) local_start_time;
+  g_autofree gchar *timestamp_str = NULL;
 
-  local_start_time = g_date_time_to_local (gcal_event_get_date_start (self->event));
+  if (GCAL_IS_EVENT (self->event) &&
+      self->timestamp_policy != GCAL_TIMESTAMP_POLICY_NONE)
+    {
+      g_autoptr (GDateTime) time = NULL;
 
-  if (self->clock_format_24h)
-    return g_date_time_format (local_start_time, "%R");
-  else
-    return g_date_time_format (local_start_time, "%I:%M %P");
+      if (self->timestamp_policy == GCAL_TIMESTAMP_POLICY_START)
+        time = g_date_time_to_local (gcal_event_get_date_start (self->event));
+      else
+        time = g_date_time_to_local (gcal_event_get_date_end (self->event));
+
+      if (gcal_event_get_all_day (self->event) || gcal_event_is_multiday (self->event))
+        timestamp_str = g_date_time_format (time, "%a %B %e");
+      else if (self->clock_format_24h)
+        timestamp_str = g_date_time_format (time, "%R");
+      else
+        timestamp_str = g_date_time_format (time, "%I:%M %P");
+    }
+
+  gtk_widget_set_visible (self->timestamp_label, timestamp_str != NULL);
+  gtk_label_set_label (GTK_LABEL (self->timestamp_label), timestamp_str);
 }
 
 static void
 gcal_event_widget_set_event_internal (GcalEventWidget *self,
                                       GcalEvent       *event)
 {
-  g_autofree gchar *hour_str = NULL;
-
   /*
    * This function is called only once, since the property is
    * set as CONSTRUCT_ONLY. Any other attempt to set an event
@@ -432,18 +447,15 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
   /* Tooltip */
   gcal_event_widget_set_event_tooltip (self, event);
 
-  /* Hour label */
-  hour_str = get_hour_label (self);
-
-  gtk_widget_set_visible (self->hour_label, !gcal_event_get_all_day (event));
-  gtk_label_set_label (GTK_LABEL (self->hour_label), hour_str);
-
   /* Summary label */
   g_object_bind_property (event,
                           "summary",
                           self->summary_label,
                           "label",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+
+  gcal_event_widget_update_style (self);
+  gcal_event_widget_update_timestamp (self);
 }
 
 static void
@@ -560,10 +572,15 @@ gcal_event_widget_set_property (GObject      *object,
       gcal_event_widget_set_event_internal (self, g_value_get_object (value));
       break;
 
+    case PROP_TIMESTAMP_POLICY:
+      gcal_event_widget_set_timestamp_policy (self, g_value_get_enum (value));
+      break;
+
     case PROP_ORIENTATION:
       self->orientation = g_value_get_enum (value);
       gtk_widget_set_visible (self->vertical_box, self->orientation == GTK_ORIENTATION_VERTICAL);
       gcal_event_widget_update_style (self);
+      gcal_event_widget_update_timestamp (self);
       g_object_notify (object, "orientation");
       break;
 
@@ -596,6 +613,10 @@ gcal_event_widget_get_property (GObject      *object,
 
     case PROP_EVENT:
       g_value_set_object (value, self->event);
+      break;
+
+    case PROP_TIMESTAMP_POLICY:
+      g_value_set_enum (value, self->timestamp_policy);
       break;
 
     case PROP_ORIENTATION:
@@ -705,6 +726,23 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
                                                         G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
   /**
+   * GcalEventWidget::timestamp-policy:
+   *
+   * The policy for this widget's timestamp.
+   *
+   * Whether to show the start time, end time, or no time for the
+   * event. Depending on the event's kind, it will be an hour or a day.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_TIMESTAMP_POLICY,
+                                   g_param_spec_enum ("timestamp-policy",
+                                                      "Timestamp Policy",
+                                                      "The policy for this widget's timestamp",
+                                                      GCAL_TYPE_TIMESTAMP_POLICY,
+                                                      GCAL_TIMESTAMP_POLICY_NONE,
+                                                      G_PARAM_READWRITE));
+
+  /**
    * GcalEventWidget::orientation:
    *
    * The orientation of the event widget.
@@ -725,7 +763,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, color_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, drag_source);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, horizontal_box);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, hour_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, timestamp_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, squeezer);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, vertical_box);
@@ -877,6 +915,31 @@ gcal_event_widget_set_date_start (GcalEventWidget *self,
       gcal_event_widget_update_style (self);
 
       g_object_notify (G_OBJECT (self), "date-start");
+    }
+}
+
+/**
+ * gcal_event_widget_set_timestamp_policy:
+ * @self: a #GcalEventWidget
+ * @policy: the timestamp policy
+ *
+ * Sets whether to show the start time, end time, or no time for the
+ * event. Depending on the event's kind, it will be an hour or a day.
+ */
+void
+gcal_event_widget_set_timestamp_policy (GcalEventWidget     *self,
+                                        GcalTimestampPolicy  policy)
+{
+  g_return_if_fail (GCAL_IS_EVENT_WIDGET (self));
+  g_return_if_fail (policy >= GCAL_TIMESTAMP_POLICY_NONE && policy <= GCAL_TIMESTAMP_POLICY_END);
+
+  if (self->timestamp_policy != policy)
+    {
+      self->timestamp_policy = policy;
+
+      gcal_event_widget_update_timestamp (self);
+
+      g_object_notify (G_OBJECT (self), "timestamp-policy");
     }
 }
 

@@ -1860,6 +1860,8 @@ gcal_month_view_add_event (GcalTimelineSubscriber *subscriber,
 
   event_widget = gcal_event_widget_new (self->context, event);
   gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event_widget), gcal_calendar_is_read_only (calendar));
+  if (!gcal_event_get_all_day (event) && !gcal_event_is_multiday (event))
+    gcal_event_widget_set_timestamp_policy (GCAL_EVENT_WIDGET (event_widget), GCAL_TIMESTAMP_POLICY_START);
 
   add_event_widget (self, event_widget);
 
@@ -1894,6 +1896,8 @@ gcal_month_view_update_event (GcalTimelineSubscriber *subscriber,
 
   /* Create and add the new event widget */
   new_widget = gcal_event_widget_new (self->context, event);
+  if (!gcal_event_get_all_day (event) && !gcal_event_is_multiday (event))
+    gcal_event_widget_set_timestamp_policy (GCAL_EVENT_WIDGET (new_widget), GCAL_TIMESTAMP_POLICY_START);
   add_event_widget (self, new_widget);
 
   self->needs_reallocation = TRUE;

@@ -944,6 +944,7 @@ gcal_week_grid_add_event (GcalWeekGrid *self,
                          "context", self->context,
                          "event", event,
                          "orientation", GTK_ORIENTATION_VERTICAL,
+                         "timestamp-policy", GCAL_TIMESTAMP_POLICY_START,
                          NULL);
 
   gcal_range_tree_add_range (self->events,

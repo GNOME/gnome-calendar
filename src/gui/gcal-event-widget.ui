@@ -47,7 +47,7 @@
                     <property name="request-mode">width-for-height</property>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label" bind-source="hour_label" bind-property="label" bind-flags="default" />
+                        <property name="label" bind-source="timestamp_label" bind-property="label" bind-flags="default" />
                         <property name="xalign">0.0</property>
                         <style>
                           <class name="dim-label" />
@@ -91,7 +91,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="hour_label">
+                  <object class="GtkLabel" id="timestamp_label">
                     <style>
                       <class name="dim-label" />
                     </style>
