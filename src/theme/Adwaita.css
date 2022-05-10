@@ -74,6 +74,14 @@ event {
     font-size: 0.9rem;
 }
 
+event squeezer {
+  margin: 1px 4px 1px 6px;
+}
+
+event.horizontal.timed squeezer {
+  margin: 1px 2px 1px 0px;
+}
+
 event.vertical.timed {
   padding: 3px 6px;
 }

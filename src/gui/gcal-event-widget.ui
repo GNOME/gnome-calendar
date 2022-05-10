@@ -30,10 +30,6 @@
           <object class="AdwSqueezer" id="squeezer">
             <property name="hexpand">False</property>
             <property name="homogeneous">False</property>
-            <property name="margin-top">1</property>
-            <property name="margin-bottom">1</property>
-            <property name="margin-start">6</property>
-            <property name="margin-end">4</property>
             <property name="orientation">vertical</property>
 
             <!-- Vertical page -->

@@ -129,6 +129,7 @@ gcal_event_widget_update_style (GcalEventWidget *self)
   gtk_widget_remove_css_class (GTK_WIDGET (self), "slanted");
   gtk_widget_remove_css_class (GTK_WIDGET (self), "slanted-start");
   gtk_widget_remove_css_class (GTK_WIDGET (self), "slanted-end");
+  gtk_widget_remove_css_class (GTK_WIDGET (self), "timed");
 
   /*
    * If the event's dates differs from the widget's dates,
@@ -166,22 +167,10 @@ gcal_event_widget_update_style (GcalEventWidget *self)
    */
   timed = !gcal_event_get_all_day (self->event) && !gcal_event_is_multiday (self->event);
 
-  gtk_widget_set_visible (self->color_box, timed);
+  gtk_widget_set_visible (self->color_box, timed && self->orientation == GTK_ORIENTATION_HORIZONTAL);
 
   if (timed)
-    {
-      gtk_widget_add_css_class (GTK_WIDGET (self), "timed");
-
-      if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
-        {
-          gtk_widget_set_margin_start (self->squeezer, 0);
-          gtk_widget_set_margin_end (self->squeezer, 2);
-        }
-      else
-        {
-          gtk_widget_set_visible (self->color_box, FALSE);
-        }
-    }
+    gtk_widget_add_css_class (GTK_WIDGET (self), "timed");
 }
 
 static void
