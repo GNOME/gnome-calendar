@@ -90,7 +90,7 @@ create_calendar_row (GcalManager  *manager,
 
   gtk_box_append (GTK_BOX (box), icon);
 
-  gtk_style_context_add_class (gtk_widget_get_style_context (icon), "calendar-color-image");
+  gtk_widget_add_css_class (icon, "calendar-color-image");
 
   /* Source name label */
   label = gtk_label_new (gcal_calendar_get_name (calendar));

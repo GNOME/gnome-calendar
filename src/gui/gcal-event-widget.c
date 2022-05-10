@@ -865,7 +865,7 @@ gcal_event_widget_init (GcalEventWidget *self)
 
   /* Starts with horizontal */
   self->orientation = GTK_ORIENTATION_HORIZONTAL;
-  gtk_style_context_add_class (gtk_widget_get_style_context (widget), "horizontal");
+  gtk_widget_add_css_class (widget, "horizontal");
 }
 
 GtkWidget*

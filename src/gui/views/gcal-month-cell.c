@@ -425,8 +425,6 @@ void
 gcal_month_cell_set_different_month (GcalMonthCell *self,
                                      gboolean       different)
 {
-  GtkStyleContext *context;
-
   g_return_if_fail (GCAL_IS_MONTH_CELL (self));
 
   if (self->different_month == different)
@@ -434,12 +432,10 @@ gcal_month_cell_set_different_month (GcalMonthCell *self,
 
   self->different_month = different;
 
-  context = gtk_widget_get_style_context (GTK_WIDGET (self));
-
   if (different)
-    gtk_style_context_add_class (context, "out-of-month");
+    gtk_widget_add_css_class (GTK_WIDGET (self), "out-of-month");
   else
-    gtk_style_context_remove_class (context, "out-of-month");
+    gtk_widget_remove_css_class (GTK_WIDGET (self), "out-of-month");
 }
 
 GcalContext*

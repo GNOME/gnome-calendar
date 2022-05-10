@@ -200,15 +200,12 @@ static void
 update_url_entry_state (GcalNewCalendarPage *self,
                         EntryState           state)
 {
-  GtkStyleContext *context;
-
   self->calendar_address_entry_state = state;
 
-  context = gtk_widget_get_style_context (GTK_WIDGET (self->calendar_address_entry));
   if (state == ENTRY_STATE_INVALID)
-    gtk_style_context_add_class (context, "error");
+    gtk_widget_add_css_class (GTK_WIDGET (self->calendar_address_entry), "error");
   else
-    gtk_style_context_remove_class (context, "error");
+    gtk_widget_remove_css_class (GTK_WIDGET (self->calendar_address_entry), "error");
 
   update_add_button (self);
   toggle_url_entry_pulsing (self, state == ENTRY_STATE_VALIDATING);

@@ -562,7 +562,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
                               "visible",
                               G_BINDING_SYNC_CREATE);
 
-      gtk_style_context_add_class (gtk_widget_get_style_context (self->cols[col]), "weekday");
+      gtk_widget_add_css_class (self->cols[col], "weekday");
 
       gtk_grid_attach (GTK_GRID (self->grid), self->cols[col], col, -1, 1, 1);
     }
@@ -577,7 +577,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
                               "visible",
                               G_BINDING_SYNC_CREATE);
 
-      gtk_style_context_add_class (gtk_widget_get_style_context (self->rows[row]), "weeknum");
+      gtk_widget_add_css_class (self->rows[row], "weeknum");
       gtk_grid_attach (GTK_GRID (self->grid), self->rows[row], -1, row, 1, 1);
     }
 

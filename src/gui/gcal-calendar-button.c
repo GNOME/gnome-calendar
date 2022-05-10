@@ -79,7 +79,7 @@ make_calendar_row (GcalCalendar *calendar)
   paintable = get_circle_paintable_from_color (color, 16);
   icon = gtk_image_new_from_paintable (paintable);
 
-  gtk_style_context_add_class (gtk_widget_get_style_context (icon), "calendar-color-image");
+  gtk_widget_add_css_class (icon, "calendar-color-image");
 
   /* source name label */
   label = gtk_label_new (gcal_calendar_get_name (calendar));

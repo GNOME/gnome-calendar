@@ -99,7 +99,7 @@ gcal_date_chooser_day_init (GcalDateChooserDay *self)
   gtk_widget_set_valign (widget, GTK_ALIGN_CENTER);
 
   gtk_widget_set_can_focus (widget, TRUE);
-  gtk_style_context_add_class (gtk_widget_get_style_context (widget), "day");
+  gtk_widget_add_css_class (widget, "day");
 
   self->label = gtk_label_new ("");
   gtk_widget_set_halign (self->label, GTK_ALIGN_CENTER);

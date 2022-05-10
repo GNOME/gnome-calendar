@@ -1076,12 +1076,7 @@ gcal_window_init (GcalWindow *self)
 
   /* devel styling */
   if (g_strcmp0 (PROFILE, "Devel") == 0)
-  {
-      GtkStyleContext *style_context;
-
-      style_context = gtk_widget_get_style_context (GTK_WIDGET (self));
-      gtk_style_context_add_class (style_context, "devel");
-  }
+    gtk_widget_add_css_class (GTK_WIDGET (self), "devel");
 
   gtk_widget_set_parent (self->quick_add_popover, GTK_WIDGET (self));
 }
