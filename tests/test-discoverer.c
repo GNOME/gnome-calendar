@@ -59,14 +59,14 @@ discoverer_file (void)
 {
   g_autoptr (GcalSimpleServer) server = NULL;
   g_autoptr (GMainLoop) mainloop = NULL;
-  g_autoptr (SoupURI) uri = NULL;
+  g_autoptr (GUri) uri = NULL;
   g_autofree gchar *uri_str = NULL;
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  soup_uri_set_path (uri, "/public/calendar");
+  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/public/calendar");
 
-  uri_str = soup_uri_to_string (uri, FALSE);
+  uri_str = g_uri_to_string_partial (uri, G_URI_HIDE_PASSWORD);
 
   mainloop = g_main_loop_new (NULL, FALSE);
 
@@ -104,14 +104,14 @@ discoverer_webdav_unauthorized (void)
 {
   g_autoptr (GcalSimpleServer) server = NULL;
   g_autoptr (GMainLoop) mainloop = NULL;
-  g_autoptr (SoupURI) uri = NULL;
+  g_autoptr (GUri) uri = NULL;
   g_autofree gchar *uri_str = NULL;
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  soup_uri_set_path (uri, "/secret-area/calendar");
+  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area/calendar");
 
-  uri_str = soup_uri_to_string (uri, FALSE);
+  uri_str = g_uri_to_string_partial (uri, G_URI_HIDE_PASSWORD);
 
   mainloop = g_main_loop_new (NULL, FALSE);
 
@@ -149,14 +149,14 @@ discoverer_webdav_auth (void)
 {
   g_autoptr (GcalSimpleServer) server = NULL;
   g_autoptr (GMainLoop) mainloop = NULL;
-  g_autoptr (SoupURI) uri = NULL;
+  g_autoptr (GUri) uri = NULL;
   g_autofree gchar *uri_str = NULL;
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  soup_uri_set_path (uri, "/secret-area/dav");
+  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area/dav");
 
-  uri_str = soup_uri_to_string (uri, FALSE);
+  uri_str = g_uri_to_string_partial (uri, G_URI_HIDE_PASSWORD);
 
   mainloop = g_main_loop_new (NULL, FALSE);
 

@@ -59,7 +59,7 @@ static ESource*
 create_source_for_uri (DiscovererData  *data)
 {
   ESourceAuthentication *auth;
-  g_autoptr (SoupURI) soup_uri = NULL;
+  g_autoptr (GUri) guri = NULL;
   g_autofree gchar *display_name = NULL;
   g_autofree gchar *basename = NULL;
   ESourceExtension *ext;
@@ -68,18 +68,18 @@ create_source_for_uri (DiscovererData  *data)
   const gchar *host;
   const gchar *path;
 
-  soup_uri = soup_uri_new (data->uri);
-  if (!soup_uri)
+  guri = g_uri_parse (data->uri, SOUP_HTTP_URI_FLAGS | G_URI_FLAGS_PARSE_RELAXED, NULL);
+  if (!guri)
     GCAL_RETURN (NULL);
 
-  host = soup_uri_get_host (soup_uri);
+  host = g_uri_get_host (guri);
 
   /* Create the new source and add the needed extensions */
   source = e_source_new (NULL, NULL, NULL);
   e_source_set_parent (source, "webcal-stub");
 
   /* Display name */
-  path = soup_uri_get_path (soup_uri);
+  path = g_uri_get_path (guri);
   basename = g_path_get_basename (path);
   display_name = gcal_utils_format_filename_for_display (basename);
   e_source_set_display_name (source, display_name);
@@ -93,7 +93,7 @@ create_source_for_uri (DiscovererData  *data)
 
   /* Webdav */
   webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-  e_source_webdav_set_soup_uri (webdav, soup_uri);
+  e_source_webdav_set_uri (webdav, guri);
 
   return source;
 }
@@ -103,15 +103,15 @@ create_discovered_source (ESource                 *source,
                           GSList                  *user_addresses,
                           EWebDAVDiscoveredSource *discovered_source)
 {
-  g_autoptr (SoupURI) soup_uri = NULL;
+  g_autoptr (GUri) guri = NULL;
   ESourceSelectable *selectable;
   ESourceExtension *ext;
   ESourceWebdav *webdav;
   ESource *new_source;
   const gchar *resource_path;
 
-  soup_uri = soup_uri_new (discovered_source->href);
-  resource_path = soup_uri_get_path (soup_uri);
+  guri = g_uri_parse (discovered_source->href, SOUP_HTTP_URI_FLAGS | G_URI_FLAGS_PARSE_RELAXED, NULL);
+  resource_path = g_uri_get_path (guri);
 
   new_source = e_source_new (NULL, NULL, NULL);
   e_source_set_parent (new_source, "local");
@@ -188,9 +188,8 @@ is_authentication_error (gint code)
  * Callbacks
  */
 
-static void
-on_soup_session_authenticate_cb (SoupSession *session,
-                                 SoupMessage *message,
+static gboolean
+on_soup_message_authenticate_cb (SoupMessage *message,
                                  SoupAuth    *auth,
                                  gboolean     retrying,
                                  gpointer     user_data)
@@ -199,8 +198,8 @@ on_soup_session_authenticate_cb (SoupSession *session,
 
   if (data->username && data->password)
     soup_auth_authenticate (auth, data->username, data->password);
-  else
-    soup_message_set_status (message, SOUP_STATUS_UNAUTHORIZED);
+
+  return TRUE;
 }
 
 typedef GPtrArray* (*DiscoverFunc) (DiscovererData  *data,
@@ -216,26 +215,28 @@ discover_file_in_thread (DiscovererData  *data,
   g_autoptr (SoupMessage) message = NULL;
   g_autoptr (SoupSession) session = NULL;
   g_autoptr (GPtrArray) source = NULL;
-  g_autoptr (SoupURI) uri = NULL;
+  g_autoptr (GUri) guri = NULL;
   g_autofree gchar *uri_str = NULL;
   const gchar *content_type;
 
   GCAL_ENTRY;
 
-  uri = soup_uri_new (data->uri);
-  if (!uri)
+  guri = g_uri_parse (data->uri, SOUP_HTTP_URI_FLAGS | G_URI_FLAGS_PARSE_RELAXED, NULL);
+
+  if (!guri)
     GCAL_RETURN (NULL);
 
-  if (g_strcmp0 (soup_uri_get_scheme (uri), "webcal") == 0)
-    soup_uri_set_scheme (uri, SOUP_URI_SCHEME_HTTPS);
+  if (g_strcmp0 (g_uri_get_scheme (guri), "webcal") == 0)
+    e_util_change_uri_component (&guri, SOUP_URI_SCHEME, "https");
 
-  uri_str = soup_uri_to_string (uri, FALSE);
+  uri_str = g_uri_to_string_partial (guri, G_URI_HIDE_PASSWORD);
   GCAL_TRACE_MSG ("Creating request for %s", uri_str);
 
-  session = soup_session_new_with_options (SOUP_SESSION_TIMEOUT, 10, NULL);
-  g_signal_connect (session, "authenticate", G_CALLBACK (on_soup_session_authenticate_cb), data);
+  session = soup_session_new_with_options ("timeout", 10, NULL);
 
-  message = soup_message_new_from_uri ("GET", uri);
+  message = soup_message_new_from_uri ("GET", guri);
+  g_signal_connect (message, "authenticate", G_CALLBACK (on_soup_message_authenticate_cb), data);
+
   input_stream = soup_session_send (session, message, cancellable, error);
 
   if (!input_stream)
@@ -243,16 +244,16 @@ discover_file_in_thread (DiscovererData  *data,
 
   g_input_stream_close (input_stream, cancellable, error);
 
-  content_type = soup_message_headers_get_content_type (message->response_headers, NULL);
-  GCAL_TRACE_MSG ("Message retrieved, content type: %s, status code: %u", content_type, message->status_code);
+  content_type = soup_message_headers_get_content_type (soup_message_get_response_headers (message), NULL);
+  GCAL_TRACE_MSG ("Message retrieved, content type: %s, status code: %u", content_type, soup_message_get_status (message));
 
-  if (is_authentication_error (message->status_code))
+  if (is_authentication_error (soup_message_get_status (message)))
     {
       g_set_error (error,
                    GCAL_SOURCE_DISCOVERER_ERROR,
                    GCAL_SOURCE_DISCOVERER_ERROR_UNAUTHORIZED,
                    "%s",
-                   soup_status_get_phrase (message->status_code));
+                   soup_message_get_reason_phrase (message));
 
       GCAL_RETURN (NULL);
     }
@@ -302,7 +303,8 @@ discover_webdav_in_thread (DiscovererData  *data,
 
   if (local_error)
     {
-      if (is_authentication_error (local_error->code))
+      if (local_error->domain == E_SOUP_SESSION_ERROR &&
+          is_authentication_error (local_error->code))
         {
           g_set_error (error,
                        GCAL_SOURCE_DISCOVERER_ERROR,

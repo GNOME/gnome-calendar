@@ -345,15 +345,15 @@ static gboolean
 validate_url_cb (gpointer data)
 {
   GcalNewCalendarPage *self = data;
-  g_autoptr (SoupURI) uri = NULL;
+  g_autoptr (GUri) guri = NULL;
 
   GCAL_ENTRY;
 
   self->validate_url_resource_id = 0;
 
-  uri = soup_uri_new (gtk_editable_get_text (GTK_EDITABLE (self->calendar_address_entry)));
+  guri = g_uri_parse (gtk_editable_get_text (GTK_EDITABLE (self->calendar_address_entry)), SOUP_HTTP_URI_FLAGS | G_URI_FLAGS_PARSE_RELAXED, NULL);
 
-  if (uri != NULL && SOUP_URI_IS_VALID (uri))
+  if (guri != NULL && g_uri_get_scheme (guri) && g_uri_get_host (guri))
     {
       discover_sources (self);
     }

@@ -166,19 +166,13 @@ setup_calendar (GcalEditCalendarPage *self,
   /* If it's remote, build the uri */
   if (is_remote)
     {
-      ESourceAuthentication *auth;
-      g_autoptr (SoupURI) soup = NULL;
+      g_autoptr (GUri) guri = NULL;
       g_autofree gchar *uri = NULL;
       ESourceWebdav *webdav;
 
-      auth = e_source_get_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION);
       webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-      soup = e_source_webdav_dup_soup_uri (webdav);
-      uri = g_strdup_printf ("%s://%s:%d%s",
-                             soup_uri_get_scheme (soup),
-                             e_source_authentication_get_host (auth),
-                             e_source_authentication_get_port (auth),
-                             e_source_webdav_get_resource_path (webdav));
+      guri = e_source_webdav_dup_uri (webdav);
+      uri = g_uri_to_string_partial (guri, G_URI_HIDE_PASSWORD);
 
       gtk_link_button_set_uri (GTK_LINK_BUTTON (self->calendar_url_button), uri);
       gtk_button_set_label (GTK_BUTTON (self->calendar_url_button), uri);

@@ -40,6 +40,6 @@ void                 gcal_simple_server_start                    (GcalSimpleServ
 
 void                 gcal_simple_server_stop                     (GcalSimpleServer   *self);
 
-SoupURI*             gcal_simple_server_get_uri                  (GcalSimpleServer   *self);
+GUri*                gcal_simple_server_get_uri                  (GcalSimpleServer   *self);
 
 G_END_DECLS

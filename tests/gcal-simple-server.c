@@ -30,7 +30,7 @@ struct _GcalSimpleServer
   GThread            *thread;
   GMainLoop          *thread_mainloop;
   SoupServer         *server;
-  gchar              *uri;
+  GUri               *uri;
 
   GMutex              running_mutex;
   GCond               running_cond;
@@ -45,7 +45,7 @@ G_DEFINE_TYPE (GcalSimpleServer, gcal_simple_server, G_TYPE_OBJECT)
  */
 
 static void
-process_get (SoupMessage *message,
+process_get (SoupServerMessage *message,
              const gchar *prefix,
              const gchar *path)
 {
@@ -55,16 +55,16 @@ process_get (SoupMessage *message,
   if (g_strcmp0 (path, calendar_path) == 0)
     {
       g_debug ("Serving empty calendar");
-      soup_message_set_response (message,
-                                 "text/calendar",
-                                 SOUP_MEMORY_STATIC,
-                                 GCAL_TEST_SERVER_EMPTY_CALENDAR,
-                                 strlen (GCAL_TEST_SERVER_EMPTY_CALENDAR));
+      soup_server_message_set_response (message,
+                                        "text/calendar",
+                                        SOUP_MEMORY_STATIC,
+                                        GCAL_TEST_SERVER_EMPTY_CALENDAR,
+                                        strlen (GCAL_TEST_SERVER_EMPTY_CALENDAR));
     }
 
   if (g_strcmp0 (path, calendar_file) == 0)
     {
-      g_autoptr (SoupBuffer) buffer = NULL;
+      g_autoptr (GBytes) bytes = NULL;
       GMappedFile *mapping;
 
       g_debug ("Serving calendar.ics");
@@ -72,20 +72,20 @@ process_get (SoupMessage *message,
       mapping = g_mapped_file_new (path, FALSE, NULL);
       if (!mapping)
         {
-          soup_message_set_status (message, SOUP_STATUS_INTERNAL_SERVER_ERROR);
+          soup_server_message_set_status (message, SOUP_STATUS_INTERNAL_SERVER_ERROR, NULL);
           return;
         }
 
-      buffer = soup_buffer_new_with_owner (g_mapped_file_get_contents (mapping),
-                                           g_mapped_file_get_length (mapping),
-                                           mapping,
-                                           (GDestroyNotify)g_mapped_file_unref);
-      soup_message_body_append_buffer (message->response_body, buffer);
+      bytes = g_bytes_new_with_free_func (g_mapped_file_get_contents (mapping),
+                                          g_mapped_file_get_length (mapping),
+                                          (GDestroyNotify)g_mapped_file_unref,
+                                          mapping);
+      soup_message_body_append_bytes (soup_server_message_get_response_body (message), bytes);
     }
 }
 
 static void
-process_caldav (SoupMessage *message,
+process_caldav (SoupServerMessage *message,
                 const gchar *path)
 {
   g_debug ("Processing CalDAV request");
@@ -108,46 +108,44 @@ idle_quit_server_cb (gpointer user_data)
 
 static void
 no_auth_handler_cb (SoupServer        *server,
-                    SoupMessage       *message,
+                    SoupServerMessage *message,
                     const gchar       *path,
                     GHashTable        *query,
-                    SoupClientContext *client,
                     gpointer           user_data)
 {
   g_debug ("No authenticaton needed");
 
-  if (message->method == SOUP_METHOD_GET)
+  if (g_strcmp0 (soup_server_message_get_method (message), SOUP_METHOD_GET) == 0)
     process_get (message, "/public", path);
-  else if (message->method == SOUP_METHOD_PROPFIND)
+  else if (g_strcmp0 (soup_server_message_get_method (message), SOUP_METHOD_PROPFIND) == 0)
     process_caldav (message, path);
   else
-    soup_message_set_status (message, SOUP_STATUS_NOT_IMPLEMENTED);
+    soup_server_message_set_status (message, SOUP_STATUS_NOT_IMPLEMENTED, NULL);
 }
 
 static void
 auth_handler_cb (SoupServer        *server,
-                 SoupMessage       *message,
+                 SoupServerMessage *message,
                  const gchar       *path,
                  GHashTable        *query,
-                 SoupClientContext *client,
                  gpointer           user_data)
 {
   g_debug ("Needs authenticaton");
 
-  if (message->method == SOUP_METHOD_GET)
+  if (g_strcmp0 (soup_server_message_get_method (message), SOUP_METHOD_GET) == 0)
     process_get (message, "/secret-area", path);
-  else if (message->method == SOUP_METHOD_PROPFIND)
+  else if (g_strcmp0 (soup_server_message_get_method (message), SOUP_METHOD_PROPFIND) == 0)
     process_caldav (message, path);
   else
-    soup_message_set_status (message, SOUP_STATUS_NOT_IMPLEMENTED);
+    soup_server_message_set_status (message, SOUP_STATUS_NOT_IMPLEMENTED, NULL);
 }
 
 static gboolean
-authorize_cb (SoupAuthDomain *domain,
-              SoupMessage    *message,
-              const char     *username,
-              const char     *password,
-              gpointer        user_data)
+authorize_cb (SoupAuthDomain    *domain,
+              SoupServerMessage *message,
+              const char        *username,
+              const char        *password,
+              gpointer           user_data)
 {
   const struct {
     const gchar *username;
@@ -183,7 +181,7 @@ run_server_in_thread (gpointer data)
   g_autoptr (GMainContext) context = NULL;
   g_autoptr (SoupServer) server = NULL;
   g_autoptr (GMainLoop) mainloop = NULL;
-  g_autoslist (SoupURI) uris = NULL;
+  g_autoslist (GUri) uris = NULL;
   g_autoptr (GError) error = NULL;
   GcalSimpleServer *self = data;
   g_autofree gchar *uri = NULL;
@@ -193,15 +191,15 @@ run_server_in_thread (gpointer data)
   mainloop = g_main_loop_new (context, FALSE);
   self->thread_mainloop = mainloop;
 
-  server = soup_server_new (SOUP_SERVER_SERVER_HEADER, "gcal-simple-server",
+  server = soup_server_new ("server-header", "gcal-simple-server",
                             NULL);
 
   /* Anything under /secret-area and /private requires authentication */
-  domain = soup_auth_domain_basic_new (SOUP_AUTH_DOMAIN_REALM, "GcalSimpleServer",
-                                       SOUP_AUTH_DOMAIN_BASIC_AUTH_CALLBACK, authorize_cb,
-                                       SOUP_AUTH_DOMAIN_BASIC_AUTH_DATA, self,
-                                       SOUP_AUTH_DOMAIN_ADD_PATH, "/secret-area",
+  domain = soup_auth_domain_basic_new ("realm", "GcalSimpleServer",
+                                       "auth-callback", authorize_cb,
+                                       "auth-data", self,
                                        NULL);
+  soup_auth_domain_add_path (domain, "/secret-area");
   soup_server_add_auth_domain (server, domain);
 
   soup_server_listen_local (server, 0, SOUP_SERVER_LISTEN_IPV4_ONLY, &error);
@@ -218,8 +216,8 @@ run_server_in_thread (gpointer data)
   uris = soup_server_get_uris (server);
   g_assert_cmpint (g_slist_length (uris), ==, 1);
 
-  uri = soup_uri_to_string (uris->data, FALSE);
-  self->uri = g_strdup (uri);
+  self->uri = g_uri_ref (uris->data);
+  uri = g_uri_to_string_partial (self->uri, G_URI_HIDE_PASSWORD);
 
   g_debug ("Listening on %s", uri);
 
@@ -252,7 +250,7 @@ gcal_simple_server_finalize (GObject *object)
   if (self->thread)
     gcal_simple_server_stop (self);
 
-  g_clear_pointer (&self->uri, g_free);
+  g_clear_pointer (&self->uri, g_uri_unref);
 
   G_OBJECT_CLASS (gcal_simple_server_parent_class)->finalize (object);
 }
@@ -299,6 +297,7 @@ void
 gcal_simple_server_stop (GcalSimpleServer *self)
 {
   GMainContext *context;
+  g_autoptr (GSource) source;
 
   g_return_if_fail (GCAL_IS_SIMPLE_SERVER (self));
 
@@ -309,7 +308,10 @@ gcal_simple_server_stop (GcalSimpleServer *self)
     }
 
   context = g_main_loop_get_context (self->thread_mainloop);
-  soup_add_completion (context, idle_quit_server_cb, self);
+  source = g_idle_source_new ();
+  g_source_set_priority (source, G_PRIORITY_DEFAULT);
+  g_source_set_callback (source, idle_quit_server_cb, self, NULL);
+  g_source_attach (source, context);
 
   g_mutex_lock (&self->running_mutex);
   self->running = FALSE;
@@ -320,11 +322,11 @@ gcal_simple_server_stop (GcalSimpleServer *self)
   self->thread = NULL;
 }
 
-SoupURI*
+GUri*
 gcal_simple_server_get_uri (GcalSimpleServer *self)
 {
   g_return_val_if_fail (GCAL_IS_SIMPLE_SERVER (self), NULL);
   g_return_val_if_fail (self->thread != NULL, NULL);
 
-  return soup_uri_new (self->uri);
+  return g_uri_ref (self->uri);
 }

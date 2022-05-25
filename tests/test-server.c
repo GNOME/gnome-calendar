@@ -19,6 +19,7 @@
  */
 
 #include <libsoup/soup.h>
+#include <libedataserver/libedataserver.h>
 
 #include "gcal-simple-server.h"
 
@@ -33,9 +34,8 @@ init_server (void)
   return g_steal_pointer (&server);
 }
 
-static void
-fail_authenticate_cb (SoupSession *session,
-                      SoupMessage *message,
+static gboolean
+fail_authenticate_cb (SoupMessage *message,
                       SoupAuth    *auth,
                       gboolean     retrying,
                       gpointer     user_data)
@@ -45,11 +45,12 @@ fail_authenticate_cb (SoupSession *session,
   gcal_simple_server_stop (server);
 
   g_assert_not_reached ();
+
+  return TRUE;
 }
 
-static void
-authenticate_cb (SoupSession *session,
-                 SoupMessage *message,
+static gboolean
+authenticate_cb (SoupMessage *message,
                  SoupAuth    *auth,
                  gboolean     retrying,
                  gpointer     user_data)
@@ -57,19 +58,24 @@ authenticate_cb (SoupSession *session,
   g_debug ("Authenticating...");
 
   soup_auth_authenticate (auth, "unicorn", "iamnotahorse");
+
+  return TRUE;
 }
 
-static void
-wrong_authenticate_cb (SoupSession *session,
-                       SoupMessage *message,
+static gboolean
+wrong_authenticate_cb (SoupMessage *message,
                        SoupAuth    *auth,
                        gboolean     retrying,
                        gpointer     user_data)
 {
   g_debug ("Authenticating with wrong username...");
 
-  if (!retrying)
-    soup_auth_authenticate (auth, "thyartismurder", "popmusic");
+  if (retrying)
+    return FALSE;
+
+  soup_auth_authenticate (auth, "thyartismurder", "popmusic");
+
+  return TRUE;
 }
 
 /*********************************************************************************************************************/
@@ -91,18 +97,20 @@ server_request_no_auth_empty (void)
   g_autoptr (GcalSimpleServer) server = NULL;
   g_autoptr (SoupMessage) message = NULL;
   g_autoptr (SoupSession) session = NULL;
-  g_autoptr (SoupURI) uri = NULL;
+  g_autoptr (GInputStream) input_stream = NULL;
+  g_autoptr (GUri) uri = NULL;
   g_autoptr (GError) error = NULL;
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
 
   session = soup_session_new ();
-  g_signal_connect (session, "authenticate", G_CALLBACK (fail_authenticate_cb), server);
 
   message = soup_message_new_from_uri ("GET", uri);
-  soup_session_send (session, message, NULL, &error);
+  g_signal_connect (message, "authenticate", G_CALLBACK (fail_authenticate_cb), server);
+  input_stream = soup_session_send (session, message, NULL, &error);
   g_assert_no_error (error);
+  g_assert_nonnull (input_stream);
 }
 
 /*********************************************************************************************************************/
@@ -113,19 +121,21 @@ server_request_no_auth_ics (void)
   g_autoptr (GcalSimpleServer) server = NULL;
   g_autoptr (SoupMessage) message = NULL;
   g_autoptr (SoupSession) session = NULL;
-  g_autoptr (SoupURI) uri = NULL;
+  g_autoptr (GInputStream) input_stream = NULL;
+  g_autoptr (GUri) uri = NULL;
   g_autoptr (GError) error = NULL;
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  soup_uri_set_path (uri, "/public/calendar.ics");
+  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/public/calendar.ics");
 
   session = soup_session_new ();
-  g_signal_connect (session, "authenticate", G_CALLBACK (fail_authenticate_cb), server);
 
   message = soup_message_new_from_uri ("GET", uri);
-  soup_session_send (session, message, NULL, &error);
+  g_signal_connect (message, "authenticate", G_CALLBACK (fail_authenticate_cb), server);
+  input_stream = soup_session_send (session, message, NULL, &error);
   g_assert_no_error (error);
+  g_assert_nonnull (input_stream);
 }
 
 /*********************************************************************************************************************/
@@ -136,19 +146,21 @@ server_request_no_auth_calendar (void)
   g_autoptr (GcalSimpleServer) server = NULL;
   g_autoptr (SoupMessage) message = NULL;
   g_autoptr (SoupSession) session = NULL;
-  g_autoptr (SoupURI) uri = NULL;
+  g_autoptr (GInputStream) input_stream = NULL;
+  g_autoptr (GUri) uri = NULL;
   g_autoptr (GError) error = NULL;
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  soup_uri_set_path (uri, "/public/calendar");
+  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/public/calendar");
 
   session = soup_session_new ();
-  g_signal_connect (session, "authenticate", G_CALLBACK (fail_authenticate_cb), server);
 
   message = soup_message_new_from_uri ("GET", uri);
-  soup_session_send (session, message, NULL, &error);
+  g_signal_connect (message, "authenticate", G_CALLBACK (fail_authenticate_cb), server);
+  input_stream = soup_session_send (session, message, NULL, &error);
   g_assert_no_error (error);
+  g_assert_nonnull (input_stream);
 }
 
 /*********************************************************************************************************************/
@@ -159,19 +171,21 @@ server_request_auth_empty (void)
   g_autoptr (GcalSimpleServer) server = NULL;
   g_autoptr (SoupMessage) message = NULL;
   g_autoptr (SoupSession) session = NULL;
-  g_autoptr (SoupURI) uri = NULL;
+  g_autoptr (GInputStream) input_stream = NULL;
+  g_autoptr (GUri) uri = NULL;
   g_autoptr (GError) error = NULL;
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  soup_uri_set_path (uri, "/secret-area");
+  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area");
 
   session = soup_session_new ();
-  g_signal_connect (session, "authenticate", G_CALLBACK (authenticate_cb), server);
 
   message = soup_message_new_from_uri ("GET", uri);
-  soup_session_send (session, message, NULL, &error);
+  g_signal_connect (message, "authenticate", G_CALLBACK (authenticate_cb), server);
+  input_stream = soup_session_send (session, message, NULL, &error);
   g_assert_no_error (error);
+  g_assert_nonnull (input_stream);
 }
 
 /*********************************************************************************************************************/
@@ -182,19 +196,21 @@ server_request_auth_calendar (void)
   g_autoptr (GcalSimpleServer) server = NULL;
   g_autoptr (SoupMessage) message = NULL;
   g_autoptr (SoupSession) session = NULL;
-  g_autoptr (SoupURI) uri = NULL;
+  g_autoptr (GInputStream) input_stream = NULL;
+  g_autoptr (GUri) uri = NULL;
   g_autoptr (GError) error = NULL;
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  soup_uri_set_path (uri, "/secret-area/calendar");
+  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area/calendar");
 
   session = soup_session_new ();
-  g_signal_connect (session, "authenticate", G_CALLBACK (authenticate_cb), server);
 
   message = soup_message_new_from_uri ("GET", uri);
-  soup_session_send (session, message, NULL, &error);
+  g_signal_connect (message, "authenticate", G_CALLBACK (authenticate_cb), server);
+  input_stream = soup_session_send (session, message, NULL, &error);
   g_assert_no_error (error);
+  g_assert_nonnull (input_stream);
 }
 
 /*********************************************************************************************************************/
@@ -205,19 +221,21 @@ server_request_auth_ics (void)
   g_autoptr (GcalSimpleServer) server = NULL;
   g_autoptr (SoupMessage) message = NULL;
   g_autoptr (SoupSession) session = NULL;
-  g_autoptr (SoupURI) uri = NULL;
+  g_autoptr (GInputStream) input_stream = NULL;
+  g_autoptr (GUri) uri = NULL;
   g_autoptr (GError) error = NULL;
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  soup_uri_set_path (uri, "/secret-area/calendar.ics");
+  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area/calendar.ics");
 
   session = soup_session_new ();
-  g_signal_connect (session, "authenticate", G_CALLBACK (authenticate_cb), server);
 
   message = soup_message_new_from_uri ("GET", uri);
-  soup_session_send (session, message, NULL, &error);
+  g_signal_connect (message, "authenticate", G_CALLBACK (authenticate_cb), server);
+  input_stream = soup_session_send (session, message, NULL, &error);
   g_assert_no_error (error);
+  g_assert_nonnull (input_stream);
 }
 
 /*********************************************************************************************************************/
@@ -228,20 +246,23 @@ server_request_auth_wrong (void)
   g_autoptr (GcalSimpleServer) server = NULL;
   g_autoptr (SoupMessage) message = NULL;
   g_autoptr (SoupSession) session = NULL;
-  g_autoptr (SoupURI) uri = NULL;
+  g_autoptr (GInputStream) input_stream = NULL;
+  g_autoptr (GUri) uri = NULL;
   g_autoptr (GError) error = NULL;
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  soup_uri_set_path (uri, "/secret-area");
+  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area");
 
   session = soup_session_new ();
-  g_signal_connect (session, "authenticate", G_CALLBACK (wrong_authenticate_cb), server);
 
   message = soup_message_new_from_uri ("GET", uri);
-  soup_session_send (session, message, NULL, &error);
+  g_signal_connect (message, "authenticate", G_CALLBACK (wrong_authenticate_cb), server);
+
+  input_stream = soup_session_send (session, message, NULL, &error);
   g_assert_no_error (error);
-  g_assert_cmpuint (message->status_code, ==, SOUP_STATUS_UNAUTHORIZED);
+  g_assert_nonnull (input_stream);
+  g_assert_cmpuint (soup_message_get_status (message), ==, SOUP_STATUS_UNAUTHORIZED);
 }
 
 /*********************************************************************************************************************/

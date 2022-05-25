@@ -61,7 +61,8 @@
             "config-opts" : [
                 "-Denable-gtk-doc=false",
                 "-Denable-introspection=false",
-                "-Denable-installed-tests=false"
+                "-Denable-installed-tests=false",
+                "-Dsoup2=false"
             ],
             "sources" : [
                 {
@@ -76,7 +77,8 @@
             "config-opts" : [
                 "-Dglade_catalog=false",
                 "-Denable_vala=false",
-                "-Dgtk_doc=false"
+                "-Dgtk_doc=false",
+                "-Dsoup2=false"
             ],
             "sources" : [
                 {

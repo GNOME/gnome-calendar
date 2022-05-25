@@ -430,14 +430,14 @@ add_meeting (GcalEventPopover *self,
 static void
 setup_location_label (GcalEventPopover *self)
 {
-  g_autoptr (SoupURI) soup_uri = NULL;
+  g_autoptr (GUri) guri = NULL;
   g_autofree gchar *location = NULL;
 
   location = g_strdup (gcal_event_get_location (self->event));
   g_strstrip (location);
 
-  soup_uri = soup_uri_new (location);
-  if (soup_uri)
+  guri = g_uri_parse (location, SOUP_HTTP_URI_FLAGS | G_URI_FLAGS_PARSE_RELAXED, NULL);
+  if (guri)
     {
       GString *string;
 
