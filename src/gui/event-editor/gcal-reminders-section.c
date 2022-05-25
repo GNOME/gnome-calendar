@@ -196,7 +196,7 @@ setup_alarms (GcalRemindersSection *self)
 
       for (j = 0; j < G_N_ELEMENTS (minutes_button); j++)
         {
-          if (minutes_button[i].minutes == minutes)
+          if (minutes_button[j].minutes == minutes)
             gtk_widget_set_sensitive (WIDGET_FROM_OFFSET (minutes_button[j].button_offset), FALSE);
         }
 
