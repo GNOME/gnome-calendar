@@ -223,6 +223,8 @@ discover_file_in_thread (DiscovererData  *data,
   GCAL_ENTRY;
 
   uri = soup_uri_new (data->uri);
+  if (!uri)
+    GCAL_RETURN (NULL);
 
   if (g_strcmp0 (soup_uri_get_scheme (uri), "webcal") == 0)
     soup_uri_set_scheme (uri, SOUP_URI_SCHEME_HTTPS);
