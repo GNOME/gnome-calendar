@@ -152,7 +152,6 @@ struct _GcalWindow
   gint                click_outside_handler_id;
 
   /* CSS */
-  GtkCssProvider     *provider;
   GtkCssProvider     *colors_provider;
 
   /* Window states */
@@ -300,36 +299,15 @@ recalculate_calendar_colors_css (GcalWindow *self)
 static void
 load_css_providers (GcalWindow *self)
 {
-  g_autoptr (GFile) css_file = NULL;
-  g_autofree gchar *theme_name = NULL;
-  g_autofree gchar *theme_uri = NULL;
   GdkDisplay *display;
 
   display = gtk_widget_get_display (GTK_WIDGET (self));
-
-  /* Theme */
-  self->provider = gtk_css_provider_new ();
-  gtk_style_context_add_provider_for_display (display,
-                                              GTK_STYLE_PROVIDER (self->provider),
-                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
-
-  /* Retrieve the theme name */
-  g_object_get (gtk_settings_get_default (), "gtk-theme-name", &theme_name, NULL);
-  theme_uri = g_strconcat ("resource:///org/gnome/calendar/theme/", theme_name, ".css", NULL);
-
-  /* Try and load the CSS file */
-  css_file = g_file_new_for_uri (theme_uri);
-
-  if (g_file_query_exists (css_file, NULL))
-    gtk_css_provider_load_from_file (self->provider, css_file);
-  else
-    gtk_css_provider_load_from_resource (self->provider, "/org/gnome/calendar/theme/Adwaita.css");
 
   /* Calendar olors */
   self->colors_provider = gtk_css_provider_new ();
   gtk_style_context_add_provider_for_display (display,
                                               GTK_STYLE_PROVIDER (self->colors_provider),
-                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
+                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
 }
 
 
@@ -795,7 +773,6 @@ gcal_window_finalize (GObject *object)
   gcal_clear_date_time (&window->active_date);
 
   g_clear_object (&window->colors_provider);
-  g_clear_object (&window->provider);
 
   G_OBJECT_CLASS (gcal_window_parent_class)->finalize (object);
 
