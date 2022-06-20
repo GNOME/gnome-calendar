@@ -20,10 +20,25 @@
       </object>
     </child>
 
+    <child>
+      <object class="GtkBox">
+        <property name="hexpand">False</property>
+        <child>
+          <object class="AdwBin" id="edge">
+            <style>
+              <class name="edge" />
+            </style>
+          </object>
+        </child>
+
     <!-- Overflow Bin -->
     <child>
       <object class="GcalOverflowBin">
+        <property name="hexpand">True</property>
         <property name="request-mode">width-for-height</property>
+        <style>
+          <class name="content" />
+        </style>
 
         <!-- Main Stack -->
         <child>
@@ -73,17 +88,6 @@
               <object class="GtkBox" id="horizontal_box">
                 <property name="spacing">4</property>
                 <child>
-                  <object class="GtkBox" id="color_box">
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="width-request">16</property>
-                    <property name="height-request">16</property>
-                    <style>
-                      <class name="icon-box" />
-                    </style>
-                  </object>
-                </child>
-                <child>
                   <object class="GtkLabel"  id="summary_label">
                     <property name="hexpand">True</property>
                     <property name="xalign">0.0</property>
@@ -102,6 +106,8 @@
 
           </object>
         </child>
+      </object>
+    </child>
       </object>
     </child>
   </template>

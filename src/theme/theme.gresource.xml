@@ -2,5 +2,6 @@
 <gresources>
   <gresource prefix="/org/gnome/calendar">
     <file>style.css</file>
+    <file>style-dark.css</file>
   </gresource>
 </gresources>

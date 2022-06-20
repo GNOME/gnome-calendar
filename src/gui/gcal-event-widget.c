@@ -51,7 +51,6 @@ struct _GcalEventWidget
   GDateTime          *dt_end;
 
   /* widgets */
-  GtkWidget          *color_box;
   GtkWidget          *horizontal_box;
   GtkWidget          *timestamp_label;
   GtkWidget          *squeezer;
@@ -169,8 +168,6 @@ gcal_event_widget_update_style (GcalEventWidget *self)
    * from all-day or multi-day events.
    */
   timed = !gcal_event_get_all_day (self->event) && !gcal_event_is_multiday (self->event);
-
-  gtk_widget_set_visible (self->color_box, timed && self->orientation == GTK_ORIENTATION_HORIZONTAL);
 
   if (timed)
     gtk_widget_add_css_class (GTK_WIDGET (self), "timed");
@@ -760,7 +757,6 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-event-widget.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, color_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, drag_source);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, horizontal_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, timestamp_label);
