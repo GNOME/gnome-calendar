@@ -94,6 +94,16 @@ compare_search_hits_cb (gconstpointer a,
   return gcal_search_hit_compare (hit_a, hit_b);
 }
 
+static gboolean
+search_hits_equals_cb (gconstpointer a,
+                       gconstpointer b)
+{
+  GcalSearchHit *search_hit_a = GCAL_SEARCH_HIT ((gpointer) a);
+  GcalSearchHit *search_hit_b = GCAL_SEARCH_HIT ((gpointer) b);
+
+  return gcal_search_hit_compare (search_hit_a, search_hit_b) == 0;
+}
+
 static GcalRange*
 gcal_search_model_get_range (GcalTimelineSubscriber *subscriber)
 {
@@ -108,6 +118,7 @@ gcal_search_model_add_event (GcalTimelineSubscriber *subscriber,
 {
   g_autoptr (GcalSearchHitEvent) search_hit = NULL;
   GcalSearchModel *self;
+  guint position = -1;
 
   self = GCAL_SEARCH_MODEL (subscriber);
 
@@ -117,6 +128,14 @@ gcal_search_model_add_event (GcalTimelineSubscriber *subscriber,
   GCAL_TRACE_MSG ("Adding search hit '%s'", gcal_event_get_summary (event));
 
   search_hit = gcal_search_hit_event_new (event);
+
+  g_list_store_find_with_equal_func (G_LIST_STORE (self->model),
+                                     search_hit,
+                                     search_hits_equals_cb,
+                                     &position);
+
+  if (position != -1)
+    return;
 
   g_list_store_insert_sorted (G_LIST_STORE (self->model),
                               search_hit,
