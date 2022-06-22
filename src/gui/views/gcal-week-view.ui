@@ -14,14 +14,22 @@
       <object class="GtkScrolledWindow" id="scrolled_window">
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
+
+        <!-- Zoom Gesture -->
+        <child>
+          <object class="GtkGestureZoom">
+            <signal name="scale-changed" handler="on_zoom_gesture_scale_changed_cb" object="GcalWeekView" swapped="yes" />
+            <signal name="begin" handler="on_zoom_gesture_begin_cb" object="GcalWeekView" swapped="yes" />
+          </object>
+        </child>
+
         <child>
           <object class="GtkViewport">
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="content">
                 <property name="orientation">horizontal</property>
                 <child>
                   <object class="GcalWeekHourBar" id="hours_bar">
-                    <property name="height-request">2568</property>
                   </object>
                 </child>
                 <child>

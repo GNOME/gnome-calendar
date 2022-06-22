@@ -38,6 +38,7 @@ struct _GcalWeekView
 {
   GtkBox              parent;
 
+  GtkWidget          *content;
   GtkWidget          *header;
   GcalWeekHourBar    *hours_bar;
   GtkWidget          *scrolled_window;
@@ -51,6 +52,9 @@ struct _GcalWeekView
   gulong              stack_page_changed_id;
 
   gint                clicked_cell;
+
+  gdouble             gesture_zoom_center;
+  gint                gesture_zoom_initial_height;
 };
 
 static void          schedule_position_scroll                    (GcalWeekView       *self);
@@ -73,12 +77,59 @@ G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
                                                 gcal_timeline_subscriber_interface_init));
 
+/* 60px * ⅓ * 48 rows + 1px * 47 lines = 1007px */
+#define HEIGHT_MIN 1007
+/* 60px * 1 * 48 rows + 1px * 47 lines = 2927px */
+#define HEIGHT_DEFAULT 2927
+/* 60px * 3 * 48 rows + 1px * 47 lines = 8687px */
+#define HEIGHT_MAX 8687
+
 /* Callbacks */
 static void
 on_event_activated (GcalWeekView *self,
                     GtkWidget    *widget)
 {
   g_signal_emit_by_name (self, "event-activated", widget);
+}
+
+static void
+on_zoom_gesture_scale_changed_cb (GcalWeekView   *self,
+                                  gdouble         scale,
+                                  GtkGestureZoom *gesture)
+{
+  GtkAdjustment *vadjustment;
+  gdouble view_center_x, view_center_y;
+  gdouble height;
+
+  gtk_gesture_get_bounding_box_center (GTK_GESTURE (gesture), &view_center_x, &view_center_y);
+  vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));
+
+  height = self->gesture_zoom_initial_height * scale;
+  height = CLAMP (height, HEIGHT_MIN, HEIGHT_MAX);
+
+  gtk_widget_set_size_request (self->content, -1, height);
+  gtk_adjustment_set_lower (vadjustment, 0);
+  gtk_adjustment_set_upper (vadjustment, height);
+  gtk_adjustment_set_value (vadjustment, (self->gesture_zoom_center * height) - view_center_y);
+}
+
+static void
+on_zoom_gesture_begin_cb (GcalWeekView     *self,
+                          GdkEventSequence *sequence,
+                          GtkGesture       *gesture)
+{
+  GtkAdjustment *vadjustment;
+  gdouble view_center_x, view_center_y;
+  gdouble center, height;
+
+  gtk_gesture_get_bounding_box_center (gesture, &view_center_x, &view_center_y);
+  vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));
+
+  center = gtk_adjustment_get_value (vadjustment) + view_center_y - gtk_adjustment_get_lower (vadjustment);
+  height = gtk_adjustment_get_upper (vadjustment) - gtk_adjustment_get_lower (vadjustment);
+
+  self->gesture_zoom_center = center / height;
+  self->gesture_zoom_initial_height = gtk_widget_get_allocated_height (self->content);
 }
 
 static void
@@ -424,12 +475,15 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-week-view.ui");
 
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, content);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, header);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, hours_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, scrolled_window);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, week_grid);
 
   gtk_widget_class_bind_template_callback (widget_class, on_event_activated);
+  gtk_widget_class_bind_template_callback (widget_class, on_zoom_gesture_scale_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_zoom_gesture_begin_cb);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
@@ -440,6 +494,8 @@ gcal_week_view_init (GcalWeekView *self)
   GtkSizeGroup *size_group;
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  gtk_widget_set_size_request (self->content, -1, HEIGHT_DEFAULT);
 
   size_group = gcal_week_header_get_sidebar_size_group (GCAL_WEEK_HEADER (self->header));
   gtk_size_group_add_widget (size_group, GTK_WIDGET (self->hours_bar));
