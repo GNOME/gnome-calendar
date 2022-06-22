@@ -274,9 +274,6 @@
       <pattern>*.ifb</pattern>
       <pattern>*.vcs</pattern>
     </patterns>
-    <mime-types>
-      <mime-type>text/calendar</mime-type>
-    </mime-types>
   </object>
 
   <!-- Headerbar buttons -->
