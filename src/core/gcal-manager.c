@@ -26,7 +26,7 @@
 #include "gcal-timeline-subscriber.h"
 #include "gcal-utils.h"
 
-//#include <libedataserverui/libedataserverui.h>
+#include <libedataserverui4/libedataserverui4.h>
 
 /**
  * SECTION:gcal-manager
@@ -67,7 +67,7 @@ struct _GcalManager
   GListStore         *calendars_model;
 
   ESourceRegistry    *source_registry;
-  //ECredentialsPrompter *credentials_prompter;
+  ECredentialsPrompter *credentials_prompter;
 
   GCancellable       *async_ops;
 
@@ -437,8 +437,6 @@ on_event_removed (GObject      *source_object,
   GCAL_EXIT;
 }
 
-#if 0 /* libedataserverui */
-
 static void
 show_source_error (const gchar  *where,
                    const gchar  *what,
@@ -580,8 +578,6 @@ source_get_last_credentials_required_arguments_cb (GObject      *source_object,
 
   GCAL_EXIT;
 }
-
-#endif /* libedataserverui */
 
 static void
 gcal_manager_finalize (GObject *object)
@@ -1260,6 +1256,7 @@ gcal_manager_get_synchronizing (GcalManager *self)
 void
 gcal_manager_startup (GcalManager *self)
 {
+  ESourceCredentialsProvider *credentials_provider;
   GList *sources, *l;
   GError *error = NULL;
 
@@ -1290,9 +1287,6 @@ gcal_manager_startup (GcalManager *self)
                                NULL,
                                self,
                                NULL);
-
-#if 0 /* libedataserverui */
-  ESourceCredentialsProvider *credentials_provider;
 
   self->credentials_prompter = e_credentials_prompter_new (self->source_registry);
 
@@ -1357,8 +1351,6 @@ gcal_manager_startup (GcalManager *self)
   g_signal_connect_object (self->source_registry, "credentials-required", G_CALLBACK (source_credentials_required_cb), self, 0);
 
   e_credentials_prompter_process_awaiting_credentials (self->credentials_prompter);
-
-#endif /* libedataserverui */
 
   g_signal_connect_object (self->source_registry, "source-added", G_CALLBACK (load_source), self, G_CONNECT_SWAPPED);
   g_signal_connect_object (self->source_registry, "source-removed", G_CALLBACK (remove_source), self, G_CONNECT_SWAPPED);

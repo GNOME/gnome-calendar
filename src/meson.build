@@ -3,7 +3,7 @@ src_inc = include_directories('.')
 gcal_deps = [
   libadwaita_dep,
   gsettings_desktop_schemas_dep,
-  #libedataserverui_dep,
+  libedataserverui_dep,
   libedataserver_dep,
   libecal_dep,
   libsoup_dep,
