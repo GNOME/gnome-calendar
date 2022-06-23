@@ -188,7 +188,10 @@ update_color (GcalEventWidget *self)
   date_compare = g_date_time_compare (self->dt_end, now);
 
   /* Fades out an event that's earlier than the current date */
-  gtk_widget_set_opacity (GTK_WIDGET (self), date_compare < 0 ? 0.6 : 1.0);
+  if (date_compare < 0)
+    gtk_widget_add_css_class (GTK_WIDGET (self), "dim-label");
+  else
+    gtk_widget_remove_css_class (GTK_WIDGET (self), "dim-label");
 
   /* Remove the old style class */
   if (self->css_class)
