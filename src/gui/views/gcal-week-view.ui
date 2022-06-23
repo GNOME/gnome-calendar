@@ -23,6 +23,26 @@
           </object>
         </child>
 
+        <!-- Scroll Event Controller -->
+        <child>
+          <object class="GtkEventControllerScroll">
+            <property name="propagation-phase">capture</property>
+            <property name="flags">vertical|kinetic</property>
+            <signal name="scroll" handler="on_scroll_controller_scroll_begin_cb" object="GcalWeekView" swapped="yes" />
+            <signal name="scroll" handler="on_scroll_controller_scroll_cb" object="GcalWeekView" swapped="yes" />
+          </object>
+        </child>
+
+        <!-- Motion Event Controller -->
+        <child>
+          <object class="GtkEventControllerMotion">
+            <property name="propagation-phase">capture</property>
+            <signal name="enter" handler="on_motion_controller_enter_cb" object="GcalWeekView" swapped="yes" />
+            <signal name="motion" handler="on_motion_controller_motion_cb" object="GcalWeekView" swapped="yes" />
+            <signal name="leave" handler="on_motion_controller_leave_cb" object="GcalWeekView" swapped="yes" />
+          </object>
+        </child>
+
         <child>
           <object class="GtkViewport">
             <child>

@@ -55,6 +55,10 @@ struct _GcalWeekView
 
   gdouble             gesture_zoom_center;
   gint                gesture_zoom_initial_height;
+
+  gboolean            pointer_position_valid;
+  gdouble             pointer_position_y;
+  gdouble             scroll_scale;
 };
 
 static void          schedule_position_scroll                    (GcalWeekView       *self);
@@ -125,6 +129,73 @@ apply_zoom (GcalWeekView *self,
   gtk_adjustment_set_lower (vadjustment, 0);
   gtk_adjustment_set_upper (vadjustment, height);
   gtk_adjustment_set_value (vadjustment, (self->gesture_zoom_center * height) - view_center_y);
+}
+
+static void
+on_motion_controller_enter_cb (GcalWeekView             *self,
+                               gdouble                   x,
+                               gdouble                   y,
+                               GtkEventControllerMotion *controller)
+{
+  self->pointer_position_valid = TRUE;
+  self->pointer_position_y = y;
+}
+
+static void
+on_motion_controller_motion_cb (GcalWeekView             *self,
+                               gdouble                   x,
+                               gdouble                   y,
+                               GtkEventControllerMotion *controller)
+{
+  self->pointer_position_valid = TRUE;
+  self->pointer_position_y = y;
+}
+
+static void
+on_motion_controller_leave_cb (GcalWeekView             *self,
+                               GtkEventControllerMotion *controller)
+{
+  self->pointer_position_valid = FALSE;
+}
+
+static void
+on_scroll_controller_scroll_begin_cb (GcalWeekView             *self,
+                                      GtkEventControllerScroll *controller)
+{
+  gdouble view_center_y;
+
+  self->scroll_scale = 1.0;
+
+  if (self->pointer_position_valid)
+    view_center_y = self->pointer_position_y;
+  else
+    view_center_y = gtk_widget_get_allocated_height (self->scrolled_window) / 2.0;
+
+  begin_zoom (self, view_center_y);
+}
+
+static gboolean
+on_scroll_controller_scroll_cb (GcalWeekView             *self,
+                                gdouble                   dx,
+                                gdouble                   dy,
+                                GtkEventControllerScroll *controller)
+{
+  gdouble scale, view_center_y;
+
+  if (!(gtk_event_controller_get_current_event_state (GTK_EVENT_CONTROLLER (controller)) & GDK_CONTROL_MASK))
+    return FALSE;
+
+  scale = dy / 100.0 + self->scroll_scale;
+
+  if (self->pointer_position_valid)
+    view_center_y = self->pointer_position_y;
+  else
+    view_center_y = gtk_widget_get_allocated_height (self->scrolled_window) / 2.0;
+
+  begin_zoom (self, view_center_y);
+  apply_zoom (self, view_center_y, scale);
+
+  return TRUE;
 }
 
 static void
@@ -501,6 +572,11 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, week_grid);
 
   gtk_widget_class_bind_template_callback (widget_class, on_event_activated);
+  gtk_widget_class_bind_template_callback (widget_class, on_motion_controller_enter_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_motion_controller_motion_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_motion_controller_leave_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_scroll_begin_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_scroll_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_zoom_gesture_scale_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_zoom_gesture_begin_cb);
 
