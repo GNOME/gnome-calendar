@@ -93,15 +93,29 @@ on_event_activated (GcalWeekView *self,
 }
 
 static void
-on_zoom_gesture_scale_changed_cb (GcalWeekView   *self,
-                                  gdouble         scale,
-                                  GtkGestureZoom *gesture)
+begin_zoom (GcalWeekView *self,
+            gdouble       view_center_y)
 {
   GtkAdjustment *vadjustment;
-  gdouble view_center_x, view_center_y;
+  gdouble center, height;
+
+  vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));
+
+  center = gtk_adjustment_get_value (vadjustment) + view_center_y - gtk_adjustment_get_lower (vadjustment);
+  height = gtk_adjustment_get_upper (vadjustment) - gtk_adjustment_get_lower (vadjustment);
+
+  self->gesture_zoom_center = center / height;
+  self->gesture_zoom_initial_height = gtk_widget_get_allocated_height (self->content);
+}
+
+static void
+apply_zoom (GcalWeekView *self,
+            gdouble       view_center_y,
+            gdouble       scale)
+{
+  GtkAdjustment *vadjustment;
   gdouble height;
 
-  gtk_gesture_get_bounding_box_center (GTK_GESTURE (gesture), &view_center_x, &view_center_y);
   vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));
 
   height = self->gesture_zoom_initial_height * scale;
@@ -114,22 +128,27 @@ on_zoom_gesture_scale_changed_cb (GcalWeekView   *self,
 }
 
 static void
+on_zoom_gesture_scale_changed_cb (GcalWeekView   *self,
+                                  gdouble         scale,
+                                  GtkGestureZoom *gesture)
+{
+  gdouble view_center_x, view_center_y;
+
+  gtk_gesture_get_bounding_box_center (GTK_GESTURE (gesture), &view_center_x, &view_center_y);
+
+  apply_zoom (self, view_center_y, scale);
+}
+
+static void
 on_zoom_gesture_begin_cb (GcalWeekView     *self,
                           GdkEventSequence *sequence,
                           GtkGesture       *gesture)
 {
-  GtkAdjustment *vadjustment;
   gdouble view_center_x, view_center_y;
-  gdouble center, height;
 
   gtk_gesture_get_bounding_box_center (gesture, &view_center_x, &view_center_y);
-  vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));
 
-  center = gtk_adjustment_get_value (vadjustment) + view_center_y - gtk_adjustment_get_lower (vadjustment);
-  height = gtk_adjustment_get_upper (vadjustment) - gtk_adjustment_get_lower (vadjustment);
-
-  self->gesture_zoom_center = center / height;
-  self->gesture_zoom_initial_height = gtk_widget_get_allocated_height (self->content);
+  begin_zoom (self, view_center_y);
 }
 
 static void
