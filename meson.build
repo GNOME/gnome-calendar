@@ -169,7 +169,7 @@ gtk_dep = dependency('gtk4', version: '>= 4.6.0')
 gio_dep = dependency('gio-2.0', version: '>= 2.58.0')
 gweather_dep = dependency('gweather4')
 geoclue_dep = dependency('libgeoclue-2.0', version: '>=2.4')
-geocode_dep = dependency('geocode-glib-1.0', version: '>=3.23')
+geocode_dep = dependency('geocode-glib-2.0', version: '>=3.26.3')
 m_dep = cc.find_library('m')
 
 gnome = import('gnome')
