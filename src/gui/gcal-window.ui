@@ -98,14 +98,15 @@
     <child>
       <object class="AdwToastOverlay" id="overlay">
         <child>
-          <object class="GtkBox" id="box">
+          <object class="AdwLeaflet" id="leaflet">
+            <property name="homogeneous">False</property>
             <child>
               <object class="GtkBox">
                 <property name="hexpand">False</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="AdwHeaderBar">
-                    <property name="show-end-title-buttons">False</property>
+                    <property name="show-end-title-buttons" bind-source="leaflet" bind-property="folded" bind-flags="sync-create"/>
                     <property name="title-widget">
                       <object class="GcalCalendarButton" id="calendars_button" />
                     </property>
@@ -145,7 +146,12 @@
               </object>
             </child>
             <child>
-              <object class="GtkSeparator"/>
+              <object class="AdwLeafletPage">
+                <property name="navigatable">True</property>
+                <property name="child">
+                  <object class="GtkSeparator"/>
+                </property>
+              </object>
             </child>
             <child>
               <object class="GtkBox">
