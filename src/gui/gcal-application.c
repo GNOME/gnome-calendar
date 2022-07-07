@@ -138,28 +138,11 @@ static gchar*
 build_about_copyright (GcalApplication *self)
 {
   g_autoptr (GDateTime) dt = NULL;
-  GcalWeatherService *weather_service;
-  const gchar *attribution;
-  GString *builder;
 
-  builder = g_string_new ("<span size=\"small\">");
   dt = g_date_time_new_now_local ();
 
-  /* Build string: */
-  g_string_append_printf (builder,
-                         _("Copyright \xC2\xA9 2012\xE2\x80\x93%d " "The Calendar authors"),
-                          g_date_time_get_year (dt));
-
-  weather_service = gcal_context_get_weather_service (self->context);
-  attribution = gcal_weather_service_get_attribution (weather_service);
-  if (attribution)
-    {
-      g_string_append_c (builder, '\n');
-      g_string_append (builder, attribution);
-    }
-  g_string_append (builder, "</span>");
-
-  return g_string_free (builder, FALSE);
+  return g_strdup_printf(_("Copyright \xC2\xA9 2012\xE2\x80\x93%d The Calendar authors"),
+                         g_date_time_get_year (dt));
 }
 
 static void
@@ -167,19 +150,18 @@ gcal_application_show_about (GSimpleAction *simple,
                              GVariant      *parameter,
                              gpointer       user_data)
 {
+  GcalWeatherService *weather_service;
   GcalApplication *self;
-  GtkWidget *dialog;
-  GtkLabel *copyright_label;
-  g_autofree gchar *program_name = NULL;
+  GtkWidget *about;
   g_autofree gchar *copyright = NULL;
 
-  const gchar *authors[] = {
+  const gchar *developers[] = {
     "Erick Pérez Castellanos <erickpc@gnome.org>",
     "Georges Basile Stavracas Neto <georges.stavracas@gmail.com>",
     "Isaque Galdino <igaldino@gmail.com>",
     NULL
   };
-  const gchar *artists[] = {
+  const gchar *designers[] = {
     "Jakub Steiner <jimmac@gmail.com>",
     "Lapo Calamandrei <calamandrei@gmail.com>",
     "Reda Lazri <the.red.shortcut@gmail.com>",
@@ -187,30 +169,33 @@ gcal_application_show_about (GSimpleAction *simple,
     NULL
   };
 
-
   self = GCAL_APPLICATION (user_data);
 
-  program_name = g_strconcat (_("Calendar"), NAME_SUFFIX, NULL);
-  dialog = g_object_new (GTK_TYPE_ABOUT_DIALOG,
-                         "transient-for", GTK_WINDOW (self->window),
-                         "modal", TRUE,
-                         "destroy-with-parent", TRUE,
-                         "program-name", program_name,
-                         "version", VERSION,
-                         "license-type", GTK_LICENSE_GPL_3_0,
-                         "authors", authors,
-                         "artists", artists,
-                         "logo-icon-name", APPLICATION_ID,
-                         "translator-credits", _("translator-credits"),
-                         NULL);
-
   copyright = build_about_copyright (self);
-  copyright_label = GTK_LABEL (gtk_widget_get_template_child (GTK_WIDGET (dialog),
-                                                              GTK_TYPE_ABOUT_DIALOG,
-                                                              "copyright_label"));
-  gtk_label_set_markup (copyright_label, copyright);
 
-  gtk_window_present (GTK_WINDOW (dialog));
+  about = g_object_new (ADW_TYPE_ABOUT_WINDOW,
+                        "transient-for", GTK_WINDOW (self->window),
+                        "application-name", _("Calendar"),
+                        "application-icon", APPLICATION_ID,
+                        "developer-name", _("The GNOME Project"),
+                        "version", VERSION,
+                        "copyright", copyright,
+                        "website", "https://wiki.gnome.org/Apps/Calendar",
+                        "issue-url", "https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/new",
+                        "license-type", GTK_LICENSE_GPL_3_0,
+                        "developers", developers,
+                        "designers", designers,
+                        "translator-credits", _("translator-credits"),
+                        NULL);
+
+  weather_service = gcal_context_get_weather_service (self->context);
+  adw_about_window_add_legal_section (ADW_ABOUT_WINDOW (about),
+                                      _("Weather"),
+                                      NULL,
+                                      GTK_LICENSE_CUSTOM,
+                                      gcal_weather_service_get_attribution (weather_service));
+
+  gtk_window_present (GTK_WINDOW (about));
 }
 
 static void
