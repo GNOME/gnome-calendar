@@ -52,27 +52,6 @@ enum
 };
 
 /*
- * Auxiliary methods
- */
-
-static void
-make_entry_expandable (GtkEditable *entry)
-{
-  GtkWidget *child;
-
-  for (child = gtk_widget_get_first_child (GTK_WIDGET (entry));
-       child;
-       child = gtk_widget_get_next_sibling (child))
-    {
-      if (!GTK_IS_TEXT (child))
-        continue;
-
-      gtk_text_set_propagate_text_width (GTK_TEXT (child), TRUE);
-    }
-}
-
-
-/*
  * GcalEventEditorSection interface
  */
 
@@ -204,7 +183,4 @@ static void
 gcal_summary_section_init (GcalSummarySection *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
-
-  make_entry_expandable (self->location_entry);
-  make_entry_expandable (self->summary_entry);
 }

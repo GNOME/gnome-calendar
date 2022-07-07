@@ -12,37 +12,23 @@
 
         <!-- Summary -->
         <child>
-          <object class="AdwActionRow">
+          <object class="AdwEntryRow" id="summary_entry">
             <property name="title" translatable="yes">Title</property>
-            <property name="activatable-widget">summary_entry</property>
-
-            <child>
-              <object class="GtkEntry" id="summary_entry">
-                <property name="hexpand">True</property>
-                <property name="halign">end</property>
-                <property name="valign">center</property>
-                <property name="width-chars">20</property>
-                <property name="max-width-chars">30</property>
-              </object>
-            </child>
-
           </object>
         </child>
 
         <!-- Location -->
         <child>
-          <object class="AdwActionRow">
+          <object class="AdwEntryRow" id="location_entry">
             <property name="title" translatable="yes">Location</property>
-            <property name="activatable-widget">location_entry</property>
 
-            <child>
-              <object class="GtkEntry" id="location_entry">
-                <property name="hexpand">True</property>
-                <property name="halign">end</property>
+            <child type="suffix">
+              <object class="GtkButton">
                 <property name="valign">center</property>
-                <property name="width-chars">20</property>
-                <property name="max-width-chars">30</property>
-                <property name="secondary_icon_name">find-location-symbolic</property>
+                <property name="icon-name">find-location-symbolic</property>
+                <style>
+                  <class name="flat"/>
+                </style>
               </object>
             </child>
 
