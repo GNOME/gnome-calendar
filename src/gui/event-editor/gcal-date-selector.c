@@ -29,7 +29,7 @@
 
 struct _GcalDateSelector
 {
-  GtkEntry     parent;
+  AdwEntryRow  parent;
 
   /* widgets */
   GtkWidget   *date_chooser;
@@ -38,7 +38,7 @@ struct _GcalDateSelector
   GSettings   *settings;
 };
 
-G_DEFINE_TYPE (GcalDateSelector, gcal_date_selector, GTK_TYPE_ENTRY);
+G_DEFINE_TYPE (GcalDateSelector, gcal_date_selector, ADW_TYPE_ENTRY_ROW);
 
 enum
 {
@@ -95,20 +95,6 @@ parse_date (GcalDateSelector *self)
   gcal_date_selector_set_date (self, new_date);
 
   g_clear_pointer (&new_date, g_date_time_unref);
-}
-
-static void
-icon_pressed_cb (GcalDateSelector     *self,
-                 GtkEntryIconPosition  position,
-                 GdkEvent             *event)
-{
-  GdkRectangle icon_bounds;
-
-  gtk_entry_get_icon_area (GTK_ENTRY (self), position, &icon_bounds);
-
-  gtk_popover_set_pointing_to (GTK_POPOVER (self->date_selector_popover), &icon_bounds);
-
-  gtk_popover_popup (GTK_POPOVER (self->date_selector_popover));
 }
 
 static void
@@ -205,16 +191,15 @@ gcal_date_selector_set_property (GObject      *object,
 }
 
 static void
-gcal_date_selector_activate (GtkEntry *entry)
+gcal_date_selector_activate (GcalDateSelector *self)
 {
-  parse_date (GCAL_DATE_SELECTOR (entry));
+  parse_date (GCAL_DATE_SELECTOR (self));
 }
 
 static void
 gcal_date_selector_class_init (GcalDateSelectorClass *klass)
 {
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-  GtkEntryClass *entry_class = GTK_ENTRY_CLASS (klass);
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   g_type_ensure (GCAL_TYPE_DATE_CHOOSER);
@@ -225,8 +210,6 @@ gcal_date_selector_class_init (GcalDateSelectorClass *klass)
 
   widget_class->focus = gcal_date_selector_focus;
   widget_class->size_allocate = gcal_date_selector_size_allocate;
-
-  entry_class->activate = gcal_date_selector_activate;
 
   /**
    * GcalDateSelector::date:
@@ -247,7 +230,6 @@ gcal_date_selector_class_init (GcalDateSelectorClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalDateSelector, date_selector_popover);
 
   gtk_widget_class_bind_template_callback (widget_class, calendar_day_selected);
-  gtk_widget_class_bind_template_callback (widget_class, icon_pressed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_contains_focus_changed_cb);
 }
 
@@ -263,6 +245,10 @@ gcal_date_selector_init (GcalDateSelector *self)
                    self->date_chooser,
                    "show-week-numbers",
                    G_SETTINGS_BIND_DEFAULT);
+
+  g_signal_connect_swapped (gtk_editable_get_delegate (GTK_EDITABLE (self)),
+                            "activate", G_CALLBACK (gcal_date_selector_activate),
+                            self);
 }
 
 /* Public API */

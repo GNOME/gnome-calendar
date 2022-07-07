@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="GcalDateSelector" parent="GtkEntry">
-    <property name="width-chars">11</property>
-    <property name="max-width-chars">11</property>
-    <property name="secondary-icon-name">pan-down-symbolic</property>
+  <template class="GcalDateSelector" parent="AdwEntryRow">
     <property name="input-hints">no-emoji</property>
-    <signal name="icon-press" handler="icon_pressed_cb" object="GcalDateSelector" swapped="no"/>
 
     <child>
       <object class="GtkEventControllerFocus">
@@ -13,21 +9,31 @@
       </object>
     </child>
 
-    <child>
-      <object class="GtkPopover" id="date_selector_popover">
-        <property name="position">bottom</property>
-        <property name="margin-top">12</property>
-        <property name="margin-bottom">12</property>
-        <property name="margin-start">12</property>
-        <property name="margin-end">12</property>
-        <child>
-          <object class="GcalDateChooser" id="date_chooser">
-            <property name="show_events">False</property>
-            <property name="show_selected_week">False</property>
-            <property name="show_week_numbers">True</property>
-            <signal name="day-selected" handler="calendar_day_selected" object="GcalDateSelector" swapped="yes"/>
+    <child type="suffix">
+      <object class="GtkMenuButton" id="date_selector_button">
+        <property name="valign">center</property>
+        <property name="icon-name">x-office-calendar-symbolic</property>
+        <property name="tooltip-text" translatable="yes">Pick Date</property>
+        <property name="popover">
+          <object class="GtkPopover" id="date_selector_popover">
+            <property name="position">bottom</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <child>
+              <object class="GcalDateChooser" id="date_chooser">
+                <property name="show_events">False</property>
+                <property name="show_selected_week">False</property>
+                <property name="show_week_numbers">True</property>
+                <signal name="day-selected" handler="calendar_day_selected" object="GcalDateSelector" swapped="yes"/>
+              </object>
+            </child>
           </object>
-        </child>
+        </property>
+        <style>
+          <class name="flat"/>
+        </style>
       </object>
     </child>
 

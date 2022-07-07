@@ -20,12 +20,13 @@
 #define __GCAL_DATE_SELECTOR_H__
 
 #include <gtk/gtk.h>
+#include <libadwaita-1/adwaita.h>
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_DATE_SELECTOR             (gcal_date_selector_get_type ())
 
-G_DECLARE_FINAL_TYPE (GcalDateSelector, gcal_date_selector, GCAL, DATE_SELECTOR, GtkEntry)
+G_DECLARE_FINAL_TYPE (GcalDateSelector, gcal_date_selector, GCAL, DATE_SELECTOR, AdwEntryRow)
 
 GtkWidget*       gcal_date_selector_new             (void);
 
