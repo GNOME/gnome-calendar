@@ -104,10 +104,12 @@ struct _GcalWindow
   GtkWidget          *month_view;
   GtkWidget          *agenda_view;
   GtkWidget          *date_chooser;
+  GtkWidget          *action_bar;
 
   /* header_bar widets */
   GtkWidget          *calendars_button;
   GtkWidget          *menu_button;
+  GtkWidget          *new_event_button;
   GtkWidget          *today_button;
   GtkWidget          *views_switcher;
 
@@ -652,6 +654,34 @@ event_activated (GcalView        *view,
 }
 
 static void
+on_folded_notify_cb (AdwLeaflet *leaflet,
+                     GParamSpec *pspec,
+                     GcalWindow *self)
+{
+  if (adw_leaflet_get_folded (leaflet))
+    {
+      gtk_header_bar_remove (GTK_HEADER_BAR (self->header_bar), self->today_button);
+      gtk_header_bar_remove (GTK_HEADER_BAR (self->header_bar), self->new_event_button);
+      gtk_header_bar_remove (GTK_HEADER_BAR (self->header_bar), GTK_WIDGET (self->search_button));
+
+      gtk_action_bar_pack_start (GTK_ACTION_BAR (self->action_bar), self->today_button);
+      gtk_action_bar_pack_end (GTK_ACTION_BAR (self->action_bar), self->new_event_button);
+      gtk_action_bar_pack_end (GTK_ACTION_BAR (self->action_bar), GTK_WIDGET (self->search_button));
+    }
+  else
+    {
+      gtk_action_bar_remove (GTK_ACTION_BAR (self->action_bar), self->today_button);
+      gtk_action_bar_remove (GTK_ACTION_BAR (self->action_bar), self->new_event_button);
+      gtk_action_bar_remove (GTK_ACTION_BAR (self->action_bar), GTK_WIDGET (self->search_button));
+
+      gtk_header_bar_pack_start (GTK_HEADER_BAR (self->header_bar), self->today_button);
+      gtk_header_bar_pack_end (GTK_HEADER_BAR (self->header_bar), self->new_event_button);
+      gtk_header_bar_pack_end (GTK_HEADER_BAR (self->header_bar), GTK_WIDGET (self->search_button));
+    }
+}
+
+
+static void
 on_toast_dismissed_cb (AdwToast   *toast,
                        GcalWindow *self)
 {
@@ -1026,9 +1056,11 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, main_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, menu_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, action_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_management_dialog);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, new_event_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, today_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
@@ -1037,6 +1069,9 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, week_view);
 
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
+
+  /* Layout related */
+  gtk_widget_class_bind_template_callback (widget_class, on_folded_notify_cb);
 
   /* Event creation related */
   gtk_widget_class_bind_template_callback (widget_class, edit_event);

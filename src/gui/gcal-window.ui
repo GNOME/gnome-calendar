@@ -100,6 +100,7 @@
         <child>
           <object class="AdwLeaflet" id="leaflet">
             <property name="homogeneous">False</property>
+            <signal name="notify::folded" handler="on_folded_notify_cb" object="GcalWindow" swapped="no"/>
             <child>
               <object class="GtkBox">
                 <property name="hexpand">False</property>
@@ -141,6 +142,11 @@
                     <style>
                       <class name="view"/>
                     </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkActionBar" id="action_bar">
+                    <property name="revealed" bind-source="leaflet" bind-property="folded" bind-flags="sync-create"/>
                   </object>
                 </child>
               </object>
