@@ -1,3 +1,12 @@
+Major changes in 43.alpha:
+* Introduce sidebar to the main window
+* Add ability to zoom the Week view
+* Improved style of events
+* Drop the Year view
+* Use new entry rows in event editor
+* Switch to soup3
+* Updated translations
+
 Major changes in 42.1:
 * Improvements to the date chooser widget
 * Fix spawning of Settings app

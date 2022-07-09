@@ -45,6 +45,7 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2022-07-09" version="43.alpha" />
     <release date="2022-03-18" version="42.0">
       <description>
         <p>
