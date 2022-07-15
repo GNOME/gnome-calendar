@@ -3,27 +3,27 @@
 # This file is distributed under the same license as the gnome-calendar package.
 # Marcus Lundblad <ml@update.uu.se>, 2014.
 # Mattias Eriksson <snaggen@gmail.com>, 2015.
-# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
+# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
 # Luna Jernberg <droidbittin@gmail.com>, 2021, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-02-21 16:09+0000\n"
-"PO-Revision-Date: 2022-02-13 19:42+0100\n"
-"Last-Translator: Luna Jernberg <droidbittin@gmail.com>\n"
+"POT-Creation-Date: 2022-07-15 00:56+0000\n"
+"PO-Revision-Date: 2022-07-15 16:23+0200\n"
+"Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:193 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
 #: src/gui/gcal-window.ui:4
 msgid "Calendar"
 msgstr "Kalender"
@@ -116,7 +116,7 @@ msgstr ""
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1909 src/gui/gcal-event-popover.c:388
+#: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -125,14 +125,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1917
+#: src/core/gcal-event.c:1914
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%2$s %1$s — %4$s %3$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1933 src/gui/gcal-quick-add-popover.c:461
+#: src/core/gcal-event.c:1930 src/gui/gcal-quick-add-popover.c:461
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -168,7 +168,7 @@ msgid "Settings"
 msgstr "Inställningar"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
-#: src/gui/event-editor/gcal-summary-section.ui:35
+#: src/gui/event-editor/gcal-summary-section.ui:23
 #: src/gui/gcal-event-popover.ui:111
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -201,7 +201,7 @@ msgstr "Välj en fil"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:284
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 msgid "Cancel"
 msgstr "Avbryt"
@@ -210,11 +210,11 @@ msgstr "Avbryt"
 msgid "Open"
 msgstr "Öppna"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:515
+#: src/gui/calendar-management/gcal-new-calendar-page.c:512
 msgid "New Calendar"
 msgstr "Ny kalender"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:693
+#: src/gui/calendar-management/gcal-new-calendar-page.c:690
 msgid "Calendar files"
 msgstr "Kalenderfiler"
 
@@ -240,6 +240,7 @@ msgid "Open a File"
 msgstr "Öppna en fil"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
+#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Kalendrar"
 
@@ -263,7 +264,7 @@ msgstr "Lösenord"
 msgid "Connect"
 msgstr "Anslut"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:288
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Lägg till"
@@ -454,7 +455,7 @@ msgstr "Igår"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:127
+#: src/gui/gcal-window.ui:161
 msgid "Today"
 msgstr "Idag"
 
@@ -544,7 +545,7 @@ msgstr "Antal förekomster"
 msgid "End Repeat Date"
 msgstr "Slutdatum för upprepning"
 
-#: src/gui/event-editor/gcal-summary-section.c:99
+#: src/gui/event-editor/gcal-summary-section.c:78
 #: src/gui/gcal-quick-add-popover.c:676
 msgid "Unnamed event"
 msgstr "Namnlös händelse"
@@ -554,20 +555,20 @@ msgstr "Namnlös händelse"
 msgid "Title"
 msgstr "Titel"
 
-#: src/gui/event-editor/gcal-time-selector.ui:18
+#: src/gui/event-editor/gcal-time-selector.ui:22
 msgid ":"
 msgstr ":"
 
 # Enligt ICU-locale https://www.localeplanet.com/icu/sv/index.html
 # Glibc är istället tom https://lh.2xlibre.net/locale/sv_SE/
-#: src/gui/event-editor/gcal-time-selector.ui:41
+#: src/gui/event-editor/gcal-time-selector.ui:46
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "fm"
 
 # Enligt ICU-locale https://www.localeplanet.com/icu/sv/index.html
 # Glibc är istället tom https://lh.2xlibre.net/locale/sv_SE/
-#: src/gui/event-editor/gcal-time-selector.ui:42
+#: src/gui/event-editor/gcal-time-selector.ui:47
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "em"
@@ -592,12 +593,16 @@ msgstr "Öppna kalender på det passerade datumet"
 msgid "Open calendar showing the passed event"
 msgstr "Öppna kalender och visa den passerade händelsen"
 
-#: src/gui/gcal-application.c:150
+#: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d Kalender-upphovsmännen"
 
-#: src/gui/gcal-application.c:204
+#: src/gui/gcal-application.c:180
+msgid "The GNOME Project"
+msgstr "GNOME-projektet"
+
+#: src/gui/gcal-application.c:188
 msgid "translator-credits"
 msgstr ""
 "Marcus Lundblad <ml@update.uu.se>\n"
@@ -606,20 +611,24 @@ msgstr ""
 "Skicka synpunkter på översättningen till\n"
 "<tp-sv@listor.tp-sv.se>."
 
+#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:261
+msgid "Weather"
+msgstr "Väder"
+
 #: src/gui/gcal-calendar-button.ui:6
 msgid "Manage your calendars"
 msgstr "Hantera dina kalendrar"
 
-#: src/gui/gcal-calendar-button.ui:32
+#: src/gui/gcal-calendar-button.ui:41
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Synkroniserar fjärrkalendrar…"
 
-#: src/gui/gcal-calendar-button.ui:62
+#: src/gui/gcal-calendar-button.ui:71
 msgid "_Synchronize Calendars"
 msgstr "S_ynkronisera kalendrar"
 
-#: src/gui/gcal-calendar-button.ui:66
+#: src/gui/gcal-calendar-button.ui:75
 msgid "Manage Calendars…"
 msgstr "Hantera kalendrar…"
 
@@ -785,7 +794,7 @@ msgid "Edit…"
 msgstr "Redigera…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:409
+#: src/gui/gcal-event-widget.c:350
 #, c-format
 msgid "At %s"
 msgstr "Vid %s"
@@ -1046,53 +1055,45 @@ msgstr "Visa väder"
 msgid "Automatic Location"
 msgstr "Automatisk plats"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:698
 msgid "Another event deleted"
 msgstr "En annan händelse raderad"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:698
 msgid "Event deleted"
 msgstr "Händelse raderad"
 
-#: src/gui/gcal-window.c:715
+#: src/gui/gcal-window.c:700
 msgid "_Undo"
 msgstr "Ån_gra"
 
-#: src/gui/gcal-window.ui:137
+#: src/gui/gcal-window.ui:177
 msgctxt "tooltip"
 msgid "Add a new event"
 msgstr "Lägg till en ny händelse"
 
-#: src/gui/gcal-window.ui:157
+#: src/gui/gcal-window.ui:182
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Sök efter händelser"
 
-#: src/gui/gcal-window.ui:182
+#: src/gui/gcal-window.ui:203
 msgid "Week"
 msgstr "Vecka"
 
-#: src/gui/gcal-window.ui:196
+#: src/gui/gcal-window.ui:217
 msgid "Month"
 msgstr "Månad"
 
-#: src/gui/gcal-window.ui:211
-msgid "Year"
-msgstr "År"
-
-#: src/gui/gcal-window.ui:250
+#: src/gui/gcal-window.ui:257
 msgid "_Online Accounts…"
 msgstr "_Nätkonton…"
 
-#: src/gui/gcal-window.ui:254
-msgid "Weather"
-msgstr "Väder"
-
-#: src/gui/gcal-window.ui:262
+#: src/gui/gcal-window.ui:269
 msgid "_Keyboard Shortcuts"
 msgstr "_Tangentbordsgenvägar"
 
-#: src/gui/gcal-window.ui:266
+#: src/gui/gcal-window.ui:273
 msgid "_About Calendar"
 msgstr "_Om Kalender"
 
@@ -1171,11 +1172,6 @@ msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Månadsvy"
 
-#: src/gui/gtk/help-overlay.ui:96
-msgctxt "shortcut window"
-msgid "Year view"
-msgstr "Årsvy"
-
 #: src/gui/importer/gcal-import-dialog.c:396
 #, c-format
 msgid "Import %d event"
@@ -1187,7 +1183,7 @@ msgstr[1] "Importera %d händelser"
 msgid "Import Files…"
 msgstr "Importera filer…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1311
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
 msgid "_Cancel"
 msgstr "A_vbryt"
 
@@ -1261,7 +1257,7 @@ msgstr[1] "%d andra händelser"
 msgid "week %d"
 msgstr "vecka %d"
 
-#: src/utils/gcal-utils.c:1308
+#: src/utils/gcal-utils.c:1320
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1269,17 +1265,24 @@ msgstr ""
 "Händelsen som du försöker ändra är återkommande. Ändringarna du har valt ska "
 "verkställas för:"
 
-#: src/utils/gcal-utils.c:1313
+#: src/utils/gcal-utils.c:1325
 msgid "_Only This Event"
 msgstr "Endast _denna händelse"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1332
 msgid "_Subsequent events"
 msgstr "_Efterföljande händelser"
 
-#: src/utils/gcal-utils.c:1322
+#: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "_Alla händelser"
+
+#~ msgid "Year"
+#~ msgstr "År"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Year view"
+#~ msgstr "Årsvy"
 
 #~ msgid "Follow system night light"
 #~ msgstr "Följ systemets nattbelysning"
