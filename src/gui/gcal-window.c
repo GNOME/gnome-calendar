@@ -178,10 +178,11 @@ static GParamSpec* properties[N_PROPS] = { NULL, };
  */
 
 static void
-update_today_button_sensitive (GcalWindow *window)
+update_today_action_enabled (GcalWindow *window)
 {
   g_autoptr (GDateTime) now = NULL;
-  gboolean sensitive;
+  GSimpleAction *action;
+  gboolean enabled;
 
   GCAL_ENTRY;
 
@@ -190,8 +191,8 @@ update_today_button_sensitive (GcalWindow *window)
   switch (window->active_view)
     {
     case GCAL_WINDOW_VIEW_WEEK:
-      sensitive = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
-                  g_date_time_get_week_of_year (window->active_date) !=  g_date_time_get_week_of_year (now);
+      enabled = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
+                g_date_time_get_week_of_year (window->active_date) !=  g_date_time_get_week_of_year (now);
 
       GCAL_TRACE_MSG ("Week: active date's week is %d, current week is %d",
                       g_date_time_get_week_of_year (window->active_date),
@@ -199,16 +200,17 @@ update_today_button_sensitive (GcalWindow *window)
       break;
 
     case GCAL_WINDOW_VIEW_MONTH:
-      sensitive = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
-                  g_date_time_get_month (window->active_date) != g_date_time_get_month (now);
+      enabled = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
+                g_date_time_get_month (window->active_date) != g_date_time_get_month (now);
       break;
 
     default:
-      sensitive = TRUE;
+      enabled = TRUE;
       break;
     }
 
-  gtk_widget_set_sensitive (window->today_button, sensitive);
+  action = G_SIMPLE_ACTION (g_action_map_lookup_action (G_ACTION_MAP (window), "today"));
+  g_simple_action_set_enabled (action, enabled);
 
   GCAL_EXIT;
 }
@@ -250,7 +252,7 @@ update_active_date (GcalWindow *window,
   gcal_view_set_date (GCAL_VIEW (window->agenda_view), new_date);
   gcal_view_set_date (GCAL_VIEW (window->date_chooser), new_date);
 
-  update_today_button_sensitive (window);
+  update_today_action_enabled (window);
 
   maybe_add_subscribers_to_timeline (window);
 
@@ -494,7 +496,7 @@ view_changed (GObject    *object,
   g_type_class_unref (eklass);
 
   window->active_view = view_type;
-  update_today_button_sensitive (window);
+  update_today_action_enabled (window);
   g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
 }
 
