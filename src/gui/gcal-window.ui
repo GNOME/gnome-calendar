@@ -147,6 +147,9 @@
                 <child>
                   <object class="GtkActionBar" id="action_bar">
                     <property name="revealed" bind-source="leaflet" bind-property="folded" bind-flags="sync-create"/>
+                    <child type="end">
+                      <object class="GcalToolbarEnd"/>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -183,16 +186,7 @@
                       </object>
                     </child>
                     <child type="end">
-                      <object class="GtkButton" id="new_event_button">
-                        <property name="icon-name">list-add-symbolic</property>
-                        <property name="action-name">win.new-event</property>
-                        <property name="tooltip_text" translatable="yes" context="tooltip">Add a new event</property>
-                      </object>
-                    </child>
-                    <child type="end">
-                      <object class="GcalSearchButton" id="search_button">
-                        <property name="tooltip_text" translatable="yes" context="tooltip">Search for events</property>
-                      </object>
+                      <object class="GcalToolbarEnd"/>
                     </child>
                   </object>
                 </child>

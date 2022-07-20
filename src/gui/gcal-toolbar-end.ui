@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalToolbarEnd" parent="AdwBin">
+    <property name="child">
+      <object class="GtkBox">
+        <property name="spacing">6</property>
+        <child>
+          <object class="GcalSearchButton">
+            <property name="tooltip_text" translatable="yes" context="tooltip">Search for events</property>
+            <binding name="context">
+              <lookup type="GcalWindow" name="context">
+                <lookup type="GtkWidget" name="root">GcalToolbarEnd</lookup>
+              </lookup>
+            </binding>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="icon-name">list-add-symbolic</property>
+            <property name="action-name">win.new-event</property>
+            <property name="tooltip_text" translatable="yes" context="tooltip">Add a new event</property>
+          </object>
+        </child>
+      </object>
+    </property>
+  </template>
+</interface>

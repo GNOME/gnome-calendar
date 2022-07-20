@@ -24,6 +24,7 @@ sources += files(
   'gcal-quick-add-popover.c',
   'gcal-search-button.c',
   'gcal-search-hit-row.c',
+  'gcal-toolbar-end.c',
   'gcal-weather-settings.c',
   'gcal-window.c',
 )

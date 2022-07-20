@@ -35,6 +35,7 @@
 #include "gcal-search-button.h"
 #include "gcal-timeline.h"
 #include "gcal-timeline-subscriber.h"
+#include "gcal-toolbar-end.h"
 #include "gcal-view.h"
 #include "gcal-weather-settings.h"
 #include "gcal-week-view.h"
@@ -109,14 +110,11 @@ struct _GcalWindow
   /* header_bar widets */
   GtkWidget          *calendars_button;
   GtkWidget          *menu_button;
-  GtkWidget          *new_event_button;
   GtkWidget          *today_button;
   GtkWidget          *views_switcher;
 
   GcalEventEditorDialog *event_editor;
   GtkWindow             *import_dialog;
-
-  GcalSearchButton   *search_button;
 
   /* new event popover widgets */
   GtkWidget          *quick_add_popover;
@@ -661,22 +659,14 @@ on_folded_notify_cb (AdwLeaflet *leaflet,
   if (adw_leaflet_get_folded (leaflet))
     {
       gtk_header_bar_remove (GTK_HEADER_BAR (self->header_bar), self->today_button);
-      gtk_header_bar_remove (GTK_HEADER_BAR (self->header_bar), self->new_event_button);
-      gtk_header_bar_remove (GTK_HEADER_BAR (self->header_bar), GTK_WIDGET (self->search_button));
 
       gtk_action_bar_pack_start (GTK_ACTION_BAR (self->action_bar), self->today_button);
-      gtk_action_bar_pack_end (GTK_ACTION_BAR (self->action_bar), self->new_event_button);
-      gtk_action_bar_pack_end (GTK_ACTION_BAR (self->action_bar), GTK_WIDGET (self->search_button));
     }
   else
     {
       gtk_action_bar_remove (GTK_ACTION_BAR (self->action_bar), self->today_button);
-      gtk_action_bar_remove (GTK_ACTION_BAR (self->action_bar), self->new_event_button);
-      gtk_action_bar_remove (GTK_ACTION_BAR (self->action_bar), GTK_WIDGET (self->search_button));
 
       gtk_header_bar_pack_start (GTK_HEADER_BAR (self->header_bar), self->today_button);
-      gtk_header_bar_pack_end (GTK_HEADER_BAR (self->header_bar), self->new_event_button);
-      gtk_header_bar_pack_end (GTK_HEADER_BAR (self->header_bar), GTK_WIDGET (self->search_button));
     }
 }
 
@@ -870,7 +860,6 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->date_chooser, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->event_editor, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "context", self->search_button, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   /* CSS */
   load_css_providers (self);
@@ -1003,7 +992,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
   g_type_ensure (GCAL_TYPE_QUICK_ADD_POPOVER);
-  g_type_ensure (GCAL_TYPE_SEARCH_BUTTON);
+  g_type_ensure (GCAL_TYPE_TOOLBAR_END);
   g_type_ensure (GCAL_TYPE_WEATHER_SETTINGS);
   g_type_ensure (GCAL_TYPE_WEEK_VIEW);
 
@@ -1058,9 +1047,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, action_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_management_dialog);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, new_event_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, today_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
