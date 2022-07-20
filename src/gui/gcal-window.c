@@ -110,7 +110,6 @@ struct _GcalWindow
   /* header_bar widets */
   GtkWidget          *calendars_button;
   GtkWidget          *menu_button;
-  GtkWidget          *today_button;
   GtkWidget          *views_switcher;
 
   GcalEventEditorDialog *event_editor;
@@ -654,26 +653,6 @@ event_activated (GcalView        *view,
 }
 
 static void
-on_folded_notify_cb (AdwLeaflet *leaflet,
-                     GParamSpec *pspec,
-                     GcalWindow *self)
-{
-  if (adw_leaflet_get_folded (leaflet))
-    {
-      gtk_header_bar_remove (GTK_HEADER_BAR (self->header_bar), self->today_button);
-
-      gtk_action_bar_pack_start (GTK_ACTION_BAR (self->action_bar), self->today_button);
-    }
-  else
-    {
-      gtk_action_bar_remove (GTK_ACTION_BAR (self->action_bar), self->today_button);
-
-      gtk_header_bar_pack_start (GTK_HEADER_BAR (self->header_bar), self->today_button);
-    }
-}
-
-
-static void
 on_toast_dismissed_cb (AdwToast   *toast,
                        GcalWindow *self)
 {
@@ -1050,7 +1029,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, action_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_management_dialog);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, today_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
@@ -1058,9 +1036,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, week_view);
 
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
-
-  /* Layout related */
-  gtk_widget_class_bind_template_callback (widget_class, on_folded_notify_cb);
 
   /* Event creation related */
   gtk_widget_class_bind_template_callback (widget_class, edit_event);

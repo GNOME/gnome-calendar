@@ -100,7 +100,6 @@
         <child>
           <object class="AdwLeaflet" id="leaflet">
             <property name="homogeneous">False</property>
-            <signal name="notify::folded" handler="on_folded_notify_cb" object="GcalWindow" swapped="no"/>
             <child>
               <object class="GtkBox">
                 <property name="hexpand">False</property>
@@ -147,6 +146,17 @@
                 <child>
                   <object class="GtkActionBar" id="action_bar">
                     <property name="revealed" bind-source="leaflet" bind-property="folded" bind-flags="sync-create"/>
+                    <child type="start">
+                      <object class="GtkButton">
+                        <property name="action-name">win.today</property>
+                        <property name="child">
+                          <object class="AdwButtonContent">
+                            <property name="label" translatable="yes">Today</property>
+                            <property name="icon-name">calendar-today-symbolic</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
                     <child type="end">
                       <object class="GcalToolbarEnd"/>
                     </child>
@@ -169,7 +179,7 @@
                   <object class="GtkHeaderBar" id="header_bar">
                     <property name="show-title-buttons">True</property>
                     <child>
-                      <object class="GtkButton" id="today_button">
+                      <object class="GtkButton">
                         <property name="action-name">win.today</property>
                         <property name="child">
                           <object class="AdwButtonContent">
