@@ -1,0 +1,1247 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
+"POT-Creation-Date: 2022-07-25 14:16+0000\n"
+"PO-Revision-Date: 2022-07-26 07:12+0200\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: \n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
+#: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
+#: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4
+msgid "Calendar"
+msgstr "კალენდერი"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
+msgid "Calendar for GNOME"
+msgstr "კალენდარი GNOME-სთვუს"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
+"Calendar, like you’ve been using it for ages!"
+msgstr ""
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
+msgid "Week view"
+msgstr "კვირის ხედი"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
+msgid "Year view"
+msgstr "წლის ხედი"
+
+#: data/org.gnome.Calendar.desktop.in.in:4
+msgid "Access and manage your calendars"
+msgstr "კალენდრების მართვა"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.Calendar.desktop.in.in:13
+msgid "Calendar;Event;Reminder;"
+msgstr "Calendar;Event;Reminder;"
+
+#: data/org.gnome.calendar.gschema.xml.in:6
+msgid "Window maximized"
+msgstr "გადიდებული ფანჯარა"
+
+#: data/org.gnome.calendar.gschema.xml.in:7
+msgid "Window maximized state"
+msgstr "ფანჯრის სრულად გაშლილი მდგომარეობა"
+
+#: data/org.gnome.calendar.gschema.xml.in:11
+msgid "Window size"
+msgstr "ფანჯრის ზომა"
+
+#: data/org.gnome.calendar.gschema.xml.in:12
+msgid "Window size (width and height)."
+msgstr "ფანჯრის ზომა (სიგანე, სიმაღლე)"
+
+#: data/org.gnome.calendar.gschema.xml.in:16
+msgid "Window position"
+msgstr "ფანჯრის მდებარეობა"
+
+#: data/org.gnome.calendar.gschema.xml.in:17
+msgid "Window position (x and y)."
+msgstr "ფანჯრის მდებარეობა (x და y)"
+
+#: data/org.gnome.calendar.gschema.xml.in:21
+msgid "Type of the active view"
+msgstr "აქტიური ხედის ტიპი"
+
+#: data/org.gnome.calendar.gschema.xml.in:22
+msgid "Type of the active window view, default value is: monthly view"
+msgstr ""
+
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Weather Service Configuration"
+msgstr "ამინდის სერვისის მორგება"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr ""
+
+#. Translators: %1$s is the start date and %2$s is the end date.
+#. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
+#: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
+#, c-format
+msgid "%1$s — %2$s"
+msgstr "%1$s — %2$s"
+
+#.
+#. * Translators: %1$s is the start date, %2$s is the start time,
+#. * %3$s is the end date, and %4$s is the end time.
+#.
+#: src/core/gcal-event.c:1914
+#, c-format
+msgid "%1$s %2$s — %3$s %4$s"
+msgstr "%1$s %2$s — %3$s %4$s"
+
+#. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
+#: src/core/gcal-event.c:1930 src/gui/gcal-quick-add-popover.c:461
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s, %2$s – %3$s"
+
+#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
+msgid "Calendar Settings"
+msgstr "კალენდრის პარამეტრები"
+
+#: src/gui/calendar-management/gcal-calendars-page.c:354
+msgid "Manage Calendars"
+msgstr "კალენდრების მართვა"
+
+#. Update notification label
+#: src/gui/calendar-management/gcal-calendars-page.c:384
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "კალენდარი წაიშალა: <b>%s</b>"
+
+#: src/gui/calendar-management/gcal-calendars-page.ui:24
+msgid "Undo"
+msgstr "დაბრუნება"
+
+#: src/gui/calendar-management/gcal-calendars-page.ui:78
+msgid "Add Calendar…"
+msgstr "კალენდრის დამატება…"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:19
+msgid "Account"
+msgstr "ანგარიში"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:46
+msgid "Settings"
+msgstr "მორგება"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
+#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/gcal-event-popover.ui:111
+#: src/gui/importer/gcal-import-file-row.c:151
+msgid "Location"
+msgstr "მდებარეობა"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:84
+msgid "Calendar name"
+msgstr "კალენდრის სახელი"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
+msgid "Color"
+msgstr "ფერი"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:134
+msgid "Display calendar"
+msgstr "კალენდრის ჩვენება"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:146
+msgid "Add new events to this calendar by default"
+msgstr ""
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:158
+msgid "Remove Calendar"
+msgstr "კალენდრის წაშლა"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:49
+msgid "Select a file"
+msgstr "აირჩიეთ ფაილი"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:94
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
+msgid "Cancel"
+msgstr "გაუქმება"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:96
+msgid "Open"
+msgstr "გახსნა"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:512
+msgid "New Calendar"
+msgstr "ახალი კალენდარი"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:690
+msgid "Calendar files"
+msgstr "კალენდრის ფაილები"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:16
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:22
+msgid "Calendar Name"
+msgstr "კალენდრის სახელი"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:55
+msgid "Import a Calendar"
+msgstr "კალენდრის შემოტანა"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:72
+msgid ""
+"Alternatively, enter the web address of an online calendar you want to "
+"import, or open a supported calendar file."
+msgstr ""
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:100
+msgid "Open a File"
+msgstr "ფაილის გახსნა"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:124
+#: src/gui/gcal-calendar-button.ui:23
+msgid "Calendars"
+msgstr "კალენდრები"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:148
+msgid ""
+"If the calendar belongs to one of your online accounts, you can add it "
+"through the <a href=\"GOA\">online account settings</a>."
+msgstr ""
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+msgid "User"
+msgstr "მომხმარებელი"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
+msgid "Password"
+msgstr "პაროლი"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
+msgid "Connect"
+msgstr "დაკავშირება"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
+#: src/gui/gcal-quick-add-popover.ui:98
+msgid "Add"
+msgstr "დამატება"
+
+#: src/gui/event-editor/gcal-alarm-row.c:84
+#, c-format
+msgid "%1$u day, %2$u hour, and %3$u minute before"
+msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u დღით, %2$u საათით და %3$u წუთით ადრე"
+msgstr[1] "%1$u დღით, %2$u საათით და %3$u წუთით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:88
+#, c-format
+msgid "%1$u day, %2$u hours, and %3$u minute before"
+msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u დღით, %2$u საათით და %3$u წუთით ადრე"
+msgstr[1] "%1$u დღით, %2$u საათით და %3$u წუთით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:94
+#, c-format
+msgid "%1$u days, %2$u hour, and %3$u minute before"
+msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u დღით, %2$u საათით და %3$u წუთით ადრე"
+msgstr[1] "%1$u დღით, %2$u საათით და %3$u წუთით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:98
+#, c-format
+msgid "%1$u days, %2$u hours, and %3$u minute before"
+msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u დღით, %2$u საათით და %3$u წუთით ადრე"
+msgstr[1] "%1$u დღით, %2$u საათით და %3$u წუთით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:113
+#, c-format
+msgid "%1$u day and %2$u hour before"
+msgid_plural "%1$u day and %2$u hours before"
+msgstr[0] "%1$u დღით და %2$u საათით ადრე"
+msgstr[1] "%1$u დღით და %2$u საათით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:117
+#, c-format
+msgid "%1$u days and %2$u hour before"
+msgid_plural "%1$u days and %2$u hours before"
+msgstr[0] "%1$u დღით და %2$u საათით ადრე"
+msgstr[1] "%1$u დღით და %2$u საათით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:133
+#, c-format
+msgid "%1$u day and %2$u minute before"
+msgid_plural "%1$u day and %2$u minutes before"
+msgstr[0] "%1$u დღით და %2$u წუთით ადრე"
+msgstr[1] "%1$u დღით და %2$u წუთით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:137
+#, c-format
+msgid "%1$u days and %2$u minute before"
+msgid_plural "%1$u days and %2$u minutes before"
+msgstr[0] "%1$u დღით და %2$u წუთით ადრე"
+msgstr[1] "%1$u დღით და %2$u წუთით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:147
+#, c-format
+msgid "%1$u day before"
+msgid_plural "%1$u days before"
+msgstr[0] "%1$u დღით ადრე"
+msgstr[1] "%1$u დღით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:165
+#, c-format
+msgid "%1$u hour and %2$u minute before"
+msgid_plural "%1$u hour and %2$u minutes before"
+msgstr[0] "%1$u საათით და %2$u წუთით ადრე"
+msgstr[1] "%1$u საათით და %2$u წუთით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:169
+#, c-format
+msgid "%1$u hours and %2$u minute before"
+msgid_plural "%1$u hours and %2$u minutes before"
+msgstr[0] "%1$u საათით და %2$u წუთით ადრე"
+msgstr[1] "%1$u საათით და %2$u წუთით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:179
+#, c-format
+msgid "%1$u hour before"
+msgid_plural "%1$u hours before"
+msgstr[0] "%1$u საათით ადრე"
+msgstr[1] "%1$u საათით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:191
+#, c-format
+msgid "%1$u minute before"
+msgid_plural "%1$u minutes before"
+msgstr[0] "%1$u წუთით ადრე"
+msgstr[1] "%1$u წუთით ადრე"
+
+#: src/gui/event-editor/gcal-alarm-row.c:198
+msgid "Event start time"
+msgstr "მოვლენის დაწყების დრო"
+
+#: src/gui/event-editor/gcal-alarm-row.ui:11
+msgid "Toggles the sound of the alarm"
+msgstr ""
+
+#: src/gui/event-editor/gcal-alarm-row.ui:21
+msgid "Remove the alarm"
+msgstr "მაღვიძარას წაშლა"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+msgid "Save"
+msgstr "შენახვა"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:86
+msgid "Done"
+msgstr "დასრულებულია"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
+msgid "Click to select the calendar"
+msgstr "დააწკაპუნეთ კალენდრის ასარჩევად"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:115
+msgid "Schedule"
+msgstr "განრიგი"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
+msgid "Reminders"
+msgstr "შეხსენებები"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
+msgid "Notes"
+msgstr "შენიშვნები"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+msgid "Delete Event"
+msgstr "%1 მოვლენის წაშლა"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:26
+msgid "Add a Reminder…"
+msgstr "შემხსენებლის დამატება…"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:52
+msgid "5 minutes"
+msgstr "5 წუთი"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:58
+msgid "10 minutes"
+msgstr "10 წუთი"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:64
+msgid "15 minutes"
+msgstr "15 წუთი"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:70
+msgid "30 minutes"
+msgstr "30 წუთი"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:76
+msgid "1 hour"
+msgstr "%1 საათი"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:82
+msgid "1 day"
+msgstr "%1 დღე"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:88
+msgid "2 days"
+msgstr "2 დღე"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:94
+msgid "3 days"
+msgstr "3 დღე"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:100
+msgid "1 week"
+msgstr "1 კვირა"
+
+#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
+#: src/gui/event-editor/gcal-schedule-section.c:238
+#, c-format
+msgid "Last %A"
+msgstr "ბოლო %A"
+
+#: src/gui/event-editor/gcal-schedule-section.c:242
+#: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+msgid "Yesterday"
+msgstr "გუშინ"
+
+#: src/gui/event-editor/gcal-schedule-section.c:246
+#: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
+#: src/gui/gcal-window.ui:161
+msgid "Today"
+msgstr "დღეს"
+
+#: src/gui/event-editor/gcal-schedule-section.c:250
+#: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+msgid "Tomorrow"
+msgstr "ხვალ"
+
+#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
+#: src/gui/event-editor/gcal-schedule-section.c:255
+#, c-format
+msgid "This %A"
+msgstr "ეს %A"
+
+#.
+#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
+#. * formatted time (e.g. 03:14 PM, or 21:29)
+#.
+#: src/gui/event-editor/gcal-schedule-section.c:285
+#, c-format
+msgid "%1$s, %2$s"
+msgstr "%1$s, %2$s"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:17
+msgid "All Day"
+msgstr "მთელი დღე"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:34
+#: src/gui/importer/gcal-import-file-row.c:152
+msgid "Starts"
+msgstr "საწყისი"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:77
+#: src/gui/importer/gcal-import-file-row.c:153
+msgid "Ends"
+msgstr "მთავრდება"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:120
+msgid "Repeat"
+msgstr "გამეორება"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:128
+msgid "No Repeat"
+msgstr "გამეორების გარეშე"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:129
+msgid "Daily"
+msgstr "დღიურად"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:130
+msgid "Monday – Friday"
+msgstr "ორშაბათი - პარასკევი"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:131
+msgid "Weekly"
+msgstr "კვირაში ერთხელ"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:132
+msgid "Monthly"
+msgstr "თვეში ერთხელ"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:133
+msgid "Yearly"
+msgstr "წლიურად"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:146
+msgid "End Repeat"
+msgstr "გამეორების დასრულება"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:154
+msgid "Forever"
+msgstr "სამუდამოდ"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:155
+msgid "No. of occurrences"
+msgstr ""
+
+#: src/gui/event-editor/gcal-schedule-section.ui:156
+msgid "Until Date"
+msgstr "დრომდე"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:169
+msgid "Number of Occurrences"
+msgstr ""
+
+#: src/gui/event-editor/gcal-schedule-section.ui:188
+msgid "End Repeat Date"
+msgstr "გამეორების დასრულების თარიღი"
+
+#: src/gui/event-editor/gcal-summary-section.c:78
+#: src/gui/gcal-quick-add-popover.c:676
+msgid "Unnamed event"
+msgstr "უსახელო მოვლენა"
+
+#: src/gui/event-editor/gcal-summary-section.ui:16
+#: src/gui/importer/gcal-import-file-row.c:150
+msgid "Title"
+msgstr "სათაური"
+
+#: src/gui/event-editor/gcal-time-selector.ui:22
+msgid ":"
+msgstr ":"
+
+#: src/gui/event-editor/gcal-time-selector.ui:46
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "AM"
+msgstr "AM"
+
+#: src/gui/event-editor/gcal-time-selector.ui:47
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "PM"
+msgstr "PM"
+
+#: src/gui/gcal-application.c:58
+msgid "Quit GNOME Calendar"
+msgstr "GNOME კალენდრიდან აგასვლა"
+
+#: src/gui/gcal-application.c:63
+msgid "Display version number"
+msgstr "ვერსიის ინფორმაციის ჩვენება"
+
+#: src/gui/gcal-application.c:68
+msgid "Enable debug messages"
+msgstr "გამართვის შეტყობინებების ჩართვა"
+
+#: src/gui/gcal-application.c:73
+msgid "Open calendar on the passed date"
+msgstr ""
+
+#: src/gui/gcal-application.c:78
+msgid "Open calendar showing the passed event"
+msgstr ""
+
+#: src/gui/gcal-application.c:144
+#, c-format
+msgid "Copyright © 2012–%d The Calendar authors"
+msgstr ""
+
+#: src/gui/gcal-application.c:180
+msgid "The GNOME Project"
+msgstr "პროექტი \"GNOME\""
+
+#: src/gui/gcal-application.c:188
+msgid "translator-credits"
+msgstr "თემური დოღონაძე"
+
+#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:261
+msgid "Weather"
+msgstr "ამინდი"
+
+#: src/gui/gcal-calendar-button.ui:6
+msgid "Manage your calendars"
+msgstr "კალენდრების მართვა"
+
+#: src/gui/gcal-calendar-button.ui:41
+msgctxt "tooltip"
+msgid "Synchronizing remote calendars…"
+msgstr "დაშორებული კალენდრების სინქრონიზაცია…"
+
+#: src/gui/gcal-calendar-button.ui:71
+msgid "_Synchronize Calendars"
+msgstr "_კალენდრების სინქრონიზაცია"
+
+#: src/gui/gcal-calendar-button.ui:75
+msgid "Manage Calendars…"
+msgstr "კალენდრების მართვა…"
+
+#: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:255
+msgid "January"
+msgstr "იანვარი"
+
+#: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:256
+msgid "February"
+msgstr "თებერვალი"
+
+#: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:257
+msgid "March"
+msgstr "მარტი"
+
+#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:258
+msgid "April"
+msgstr "აპრილი"
+
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:259
+msgid "May"
+msgstr "მაისი"
+
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:260
+msgid "June"
+msgstr "ივნისი"
+
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:261
+msgid "July"
+msgstr "ივლისი"
+
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:262
+msgid "August"
+msgstr "აგვისტო"
+
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:263
+msgid "September"
+msgstr "სექტემბერი"
+
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:264
+msgid "October"
+msgstr "ოქტომბერი"
+
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:265
+msgid "November"
+msgstr "ნოემბერი"
+
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:266
+msgid "December"
+msgstr "დეკემბერი"
+
+#: src/gui/gcal-event-popover.c:158
+#, c-format
+msgid "Today %s"
+msgstr "დღეს %s"
+
+#: src/gui/gcal-event-popover.c:162
+#, c-format
+msgid "Tomorrow %s"
+msgstr "ხვალ %s"
+
+#: src/gui/gcal-event-popover.c:166
+#, c-format
+msgid "Yesterday %s"
+msgstr "გუშინ %s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, and %3$ is the hour. This format string results in dates
+#. * like "November 21, 22:00".
+#.
+#: src/gui/gcal-event-popover.c:175
+#, c-format
+msgid "%1$s %2$d, %3$s"
+msgstr "%1$s %2$d, %3$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$d is the year, and %4$s is the hour. This format string
+#. * results in dates like "November 21, 2020, 22:00".
+#.
+#: src/gui/gcal-event-popover.c:187
+#, c-format
+msgid "%1$s %2$d, %3$d, %4$s"
+msgstr "%1$s %2$d, %3$d, %4$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), and %2$d is
+#. * the day of month. This format string results in dates like
+#. * "November 21".
+#.
+#: src/gui/gcal-event-popover.c:216 src/gui/gcal-event-popover.c:330
+#, c-format
+msgid "%1$s %2$d"
+msgstr "%1$s %2$d"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, and %3$d is the year. This format string results in dates
+#. * like "November 21, 2020".
+#.
+#: src/gui/gcal-event-popover.c:227 src/gui/gcal-event-popover.c:341
+#, c-format
+msgid "%1$s %2$d, %3$d"
+msgstr "%1$s %2$d, %3$d"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Today, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:261
+#, c-format
+msgid "Today, %1$s — %2$s"
+msgstr "დღეს, %1$s — %2$s"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Tomorrow, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:269
+#, c-format
+msgid "Tomorrow, %1$s – %2$s"
+msgstr "ხვალ, %1$s – %2$s"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Tomorrow, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:277
+#, c-format
+msgid "Yesterday, %1$s – %2$s"
+msgstr "გუშინ, %1$s – %2$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$s is the start hour, and %4$s is the end hour. This
+#. * format string results in dates like "November 21, 19:00 — 22:00".
+#.
+#: src/gui/gcal-event-popover.c:286
+#, c-format
+msgid "%1$s %2$d, %3$s – %4$s"
+msgstr "%1$s %2$d, %3$s – %4$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$d is the year, %4$s is the start hour, and %5$s is the
+#. * end hour. This format string results in dates like:
+#. *
+#. * "November 21, 2021, 19:00 — 22:00".
+#.
+#: src/gui/gcal-event-popover.c:301
+#, c-format
+msgid "%1$s %2$d, %3$d, %4$s – %5$s"
+msgstr "%1$s %2$d, %3$d, %4$s – %5$s"
+
+#: src/gui/gcal-event-popover.ui:71
+msgid "No event information"
+msgstr "მოვლენის ინფორმაციის გარეშე"
+
+#: src/gui/gcal-event-popover.ui:169
+msgid "Edit…"
+msgstr "ჩასწორება…"
+
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:350
+#, c-format
+msgid "At %s"
+msgstr "%s-ზე"
+
+#: src/gui/gcal-meeting-row.c:65
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#: src/gui/gcal-meeting-row.c:66
+msgid "Jitsi"
+msgstr "Jitsi"
+
+#: src/gui/gcal-meeting-row.c:67
+msgid "Whereby"
+msgstr ""
+
+#: src/gui/gcal-meeting-row.c:68
+msgid "Zoom"
+msgstr "გადიდება"
+
+#: src/gui/gcal-meeting-row.c:78
+msgid "Unknown Service"
+msgstr "უცნობი სერვისი"
+
+#. Translators: "Join" as in "Join meeting"
+#: src/gui/gcal-meeting-row.ui:12
+msgid "Join"
+msgstr "შეერთება"
+
+#: src/gui/gcal-quick-add-popover.c:118
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.c:233
+msgid "from next Monday"
+msgstr "შემდეგი ორშაბათიდან"
+
+#: src/gui/gcal-quick-add-popover.c:234
+msgid "from next Tuesday"
+msgstr "შემდეგი სამშაბათიდან"
+
+#: src/gui/gcal-quick-add-popover.c:235
+msgid "from next Wednesday"
+msgstr "შემდეგი ოთხშაბათიდან"
+
+#: src/gui/gcal-quick-add-popover.c:236
+msgid "from next Thursday"
+msgstr "შემდეგი ხუთშაბათიდან"
+
+#: src/gui/gcal-quick-add-popover.c:237
+msgid "from next Friday"
+msgstr "შემდეგი პარასკევიდან"
+
+#: src/gui/gcal-quick-add-popover.c:238
+msgid "from next Saturday"
+msgstr "შემდეგი შაბათიდან"
+
+#: src/gui/gcal-quick-add-popover.c:239
+msgid "from next Sunday"
+msgstr "შემდეგი კვირიდან"
+
+#: src/gui/gcal-quick-add-popover.c:244
+msgid "to next Monday"
+msgstr "შემდეგ ორშაბათამდე"
+
+#: src/gui/gcal-quick-add-popover.c:245
+msgid "to next Tuesday"
+msgstr "შემდეგ სამშაბათამდე"
+
+#: src/gui/gcal-quick-add-popover.c:246
+msgid "to next Wednesday"
+msgstr "შემდეგ ოთხშაბათამდე"
+
+#: src/gui/gcal-quick-add-popover.c:247
+msgid "to next Thursday"
+msgstr "შემდეგ ხუთშაბათამდე"
+
+#: src/gui/gcal-quick-add-popover.c:248
+msgid "to next Friday"
+msgstr "შემდეგ პარასკევამდე"
+
+#: src/gui/gcal-quick-add-popover.c:249
+msgid "to next Saturday"
+msgstr "შემდეგ შაბათამდე"
+
+#: src/gui/gcal-quick-add-popover.c:250
+msgid "to next Sunday"
+msgstr "შემდეგ კვირამდე"
+
+#: src/gui/gcal-quick-add-popover.c:275
+#, c-format
+msgid "from Today"
+msgstr "დღეიდან"
+
+#: src/gui/gcal-quick-add-popover.c:279
+#, c-format
+msgid "from Tomorrow"
+msgstr "ხვალიდან"
+
+#: src/gui/gcal-quick-add-popover.c:283
+#, c-format
+msgid "from Yesterday"
+msgstr "გუშინიდან"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gui/gcal-quick-add-popover.c:301
+#, c-format
+msgid "from %1$s %2$s"
+msgstr "%1$s %2$s-დან"
+
+#: src/gui/gcal-quick-add-popover.c:312
+#, c-format
+msgid "to Today"
+msgstr "დღემდე"
+
+#: src/gui/gcal-quick-add-popover.c:316
+#, c-format
+msgid "to Tomorrow"
+msgstr "ხვალამდე"
+
+#: src/gui/gcal-quick-add-popover.c:320
+#, c-format
+msgid "to Yesterday"
+msgstr "გუშინდლამდე"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gui/gcal-quick-add-popover.c:338
+#, c-format
+msgid "to %1$s %2$s"
+msgstr "%1$s %2$s-მდე"
+
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
+#: src/gui/gcal-quick-add-popover.c:345
+#, c-format
+msgid "New Event %1$s %2$s"
+msgstr "ახალი მოვლენა %1$s %2$s"
+
+#: src/gui/gcal-quick-add-popover.c:362
+#, c-format
+msgid "New Event Today"
+msgstr "ახალი მოვლენა: დღეს"
+
+#: src/gui/gcal-quick-add-popover.c:366
+#, c-format
+msgid "New Event Tomorrow"
+msgstr "ახალი მოვლენა: ხვალ"
+
+#: src/gui/gcal-quick-add-popover.c:370
+#, c-format
+msgid "New Event Yesterday"
+msgstr "ახალი მოვლენა: გუშინ"
+
+#: src/gui/gcal-quick-add-popover.c:376
+msgid "New Event next Monday"
+msgstr "ახალი მოვლენა: შემდეგ ორშაბათს"
+
+#: src/gui/gcal-quick-add-popover.c:377
+msgid "New Event next Tuesday"
+msgstr "ახალი მოვლენა: შემდეგ სამშაბათს"
+
+#: src/gui/gcal-quick-add-popover.c:378
+msgid "New Event next Wednesday"
+msgstr "ახალი მოვლენა: შემდეგ ოთხშაბათს"
+
+#: src/gui/gcal-quick-add-popover.c:379
+msgid "New Event next Thursday"
+msgstr "ახალი მოვლენა: შემდეგ ხუთშაბათს"
+
+#: src/gui/gcal-quick-add-popover.c:380
+msgid "New Event next Friday"
+msgstr "ახალი მოვლენა: შემდეგ პარასკევს"
+
+#: src/gui/gcal-quick-add-popover.c:381
+msgid "New Event next Saturday"
+msgstr "ახალი მოვლენა: შემდეგ შაბათს"
+
+#: src/gui/gcal-quick-add-popover.c:382
+msgid "New Event next Sunday"
+msgstr "ახალი მოვლენა: შემდეგ კვირას"
+
+#. Translators: %d is the numeric day of month
+#: src/gui/gcal-quick-add-popover.c:394
+#, c-format
+msgid "New Event on January %d"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.c:395
+#, c-format
+msgid "New Event on February %d"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.c:396
+#, c-format
+msgid "New Event on March %d"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.c:397
+#, c-format
+msgid "New Event on April %d"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.c:398
+#, c-format
+msgid "New Event on May %d"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.c:399
+#, c-format
+msgid "New Event on June %d"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.c:400
+#, c-format
+msgid "New Event on July %d"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.c:401
+#, c-format
+msgid "New Event on August %d"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.c:402
+#, c-format
+msgid "New Event on September %d"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.c:403
+#, c-format
+msgid "New Event on October %d"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.c:404
+#, c-format
+msgid "New Event on November %d"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.c:405
+#, c-format
+msgid "New Event on December %d"
+msgstr ""
+
+#: src/gui/gcal-quick-add-popover.ui:87
+msgid "Edit Details…"
+msgstr "დეტალების ჩასწორება…"
+
+#: src/gui/gcal-weather-settings.ui:17
+msgid "Show Weather"
+msgstr "ამინდის ჩვენება"
+
+#: src/gui/gcal-weather-settings.ui:34
+msgid "Automatic Location"
+msgstr "ავტომატური მდებარეობა"
+
+#: src/gui/gcal-window.c:698
+msgid "Another event deleted"
+msgstr ""
+
+#: src/gui/gcal-window.c:698
+msgid "Event deleted"
+msgstr "მოვლენა წაიშალა"
+
+#: src/gui/gcal-window.c:700
+msgid "_Undo"
+msgstr "_დაბრუნება"
+
+#: src/gui/gcal-window.ui:177
+msgctxt "tooltip"
+msgid "Add a new event"
+msgstr "ახალი მოვლენისს დამატება"
+
+#: src/gui/gcal-window.ui:182
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "მოვლენის ძებნა"
+
+#: src/gui/gcal-window.ui:203
+msgid "Week"
+msgstr "კვირა"
+
+#: src/gui/gcal-window.ui:217
+msgid "Month"
+msgstr "თვე"
+
+#: src/gui/gcal-window.ui:257
+msgid "_Online Accounts…"
+msgstr "_ონლაინ ანგარიშები…"
+
+#: src/gui/gcal-window.ui:269
+msgid "_Keyboard Shortcuts"
+msgstr "კლავიატურის მალსახმობები"
+
+#: src/gui/gcal-window.ui:273
+msgid "_About Calendar"
+msgstr "_კალენდრის შესახებ"
+
+#: src/gui/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "ზოგადი"
+
+#: src/gui/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "ახალი მოვლენა"
+
+#: src/gui/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "ფანჯრის დახურვა"
+
+#: src/gui/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "ძებნა"
+
+#: src/gui/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "დახმარების ჩვენება"
+
+#: src/gui/gtk/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "მალსახმობები"
+
+#: src/gui/gtk/help-overlay.ui:46
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "ნავიგაცია"
+
+#: src/gui/gtk/help-overlay.ui:49
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "უკან დაბრუნება"
+
+#: src/gui/gtk/help-overlay.ui:55
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "წინ გადასვლა"
+
+#: src/gui/gtk/help-overlay.ui:61
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "დღევანდელი დღის ჩვენება"
+
+#: src/gui/gtk/help-overlay.ui:67
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "შემდეგი ხედი"
+
+#: src/gui/gtk/help-overlay.ui:73
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "წინა ხედი"
+
+#: src/gui/gtk/help-overlay.ui:81
+msgctxt "shortcut window"
+msgid "View"
+msgstr "ხედი"
+
+#: src/gui/gtk/help-overlay.ui:84
+msgctxt "shortcut window"
+msgid "Week view"
+msgstr "კვირის ხედი"
+
+#: src/gui/gtk/help-overlay.ui:90
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "თვის ხედი"
+
+#: src/gui/importer/gcal-import-dialog.c:396
+#, c-format
+msgid "Import %d event"
+msgid_plural "Import %d events"
+msgstr[0] "%d მოვლენის შემოტანა"
+msgstr[1] "%d მოვლენის შემოტანა"
+
+#: src/gui/importer/gcal-import-dialog.ui:4
+msgid "Import Files…"
+msgstr "ფაილების შემოტანა…"
+
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+msgid "_Cancel"
+msgstr "გაუქმება"
+
+#: src/gui/importer/gcal-import-dialog.ui:29
+msgid "_Import"
+msgstr "_იმპორტი"
+
+#: src/gui/importer/gcal-import-dialog.ui:50
+msgid "C_alendar"
+msgstr "_კალენდარი"
+
+#: src/gui/importer/gcal-importer.c:33
+msgid "No error"
+msgstr "შეცდომის გარეშე"
+
+#: src/gui/importer/gcal-importer.c:36
+msgid "Bad argument to function"
+msgstr "ფუნქციის არასწორი არგუმენტი"
+
+#: src/gui/importer/gcal-importer.c:40
+msgid "Failed to allocate a new object in memory"
+msgstr "მეხსიერებაში ახალი ობიექტის გამოყოფის შეცდომა"
+
+#: src/gui/importer/gcal-importer.c:43
+msgid "File is malformed, invalid, or corrupted"
+msgstr "ფაილი არასწორი ან დაზიანებულია"
+
+#: src/gui/importer/gcal-importer.c:46
+msgid "Failed to parse the calendar contents"
+msgstr "კალენდრის შემცველობის დამუშავების შეცდომა"
+
+#: src/gui/importer/gcal-importer.c:49
+msgid "Failed to read file"
+msgstr "ფაილის წაკითხვის შეცდომა"
+
+#: src/gui/importer/gcal-importer.c:56
+msgid "Internal error"
+msgstr "შიდა შეცდომა"
+
+#: src/gui/importer/gcal-importer.c:94
+msgid "File is not an iCalendar (.ics) file"
+msgstr "ფაილი ელკალენდრის (.ics) ფაილი არაა"
+
+#: src/gui/importer/gcal-import-file-row.c:154
+msgid "Description"
+msgstr "აღწერა"
+
+#: src/gui/views/gcal-month-popover.ui:59
+msgid "New Event…"
+msgstr "ახალი მოვლენა…"
+
+#: src/gui/views/gcal-week-grid.c:580
+msgid "00 AM"
+msgstr "00 AM"
+
+#: src/gui/views/gcal-week-grid.c:583
+msgid "00:00"
+msgstr "00:00"
+
+#: src/gui/views/gcal-week-header.c:478
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "%d სხვა მოვლენა"
+msgstr[1] "%d სხვა მოვლენა"
+
+#: src/gui/views/gcal-week-header.c:1006
+#, c-format
+msgid "week %d"
+msgstr "კვირა %d"
+
+#: src/utils/gcal-utils.c:1320
+msgid ""
+"The event you are trying to modify is recurring. The changes you have "
+"selected should be applied to:"
+msgstr ""
+
+#: src/utils/gcal-utils.c:1325
+msgid "_Only This Event"
+msgstr "მხოლოდ _ეს მოვლენა"
+
+#: src/utils/gcal-utils.c:1332
+msgid "_Subsequent events"
+msgstr ""
+
+#: src/utils/gcal-utils.c:1334
+msgid "_All events"
+msgstr "_ყველა მოვლენა"
