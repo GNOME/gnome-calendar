@@ -1,16 +1,9 @@
-# Copyright (C) 2022 The Abkhazian language development fund named after Bagrat Shinkuba
-# This file is distributed under the same license as the gnome-calendar package.
-# Нанба Наала <naala-nanba@rambler.ru>, 2022.
-#
-
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2022-07-21 10:11+0000\n"
-"PO-Revision-Date: 2022-07-22 16:00+0000\n"
 "Last-Translator: Нанба Наала <naala-nanba@rambler.ru>\n"
-"Language-Team: Abkhazian <LL@li.org>\n"
+"Language-Team: Abkhazian <ab@li.org>\n"
 "Language: ab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +99,7 @@ msgstr ""
 #: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
 #, c-format
 msgid "%1$s — %2$s"
-msgstr ""
+msgstr "%1$s — %2$s"
 
 #.
 #. * Translators: %1$s is the start date, %2$s is the start time,
@@ -115,14 +108,14 @@ msgstr ""
 #: src/core/gcal-event.c:1914
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
-msgstr ""
+msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
 #: src/core/gcal-event.c:1930 src/gui/gcal-quick-add-popover.c:461
 #, c-format
 msgid "%1$s, %2$s – %3$s"
-msgstr ""
+msgstr "%1$s, %2$s — %3$s"
 
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
@@ -140,7 +133,7 @@ msgstr ""
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:24
 msgid "Undo"
-msgstr ""
+msgstr "Архынҳәра"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:78
 msgid "Add Calendar…"
@@ -159,7 +152,7 @@ msgstr ""
 #: src/gui/gcal-event-popover.ui:111
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
-msgstr ""
+msgstr "Аҭыӡҭыԥ"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:84
 msgid "Calendar name"
@@ -256,64 +249,64 @@ msgstr ""
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$u ҽнаки, %2$u сааҭки %3$u минуҭки ҟалаанӡа"
+msgstr[1] "%1$u ҽнаки, %2$u сааҭки %3$u минуҭки ҟалаанӡа"
 
 #: src/gui/event-editor/gcal-alarm-row.c:88
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$u ҽнаки, %2$u сааҭки %3$u минуҭ ки ҟалаанӡа"
+msgstr[1] "%1$u ҽнаки, %2$u сааҭки %3$u минуҭки  ҟалаанӡа"
 
 #: src/gui/event-editor/gcal-alarm-row.c:94
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$u мши, %2$u сааҭки, и %3$u минуҭки ҟалаанӡа"
+msgstr[1] "%1$u мши, %2$u сааҭки, и %3$u минуҭки ҟалаанӡа"
 
 #: src/gui/event-editor/gcal-alarm-row.c:98
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$u мши, %2$u сааҭки, и %3$u минуҭки ҟалаанӡа"
+msgstr[1] "%1$u мши, %2$u сааҭки, и %3$u минуҭки ҟалаанӡа"
 
 #: src/gui/event-editor/gcal-alarm-row.c:113
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$u ҽнаки и %2$u сааҭки ҟалаанӡа"
+msgstr[1] "%1$u ҽнаки %2$u сааҭки ҟалаанӡа"
 
 #: src/gui/event-editor/gcal-alarm-row.c:117
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$u мши %2$u сааҭки ҟалаанӡа"
+msgstr[1] "%1$u мши %2$u сааҭки ҟалаанӡа"
 
 #: src/gui/event-editor/gcal-alarm-row.c:133
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$u ҽнаки %2$u минуҭки ҟалаанӡа"
+msgstr[1] "%1$u ҽнаки %2$u минуҭки ҟалаанӡа"
 
 #: src/gui/event-editor/gcal-alarm-row.c:137
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$u мши и %2$u минуҭки ҟалаанӡа"
+msgstr[1] "%1$u мши и %2$u минуҭки ҟалаанӡа"
 
 #: src/gui/event-editor/gcal-alarm-row.c:147
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$u ҽнак шагоу"
+msgstr[1] "%1$u мшы шагоу"
 
 #: src/gui/event-editor/gcal-alarm-row.c:165
 #, c-format
@@ -333,15 +326,15 @@ msgstr[1] ""
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$u сааҭк иҟалаанӡа"
+msgstr[1] "%1$u сааҭк иҟалаанӡа"
 
 #: src/gui/event-editor/gcal-alarm-row.c:191
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$u минуҭк ҟалаанӡа"
+msgstr[1] "%1$u минуҭк ҟалаанӡа"
 
 #: src/gui/event-editor/gcal-alarm-row.c:198
 msgid "Event start time"
@@ -459,7 +452,7 @@ msgstr ""
 #: src/gui/event-editor/gcal-schedule-section.c:285
 #, c-format
 msgid "%1$s, %2$s"
-msgstr ""
+msgstr "%1$s %2$s"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:17
 msgid "All Day"
@@ -530,7 +523,7 @@ msgstr ""
 #: src/gui/event-editor/gcal-summary-section.c:78
 #: src/gui/gcal-quick-add-popover.c:676
 msgid "Unnamed event"
-msgstr ""
+msgstr "Ихьӡыдоу ахҭыс"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
@@ -539,17 +532,17 @@ msgstr ""
 
 #: src/gui/event-editor/gcal-time-selector.ui:22
 msgid ":"
-msgstr ""
+msgstr ":"
 
 #: src/gui/event-editor/gcal-time-selector.ui:46
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
-msgstr ""
+msgstr "AM"
 
 #: src/gui/event-editor/gcal-time-selector.ui:47
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
-msgstr ""
+msgstr "PM"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
@@ -574,11 +567,11 @@ msgstr ""
 #: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
-msgstr ""
+msgstr "Аԥҵаҩы изин © 2012–%d  «Амзар» апшьы аԥҵаҩцәа"
 
 #: src/gui/gcal-application.c:180
 msgid "The GNOME Project"
-msgstr ""
+msgstr "The GNOME Project"
 
 #: src/gui/gcal-application.c:188
 msgid "translator-credits"
@@ -619,7 +612,7 @@ msgstr ""
 
 #: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:258
 msgid "April"
-msgstr ""
+msgstr "Мшаԥы"
 
 #: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:259
 msgid "May"
@@ -635,7 +628,7 @@ msgstr ""
 
 #: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:262
 msgid "August"
-msgstr ""
+msgstr "Нанҳәа"
 
 #: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:263
 msgid "September"
@@ -676,7 +669,7 @@ msgstr ""
 #: src/gui/gcal-event-popover.c:175
 #, c-format
 msgid "%1$s %2$d, %3$s"
-msgstr ""
+msgstr "%1$s %2$d, %3$s"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
@@ -686,7 +679,7 @@ msgstr ""
 #: src/gui/gcal-event-popover.c:187
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s"
-msgstr ""
+msgstr "%1$s %2$d, %3$d, %4$s"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), and %2$d is
@@ -696,7 +689,7 @@ msgstr ""
 #: src/gui/gcal-event-popover.c:216 src/gui/gcal-event-popover.c:330
 #, c-format
 msgid "%1$s %2$d"
-msgstr ""
+msgstr "%1$s %2$d"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
@@ -706,7 +699,7 @@ msgstr ""
 #: src/gui/gcal-event-popover.c:227 src/gui/gcal-event-popover.c:341
 #, c-format
 msgid "%1$s %2$d, %3$d"
-msgstr ""
+msgstr "%1$s %2$d, %3$d"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
@@ -743,7 +736,7 @@ msgstr ""
 #: src/gui/gcal-event-popover.c:286
 #, c-format
 msgid "%1$s %2$d, %3$s – %4$s"
-msgstr ""
+msgstr "%1$s %2$d, %3$s – %4$s"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
@@ -755,7 +748,7 @@ msgstr ""
 #: src/gui/gcal-event-popover.c:301
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
-msgstr ""
+msgstr "%1$s %2$d, %3$d, %4$s – %5$s"
 
 #: src/gui/gcal-event-popover.ui:71
 msgid "No event information"
@@ -769,23 +762,23 @@ msgstr ""
 #: src/gui/gcal-event-widget.c:350
 #, c-format
 msgid "At %s"
-msgstr ""
+msgstr "%s аҟны "
 
 #: src/gui/gcal-meeting-row.c:65
 msgid "Google Meet"
-msgstr ""
+msgstr "Google Meet"
 
 #: src/gui/gcal-meeting-row.c:66
 msgid "Jitsi"
-msgstr ""
+msgstr "Jitsi"
 
 #: src/gui/gcal-meeting-row.c:67
 msgid "Whereby"
-msgstr ""
+msgstr "Whereby"
 
 #: src/gui/gcal-meeting-row.c:68
 msgid "Zoom"
-msgstr ""
+msgstr "Zoom"
 
 #: src/gui/gcal-meeting-row.c:78
 msgid "Unknown Service"
@@ -1025,7 +1018,7 @@ msgstr ""
 
 #: src/gui/gcal-weather-settings.ui:34
 msgid "Automatic Location"
-msgstr ""
+msgstr "Автоматикла ҭыԥс аҟазаара аилкаара"
 
 #: src/gui/gcal-window.c:698
 msgid "Another event deleted"
@@ -1037,7 +1030,7 @@ msgstr ""
 
 #: src/gui/gcal-window.c:700
 msgid "_Undo"
-msgstr ""
+msgstr "_архынҳәра"
 
 #: src/gui/gcal-window.ui:177
 msgctxt "tooltip"
@@ -1209,11 +1202,11 @@ msgstr ""
 
 #: src/gui/views/gcal-week-grid.c:580
 msgid "00 AM"
-msgstr ""
+msgstr "00 AM"
 
 #: src/gui/views/gcal-week-grid.c:583
 msgid "00:00"
-msgstr ""
+msgstr "00:00"
 
 #: src/gui/views/gcal-week-header.c:478
 #, c-format
