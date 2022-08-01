@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-02-13 13:34+0000\n"
-"PO-Revision-Date: 2022-02-14 18:02+0800\n"
+"POT-Creation-Date: 2022-07-15 00:56+0000\n"
+"PO-Revision-Date: 2022-07-29 19:13+0800\n"
 "Last-Translator: lumingzh <lumingzh@qq.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -24,11 +24,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Launchpad-Export-Date: 2016-03-22 14:52+0000\n"
-"X-Generator: Gtranslator 41.0\n"
+"X-Generator: Gtranslator 42.0\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:193 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
 #: src/gui/gcal-window.ui:4
 msgid "Calendar"
 msgstr "日历"
@@ -116,7 +116,7 @@ msgstr "是否显示天气预报，默认情况下使用自动位置探测，也
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1909 src/gui/gcal-event-popover.c:388
+#: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -125,14 +125,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1917
+#: src/core/gcal-event.c:1914
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1933 src/gui/gcal-quick-add-popover.c:461
+#: src/core/gcal-event.c:1930 src/gui/gcal-quick-add-popover.c:461
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s，%2$s – %3$s"
@@ -168,7 +168,7 @@ msgid "Settings"
 msgstr "设置"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
-#: src/gui/event-editor/gcal-summary-section.ui:35
+#: src/gui/event-editor/gcal-summary-section.ui:23
 #: src/gui/gcal-event-popover.ui:111
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -196,13 +196,12 @@ msgid "Remove Calendar"
 msgstr "移除日历"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:49
-#| msgid "Failed to read file"
 msgid "Select a file"
 msgstr "选择文件"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:284
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 msgid "Cancel"
 msgstr "取消"
@@ -211,11 +210,11 @@ msgstr "取消"
 msgid "Open"
 msgstr "打开"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:515
+#: src/gui/calendar-management/gcal-new-calendar-page.c:512
 msgid "New Calendar"
 msgstr "新建日历"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:693
+#: src/gui/calendar-management/gcal-new-calendar-page.c:690
 msgid "Calendar files"
 msgstr "日历文件"
 
@@ -239,6 +238,7 @@ msgid "Open a File"
 msgstr "打开文件"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
+#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "日历"
 
@@ -261,7 +261,7 @@ msgstr "密码"
 msgid "Connect"
 msgstr "连接"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:288
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "添加"
@@ -438,7 +438,7 @@ msgstr "昨天"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:119
+#: src/gui/gcal-window.ui:161
 msgid "Today"
 msgstr "今天"
 
@@ -528,7 +528,7 @@ msgstr "重复次数"
 msgid "End Repeat Date"
 msgstr "结束重复日期"
 
-#: src/gui/event-editor/gcal-summary-section.c:99
+#: src/gui/event-editor/gcal-summary-section.c:78
 #: src/gui/gcal-quick-add-popover.c:676
 msgid "Unnamed event"
 msgstr "未命名事件"
@@ -538,16 +538,16 @@ msgstr "未命名事件"
 msgid "Title"
 msgstr "标题"
 
-#: src/gui/event-editor/gcal-time-selector.ui:18
+#: src/gui/event-editor/gcal-time-selector.ui:22
 msgid ":"
 msgstr ":"
 
-#: src/gui/event-editor/gcal-time-selector.ui:41
+#: src/gui/event-editor/gcal-time-selector.ui:46
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "上午"
 
-#: src/gui/event-editor/gcal-time-selector.ui:42
+#: src/gui/event-editor/gcal-time-selector.ui:47
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "下午"
@@ -572,12 +572,16 @@ msgstr "打开日历显示过去的日期"
 msgid "Open calendar showing the passed event"
 msgstr "打开日历显示过去的事件"
 
-#: src/gui/gcal-application.c:150
+#: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d The Calendar 作者"
 
-#: src/gui/gcal-application.c:204
+#: src/gui/gcal-application.c:180
+msgid "The GNOME Project"
+msgstr "GNOME 项目"
+
+#: src/gui/gcal-application.c:188
 msgid "translator-credits"
 msgstr ""
 "tuhaihe <1132321739qq@gmail.com>, 2013, 2020\n"
@@ -587,20 +591,24 @@ msgstr ""
 "Mingcong Bai <jeffbai@aosc.io>, 2018\n"
 "Dinzhong Chen <wsxy162@gmail.com>, 2017, 2019"
 
+#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:261
+msgid "Weather"
+msgstr "天气"
+
 #: src/gui/gcal-calendar-button.ui:6
 msgid "Manage your calendars"
 msgstr "管理您的日历"
 
-#: src/gui/gcal-calendar-button.ui:32
+#: src/gui/gcal-calendar-button.ui:41
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "正在同步远程日历……"
 
-#: src/gui/gcal-calendar-button.ui:62
+#: src/gui/gcal-calendar-button.ui:71
 msgid "_Synchronize Calendars"
 msgstr "同步日历(_S)"
 
-#: src/gui/gcal-calendar-button.ui:66
+#: src/gui/gcal-calendar-button.ui:75
 msgid "Manage Calendars…"
 msgstr "管理日历…"
 
@@ -765,7 +773,7 @@ msgid "Edit…"
 msgstr "编辑…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:409
+#: src/gui/gcal-event-widget.c:350
 #, c-format
 msgid "At %s"
 msgstr "位于 %s"
@@ -1026,55 +1034,45 @@ msgstr "显示天气"
 msgid "Automatic Location"
 msgstr "自动定位"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:698
 msgid "Another event deleted"
 msgstr "另一个事件已删除"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:698
 msgid "Event deleted"
 msgstr "事件已删除"
 
-#: src/gui/gcal-window.c:715
-#| msgid "Undo"
+#: src/gui/gcal-window.c:700
 msgid "_Undo"
 msgstr "撤消(_U)"
 
-#: src/gui/gcal-window.ui:114
+#: src/gui/gcal-window.ui:177
 msgctxt "tooltip"
 msgid "Add a new event"
 msgstr "添加新事件"
 
-#: src/gui/gcal-window.ui:159
+#: src/gui/gcal-window.ui:182
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "搜索事件"
 
-#: src/gui/gcal-window.ui:184
+#: src/gui/gcal-window.ui:203
 msgid "Week"
 msgstr "周"
 
-#: src/gui/gcal-window.ui:198
+#: src/gui/gcal-window.ui:217
 msgid "Month"
 msgstr "月"
 
-#: src/gui/gcal-window.ui:213
-msgid "Year"
-msgstr "年"
-
-#: src/gui/gcal-window.ui:252
+#: src/gui/gcal-window.ui:257
 msgid "_Online Accounts…"
 msgstr "在线帐号(_O)…"
 
-#: src/gui/gcal-window.ui:256
-#| msgid "_Weather"
-msgid "Weather"
-msgstr "天气"
-
-#: src/gui/gcal-window.ui:264
+#: src/gui/gcal-window.ui:269
 msgid "_Keyboard Shortcuts"
 msgstr "键盘快捷键(_K)"
 
-#: src/gui/gcal-window.ui:268
+#: src/gui/gcal-window.ui:273
 msgid "_About Calendar"
 msgstr "关于日历(_A)"
 
@@ -1153,11 +1151,6 @@ msgctxt "shortcut window"
 msgid "Month view"
 msgstr "月视图"
 
-#: src/gui/gtk/help-overlay.ui:96
-msgctxt "shortcut window"
-msgid "Year view"
-msgstr "年视图"
-
 #: src/gui/importer/gcal-import-dialog.c:396
 #, c-format
 msgid "Import %d event"
@@ -1168,7 +1161,7 @@ msgstr[0] "导入 %d 个事件"
 msgid "Import Files…"
 msgstr "导入文件…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1311
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
 msgid "_Cancel"
 msgstr "取消(_C)"
 
@@ -1239,23 +1232,30 @@ msgstr[0] "其他 %d 个事件"
 msgid "week %d"
 msgstr "第 %d 周"
 
-#: src/utils/gcal-utils.c:1308
+#: src/utils/gcal-utils.c:1320
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr "您正在修改的事件是重复事件。您所作的修改会应用到："
 
-#: src/utils/gcal-utils.c:1313
+#: src/utils/gcal-utils.c:1325
 msgid "_Only This Event"
 msgstr "仅此事件(_O)"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1332
 msgid "_Subsequent events"
 msgstr "后续事件(_S)"
 
-#: src/utils/gcal-utils.c:1322
+#: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "所有事件(_A)"
+
+#~ msgid "Year"
+#~ msgstr "年"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Year view"
+#~ msgstr "年视图"
 
 #~ msgid "Follow system night light"
 #~ msgstr "遵循系统的夜光设置"
