@@ -6,28 +6,21 @@
 # Porrumentzio <porrumentzio@riseup.net>, 2022.
 #
 msgid ""
-msgstr ""
-"Project-Id-Version: gnome-calendar master\n"
+msgstr "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-03-17 08:24+0000\n"
-"PO-Revision-Date: 2022-04-20 19:41+0200\n"
-"Last-Translator: Porrumentzio <porrumentzio@riseup.net>\n"
+"POT-Creation-Date: 2022-07-15 00:56+0000\n"
+"PO-Revision-Date: 2022-08-07 19:41+0200\n"
+"Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <Librezale>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-DL-Team: eu\n"
-"X-DL-Module: gnome-calendar\n"
-"X-DL-Branch: master\n"
-"X-DL-Domain: po\n"
-"X-DL-State: Translating\n"
-"X-Generator: Gtranslator 40.0\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:193 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
 #: src/gui/gcal-window.ui:4
 msgid "Calendar"
 msgstr "Egutegia"
@@ -41,20 +34,14 @@ msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
-msgstr ""
-"GNOME Calendar egutegien aplikazio sotil eta ederra da, GNOME mahaigainean "
-"primeran integratu dadin diseinatua. GNOME mahaigainak oinarritzat dituen "
-"osagaiak berrerabilita, Calendar ederto integratzen da GNOME ekosisteman."
+msgstr "GNOME Calendar egutegien aplikazio sotil eta ederra da, GNOME mahaigainean primeran integratu dadin diseinatua. GNOME mahaigainak oinarritzat dituen osagaiak berrerabilita, Calendar ederto integratzen da GNOME ekosisteman."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
-msgstr ""
-"Oreka egokia bilatu nahi dugu ongi eraikitako eginbideen eta erabiltzailean "
-"zentratutako erabilgarritasunaren artean. Ezer ez soberan, ezer ez faltan. "
-"Eroso arituko zara Calendar erabilita, betidanik erabili izan bazenu bezala!"
+msgstr "Oreka egokia bilatu nahi dugu ongi eraikitako eginbideen eta erabiltzailean zentratutako erabilgarritasunaren artean. Ezer ez soberan, ezer ez faltan. Eroso arituko zara Calendar erabilita, betidanik erabili izan bazenu bezala!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
 msgid "Week view"
@@ -113,9 +100,7 @@ msgstr "Eguraldi-zerbitzuaren konfigurazioa"
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
-msgstr ""
-"Eguraldi-txostenak erakusten badira, kokaleku automatikoak eta kokalekuaren "
-"izen bat erabiliko dira"
+msgstr "Eguraldi-txostenak erakusten badira, kokaleku automatikoak eta kokalekuaren izen bat erabiliko dira"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -171,7 +156,7 @@ msgid "Settings"
 msgstr "Ezarpenak"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
-#: src/gui/event-editor/gcal-summary-section.ui:35
+#: src/gui/event-editor/gcal-summary-section.ui:23
 #: src/gui/gcal-event-popover.ui:111
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -204,7 +189,7 @@ msgstr "Hautatu fitxategia"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:284
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 msgid "Cancel"
 msgstr "Utzi"
@@ -213,11 +198,11 @@ msgstr "Utzi"
 msgid "Open"
 msgstr "Ireki"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:515
+#: src/gui/calendar-management/gcal-new-calendar-page.c:512
 msgid "New Calendar"
 msgstr "Egutegi berria"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:693
+#: src/gui/calendar-management/gcal-new-calendar-page.c:690
 msgid "Calendar files"
 msgstr "Egutegiaren fitxategiak"
 
@@ -234,15 +219,14 @@ msgstr "Inportatu egutegi bat"
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
-msgstr ""
-"Bestela, sartu inportatu nahi duzun lineako egutegi baten web helbidea, edo "
-"ireki onartuta dagoen egutegi-fitxategi bat."
+msgstr "Bestela, sartu inportatu nahi duzun lineako egutegi baten web helbidea, edo ireki onartuta dagoen egutegi-fitxategi bat."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:100
 msgid "Open a File"
 msgstr "Ireki fitxategia"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
+#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Egutegiak"
 
@@ -250,9 +234,7 @@ msgstr "Egutegiak"
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
-msgstr ""
-"Egutegia zure lineako kontu batena bada, <a href=\"GOA\">lineako kontuaren "
-"ezarpenak</a> bidez gehi dezakezu."
+msgstr "Egutegia zure lineako kontu batena bada, <a href=\"GOA\">lineako kontuaren ezarpenak</a> bidez gehi dezakezu."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:194
 msgid "User"
@@ -266,7 +248,7 @@ msgstr "Pasahitza"
 msgid "Connect"
 msgstr "Konektatu"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:288
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Gehitu"
@@ -456,7 +438,7 @@ msgstr "Atzo"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:127
+#: src/gui/gcal-window.ui:161
 msgid "Today"
 msgstr "Gaur"
 
@@ -546,7 +528,7 @@ msgstr "Agerraldien kopurua"
 msgid "End Repeat Date"
 msgstr "Errepikapen-amaieraren data"
 
-#: src/gui/event-editor/gcal-summary-section.c:99
+#: src/gui/event-editor/gcal-summary-section.c:78
 #: src/gui/gcal-quick-add-popover.c:676
 msgid "Unnamed event"
 msgstr "Gertaera izengabea"
@@ -556,16 +538,16 @@ msgstr "Gertaera izengabea"
 msgid "Title"
 msgstr "Titulua"
 
-#: src/gui/event-editor/gcal-time-selector.ui:18
+#: src/gui/event-editor/gcal-time-selector.ui:22
 msgid ":"
 msgstr ":"
 
-#: src/gui/event-editor/gcal-time-selector.ui:41
+#: src/gui/event-editor/gcal-time-selector.ui:46
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "AM"
 
-#: src/gui/event-editor/gcal-time-selector.ui:42
+#: src/gui/event-editor/gcal-time-selector.ui:47
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "PM"
@@ -590,29 +572,37 @@ msgstr "Ireki egutegia igarotako datan"
 msgid "Open calendar showing the passed event"
 msgstr "Ireki egutegia igarotako gertaera erakutsiz"
 
-#: src/gui/gcal-application.c:150
+#: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d Calendar egileak"
 
-#: src/gui/gcal-application.c:204
+#: src/gui/gcal-application.c:180
+msgid "The GNOME Project"
+msgstr "GNOME proiektua"
+
+#: src/gui/gcal-application.c:188
 msgid "translator-credits"
 msgstr "Asier Sarasua Garmendia <asier.sarasua@gmail.com>"
+
+#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:261
+msgid "Weather"
+msgstr "Eguraldia"
 
 #: src/gui/gcal-calendar-button.ui:6
 msgid "Manage your calendars"
 msgstr "Kudeatu zure egutegiak"
 
-#: src/gui/gcal-calendar-button.ui:32
+#: src/gui/gcal-calendar-button.ui:41
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Urreneko egutegiak sinkronizatzen…"
 
-#: src/gui/gcal-calendar-button.ui:62
+#: src/gui/gcal-calendar-button.ui:71
 msgid "_Synchronize Calendars"
 msgstr "_Sinkronizatu egutegiak"
 
-#: src/gui/gcal-calendar-button.ui:66
+#: src/gui/gcal-calendar-button.ui:75
 msgid "Manage Calendars…"
 msgstr "Kudeatu egutegiak…"
 
@@ -777,7 +767,7 @@ msgid "Edit…"
 msgstr "Editatu…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:409
+#: src/gui/gcal-event-widget.c:350
 #, c-format
 msgid "At %s"
 msgstr "Lekua: %s"
@@ -1038,53 +1028,45 @@ msgstr "Erakutsi eguraldia"
 msgid "Automatic Location"
 msgstr "Kokaleku automatikoa"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:698
 msgid "Another event deleted"
 msgstr "Beste gertaera ezabatuta"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:698
 msgid "Event deleted"
 msgstr "Gertaera ezabatuta"
 
-#: src/gui/gcal-window.c:715
+#: src/gui/gcal-window.c:700
 msgid "_Undo"
 msgstr "_Desegin"
 
-#: src/gui/gcal-window.ui:137
+#: src/gui/gcal-window.ui:177
 msgctxt "tooltip"
 msgid "Add a new event"
 msgstr "Gehitu gertaera berria"
 
-#: src/gui/gcal-window.ui:157
+#: src/gui/gcal-window.ui:182
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Bilatu gertaerak"
 
-#: src/gui/gcal-window.ui:182
+#: src/gui/gcal-window.ui:203
 msgid "Week"
 msgstr "Astea"
 
-#: src/gui/gcal-window.ui:196
+#: src/gui/gcal-window.ui:217
 msgid "Month"
 msgstr "Hila"
 
-#: src/gui/gcal-window.ui:211
-msgid "Year"
-msgstr "Urtea"
-
-#: src/gui/gcal-window.ui:250
+#: src/gui/gcal-window.ui:257
 msgid "_Online Accounts…"
 msgstr "_Lineako kontuak…"
 
-#: src/gui/gcal-window.ui:254
-msgid "Weather"
-msgstr "Eguraldia"
-
-#: src/gui/gcal-window.ui:262
+#: src/gui/gcal-window.ui:269
 msgid "_Keyboard Shortcuts"
 msgstr "Las_ter-teklak"
 
-#: src/gui/gcal-window.ui:266
+#: src/gui/gcal-window.ui:273
 msgid "_About Calendar"
 msgstr "Calendar aplikazioari _buruz"
 
@@ -1163,11 +1145,6 @@ msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Hileko ikuspegia"
 
-#: src/gui/gtk/help-overlay.ui:96
-msgctxt "shortcut window"
-msgid "Year view"
-msgstr "Urtearen ikuspegia"
-
 #: src/gui/importer/gcal-import-dialog.c:396
 #, c-format
 msgid "Import %d event"
@@ -1179,7 +1156,7 @@ msgstr[1] "Inportatu %d gertaera"
 msgid "Import Files…"
 msgstr "Inportau fitxategiak…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1311
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
 msgid "_Cancel"
 msgstr "_Utzi"
 
@@ -1251,25 +1228,30 @@ msgstr[1] "Beste %d gertaera"
 msgid "week %d"
 msgstr "%d. astea"
 
-#: src/utils/gcal-utils.c:1308
+#: src/utils/gcal-utils.c:1320
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
-msgstr ""
-"Aldatu nahi duzun gertaera errepikakorra da. Hautatu dituzun aldaketek honi "
-"eragingo die:"
+msgstr "Aldatu nahi duzun gertaera errepikakorra da. Hautatu dituzun aldaketek honi eragingo die:"
 
-#: src/utils/gcal-utils.c:1313
+#: src/utils/gcal-utils.c:1325
 msgid "_Only This Event"
 msgstr "_Soilik gertaera hau"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1332
 msgid "_Subsequent events"
 msgstr "_Honako gertaerak"
 
-#: src/utils/gcal-utils.c:1322
+#: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "_Gertaera guztiak"
+
+#~ msgid "Year"
+#~ msgstr "Urtea"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Year view"
+#~ msgstr "Urtearen ikuspegia"
 
 #~ msgid "Follow system night light"
 #~ msgstr "Jarraitu sistemaren gaueko argia"
