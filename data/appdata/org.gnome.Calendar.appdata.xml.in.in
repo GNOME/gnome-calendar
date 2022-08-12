@@ -20,16 +20,17 @@
   </description>
 
   <screenshots>
-    <screenshot type="default">
-      <image width="1560" height="1029">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/default.png</image>
-    </screenshot>
     <screenshot>
       <caption>Week view</caption>
-      <image width="1560" height="1029">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/week-view.png</image>
+      <image>https://static.gnome.org/appdata/gnome-43/calendar/calendar-week.png</image>
     </screenshot>
     <screenshot>
-      <caption>Year view</caption>
-      <image width="1560" height="1029">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/year-view.png</image>
+      <caption>Month view</caption>
+      <image>https://static.gnome.org/appdata/gnome-43/calendar/calendar-month.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Event editor</caption>
+      <image>https://static.gnome.org/appdata/gnome-43/calendar/calendar-event.png</image>
     </screenshot>
   </screenshots>
 
