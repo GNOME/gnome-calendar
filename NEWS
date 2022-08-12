@@ -1,4 +1,8 @@
 Major changes in 43.alpha:
+* Collapse sidebar in smaller window sizes
+* Updated translations
+
+Major changes in 43.alpha:
 * Introduce sidebar to the main window
 * Add ability to zoom the Week view
 * Improved style of events
