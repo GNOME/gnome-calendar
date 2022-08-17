@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-12 03:14+0000\n"
-"PO-Revision-Date: 2022-08-12 13:26+0200\n"
+"POT-Creation-Date: 2022-08-15 12:45+0000\n"
+"PO-Revision-Date: 2022-08-17 13:37+0200\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
@@ -37,9 +37,10 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"GNOME kalendar je jednostavna ugodna aplikacija za kalendar dizajnirana kako "
-"bi se uklopila u GNOME radnu površinu. Koristi komponente na kojima je GNOME "
-"radna površina izgrađena, Kalendar se dobro integrira u GNOME eko sustav."
+"GNOME kalendar je jednostavna i ugodna aplikacija za kalendar dizajnirana "
+"kako bi se uklopila u GNOME radno okruženje. Koristi komponente na kojima je "
+"GNOME radno okruženje izgrađeno, Kalendar se dobro integrira u GNOME "
+"ekosustav."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
@@ -1049,6 +1050,16 @@ msgstr "Novi događaj u prosincu %d"
 msgid "Edit Details…"
 msgstr "Uredi pojedinosti…"
 
+#: src/gui/gcal-toolbar-end.ui:9
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "Pretraži događaje"
+
+#: src/gui/gcal-toolbar-end.ui:21
+msgctxt "tooltip"
+msgid "Add a new event"
+msgstr "Dodaj novi događaj"
+
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
 msgstr "Prikaži vremensku prognozu"
@@ -1268,14 +1279,6 @@ msgstr "_Naknadni događaji"
 #: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "_Svi događaji"
-
-#~ msgctxt "tooltip"
-#~ msgid "Add a new event"
-#~ msgstr "Dodaj novi događaj"
-
-#~ msgctxt "tooltip"
-#~ msgid "Search for events"
-#~ msgstr "Pretraži događaje"
 
 #~ msgid "Year"
 #~ msgstr "Godina"
