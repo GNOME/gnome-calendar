@@ -2,7 +2,7 @@
 # Copyright (C) 2012 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 #
-# Jordi Mas i Hernandez <jmas@softcatala.org>, 2013-2021
+# Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2022
 # Gil Forcada Codinachs <gil.gnome@gmail.com>, 2018.
 #
 # N.T.
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2022-02-13 13:34+0000\n"
 "PO-Revision-Date: 2021-08-18 15:27+0100\n"
-"Last-Translator: Jordi Mas <jmas@softcatala.org>\n"
+"Last-Translator: Jordi Mas i Hernàndez <jmas@softcatala.org>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgstr ""
 "El Calendari del GNOME és una aplicació de calendari simple i bonica "
 "dissenyada per a encaixar perfectament amb l'escriptori GNOME. Gràcies a la "
 "reutilització dels components amb què s'ha construït l'escriptori GNOME, el "
-"calendari s'integra bé amb l'ecosistema GNOME."
+"Calendari s'integra bé amb l'ecosistema GNOME."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
@@ -598,7 +598,7 @@ msgstr "Copyright © 2012–%d els autors del Calendari"
 #: src/gui/gcal-application.c:204
 msgid "translator-credits"
 msgstr ""
-"Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2021\n"
+"Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2022\n"
 "Miquel-Àngel Burgos i Fradeja <miquel.angel.burgos@gmail.com>, 2020"
 
 #: src/gui/gcal-calendar-button.ui:6
@@ -687,7 +687,7 @@ msgstr "Ahir %s"
 #: src/gui/gcal-event-popover.c:175
 #, c-format
 msgid "%1$s %2$d, %3$s"
-msgstr "%2$d, %1$s – %3$s"
+msgstr "%2$d %1$s – %3$s"
 
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
 #. * of month, %3$d is the year, and %4$s is the hour. This format string
