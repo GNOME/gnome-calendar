@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-15 12:45+0000\n"
-"PO-Revision-Date: 2022-08-17 13:39+0200\n"
+"POT-Creation-Date: 2022-08-20 21:05+0000\n"
+"PO-Revision-Date: 2022-08-20 23:50+0200\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
@@ -52,13 +52,17 @@ msgstr ""
 "korisnike. Bez nedostataka i manjkavosti, osjećati ćete se komforno "
 "koristeći Kalendar, kao da ga koristite godinama!"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
 msgid "Week view"
 msgstr "Tjedni prikaz"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Year view"
-msgstr "Godišnji prikaz"
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
+msgid "Month view"
+msgstr "Mjesečni prikaz"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
+msgid "Event editor"
+msgstr "Uređivač događaja"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -1279,6 +1283,9 @@ msgstr "_Naknadni događaji"
 #: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "_Svi događaji"
+
+#~ msgid "Year view"
+#~ msgstr "Godišnji prikaz"
 
 #~ msgid "Year"
 #~ msgstr "Godina"
