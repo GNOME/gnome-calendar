@@ -179,11 +179,11 @@ new_date_header_string (GDateTime *date)
   yesterday = g_date_time_add_days (today, -1);
 
   if (gcal_date_time_compare_date (date, today) == 0)
-    return g_strdup ("Today");
+    return g_strdup (_("Today"));
   else if (gcal_date_time_compare_date (date, tomorrow) == 0)
-    return g_strdup ("Tomorrow");
+    return g_strdup (_("Tomorrow"));
   else if (gcal_date_time_compare_date (date, yesterday) == 0)
-    return g_strdup ("Yesterday");
+    return g_strdup (_("Yesterday"));
   else
     return g_date_time_format (date, "%A %B %e");
 }
