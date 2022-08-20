@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-07-15 00:56+0000\n"
-"PO-Revision-Date: 2022-07-16 17:54+0430\n"
+"POT-Creation-Date: 2022-08-20 21:05+0000\n"
+"PO-Revision-Date: 2022-08-21 01:53+0430\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "Language: fa\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.1\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -50,13 +50,17 @@ msgstr ""
 "هدف ما پیدا کردن نقطهٔ عطف خوش‌ساختی و کاربردپذیری است. جامع و مانع .هنگام "
 "استفاده از تقویم چنان راحتی خواهید بود که انگار که سال‌هاست از آن استفاده می‌کنید!"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
 msgid "Week view"
 msgstr "نمای هفتگی"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Year view"
-msgstr "نمای سالانه"
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
+msgid "Month view"
+msgstr "نمای ماهانه"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
+msgid "Event editor"
+msgstr "ویرایشگر رویداد"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -437,7 +441,7 @@ msgstr "دیروز"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:161
+#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 msgid "Today"
 msgstr "امروز"
 
@@ -587,7 +591,7 @@ msgstr ""
 "دانیال بهزادی <dani.behzi@ubuntu.com>\n"
 "امیر فارسی <amir_farsi@ymail.com>"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:261
+#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
 msgid "Weather"
 msgstr "آب‌وهوا"
 
@@ -1022,6 +1026,16 @@ msgstr "رویداد جدید برای %Id دسامبر"
 msgid "Edit Details…"
 msgstr "ویرایش جزییات…"
 
+#: src/gui/gcal-toolbar-end.ui:9
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "جست‌وجو برای رویدادها"
+
+#: src/gui/gcal-toolbar-end.ui:21
+msgctxt "tooltip"
+msgid "Add a new event"
+msgstr "افزودن رویدادی جدید"
+
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
 msgstr "نمایش آب‌وهوا"
@@ -1030,45 +1044,35 @@ msgstr "نمایش آب‌وهوا"
 msgid "Automatic Location"
 msgstr "موقعیت خودکار"
 
-#: src/gui/gcal-window.c:698
+#: src/gui/gcal-window.c:699
 msgid "Another event deleted"
 msgstr "رویدادی دیگر حذف شد"
 
-#: src/gui/gcal-window.c:698
+#: src/gui/gcal-window.c:699
 msgid "Event deleted"
 msgstr "رویداد حذف شد"
 
-#: src/gui/gcal-window.c:700
+#: src/gui/gcal-window.c:701
 msgid "_Undo"
 msgstr "_برگردان"
 
-#: src/gui/gcal-window.ui:177
-msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "افزودن رویدادی جدید"
-
-#: src/gui/gcal-window.ui:182
-msgctxt "tooltip"
-msgid "Search for events"
-msgstr "جست‌وجو برای رویدادها"
-
-#: src/gui/gcal-window.ui:203
+#: src/gui/gcal-window.ui:219
 msgid "Week"
 msgstr "هفته"
 
-#: src/gui/gcal-window.ui:217
+#: src/gui/gcal-window.ui:233
 msgid "Month"
 msgstr "ماه"
 
-#: src/gui/gcal-window.ui:257
+#: src/gui/gcal-window.ui:273
 msgid "_Online Accounts…"
 msgstr "حساب‌های _برخط…"
 
-#: src/gui/gcal-window.ui:269
+#: src/gui/gcal-window.ui:285
 msgid "_Keyboard Shortcuts"
 msgstr "_میان‌برهای صفحه‌کلید"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:289
 msgid "_About Calendar"
 msgstr "_دربارهٔ تقویم"
 
@@ -1247,6 +1251,9 @@ msgstr "_تمام رویدادهای بعدی"
 #: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "_تمام رویدادها"
+
+#~ msgid "Year view"
+#~ msgstr "نمای سالانه"
 
 #~ msgid "Year"
 #~ msgstr "سال"
