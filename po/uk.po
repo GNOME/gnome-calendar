@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-07-15 00:56+0000\n"
-"PO-Revision-Date: 2022-07-16 08:46+0300\n"
+"POT-Creation-Date: 2022-08-20 21:05+0000\n"
+"PO-Revision-Date: 2022-08-21 09:47+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -55,13 +55,20 @@ msgstr ""
 "продуманою функціональністю. Все потрібне й нічого зайвого. Вам буде зручно "
 "користуватись календарем, неначе ви ним користувались роками!"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
 msgid "Week view"
 msgstr "Перегляд тижня"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Year view"
-msgstr "Перегляд року"
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
+#| msgctxt "shortcut window"
+#| msgid "Month view"
+msgid "Month view"
+msgstr "Перегляд місяця"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
+#| msgid "Event deleted"
+msgid "Event editor"
+msgstr "Редактор подій"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -482,7 +489,7 @@ msgstr "Учора"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:161
+#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 msgid "Today"
 msgstr "Сьогодні"
 
@@ -631,7 +638,7 @@ msgstr ""
 "Daniel Korostil <ted.korostiled@gmail.com>, 2015-2016.\n"
 "Mykola Tkach <Stuartlittle1970@gmail.com>, 2014-2016."
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:261
+#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
 msgid "Weather"
 msgstr "Погода"
 
@@ -1066,6 +1073,16 @@ msgstr "Нова подія на грудень %d"
 msgid "Edit Details…"
 msgstr "Редагувати подробиці…"
 
+#: src/gui/gcal-toolbar-end.ui:9
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "Пошук подій"
+
+#: src/gui/gcal-toolbar-end.ui:21
+msgctxt "tooltip"
+msgid "Add a new event"
+msgstr "Створити подію"
+
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
 msgstr "Показати погоду"
@@ -1074,45 +1091,35 @@ msgstr "Показати погоду"
 msgid "Automatic Location"
 msgstr "Автоматичне визначення місцевості"
 
-#: src/gui/gcal-window.c:698
+#: src/gui/gcal-window.c:699
 msgid "Another event deleted"
 msgstr "Іншу подію вилучено"
 
-#: src/gui/gcal-window.c:698
+#: src/gui/gcal-window.c:699
 msgid "Event deleted"
 msgstr "Подію вилучено"
 
-#: src/gui/gcal-window.c:700
+#: src/gui/gcal-window.c:701
 msgid "_Undo"
 msgstr "_Скасувати"
 
-#: src/gui/gcal-window.ui:177
-msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "Створити подію"
-
-#: src/gui/gcal-window.ui:182
-msgctxt "tooltip"
-msgid "Search for events"
-msgstr "Пошук подій"
-
-#: src/gui/gcal-window.ui:203
+#: src/gui/gcal-window.ui:219
 msgid "Week"
 msgstr "Тиждень"
 
-#: src/gui/gcal-window.ui:217
+#: src/gui/gcal-window.ui:233
 msgid "Month"
 msgstr "Місяць"
 
-#: src/gui/gcal-window.ui:257
+#: src/gui/gcal-window.ui:273
 msgid "_Online Accounts…"
 msgstr "Мережеві _облікові записи"
 
-#: src/gui/gcal-window.ui:269
+#: src/gui/gcal-window.ui:285
 msgid "_Keyboard Shortcuts"
 msgstr "_Клавіатурні скорочення"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:289
 msgid "_About Calendar"
 msgstr "Про _Календар"
 
@@ -1298,6 +1305,9 @@ msgstr "Для _наступних подій"
 #: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "Для _всіх подій"
+
+#~ msgid "Year view"
+#~ msgstr "Перегляд року"
 
 #~ msgid "Year"
 #~ msgstr "Рік"
