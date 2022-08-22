@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-07-15 00:56+0000\n"
-"PO-Revision-Date: 2022-07-15 08:57+0300\n"
+"POT-Creation-Date: 2022-08-20 21:05+0000\n"
+"PO-Revision-Date: 2022-08-22 14:02+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: Hebrew <>\n"
 "Language: he\n"
@@ -51,13 +51,20 @@ msgstr ""
 "משתמש. ללא עודף, ללא מחסור. תורגש נוחות בשימוש לוח השנה, כאילו הוא בשימוש על "
 "ידך כבר שנים!"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
 msgid "Week view"
 msgstr "תצוגה שבועית"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Year view"
-msgstr "תצוגה שנתית"
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
+#| msgctxt "shortcut window"
+#| msgid "Month view"
+msgid "Month view"
+msgstr "תצוגה חודשית"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
+#| msgid "Event deleted"
+msgid "Event editor"
+msgstr "עריכת אירוע"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -478,7 +485,7 @@ msgstr "אתמול"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:161
+#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 msgid "Today"
 msgstr "היום"
 
@@ -627,7 +634,7 @@ msgstr ""
 "יוסף אור בוצ׳קו <yoseforb@gmail.com>\n"
 "<a href=\"https://l10n.gnome.org/teams/he/\">מיזם תרגום GNOME לעברית</a>"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:261
+#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
 msgid "Weather"
 msgstr "מזג אוויר"
 
@@ -1062,6 +1069,16 @@ msgstr "אירוע חדש ב־%d בדצמבר"
 msgid "Edit Details…"
 msgstr "עריכת פרטים…"
 
+#: src/gui/gcal-toolbar-end.ui:9
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "חיפוש אירועים"
+
+#: src/gui/gcal-toolbar-end.ui:21
+msgctxt "tooltip"
+msgid "Add a new event"
+msgstr "הוספת אירוע חדש"
+
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
 msgstr "הצגת מזג אוויר"
@@ -1070,45 +1087,35 @@ msgstr "הצגת מזג אוויר"
 msgid "Automatic Location"
 msgstr "מיקום אוטומטי"
 
-#: src/gui/gcal-window.c:698
+#: src/gui/gcal-window.c:699
 msgid "Another event deleted"
 msgstr "אירוע נוסף נמחק"
 
-#: src/gui/gcal-window.c:698
+#: src/gui/gcal-window.c:699
 msgid "Event deleted"
 msgstr "מחיקת אירוע"
 
-#: src/gui/gcal-window.c:700
+#: src/gui/gcal-window.c:701
 msgid "_Undo"
 msgstr "_ביטול"
 
-#: src/gui/gcal-window.ui:177
-msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "הוספת אירוע חדש"
-
-#: src/gui/gcal-window.ui:182
-msgctxt "tooltip"
-msgid "Search for events"
-msgstr "חיפוש אירועים"
-
-#: src/gui/gcal-window.ui:203
+#: src/gui/gcal-window.ui:219
 msgid "Week"
 msgstr "שבוע"
 
-#: src/gui/gcal-window.ui:217
+#: src/gui/gcal-window.ui:233
 msgid "Month"
 msgstr "חודש"
 
-#: src/gui/gcal-window.ui:257
+#: src/gui/gcal-window.ui:273
 msgid "_Online Accounts…"
 msgstr "_חשבונות מקוונים…"
 
-#: src/gui/gcal-window.ui:269
+#: src/gui/gcal-window.ui:285
 msgid "_Keyboard Shortcuts"
 msgstr "_צירופי מקשים"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:289
 msgid "_About Calendar"
 msgstr "על אודות _לוח שנה"
 
@@ -1291,6 +1298,9 @@ msgstr "מאורעות _עוקבים"
 #: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "_כל האירועים"
+
+#~ msgid "Year view"
+#~ msgstr "תצוגה שנתית"
 
 #~ msgid "Year"
 #~ msgstr "שנה"
