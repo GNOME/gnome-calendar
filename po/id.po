@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-07-15 00:56+0000\n"
-"PO-Revision-Date: 2022-07-24 11:29+0700\n"
+"POT-Creation-Date: 2022-08-20 21:05+0000\n"
+"PO-Revision-Date: 2022-08-22 17:07+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnomed@i15n.org>\n"
 "Language: id\n"
@@ -52,13 +52,17 @@ msgstr ""
 "yang hilang. Anda akan merasa nyaman memakai Calendar, serasa Anda sudah "
 "memakainya bertahun-tahun!"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
 msgid "Week view"
 msgstr "Tilikan minggu"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Year view"
-msgstr "Tilikan tahun"
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
+msgid "Month view"
+msgstr "Tilikan bulan"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
+msgid "Event editor"
+msgstr "Penyunting acara"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -440,7 +444,7 @@ msgstr "Kemarin"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:161
+#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 msgid "Today"
 msgstr "Hari ini"
 
@@ -589,7 +593,7 @@ msgstr ""
 "Andika Triwidada <andika@gmail.com>, 2013, 2016, 2019, 2021.\n"
 "Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2022."
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:261
+#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
 msgid "Weather"
 msgstr "Cuaca"
 
@@ -1024,6 +1028,16 @@ msgstr "Acara Baru pada %d Desember"
 msgid "Edit Details…"
 msgstr "Sunting Rincian…"
 
+#: src/gui/gcal-toolbar-end.ui:9
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "Cari acara"
+
+#: src/gui/gcal-toolbar-end.ui:21
+msgctxt "tooltip"
+msgid "Add a new event"
+msgstr "Tambah acara baru"
+
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
 msgstr "Tampilkan Cuaca"
@@ -1032,45 +1046,35 @@ msgstr "Tampilkan Cuaca"
 msgid "Automatic Location"
 msgstr "Lokasi Otomatis"
 
-#: src/gui/gcal-window.c:698
+#: src/gui/gcal-window.c:699
 msgid "Another event deleted"
 msgstr "Acara lain dihapus"
 
-#: src/gui/gcal-window.c:698
+#: src/gui/gcal-window.c:699
 msgid "Event deleted"
 msgstr "Acara dihapus"
 
-#: src/gui/gcal-window.c:700
+#: src/gui/gcal-window.c:701
 msgid "_Undo"
 msgstr "_Tak Jadi"
 
-#: src/gui/gcal-window.ui:177
-msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "Tambah acara baru"
-
-#: src/gui/gcal-window.ui:182
-msgctxt "tooltip"
-msgid "Search for events"
-msgstr "Cari acara"
-
-#: src/gui/gcal-window.ui:203
+#: src/gui/gcal-window.ui:219
 msgid "Week"
 msgstr "Minggu"
 
-#: src/gui/gcal-window.ui:217
+#: src/gui/gcal-window.ui:233
 msgid "Month"
 msgstr "Bulan"
 
-#: src/gui/gcal-window.ui:257
+#: src/gui/gcal-window.ui:273
 msgid "_Online Accounts…"
 msgstr "Ak_un Daring…"
 
-#: src/gui/gcal-window.ui:269
+#: src/gui/gcal-window.ui:285
 msgid "_Keyboard Shortcuts"
 msgstr "Pintasan Papan Ti_k"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:289
 msgid "_About Calendar"
 msgstr "Ten_ang Kalender"
 
@@ -1249,6 +1253,9 @@ msgstr "A_cara berikutnya"
 #: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "Semu_a acara"
+
+#~ msgid "Year view"
+#~ msgstr "Tilikan tahun"
 
 #~ msgid "Year"
 #~ msgstr "Tahun"
