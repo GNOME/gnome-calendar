@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-07-15 00:56+0000\n"
-"PO-Revision-Date: 2022-07-27 11:29+0200\n"
+"POT-Creation-Date: 2022-08-20 21:05+0000\n"
+"PO-Revision-Date: 2022-08-24 08:27+0200\n"
 "Last-Translator: Daniel Mustieles García <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -52,13 +52,17 @@ msgstr ""
 "y la usabilidad centrada en el usuario. No hay excesos ni carencias. Se "
 "sentirá cómodo usando Calendario, como si llevara años usándolo."
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
 msgid "Week view"
 msgstr "Vista de semana"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Year view"
-msgstr "Vista de año"
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
+msgid "Month view"
+msgstr "Vista de mes"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
+msgid "Event editor"
+msgstr "Editor de eventos"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -453,7 +457,7 @@ msgstr "Ayer"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:161
+#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 msgid "Today"
 msgstr "Hoy"
 
@@ -600,7 +604,7 @@ msgstr "El Proyecto GNOME"
 msgid "translator-credits"
 msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2012 - 2021"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:261
+#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
 msgid "Weather"
 msgstr "Meteorología"
 
@@ -1035,6 +1039,16 @@ msgstr "Evento nuevo el %d de diciembre"
 msgid "Edit Details…"
 msgstr "Editar detalles…"
 
+#: src/gui/gcal-toolbar-end.ui:9
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "Buscar eventos"
+
+#: src/gui/gcal-toolbar-end.ui:21
+msgctxt "tooltip"
+msgid "Add a new event"
+msgstr "Añadir un evento nuevo"
+
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
 msgstr "Mostrar información meteorológica"
@@ -1043,45 +1057,35 @@ msgstr "Mostrar información meteorológica"
 msgid "Automatic Location"
 msgstr "Ubicación automática"
 
-#: src/gui/gcal-window.c:698
+#: src/gui/gcal-window.c:699
 msgid "Another event deleted"
 msgstr "Otro evento eliminado"
 
-#: src/gui/gcal-window.c:698
+#: src/gui/gcal-window.c:699
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
-#: src/gui/gcal-window.c:700
+#: src/gui/gcal-window.c:701
 msgid "_Undo"
 msgstr "Des_hacer"
 
-#: src/gui/gcal-window.ui:177
-msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "Añadir un evento nuevo"
-
-#: src/gui/gcal-window.ui:182
-msgctxt "tooltip"
-msgid "Search for events"
-msgstr "Buscar eventos"
-
-#: src/gui/gcal-window.ui:203
+#: src/gui/gcal-window.ui:219
 msgid "Week"
 msgstr "Semana"
 
-#: src/gui/gcal-window.ui:217
+#: src/gui/gcal-window.ui:233
 msgid "Month"
 msgstr "Mes"
 
-#: src/gui/gcal-window.ui:257
+#: src/gui/gcal-window.ui:273
 msgid "_Online Accounts…"
 msgstr "C_uentas en línea…"
 
-#: src/gui/gcal-window.ui:269
+#: src/gui/gcal-window.ui:285
 msgid "_Keyboard Shortcuts"
 msgstr "_Atajos del teclado"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:289
 msgid "_About Calendar"
 msgstr "_Acerca de Calendario"
 
@@ -1262,6 +1266,9 @@ msgstr "_Eventos próximos"
 #: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "_Todos los eventos"
+
+#~ msgid "Year view"
+#~ msgstr "Vista de año"
 
 #~ msgid "Year"
 #~ msgstr "Año"
