@@ -3,7 +3,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2022-07-21 10:11+0000\n"
 "Last-Translator: Нанба Наала <naala-nanba@rambler.ru>\n"
-"Language-Team: Abkhazian <ab@li.org>\n"
+"Language-Team: Abkhazian <daniel.abzakh@gmail.com>\n"
 "Language: ab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -426,7 +426,7 @@ msgstr ""
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
 msgid "Yesterday"
-msgstr ""
+msgstr "Иацы"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
@@ -456,7 +456,7 @@ msgstr "%1$s %2$s"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:17
 msgid "All Day"
-msgstr ""
+msgstr "Амш зегьы"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:34
 #: src/gui/importer/gcal-import-file-row.c:152
@@ -502,7 +502,7 @@ msgstr ""
 
 #: src/gui/event-editor/gcal-schedule-section.ui:154
 msgid "Forever"
-msgstr ""
+msgstr "Еснагь"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:155
 msgid "No. of occurrences"
@@ -612,7 +612,7 @@ msgstr ""
 
 #: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:258
 msgid "April"
-msgstr "Мшаԥы"
+msgstr "Мшаԥымза"
 
 #: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:259
 msgid "May"
@@ -659,7 +659,7 @@ msgstr ""
 #: src/gui/gcal-event-popover.c:166
 #, c-format
 msgid "Yesterday %s"
-msgstr ""
+msgstr "Иацы%s"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
@@ -726,7 +726,7 @@ msgstr ""
 #: src/gui/gcal-event-popover.c:277
 #, c-format
 msgid "Yesterday, %1$s – %2$s"
-msgstr ""
+msgstr "Иацы, %1$s – %2$s"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
