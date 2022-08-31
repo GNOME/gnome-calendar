@@ -8,22 +8,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-02-13 13:34+0000\n"
-"PO-Revision-Date: 2022-02-13 17:24+0100\n"
+"POT-Creation-Date: 2022-08-31 07:02+0000\n"
+"PO-Revision-Date: 2022-08-31 20:41+0200\n"
 "Last-Translator: Matej Urbančič <mateju@src.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
+"n%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:193 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
 #: src/gui/gcal-window.ui:4
 msgid "Calendar"
 msgstr "Koledar"
@@ -51,13 +51,17 @@ msgstr ""
 "zmožnosti. Ni presežkov ni pomanjkljivosti. Uporaba programa je enostavna, "
 "kot je od nekdaj bila."
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
 msgid "Week view"
 msgstr "Tedenski pogled"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Year view"
-msgstr "Letni pogled"
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
+msgid "Month view"
+msgstr "Mesečni pogled"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
+msgid "Event editor"
+msgstr "Urejevalnik dogodkov"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -115,7 +119,7 @@ msgstr ""
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1909 src/gui/gcal-event-popover.c:388
+#: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s – %2$s"
@@ -124,14 +128,14 @@ msgstr "%1$s – %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1917
+#: src/core/gcal-event.c:1914
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s, %2$s – %3$s, %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1933 src/gui/gcal-quick-add-popover.c:461
+#: src/core/gcal-event.c:1930 src/gui/gcal-quick-add-popover.c:461
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -167,7 +171,7 @@ msgid "Settings"
 msgstr "Nastavitve"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
-#: src/gui/event-editor/gcal-summary-section.ui:35
+#: src/gui/event-editor/gcal-summary-section.ui:23
 #: src/gui/gcal-event-popover.ui:111
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -200,7 +204,7 @@ msgstr "Izbor datoteke"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:284
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 msgid "Cancel"
 msgstr "Prekliči"
@@ -209,11 +213,11 @@ msgstr "Prekliči"
 msgid "Open"
 msgstr "Odpri"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:515
+#: src/gui/calendar-management/gcal-new-calendar-page.c:512
 msgid "New Calendar"
 msgstr "Nov koledar"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:693
+#: src/gui/calendar-management/gcal-new-calendar-page.c:690
 msgid "Calendar files"
 msgstr "Datoteke koledarja"
 
@@ -239,6 +243,7 @@ msgid "Open a File"
 msgstr "Odpri datoteko"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
+#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Koledarji"
 
@@ -262,7 +267,7 @@ msgstr "Geslo"
 msgid "Connect"
 msgstr "Poveži"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:288
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Dodaj"
@@ -488,7 +493,7 @@ msgstr "včeraj"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:119
+#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 msgid "Today"
 msgstr "danes"
 
@@ -578,7 +583,7 @@ msgstr "Ponovi nekajkrat"
 msgid "End Repeat Date"
 msgstr "Datum konca ponavljanja"
 
-#: src/gui/event-editor/gcal-summary-section.c:99
+#: src/gui/event-editor/gcal-summary-section.c:78
 #: src/gui/gcal-quick-add-popover.c:676
 msgid "Unnamed event"
 msgstr "Neimenovan dogodek"
@@ -588,16 +593,16 @@ msgstr "Neimenovan dogodek"
 msgid "Title"
 msgstr "Naslov"
 
-#: src/gui/event-editor/gcal-time-selector.ui:18
+#: src/gui/event-editor/gcal-time-selector.ui:22
 msgid ":"
 msgstr ":"
 
-#: src/gui/event-editor/gcal-time-selector.ui:41
+#: src/gui/event-editor/gcal-time-selector.ui:46
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "dop"
 
-#: src/gui/event-editor/gcal-time-selector.ui:42
+#: src/gui/event-editor/gcal-time-selector.ui:47
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "pop"
@@ -622,29 +627,37 @@ msgstr "Odpri koledar na preteklem datumu"
 msgid "Open calendar showing the passed event"
 msgstr "Odpri koledar v pogledu preteklih dogodkov"
 
-#: src/gui/gcal-application.c:150
+#: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Avtorske pravice © 2012–%d Avtorji programa Koledar"
 
-#: src/gui/gcal-application.c:204
+#: src/gui/gcal-application.c:180
+msgid "The GNOME Project"
+msgstr "Projekt GNOME"
+
+#: src/gui/gcal-application.c:188
 msgid "translator-credits"
 msgstr "Matej Urbančič <mateju@svn@gnome.org>"
+
+#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+msgid "Weather"
+msgstr "Vreme"
 
 #: src/gui/gcal-calendar-button.ui:6
 msgid "Manage your calendars"
 msgstr "Upravljanje s koledarji"
 
-#: src/gui/gcal-calendar-button.ui:32
+#: src/gui/gcal-calendar-button.ui:41
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Poteka usklajevanje oddaljenih koledarjev …"
 
-#: src/gui/gcal-calendar-button.ui:62
+#: src/gui/gcal-calendar-button.ui:71
 msgid "_Synchronize Calendars"
 msgstr "_Uskladi koledarje"
 
-#: src/gui/gcal-calendar-button.ui:66
+#: src/gui/gcal-calendar-button.ui:75
 msgid "Manage Calendars…"
 msgstr "Upravljanje koledarjev"
 
@@ -809,7 +822,7 @@ msgid "Edit…"
 msgstr "Uredi …"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:409
+#: src/gui/gcal-event-widget.c:350
 #, c-format
 msgid "At %s"
 msgstr "Mesto: %s"
@@ -1062,6 +1075,16 @@ msgstr "Nov dogodek na %d. decembra"
 msgid "Edit Details…"
 msgstr "Uredi podrobnosti …"
 
+#: src/gui/gcal-toolbar-end.ui:9
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "Iskanje dogodkov"
+
+#: src/gui/gcal-toolbar-end.ui:21
+msgctxt "tooltip"
+msgid "Add a new event"
+msgstr "Dodaj nov dogodek"
+
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
 msgstr "Pokaži vremensko napoved"
@@ -1070,53 +1093,35 @@ msgstr "Pokaži vremensko napoved"
 msgid "Automatic Location"
 msgstr "Samodejno določi mesto"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:699
 msgid "Another event deleted"
 msgstr "Izbrisan je drug dogodek"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:699
 msgid "Event deleted"
 msgstr "Dogodek je izbrisan"
 
-#: src/gui/gcal-window.c:715
+#: src/gui/gcal-window.c:701
 msgid "_Undo"
 msgstr "_Razveljavi"
 
-#: src/gui/gcal-window.ui:114
-msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "Dodaj nov dogodek"
-
-#: src/gui/gcal-window.ui:159
-msgctxt "tooltip"
-msgid "Search for events"
-msgstr "Iskanje dogodkov"
-
-#: src/gui/gcal-window.ui:184
+#: src/gui/gcal-window.ui:219
 msgid "Week"
 msgstr "Teden"
 
-#: src/gui/gcal-window.ui:198
+#: src/gui/gcal-window.ui:233
 msgid "Month"
 msgstr "Mesec"
 
-#: src/gui/gcal-window.ui:213
-msgid "Year"
-msgstr "Leto"
-
-#: src/gui/gcal-window.ui:252
+#: src/gui/gcal-window.ui:273
 msgid "_Online Accounts…"
 msgstr "_Spletni računi …"
 
-#: src/gui/gcal-window.ui:256
-msgid "Weather"
-msgstr "Vreme"
-
-#: src/gui/gcal-window.ui:264
+#: src/gui/gcal-window.ui:285
 msgid "_Keyboard Shortcuts"
 msgstr "_Tipkovne bližnjice"
 
-#: src/gui/gcal-window.ui:268
+#: src/gui/gcal-window.ui:289
 msgid "_About Calendar"
 msgstr "_O programu"
 
@@ -1195,11 +1200,6 @@ msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Mesečni pogled"
 
-#: src/gui/gtk/help-overlay.ui:96
-msgctxt "shortcut window"
-msgid "Year view"
-msgstr "Letni pogled"
-
 #: src/gui/importer/gcal-import-dialog.c:396
 #, c-format
 msgid "Import %d event"
@@ -1213,7 +1213,7 @@ msgstr[3] "Uvozi %d dogodke"
 msgid "Import Files…"
 msgstr "Uvozi datoteke …"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1311
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
 msgid "_Cancel"
 msgstr "_Prekliči"
 
@@ -1287,7 +1287,7 @@ msgstr[3] "Drugi %d dogodki"
 msgid "week %d"
 msgstr "%d. teden"
 
-#: src/utils/gcal-utils.c:1308
+#: src/utils/gcal-utils.c:1320
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1295,17 +1295,27 @@ msgstr ""
 "Dogodek, ki ga nameravate spremeniti, se ponavlja. Spremembe, ki jih boste "
 "naredili se bodo odražale na:"
 
-#: src/utils/gcal-utils.c:1313
+#: src/utils/gcal-utils.c:1325
 msgid "_Only This Event"
 msgstr "_Le ta dogodek"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1332
 msgid "_Subsequent events"
 msgstr "_Poznejši dogodki"
 
-#: src/utils/gcal-utils.c:1322
+#: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "_Vsi dogodki"
+
+#~ msgid "Year view"
+#~ msgstr "Letni pogled"
+
+#~ msgid "Year"
+#~ msgstr "Leto"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Year view"
+#~ msgstr "Letni pogled"
 
 #~ msgid "Follow system night light"
 #~ msgstr "Upošteva sistemsko nočno osvetlitev"
@@ -1476,8 +1486,8 @@ msgstr "_Vsi dogodki"
 
 #~ msgid ""
 #~ "Enter the address of the calendar that you want to add. If the calendar "
-#~ "belongs to one of you online accounts, you can add it through the <a href="
-#~ "\"GOA\">online account settings</a>."
+#~ "belongs to one of you online accounts, you can add it through the <a "
+#~ "href=\"GOA\">online account settings</a>."
 #~ msgstr ""
 #~ "Vpis naslova koledarja, ki ga želite dodati. Če je koledar v enem izmed "
 #~ "spletnih računov, ga je mogoče dodati prek <a href=\"GOA\">nastavitev "
