@@ -4,25 +4,27 @@
 #
 # Cheng-Chia Tseng <pswo10680@gmail.com>, 2013.
 # pan93412 <pan93412@gmail.com>, 2019.
+# Freddy Cheng <freddy4212@gmail.com>, 2022.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-11-07 10:58+0000\n"
-"PO-Revision-Date: 2021-04-03 08:27+0800\n"
-"Last-Translator: Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>\n"
-"Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
+"POT-Creation-Date: 2022-08-24 06:28+0000\n"
+"PO-Revision-Date: 2022-09-03 16:54+0800\n"
+"Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
+"Language-Team: Chinese - Taiwan <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
-#: src/gui/gcal-window.ui:170
+#: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4
 msgid "Calendar"
 msgstr "行事曆"
 
@@ -36,8 +38,8 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"GNOME《行事曆》是為了能完美搭配 GNOME 桌面而設計的簡單、精美行事曆應用程式。"
-"藉著重複使用 GNOME 桌面內建的元件，《行事曆》順利整合到 GNOME 生態系中。"
+"《行事曆》是為了完美搭配 GNOME 桌面而設計的行事曆應用程式，簡單且精美，並能無"
+"縫整合至 GNOME 的生態系統中。"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
@@ -45,25 +47,29 @@ msgid ""
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
-"我們的目標是在精心設計的功能，與以使用者為中心的可用性之間找到完美的平衡點，"
-"麻雀雖小五臟俱全，您會很舒適的使用《行事曆》，就像您過去一直在使用的一樣！"
+"我們的目標是在「精心設計的功能」以及「使用者中心的可用性」之間找到完美平衡"
+"點，不多也不少。《行事曆》將帶給你一如既往舒適的使用經驗。"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
 msgid "Week view"
-msgstr "週次檢視"
+msgstr "週檢視"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Year view"
-msgstr "年檢視"
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
+msgid "Month view"
+msgstr "月檢視"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
+msgid "Event editor"
+msgstr "編輯行程"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
-msgstr "存取、管理您的行事曆"
+msgstr "存取及管理您的行事曆"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in.in:13
 msgid "Calendar;Event;Reminder;"
-msgstr "Calendar;Event;Reminder;行事曆;事件;行程;活動;提醒;"
+msgstr "Calendar;Event;Reminder;行事曆;事件;行程;活動;提醒;日曆;"
 
 #: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
@@ -79,7 +85,7 @@ msgstr "視窗大小"
 
 #: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
-msgstr "視窗大小 (寬度和高度)。"
+msgstr "視窗大小 (寬度, 高度)。"
 
 #: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Window position"
@@ -87,15 +93,15 @@ msgstr "視窗位置"
 
 #: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
-msgstr "視窗位置 (x 與 y)。"
+msgstr "視窗位置 (x, y)。"
 
 #: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
-msgstr "使用中檢視的類型"
+msgstr "紀錄目前的檢視畫面"
 
 #: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
-msgstr "使用中視窗檢視的類型，預設值為：月次檢視"
+msgstr "紀錄目前的檢視畫面，預設值為：月檢視"
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
@@ -105,421 +111,429 @@ msgstr "天氣服務設定"
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
-msgstr "是否要顯示天氣報告，會使用自動位置和位置名稱"
-
-#: data/org.gnome.calendar.gschema.xml.in:31
-msgid "Follow system night light"
-msgstr "跟隨系統的夜光模式"
-
-#: data/org.gnome.calendar.gschema.xml.in:32
-msgid "Use GNOME night light setting to activate night-mode."
-msgstr "使用 GNOME 夜光模式設定啟用夜間模式。"
+msgstr "是否要透過定位服務偵測並顯示所在地的天氣資訊"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1882
+#. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
+#: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
 #, c-format
 msgid "%1$s — %2$s"
-msgstr "%1$s — %2$s"
+msgstr "%1$s至 %2$s"
 
 #.
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1890
+#: src/core/gcal-event.c:1914
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
-msgstr "%1$s %2$s — %3$s %4$s"
+msgstr "%1$s %2$s 至 %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1906 src/gui/gcal-quick-add-popover.c:472
+#: src/core/gcal-event.c:1930 src/gui/gcal-quick-add-popover.c:461
 #, c-format
 msgid "%1$s, %2$s – %3$s"
-msgstr "%1$s，%2$s – %3$s"
+msgstr "%1$s 從 %2$s 開始至 %3$s"
 
-#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:42
+#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
 msgstr "行事曆設定"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:359
+#: src/gui/calendar-management/gcal-calendars-page.c:354
 msgid "Manage Calendars"
 msgstr "管理行事曆"
 
 #. Update notification label
-#: src/gui/calendar-management/gcal-calendars-page.c:389
+#: src/gui/calendar-management/gcal-calendars-page.c:384
 #, c-format
 msgid "Calendar <b>%s</b> removed"
-msgstr "<b>%s</b> 行事曆已移除"
+msgstr "已移除「%s」行事曆"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:672 src/gui/gcal-window.c:676
+#: src/gui/calendar-management/gcal-calendars-page.ui:24
 msgid "Undo"
-msgstr "復原"
+msgstr "還原"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:97
+#: src/gui/calendar-management/gcal-calendars-page.ui:78
 msgid "Add Calendar…"
 msgstr "加入行事曆…"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:18
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:19
 msgid "Account"
 msgstr "帳號"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:43
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:46
 msgid "Settings"
 msgstr "設定"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
-#: src/gui/event-editor/gcal-summary-section.ui:37
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
+#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/gcal-event-popover.ui:111
+#: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
-msgstr "位置"
+msgstr "地點"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:84
 msgid "Calendar name"
 msgstr "行事曆名稱"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:121
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:65
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
 msgid "Color"
-msgstr "色彩"
+msgstr "顏色"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:155
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:134
 msgid "Display calendar"
 msgstr "顯示行事曆"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:175
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:146
 msgid "Add new events to this calendar by default"
-msgstr "將新行程預設加入此行事曆中"
+msgstr "新行程預設會加入本行事曆"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:190
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:158
 msgid "Remove Calendar"
 msgstr "移除行事曆"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:505
+#: src/gui/calendar-management/gcal-file-chooser-button.c:49
+msgid "Select a file"
+msgstr "選擇檔案"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:94
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
+msgid "Cancel"
+msgstr "取消"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:96
+msgid "Open"
+msgstr "開啟"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:512
 msgid "New Calendar"
 msgstr "新增行事曆"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:667
+#: src/gui/calendar-management/gcal-new-calendar-page.c:690
 msgid "Calendar files"
-msgstr "行事曆檔案"
+msgstr "行事曆檔"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:41
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:16
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:22
 msgid "Calendar Name"
 msgstr "行事曆名稱"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:86
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:55
 msgid "Import a Calendar"
 msgstr "匯入行事曆"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:72
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
-msgstr "亦可輸入想匯入線上行事曆的網路位址，或開啟支援的行事曆檔案。"
+msgstr "您也能輸入線上行事曆網址或開啟支援的行事曆檔來匯入行事曆。"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:137
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:100
 msgid "Open a File"
 msgstr "開啟檔案"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:158
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:124
+#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "行事曆"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:204
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:148
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"如果該行事曆屬於您的線上帳號之一，您可以透過<a href=\"GOA\">線上帳號設定</a>"
-"來將之加入。"
+"欲匯入線上帳號的行事曆，可於《設定值》中加入<a href=\"GOA\">線上帳號</a>。"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:240
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
 msgid "User"
 msgstr "使用者"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:254
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 msgid "Password"
 msgstr "密碼"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:302
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:341
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:17
-msgid "Cancel"
-msgstr "取消"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:311
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
 msgid "Connect"
-msgstr "連接"
+msgstr "連線"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:348
-#: src/gui/gcal-quick-add-popover.ui:130
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
+#: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "加入"
 
-#: src/gui/event-editor/gcal-alarm-row.c:85
+#: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
-msgstr[0] "%1$u天%2$u時%3$u分前"
+msgstr[0] "%1$u 天又 %2$u 小時 %3$u 分鐘前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:89
+#: src/gui/event-editor/gcal-alarm-row.c:88
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
-msgstr[0] "%1$u天%2$u時%3$u分前"
+msgstr[0] "%1$u 天又 %2$u 小時 %3$u 分鐘前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:95
+#: src/gui/event-editor/gcal-alarm-row.c:94
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
-msgstr[0] "%1$u天%2$u時%3$u分前"
+msgstr[0] "%1$u 天又 %2$u 小時 %3$u 分鐘前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:99
+#: src/gui/event-editor/gcal-alarm-row.c:98
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
-msgstr[0] "%1$u天%2$u時%3$u分前"
+msgstr[0] "%1$u 天又 %2$u 小時 %3$u 分鐘前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:114
+#: src/gui/event-editor/gcal-alarm-row.c:113
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
-msgstr[0] "%1$u天%2$u時前"
+msgstr[0] "%1$u 天又 %2$u 小時前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:118
+#: src/gui/event-editor/gcal-alarm-row.c:117
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
-msgstr[0] "%1$u天%2$u時前"
+msgstr[0] "%1$u 天又 %2$u 小時前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:134
+#: src/gui/event-editor/gcal-alarm-row.c:133
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
-msgstr[0] "%1$u天%2$u分前"
+msgstr[0] "%1$u 天又 %2$u 分鐘前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:138
+#: src/gui/event-editor/gcal-alarm-row.c:137
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
-msgstr[0] "%1$u天%2$u分前"
+msgstr[0] "%1$u 天又 %2$u 分鐘前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:148
+#: src/gui/event-editor/gcal-alarm-row.c:147
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
-msgstr[0] "%1$u天前"
+msgstr[0] "%1$u 天前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:166
+#: src/gui/event-editor/gcal-alarm-row.c:165
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
-msgstr[0] "%1$u時%2$u分前"
+msgstr[0] "%1$u 小時 %2$u 分鐘前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:170
+#: src/gui/event-editor/gcal-alarm-row.c:169
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
-msgstr[0] "%1$u時%2$u分前"
+msgstr[0] "%1$u 小時 %2$u 分鐘前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:180
+#: src/gui/event-editor/gcal-alarm-row.c:179
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
-msgstr[0] "%1$u小時前"
+msgstr[0] "%1$u 小時前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:192
+#: src/gui/event-editor/gcal-alarm-row.c:191
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
-msgstr[0] "%1$u分前"
+msgstr[0] "%1$u 分鐘前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:199
+#: src/gui/event-editor/gcal-alarm-row.c:198
 msgid "Event start time"
 msgstr "活動開始時間"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:18
+#: src/gui/event-editor/gcal-alarm-row.ui:11
 msgid "Toggles the sound of the alarm"
-msgstr "切換鬧鐘聲音"
+msgstr "鈴響開關"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:35
+#: src/gui/event-editor/gcal-alarm-row.ui:21
 msgid "Remove the alarm"
-msgstr "移除此鬧鐘"
+msgstr "移除鈴響"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:201
+#: src/gui/event-editor/gcal-event-editor-dialog.c:196
 msgid "Save"
 msgstr "儲存"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:201
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:108
+#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:86
 msgid "Done"
 msgstr "完成"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:37
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
 msgid "Click to select the calendar"
-msgstr "點按這裡選擇行事曆"
+msgstr "點一下即可選擇行事曆"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:157
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:115
 msgid "Schedule"
-msgstr "排定行程"
+msgstr "日程"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:178
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
 msgid "Reminders"
 msgstr "提醒"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:201
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
 msgid "Notes"
 msgstr "備註"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:226
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
 msgid "Delete Event"
-msgstr "刪除事件"
+msgstr "刪除行程"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:28
+#: src/gui/event-editor/gcal-reminders-section.ui:26
 msgid "Add a Reminder…"
 msgstr "加入提醒…"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:55
+#: src/gui/event-editor/gcal-reminders-section.ui:52
 msgid "5 minutes"
-msgstr "5 分鐘"
+msgstr "5 分鐘前"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:58
+msgid "10 minutes"
+msgstr "10 分鐘前"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:64
-msgid "10 minutes"
-msgstr "10 分鐘"
-
-#: src/gui/event-editor/gcal-reminders-section.ui:73
 msgid "15 minutes"
-msgstr "15 分鐘"
+msgstr "15 分鐘前"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:82
+#: src/gui/event-editor/gcal-reminders-section.ui:70
 msgid "30 minutes"
 msgstr "30 分鐘"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:91
+#: src/gui/event-editor/gcal-reminders-section.ui:76
 msgid "1 hour"
-msgstr "1 小時"
+msgstr "1 小時前"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:99
+#: src/gui/event-editor/gcal-reminders-section.ui:82
 msgid "1 day"
-msgstr "1 天"
+msgstr "1 天前"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:108
+#: src/gui/event-editor/gcal-reminders-section.ui:88
 msgid "2 days"
-msgstr "2 天"
+msgstr "2 天前"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:117
+#: src/gui/event-editor/gcal-reminders-section.ui:94
 msgid "3 days"
-msgstr "3 天"
+msgstr "3 天前"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:126
+#: src/gui/event-editor/gcal-reminders-section.ui:100
 msgid "1 week"
-msgstr "1 週"
+msgstr "1 週前"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:241
+#: src/gui/event-editor/gcal-schedule-section.c:238
 #, c-format
 msgid "Last %A"
-msgstr "上個%A"
+msgstr "上%A"
 
-#: src/gui/event-editor/gcal-schedule-section.c:245
+#: src/gui/event-editor/gcal-schedule-section.c:242
+#: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
 msgid "Yesterday"
 msgstr "昨天"
 
-#: src/gui/event-editor/gcal-schedule-section.c:249 src/gui/gcal-window.ui:187
-#: src/gui/views/gcal-year-view.c:282 src/gui/views/gcal-year-view.c:560
-#: src/gui/views/gcal-year-view.ui:88
+#: src/gui/event-editor/gcal-schedule-section.c:246
+#: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
+#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 msgid "Today"
 msgstr "今天"
 
-#: src/gui/event-editor/gcal-schedule-section.c:253
+#: src/gui/event-editor/gcal-schedule-section.c:250
+#: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
 msgid "Tomorrow"
 msgstr "明天"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:263
+#: src/gui/event-editor/gcal-schedule-section.c:255
 #, c-format
 msgid "This %A"
-msgstr "這個%A"
+msgstr "本%A"
 
 #.
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
-#: src/gui/event-editor/gcal-schedule-section.c:293
+#: src/gui/event-editor/gcal-schedule-section.c:285
 #, c-format
 msgid "%1$s, %2$s"
-msgstr "%1$s，%2$s"
+msgstr "%1$s %2$s"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:20
+#: src/gui/event-editor/gcal-schedule-section.ui:17
 msgid "All Day"
-msgstr "整天"
+msgstr "全天"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:40
+#: src/gui/event-editor/gcal-schedule-section.ui:34
+#: src/gui/importer/gcal-import-file-row.c:152
 msgid "Starts"
-msgstr "開始"
+msgstr "開始時間"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:90
+#: src/gui/event-editor/gcal-schedule-section.ui:77
+#: src/gui/importer/gcal-import-file-row.c:153
 msgid "Ends"
-msgstr "結束"
+msgstr "結束時間"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:140
+#: src/gui/event-editor/gcal-schedule-section.ui:120
 msgid "Repeat"
-msgstr "重複"
+msgstr "重複行程"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:150
+#: src/gui/event-editor/gcal-schedule-section.ui:128
 msgid "No Repeat"
 msgstr "不重複"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:151
+#: src/gui/event-editor/gcal-schedule-section.ui:129
 msgid "Daily"
 msgstr "每天"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:152
+#: src/gui/event-editor/gcal-schedule-section.ui:130
 msgid "Monday – Friday"
-msgstr "周一到週五"
+msgstr "週一至週五"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:153
+#: src/gui/event-editor/gcal-schedule-section.ui:131
 msgid "Weekly"
 msgstr "每週"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:154
+#: src/gui/event-editor/gcal-schedule-section.ui:132
 msgid "Monthly"
 msgstr "每月"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:155
+#: src/gui/event-editor/gcal-schedule-section.ui:133
 msgid "Yearly"
 msgstr "每年"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:168
+#: src/gui/event-editor/gcal-schedule-section.ui:146
 msgid "End Repeat"
 msgstr "結束重複"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:178
+#: src/gui/event-editor/gcal-schedule-section.ui:154
 msgid "Forever"
 msgstr "永遠"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:179
+#: src/gui/event-editor/gcal-schedule-section.ui:155
 msgid "No. of occurrences"
 msgstr "重複次數"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:180
+#: src/gui/event-editor/gcal-schedule-section.ui:156
 msgid "Until Date"
-msgstr "直到哪天"
+msgstr "直到某日"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:193
+#: src/gui/event-editor/gcal-schedule-section.ui:169
 msgid "Number of Occurrences"
 msgstr "重複次數"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:213
+#: src/gui/event-editor/gcal-schedule-section.ui:188
 msgid "End Repeat Date"
 msgstr "結束重複日期"
 
 #: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:689
+#: src/gui/gcal-quick-add-popover.c:676
 msgid "Unnamed event"
-msgstr "未命名的行程"
+msgstr "未命名行程"
 
-#: src/gui/event-editor/gcal-summary-section.ui:19
+#: src/gui/event-editor/gcal-summary-section.ui:16
+#: src/gui/importer/gcal-import-file-row.c:150
 msgid "Title"
 msgstr "標題"
 
@@ -527,186 +541,336 @@ msgstr "標題"
 msgid ":"
 msgstr ":"
 
-#: src/gui/event-editor/gcal-time-selector.ui:47
-#: src/gui/views/gcal-week-view.c:440
+#: src/gui/event-editor/gcal-time-selector.ui:46
+#: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "上午"
 
-#: src/gui/event-editor/gcal-time-selector.ui:48
-#: src/gui/views/gcal-week-view.c:440
+#: src/gui/event-editor/gcal-time-selector.ui:47
+#: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "下午"
 
-#: src/gui/gcal-application.c:63
+#: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
-msgstr "退出 GNOME 行事曆"
+msgstr "退出《行事曆》"
 
-#: src/gui/gcal-application.c:68
+#: src/gui/gcal-application.c:63
 msgid "Display version number"
 msgstr "顯示版本號碼"
 
-#: src/gui/gcal-application.c:73
+#: src/gui/gcal-application.c:68
 msgid "Enable debug messages"
 msgstr "啟用除錯訊息"
 
-#: src/gui/gcal-application.c:78
+#: src/gui/gcal-application.c:73
 msgid "Open calendar on the passed date"
-msgstr "在傳入的日期開啟行事曆"
+msgstr "開啟行事曆並前往輸入的日期"
 
-#: src/gui/gcal-application.c:83
+#: src/gui/gcal-application.c:78
 msgid "Open calendar showing the passed event"
-msgstr "開啟行事曆顯示傳入的行程"
+msgstr "開啟行事曆並顯示輸入的行程"
 
-#: src/gui/gcal-application.c:234
+#: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
-msgstr "著作權所有 © 2012–%d Calendar 作者群"
+msgstr "著作權所有 © 2012–%d 《行事曆》作者群"
 
-#: src/gui/gcal-application.c:288
+#: src/gui/gcal-application.c:180
+msgid "The GNOME Project"
+msgstr "GNOME 專案"
+
+#: src/gui/gcal-application.c:188
 msgid "translator-credits"
 msgstr ""
 "Cheng-Chia Tseng <pswo10680@gmail.com>, 2013, 2015, 2017.\n"
-"Yi-Jyun Pan <pan93412@gmail.com>, 2020."
+"Yi-Jyun Pan <pan93412@gmail.com>, 2020.\n"
+"Freddy Cheng <freddy4212@gmail.com>, 2022."
 
-#: src/gui/gcal-calendar-popover.ui:43
-msgid "_Synchronize Calendars"
-msgstr "同步行事曆(_S)"
+#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+msgid "Weather"
+msgstr "天氣"
 
-#: src/gui/gcal-calendar-popover.ui:51
-msgid "Manage Calendars…"
-msgstr "管理行事曆…"
+#: src/gui/gcal-calendar-button.ui:6
+msgid "Manage your calendars"
+msgstr "管理您的行事曆"
 
-#: src/gui/gcal-calendar-popover.ui:75
+#: src/gui/gcal-calendar-button.ui:41
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "正在同步遠端行事曆…"
 
-#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:428
-#, c-format
-msgid "At %s"
-msgstr "地點在 %s"
+#: src/gui/gcal-calendar-button.ui:71
+msgid "_Synchronize Calendars"
+msgstr "同步行事曆(_S)"
 
-#: src/gui/gcal-quick-add-popover.c:117
-#, c-format
-msgid "%s (this calendar is read-only)"
-msgstr "%s (這個行事曆唯讀)"
+#: src/gui/gcal-calendar-button.ui:75
+msgid "Manage Calendars…"
+msgstr "管理行事曆…"
 
-#: src/gui/gcal-quick-add-popover.c:244
-msgid "from next Monday"
-msgstr "從下週一"
-
-#: src/gui/gcal-quick-add-popover.c:245
-msgid "from next Tuesday"
-msgstr "從下週二"
-
-#: src/gui/gcal-quick-add-popover.c:246
-msgid "from next Wednesday"
-msgstr "從下週三"
-
-#: src/gui/gcal-quick-add-popover.c:247
-msgid "from next Thursday"
-msgstr "從下週四"
-
-#: src/gui/gcal-quick-add-popover.c:248
-msgid "from next Friday"
-msgstr "從下週五"
-
-#: src/gui/gcal-quick-add-popover.c:249
-msgid "from next Saturday"
-msgstr "從下週六"
-
-#: src/gui/gcal-quick-add-popover.c:250
-msgid "from next Sunday"
-msgstr "從下週日"
-
-#: src/gui/gcal-quick-add-popover.c:255
-msgid "to next Monday"
-msgstr "到下週一"
-
-#: src/gui/gcal-quick-add-popover.c:256
-msgid "to next Tuesday"
-msgstr "到下週二"
-
-#: src/gui/gcal-quick-add-popover.c:257
-msgid "to next Wednesday"
-msgstr "到下週三"
-
-#: src/gui/gcal-quick-add-popover.c:258
-msgid "to next Thursday"
-msgstr "到下週四"
-
-#: src/gui/gcal-quick-add-popover.c:259
-msgid "to next Friday"
-msgstr "到下週五"
-
-#: src/gui/gcal-quick-add-popover.c:260
-msgid "to next Saturday"
-msgstr "到下週六"
-
-#: src/gui/gcal-quick-add-popover.c:261
-msgid "to next Sunday"
-msgstr "到下週日"
-
-#: src/gui/gcal-quick-add-popover.c:266
+#: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:255
 msgid "January"
 msgstr "1月"
 
-#: src/gui/gcal-quick-add-popover.c:267
+#: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:256
 msgid "February"
 msgstr "2月"
 
-#: src/gui/gcal-quick-add-popover.c:268
+#: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:257
 msgid "March"
 msgstr "3月"
 
-#: src/gui/gcal-quick-add-popover.c:269
+#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:258
 msgid "April"
 msgstr "4月"
 
-#: src/gui/gcal-quick-add-popover.c:270
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:259
 msgid "May"
 msgstr "5月"
 
-#: src/gui/gcal-quick-add-popover.c:271
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:260
 msgid "June"
 msgstr "6月"
 
-#: src/gui/gcal-quick-add-popover.c:272
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:261
 msgid "July"
 msgstr "7月"
 
-#: src/gui/gcal-quick-add-popover.c:273
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:262
 msgid "August"
 msgstr "8月"
 
-#: src/gui/gcal-quick-add-popover.c:274
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:263
 msgid "September"
 msgstr "9月"
 
-#: src/gui/gcal-quick-add-popover.c:275
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:264
 msgid "October"
 msgstr "10月"
 
-#: src/gui/gcal-quick-add-popover.c:276
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:265
 msgid "November"
 msgstr "11月"
 
-#: src/gui/gcal-quick-add-popover.c:277
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:266
 msgid "December"
 msgstr "12月"
 
-#: src/gui/gcal-quick-add-popover.c:286
+#: src/gui/gcal-event-popover.c:158
+#, c-format
+msgid "Today %s"
+msgstr "今天 %s"
+
+#: src/gui/gcal-event-popover.c:162
+#, c-format
+msgid "Tomorrow %s"
+msgstr "明天 %s"
+
+#: src/gui/gcal-event-popover.c:166
+#, c-format
+msgid "Yesterday %s"
+msgstr "昨天 %s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, and %3$ is the hour. This format string results in dates
+#. * like "November 21, 22:00".
+#.
+#: src/gui/gcal-event-popover.c:175
+#, c-format
+msgid "%1$s %2$d, %3$s"
+msgstr "%1$s%2$d日 %3$s "
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$d is the year, and %4$s is the hour. This format string
+#. * results in dates like "November 21, 2020, 22:00".
+#.
+#: src/gui/gcal-event-popover.c:187
+#, c-format
+msgid "%1$s %2$d, %3$d, %4$s"
+msgstr "%3$d年%1$s%2$d日 %4$s "
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), and %2$d is
+#. * the day of month. This format string results in dates like
+#. * "November 21".
+#.
+#: src/gui/gcal-event-popover.c:216 src/gui/gcal-event-popover.c:330
+#, c-format
+msgid "%1$s %2$d"
+msgstr "%1$s%2$d日"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, and %3$d is the year. This format string results in dates
+#. * like "November 21, 2020".
+#.
+#: src/gui/gcal-event-popover.c:227 src/gui/gcal-event-popover.c:341
+#, c-format
+msgid "%1$s %2$d, %3$d"
+msgstr "%3$d年%1$s%2$d日"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Today, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:261
+#, c-format
+msgid "Today, %1$s — %2$s"
+msgstr "今天 %1$s 至 %2$s"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Tomorrow, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:269
+#, c-format
+msgid "Tomorrow, %1$s – %2$s"
+msgstr "明天 %1$s 至 %2$s"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Tomorrow, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:277
+#, c-format
+msgid "Yesterday, %1$s – %2$s"
+msgstr "昨天 %1$s 至 %2$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$s is the start hour, and %4$s is the end hour. This
+#. * format string results in dates like "November 21, 19:00 — 22:00".
+#.
+#: src/gui/gcal-event-popover.c:286
+#, c-format
+msgid "%1$s %2$d, %3$s – %4$s"
+msgstr "%1$s%2$d日 %3$s 至 %4$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$d is the year, %4$s is the start hour, and %5$s is the
+#. * end hour. This format string results in dates like:
+#. *
+#. * "November 21, 2021, 19:00 — 22:00".
+#.
+#: src/gui/gcal-event-popover.c:301
+#, c-format
+msgid "%1$s %2$d, %3$d, %4$s – %5$s"
+msgstr "%3$d年%1$s%2$d日 %4$s 至 %5$s"
+
+#: src/gui/gcal-event-popover.ui:71
+msgid "No event information"
+msgstr "沒有行程資訊"
+
+#: src/gui/gcal-event-popover.ui:169
+msgid "Edit…"
+msgstr "編輯…"
+
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:350
+#, c-format
+msgid "At %s"
+msgstr "位於「%s」"
+
+#: src/gui/gcal-meeting-row.c:65
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#: src/gui/gcal-meeting-row.c:66
+msgid "Jitsi"
+msgstr "Jitsi"
+
+#: src/gui/gcal-meeting-row.c:67
+msgid "Whereby"
+msgstr "Whereby"
+
+#: src/gui/gcal-meeting-row.c:68
+msgid "Zoom"
+msgstr "Zoom"
+
+#: src/gui/gcal-meeting-row.c:78
+msgid "Unknown Service"
+msgstr "不明服務"
+
+#. Translators: "Join" as in "Join meeting"
+#: src/gui/gcal-meeting-row.ui:12
+msgid "Join"
+msgstr "參加"
+
+#: src/gui/gcal-quick-add-popover.c:118
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s（這個行事曆唯讀）"
+
+#: src/gui/gcal-quick-add-popover.c:233
+msgid "from next Monday"
+msgstr "從下週一"
+
+#: src/gui/gcal-quick-add-popover.c:234
+msgid "from next Tuesday"
+msgstr "從下週二"
+
+#: src/gui/gcal-quick-add-popover.c:235
+msgid "from next Wednesday"
+msgstr "從下週三"
+
+#: src/gui/gcal-quick-add-popover.c:236
+msgid "from next Thursday"
+msgstr "從下週四"
+
+#: src/gui/gcal-quick-add-popover.c:237
+msgid "from next Friday"
+msgstr "從下週五"
+
+#: src/gui/gcal-quick-add-popover.c:238
+msgid "from next Saturday"
+msgstr "從下週六"
+
+#: src/gui/gcal-quick-add-popover.c:239
+msgid "from next Sunday"
+msgstr "從下週日"
+
+#: src/gui/gcal-quick-add-popover.c:244
+msgid "to next Monday"
+msgstr "至下週一"
+
+#: src/gui/gcal-quick-add-popover.c:245
+msgid "to next Tuesday"
+msgstr "至下週二"
+
+#: src/gui/gcal-quick-add-popover.c:246
+msgid "to next Wednesday"
+msgstr "至下週三"
+
+#: src/gui/gcal-quick-add-popover.c:247
+msgid "to next Thursday"
+msgstr "至下週四"
+
+#: src/gui/gcal-quick-add-popover.c:248
+msgid "to next Friday"
+msgstr "至下週五"
+
+#: src/gui/gcal-quick-add-popover.c:249
+msgid "to next Saturday"
+msgstr "至下週六"
+
+#: src/gui/gcal-quick-add-popover.c:250
+msgid "to next Sunday"
+msgstr "至下週日"
+
+#: src/gui/gcal-quick-add-popover.c:275
 #, c-format
 msgid "from Today"
 msgstr "從今天"
 
-#: src/gui/gcal-quick-add-popover.c:290
+#: src/gui/gcal-quick-add-popover.c:279
 #, c-format
 msgid "from Tomorrow"
 msgstr "從明天"
 
-#: src/gui/gcal-quick-add-popover.c:294
+#: src/gui/gcal-quick-add-popover.c:283
 #, c-format
 msgid "from Yesterday"
 msgstr "從昨天"
@@ -715,353 +879,400 @@ msgstr "從昨天"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:312
+#: src/gui/gcal-quick-add-popover.c:301
 #, c-format
 msgid "from %1$s %2$s"
-msgstr "從%1$s%2$s"
+msgstr "從%1$s%2$s日"
 
-#: src/gui/gcal-quick-add-popover.c:323
+#: src/gui/gcal-quick-add-popover.c:312
 #, c-format
 msgid "to Today"
-msgstr "到今天"
+msgstr "至今天"
 
-#: src/gui/gcal-quick-add-popover.c:327
+#: src/gui/gcal-quick-add-popover.c:316
 #, c-format
 msgid "to Tomorrow"
-msgstr "到明天"
+msgstr "至明天"
 
-#: src/gui/gcal-quick-add-popover.c:331
+#: src/gui/gcal-quick-add-popover.c:320
 #, c-format
 msgid "to Yesterday"
-msgstr "到昨天"
+msgstr "至昨天"
 
 #. Translators:
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:349
+#: src/gui/gcal-quick-add-popover.c:338
 #, c-format
 msgid "to %1$s %2$s"
-msgstr "到%1$s%2$s"
+msgstr "至 %1$s%2$s日"
 
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
-#: src/gui/gcal-quick-add-popover.c:356
+#: src/gui/gcal-quick-add-popover.c:345
 #, c-format
 msgid "New Event %1$s %2$s"
-msgstr "%1$s%2$s有新行程"
+msgstr "%1$s%2$s的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:373
+#: src/gui/gcal-quick-add-popover.c:362
 #, c-format
 msgid "New Event Today"
-msgstr "今天有新行程"
+msgstr "今天的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:377
+#: src/gui/gcal-quick-add-popover.c:366
 #, c-format
 msgid "New Event Tomorrow"
-msgstr "明天有新行程"
+msgstr "明天的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:381
+#: src/gui/gcal-quick-add-popover.c:370
 #, c-format
 msgid "New Event Yesterday"
-msgstr "昨天有新行程"
+msgstr "昨天的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:387
+#: src/gui/gcal-quick-add-popover.c:376
 msgid "New Event next Monday"
-msgstr "下週一有新行程"
+msgstr "下週一的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:388
+#: src/gui/gcal-quick-add-popover.c:377
 msgid "New Event next Tuesday"
-msgstr "下週二有新行程"
+msgstr "下週二的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:389
+#: src/gui/gcal-quick-add-popover.c:378
 msgid "New Event next Wednesday"
-msgstr "下週三有新行程"
+msgstr "下週三的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:390
+#: src/gui/gcal-quick-add-popover.c:379
 msgid "New Event next Thursday"
-msgstr "下週四有新行程"
+msgstr "下週四的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:391
+#: src/gui/gcal-quick-add-popover.c:380
 msgid "New Event next Friday"
-msgstr "下週五有新行程"
+msgstr "下週五的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:392
+#: src/gui/gcal-quick-add-popover.c:381
 msgid "New Event next Saturday"
-msgstr "下週六有新行程"
+msgstr "下週六的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:393
+#: src/gui/gcal-quick-add-popover.c:382
 msgid "New Event next Sunday"
-msgstr "下週日有新行程"
+msgstr "下週日的新行程"
 
 #. Translators: %d is the numeric day of month
-#: src/gui/gcal-quick-add-popover.c:405
+#: src/gui/gcal-quick-add-popover.c:394
 #, c-format
 msgid "New Event on January %d"
-msgstr "1月%d日有新行程"
+msgstr "1月%d日的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:406
+#: src/gui/gcal-quick-add-popover.c:395
 #, c-format
 msgid "New Event on February %d"
-msgstr "2月%d日有新行程"
+msgstr "2月%d日的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:407
+#: src/gui/gcal-quick-add-popover.c:396
 #, c-format
 msgid "New Event on March %d"
-msgstr "3月%d日有新行程"
+msgstr "3月%d日的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:408
+#: src/gui/gcal-quick-add-popover.c:397
 #, c-format
 msgid "New Event on April %d"
-msgstr "4月%d日有新行程"
+msgstr "4月%d日的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:409
+#: src/gui/gcal-quick-add-popover.c:398
 #, c-format
 msgid "New Event on May %d"
-msgstr "5月%d日有新行程"
+msgstr "5月%d日的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:410
+#: src/gui/gcal-quick-add-popover.c:399
 #, c-format
 msgid "New Event on June %d"
-msgstr "6月%d日有新行程"
+msgstr "6月%d日的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:411
+#: src/gui/gcal-quick-add-popover.c:400
 #, c-format
 msgid "New Event on July %d"
-msgstr "7月%d日有新行程"
+msgstr "7月%d日的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:412
+#: src/gui/gcal-quick-add-popover.c:401
 #, c-format
 msgid "New Event on August %d"
-msgstr "8月%d日有新行程"
+msgstr "8月%d日的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:413
+#: src/gui/gcal-quick-add-popover.c:402
 #, c-format
 msgid "New Event on September %d"
-msgstr "9月%d日有新行程"
+msgstr "9月%d日的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:414
+#: src/gui/gcal-quick-add-popover.c:403
 #, c-format
 msgid "New Event on October %d"
-msgstr "10月%d日有新行程"
+msgstr "10月%d日的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:415
+#: src/gui/gcal-quick-add-popover.c:404
 #, c-format
 msgid "New Event on November %d"
-msgstr "11月%d日有新行程"
+msgstr "11月%d日的新行程"
 
-#: src/gui/gcal-quick-add-popover.c:416
+#: src/gui/gcal-quick-add-popover.c:405
 #, c-format
 msgid "New Event on December %d"
-msgstr "12月%d日有新行程"
+msgstr "12月%d日的新行程"
 
-#: src/gui/gcal-quick-add-popover.ui:117
+#: src/gui/gcal-quick-add-popover.ui:87
 msgid "Edit Details…"
 msgstr "編輯詳細資訊…"
 
-#: src/gui/gcal-weather-settings.ui:12 src/gui/gcal-window.ui:327
-msgid "_Weather"
-msgstr "天氣(_W)"
-
-#: src/gui/gcal-weather-settings.ui:30
-msgid "Show Weather"
-msgstr "顯示天氣"
-
-#: src/gui/gcal-weather-settings.ui:53
-msgid "Automatic Location"
-msgstr "自動位置"
-
-#: src/gui/gcal-window.c:672
-msgid "Another event deleted"
-msgstr "叧一個行程已刪除"
-
-#: src/gui/gcal-window.c:676
-msgid "Event deleted"
-msgstr "行程已刪除"
-
-#: src/gui/gcal-window.ui:47
-msgid "Week"
-msgstr "週"
-
-#: src/gui/gcal-window.ui:62
-msgid "Month"
-msgstr "月"
-
-#: src/gui/gcal-window.ui:76
-msgid "Year"
-msgstr "年"
-
-#: src/gui/gcal-window.ui:176
-msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "新增事件"
-
-#: src/gui/gcal-window.ui:265
-msgid "Manage your calendars"
-msgstr "管理您的行事曆"
-
-#: src/gui/gcal-window.ui:276
+#: src/gui/gcal-toolbar-end.ui:9
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "搜尋行程"
 
-#: src/gui/gcal-window.ui:318
+#: src/gui/gcal-toolbar-end.ui:21
+msgctxt "tooltip"
+msgid "Add a new event"
+msgstr "新增行程"
+
+#: src/gui/gcal-weather-settings.ui:17
+msgid "Show Weather"
+msgstr "顯示天氣"
+
+#: src/gui/gcal-weather-settings.ui:34
+msgid "Automatic Location"
+msgstr "自動位置"
+
+#: src/gui/gcal-window.c:699
+msgid "Another event deleted"
+msgstr "叧一個行程已刪除"
+
+#: src/gui/gcal-window.c:699
+msgid "Event deleted"
+msgstr "行程已刪除"
+
+#: src/gui/gcal-window.c:701
+msgid "_Undo"
+msgstr "還原(_U)"
+
+#: src/gui/gcal-window.ui:219
+msgid "Week"
+msgstr "週"
+
+#: src/gui/gcal-window.ui:233
+msgid "Month"
+msgstr "月"
+
+#: src/gui/gcal-window.ui:273
 msgid "_Online Accounts…"
 msgstr "線上帳號(_O)…"
 
-#: src/gui/gcal-window.ui:342
+#: src/gui/gcal-window.ui:285
 msgid "_Keyboard Shortcuts"
 msgstr "鍵盤捷徑鍵(_K)"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:289
 msgid "_About Calendar"
-msgstr "關於《行事曆》(_A)"
+msgstr "關於行事曆(_A)"
 
-#: src/gui/gtk/help-overlay.ui:13
+#: src/gui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
 msgstr "一般"
 
-#: src/gui/gtk/help-overlay.ui:17
+#: src/gui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "New event"
-msgstr "新增事件"
+msgstr "新增行程"
 
-#: src/gui/gtk/help-overlay.ui:24
+#: src/gui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "關閉視窗"
 
-#: src/gui/gtk/help-overlay.ui:31
+#: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "搜尋"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:32
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "顯示求助文件"
 
-#: src/gui/gtk/help-overlay.ui:45
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "捷徑鍵"
 
-#: src/gui/gtk/help-overlay.ui:54
+#: src/gui/gtk/help-overlay.ui:46
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "導覽"
 
-#: src/gui/gtk/help-overlay.ui:58
+#: src/gui/gtk/help-overlay.ui:49
 msgctxt "shortcut window"
 msgid "Go back"
-msgstr "向後"
+msgstr "後退"
 
-#: src/gui/gtk/help-overlay.ui:65
+#: src/gui/gtk/help-overlay.ui:55
 msgctxt "shortcut window"
 msgid "Go forward"
-msgstr "向前"
+msgstr "前進"
 
-#: src/gui/gtk/help-overlay.ui:72
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Show today"
-msgstr "顯示今天"
+msgstr "跳至今天"
 
-#: src/gui/gtk/help-overlay.ui:79
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Next view"
-msgstr "下一檢視"
+msgstr "下個檢視畫面"
 
-#: src/gui/gtk/help-overlay.ui:86
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Previous view"
-msgstr "上一檢視"
+msgstr "上個檢視畫面"
 
-#: src/gui/gtk/help-overlay.ui:95
+#: src/gui/gtk/help-overlay.ui:81
 msgctxt "shortcut window"
 msgid "View"
-msgstr "檢視"
+msgstr "檢視畫面"
 
-#: src/gui/gtk/help-overlay.ui:99
+#: src/gui/gtk/help-overlay.ui:84
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "週檢視"
 
-#: src/gui/gtk/help-overlay.ui:106
+#: src/gui/gtk/help-overlay.ui:90
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "月檢視"
 
-#: src/gui/gtk/help-overlay.ui:113
-msgctxt "shortcut window"
-msgid "Year view"
-msgstr "年檢視"
+#: src/gui/importer/gcal-import-dialog.c:396
+#, c-format
+msgid "Import %d event"
+msgid_plural "Import %d events"
+msgstr[0] "匯入 %d 個行程"
 
-#: src/gui/views/gcal-month-popover.ui:91
+#: src/gui/importer/gcal-import-dialog.ui:4
+msgid "Import Files…"
+msgstr "匯入檔案…"
+
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+msgid "_Cancel"
+msgstr "取消(_C)"
+
+#: src/gui/importer/gcal-import-dialog.ui:29
+msgid "_Import"
+msgstr "匯入(_I)"
+
+#: src/gui/importer/gcal-import-dialog.ui:50
+msgid "C_alendar"
+msgstr "行事曆(_A)"
+
+#: src/gui/importer/gcal-importer.c:33
+msgid "No error"
+msgstr "沒有錯誤"
+
+#: src/gui/importer/gcal-importer.c:36
+msgid "Bad argument to function"
+msgstr "不明的函式引數"
+
+#: src/gui/importer/gcal-importer.c:40
+msgid "Failed to allocate a new object in memory"
+msgstr "無法於儲存區指派新目標"
+
+#: src/gui/importer/gcal-importer.c:43
+msgid "File is malformed, invalid, or corrupted"
+msgstr "檔案異常、無效或損毀"
+
+#: src/gui/importer/gcal-importer.c:46
+msgid "Failed to parse the calendar contents"
+msgstr "無法解析行事曆內容"
+
+#: src/gui/importer/gcal-importer.c:49
+msgid "Failed to read file"
+msgstr "無法讀取檔案"
+
+#: src/gui/importer/gcal-importer.c:56
+msgid "Internal error"
+msgstr "網路錯誤"
+
+#: src/gui/importer/gcal-importer.c:94
+msgid "File is not an iCalendar (.ics) file"
+msgstr "檔案並非 iCalender 檔 (.ics)"
+
+#: src/gui/importer/gcal-import-file-row.c:154
+msgid "Description"
+msgstr "描述"
+
+#: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
-msgstr "新增事件…"
+msgstr "新行程…"
 
-#: src/gui/views/gcal-week-grid.c:681 src/gui/views/gcal-week-view.c:293
+#: src/gui/views/gcal-week-grid.c:580
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:684 src/gui/views/gcal-week-view.c:296
+#: src/gui/views/gcal-week-grid.c:583
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:465
+#: src/gui/views/gcal-week-header.c:478
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "其他 %d 項行程"
 
-#: src/gui/views/gcal-week-header.c:1004
+#: src/gui/views/gcal-week-header.c:1006
 #, c-format
 msgid "week %d"
 msgstr "第 %d 週"
 
-#. Translators: This is a date format in the sidebar of the year
-#. * view when the selection starts at the specified day and the
-#. * end is unspecified.
-#: src/gui/views/gcal-year-view.c:291
-msgid "%B %d…"
-msgstr "%m月%d日…"
-
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/gui/views/gcal-year-view.c:297 src/gui/views/gcal-year-view.c:563
-msgid "%B %d"
-msgstr "%m月%d日"
-
-#: src/gui/views/gcal-year-view.ui:133
-msgid "No events"
-msgstr "沒有行程"
-
-#: src/gui/views/gcal-year-view.ui:155
-msgid "Add Event…"
-msgstr "加入行程…"
-
-#: src/utils/gcal-utils.c:958
+#: src/utils/gcal-utils.c:1320
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
-msgstr "您試圖修改的行程是重複行程。您所做出的更動應套用到："
+msgstr "您試圖修改的行程是重複行程，要將更動套用到："
 
-#: src/utils/gcal-utils.c:961
-msgid "_Cancel"
-msgstr "取消(_C)"
-
-#: src/utils/gcal-utils.c:963
+#: src/utils/gcal-utils.c:1325
 msgid "_Only This Event"
 msgstr "僅此行程(_O)"
 
-#: src/utils/gcal-utils.c:970
+#: src/utils/gcal-utils.c:1332
 msgid "_Subsequent events"
 msgstr "後續行程(_S)"
 
-#: src/utils/gcal-utils.c:972
+#: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "全部行程(_A)"
+
+#~ msgid "Year view"
+#~ msgstr "年檢視"
+
+#~ msgid "Follow system night light"
+#~ msgstr "跟隨系統的夜光模式"
+
+#~ msgid "Use GNOME night light setting to activate night-mode."
+#~ msgstr "使用 GNOME 夜光模式設定啟用夜間模式。"
+
+#~ msgid "Year"
+#~ msgstr "年"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Year view"
+#~ msgstr "年檢視"
+
+#~ msgid "%B %d…"
+#~ msgstr "%m月%d日…"
+
+#~ msgid "%B %d"
+#~ msgstr "%m月%d日"
+
+#~ msgid "No events"
+#~ msgstr "沒有行程"
+
+#~ msgid "Add Event…"
+#~ msgstr "加入行程…"
 
 #~ msgid "Check this out!"
 #~ msgstr "看看這個！"
@@ -1084,9 +1295,6 @@ msgstr "全部行程(_A)"
 #~ msgid "New Local Calendar…"
 #~ msgstr "新增本機行事曆…"
 
-#~ msgid "From File…"
-#~ msgstr "從檔案…"
-
 #~ msgid "No results found"
 #~ msgstr "找不到結果"
 
@@ -1108,9 +1316,6 @@ msgstr "全部行程(_A)"
 
 #~ msgid "Open online account settings"
 #~ msgstr "開啟線上帳號設定"
-
-#~ msgid "Google"
-#~ msgstr "Google"
 
 #~ msgid "Click to set up"
 #~ msgstr "點選來設置"
@@ -1138,12 +1343,6 @@ msgstr "全部行程(_A)"
 
 #~ msgid "Use the entry above to search for events."
 #~ msgstr "使用上列輸入方塊開始搜尋行程。"
-
-#~ msgid "Select a calendar file"
-#~ msgstr "選取行事曆檔案"
-
-#~ msgid "Open"
-#~ msgstr "開啟"
 
 #~ msgid "Unnamed Calendar"
 #~ msgstr "未命名行事曆"
