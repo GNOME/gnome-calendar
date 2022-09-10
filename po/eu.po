@@ -9,7 +9,7 @@ msgid ""
 msgstr "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2022-08-26 14:27+0000\n"
-"PO-Revision-Date: 2022-08-31 19:41+0200\n"
+"PO-Revision-Date: 2022-09-10 19:41+0200\n"
 "Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <Librezale>\n"
 "Language: eu\n"
@@ -587,7 +587,7 @@ msgstr "GNOME proiektua"
 
 #: src/gui/gcal-application.c:188
 msgid "translator-credits"
-msgstr "Asier Sarasua Garmendia <asier.sarasua@gmail.com>"
+msgstr "translator-credits"
 
 #: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
 msgid "Weather"
@@ -711,7 +711,7 @@ msgstr "%1$s %2$d"
 #: src/gui/gcal-event-popover.c:227 src/gui/gcal-event-popover.c:341
 #, c-format
 msgid "%1$s %2$d, %3$d"
-msgstr "%1$s %2$d, %3$d"
+msgstr "%3$d %1$s %2$d"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
@@ -760,7 +760,7 @@ msgstr "%1$s %2$d, %3$s – %4$s"
 #: src/gui/gcal-event-popover.c:301
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
-msgstr "%1$s %2$d, %3$d, %4$s – %5$s"
+msgstr "%3$d %1$s %2$d, %4$s – %5$s"
 
 #: src/gui/gcal-event-popover.ui:71
 msgid "No event information"
