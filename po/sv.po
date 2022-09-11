@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2022-08-21 00:36+0200\n"
+"POT-Creation-Date: 2022-09-03 17:57+0000\n"
+"PO-Revision-Date: 2022-09-11 21:04+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -455,13 +455,13 @@ msgstr "I %As"
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
 msgid "Yesterday"
-msgstr "Igår"
+msgstr "I går"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
 #: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 msgid "Today"
-msgstr "Idag"
+msgstr "I dag"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
@@ -564,14 +564,14 @@ msgid ":"
 msgstr ":"
 
 # Enligt ICU-locale https://www.localeplanet.com/icu/sv/index.html
-# Glibc är istället tom https://lh.2xlibre.net/locale/sv_SE/
+# Glibc är i stället tom https://lh.2xlibre.net/locale/sv_SE/
 #: src/gui/event-editor/gcal-time-selector.ui:46
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "fm"
 
 # Enligt ICU-locale https://www.localeplanet.com/icu/sv/index.html
-# Glibc är istället tom https://lh.2xlibre.net/locale/sv_SE/
+# Glibc är i stället tom https://lh.2xlibre.net/locale/sv_SE/
 #: src/gui/event-editor/gcal-time-selector.ui:47
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
@@ -688,7 +688,7 @@ msgstr "december"
 #: src/gui/gcal-event-popover.c:158
 #, c-format
 msgid "Today %s"
-msgstr "Idag %s"
+msgstr "I dag %s"
 
 #: src/gui/gcal-event-popover.c:162
 #, c-format
@@ -698,7 +698,7 @@ msgstr "I morgon %s"
 #: src/gui/gcal-event-popover.c:166
 #, c-format
 msgid "Yesterday %s"
-msgstr "Igår %s"
+msgstr "I går %s"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
@@ -747,7 +747,7 @@ msgstr "%2$d %1$s %3$d"
 #: src/gui/gcal-event-popover.c:261
 #, c-format
 msgid "Today, %1$s — %2$s"
-msgstr "Idag, %1$s — %2$s"
+msgstr "I dag, %1$s — %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
@@ -765,7 +765,7 @@ msgstr "I morgon, %1$s – %2$s"
 #: src/gui/gcal-event-popover.c:277
 #, c-format
 msgid "Yesterday, %1$s – %2$s"
-msgstr "Igår, %1$s – %2$s"
+msgstr "I går, %1$s – %2$s"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
@@ -892,7 +892,7 @@ msgstr "till nästa söndag"
 #: src/gui/gcal-quick-add-popover.c:275
 #, c-format
 msgid "from Today"
-msgstr "från idag"
+msgstr "från i dag"
 
 #: src/gui/gcal-quick-add-popover.c:279
 #, c-format
@@ -902,7 +902,7 @@ msgstr "från i morgon"
 #: src/gui/gcal-quick-add-popover.c:283
 #, c-format
 msgid "from Yesterday"
-msgstr "från igår"
+msgstr "från i går"
 
 #. Translators:
 #. * this is the format string for representing a date consisting of a month
@@ -916,7 +916,7 @@ msgstr "från %2$s %1$s"
 #: src/gui/gcal-quick-add-popover.c:312
 #, c-format
 msgid "to Today"
-msgstr "till idag"
+msgstr "till i dag"
 
 #: src/gui/gcal-quick-add-popover.c:316
 #, c-format
@@ -926,7 +926,7 @@ msgstr "till i morgon"
 #: src/gui/gcal-quick-add-popover.c:320
 #, c-format
 msgid "to Yesterday"
-msgstr "till igår"
+msgstr "till i går"
 
 #. Translators:
 #. * this is the format string for representing a date consisting of a month
@@ -946,7 +946,7 @@ msgstr "Ny händelse %1$s %2$s"
 #: src/gui/gcal-quick-add-popover.c:362
 #, c-format
 msgid "New Event Today"
-msgstr "Ny händelse idag"
+msgstr "Ny händelse i dag"
 
 #: src/gui/gcal-quick-add-popover.c:366
 #, c-format
@@ -956,7 +956,7 @@ msgstr "Ny händelse i morgon"
 #: src/gui/gcal-quick-add-popover.c:370
 #, c-format
 msgid "New Event Yesterday"
-msgstr "Ny händelse igår"
+msgstr "Ny händelse i går"
 
 #: src/gui/gcal-quick-add-popover.c:376
 msgid "New Event next Monday"
@@ -1149,7 +1149,7 @@ msgstr "Gå framåt"
 #: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Show today"
-msgstr "Visa idag"
+msgstr "Visa i dag"
 
 #: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
@@ -1240,7 +1240,7 @@ msgid "New Event…"
 msgstr "Ny händelse…"
 
 # Enligt ICU-locale https://www.localeplanet.com/icu/sv/index.html
-# Glibc är istället tom https://lh.2xlibre.net/locale/sv_SE/
+# Glibc är i stället tom https://lh.2xlibre.net/locale/sv_SE/
 #: src/gui/views/gcal-week-grid.c:580
 msgid "00 AM"
 msgstr "00 fm"
@@ -1280,31 +1280,3 @@ msgstr "_Efterföljande händelser"
 #: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "_Alla händelser"
-
-#~ msgid "Year view"
-#~ msgstr "Årsvy"
-
-#~ msgid "Year"
-#~ msgstr "År"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Year view"
-#~ msgstr "Årsvy"
-
-#~ msgid "Follow system night light"
-#~ msgstr "Följ systemets nattbelysning"
-
-#~ msgid "Use GNOME night light setting to activate night-mode."
-#~ msgstr "Använd GNOME:s nattbelysningsinställning för att aktivera nattläge."
-
-#~ msgid "%B %d…"
-#~ msgstr "%d %B…"
-
-#~ msgid "%B %d"
-#~ msgstr "%d %B"
-
-#~ msgid "No events"
-#~ msgstr "Inga händelser"
-
-#~ msgid "Add Event…"
-#~ msgstr "Lägg till händelse…"
