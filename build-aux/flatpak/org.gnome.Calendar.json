@@ -123,7 +123,6 @@
             "buildsystem" : "meson",
             "config-opts" : [
                 "-Dgtk_doc=false",
-                "-Dgtk3=false",
                 "-Dintrospection=false",
                 "-Dvapi=false"
             ],
