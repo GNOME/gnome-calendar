@@ -46,6 +46,16 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2022-09-03" version="43.0">
+      <description>
+        <p>
+          <ul>
+            <li>Navigation sidebar with weekly events</li>
+            <li>New and updated translations</li>
+          </ul>
+        </p>
+      </description>
+    </release>
     <release date="2022-09-03" version="43~rc" />
     <release date="2022-08-12" version="43~beta" />
     <release date="2022-07-09" version="43~alpha" />
