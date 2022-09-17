@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2021-08-26 15:27+0100\n"
+"POT-Creation-Date: 2022-09-16 18:47+0000\n"
+"PO-Revision-Date: 2021-09-17 15:27+0100\n"
 "Last-Translator: Jordi Mas i Hernàndez <jmas@softcatala.org>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -47,11 +47,11 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, nothing missing. You’ll feel comfortable using"
-" Calendar, like you’ve been using it for ages!"
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
+"Calendar, like you’ve been using it for ages!"
 msgstr ""
-"El nostre objectiu és trobar l'equilibri perfecte entre característiques ben"
-" elaborades i usabilitat centrada en l'usuari. Sense excessos ni mancances. "
+"El nostre objectiu és trobar l'equilibri perfecte entre característiques ben "
+"elaborades i usabilitat centrada en l'usuari. Sense excessos ni mancances. "
 "Us trobareu a gust usant el Calendari, com si l'haguéssiu utilitzat sempre!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
@@ -70,8 +70,7 @@ msgstr "Editor de cites"
 msgid "Access and manage your calendars"
 msgstr "Accedeix i gestiona els calendaris"
 
-#. Translators: Search terms to find this application. Do NOT translate or
-#. localize the semicolons! The list MUST also end with a semicolon!
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in.in:13
 msgid "Calendar;Event;Reminder;"
 msgstr "Calendari;Cita;Recordatori;"
@@ -122,24 +121,23 @@ msgstr ""
 "i el nom de la ubicació"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#. Translators: %1$s is the start date, and %2$s. For example: June 21 -
-#. November 29, 2022
+#. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
 #: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
 
+#.
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
+#.
 #: src/core/gcal-event.c:1914
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
-#. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end
-#. hour
-#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is
-#. the end hour
+#. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
 #: src/core/gcal-event.c:1930 src/gui/gcal-quick-add-popover.c:461
 #, c-format
 msgid "%1$s, %2$s – %3$s"
@@ -457,17 +455,20 @@ msgstr "%A passat"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Ahir"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
 #: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Avui"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Demà"
 
@@ -477,9 +478,10 @@ msgstr "Demà"
 msgid "This %A"
 msgstr "Aquest %A"
 
-#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even
-#. 2019-10-11) and %2$s is the
+#.
+#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
+#.
 #: src/gui/event-editor/gcal-schedule-section.c:285
 #, c-format
 msgid "%1$s, %2$s"
@@ -694,72 +696,90 @@ msgstr "Demà %s"
 msgid "Yesterday %s"
 msgstr "Ahir %s"
 
+#.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
 #. * of month, and %3$ is the hour. This format string results in dates
 #. * like "November 21, 22:00".
+#.
 #: src/gui/gcal-event-popover.c:175
 #, c-format
 msgid "%1$s %2$d, %3$s"
 msgstr "%2$d %1$s – %3$s"
 
+#.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
 #. * of month, %3$d is the year, and %4$s is the hour. This format string
 #. * results in dates like "November 21, 2020, 22:00".
+#.
 #: src/gui/gcal-event-popover.c:187
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%2$d %1$s de %3$d, %4$s"
 
+#.
 #. * Translators: %1$s is a month name (e.g. November), and %2$d is
 #. * the day of month. This format string results in dates like
 #. * "November 21".
+#.
 #: src/gui/gcal-event-popover.c:216 src/gui/gcal-event-popover.c:330
 #, c-format
 msgid "%1$s %2$d"
 msgstr "%2$d %1$s"
 
+#.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
 #. * of month, and %3$d is the year. This format string results in dates
 #. * like "November 21, 2020".
+#.
 #: src/gui/gcal-event-popover.c:227 src/gui/gcal-event-popover.c:341
 #, c-format
 msgid "%1$s %2$d, %3$d"
 msgstr "%2$d %1$s de %3$d"
 
+#.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Today, 19:00 — 22:00"
+#.
 #: src/gui/gcal-event-popover.c:261
 #, c-format
 msgid "Today, %1$s — %2$s"
 msgstr "Avui, %1$s — %2$s"
 
+#.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
+#.
 #: src/gui/gcal-event-popover.c:269
 #, c-format
 msgid "Tomorrow, %1$s – %2$s"
 msgstr "Demà, %1$s – %2$s"
 
+#.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
+#.
 #: src/gui/gcal-event-popover.c:277
 #, c-format
 msgid "Yesterday, %1$s – %2$s"
 msgstr "Ahir, %1$s – %2$s"
 
+#.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
 #. * of month, %3$s is the start hour, and %4$s is the end hour. This
 #. * format string results in dates like "November 21, 19:00 — 22:00".
+#.
 #: src/gui/gcal-event-popover.c:286
 #, c-format
 msgid "%1$s %2$d, %3$s – %4$s"
 msgstr "%2$d %1$s, %3$s – %4$s"
 
+#.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
 #. * of month, %3$d is the year, %4$s is the start hour, and %5$s is the
 #. * end hour. This format string results in dates like:
 #. *
 #. * "November 21, 2021, 19:00 — 22:00".
+#.
 #: src/gui/gcal-event-popover.c:301
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
@@ -883,6 +903,7 @@ msgstr "des d'ahir"
 #. Translators:
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
+#.
 #: src/gui/gcal-quick-add-popover.c:301
 #, c-format
 msgid "from %1$s %2$s"
@@ -906,13 +927,13 @@ msgstr "fins ahir"
 #. Translators:
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
+#.
 #: src/gui/gcal-quick-add-popover.c:338
 #, c-format
 msgid "to %1$s %2$s"
 msgstr "fins %1$s %2$s"
 
-#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end
-#. date (e.g. "to Tomorrow")
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
 #: src/gui/gcal-quick-add-popover.c:345
 #, c-format
 msgid "New Event %1$s %2$s"
@@ -1210,6 +1231,10 @@ msgstr "El fitxer no és un fitxer iCalendar (.ics)"
 msgid "Description"
 msgstr "Descripció"
 
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "Sense cites"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "Cita nova…"
@@ -1253,4 +1278,3 @@ msgstr "_Cites subsegüents"
 #: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "_Totes les cites"
-
