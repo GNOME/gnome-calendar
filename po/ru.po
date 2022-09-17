@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2022-08-21 12:04+0300\n"
+"POT-Creation-Date: 2022-09-16 18:50+0000\n"
+"PO-Revision-Date: 2022-09-17 12:56+0300\n"
 "Last-Translator: Aleksandr Melman <Alexmelman88@gmail.com>\n"
 "Language-Team: Russian <Alexmelman88@gmail.com>\n"
 "Language: ru\n"
@@ -151,7 +151,7 @@ msgstr "%1$s, %2$s — %3$s"
 
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
-msgstr "Параметры календаря"
+msgstr "Настройки календаря"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:354
 msgid "Manage Calendars"
@@ -177,7 +177,7 @@ msgstr "Учётная запись"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:46
 msgid "Settings"
-msgstr "Параметры"
+msgstr "Настройки"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
 #: src/gui/event-editor/gcal-summary-section.ui:23
@@ -262,7 +262,7 @@ msgid ""
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
 "Если календарь относится к одной из сетевых учётных записей, его можно "
-"добавить через <a href=\"GOA\">параметры сетевых учётных записей</a>."
+"добавить через <a href=\"GOA\">настройки сетевых учётных записей</a>."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:194
 msgid "User"
@@ -474,17 +474,20 @@ msgstr "%A на прошлой недели"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Вчера"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
 #: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Сегодня"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Завтра"
 
@@ -1249,6 +1252,10 @@ msgstr "Файл не является файлом iCalendar (.ics)"
 #: src/gui/importer/gcal-import-file-row.c:154
 msgid "Description"
 msgstr "Описание"
+
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "Нет событий"
 
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
