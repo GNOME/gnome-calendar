@@ -1,5 +1,5 @@
 # Turkish translation for gnome-calendar.
-# Copyright (C) 2015-2019 gnome-calendar's COPYRIGHT HOLDER
+# Copyright (C) 2015-2012 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 #
 # Taner Orak <tnrork@gmail.com>, 2015.
@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2022-08-21 13:17+0300\n"
+"POT-Creation-Date: 2022-09-16 18:47+0000\n"
+"PO-Revision-Date: 2022-09-17 12:11+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -444,17 +444,20 @@ msgstr "Geçen %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Dün"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
 #: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Bugün"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Yarın"
 
@@ -1216,6 +1219,10 @@ msgstr "Dosya iCalendar (.ics) dosyası değil"
 msgid "Description"
 msgstr "Açıklama"
 
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "Olay yok"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "Yeni Olay…"
@@ -1258,211 +1265,3 @@ msgstr "_Sonraki olaylar"
 #: src/utils/gcal-utils.c:1334
 msgid "_All events"
 msgstr "_Tüm olaylar"
-
-#~ msgid "Year view"
-#~ msgstr "Yıl görünümü"
-
-#~ msgid "Year"
-#~ msgstr "Yıl"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Year view"
-#~ msgstr "Yıl görünümü"
-
-#~ msgid "Follow system night light"
-#~ msgstr "Sistem gece ışığını izle"
-
-#~ msgid "Use GNOME night light setting to activate night-mode."
-#~ msgstr "Gece kipini aktifleştirmek için GNOME gece ışığı ayarını kullan."
-
-#~ msgid "%B %d…"
-#~ msgstr "%B %d…"
-
-#~ msgid "%B %d"
-#~ msgstr "%B %d"
-
-#~ msgid "No events"
-#~ msgstr "Olay yok"
-
-#~ msgid "Add Event…"
-#~ msgstr "Olay Ekle…"
-
-#~ msgid "Check this out!"
-#~ msgstr "Şuna bir bak!"
-
-#~ msgid "Search for events"
-#~ msgstr "Olay ara"
-
-#~ msgid "Calendar management"
-#~ msgstr "Takvim yönetimi"
-
-#~ msgid "Date"
-#~ msgstr "Tarih"
-
-#~ msgid "Time"
-#~ msgstr "Zaman"
-
-#~ msgid "From Web…"
-#~ msgstr "Web’ten…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "Yeni Yerel Takvim…"
-
-#~ msgid "No results found"
-#~ msgstr "Hiçbir sonuç bulunamadı"
-
-#~ msgid "Try a different search"
-#~ msgstr "Farklı bir arama dene"
-
-#~ msgid "%d week before"
-#~ msgid_plural "%d weeks before"
-#~ msgstr[0] "%d hafta önce"
-
-#~ msgid "%s AM"
-#~ msgstr "ÖÖ %s"
-
-#~ msgid "%s PM"
-#~ msgstr "ÖS %s"
-
-#~ msgid "org.gnome.Calendar"
-#~ msgstr "org.gnome.Calendar"
-
-#~ msgid "Open online account settings"
-#~ msgstr "Çevrim içi hesap ayarlarını aç"
-
-#~ msgid "Click to set up"
-#~ msgstr "Ayarlamak için tıkla"
-
-#~ msgid "Nextcloud"
-#~ msgstr "Nextcloud"
-
-#~ msgid "Microsoft Exchange"
-#~ msgstr "Microsoft Exchange"
-
-#~ msgid "Overview"
-#~ msgstr "Genel Görünüm"
-
-#~ msgid "Edit Calendar"
-#~ msgstr "Takvimi Düzenle"
-
-#~ msgid "Calendar Address"
-#~ msgstr "Takvim Adresi"
-
-#~ msgid "Enter your credentials"
-#~ msgstr "Kimlik bilgilerinizi girin"
-
-#~ msgid "All day"
-#~ msgstr "Tüm gün"
-
-#~ msgid "Use the entry above to search for events."
-#~ msgstr "Olaylarda arama yapmak için yukarıdaki girdiyi kullan."
-
-#~ msgid "Unnamed Calendar"
-#~ msgstr "Adsız Takvim"
-
-#~ msgid "Off"
-#~ msgstr "Kapalı"
-
-#~ msgid "On"
-#~ msgstr "Açık"
-
-#~ msgid "Expired"
-#~ msgstr "Sona ermiş"
-
-#~ msgid "_Calendars"
-#~ msgstr "_Takvimler"
-
-#~ msgid "_About"
-#~ msgstr "_Hakkında"
-
-#~ msgid "_Quit"
-#~ msgstr "_Çıkış"
-
-#~ msgid "Add Eve_nt…"
-#~ msgstr "O_lay Ekle…"
-
-#~ msgid "Add Eve_nt"
-#~ msgstr "O_lay Ekle"
-
-#~| msgid "_Weather"
-#~ msgid "weather-menu"
-#~ msgstr "weather-menu"
-
-#~| msgid "win-menu-main"
-#~ msgid "main-menu"
-#~ msgstr "main-menu"
-
-#~ msgid "temp"
-#~ msgstr "temp"
-
-#~ msgid "win-menu-weather"
-#~ msgstr "win-menu-weather"
-
-#~ msgid "ownCloud"
-#~ msgstr "ownCloud"
-
-#~ msgid "Copyright © %d The Calendar authors"
-#~ msgstr "Telif Hakkı © %d Takvim geliştiricileri"
-
-#~ msgid "— Calendar management"
-#~ msgstr "— Takvim yönetimi"
-
-#~ msgid "Other events"
-#~ msgstr "Diğer olaylar"
-
-#~ msgid "New Event from %s to %s"
-#~ msgstr "%s’den %s’e Yeni Olay"
-
-#~ msgid "New Event on %s, %s – %s"
-#~ msgstr "%s’de Yeni Olay, %s – %s"
-
-#~ msgid "_Search…"
-#~ msgstr "_Ara…"
-
-#~ msgid "_Calendars…"
-#~ msgstr "_Takvimler…"
-
-#~ msgid "List of the disabled sources"
-#~ msgstr "Devre dışı bırakılmış kaynakların listesi"
-
-#~ msgid "Sources disabled last time Calendar ran"
-#~ msgstr "Takvim'in son çalıştırılışında devre dışı bırakılan kaynaklar"
-
-#~ msgid "week %d / %d"
-#~ msgstr "%d / %d hafta"
-
-#~ msgid "Midnight"
-#~ msgstr "Gece Yarısı"
-
-#~ msgid "Noon"
-#~ msgstr "Öğlen"
-
-#~ msgid "00:00 PM"
-#~ msgstr "00:00 ÖS"
-
-#~ msgid "Create"
-#~ msgstr "Oluştur"
-
-#~ msgid "%.2d:%.2d AM"
-#~ msgstr "%.2d:%.2d ÖÖ"
-
-#~ msgid "%.2d:%.2d PM"
-#~ msgstr "%.2d:%.2d ÖS"
-
-#~ msgid "%m/%d/%y"
-#~ msgstr "%d/%m/%y"
-
-#~ msgid "Max Content Height"
-#~ msgstr "En Fazla İçerik Yüksekliği"
-
-#~ msgid "The maximum height request that can be made."
-#~ msgstr "Yapılabilecek en fazla yükseklik isteği."
-
-#~ msgid "Max Content Width"
-#~ msgstr "En Fazla İçerik Genişliği"
-
-#~ msgid "The maximum width request that can be made."
-#~ msgstr "Yapılabilecek en fazla genişlik isteği."
-
-#~ msgid "%.2d:%.2d %s"
-#~ msgstr "%.2d:%.2d %s"
