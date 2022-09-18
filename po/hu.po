@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2022-09-01 01:50+0200\n"
+"POT-Creation-Date: 2022-09-16 18:47+0000\n"
+"PO-Revision-Date: 2022-09-18 07:37+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
@@ -58,13 +58,10 @@ msgid "Week view"
 msgstr "Hét nézet"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
-#| msgctxt "shortcut window"
-#| msgid "Month view"
 msgid "Month view"
 msgstr "Hónap nézet"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
-#| msgid "Event deleted"
 msgid "Event editor"
 msgstr "Eseményszerkesztő"
 
@@ -456,17 +453,20 @@ msgstr "Előző %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Tegnap"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
 #: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Ma"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Holnap"
 
@@ -1228,6 +1228,12 @@ msgstr "A fájl nem iCalendar-fájl (.ics)"
 #: src/gui/importer/gcal-import-file-row.c:154
 msgid "Description"
 msgstr "Leírás"
+
+#: src/gui/views/gcal-agenda-view.ui:36
+#| msgctxt "shortcut window"
+#| msgid "New event"
+msgid "No events"
+msgstr "Nincsenek események"
 
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
