@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-22 02:08+0000\n"
-"PO-Revision-Date: 2022-08-22 07:00+0200\n"
+"POT-Creation-Date: 2022-09-27 11:05+0000\n"
+"PO-Revision-Date: 2022-09-28 20:24+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: \n"
 "Language: ka\n"
@@ -437,17 +437,20 @@ msgstr "ბოლო %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "გუშინ"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
 #: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "დღეს"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "ხვალ"
 
@@ -1207,6 +1210,10 @@ msgstr "ფაილი ელკალენდრის (.ics) ფაილი
 #: src/gui/importer/gcal-import-file-row.c:154
 msgid "Description"
 msgstr "აღწერა"
+
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "მოვლენების გარეშე"
 
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
