@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-09-11 19:06+0000\n"
-"PO-Revision-Date: 2022-09-12 13:52+0200\n"
+"POT-Creation-Date: 2022-09-16 18:47+0000\n"
+"PO-Revision-Date: 2022-10-02 18:30+0200\n"
 "Last-Translator: Alexander Shopov <ash@kambanaria.org>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "Language: bg\n"
@@ -448,17 +448,20 @@ msgstr "Последния/ата %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Вчера"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
 #: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Днес"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Утре"
 
@@ -1227,6 +1230,10 @@ msgstr "Файлът не е във формат iCalendar (ics)"
 #: src/gui/importer/gcal-import-file-row.c:154
 msgid "Description"
 msgstr "Описание"
+
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "Няма събития"
 
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
