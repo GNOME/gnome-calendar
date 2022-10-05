@@ -314,7 +314,7 @@ on_ask_recurrence_response_save_cb (GcalEvent             *event,
     {
       GcalManager *manager = gcal_context_get_manager (self->context);
 
-      gcal_manager_update_event (manager, self->event, GCAL_RECURRENCE_MOD_THIS_ONLY);
+      gcal_manager_update_event (manager, self->event, mod_type);
     }
 
   clear_and_hide_dialog (self);
