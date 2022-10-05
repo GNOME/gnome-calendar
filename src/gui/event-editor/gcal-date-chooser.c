@@ -473,6 +473,7 @@ gcal_date_chooser_set_date (GcalView  *view,
     {
       gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->year_choice), y2);
       gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->month_choice), m2 - 1);
+      gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->combined_choice), y2 * 12 + m2 - 1);
       calendar_compute_days (self);
       gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (self));
     }
