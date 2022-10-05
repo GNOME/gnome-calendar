@@ -466,8 +466,7 @@ gcal_date_chooser_set_date (GcalView  *view,
   g_date_time_get_ymd (self->date, &y1, &m1, &d1);
   g_date_time_get_ymd (date, &y2, &m2, &d2);
 
-  g_date_time_unref (self->date);
-  self->date = g_date_time_ref (date);
+  gcal_set_date_time (&self->date, date);
 
   if (y1 != y2 || m1 != m2)
     {
