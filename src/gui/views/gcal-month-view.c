@@ -1685,8 +1685,9 @@ on_scroll_controller_scrolled_cb (GtkEventControllerScroll *scroll_controller,
   diff = self->scroll_value > 0.0 ? 1.0 : -1.0;
   new_date = g_date_time_add_months (self->date, diff);
 
-  gcal_set_date_time (&self->date, new_date);
   self->scroll_value = 0.0;
+
+  gcal_view_set_date (GCAL_VIEW (self), new_date);
 
   g_object_notify (G_OBJECT (self), "active-date");
 
