@@ -694,7 +694,9 @@ on_event_editor_dialog_remove_event_cb (GcalEventEditorDialog *edit_dialog,
   GCAL_ENTRY;
 
   has_deleted_event = self->delete_event_toast != NULL;
-  g_clear_pointer (&self->delete_event_toast, adw_toast_dismiss);
+  if (self->delete_event_toast)
+    adw_toast_dismiss (self->delete_event_toast);
+  self->delete_event_toast = NULL;
 
   toast = adw_toast_new (has_deleted_event ? _("Another event deleted") : _("Event deleted"));
   adw_toast_set_timeout (toast, 5);
