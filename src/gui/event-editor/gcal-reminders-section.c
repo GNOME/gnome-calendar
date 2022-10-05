@@ -36,6 +36,7 @@ struct _GcalRemindersSection
   GtkWidget          *alarms_popover;
   GtkListBoxRow      *new_alarm_row;
 
+  GtkWidget          *event_start_button;
   GtkWidget          *five_minutes_button;
   GtkWidget          *ten_minutes_button;
   GtkWidget          *fifteen_minutes_button;
@@ -82,6 +83,7 @@ struct
   gint minutes;
   gint button_offset;
 } minutes_button[] = {
+    { 0,     OFFSET (event_start_button) },
     { 5,     OFFSET (five_minutes_button) },
     { 10,    OFFSET (ten_minutes_button) },
     { 15,    OFFSET (fifteen_minutes_button) },
@@ -342,7 +344,7 @@ on_add_alarm_button_clicked_cb (GtkWidget            *button,
   guint i, minutes;
 
   /* Search for the button minute */
-  minutes = 0;
+  minutes = G_MAXUINT;
 
   for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
     {
@@ -353,7 +355,7 @@ on_add_alarm_button_clicked_cb (GtkWidget            *button,
         }
     }
 
-  if (minutes == 0)
+  if (minutes == G_MAXUINT)
     return;
 
   alarm = create_alarm (minutes);
@@ -552,6 +554,7 @@ gcal_reminders_section_class_init (GcalRemindersSectionClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, alarms_listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, alarms_popover);
+  gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, event_start_button);
   gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, five_minutes_button);
   gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, new_alarm_row);
   gtk_widget_class_bind_template_child (widget_class, GcalRemindersSection, one_day_button);
