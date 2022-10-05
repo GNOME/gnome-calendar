@@ -35,14 +35,15 @@ gboolean
 gcal_set_date_time (GDateTime **dest,
                     GDateTime  *src)
 {
-  gboolean changed = *dest != src;
+  if (*dest == src)
+    return FALSE;
 
   gcal_clear_date_time (dest);
 
   if (src)
     *dest = g_date_time_ref (src);
 
-  return changed;
+  return TRUE;
 }
 
 /**
