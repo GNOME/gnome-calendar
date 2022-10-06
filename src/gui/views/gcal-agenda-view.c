@@ -387,7 +387,7 @@ update_header (GtkListBoxRow *row,
 
   header = g_object_new (GTK_TYPE_LABEL,
                          "label", label,
-                         "xalign", 0,
+                         "xalign", 0.0f,
                          NULL);
   gtk_widget_add_css_class (header, "caption-heading");
 
