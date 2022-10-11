@@ -832,6 +832,175 @@ gcal_event_new_from_event (GcalEvent *self)
   return gcal_event_new (self->calendar, component, NULL);
 }
 
+static void
+gcal_event_get_time_offsets (GcalEvent *self,
+                             GTimeSpan *start_offset,
+                             GTimeSpan *end_offset)
+{
+  GDateTime *start_time = NULL;
+  GDateTime *end_time = NULL;
+  g_autoptr (GDateTime) start_day = NULL;
+  g_autoptr (GDateTime) end_day = NULL;
+
+  start_time = gcal_event_get_date_start (self);
+  end_time = gcal_event_get_date_end (self);
+
+  start_day = g_date_time_new (g_date_time_get_timezone (start_time),
+                               g_date_time_get_year (start_time),
+                               g_date_time_get_month (start_time),
+                               g_date_time_get_day_of_month (start_time),
+                               0, 0, 0);
+  end_day = g_date_time_new (g_date_time_get_timezone (end_time),
+                             g_date_time_get_year (end_time),
+                             g_date_time_get_month (end_time),
+                             g_date_time_get_day_of_month (end_time),
+                             0, 0, 0);
+
+  *start_offset = g_date_time_difference (start_time, start_day);
+  *end_offset = g_date_time_difference (end_time, end_day);
+}
+
+/**
+ * gcal_event_new_main_event_from_instance_event:
+ * @self: a #GcalEvent
+ *
+ * Creates a main @event from an instance event. This is useful
+ * for updating all recurring events at the same time to match
+ * the content of one instance in the set.
+ *
+ * Note, if the instance start time has been changed, the generated
+ * main event will be updated to reflect that new start time as
+ * well.
+ *
+ * Returns: (transfer full)(nullable): a #GcalEvent
+ */
+GcalEvent*
+gcal_event_new_main_event_from_instance_event (GcalEvent *self)
+{
+  GcalEvent *main_event;
+
+  g_autoptr (ECalComponent) new_main_ecal_component = NULL;
+  g_autoptr (ECalComponent) old_main_ecal_component = NULL;
+  ECalComponentDateTime *start_date = NULL;
+  ECalComponentDateTime *end_date = NULL;
+  g_autoptr (GError) error = NULL;
+  ECalClient *client;
+  const char *uid;
+
+  ICalComponent *old_main_ical_component;
+
+  g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
+
+  if (!e_cal_component_is_instance (self->component))
+    return NULL;
+
+  new_main_ecal_component = e_cal_component_clone (self->component);
+
+  /* The main event shares a uid with the instance event, but has
+   * a null recurrence id
+   */
+  uid = e_cal_component_get_uid (new_main_ecal_component);
+
+  client = gcal_calendar_get_client (self->calendar);
+
+  if (!e_cal_client_get_object_sync (client,
+                                     uid,
+                                     NULL,
+                                     &old_main_ical_component,
+                                     NULL,
+                                     &error))
+    {
+      g_warning ("Error finding main event from instance event: %s", error->message);
+      return NULL;
+    }
+
+  old_main_ecal_component = e_cal_component_new_from_icalcomponent (g_steal_pointer (&old_main_ical_component));
+
+  if (!old_main_ecal_component)
+    return NULL;
+
+  /* Copy the start time and end time from the old main event to the new one
+   * and clear the recurrence id.
+   */
+  start_date = e_cal_component_get_dtstart (old_main_ecal_component);
+  e_cal_component_set_dtstart (new_main_ecal_component, start_date);
+  g_clear_pointer (&start_date, e_cal_component_datetime_free);
+
+  end_date = e_cal_component_get_dtend (old_main_ecal_component);
+
+  if (end_date != NULL)
+    {
+      e_cal_component_set_dtend (new_main_ecal_component, end_date);
+      g_clear_pointer (&end_date, e_cal_component_datetime_free);
+    }
+
+  e_cal_component_set_recurid (new_main_ecal_component, NULL);
+  e_cal_component_commit_sequence (new_main_ecal_component);
+
+  main_event = gcal_event_new (self->calendar, new_main_ecal_component, &error);
+
+  if (!main_event)
+    {
+      g_warning ("Error creating main event from modified instance event: %s", error->message);
+      return NULL;
+    }
+
+  return main_event;
+}
+
+/**
+ * gcal_event_apply_instance:
+ * @self: a #GcalEvent
+ *
+ * Applies the changes from an instance event to its associated
+ * main event.
+ */
+void
+gcal_event_apply_instance (GcalEvent *self,
+                           GcalEvent *instance)
+{
+  g_return_if_fail (GCAL_IS_EVENT (self));
+
+  if (e_cal_component_is_instance (self->component))
+    return;
+
+  if (!e_cal_component_is_instance (instance->component))
+    return;
+
+  if (!instance->all_day)
+    {
+      GTimeSpan instance_event_start_offset = 0, main_event_start_offset = 0;
+      GTimeSpan instance_event_end_offset = 0, main_event_end_offset = 0;
+      g_autoptr (GDateTime) main_event_start_date = NULL;
+      g_autoptr (GDateTime) main_event_end_date = NULL;
+
+      gcal_event_set_all_day (self, FALSE);
+
+      gcal_event_get_time_offsets (instance,
+                                   &instance_event_start_offset,
+                                   &instance_event_end_offset);
+
+      gcal_event_get_time_offsets (self,
+                                   &main_event_start_offset,
+                                   &main_event_end_offset);
+
+      if (instance_event_start_offset != main_event_start_offset)
+        {
+          main_event_start_date = g_date_time_add (self->dt_start,
+                                                   instance_event_start_offset - main_event_start_offset);
+          gcal_event_set_date_start (self, main_event_start_date);
+        }
+
+      if (instance_event_end_offset != main_event_end_offset)
+        {
+          main_event_end_date = g_date_time_add (self->dt_end,
+                                                 instance_event_end_offset - main_event_end_offset);
+
+          gcal_event_set_date_end (self, main_event_end_date);
+        }
+    }
+}
+
 /**
  * gcal_event_get_all_day:
  * @self: a #GcalEvent

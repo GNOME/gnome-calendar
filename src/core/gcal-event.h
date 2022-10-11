@@ -55,6 +55,11 @@ GcalEvent*           gcal_event_new                              (GcalCalendar  
 
 GcalEvent*           gcal_event_new_from_event                   (GcalEvent          *self);
 
+GcalEvent*           gcal_event_new_main_event_from_instance_event (GcalEvent        *self);
+
+void                 gcal_event_apply_instance                   (GcalEvent *self,
+                                                                  GcalEvent *instance);
+
 gboolean             gcal_event_get_all_day                      (GcalEvent          *self);
 
 void                 gcal_event_set_all_day                      (GcalEvent          *self,
