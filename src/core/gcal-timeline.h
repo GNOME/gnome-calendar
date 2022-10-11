@@ -53,5 +53,6 @@ void                 gcal_timeline_set_filter                    (GcalTimeline  
                                                                   const gchar        *filter);
 
 gboolean             gcal_timeline_is_complete                   (GcalTimeline       *self);
+void                 gcal_timeline_refresh                       (GcalTimeline       *self);
 
 G_END_DECLS

@@ -1076,3 +1076,13 @@ gcal_timeline_is_complete (GcalTimeline *self)
 
   return is_timeline_complete (self);
 }
+
+void
+gcal_timeline_refresh (GcalTimeline *self)
+{
+  GCAL_ENTRY;
+
+  update_calendar_monitor_filters (self);
+
+  GCAL_EXIT;
+}

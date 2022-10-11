@@ -381,9 +381,12 @@ on_event_updated (GObject      *source_object,
                   GAsyncResult *result,
                   gpointer      user_data)
 {
+  GcalManager *self;
   GError *error = NULL;
 
   GCAL_ENTRY;
+
+  self = GCAL_MANAGER (g_object_get_data (user_data, "GcalManager"));
 
   if (! e_cal_client_modify_object_finish (E_CAL_CLIENT (source_object),
                                            result,
@@ -393,6 +396,8 @@ on_event_updated (GObject      *source_object,
       g_error_free (error);
     }
   g_object_unref (E_CAL_COMPONENT (user_data));
+
+  gcal_timeline_refresh (self->timeline);
 
   GCAL_EXIT;
 }
@@ -1068,6 +1073,7 @@ gcal_manager_update_event (GcalManager           *self,
    */
   g_object_ref (component);
 
+  g_object_set_data (G_OBJECT (component), "GcalManager", GCAL_MANAGER (self));
   e_cal_client_modify_object (gcal_calendar_get_client (calendar),
                               e_cal_component_get_icalcomponent (component),
                               (ECalObjModType) mod,
