@@ -370,7 +370,7 @@ update_header (GtkListBoxRow *row,
       g_autofree gchar *end_label = NULL;
       if (gcal_date_time_compare_date (start, today) == 0)
         {
-          label = g_strdup ("On-going");
+          label = g_strdup (_("On-going"));
         }
       else
         {
