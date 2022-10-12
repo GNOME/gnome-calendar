@@ -794,7 +794,7 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
           if (ltr)
             x = column_width * i + offset + 1;
           else
-            x = width - event_width - (column_width * i + offset + x + 1);
+            x = width - event_width - (column_width * i + offset + 1);
 
           /* Setup the child position and size */
           child_allocation.x = x;
