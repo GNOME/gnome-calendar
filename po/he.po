@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
+"POT-Creation-Date: 2022-09-16 18:47+0000\n"
 "PO-Revision-Date: 2022-08-22 14:02+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: Hebrew <>\n"
@@ -56,13 +56,10 @@ msgid "Week view"
 msgstr "תצוגה שבועית"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
-#| msgctxt "shortcut window"
-#| msgid "Month view"
 msgid "Month view"
 msgstr "תצוגה חודשית"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
-#| msgid "Event deleted"
 msgid "Event editor"
 msgstr "עריכת אירוע"
 
@@ -254,8 +251,8 @@ msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"אם לוח השנה שייך לאחד מהחשבונות המקוונים שלך, ניתן להוסיף אותו דרך <a "
-"href=\"GOA\">הגדרות חשבונות מקוונים</a>."
+"אם לוח השנה שייך לאחד מהחשבונות המקוונים שלך, ניתן להוסיף אותו דרך <a href="
+"\"GOA\">הגדרות חשבונות מקוונים</a>."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:194
 msgid "User"
@@ -480,17 +477,20 @@ msgstr "‏%A האחרון"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "אתמול"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
 #: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "היום"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "מחר"
 
@@ -1255,6 +1255,10 @@ msgstr "הקובץ אינו קובץ iCalendar‏ (‎.ics)"
 msgid "Description"
 msgstr "תיאור"
 
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "אין אירועים"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "אירוע חדש…"
@@ -1320,9 +1324,6 @@ msgstr "_כל האירועים"
 
 #~ msgid "%B %d"
 #~ msgstr "%d ב%B"
-
-#~ msgid "No events"
-#~ msgstr "אין אירועים"
 
 #~ msgid "Add Event…"
 #~ msgstr "הוספת אירוע…"
