@@ -52,6 +52,7 @@ struct _GcalEventWidget
 
   /* widgets */
   GtkWidget          *horizontal_box;
+  GtkWidget          *main_widget;
   GtkWidget          *timestamp_label;
   GtkWidget          *squeezer;
   GtkWidget          *summary_label;
@@ -633,7 +634,7 @@ gcal_event_widget_dispose (GObject *object)
 {
   GcalEventWidget *self = GCAL_EVENT_WIDGET (object);
 
-  g_clear_pointer (&self->squeezer, gtk_widget_unparent);
+  g_clear_pointer (&self->main_widget, gtk_widget_unparent);
 
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->dispose (object);
 }
@@ -762,6 +763,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, drag_source);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, horizontal_box);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, main_widget);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, timestamp_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, squeezer);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_label);

@@ -21,7 +21,7 @@
     </child>
 
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="main_widget">
         <property name="hexpand">False</property>
         <child>
           <object class="AdwBin" id="edge">
