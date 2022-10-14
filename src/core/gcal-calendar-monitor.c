@@ -473,7 +473,13 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
                                     const GSList        *objects,
                                     GcalCalendarMonitor *self)
 {
+  g_autoptr (GRWLockReaderLocker) reader_locker = NULL;
+  g_autoptr (GHashTable) events_to_remove = NULL;
+  g_autoptr (GPtrArray) components_to_expand = NULL;
+  g_autoptr (GcalRange) range = NULL;
+  GHashTableIter iter;
   const GSList *l;
+  const gchar *aux;
 
   GCAL_ENTRY;
 
@@ -483,10 +489,16 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
       return;
     }
 
+  reader_locker = g_rw_lock_reader_locker_new (&self->shared.lock);
+  components_to_expand = g_ptr_array_new ();
+  events_to_remove = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+  range = gcal_range_copy (self->shared.range);
+
   for (l = objects; l; l = l->next)
     {
       g_autoptr (GcalEvent) event = NULL;
       g_autoptr (GError) error = NULL;
+      ECalComponentId *component_id;
       ICalComponent *icomponent;
       ECalComponent *ecomponent;
 
@@ -500,6 +512,41 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
       if (!ecomponent)
         continue;
 
+      /*
+       * If the event has no recurrence id, it is either a main event, or a
+       * regular non-recurring event. If we're receiving the 'objects-modified'
+       * signal because this event went from recurring to non-recurring, the
+       * instances of the old recurrency are still here. They need to be removed.
+       */
+      component_id = e_cal_component_get_id (ecomponent);
+      if (!e_cal_component_id_get_rid (component_id))
+        {
+          g_autofree gchar *event_id = NULL;
+
+          event_id = g_strdup_printf ("%s:%s",
+                                      gcal_calendar_get_id (self->calendar),
+                                      e_cal_component_id_get_uid (component_id));
+
+          g_hash_table_iter_init (&iter, self->shared.events);
+          while (g_hash_table_iter_next (&iter, (gpointer*) &aux, NULL))
+            {
+              if (!g_str_equal (aux, event_id) && g_str_has_prefix (aux, event_id))
+                g_hash_table_add (events_to_remove, g_strdup (aux));
+            }
+        }
+      g_clear_pointer (&component_id, e_cal_component_id_free);
+
+      /* Recurrent events will be processed later */
+      if (e_cal_util_component_has_recurrences (icomponent) &&
+          !e_cal_util_component_is_instance (icomponent))
+        {
+          GCAL_TRACE_MSG ("Component %s (%s) needs to be expanded",
+                          i_cal_component_get_summary (icomponent),
+                          i_cal_component_get_uid (icomponent));
+          g_ptr_array_add (components_to_expand, icomponent);
+          continue;
+        }
+
       event = gcal_event_new (self->calendar, ecomponent, &error);
       g_clear_object (&ecomponent);
 
@@ -511,6 +558,95 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
 
       update_event_in_idle (self, event);
     }
+
+  /* Recurrent events */
+  if (components_to_expand->len > 0)
+    {
+      g_autoptr (GPtrArray) expanded_events = NULL;
+      g_autoptr (GDateTime) range_start = NULL;
+      g_autoptr (GDateTime) range_end = NULL;
+      ECalClient *client;
+      time_t range_start_time;
+      time_t range_end_time;
+
+      GCAL_TRACE_MSG ("Expanding recurrencies of %d events", components_to_expand->len);
+
+      client = gcal_calendar_get_client (self->calendar);
+
+      range_start = gcal_range_get_start (range);
+      range_end = gcal_range_get_end (range);
+      range_start_time = g_date_time_to_unix (range_start);
+      range_end_time = g_date_time_to_unix (range_end) - 1;
+
+      expanded_events = g_ptr_array_new_with_free_func (g_object_unref);
+
+      /* Generate the instances */
+      for (guint i = 0; i < components_to_expand->len; i++)
+        {
+          GenerateRecurrencesData recurrences_data;
+          ICalComponent *icomponent;
+#if GCAL_ENABLE_TRACE
+          gint old_size;
+#endif
+
+          if (g_cancellable_is_cancelled (self->cancellable))
+            return;
+
+          icomponent = g_ptr_array_index (components_to_expand, i);
+
+          recurrences_data.monitor = self;
+          recurrences_data.expanded_events = expanded_events;
+
+#if GCAL_ENABLE_TRACE
+          old_size = expanded_events->len;
+#endif
+
+          e_cal_client_generate_instances_for_object_sync (client,
+                                                           icomponent,
+                                                           range_start_time,
+                                                           range_end_time,
+                                                           self->cancellable,
+                                                           client_instance_generated_cb,
+                                                           &recurrences_data);
+
+#if GCAL_ENABLE_TRACE
+            {
+              g_autofree gchar *range_str = gcal_range_to_string (range);
+
+              GCAL_TRACE_MSG ("Component %s (%s) added %d instance(s) between %s",
+                              i_cal_component_get_summary (icomponent),
+                              i_cal_component_get_uid (icomponent),
+                              expanded_events->len - old_size,
+                              range_str);
+            }
+#endif
+        }
+
+      for (guint i = 0; i < expanded_events->len; i++)
+        {
+          GcalEvent *event = g_ptr_array_index (expanded_events, i);
+          GcalEvent *old_event;
+
+          if (g_cancellable_is_cancelled (self->cancellable))
+            return;
+
+          old_event = g_hash_table_lookup (self->shared.events, gcal_event_get_uid (event));
+          if (old_event)
+            {
+              update_event_in_idle (self, event);
+              g_hash_table_remove (events_to_remove, gcal_event_get_uid (event));
+            }
+          else
+            {
+              add_event_in_idle (self, event);
+            }
+        }
+    }
+
+  /* Now remove lingering events */
+  g_hash_table_iter_init (&iter, events_to_remove);
+  while (g_hash_table_iter_next (&iter, (gpointer*) &aux, NULL))
+    remove_event_in_idle (self, aux);
 
   GCAL_EXIT;
 }
@@ -543,9 +679,26 @@ on_client_view_objects_removed_cb (ECalClientView      *view,
         }
       else
         {
+          g_autoptr (GRWLockReaderLocker) reader_locker = NULL;
+          GHashTableIter iter;
+          const gchar *aux;
+
           event_id = g_strdup_printf ("%s:%s",
                                       gcal_calendar_get_id (self->calendar),
                                       e_cal_component_id_get_uid (component_id));
+
+          /*
+           * If this is the main component, remove the expanded recurrency instances
+           * as well.
+           */
+          reader_locker = g_rw_lock_reader_locker_new (&self->shared.lock);
+
+          g_hash_table_iter_init (&iter, self->shared.events);
+          while (g_hash_table_iter_next (&iter, (gpointer*) &aux, NULL))
+            {
+              if (!g_str_equal (aux, event_id) && g_str_has_prefix (aux, event_id))
+                remove_event_in_idle (self, aux);
+            }
         }
 
       remove_event_in_idle (self, event_id);
