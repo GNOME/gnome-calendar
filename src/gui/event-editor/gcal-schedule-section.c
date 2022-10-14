@@ -609,7 +609,7 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
 
   if (freq != GCAL_RECURRENCE_NO_REPEAT)
     {
-      GcalRecurrence *recur;
+      g_autoptr (GcalRecurrence) recur = NULL;
 
       recur = gcal_recurrence_new ();
       recur->frequency = freq;
@@ -629,8 +629,6 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
           /* ... and set the new one */
           gcal_event_set_recurrence (self->event, recur);
         }
-
-      g_clear_pointer (&recur, gcal_recurrence_unref);
     }
   else
     {
