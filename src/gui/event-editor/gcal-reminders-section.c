@@ -361,11 +361,54 @@ gcal_reminders_section_apply (GcalEventEditorSection *section)
   GCAL_EXIT;
 }
 
+static gboolean
+gcal_reminders_section_changed (GcalEventEditorSection *section)
+{
+  GcalRemindersSection *self;
+  g_autoptr (GList) alarms = NULL;
+
+  GCAL_ENTRY;
+
+  self = GCAL_REMINDERS_SECTION (section);
+
+  alarms = gcal_event_get_alarms (self->event);
+  if (g_list_length (alarms) != self->alarms->len)
+    GCAL_RETURN (FALSE);
+
+  for (GList *l = alarms; l != NULL; l = l->next)
+    {
+      ECalComponentAlarm *other_alarm;
+      ECalComponentAlarm *alarm;
+
+      alarm = l->data;
+      other_alarm = NULL;
+
+      for (guint i = 0; i < self->alarms->len; i++)
+        {
+          ECalComponentAlarm *aux = g_ptr_array_index (self->alarms, i);
+
+          if (get_alarm_trigger_minutes (self->event, alarm) == get_alarm_trigger_minutes (self->event, aux))
+            {
+              other_alarm = aux;
+              break;
+            }
+        }
+
+      if (!other_alarm)
+        GCAL_RETURN (TRUE);
+
+      /* TODO: this certainly needs deeper comparisons! */
+    }
+
+  GCAL_RETURN (FALSE);
+}
+
 static void
 gcal_event_editor_section_iface_init (GcalEventEditorSectionInterface *iface)
 {
   iface->set_event = gcal_reminders_section_set_event;
   iface->apply = gcal_reminders_section_apply;
+  iface->changed = gcal_reminders_section_changed;
 }
 
 

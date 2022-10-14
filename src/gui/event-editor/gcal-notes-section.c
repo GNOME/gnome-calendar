@@ -94,11 +94,30 @@ gcal_notes_section_apply (GcalEventEditorSection *section)
   GCAL_EXIT;
 }
 
+static gboolean
+gcal_notes_section_changed (GcalEventEditorSection *section)
+{
+  g_autofree gchar *note_text = NULL;
+  GcalNotesSection *self;
+  GtkTextBuffer *buffer;
+
+  GCAL_ENTRY;
+
+  self = GCAL_NOTES_SECTION (section);
+
+  /* Update description */
+  buffer = gtk_text_view_get_buffer (self->notes_text);
+  g_object_get (G_OBJECT (buffer), "text", &note_text, NULL);
+
+  GCAL_RETURN (g_strcmp0 (gcal_event_get_description (self->event), note_text) != 0);
+}
+
 static void
 gcal_event_editor_section_iface_init (GcalEventEditorSectionInterface *iface)
 {
   iface->set_event = gcal_notes_section_set_event;
   iface->apply = gcal_notes_section_apply;
+  iface->changed = gcal_notes_section_changed;
 }
 
 

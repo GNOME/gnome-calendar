@@ -45,6 +45,8 @@ struct _GcalEventEditorSectionInterface
                                                                   GcalEventEditorFlags    flags);
 
   void               (*apply)                                    (GcalEventEditorSection *self);
+
+  gboolean           (*changed)                                  (GcalEventEditorSection *self);
 };
 
 void                 gcal_event_editor_section_set_event         (GcalEventEditorSection *self,
@@ -52,5 +54,7 @@ void                 gcal_event_editor_section_set_event         (GcalEventEdito
                                                                   GcalEventEditorFlags    flags);
 
 void                 gcal_event_editor_section_apply             (GcalEventEditorSection *self);
+
+gboolean             gcal_event_editor_section_changed           (GcalEventEditorSection *self);
 
 G_END_DECLS
