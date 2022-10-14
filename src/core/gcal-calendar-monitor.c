@@ -76,7 +76,7 @@ struct _GcalCalendarMonitor
    * a locked muxed.
    */
   struct {
-    GMutex            mutex;
+    GRWLock           lock;
     GcalRange        *range;
     gchar            *filter;
   } shared;
@@ -178,9 +178,9 @@ get_monitor_ranges (GcalCalendarMonitor  *self)
 {
   g_autoptr (GcalRange) range = NULL;
 
-  g_mutex_lock (&self->shared.mutex);
+  g_rw_lock_reader_lock (&self->shared.lock);
   range = gcal_range_copy (self->shared.range);
-  g_mutex_unlock (&self->shared.mutex);
+  g_rw_lock_reader_unlock (&self->shared.lock);
 
   return g_steal_pointer (&range);
 }
@@ -607,20 +607,20 @@ create_view (GcalCalendarMonitor *self)
 
   GCAL_ENTRY;
 
-  g_mutex_lock (&self->shared.mutex);
+  g_rw_lock_reader_lock (&self->shared.lock);
 
   g_assert (self->cancellable == NULL);
   self->cancellable = g_cancellable_new ();
 
   if (!self->shared.range)
     {
-      g_mutex_unlock (&self->shared.mutex);
+      g_rw_lock_reader_unlock (&self->shared.lock);
       GCAL_RETURN ();
     }
 
   filter = build_subscriber_filter (self->shared.range, self->shared.filter);
 
-  g_mutex_unlock (&self->shared.mutex);
+  g_rw_lock_reader_unlock (&self->shared.lock);
 
   if (!gcal_calendar_get_visible (self->calendar))
     GCAL_RETURN ();
@@ -1128,6 +1128,8 @@ gcal_calendar_monitor_init (GcalCalendarMonitor *self)
   self->main_context = g_main_context_ref_thread_default ();
   self->messages = g_async_queue_new ();
   self->complete = FALSE;
+
+  g_rw_lock_init (&self->shared.lock);
 }
 
 GcalCalendarMonitor*
@@ -1157,7 +1159,7 @@ gcal_calendar_monitor_set_range (GcalCalendarMonitor *self,
 
   GCAL_ENTRY;
 
-  g_mutex_lock (&self->shared.mutex);
+  g_rw_lock_writer_lock (&self->shared.lock);
 
   range_changed =
     !self->shared.range ||
@@ -1166,14 +1168,14 @@ gcal_calendar_monitor_set_range (GcalCalendarMonitor *self,
 
   if (!range_changed)
     {
-      g_mutex_unlock (&self->shared.mutex);
+      g_rw_lock_writer_unlock (&self->shared.lock);
       GCAL_RETURN ();
     }
 
   g_clear_pointer (&self->shared.range, gcal_range_unref);
   self->shared.range = range ? gcal_range_copy (range) : NULL;
 
-  g_mutex_unlock (&self->shared.mutex);
+  g_rw_lock_writer_unlock (&self->shared.lock);
 
   maybe_spawn_view_thread (self);
   remove_events_outside_range (self, range);
@@ -1213,12 +1215,12 @@ gcal_calendar_monitor_set_filter (GcalCalendarMonitor *self,
 {
   g_return_if_fail (GCAL_IS_CALENDAR_MONITOR (self));
 
-  g_mutex_lock (&self->shared.mutex);
+  g_rw_lock_writer_lock (&self->shared.lock);
 
   g_clear_pointer (&self->shared.filter, g_free);
   self->shared.filter = g_strdup (filter);
 
-  g_mutex_unlock (&self->shared.mutex);
+  g_rw_lock_writer_unlock (&self->shared.lock);
 
   remove_all_events (self);
 
