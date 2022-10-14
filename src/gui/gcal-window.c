@@ -706,7 +706,7 @@ on_event_editor_dialog_remove_event_cb (GcalEventEditorDialog *edit_dialog,
   g_object_set_data (G_OBJECT (toast), "modifier", GINT_TO_POINTER (modifier));
   g_signal_connect (toast, "dismissed", G_CALLBACK (on_toast_dismissed_cb), self);
 
-  adw_toast_overlay_add_toast (self->overlay, toast);
+  adw_toast_overlay_add_toast (self->overlay, g_object_ref (toast));
   self->delete_event_toast = g_steal_pointer (&toast);
 
   /* hide widget of the event */
