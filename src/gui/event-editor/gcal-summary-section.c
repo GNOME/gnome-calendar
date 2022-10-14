@@ -99,11 +99,29 @@ gcal_reminders_section_apply (GcalEventEditorSection *section)
   GCAL_EXIT;
 }
 
+static gboolean
+gcal_reminders_section_changed (GcalEventEditorSection *section)
+{
+  GcalSummarySection *self;
+  const gchar *event_location;
+  const gchar *event_summary;
+
+  GCAL_ENTRY;
+
+  self = GCAL_SUMMARY_SECTION (section);
+  event_summary = gcal_event_get_summary (self->event);
+  event_location = gcal_event_get_location (self->event);
+
+  GCAL_RETURN (g_strcmp0 (event_summary, gtk_editable_get_text (self->summary_entry)) != 0 ||
+               g_strcmp0 (event_location, gtk_editable_get_text (self->location_entry)) != 0);
+}
+
 static void
 gcal_event_editor_section_iface_init (GcalEventEditorSectionInterface *iface)
 {
   iface->set_event = gcal_reminders_section_set_event;
   iface->apply = gcal_reminders_section_apply;
+  iface->changed = gcal_reminders_section_changed;
 }
 
 

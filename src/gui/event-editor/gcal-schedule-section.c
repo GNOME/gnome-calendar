@@ -641,11 +641,68 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
   GCAL_EXIT;
 }
 
+static gboolean
+gcal_schedule_section_changed (GcalEventEditorSection *section)
+{
+  g_autoptr (GDateTime) start_date = NULL;
+  g_autoptr (GDateTime) end_date = NULL;
+  GcalScheduleSection *self;
+  gboolean was_all_day;
+  gboolean all_day;
+
+  GCAL_ENTRY;
+
+  self = GCAL_SCHEDULE_SECTION (section);
+  all_day = gtk_switch_get_active (self->all_day_switch);
+  was_all_day = gcal_event_get_all_day (self->event);
+
+  /* All day */
+  if (all_day != was_all_day)
+    GCAL_RETURN (TRUE);
+
+  /* Start date */
+  start_date = get_date_start (self);
+  if (!g_date_time_equal (start_date, gcal_event_get_date_start (self->event)))
+    GCAL_RETURN (TRUE);
+
+  /* End date */
+  end_date = get_date_end (self);
+  if (gtk_switch_get_active (self->all_day_switch))
+    {
+      g_autoptr (GDateTime) fake_end_date = g_date_time_add_days (end_date, 1);
+      gcal_set_date_time (&end_date, fake_end_date);
+    }
+  else if (!all_day && was_all_day)
+    {
+      /* When an all day event is changed to be not an all day event, we
+       * need to correct for the fact that the event's timezone was until
+       * now set to UTC. That means we need to change the timezone to
+       * localtime now, or else it will be saved incorrectly.
+       */
+      GDateTime *localtime_date;
+
+      localtime_date = g_date_time_to_local (start_date);
+      g_clear_pointer (&start_date, g_date_time_unref);
+      start_date = localtime_date;
+
+      localtime_date = g_date_time_to_local (end_date);
+      g_clear_pointer (&end_date, g_date_time_unref);
+      end_date = localtime_date;
+    }
+
+  if (!g_date_time_equal (end_date, gcal_event_get_date_end (self->event)))
+    GCAL_RETURN (TRUE);
+
+  /* Recurrency */
+  GCAL_RETURN (gcal_schedule_section_recurrence_changed (self));
+}
+
 static void
 gcal_event_editor_section_iface_init (GcalEventEditorSectionInterface *iface)
 {
   iface->set_event = gcal_schedule_section_set_event;
   iface->apply = gcal_schedule_section_apply;
+  iface->changed = gcal_schedule_section_changed;
 }
 
 
@@ -748,4 +805,27 @@ static void
 gcal_schedule_section_init (GcalScheduleSection *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
+}
+
+gboolean
+gcal_schedule_section_recurrence_changed (GcalScheduleSection *self)
+{
+  g_autoptr (GcalRecurrence) recurrence = NULL;
+  GcalRecurrenceFrequency freq;
+
+  g_return_val_if_fail (GCAL_IS_SCHEDULE_SECTION (self), FALSE);
+
+  freq = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_combo));
+  if (freq == GCAL_RECURRENCE_NO_REPEAT && !gcal_event_get_recurrence (self->event))
+    GCAL_RETURN (FALSE);
+
+  recurrence = gcal_recurrence_new ();
+  recurrence->frequency = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_combo));
+  recurrence->limit_type = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_duration_combo));
+  if (recurrence->limit_type == GCAL_RECURRENCE_UNTIL)
+    recurrence->limit.until = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector));
+  else if (recurrence->limit_type == GCAL_RECURRENCE_COUNT)
+    recurrence->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
+
+  GCAL_RETURN (!gcal_recurrence_is_equal (recurrence, gcal_event_get_recurrence (self->event)));
 }

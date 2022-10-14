@@ -66,3 +66,22 @@ gcal_event_editor_section_apply (GcalEventEditorSection *self)
   if (GCAL_EVENT_EDITOR_SECTION_GET_IFACE (self)->apply)
     GCAL_EVENT_EDITOR_SECTION_GET_IFACE (self)->apply (self);
 }
+
+/**
+ * gcal_event_editor_section_changed:
+ * @self: a #GcalEventEditorSection
+ *
+ * Checks whether this section has any pending changes to the event.
+ *
+ * Returns: %TRUE if this section has pending changes
+ */
+gboolean
+gcal_event_editor_section_changed (GcalEventEditorSection *self)
+{
+  g_return_val_if_fail (GCAL_IS_EVENT_EDITOR_SECTION (self), FALSE);
+
+  if (GCAL_EVENT_EDITOR_SECTION_GET_IFACE (self)->changed)
+    return GCAL_EVENT_EDITOR_SECTION_GET_IFACE (self)->changed (self);
+  else
+    return TRUE;
+}
