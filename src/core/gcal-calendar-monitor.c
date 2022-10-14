@@ -600,6 +600,7 @@ on_client_view_complete_cb (ECalClientView      *view,
 static void
 create_view (GcalCalendarMonitor *self)
 {
+  g_autoptr (GRWLockReaderLocker) reader_locker = NULL;
   g_autofree gchar *filter = NULL;
   g_autoptr (GError) error = NULL;
   ECalClientView *view;
@@ -607,20 +608,17 @@ create_view (GcalCalendarMonitor *self)
 
   GCAL_ENTRY;
 
-  g_rw_lock_reader_lock (&self->shared.lock);
+  reader_locker = g_rw_lock_reader_locker_new (&self->shared.lock);
 
   g_assert (self->cancellable == NULL);
   self->cancellable = g_cancellable_new ();
 
   if (!self->shared.range)
-    {
-      g_rw_lock_reader_unlock (&self->shared.lock);
-      GCAL_RETURN ();
-    }
+    GCAL_RETURN ();
 
   filter = build_subscriber_filter (self->shared.range, self->shared.filter);
 
-  g_rw_lock_reader_unlock (&self->shared.lock);
+  g_clear_pointer (&reader_locker, g_rw_lock_reader_locker_free);
 
   if (!gcal_calendar_get_visible (self->calendar))
     GCAL_RETURN ();
@@ -1153,13 +1151,14 @@ void
 gcal_calendar_monitor_set_range (GcalCalendarMonitor *self,
                                  GcalRange           *range)
 {
+  g_autoptr (GRWLockWriterLocker) writer_locker = NULL;
   gboolean range_changed;
 
   g_return_if_fail (GCAL_IS_CALENDAR_MONITOR (self));
 
   GCAL_ENTRY;
 
-  g_rw_lock_writer_lock (&self->shared.lock);
+  writer_locker = g_rw_lock_writer_locker_new (&self->shared.lock);
 
   range_changed =
     !self->shared.range ||
@@ -1167,15 +1166,12 @@ gcal_calendar_monitor_set_range (GcalCalendarMonitor *self,
     gcal_range_calculate_overlap (self->shared.range, range, NULL) != GCAL_RANGE_EQUAL;
 
   if (!range_changed)
-    {
-      g_rw_lock_writer_unlock (&self->shared.lock);
-      GCAL_RETURN ();
-    }
+    GCAL_RETURN ();
 
   g_clear_pointer (&self->shared.range, gcal_range_unref);
   self->shared.range = range ? gcal_range_copy (range) : NULL;
 
-  g_rw_lock_writer_unlock (&self->shared.lock);
+  g_clear_pointer (&writer_locker, g_rw_lock_writer_locker_free);
 
   maybe_spawn_view_thread (self);
   remove_events_outside_range (self, range);
