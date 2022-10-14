@@ -291,6 +291,7 @@ on_delete_button_clicked_cb (GtkButton             *button,
     {
       gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
                                                    self->event,
+                                                   TRUE,
                                                    on_ask_recurrence_response_delete_cb,
                                                    self);
     }
@@ -362,6 +363,7 @@ on_done_button_clicked_cb (GtkButton             *button,
     {
       gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
                                                    self->event,
+                                                   TRUE,
                                                    on_ask_recurrence_response_save_cb,
                                                    self);
       return;

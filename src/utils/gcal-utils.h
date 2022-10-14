@@ -132,6 +132,7 @@ void                 gcal_utils_extract_google_section           (const gchar   
 
 void                 gcal_utils_ask_recurrence_modification_type (GtkWidget                 *parent,
                                                                   GcalEvent                 *event,
+                                                                  gboolean                   show_mod_all,
                                                                   GcalAskRecurrenceCallback  callback,
                                                                   gpointer                   user_data);
 

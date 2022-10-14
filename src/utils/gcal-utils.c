@@ -1298,6 +1298,7 @@ on_message_dialog_response_cb (GtkDialog         *dialog,
 void
 gcal_utils_ask_recurrence_modification_type (GtkWidget                 *parent,
                                              GcalEvent                 *event,
+                                             gboolean                   show_mod_all,
                                              GcalAskRecurrenceCallback  callback,
                                              gpointer                   user_data)
 {
@@ -1331,7 +1332,9 @@ gcal_utils_ask_recurrence_modification_type (GtkWidget                 *parent,
   if (!e_client_check_capability (E_CLIENT (client), E_CAL_STATIC_CAPABILITY_NO_THISANDFUTURE))
     gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Subsequent events"), GTK_RESPONSE_OK);
 
-  gtk_dialog_add_button (GTK_DIALOG (dialog), _("_All events"), GTK_RESPONSE_YES);
+  if (show_mod_all)
+    gtk_dialog_add_button (GTK_DIALOG (dialog), _("_All events"), GTK_RESPONSE_YES);
+
   gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gtk_widget_get_native (parent)));
   g_signal_connect (dialog, "response", G_CALLBACK (on_message_dialog_response_cb), data);
 
