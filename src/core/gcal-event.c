@@ -411,7 +411,7 @@ setup_component (GcalEvent  *self,
   gcal_event_update_uid_internal (self);
 
   /* Set has-recurrence to check if the component has recurrence or not */
-  self->has_recurrence = e_cal_component_has_recurrences(self->component);
+  self->has_recurrence = e_cal_component_has_recurrences (self->component);
 
   /* Load the recurrence-rules in GcalRecurrence struct */
   self->recurrence = gcal_recurrence_parse_recurrence_rules (self->component);
