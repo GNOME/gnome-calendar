@@ -57,8 +57,11 @@ GcalEvent*           gcal_event_new_from_event                   (GcalEvent     
 
 GcalEvent*           gcal_event_new_main_event_from_instance_event (GcalEvent        *self);
 
-void                 gcal_event_apply_instance                   (GcalEvent *self,
-                                                                  GcalEvent *instance);
+void                 gcal_event_apply_instance                   (GcalEvent          *self,
+                                                                  GcalEvent          *instance);
+
+void                 gcal_event_remove_instance                  (GcalEvent          *self,
+                                                                  GcalEvent          *instance);
 
 gboolean             gcal_event_get_all_day                      (GcalEvent          *self);
 
@@ -83,6 +86,7 @@ void                 gcal_event_set_date_start                   (GcalEvent     
                                                                   GDateTime          *dt);
 
 GcalRange*           gcal_event_get_range                        (GcalEvent          *self);
+gboolean             gcal_event_get_excluded                     (GcalEvent          *self);
 
 const gchar*         gcal_event_get_description                  (GcalEvent          *self);
 

@@ -679,7 +679,8 @@ timeline_source_dispatch (GSource     *source,
 
           if (subscriber)
             {
-              add_event_to_subscriber (subscriber, event);
+              if (!gcal_event_get_excluded (event))
+                add_event_to_subscriber (subscriber, event);
               g_hash_table_remove (self->queued_adds, subscriber_event_id);
             }
           break;
@@ -703,7 +704,13 @@ timeline_source_dispatch (GSource     *source,
               }
 
             if (subscriber)
-              update_subscriber_event (subscriber, event);
+              {
+
+                if (!gcal_event_get_excluded (event))
+                  update_subscriber_event (subscriber, event);
+                else
+                  remove_event_from_subscriber (subscriber, event);
+              }
           }
           break;
 

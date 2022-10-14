@@ -95,6 +95,7 @@ struct _GcalEvent
   GBinding           *color_binding;
 
   gboolean            all_day;
+  gboolean            excluded;
 
   /* A map of GcalAlarmType */
   GHashTable         *alarms;
@@ -138,10 +139,40 @@ static GParamSpec* properties[N_PROPS] = { NULL, };
  */
 
 static void
+check_if_excluded (GcalEvent  *self)
+{
+  ECalComponentDateTime *date;
+  GSList *exclusion_dates, *node;
+
+  GCAL_TRACE_MSG ("Checking if event should be excluded");
+
+  self->excluded = FALSE;
+
+  date = e_cal_component_get_dtstart (self->component);
+  exclusion_dates = e_cal_component_get_exdates (self->component);
+  for (node = exclusion_dates; node != NULL; node = node->next)
+    {
+      ECalComponentDateTime *exclusion_date = node->data;
+
+      if (i_cal_time_compare (e_cal_component_datetime_get_value (exclusion_date),
+                              e_cal_component_datetime_get_value (date)) == 0)
+        {
+          self->excluded = TRUE;
+          break;
+        }
+    }
+  g_slist_free_full (exclusion_dates, e_cal_component_datetime_free);
+
+  g_clear_pointer (&date, e_cal_component_datetime_free);
+}
+
+static void
 clear_range (GcalEvent *self)
 {
   g_clear_pointer (&self->range, gcal_range_unref);
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_RANGE]);
+
+  check_if_excluded (self);
 }
 
 static GTimeZone*
@@ -391,6 +422,8 @@ setup_component (GcalEvent  *self,
 
       g_clear_object (&date);
     }
+
+  check_if_excluded (self);
 
   /* Summary */
   text = e_cal_component_get_summary (self->component);
@@ -1002,6 +1035,38 @@ gcal_event_apply_instance (GcalEvent *self,
 }
 
 /**
+ * gcal_event_remove_instance:
+ * @self: a #GcalEvent
+ *
+ * Marks the given instance as an exception in the main event recurrence list,
+ * so it essentially gets removed
+ */
+void
+gcal_event_remove_instance (GcalEvent *self,
+                            GcalEvent *instance)
+{
+  GSList *exceptions;
+  ECalComponentDateTime *instance_date;
+
+  g_return_if_fail (GCAL_IS_EVENT (self));
+
+  if (e_cal_component_is_instance (self->component))
+    return;
+
+  if (!e_cal_component_is_instance (instance->component))
+    return;
+
+  instance_date = e_cal_component_get_dtstart (instance->component);
+  exceptions = e_cal_component_get_exdates (self->component);
+  exceptions = g_slist_prepend (exceptions, instance_date);
+
+  e_cal_component_set_exdates (self->component, exceptions);
+  e_cal_component_commit_sequence (self->component);
+
+  g_slist_free_full (exceptions, e_cal_component_datetime_free);
+}
+
+/**
  * gcal_event_get_all_day:
  * @self: a #GcalEvent
  *
@@ -1209,9 +1274,23 @@ gcal_event_get_range (GcalEvent *self)
       self->range = gcal_range_new (gcal_event_get_date_start (self),
                                     gcal_event_get_date_end (self),
                                     self->all_day ? GCAL_RANGE_DATE_ONLY : GCAL_RANGE_DEFAULT);
+
+      check_if_excluded (self);
     }
 
   return self->range;
+}
+
+/**
+ * gcal_event_get_excluded:
+ * @self: a #GcalEvent
+ *
+ * Retrieves whether or not the event has been excluded by an exdate.
+ */
+gboolean
+gcal_event_get_excluded (GcalEvent *self)
+{
+  return self->excluded;
 }
 
 /**
@@ -1847,6 +1926,8 @@ gcal_event_set_recurrence (GcalEvent      *self,
 
   g_clear_object (&rrule);
   g_clear_object (&prop);
+
+  check_if_excluded (self);
 }
 
 /**

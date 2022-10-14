@@ -1115,6 +1115,24 @@ gcal_manager_remove_event (GcalManager           *self,
                               on_event_removed,
                               g_object_ref (event));
 
+  if (mod != GCAL_RECURRENCE_MOD_ALL)
+    {
+      g_autoptr (GcalEvent) main_event = NULL;
+
+      main_event = gcal_event_new_main_event_from_instance_event (event);
+      component = gcal_event_get_component (main_event);
+
+      gcal_event_remove_instance (main_event, event);
+
+      e_cal_client_modify_object (gcal_calendar_get_client (calendar),
+                                  e_cal_component_get_icalcomponent (component),
+                                  (ECalObjModType) GCAL_RECURRENCE_MOD_ALL,
+                                  E_CAL_OPERATION_FLAG_NONE,
+                                  NULL,
+                                  on_event_updated,
+                                  g_object_ref (component));
+    }
+
   g_free (rid);
 
   GCAL_EXIT;
