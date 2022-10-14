@@ -205,7 +205,7 @@ get_timezone_from_ical (GcalEvent             *self,
    * in this case.
    */
   if (!tz)
-    tz = g_time_zone_new_utc ();
+    return NULL;
 
   GCAL_TRACE_MSG ("%s (%p)", g_time_zone_get_identifier (tz), tz);
 
@@ -314,14 +314,15 @@ setup_component (GcalEvent  *self,
 {
   g_autoptr (GTimeZone) zone_start = NULL;
   g_autoptr (GTimeZone) zone_end = NULL;
-  ECalComponentDateTime *start;
-  ECalComponentDateTime *end;
-  ECalComponentText *text;
+  ECalComponentDateTime *start = NULL;
+  ECalComponentDateTime *end = NULL;
+  ECalComponentText *text = NULL;
   ICalTime *date;
   GDateTime *date_start;
   GDateTime *date_end;
   gboolean start_is_all_day, end_is_all_day;
   gchar *description, *location;
+  gboolean component_setup = FALSE;
 
   g_assert (self->component != NULL);
 
@@ -339,16 +340,24 @@ setup_component (GcalEvent  *self,
                    GCAL_EVENT_ERROR_INVALID_START_DATE,
                    "Event '%s' has an invalid start date", gcal_event_get_uid (self));
 
-      e_cal_component_datetime_free (start);
-      start = e_cal_component_datetime_new_take (i_cal_time_new_today (), NULL);
-      g_clear_pointer (&start, e_cal_component_datetime_free);
-      return FALSE;
+      goto out;
     }
 
   GCAL_TRACE_MSG ("Retrieving start timezone");
 
-  date = i_cal_time_normalize (e_cal_component_datetime_get_value (start));
   zone_start = get_timezone_from_ical (self, start);
+
+  if (!zone_start)
+    {
+      g_set_error (error,
+                   GCAL_EVENT_ERROR,
+                   GCAL_EVENT_ERROR_INVALID_TIME_ZONE,
+                   "Event '%s' has an invalid start date timezone", gcal_event_get_uid (self));
+
+      goto out;
+    }
+
+  date = i_cal_time_normalize (e_cal_component_datetime_get_value (start));
   date_start = g_date_time_new (zone_start,
                                 i_cal_time_get_year (date),
                                 i_cal_time_get_month (date),
@@ -373,8 +382,18 @@ setup_component (GcalEvent  *self,
     {
       GCAL_TRACE_MSG ("Retrieving end timezone");
 
-      date = i_cal_time_normalize (e_cal_component_datetime_get_value (end));
       zone_end = get_timezone_from_ical (self, end);
+
+      if (!zone_end)
+        {
+          g_set_error (error,
+                       GCAL_EVENT_ERROR,
+                       GCAL_EVENT_ERROR_INVALID_TIME_ZONE,
+                       "Event '%s' has an invalid end date timezone", gcal_event_get_uid (self));
+          goto out;
+        }
+
+      date = i_cal_time_normalize (e_cal_component_datetime_get_value (end));
       date_end = g_date_time_new (zone_end,
                                   i_cal_time_get_year (date),
                                   i_cal_time_get_month (date),
@@ -422,14 +441,17 @@ setup_component (GcalEvent  *self,
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_HAS_RECURRENCE]);
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_RECURRENCE]);
 
+  component_setup = TRUE;
+
   g_clear_pointer (&description, g_free);
   g_clear_pointer (&location, g_free);
 
+out:
   e_cal_component_text_free (text);
   e_cal_component_datetime_free (start);
   e_cal_component_datetime_free (end);
 
-  return TRUE;
+  return component_setup;
 }
 
 
