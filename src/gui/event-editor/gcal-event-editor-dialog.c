@@ -329,6 +329,7 @@ on_done_button_clicked_cb (GtkButton             *button,
   GcalCalendar *calendar;
   GcalManager *manager;
   gboolean schedule_changed;
+  gboolean was_recurrent;
   gint i;
 
   manager = gcal_context_get_manager (self->context);
@@ -362,6 +363,12 @@ on_done_button_clicked_cb (GtkButton             *button,
         goto out;
     }
 
+  /*
+   * We don't want to ask the recurrence mod type if the event wasn't
+   * actually recurrent.
+   */
+  was_recurrent = gcal_event_has_recurrence (self->event);
+
   for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
     gcal_event_editor_section_apply (self->sections[i]);
 
@@ -385,7 +392,7 @@ on_done_button_clicked_cb (GtkButton             *button,
     {
       gcal_manager_create_event (manager, self->event);
     }
-  else if (gcal_event_has_recurrence (self->event))
+  else if (was_recurrent && gcal_event_has_recurrence (self->event))
     {
       gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
                                                    self->event,
