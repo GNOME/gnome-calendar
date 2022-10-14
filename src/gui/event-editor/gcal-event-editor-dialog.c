@@ -330,14 +330,14 @@ on_done_button_clicked_cb (GtkButton             *button,
   GcalManager *manager;
   gint i;
 
-  for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
-    gcal_event_editor_section_apply (self->sections[i]);
-
   manager = gcal_context_get_manager (self->context);
   calendar = gcal_event_get_calendar (self->event);
 
   if (gcal_calendar_is_read_only (calendar))
     GCAL_GOTO (out);
+
+  for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
+    gcal_event_editor_section_apply (self->sections[i]);
 
   selected_calendar = g_steal_pointer (&self->selected_calendar);
   if (selected_calendar && calendar != selected_calendar)
