@@ -176,8 +176,8 @@
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkHeaderBar" id="header_bar">
-                    <property name="show-title-buttons">True</property>
+                  <object class="AdwHeaderBar" id="header_bar">
+                    <property name="show-start-title-buttons" bind-source="leaflet" bind-property="folded" bind-flags="sync-create"/>
                     <child>
                       <object class="GtkButton">
                         <property name="action-name">win.today</property>
