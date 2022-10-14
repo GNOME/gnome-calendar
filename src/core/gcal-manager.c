@@ -1061,20 +1061,13 @@ gcal_manager_update_event (GcalManager           *self,
   if (mod == GCAL_RECURRENCE_MOD_ALL)
     e_cal_component_set_recurid (component, NULL);
 
-  /*
-   * While we're updating the event, we don't want the component
-   * to be destroyed, so take a reference of the component while
-   * we're performing the update on it.
-   */
-  g_object_ref (component);
-
   e_cal_client_modify_object (gcal_calendar_get_client (calendar),
                               e_cal_component_get_icalcomponent (component),
                               (ECalObjModType) mod,
                               E_CAL_OPERATION_FLAG_NONE,
                               NULL,
                               on_event_updated,
-                              component);
+                              g_object_ref (component));
 
   GCAL_EXIT;
 }
