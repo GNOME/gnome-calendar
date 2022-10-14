@@ -442,7 +442,7 @@ on_drop_target_drop_cb (GtkDropTarget *drop_target,
 
       gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
                                                    event,
-                                                   TRUE,
+                                                   FALSE,
                                                    on_ask_recurrence_response_cb,
                                                    data);
     }
