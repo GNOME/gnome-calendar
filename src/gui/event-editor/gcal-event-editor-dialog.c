@@ -336,6 +336,22 @@ on_done_button_clicked_cb (GtkButton             *button,
   if (gcal_calendar_is_read_only (calendar))
     GCAL_GOTO (out);
 
+  if (!self->event_is_new)
+    {
+      gboolean anything_changed = FALSE;
+
+      for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
+        {
+          gboolean section_changed;
+
+          section_changed = gcal_event_editor_section_changed (self->sections[i]);
+          anything_changed |= section_changed;
+        }
+
+      if (!anything_changed)
+        goto out;
+    }
+
   for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
     gcal_event_editor_section_apply (self->sections[i]);
 
