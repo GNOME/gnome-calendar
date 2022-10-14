@@ -326,7 +326,6 @@ on_client_view_objects_added_cb (ECalClientView      *view,
     {
       g_autoptr (GcalEvent) event = NULL;
       g_autoptr (GError) error = NULL;
-      g_autofree gchar *event_id = NULL;
       ICalComponent *icomponent;
       ECalComponent *ecomponent;
 
@@ -363,10 +362,12 @@ on_client_view_objects_added_cb (ECalClientView      *view,
           continue;
         }
 
-      event_id = g_strdup (gcal_event_get_uid (event));
-
       if (!self->monitor_thread.populated)
         {
+          g_autofree gchar *event_id = NULL;
+
+          event_id = g_strdup (gcal_event_get_uid (event));
+
           g_hash_table_insert (self->monitor_thread.events_to_add,
                                g_steal_pointer (&event_id),
                                g_object_ref (event));
@@ -443,16 +444,17 @@ on_client_view_objects_added_cb (ECalClientView      *view,
       /* Process all these instances */
       for (i = 0; i < expanded_events->len; i++)
         {
-          g_autofree gchar *event_id = NULL;
           GcalEvent *event = g_ptr_array_index (expanded_events, i);
 
           if (g_cancellable_is_cancelled (self->cancellable))
             return;
 
-          event_id = g_strdup (gcal_event_get_uid (event));
-
           if (!self->monitor_thread.populated)
             {
+              g_autofree gchar *event_id = NULL;
+
+              event_id = g_strdup (gcal_event_get_uid (event));
+
               g_hash_table_insert (self->monitor_thread.events_to_add,
                                    g_steal_pointer (&event_id),
                                    g_object_ref (event));
