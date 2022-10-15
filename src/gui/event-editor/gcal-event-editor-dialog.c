@@ -275,6 +275,9 @@ on_ask_recurrence_response_delete_cb (GcalEvent             *event,
 {
   GcalEventEditorDialog *self = GCAL_EVENT_EDITOR_DIALOG (user_data);
 
+  if (mod_type == GCAL_RECURRENCE_MOD_NONE)
+    return;
+
   g_signal_emit (self, signals[REMOVE_EVENT], 0, event, mod_type);
   clear_and_hide_dialog (self);
 }
@@ -310,14 +313,14 @@ on_ask_recurrence_response_save_cb (GcalEvent             *event,
                                     gpointer               user_data)
 {
   GcalEventEditorDialog *self = GCAL_EVENT_EDITOR_DIALOG (user_data);
+  GcalManager *manager;
 
-  if (mod_type != GCAL_RECURRENCE_MOD_NONE)
-    {
-      GcalManager *manager = gcal_context_get_manager (self->context);
+  if (mod_type == GCAL_RECURRENCE_MOD_NONE)
+    return;
 
-      gcal_manager_update_event (manager, self->event, mod_type);
-    }
+  manager = gcal_context_get_manager (self->context);
 
+  gcal_manager_update_event (manager, self->event, mod_type);
   clear_and_hide_dialog (self);
 }
 
