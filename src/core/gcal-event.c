@@ -1686,7 +1686,7 @@ gcal_event_set_recurrence (GcalEvent      *self,
  *
  * Gets the recurrence struct @recur of the event.
  *
- * Returns: (transfer full): a #GcalRecurrence
+ * Returns: (transfer none): a #GcalRecurrence
  */
 GcalRecurrence*
 gcal_event_get_recurrence (GcalEvent *self)
