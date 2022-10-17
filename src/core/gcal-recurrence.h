@@ -56,7 +56,7 @@ typedef enum
 
 struct _GcalRecurrence
 {
-  gint                     ref_count;
+  gatomicrefcount          ref_count;
 
   GcalRecurrenceFrequency  frequency;
   GcalRecurrenceLimitType  limit_type;

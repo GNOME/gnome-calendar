@@ -54,7 +54,7 @@ gcal_recurrence_new (void)
   new_recur->limit.until = NULL;
   new_recur->limit.count = 0;
 
-  new_recur->ref_count = 1;
+  g_atomic_ref_count_init (&new_recur->ref_count);
 
   return new_recur;
 }
@@ -93,7 +93,7 @@ gcal_recurrence_ref (GcalRecurrence *self)
   g_return_val_if_fail (self, NULL);
   g_return_val_if_fail (self->ref_count, NULL);
 
-  g_atomic_int_inc (&self->ref_count);
+  g_atomic_ref_count_inc (&self->ref_count);
 
   return self;
 }
@@ -104,7 +104,7 @@ gcal_recurrence_unref (GcalRecurrence *self)
   g_return_if_fail (self);
   g_return_if_fail (self->ref_count);
 
-  if (g_atomic_int_dec_and_test (&self->ref_count))
+  if (g_atomic_ref_count_dec (&self->ref_count))
     gcal_recurrence_free (self);
 }
 
