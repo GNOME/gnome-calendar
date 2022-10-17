@@ -827,3 +827,20 @@ gcal_schedule_section_recurrence_changed (GcalScheduleSection *self)
 
   GCAL_RETURN (!gcal_recurrence_is_equal (recurrence, gcal_event_get_recurrence (self->event)));
 }
+
+gboolean
+gcal_schedule_section_day_changed (GcalScheduleSection *self)
+{
+  g_autoptr (GDateTime) start_date = NULL;
+  g_autoptr (GDateTime) end_date = NULL;
+
+  g_return_val_if_fail (GCAL_IS_SCHEDULE_SECTION (self), FALSE);
+
+  GCAL_ENTRY;
+
+  start_date = get_date_start (self);
+  end_date = get_date_end (self);
+
+  GCAL_RETURN (gcal_date_time_compare_date (start_date, gcal_event_get_date_start (self->event)) < 0 ||
+               gcal_date_time_compare_date (end_date, gcal_event_get_date_end (self->event)) > 0);
+}

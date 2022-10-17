@@ -331,7 +331,7 @@ on_done_button_clicked_cb (GtkButton             *button,
   GcalCalendar *selected_calendar;
   GcalCalendar *calendar;
   GcalManager *manager;
-  gboolean schedule_changed;
+  gboolean can_show_mod_all;
   gboolean was_recurrent;
   gint i;
 
@@ -341,7 +341,7 @@ on_done_button_clicked_cb (GtkButton             *button,
   if (gcal_calendar_is_read_only (calendar))
     GCAL_GOTO (out);
 
-  schedule_changed = FALSE;
+  can_show_mod_all = TRUE;
   if (!self->event_is_new)
     {
       gboolean anything_changed = FALSE;
@@ -352,18 +352,14 @@ on_done_button_clicked_cb (GtkButton             *button,
 
           section_changed = gcal_event_editor_section_changed (self->sections[i]);
           anything_changed |= section_changed;
-
-          if (self->sections[i] == self->schedule_section)
-            schedule_changed = section_changed;
         }
-
-      GCAL_TRACE_MSG ("Event %s changed: %d, schedule changed: %d",
-                      gcal_event_get_uid (self->event),
-                      anything_changed,
-                      schedule_changed);
 
       if (!anything_changed)
         goto out;
+
+      can_show_mod_all =
+        !gcal_schedule_section_recurrence_changed (GCAL_SCHEDULE_SECTION (self->schedule_section)) &&
+        !gcal_schedule_section_day_changed (GCAL_SCHEDULE_SECTION (self->schedule_section));
     }
 
   /*
@@ -399,7 +395,7 @@ on_done_button_clicked_cb (GtkButton             *button,
     {
       gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
                                                    self->event,
-                                                   !schedule_changed,
+                                                   can_show_mod_all,
                                                    on_ask_recurrence_response_save_cb,
                                                    self);
       return;

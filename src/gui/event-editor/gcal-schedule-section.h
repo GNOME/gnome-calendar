@@ -29,4 +29,6 @@ G_DECLARE_FINAL_TYPE (GcalScheduleSection, gcal_schedule_section, GCAL, SCHEDULE
 
 gboolean             gcal_schedule_section_recurrence_changed    (GcalScheduleSection *self);
 
+gboolean             gcal_schedule_section_day_changed           (GcalScheduleSection *self);
+
 G_END_DECLS
