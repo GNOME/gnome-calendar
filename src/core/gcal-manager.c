@@ -1052,15 +1052,6 @@ gcal_manager_update_event (GcalManager           *self,
   calendar = gcal_event_get_calendar (event);
   component = gcal_event_get_component (event);
 
-  /*
-   * HACK: In Evolution Calendar, a NULL 'rid' is usually associated
-   * with an E_CAL_OBJ_MOD_ALL modtype. Here, we are manually setting
-   * the rid to NULL when modifying a recurrent event with MOD_ALL
-   * modtype.
-   */
-  if (mod == GCAL_RECURRENCE_MOD_ALL)
-    e_cal_component_set_recurid (component, NULL);
-
   e_cal_client_modify_object (gcal_calendar_get_client (calendar),
                               e_cal_component_get_icalcomponent (component),
                               (ECalObjModType) mod,
