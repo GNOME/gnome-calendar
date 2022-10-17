@@ -207,6 +207,64 @@ clear_and_hide_dialog (GcalEventEditorDialog *self)
   gtk_widget_hide (GTK_WIDGET (self));
 }
 
+static void
+apply_event_properties_to_template_event (GcalEvent *template_event,
+                                          GcalEvent *event)
+{
+  g_autoptr (GDateTime) start_date = NULL;
+  g_autoptr (GDateTime) end_date = NULL;
+  GDateTime *template_start_date;
+  GDateTime *event_start_date;
+  GDateTime *template_end_date;
+  GDateTime *event_end_date;
+  gboolean was_all_day;
+  gboolean is_all_day;
+
+  is_all_day = gcal_event_get_all_day (event);
+  was_all_day = gcal_event_get_all_day (template_event);
+
+  template_start_date = gcal_event_get_date_start (template_event);
+  template_end_date = gcal_event_get_date_end (template_event);
+  event_start_date = gcal_event_get_date_start (event);
+  event_end_date = gcal_event_get_date_end (event);
+
+  start_date = g_date_time_new (g_date_time_get_timezone (event_start_date),
+                                g_date_time_get_year (template_start_date),
+                                g_date_time_get_month (template_start_date),
+                                g_date_time_get_day_of_month (template_start_date),
+                                g_date_time_get_hour (event_start_date),
+                                g_date_time_get_minute (event_start_date),
+                                g_date_time_get_second (event_start_date));
+
+  end_date = g_date_time_new (g_date_time_get_timezone (event_end_date),
+                              g_date_time_get_year (template_end_date),
+                              g_date_time_get_month (template_end_date),
+                              g_date_time_get_day_of_month (template_end_date),
+                              g_date_time_get_hour (event_end_date),
+                              g_date_time_get_minute (event_end_date),
+                              g_date_time_get_second (event_end_date));
+
+  if (was_all_day != is_all_day)
+    {
+      g_autoptr (GDateTime) fake_end_date = NULL;
+
+      if (is_all_day)
+        fake_end_date = g_date_time_add_days (end_date, -1);
+      else
+        fake_end_date = g_date_time_add_days (end_date, 1);
+
+      gcal_set_date_time (&end_date, fake_end_date);
+    }
+
+  gcal_event_set_summary (template_event, gcal_event_get_summary (event));
+  gcal_event_set_location (template_event, gcal_event_get_location (event));
+  gcal_event_set_description (template_event, gcal_event_get_description (event));
+  gcal_event_set_recurrence (template_event, gcal_event_get_recurrence (event));
+  gcal_event_set_all_day (template_event, gcal_event_get_all_day (event));
+  gcal_event_set_date_start (template_event, start_date);
+  gcal_event_set_date_end (template_event, end_date);
+}
+
 
 /*
  * Callbacks
@@ -315,13 +373,68 @@ on_ask_recurrence_response_save_cb (GcalEvent             *event,
   GcalEventEditorDialog *self = GCAL_EVENT_EDITOR_DIALOG (user_data);
   GcalManager *manager;
 
-  if (mod_type == GCAL_RECURRENCE_MOD_NONE)
-    return;
+  GCAL_ENTRY;
 
   manager = gcal_context_get_manager (self->context);
 
-  gcal_manager_update_event (manager, self->event, mod_type);
+  switch (mod_type)
+    {
+    case GCAL_RECURRENCE_MOD_NONE:
+      GCAL_RETURN ();
+
+    case GCAL_RECURRENCE_MOD_ALL:
+      {
+        g_autoptr (GcalEvent) template_event = NULL;
+        g_autoptr (GError) error = NULL;
+        ECalComponentId *component_id;
+        ICalComponent *template_icomponent;
+        ECalComponent *template_ecomponent;
+        ECalComponent *component;
+        GcalCalendar *calendar;
+        ECalClient *client;
+
+        calendar = gcal_event_get_calendar (event);
+        client = gcal_calendar_get_client (calendar);
+        component = gcal_event_get_component (event);
+        component_id = e_cal_component_get_id (component);
+
+        e_cal_client_get_object_sync (client,
+                                      e_cal_component_id_get_uid (component_id),
+                                      NULL,
+                                      &template_icomponent,
+                                      NULL,
+                                      &error);
+
+        g_clear_pointer (&component_id, e_cal_component_id_free);
+
+        if (error)
+          {
+            g_warning ("Error updating event: %s", error->message);
+            break;
+          }
+
+        template_ecomponent = e_cal_component_new_from_icalcomponent (template_icomponent);
+        template_event = gcal_event_new (calendar, template_ecomponent, &error);
+        if (error)
+          {
+            g_warning ("Error updating event: %s", error->message);
+            break;
+          }
+
+        apply_event_properties_to_template_event (template_event, event);
+        gcal_manager_update_event (manager, template_event, mod_type);
+      }
+      break;
+
+    case GCAL_RECURRENCE_MOD_THIS_AND_FUTURE:
+    case GCAL_RECURRENCE_MOD_THIS_ONLY:
+      gcal_manager_update_event (manager, self->event, mod_type);
+      break;
+    }
+
   clear_and_hide_dialog (self);
+
+  GCAL_EXIT;
 }
 
 static void
