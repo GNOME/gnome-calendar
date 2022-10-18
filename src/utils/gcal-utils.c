@@ -1050,10 +1050,6 @@ filter_children_by_uid_and_modtype (GtkWidget             *widget,
       event_widget = GCAL_EVENT_WIDGET (child);
       ev = gcal_event_widget_get_event (event_widget);
 
-      /*
-       * We can assume only one event will have the exact uuid. Even among
-       * recurrencies.
-       */
       if (g_str_equal (uid, gcal_event_get_uid (ev)))
         {
           result = g_list_prepend (result, event_widget);
