@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-09-16 18:47+0000\n"
-"PO-Revision-Date: 2022-08-22 14:02+0300\n"
+"POT-Creation-Date: 2022-10-12 19:02+0000\n"
+"PO-Revision-Date: 2022-10-23 19:46+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: Hebrew <>\n"
 "Language: he\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
 "2 : 3)\n"
-"X-Generator: Gtranslator 40.0\n"
+"X-Generator: Gtranslator 42.0\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -251,8 +251,8 @@ msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"אם לוח השנה שייך לאחד מהחשבונות המקוונים שלך, ניתן להוסיף אותו דרך <a href="
-"\"GOA\">הגדרות חשבונות מקוונים</a>."
+"אם לוח השנה שייך לאחד מהחשבונות המקוונים שלך, ניתן להוסיף אותו דרך <a "
+"href=\"GOA\">הגדרות חשבונות מקוונים</a>."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:194
 msgid "User"
@@ -632,7 +632,7 @@ msgstr "מיזם GNOME"
 msgid "translator-credits"
 msgstr ""
 "יוסף אור בוצ׳קו <yoseforb@gmail.com>\n"
-"<a href=\"https://l10n.gnome.org/teams/he/\">מיזם תרגום GNOME לעברית</a>"
+"מיזם תרגום GNOME לעברית https://l10n.gnome.org/teams/he/"
 
 #: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
 msgid "Weather"
@@ -1087,15 +1087,15 @@ msgstr "הצגת מזג אוויר"
 msgid "Automatic Location"
 msgstr "מיקום אוטומטי"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Another event deleted"
 msgstr "אירוע נוסף נמחק"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Event deleted"
 msgstr "מחיקת אירוע"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:703
 msgid "_Undo"
 msgstr "_ביטול"
 
