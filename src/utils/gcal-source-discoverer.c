@@ -27,6 +27,8 @@
 #include "gcal-source-discoverer.h"
 #include "gcal-utils.h"
 
+#define ICAL_HEADER_STRING "BEGIN:VCALENDAR\r\n"
+
 G_DEFINE_QUARK (GcalSourceDiscoverer, gcal_source_discoverer_error);
 
 typedef struct
@@ -217,7 +219,11 @@ discover_file_in_thread (DiscovererData  *data,
   g_autoptr (GPtrArray) source = NULL;
   g_autoptr (GUri) guri = NULL;
   g_autofree gchar *uri_str = NULL;
+  g_autofree gchar *header_string = NULL;
+  gsize header_string_read_len;
+  gboolean is_calendar_header;
   const gchar *content_type;
+  gboolean is_calendar_content_type;
 
   GCAL_ENTRY;
 
@@ -242,9 +248,22 @@ discover_file_in_thread (DiscovererData  *data,
   if (!input_stream)
     GCAL_RETURN (NULL);
 
+  header_string = g_malloc0 (sizeof (gchar) * (strlen (ICAL_HEADER_STRING) + 1));
+  g_input_stream_read_all (input_stream,
+                           header_string,
+                           strlen (ICAL_HEADER_STRING),
+                           &header_string_read_len,
+                           cancellable,
+                           NULL);
+
+  is_calendar_header = header_string_read_len == strlen (ICAL_HEADER_STRING) &&
+                       strcmp (ICAL_HEADER_STRING, header_string) == 0;
+
   g_input_stream_close (input_stream, cancellable, error);
 
   content_type = soup_message_headers_get_content_type (soup_message_get_response_headers (message), NULL);
+  is_calendar_content_type = content_type && g_strstr_len (content_type, -1, "text/calendar") != NULL;
+
   GCAL_TRACE_MSG ("Message retrieved, content type: %s, status code: %u", content_type, soup_message_get_status (message));
 
   if (is_authentication_error (soup_message_get_status (message)))
@@ -258,7 +277,7 @@ discover_file_in_thread (DiscovererData  *data,
       GCAL_RETURN (NULL);
     }
 
-  if (content_type && g_strstr_len (content_type, -1, "text/calendar") != NULL)
+  if (is_calendar_header || is_calendar_content_type)
     {
       source = g_ptr_array_new_full (1, g_object_unref);
       g_ptr_array_add (source, create_source_for_uri (data));
