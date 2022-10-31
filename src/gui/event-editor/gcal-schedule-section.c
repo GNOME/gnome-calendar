@@ -616,7 +616,7 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
       recur->limit_type = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_duration_combo));
 
       if (recur->limit_type == GCAL_RECURRENCE_UNTIL)
-        recur->limit.until = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector));
+        recur->limit.until = g_date_time_ref (gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector)));
       else if (recur->limit_type == GCAL_RECURRENCE_COUNT)
         recur->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
 
@@ -821,7 +821,7 @@ gcal_schedule_section_recurrence_changed (GcalScheduleSection *self)
   recurrence->frequency = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_combo));
   recurrence->limit_type = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_duration_combo));
   if (recurrence->limit_type == GCAL_RECURRENCE_UNTIL)
-    recurrence->limit.until = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector));
+    recurrence->limit.until = g_date_time_ref (gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector)));
   else if (recurrence->limit_type == GCAL_RECURRENCE_COUNT)
     recurrence->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
 
