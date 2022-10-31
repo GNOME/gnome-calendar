@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-09-16 18:47+0000\n"
+"POT-Creation-Date: 2022-09-29 15:39+0000\n"
 "Last-Translator: Нанба Наала <naala-nanba@rambler.ru>\n"
 "Language-Team: Abkhazian <daniel.abzakh@gmail.com>\n"
 "Language: ab\n"
@@ -9,6 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-DamnedLies-Scope: partial\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -56,10 +57,6 @@ msgstr ""
 msgid "Calendar;Event;Reminder;"
 msgstr ""
 
-#: data/org.gnome.calendar.gschema.xml.in:6
-msgid "Window maximized"
-msgstr ""
-
 #: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
 msgstr "Аԥенџьыр иамоуп иреиҳау ашәагаа"
@@ -79,24 +76,6 @@ msgstr "Аԥенџьыр аҭыԥ"
 #: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
 msgstr "Аԥенџьыр аҭыԥ (x ; y)"
-
-#: data/org.gnome.calendar.gschema.xml.in:21
-msgid "Type of the active view"
-msgstr ""
-
-#: data/org.gnome.calendar.gschema.xml.in:22
-msgid "Type of the active window view, default value is: monthly view"
-msgstr ""
-
-#: data/org.gnome.calendar.gschema.xml.in:26
-msgid "Weather Service Configuration"
-msgstr ""
-
-#: data/org.gnome.calendar.gschema.xml.in:27
-msgid ""
-"Whether weather reports are shown, automatic locations are used and a "
-"location-name"
-msgstr ""
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -181,7 +160,7 @@ msgstr ""
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:49
 msgid "Select a file"
-msgstr ""
+msgstr "Афаил алхра"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:248
@@ -196,7 +175,7 @@ msgstr "Аартра"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:512
 msgid "New Calendar"
-msgstr ""
+msgstr "Амзар аԥҵара"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:690
 msgid "Calendar files"
@@ -354,7 +333,7 @@ msgstr ""
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:196
 msgid "Save"
-msgstr ""
+msgstr "Аиқәырхара"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:196
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:86
@@ -387,7 +366,7 @@ msgstr ""
 
 #: src/gui/event-editor/gcal-reminders-section.ui:52
 msgid "5 minutes"
-msgstr ""
+msgstr "5минуҭк"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:58
 msgid "10 minutes"
@@ -403,23 +382,23 @@ msgstr ""
 
 #: src/gui/event-editor/gcal-reminders-section.ui:76
 msgid "1 hour"
-msgstr ""
+msgstr "1 сааҭк"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:82
 msgid "1 day"
-msgstr ""
+msgstr "1 ҽнак"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:88
 msgid "2 days"
-msgstr ""
+msgstr "2 мш"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:94
 msgid "3 days"
-msgstr ""
+msgstr "3 мш"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:100
 msgid "1 week"
-msgstr ""
+msgstr "1 мҷыбжьык"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
 #: src/gui/event-editor/gcal-schedule-section.c:238
@@ -438,13 +417,13 @@ msgstr "Иацы"
 #: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 #: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
-msgstr ""
+msgstr "Иахьа"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
 #: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
-msgstr ""
+msgstr "Уаҵәы"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
 #: src/gui/event-editor/gcal-schedule-section.c:255
@@ -468,20 +447,20 @@ msgstr "Амш зегьы"
 #: src/gui/event-editor/gcal-schedule-section.ui:34
 #: src/gui/importer/gcal-import-file-row.c:152
 msgid "Starts"
-msgstr ""
+msgstr "Алагамҭа"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:77
 #: src/gui/importer/gcal-import-file-row.c:153
 msgid "Ends"
-msgstr ""
+msgstr "Анҵәамҭа"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:120
 msgid "Repeat"
-msgstr ""
+msgstr "Аиҭаҟаҵара"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:128
 msgid "No Repeat"
-msgstr ""
+msgstr "Аиҭаҟамҵара"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:129
 msgid "Daily"
@@ -489,7 +468,7 @@ msgstr "Есыҽнытәи"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:130
 msgid "Monday – Friday"
-msgstr ""
+msgstr "Ашәахьы инаркны ахәаш аҟынӡа"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:131
 msgid "Weekly"
@@ -497,15 +476,15 @@ msgstr ""
 
 #: src/gui/event-editor/gcal-schedule-section.ui:132
 msgid "Monthly"
-msgstr ""
+msgstr "Есымзы"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:133
 msgid "Yearly"
-msgstr ""
+msgstr "Есышықәса"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:146
 msgid "End Repeat"
-msgstr ""
+msgstr "Аиҭаҟаҵара анҵәамҭа"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:154
 msgid "Forever"
@@ -513,15 +492,15 @@ msgstr "Еснагь"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:155
 msgid "No. of occurrences"
-msgstr ""
+msgstr "Аиҭаҟаҵарақәа рхыԥхьаӡара"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:156
 msgid "Until Date"
-msgstr ""
+msgstr "Арыцхә аҟынӡа"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:169
 msgid "Number of Occurrences"
-msgstr ""
+msgstr "Аиҭаҟаҵарақәа рхыԥхьаӡара"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:188
 msgid "End Repeat Date"
@@ -590,7 +569,7 @@ msgstr "Амш зеиԥшроу"
 
 #: src/gui/gcal-calendar-button.ui:6
 msgid "Manage your calendars"
-msgstr ""
+msgstr "Амзарқәа анапхара рыҭара"
 
 #: src/gui/gcal-calendar-button.ui:41
 msgctxt "tooltip"
@@ -603,19 +582,19 @@ msgstr ""
 
 #: src/gui/gcal-calendar-button.ui:75
 msgid "Manage Calendars…"
-msgstr ""
+msgstr "Амзарқәа анапхара рыҭара...."
 
 #: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:255
 msgid "January"
-msgstr ""
+msgstr "Ажьырныҳәа"
 
 #: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:256
 msgid "February"
-msgstr ""
+msgstr "Жәабран"
 
 #: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:257
 msgid "March"
-msgstr ""
+msgstr "Хәажәкыра"
 
 #: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:258
 msgid "April"
@@ -623,15 +602,15 @@ msgstr "Мшаԥымза"
 
 #: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:259
 msgid "May"
-msgstr ""
+msgstr "Лаҵара"
 
 #: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:260
 msgid "June"
-msgstr ""
+msgstr "Рашәара"
 
 #: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:261
 msgid "July"
-msgstr ""
+msgstr "Ԥхынгәы"
 
 #: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:262
 msgid "August"
@@ -643,25 +622,25 @@ msgstr "Цәыббра"
 
 #: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:264
 msgid "October"
-msgstr ""
+msgstr "Жьҭаара"
 
 #: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:265
 msgid "November"
-msgstr ""
+msgstr "Абҵара"
 
 #: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:266
 msgid "December"
-msgstr ""
+msgstr "Ԥхынҷкәын"
 
 #: src/gui/gcal-event-popover.c:158
 #, c-format
 msgid "Today %s"
-msgstr ""
+msgstr "иахьа %s"
 
 #: src/gui/gcal-event-popover.c:162
 #, c-format
 msgid "Tomorrow %s"
-msgstr ""
+msgstr "Уаҵәы %s"
 
 #: src/gui/gcal-event-popover.c:166
 #, c-format
@@ -715,7 +694,7 @@ msgstr "%1$s %2$d, %3$d"
 #: src/gui/gcal-event-popover.c:261
 #, c-format
 msgid "Today, %1$s — %2$s"
-msgstr ""
+msgstr "Иахьа, %1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
@@ -724,7 +703,7 @@ msgstr ""
 #: src/gui/gcal-event-popover.c:269
 #, c-format
 msgid "Tomorrow, %1$s – %2$s"
-msgstr ""
+msgstr "Уаҵәы, %1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
@@ -759,7 +738,7 @@ msgstr "%1$s %2$d, %3$d, %4$s – %5$s"
 
 #: src/gui/gcal-event-popover.ui:71
 msgid "No event information"
-msgstr ""
+msgstr "Ахҭыс иазку аинформациа ыҟаӡам"
 
 #: src/gui/gcal-event-popover.ui:169
 msgid "Edit…"
@@ -789,12 +768,12 @@ msgstr "Zoom"
 
 #: src/gui/gcal-meeting-row.c:78
 msgid "Unknown Service"
-msgstr ""
+msgstr "Еилкаам асервис"
 
 #. Translators: "Join" as in "Join meeting"
 #: src/gui/gcal-meeting-row.ui:12
 msgid "Join"
-msgstr ""
+msgstr "Аҽадҵара"
 
 #: src/gui/gcal-quick-add-popover.c:118
 #, c-format
@@ -803,74 +782,74 @@ msgstr ""
 
 #: src/gui/gcal-quick-add-popover.c:233
 msgid "from next Monday"
-msgstr ""
+msgstr "анаҩстәи ашәахьы инаркны"
 
 #: src/gui/gcal-quick-add-popover.c:234
 msgid "from next Tuesday"
-msgstr ""
+msgstr "анаҩстәи аҩаша инаркны"
 
 #: src/gui/gcal-quick-add-popover.c:235
 msgid "from next Wednesday"
-msgstr ""
+msgstr "анаҩстәи ахаша инаркны"
 
 #: src/gui/gcal-quick-add-popover.c:236
 msgid "from next Thursday"
-msgstr ""
+msgstr "анаҩстәи апшьаша инаркны"
 
 #: src/gui/gcal-quick-add-popover.c:237
 msgid "from next Friday"
-msgstr ""
+msgstr "анаҩстәи ахәаша инаркны"
 
 #: src/gui/gcal-quick-add-popover.c:238
 msgid "from next Saturday"
-msgstr ""
+msgstr "анаҩстәи асабша инаркны"
 
 #: src/gui/gcal-quick-add-popover.c:239
 msgid "from next Sunday"
-msgstr ""
+msgstr "анаҩстәи амҽыша инаркны"
 
 #: src/gui/gcal-quick-add-popover.c:244
 msgid "to next Monday"
-msgstr ""
+msgstr "анаҩстәи шәахьынӡа"
 
 #: src/gui/gcal-quick-add-popover.c:245
 msgid "to next Tuesday"
-msgstr ""
+msgstr "анаҩстәи аҩашанӡа"
 
 #: src/gui/gcal-quick-add-popover.c:246
 msgid "to next Wednesday"
-msgstr ""
+msgstr "анаҩстәи ахашанӡа"
 
 #: src/gui/gcal-quick-add-popover.c:247
 msgid "to next Thursday"
-msgstr ""
+msgstr "анаҩстәи апшьашанӡа"
 
 #: src/gui/gcal-quick-add-popover.c:248
 msgid "to next Friday"
-msgstr ""
+msgstr "анаҩстәи ахәашанӡа"
 
 #: src/gui/gcal-quick-add-popover.c:249
 msgid "to next Saturday"
-msgstr ""
+msgstr "анаҩстәи асабшанӡа"
 
 #: src/gui/gcal-quick-add-popover.c:250
 msgid "to next Sunday"
-msgstr ""
+msgstr "анаҩстәи амҽышанӡа"
 
 #: src/gui/gcal-quick-add-popover.c:275
 #, c-format
 msgid "from Today"
-msgstr ""
+msgstr "иахьатәи амш инаркны"
 
 #: src/gui/gcal-quick-add-popover.c:279
 #, c-format
 msgid "from Tomorrow"
-msgstr ""
+msgstr "уаҵәтәи амш инаркны"
 
 #: src/gui/gcal-quick-add-popover.c:283
 #, c-format
 msgid "from Yesterday"
-msgstr ""
+msgstr "иацтәи амш инаркны"
 
 #. Translators:
 #. * this is the format string for representing a date consisting of a month
@@ -884,17 +863,17 @@ msgstr ""
 #: src/gui/gcal-quick-add-popover.c:312
 #, c-format
 msgid "to Today"
-msgstr ""
+msgstr "иахьатәи амш азы"
 
 #: src/gui/gcal-quick-add-popover.c:316
 #, c-format
 msgid "to Tomorrow"
-msgstr ""
+msgstr "уаҵәтәи амш азы"
 
 #: src/gui/gcal-quick-add-popover.c:320
 #, c-format
 msgid "to Yesterday"
-msgstr ""
+msgstr "иацтәи амш азы"
 
 #. Translators:
 #. * this is the format string for representing a date consisting of a month
@@ -914,106 +893,106 @@ msgstr ""
 #: src/gui/gcal-quick-add-popover.c:362
 #, c-format
 msgid "New Event Today"
-msgstr ""
+msgstr "Иахьа ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:366
 #, c-format
 msgid "New Event Tomorrow"
-msgstr ""
+msgstr "Уаҵәы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:370
 #, c-format
 msgid "New Event Yesterday"
-msgstr ""
+msgstr "Иацы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:376
 msgid "New Event next Monday"
-msgstr ""
+msgstr "Анаҩстәи ашәахьазы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:377
 msgid "New Event next Tuesday"
-msgstr ""
+msgstr "Анаҩстәи аҩашазы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:378
 msgid "New Event next Wednesday"
-msgstr ""
+msgstr "Анаҩстәи ахашазы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:379
 msgid "New Event next Thursday"
-msgstr ""
+msgstr "Анаҩстәи аԥшьашазы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:380
 msgid "New Event next Friday"
-msgstr ""
+msgstr "Анаҩстәи ахәашазы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:381
 msgid "New Event next Saturday"
-msgstr ""
+msgstr "Анаҩстәи асабшазы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:382
 msgid "New Event next Sunday"
-msgstr ""
+msgstr "Анаҩстәи амҽышазы ахҭыс аԥҵара"
 
 #. Translators: %d is the numeric day of month
 #: src/gui/gcal-quick-add-popover.c:394
 #, c-format
 msgid "New Event on January %d"
-msgstr ""
+msgstr "Ажьырныҳәа %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:395
 #, c-format
 msgid "New Event on February %d"
-msgstr ""
+msgstr "Жәабран %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:396
 #, c-format
 msgid "New Event on March %d"
-msgstr ""
+msgstr "Хәажәкыра %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:397
 #, c-format
 msgid "New Event on April %d"
-msgstr ""
+msgstr "Мшаԥы %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:398
 #, c-format
 msgid "New Event on May %d"
-msgstr ""
+msgstr "Лаҵара %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:399
 #, c-format
 msgid "New Event on June %d"
-msgstr ""
+msgstr "Рашәара %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:400
 #, c-format
 msgid "New Event on July %d"
-msgstr ""
+msgstr "Ԥхынгәы %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:401
 #, c-format
 msgid "New Event on August %d"
-msgstr ""
+msgstr "Нанҳәа %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:402
 #, c-format
 msgid "New Event on September %d"
-msgstr ""
+msgstr "Цәыббра %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:403
 #, c-format
 msgid "New Event on October %d"
-msgstr ""
+msgstr "Жьҭаара %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:404
 #, c-format
 msgid "New Event on November %d"
-msgstr ""
+msgstr "Абҵара %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.c:405
 #, c-format
 msgid "New Event on December %d"
-msgstr ""
+msgstr "Ԥхынчкәын %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.ui:87
 msgid "Edit Details…"
@@ -1031,7 +1010,7 @@ msgstr ""
 
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
-msgstr ""
+msgstr "Амш зеипшрахо арбара"
 
 #: src/gui/gcal-weather-settings.ui:34
 msgid "Automatic Location"
@@ -1039,11 +1018,11 @@ msgstr "Автоматикла ҭыԥс аҟазаара аилкаара"
 
 #: src/gui/gcal-window.c:699
 msgid "Another event deleted"
-msgstr ""
+msgstr "Даҽа хҭыск аныхуп"
 
 #: src/gui/gcal-window.c:699
 msgid "Event deleted"
-msgstr ""
+msgstr "Ахҭыс аныхуп"
 
 #: src/gui/gcal-window.c:701
 msgid "_Undo"
@@ -1059,7 +1038,7 @@ msgstr ""
 
 #: src/gui/gcal-window.ui:273
 msgid "_Online Accounts…"
-msgstr ""
+msgstr "_ Аҳа аҳасабрбатә нҵамҭақәа..."
 
 #: src/gui/gcal-window.ui:285
 msgid "_Keyboard Shortcuts"
@@ -1193,7 +1172,7 @@ msgstr ""
 
 #: src/gui/importer/gcal-importer.c:56
 msgid "Internal error"
-msgstr ""
+msgstr "Аҩныҵҟатәи агха"
 
 #: src/gui/importer/gcal-importer.c:94
 msgid "File is not an iCalendar (.ics) file"
@@ -1201,15 +1180,15 @@ msgstr ""
 
 #: src/gui/importer/gcal-import-file-row.c:154
 msgid "Description"
-msgstr ""
+msgstr "Ахцәажәара"
 
 #: src/gui/views/gcal-agenda-view.ui:36
 msgid "No events"
-msgstr ""
+msgstr "Ахҭысқәа ыҟаӡам"
 
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
-msgstr ""
+msgstr "Ахҭыс аԥҵара..."
 
 #: src/gui/views/gcal-week-grid.c:580
 msgid "00 AM"
@@ -1229,7 +1208,7 @@ msgstr[1] ""
 #: src/gui/views/gcal-week-header.c:1006
 #, c-format
 msgid "week %d"
-msgstr ""
+msgstr "%d амчыбжь"
 
 #: src/utils/gcal-utils.c:1320
 msgid ""
@@ -1239,11 +1218,11 @@ msgstr ""
 
 #: src/utils/gcal-utils.c:1325
 msgid "_Only This Event"
-msgstr ""
+msgstr "_Ари ахҭыс заҵәык"
 
 #: src/utils/gcal-utils.c:1332
 msgid "_Subsequent events"
-msgstr ""
+msgstr "_Анаҩстәи ахҭыс"
 
 #: src/utils/gcal-utils.c:1334
 msgid "_All events"
@@ -1482,7 +1461,6 @@ msgstr "_Ахҭысқәа зегьы"
 
 
 
-#, fuzzy
 
 
 
@@ -1503,7 +1481,6 @@ msgstr "_Ахҭысқәа зегьы"
 
 
 
-#, fuzzy
 
 
 
@@ -1590,7 +1567,6 @@ msgstr "_Ахҭысқәа зегьы"
 
 
 
-#, fuzzy
 
 
 
@@ -1950,3033 +1926,6 @@ msgstr "_Ахҭысқәа зегьы"
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-#, fuzzy
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
 
 
 
