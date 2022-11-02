@@ -229,6 +229,8 @@ gcal_recurrence_parse_recurrence_rules (ECalComponent *comp)
         {
           recur->limit_type = GCAL_RECURRENCE_UNTIL;
           recur->limit.until = gcal_date_time_from_icaltime (until);
+          if (!recur->limit.until)
+            recur->limit_type = GCAL_RECURRENCE_FOREVER;
         }
       else
         {
