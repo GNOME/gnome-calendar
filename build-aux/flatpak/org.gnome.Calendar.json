@@ -153,7 +153,8 @@
                 "-DENABLE_INTROSPECTION=OFF",
                 "-DENABLE_INSTALLED_TESTS=OFF",
                 "-DENABLE_GTK_DOC=OFF",
-                "-DENABLE_EXAMPLES=OFF"
+                "-DENABLE_EXAMPLES=OFF",
+                "-DENABLE_OAUTH2_WEBKITGTK4=OFF"
             ],
             "sources" : [
                 {
