@@ -11,15 +11,17 @@ Please note we have a code of conduct, please follow it in all your interactions
    the pull request.
 2. If you're adding new API, it must be properly documented.
 3. The commit message is formatted as follows:
-   ```
+
+   ```plain
    component: <summary>
-   ‌
+
    A paragraph explaining the problem and its context.
-‌
+
    Another one explaining how you solved that.
-‌
+
    <link to the issue>
    ```
+
 4. You may merge the pull request in once you have the sign-off of the maintainers, or if you
    do not have permission to do that, you may request the second reviewer to merge it for you.
 
