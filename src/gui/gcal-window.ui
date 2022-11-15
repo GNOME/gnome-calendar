@@ -151,7 +151,8 @@
                         <property name="action-name">win.today</property>
                         <property name="child">
                           <object class="AdwButtonContent">
-                            <property name="label" translatable="yes">Today</property>
+                            <property name="label" translatable="yes">_Today</property>
+                            <property name="use-underline">True</property>
                             <property name="icon-name">calendar-today-symbolic</property>
                           </object>
                         </property>
@@ -183,7 +184,8 @@
                         <property name="action-name">win.today</property>
                         <property name="child">
                           <object class="AdwButtonContent">
-                            <property name="label" translatable="yes">Today</property>
+                            <property name="label" translatable="yes">_Today</property>
+                            <property name="use-underline">True</property>
                             <property name="icon-name">calendar-today-symbolic</property>
                           </object>
                         </property>
@@ -216,7 +218,8 @@
                         <child>
                           <object class="AdwViewStackPage">
                             <property name="name">week</property>
-                            <property name="title" translatable="yes">Week</property>
+                            <property name="title" translatable="yes">_Week</property>
+                            <property name="use-underline">True</property>
                             <property name="icon_name">calendar-week-symbolic</property>
                             <property name="child">
                               <object class="GcalWeekView" id="week_view">
@@ -230,7 +233,8 @@
                         <child>
                           <object class="AdwViewStackPage">
                             <property name="name">month</property>
-                            <property name="title" translatable="yes">Month</property>
+                            <property name="title" translatable="yes">_Month</property>
+                            <property name="use-underline">True</property>
                             <property name="icon_name">calendar-month-symbolic</property>
                             <property name="child">
                               <object class="GcalMonthView" id="month_view">
