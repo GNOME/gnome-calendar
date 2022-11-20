@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2022-08-21 20:29+0200\n"
+"POT-Creation-Date: 2022-11-20 20:01+0000\n"
+"PO-Revision-Date: 2022-11-20 21:39+0100\n"
 "Last-Translator: Jürgen Benvenuti <gastornis@posteo.org>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -252,7 +252,6 @@ msgid "Open a File"
 msgstr "Eine Datei öffnen"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Kalender"
 
@@ -462,17 +461,19 @@ msgstr "Letzter %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Gestern"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Heute"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Morgen"
 
@@ -610,7 +611,7 @@ msgstr "Copyright © 2012–%d Die Kalender-Autoren"
 msgid "The GNOME Project"
 msgstr "Das GNOME-Projekt"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "Franco Della-Monica <franco.della.monica@gmail.com>\n"
@@ -623,7 +624,7 @@ msgstr ""
 "Christian Kirbach <christian.kirbach@gmail.com>\n"
 "Jürgen Benvenuti <gastornis@posteo.org>"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:281
 msgid "Weather"
 msgstr "Wetter"
 
@@ -631,17 +632,21 @@ msgstr "Wetter"
 msgid "Manage your calendars"
 msgstr "Kalender verwalten"
 
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "_Kalender"
+
 # »Entfernt« für »remote« ist hier vtll verwirrend (entfernt = gelöscht vs entfernt = woanders)
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Externe Kalender abgleichen …"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
 msgstr "Kalender _abgleichen"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
 msgstr "Kalender verwalten …"
 
@@ -806,7 +811,7 @@ msgid "Edit…"
 msgstr "Bearbeiten …"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "In %s"
@@ -1078,35 +1083,39 @@ msgstr "Wetter anzeigen"
 msgid "Automatic Location"
 msgstr "Automatische Ortsbestimmung"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Another event deleted"
 msgstr "Weiteren Termin gelöscht"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Event deleted"
 msgstr "Termin gelöscht"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:703
 msgid "_Undo"
 msgstr "_Rückgängig"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "Woche"
+#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:187
+msgid "_Today"
+msgstr "_Heute"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "Monat"
+#: src/gui/gcal-window.ui:221
+msgid "_Week"
+msgstr "_Woche"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:236
+msgid "_Month"
+msgstr "_Monat"
+
+#: src/gui/gcal-window.ui:277
 msgid "_Online Accounts…"
 msgstr "_Online-Konten …"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:289
 msgid "_Keyboard Shortcuts"
 msgstr "Tasten_kürzel"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:293
 msgid "_About Calendar"
 msgstr "_Info zu Kalender"
 
@@ -1196,7 +1205,7 @@ msgstr[1] "%d Termine importieren"
 msgid "Import Files…"
 msgstr "Dateien importieren …"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1324
 msgid "_Cancel"
 msgstr "_Abbrechen"
 
@@ -1244,15 +1253,19 @@ msgstr "Datei ist keine iCalendar-Datei (*.ics)"
 msgid "Description"
 msgstr "Beschreibung"
 
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "Keine Termine"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "Neuer Termin…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00 AM"
 msgstr "00"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:584
 msgid "00:00"
 msgstr "00:00"
 
@@ -1268,7 +1281,7 @@ msgstr[1] "Weitere %d Termine"
 msgid "week %d"
 msgstr "Woche %d"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1321
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1276,15 +1289,15 @@ msgstr ""
 "Sie versuchen, einen wiederkehrenden Termin zu bearbeiten. Die ausgewählten "
 "Änderungen sollten angewendet werden auf:"
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1326
 msgid "_Only This Event"
 msgstr "N_ur diesen Termin"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1333
 msgid "_Subsequent events"
 msgstr "Nach_folgende Termine"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1336
 msgid "_All events"
 msgstr "_Alle Termine"
 
@@ -1311,9 +1324,6 @@ msgstr "_Alle Termine"
 
 #~ msgid "%B %d"
 #~ msgstr "%e. %B"
-
-#~ msgid "No events"
-#~ msgstr "Keine Termine"
 
 #~ msgid "Add Event…"
 #~ msgstr "Termin hinzufügen …"
@@ -1400,9 +1410,6 @@ msgstr "_Alle Termine"
 
 #~ msgid "Expired"
 #~ msgstr "Abgelaufen"
-
-#~ msgid "_Calendars"
-#~ msgstr "_Kalender"
 
 #~ msgid "_About"
 #~ msgstr "_Info"
