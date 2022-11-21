@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-09-27 11:05+0000\n"
-"PO-Revision-Date: 2022-10-01 11:59+0200\n"
+"POT-Creation-Date: 2022-11-20 20:01+0000\n"
+"PO-Revision-Date: 2022-11-21 07:41+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: \n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -57,7 +57,7 @@ msgstr "მოვლენის რედაქტორი"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
-msgstr "კალენდრების მართვა"
+msgstr "კალენდარების მართვა"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in.in:13
@@ -131,11 +131,11 @@ msgstr "%1$s, %2$s – %3$s"
 
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
-msgstr "კალენდრის პარამეტრები"
+msgstr "კალენდარის პარამეტრები"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:354
 msgid "Manage Calendars"
-msgstr "კალენდრების მართვა"
+msgstr "კალენდარების მართვა"
 
 #. Update notification label
 #: src/gui/calendar-management/gcal-calendars-page.c:384
@@ -149,7 +149,7 @@ msgstr "დაბრუნება"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:78
 msgid "Add Calendar…"
-msgstr "კალენდრის დამატება…"
+msgstr "კალენდარის დამატება…"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:19
 msgid "Account"
@@ -168,7 +168,7 @@ msgstr "მდებარეობა"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:84
 msgid "Calendar name"
-msgstr "კალენდრის სახელი"
+msgstr "კალენდარის სახელი"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:33
@@ -177,7 +177,7 @@ msgstr "ფერი"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:134
 msgid "Display calendar"
-msgstr "კალენდრის ჩვენება"
+msgstr "კალენდარის ჩვენება"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:146
 msgid "Add new events to this calendar by default"
@@ -185,7 +185,7 @@ msgstr ""
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:158
 msgid "Remove Calendar"
-msgstr "კალენდრის წაშლა"
+msgstr "კალენდარის წაშლა"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:49
 msgid "Select a file"
@@ -208,16 +208,16 @@ msgstr "ახალი კალენდარი"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:690
 msgid "Calendar files"
-msgstr "კალენდრის ფაილები"
+msgstr "კალენდარის ფაილები"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:16
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:22
 msgid "Calendar Name"
-msgstr "კალენდრის სახელი"
+msgstr "კალენდარის სახელი"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:55
 msgid "Import a Calendar"
-msgstr "კალენდრის შემოტანა"
+msgstr "კალენდარის შემოტანა"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:72
 msgid ""
@@ -230,9 +230,8 @@ msgid "Open a File"
 msgstr "ფაილის გახსნა"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
-msgstr "კალენდრები"
+msgstr "კალენდარები"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:148
 msgid ""
@@ -354,7 +353,7 @@ msgstr "მოვლენის დაწყების დრო"
 
 #: src/gui/event-editor/gcal-alarm-row.ui:11
 msgid "Toggles the sound of the alarm"
-msgstr ""
+msgstr "განგაშის ხმის გადართვა"
 
 #: src/gui/event-editor/gcal-alarm-row.ui:21
 msgid "Remove the alarm"
@@ -371,7 +370,7 @@ msgstr "დასრულებულია"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:29
 msgid "Click to select the calendar"
-msgstr "დააწკაპუნეთ კალენდრის ასარჩევად"
+msgstr "დააწკაპუნეთ კალენდარის ასარჩევად"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:115
 msgid "Schedule"
@@ -443,7 +442,6 @@ msgstr "გუშინ"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 #: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "დღეს"
@@ -521,7 +519,7 @@ msgstr "სამუდამოდ"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:155
 msgid "No. of occurrences"
-msgstr ""
+msgstr "შემთხვევების რაოდენობა"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:156
 msgid "Until Date"
@@ -529,7 +527,7 @@ msgstr "დრომდე"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:169
 msgid "Number of Occurrences"
-msgstr ""
+msgstr "შემთხვევების რაოდენობა"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:188
 msgid "End Repeat Date"
@@ -561,7 +559,7 @@ msgstr "PM"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
-msgstr "GNOME კალენდრიდან აგასვლა"
+msgstr "GNOME კალენდარიდან აგასვლა"
 
 #: src/gui/gcal-application.c:63
 msgid "Display version number"
@@ -582,36 +580,40 @@ msgstr ""
 #: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
-msgstr ""
+msgstr "© 2012–%d კალენდარის ავტორები, ყველა უფლება დაცულია"
 
 #: src/gui/gcal-application.c:180
 msgid "The GNOME Project"
 msgstr "პროექტი \"GNOME\""
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr "თემური დოღონაძე"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:281
 msgid "Weather"
 msgstr "ამინდი"
 
 #: src/gui/gcal-calendar-button.ui:6
 msgid "Manage your calendars"
-msgstr "კალენდრების მართვა"
+msgstr "კალენდარების მართვა"
 
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "კალენდარები"
+
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
-msgstr "დაშორებული კალენდრების სინქრონიზაცია…"
+msgstr "დაშორებული კალენდარების სინქრონიზაცია…"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
-msgstr "_კალენდრების სინქრონიზაცია"
+msgstr "_კალენდარების სინქრონიზაცია"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
-msgstr "კალენდრების მართვა…"
+msgstr "კალენდარების მართვა…"
 
 #: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:255
 msgid "January"
@@ -774,7 +776,7 @@ msgid "Edit…"
 msgstr "ჩასწორება…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "%s-ზე"
@@ -789,7 +791,7 @@ msgstr "Jitsi"
 
 #: src/gui/gcal-meeting-row.c:67
 msgid "Whereby"
-msgstr ""
+msgstr "სადაც"
 
 #: src/gui/gcal-meeting-row.c:68
 msgid "Zoom"
@@ -807,7 +809,7 @@ msgstr "შეერთება"
 #: src/gui/gcal-quick-add-popover.c:118
 #, c-format
 msgid "%s (this calendar is read-only)"
-msgstr ""
+msgstr "%s (ეს კალენდარი მხოლოდ კითხვისთვისაა)"
 
 #: src/gui/gcal-quick-add-popover.c:233
 msgid "from next Monday"
@@ -966,62 +968,62 @@ msgstr "ახალი მოვლენა: შემდეგ კვირ�
 #: src/gui/gcal-quick-add-popover.c:394
 #, c-format
 msgid "New Event on January %d"
-msgstr ""
+msgstr "ახალი მოვლენა %d იანვარს"
 
 #: src/gui/gcal-quick-add-popover.c:395
 #, c-format
 msgid "New Event on February %d"
-msgstr ""
+msgstr "ახალი მოვლენა %d თებერვალს"
 
 #: src/gui/gcal-quick-add-popover.c:396
 #, c-format
 msgid "New Event on March %d"
-msgstr ""
+msgstr "ახალი მოვლენა %d მარტს"
 
 #: src/gui/gcal-quick-add-popover.c:397
 #, c-format
 msgid "New Event on April %d"
-msgstr ""
+msgstr "ახალი მოვლენა %d აპრილს"
 
 #: src/gui/gcal-quick-add-popover.c:398
 #, c-format
 msgid "New Event on May %d"
-msgstr ""
+msgstr "ახალი მოვლენა %d მაისს"
 
 #: src/gui/gcal-quick-add-popover.c:399
 #, c-format
 msgid "New Event on June %d"
-msgstr ""
+msgstr "ახალი მოვლენა %d ივნისს"
 
 #: src/gui/gcal-quick-add-popover.c:400
 #, c-format
 msgid "New Event on July %d"
-msgstr ""
+msgstr "ახალი მოვლენა %d ივლისს"
 
 #: src/gui/gcal-quick-add-popover.c:401
 #, c-format
 msgid "New Event on August %d"
-msgstr ""
+msgstr "ახალი მოვლენა %d აგვისტოს"
 
 #: src/gui/gcal-quick-add-popover.c:402
 #, c-format
 msgid "New Event on September %d"
-msgstr ""
+msgstr "ახალი მოვლენა %d სექტემბერს"
 
 #: src/gui/gcal-quick-add-popover.c:403
 #, c-format
 msgid "New Event on October %d"
-msgstr ""
+msgstr "ახალი მოვლენა %d ოქტომბერს"
 
 #: src/gui/gcal-quick-add-popover.c:404
 #, c-format
 msgid "New Event on November %d"
-msgstr ""
+msgstr "ახალი მოვლენა %d ნოემბერს"
 
 #: src/gui/gcal-quick-add-popover.c:405
 #, c-format
 msgid "New Event on December %d"
-msgstr ""
+msgstr "ახალი მოვლენა %d დეკემბერს"
 
 #: src/gui/gcal-quick-add-popover.ui:87
 msgid "Edit Details…"
@@ -1045,37 +1047,41 @@ msgstr "ამინდის ჩვენება"
 msgid "Automatic Location"
 msgstr "ავტომატური მდებარეობა"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Another event deleted"
-msgstr ""
+msgstr "კიდევ ერთი მოვლენა წაიშალა"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Event deleted"
 msgstr "მოვლენა წაიშალა"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:703
 msgid "_Undo"
 msgstr "_დაბრუნება"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "კვირა"
+#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:187
+msgid "_Today"
+msgstr "_დღეს"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "თვე"
+#: src/gui/gcal-window.ui:221
+msgid "_Week"
+msgstr "_კვირა"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:236
+msgid "_Month"
+msgstr "_თვე"
+
+#: src/gui/gcal-window.ui:277
 msgid "_Online Accounts…"
 msgstr "_ონლაინ ანგარიშები…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:289
 msgid "_Keyboard Shortcuts"
 msgstr "კლავიატურის მალსახმობები"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:293
 msgid "_About Calendar"
-msgstr "_კალენდრის შესახებ"
+msgstr "_კალენდარის შესახებ"
 
 #: src/gui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -1163,7 +1169,7 @@ msgstr[1] "%d მოვლენის შემოტანა"
 msgid "Import Files…"
 msgstr "ფაილების შემოტანა…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1324
 msgid "_Cancel"
 msgstr "გაუქმება"
 
@@ -1193,7 +1199,7 @@ msgstr "ფაილი არასწორი ან დაზიანებ
 
 #: src/gui/importer/gcal-importer.c:46
 msgid "Failed to parse the calendar contents"
-msgstr "კალენდრის შემცველობის დამუშავების შეცდომა"
+msgstr "კალენდარის შემცველობის დამუშავების შეცდომა"
 
 #: src/gui/importer/gcal-importer.c:49
 msgid "Failed to read file"
@@ -1205,7 +1211,7 @@ msgstr "შიდა შეცდომა"
 
 #: src/gui/importer/gcal-importer.c:94
 msgid "File is not an iCalendar (.ics) file"
-msgstr "ფაილი ელკალენდრის (.ics) ფაილი არაა"
+msgstr "ფაილი ელკალენდარის (.ics) ფაილი არაა"
 
 #: src/gui/importer/gcal-import-file-row.c:154
 msgid "Description"
@@ -1219,11 +1225,11 @@ msgstr "მოვლენების გარეშე"
 msgid "New Event…"
 msgstr "ახალი მოვლენა…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:584
 msgid "00:00"
 msgstr "00:00"
 
@@ -1239,21 +1245,21 @@ msgstr[1] "%d სხვა მოვლენა"
 msgid "week %d"
 msgstr "კვირა %d"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1321
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr ""
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1326
 msgid "_Only This Event"
 msgstr "მხოლოდ _ეს მოვლენა"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1333
 msgid "_Subsequent events"
-msgstr ""
+msgstr "_მომდევნო მოვლენები"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1336
 msgid "_All events"
 msgstr "_ყველა მოვლენა"
 
