@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-10-12 19:02+0000\n"
-"PO-Revision-Date: 2022-10-23 19:46+0300\n"
+"POT-Creation-Date: 2022-11-21 16:21+0000\n"
+"PO-Revision-Date: 2022-11-24 11:12+0200\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: Hebrew <>\n"
 "Language: he\n"
@@ -242,7 +242,6 @@ msgid "Open a File"
 msgstr "פתיחת קובץ"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "לוחות שנה"
 
@@ -483,7 +482,6 @@ msgstr "אתמול"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 #: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "היום"
@@ -628,13 +626,13 @@ msgstr "כל הזכויות שמורות © 2012‏-%d יוצרי לוח השנ�
 msgid "The GNOME Project"
 msgstr "מיזם GNOME"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "יוסף אור בוצ׳קו <yoseforb@gmail.com>\n"
 "מיזם תרגום GNOME לעברית https://l10n.gnome.org/teams/he/"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:281
 msgid "Weather"
 msgstr "מזג אוויר"
 
@@ -642,16 +640,20 @@ msgstr "מזג אוויר"
 msgid "Manage your calendars"
 msgstr "ניהול לוחות השנה שלך"
 
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "_לוחות שנה"
+
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "תיאום לוחות שנה מרוחקים…"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
 msgstr "_תזמון לוחות שנה"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
 msgstr "ניהול לוחות שנה…"
 
@@ -816,7 +818,7 @@ msgid "Edit…"
 msgstr "עריכה…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "ב%s"
@@ -1099,23 +1101,27 @@ msgstr "מחיקת אירוע"
 msgid "_Undo"
 msgstr "_ביטול"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "שבוע"
+#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:187
+msgid "_Today"
+msgstr "_היום"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "חודש"
+#: src/gui/gcal-window.ui:221
+msgid "_Week"
+msgstr "_שבוע"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:236
+msgid "_Month"
+msgstr "_חודש"
+
+#: src/gui/gcal-window.ui:277
 msgid "_Online Accounts…"
 msgstr "_חשבונות מקוונים…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:289
 msgid "_Keyboard Shortcuts"
 msgstr "_צירופי מקשים"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:293
 msgid "_About Calendar"
 msgstr "על אודות _לוח שנה"
 
@@ -1207,7 +1213,7 @@ msgstr[3] "‫%d אירועים יובאו"
 msgid "Import Files…"
 msgstr "ייבוא קבצים…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_ביטול"
 
@@ -1263,11 +1269,11 @@ msgstr "אין אירועים"
 msgid "New Event…"
 msgstr "אירוע חדש…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00 AM"
 msgstr "00"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:584
 msgid "00:00"
 msgstr "00:00"
 
@@ -1285,21 +1291,21 @@ msgstr[3] "‫‏‫%d אירועים אחרים"
 msgid "week %d"
 msgstr "שבוע %d"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr "האירוע שברצונך לשנות הוא מחזורי. השינויים שלך יחולו על:"
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "אירוע זה _בלבד"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "מאורעות _עוקבים"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "_כל האירועים"
 
