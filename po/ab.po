@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-09-29 15:39+0000\n"
+"POT-Creation-Date: 2022-11-21 16:22+0000\n"
 "Last-Translator: Нанба Наала <naala-nanba@rambler.ru>\n"
 "Language-Team: Abkhazian <daniel.abzakh@gmail.com>\n"
 "Language: ab\n"
@@ -38,24 +38,28 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
 msgid "Week view"
-msgstr ""
+msgstr "Амчыбжь ахәаҧшра"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
 msgid "Month view"
-msgstr ""
+msgstr "Амз ахәаҧшра"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
 msgid "Event editor"
-msgstr ""
+msgstr "Ахҭысқәа рредактор"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
-msgstr ""
+msgstr "Амзарқәа рахь анеиреи, урҭ рнапхгареи"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in.in:13
 msgid "Calendar;Event;Reminder;"
-msgstr ""
+msgstr "Амзар;Ахҭыс;Агәаларшәара"
+
+#: data/org.gnome.calendar.gschema.xml.in:6
+msgid "Window maximized"
+msgstr "Аԥенџьыр иамоуп иреиҳау ашәагаа"
 
 #: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
@@ -76,6 +80,24 @@ msgstr "Аԥенџьыр аҭыԥ"
 #: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
 msgstr "Аԥенџьыр аҭыԥ (x ; y)"
+
+#: data/org.gnome.calendar.gschema.xml.in:21
+msgid "Type of the active view"
+msgstr "Ахәапшра уажәтәи арежим"
+
+#: data/org.gnome.calendar.gschema.xml.in:22
+msgid "Type of the active window view, default value is: monthly view"
+msgstr ""
+
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Weather Service Configuration"
+msgstr ""
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr ""
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -106,13 +128,13 @@ msgstr "Амзар ахышәарақәа "
 
 #: src/gui/calendar-management/gcal-calendars-page.c:354
 msgid "Manage Calendars"
-msgstr ""
+msgstr "Амзарқәа рнапхагара"
 
 #. Update notification label
 #: src/gui/calendar-management/gcal-calendars-page.c:384
 #, c-format
 msgid "Calendar <b>%s</b> removed"
-msgstr ""
+msgstr "Амзар <b>%s</b> аныхуп"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:24
 msgid "Undo"
@@ -120,15 +142,15 @@ msgstr "Архынҳәра"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:78
 msgid "Add Calendar…"
-msgstr ""
+msgstr "Амзар ацҵара…"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:19
 msgid "Account"
-msgstr ""
+msgstr "Аҳасабрбатә нҵамҭа"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:46
 msgid "Settings"
-msgstr ""
+msgstr "Архиарақәа"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
 #: src/gui/event-editor/gcal-summary-section.ui:23
@@ -139,7 +161,7 @@ msgstr "Аҭыӡҭыԥ"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:84
 msgid "Calendar name"
-msgstr ""
+msgstr "Амзар ахьӡ"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:33
@@ -148,15 +170,15 @@ msgstr ""
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:134
 msgid "Display calendar"
-msgstr ""
+msgstr "Амзар арбара"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:146
 msgid "Add new events to this calendar by default"
-msgstr ""
+msgstr "Ари амза ахь ишыҟоу еиҧш ахҭыс ҿыцқәа рыцҵара"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:158
 msgid "Remove Calendar"
-msgstr ""
+msgstr "Амзар аныхра"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:49
 msgid "Select a file"
@@ -179,16 +201,16 @@ msgstr "Амзар аԥҵара"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:690
 msgid "Calendar files"
-msgstr ""
+msgstr "Амзар афаилқәа"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:16
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:22
 msgid "Calendar Name"
-msgstr ""
+msgstr "Амзар ахьӡ"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:55
 msgid "Import a Calendar"
-msgstr ""
+msgstr "Амзар аимпорт азура"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:72
 msgid ""
@@ -213,7 +235,7 @@ msgstr ""
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:194
 msgid "User"
-msgstr ""
+msgstr "Ахархәаҩ"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 msgid "Password"
@@ -321,15 +343,15 @@ msgstr[1] "%1$u минуҭк ҟалаанӡа"
 
 #: src/gui/event-editor/gcal-alarm-row.c:198
 msgid "Event start time"
-msgstr ""
+msgstr "Ахҭыс аналаго аамҭа"
 
 #: src/gui/event-editor/gcal-alarm-row.ui:11
 msgid "Toggles the sound of the alarm"
-msgstr ""
+msgstr "Арҿыхга абжьы арежим иианагоит"
 
 #: src/gui/event-editor/gcal-alarm-row.ui:21
 msgid "Remove the alarm"
-msgstr ""
+msgstr "Арҿыхга аныхра"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:196
 msgid "Save"
@@ -338,19 +360,19 @@ msgstr "Аиқәырхара"
 #: src/gui/event-editor/gcal-event-editor-dialog.c:196
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:86
 msgid "Done"
-msgstr ""
+msgstr "Ихиоуп"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:29
 msgid "Click to select the calendar"
-msgstr ""
+msgstr "Шәақәыӷәӷәа амзар алхразы"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:115
 msgid "Schedule"
-msgstr ""
+msgstr "Аихшанҵа"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:127
 msgid "Reminders"
-msgstr ""
+msgstr "Агәаларшәарақәа"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:139
 msgid "Notes"
@@ -358,11 +380,11 @@ msgstr "Азгәаҭақәа"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:158
 msgid "Delete Event"
-msgstr ""
+msgstr "Ахҭыс аныхра"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:26
 msgid "Add a Reminder…"
-msgstr ""
+msgstr "Агәаларашәара ацҵара…"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:52
 msgid "5 minutes"
@@ -370,15 +392,15 @@ msgstr "5минуҭк"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:58
 msgid "10 minutes"
-msgstr ""
+msgstr "10 минуҭк"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:64
 msgid "15 minutes"
-msgstr ""
+msgstr "15 минуҭ"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:70
 msgid "30 minutes"
-msgstr ""
+msgstr "30 минуҭ"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:76
 msgid "1 hour"
@@ -402,9 +424,9 @@ msgstr "1 мҷыбжьык"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
 #: src/gui/event-editor/gcal-schedule-section.c:238
-#, c-format
+#, fuzzy, c-format
 msgid "Last %A"
-msgstr ""
+msgstr "%А ииасхьоу амчыбжь"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
@@ -427,9 +449,9 @@ msgstr "Уаҵәы"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
 #: src/gui/event-editor/gcal-schedule-section.c:255
-#, c-format
+#, fuzzy, c-format
 msgid "This %A"
-msgstr ""
+msgstr "%А ҳазҭагылоу амчыбжь"
 
 #.
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
@@ -472,7 +494,7 @@ msgstr "Ашәахьы инаркны ахәаш аҟынӡа"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:131
 msgid "Weekly"
-msgstr ""
+msgstr "Есымчыбжьатәи"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:132
 msgid "Monthly"
@@ -504,7 +526,7 @@ msgstr "Аиҭаҟаҵарақәа рхыԥхьаӡара"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:188
 msgid "End Repeat Date"
-msgstr ""
+msgstr "Аиҭаҟаҵара анҵәамҭа аамҭарба"
 
 #: src/gui/event-editor/gcal-summary-section.c:78
 #: src/gui/gcal-quick-add-popover.c:676
@@ -532,7 +554,7 @@ msgstr "PM"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
-msgstr ""
+msgstr "Амзар GNOME ахырқәшара"
 
 #: src/gui/gcal-application.c:63
 msgid "Display version number"
@@ -578,7 +600,7 @@ msgstr ""
 
 #: src/gui/gcal-calendar-button.ui:71
 msgid "_Synchronize Calendars"
-msgstr ""
+msgstr "_Амзарқәа рсинхронркра"
 
 #: src/gui/gcal-calendar-button.ui:75
 msgid "Manage Calendars…"
@@ -745,7 +767,7 @@ msgid "Edit…"
 msgstr ""
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "%s аҟны"
@@ -858,7 +880,7 @@ msgstr "иацтәи амш инаркны"
 #: src/gui/gcal-quick-add-popover.c:301
 #, c-format
 msgid "from %1$s %2$s"
-msgstr ""
+msgstr "%1$s %2$s аҟынтә"
 
 #: src/gui/gcal-quick-add-popover.c:312
 #, c-format
@@ -882,13 +904,13 @@ msgstr "иацтәи амш азы"
 #: src/gui/gcal-quick-add-popover.c:338
 #, c-format
 msgid "to %1$s %2$s"
-msgstr ""
+msgstr "%1$s %2$s аҟынӡа"
 
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
 #: src/gui/gcal-quick-add-popover.c:345
 #, c-format
 msgid "New Event %1$s %2$s"
-msgstr ""
+msgstr "Ахҭыс аԥҵара %1$s %2$s"
 
 #: src/gui/gcal-quick-add-popover.c:362
 #, c-format
@@ -996,7 +1018,7 @@ msgstr "Ԥхынчкәын %d азы ахҭыс аԥҵара"
 
 #: src/gui/gcal-quick-add-popover.ui:87
 msgid "Edit Details…"
-msgstr ""
+msgstr "Аԥкаарақәа аредакциа рзура..."
 
 #: src/gui/gcal-toolbar-end.ui:9
 msgctxt "tooltip"
@@ -1016,25 +1038,25 @@ msgstr "Амш зеипшрахо арбара"
 msgid "Automatic Location"
 msgstr "Автоматикла ҭыԥс аҟазаара аилкаара"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Another event deleted"
 msgstr "Даҽа хҭыск аныхуп"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Event deleted"
 msgstr "Ахҭыс аныхуп"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:703
 msgid "_Undo"
 msgstr "_Аԥыхра"
 
 #: src/gui/gcal-window.ui:219
 msgid "Week"
-msgstr ""
+msgstr "Амчыбжь"
 
 #: src/gui/gcal-window.ui:233
 msgid "Month"
-msgstr ""
+msgstr "Амз"
 
 #: src/gui/gcal-window.ui:273
 msgid "_Online Accounts…"
@@ -1132,9 +1154,9 @@ msgstr[1] ""
 
 #: src/gui/importer/gcal-import-dialog.ui:4
 msgid "Import Files…"
-msgstr ""
+msgstr "Афаилқәа аимпорт рзура..."
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1324
 msgid "_Cancel"
 msgstr "_Аԥыхра"
 
@@ -1144,7 +1166,7 @@ msgstr "_Аиагара"
 
 #: src/gui/importer/gcal-import-dialog.ui:50
 msgid "C_alendar"
-msgstr ""
+msgstr "А_мзар"
 
 #: src/gui/importer/gcal-importer.c:33
 msgid "No error"
@@ -1152,7 +1174,7 @@ msgstr "Агхақәа ыҟаӡам"
 
 #: src/gui/importer/gcal-importer.c:36
 msgid "Bad argument to function"
-msgstr ""
+msgstr "Ихәарҭам аҵаҵӷәы афункциа азы "
 
 #: src/gui/importer/gcal-importer.c:40
 msgid "Failed to allocate a new object in memory"
@@ -1160,15 +1182,15 @@ msgstr ""
 
 #: src/gui/importer/gcal-importer.c:43
 msgid "File is malformed, invalid, or corrupted"
-msgstr ""
+msgstr "Афаил еицакуп, иԥаршеиуп, мамзар агха амоуп"
 
 #: src/gui/importer/gcal-importer.c:46
 msgid "Failed to parse the calendar contents"
-msgstr ""
+msgstr "Амзар аҭаҵа аилыргара залымшахеит"
 
 #: src/gui/importer/gcal-importer.c:49
 msgid "Failed to read file"
-msgstr ""
+msgstr "Афаил аԥхьара залымшаӡеит"
 
 #: src/gui/importer/gcal-importer.c:56
 msgid "Internal error"
@@ -1176,7 +1198,7 @@ msgstr "Аҩныҵҟатәи агха"
 
 #: src/gui/importer/gcal-importer.c:94
 msgid "File is not an iCalendar (.ics) file"
-msgstr ""
+msgstr "Афаил iCalendar (.ics) фаилҵас иҟаӡам"
 
 #: src/gui/importer/gcal-import-file-row.c:154
 msgid "Description"
@@ -1190,11 +1212,11 @@ msgstr "Ахҭысқәа ыҟаӡам"
 msgid "New Event…"
 msgstr "Ахҭыс аԥҵара..."
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:584
 msgid "00:00"
 msgstr "00:00"
 
@@ -1210,876 +1232,20 @@ msgstr[1] ""
 msgid "week %d"
 msgstr "%d амчыбжь"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1321
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr ""
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1326
 msgid "_Only This Event"
 msgstr "_Ари ахҭыс заҵәык"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1333
 msgid "_Subsequent events"
 msgstr "_Анаҩстәи ахҭыс"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1336
 msgid "_All events"
 msgstr "_Ахҭысқәа зегьы"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
