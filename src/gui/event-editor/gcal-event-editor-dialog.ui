@@ -2,8 +2,8 @@
 <interface>
   <template class="GcalEventEditorDialog" parent="GtkDialog">
     <property name="modal">True</property>
-    <property name="default-width">450</property>
-    <property name="default-height">500</property>
+    <property name="default-width">700</property>
+    <property name="default-height">1000</property>
     <property name="use_header_bar">1</property>
     <property name="destroy_with_parent">True</property>
     <property name="hide-on-close">True</property>
@@ -140,6 +140,7 @@
                 <child>
                   <object class="GcalNotesSection" id="notes_section">
                     <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
+                    <property name="vexpand">True</property>
                   </object>
                 </child>
               </object>
