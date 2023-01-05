@@ -124,7 +124,7 @@ msgstr "%1$s, %2$s — %3$s"
 
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
-msgstr "Амзар ахышәарақәа "
+msgstr "Амзар ахышәарақәа"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:354
 msgid "Manage Calendars"
@@ -225,7 +225,7 @@ msgstr "Афаил аартра"
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
 #: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
-msgstr ""
+msgstr "Амзарқәа"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:148
 msgid ""
@@ -800,7 +800,7 @@ msgstr "Аҽадҵара"
 #: src/gui/gcal-quick-add-popover.c:118
 #, c-format
 msgid "%s (this calendar is read-only)"
-msgstr ""
+msgstr "%s (ари амзар «аԥхьара мацара» арежим икәгылоуп)"
 
 #: src/gui/gcal-quick-add-popover.c:233
 msgid "from next Monday"
