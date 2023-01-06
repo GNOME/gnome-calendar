@@ -66,6 +66,7 @@ get_service_name_from_url (const gchar *url)
     { "meet.jit.si", N_("Jitsi") },
     { "whereby.com", N_("Whereby") },
     { "zoom.us", N_("Zoom") },
+    { "teams.microsoft.com", N_("Microsoft Teams") },
   };
   gsize i;
 
