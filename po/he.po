@@ -2,14 +2,14 @@
 # Copyright (C) 2014 THE gnome-calendar'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # יוֹסֵף אוֹר בּוֹצְ׳קוֹ <yoseforb@gnome.org>, 2014.
-# Yosef Or Boczko <yoseforb@gmail.com>, 2014-2022.
+# Yosef Or Boczko <yoseforb@gmail.com>, 2014-2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-11-21 16:21+0000\n"
-"PO-Revision-Date: 2022-11-24 11:12+0200\n"
+"POT-Creation-Date: 2023-01-24 21:08+0000\n"
+"PO-Revision-Date: 2023-01-25 09:51+0200\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: Hebrew <>\n"
 "Language: he\n"
@@ -424,7 +424,7 @@ msgstr "תזכורות"
 msgid "Notes"
 msgstr "הערות"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "מחיקת אירוע"
 
@@ -632,7 +632,7 @@ msgstr ""
 "יוסף אור בוצ׳קו <yoseforb@gmail.com>\n"
 "מיזם תרגום GNOME לעברית https://l10n.gnome.org/teams/he/"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:281
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
 msgid "Weather"
 msgstr "מזג אוויר"
 
@@ -839,7 +839,11 @@ msgstr "Whereby"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "שירות לא ידוע"
 
@@ -1101,27 +1105,31 @@ msgstr "מחיקת אירוע"
 msgid "_Undo"
 msgstr "_ביטול"
 
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:187
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "תפריט ראשי"
+
+#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
 msgid "_Today"
 msgstr "_היום"
 
-#: src/gui/gcal-window.ui:221
+#: src/gui/gcal-window.ui:222
 msgid "_Week"
 msgstr "_שבוע"
 
-#: src/gui/gcal-window.ui:236
+#: src/gui/gcal-window.ui:237
 msgid "_Month"
 msgstr "_חודש"
 
-#: src/gui/gcal-window.ui:277
+#: src/gui/gcal-window.ui:278
 msgid "_Online Accounts…"
 msgstr "_חשבונות מקוונים…"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:290
 msgid "_Keyboard Shortcuts"
 msgstr "_צירופי מקשים"
 
-#: src/gui/gcal-window.ui:293
+#: src/gui/gcal-window.ui:294
 msgid "_About Calendar"
 msgstr "על אודות _לוח שנה"
 
@@ -1261,6 +1269,10 @@ msgstr "הקובץ אינו קובץ iCalendar‏ (‎.ics)"
 msgid "Description"
 msgstr "תיאור"
 
+#: src/gui/views/gcal-agenda-view.c:373
+msgid "On-going"
+msgstr "מתמשך"
+
 #: src/gui/views/gcal-agenda-view.ui:36
 msgid "No events"
 msgstr "אין אירועים"
@@ -1390,9 +1402,6 @@ msgstr "_כל האירועים"
 
 #~ msgid "Nextcloud"
 #~ msgstr "Nextcloud"
-
-#~ msgid "Microsoft Exchange"
-#~ msgstr "Microsoft Exchange"
 
 #~ msgid "Overview"
 #~ msgstr "סקירה"
