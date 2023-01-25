@@ -6,14 +6,14 @@
 # Sérgio Cardeira <cardeira.sergio@gmail.com>, 2016.
 # João Nuno Matos <joaonmatos@gmail.com>, 2019.
 # Juliano de Souza Camargo <julianosc@protonmail.com>, 2020.
-# Hugo Carvalho <hugokarvalho@hotmail.com>, 2020, 2021, 2022.
+# Hugo Carvalho <hugokarvalho@hotmail.com>, 2020, 2021, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2022-08-22 22:39+0100\n"
+"POT-Creation-Date: 2023-01-24 21:08+0000\n"
+"PO-Revision-Date: 2023-01-25 13:52+0000\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Português (https://l10n.gnome.org/teams/pt/)\n"
 "Language: pt\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -246,7 +246,6 @@ msgid "Open a File"
 msgstr "Abrir um ficheiro"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Caléndários"
 
@@ -403,7 +402,7 @@ msgstr "Lembretes"
 msgid "Notes"
 msgstr "Notas"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "Eliminar evento"
 
@@ -455,17 +454,19 @@ msgstr "Último(a) %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Ontem"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Hoje"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Amanhã"
 
@@ -603,7 +604,7 @@ msgstr "Copyright © 2012–%d Os autores do Calendário"
 msgid "The GNOME Project"
 msgstr "O projeto GNOME"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "Tiago Santos <tiagofsantos81@sapo.pt>\n"
@@ -612,7 +613,7 @@ msgstr ""
 "Juliano de Souza Camargo <julianosc@pm.me>\n"
 "Hugo Carvalho <hugokarvalho@hotmail.com>"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
 msgid "Weather"
 msgstr "Meteorologia"
 
@@ -620,16 +621,20 @@ msgstr "Meteorologia"
 msgid "Manage your calendars"
 msgstr "Gira os seus calendários"
 
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "_Caléndários"
+
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "A sincronizar os calendários remotos…"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
 msgstr "_Sincronizar calendários"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
 msgstr "Gerir calendários…"
 
@@ -794,7 +799,7 @@ msgid "Edit…"
 msgstr "Editar…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "Em %s"
@@ -815,7 +820,11 @@ msgstr "Pelo qual"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "Serviço desconhecido"
 
@@ -1065,35 +1074,43 @@ msgstr "Mostrar meteorologia"
 msgid "Automatic Location"
 msgstr "Localização automática"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Another event deleted"
 msgstr "Outro evento eliminado"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:703
 msgid "_Undo"
 msgstr "An_ular"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "Semana"
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "Menu principal"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "Mês"
+#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+msgid "_Today"
+msgstr "_Hoje"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:222
+msgid "_Week"
+msgstr "_Semana"
+
+#: src/gui/gcal-window.ui:237
+msgid "_Month"
+msgstr "_Mês"
+
+#: src/gui/gcal-window.ui:278
 msgid "_Online Accounts…"
 msgstr "Contas _online…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:290
 msgid "_Keyboard Shortcuts"
 msgstr "_Teclas de atalho"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:294
 msgid "_About Calendar"
 msgstr "_Acerca do Calendário"
 
@@ -1183,7 +1200,7 @@ msgstr[1] "Importar %d eventos"
 msgid "Import Files…"
 msgstr "Importar ficheiros…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_Cancelar"
 
@@ -1231,15 +1248,23 @@ msgstr "O ficheiro não é um ficheiro iCalendar (.ics)"
 msgid "Description"
 msgstr "Descrição"
 
+#: src/gui/views/gcal-agenda-view.c:373
+msgid "On-going"
+msgstr "Em andamento"
+
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "Sem eventos"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "Novo evento…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:584
 msgid "00:00"
 msgstr "00:00"
 
@@ -1255,7 +1280,7 @@ msgstr[1] "Outros %d eventos"
 msgid "week %d"
 msgstr "semana %d"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1263,15 +1288,15 @@ msgstr ""
 "O evento que está a tentar modificar é recorrente. As alterações "
 "selecionadas devem afetar:"
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "Apenas _este evento"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "Eventos _subsequentes"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "_Todos os eventos"
 
@@ -1297,9 +1322,6 @@ msgstr "_Todos os eventos"
 
 #~ msgid "%B %d"
 #~ msgstr "%d de %B"
-
-#~ msgid "No events"
-#~ msgstr "Sem eventos"
 
 #~ msgid "Add Event…"
 #~ msgstr "Adicionar evento…"
@@ -1372,9 +1394,6 @@ msgstr "_Todos os eventos"
 
 #~ msgid "Nextcloud"
 #~ msgstr "Nextcloud"
-
-#~ msgid "Microsoft Exchange"
-#~ msgstr "Microsoft Exchange"
 
 #~ msgid "Overview"
 #~ msgstr "Resumo"
