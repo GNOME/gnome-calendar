@@ -5,13 +5,13 @@
 # Mykola Tkach <Stuartlittle1970@gmail.com>, 2016.
 # Daniel Korostil <ted.korostiled@gmail.com>, 2015-2019.
 # Danylo Korostil <ted.korostiled@gmail.com>, 2020.
-# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022.
+# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-11-20 20:01+0000\n"
-"PO-Revision-Date: 2022-11-20 22:15+0200\n"
+"POT-Creation-Date: 2023-01-25 18:24+0000\n"
+"PO-Revision-Date: 2023-01-27 19:52+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -428,7 +428,7 @@ msgstr "Нагадування"
 msgid "Notes"
 msgstr "Примітки"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "Вилучити подію"
 
@@ -636,7 +636,7 @@ msgstr ""
 "Daniel Korostil <ted.korostiled@gmail.com>, 2015-2016.\n"
 "Mykola Tkach <Stuartlittle1970@gmail.com>, 2014-2016."
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:281
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
 msgid "Weather"
 msgstr "Погода"
 
@@ -645,7 +645,6 @@ msgid "Manage your calendars"
 msgstr "Керування календарями"
 
 #: src/gui/gcal-calendar-button.ui:23
-#| msgid "Calendars"
 msgid "_Calendars"
 msgstr "_Календарі"
 
@@ -844,7 +843,12 @@ msgstr "Whereby"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+#| msgid "Microsoft Exchange"
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "Невідома служба"
 
@@ -1106,30 +1110,31 @@ msgstr "Подію вилучено"
 msgid "_Undo"
 msgstr "_Скасувати"
 
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:187
-#| msgid "Today"
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "Головне меню"
+
+#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
 msgid "_Today"
 msgstr "С_ьогодні"
 
-#: src/gui/gcal-window.ui:221
-#| msgid "Week"
+#: src/gui/gcal-window.ui:222
 msgid "_Week"
 msgstr "_Тиждень"
 
-#: src/gui/gcal-window.ui:236
-#| msgid "Month"
+#: src/gui/gcal-window.ui:237
 msgid "_Month"
 msgstr "_Місяць"
 
-#: src/gui/gcal-window.ui:277
+#: src/gui/gcal-window.ui:278
 msgid "_Online Accounts…"
 msgstr "Мережеві _облікові записи"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:290
 msgid "_Keyboard Shortcuts"
 msgstr "_Клавіатурні скорочення"
 
-#: src/gui/gcal-window.ui:293
+#: src/gui/gcal-window.ui:294
 msgid "_About Calendar"
 msgstr "Про _Календар"
 
@@ -1221,7 +1226,7 @@ msgstr[3] "Імпортувати один запис події"
 msgid "Import Files…"
 msgstr "Імпортувати файли…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1324
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_Скасувати"
 
@@ -1270,6 +1275,10 @@ msgstr "Файл не є файлом iCalendar (.ics)"
 msgid "Description"
 msgstr "Опис"
 
+#: src/gui/views/gcal-agenda-view.c:373
+msgid "On-going"
+msgstr "Невдовзі"
+
 #: src/gui/views/gcal-agenda-view.ui:36
 msgid "No events"
 msgstr "Немає подій"
@@ -1300,7 +1309,7 @@ msgstr[3] "Інша %d подія"
 msgid "week %d"
 msgstr "тиждень %d"
 
-#: src/utils/gcal-utils.c:1321
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1308,15 +1317,15 @@ msgstr ""
 "Подія, яку ви намагаєтесь редагувати, — повторювана. Зміни, які ви вибрали, "
 "слід застосувати до:"
 
-#: src/utils/gcal-utils.c:1326
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "_Лише для цієї події"
 
-#: src/utils/gcal-utils.c:1333
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "Для _наступних подій"
 
-#: src/utils/gcal-utils.c:1336
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "Для _всіх подій"
 
@@ -1402,9 +1411,6 @@ msgstr "Для _всіх подій"
 
 #~ msgid "Nextcloud"
 #~ msgstr "Nextcloud"
-
-#~ msgid "Microsoft Exchange"
-#~ msgstr "Microsoft Exchange"
 
 #~ msgid "Overview"
 #~ msgstr "Перегляд"
