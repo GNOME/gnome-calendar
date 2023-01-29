@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-11-20 20:01+0000\n"
-"PO-Revision-Date: 2022-11-20 23:29+0300\n"
+"POT-Creation-Date: 2023-01-11 14:14+0000\n"
+"PO-Revision-Date: 2023-01-17 18:37+0300\n"
 "Last-Translator: Aleksandr Melman <Alexmelman88@gmail.com>\n"
 "Language-Team: Russian <Alexmelman88@gmail.com>\n"
 "Language: ru\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 3.2.1\n"
+"X-Generator: Poedit 3.2.2\n"
 "X-DL-Team: ru\n"
 "X-DL-Module: gnome-calendar\n"
 "X-DL-Branch: master\n"
@@ -421,7 +421,7 @@ msgstr "Напоминания"
 msgid "Notes"
 msgstr "Примечания"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "Удалить событие"
 
@@ -596,7 +596,7 @@ msgstr "PM"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
-msgstr "Завершить календарь GNOME"
+msgstr "Закрыть календарь GNOME"
 
 #: src/gui/gcal-application.c:63
 msgid "Display version number"
@@ -629,9 +629,9 @@ msgstr ""
 "Юрий Мясоедов <ymyasoedov@yandex.ru>, 2012-2017.\n"
 "Станислав Соловей <whats_up@tut.by>, 2014-2019.\n"
 "Роман Верменко <dargodet@gmail.com>, 2017\n"
-"Aleksandr Melman <alexmelman88@gmail.com>, 2022"
+"Aleksandr Melman <alexmelman88@gmail.com>, 2022-2023"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:281
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
 msgid "Weather"
 msgstr "Погода"
 
@@ -838,7 +838,11 @@ msgstr "Whereby"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "Неизвестный сервис"
 
@@ -1100,34 +1104,38 @@ msgstr "Событие удалено"
 msgid "_Undo"
 msgstr "_Вернуть"
 
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:187
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "Главное меню"
+
+#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
 msgid "_Today"
 msgstr "_Сегодня"
 
-#: src/gui/gcal-window.ui:221
+#: src/gui/gcal-window.ui:222
 msgid "_Week"
 msgstr "_Неделя"
 
-#: src/gui/gcal-window.ui:236
+#: src/gui/gcal-window.ui:237
 msgid "_Month"
 msgstr "_Месяц"
 
-#: src/gui/gcal-window.ui:277
+#: src/gui/gcal-window.ui:278
 msgid "_Online Accounts…"
 msgstr "_Сетевые учётные записи…"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:290
 msgid "_Keyboard Shortcuts"
 msgstr "_Комбинации клавиш"
 
-#: src/gui/gcal-window.ui:293
+#: src/gui/gcal-window.ui:294
 msgid "_About Calendar"
 msgstr "_О приложении"
 
 #: src/gui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
-msgstr "Основное"
+msgstr "Общие"
 
 #: src/gui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
@@ -1211,7 +1219,7 @@ msgstr[2] "Импортировать %d событий"
 msgid "Import Files…"
 msgstr "Импортировать файлы…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1324
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_Отмена"
 
@@ -1259,6 +1267,10 @@ msgstr "Файл не является файлом iCalendar (.ics)"
 msgid "Description"
 msgstr "Описание"
 
+#: src/gui/views/gcal-agenda-view.c:373
+msgid "On-going"
+msgstr "Продолжается"
+
 #: src/gui/views/gcal-agenda-view.ui:36
 msgid "No events"
 msgstr "Нет событий"
@@ -1288,7 +1300,7 @@ msgstr[2] "Другие %d событий"
 msgid "week %d"
 msgstr "%d неделя"
 
-#: src/utils/gcal-utils.c:1321
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1296,15 +1308,15 @@ msgstr ""
 "Событие, которое вы пытаетесь изменить, повторяется. Выбранные вами "
 "изменения должны применяться к:"
 
-#: src/utils/gcal-utils.c:1326
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "_Только это событие"
 
-#: src/utils/gcal-utils.c:1333
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "_Последующие события"
 
-#: src/utils/gcal-utils.c:1336
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "_Все события"
 
