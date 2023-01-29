@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-11-21 16:22+0000\n"
-"PO-Revision-Date: 2023-01-05 18:14+0100\n"
+"POT-Creation-Date: 2023-01-25 18:24+0000\n"
+"PO-Revision-Date: 2023-01-29 16:06+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -243,7 +243,6 @@ msgid "Open a File"
 msgstr "Dobrir un fichièr"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Agendas"
 
@@ -400,7 +399,7 @@ msgstr "Rapèls"
 msgid "Notes"
 msgstr "Nòtas"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "Suprimir l'eveniment"
 
@@ -458,7 +457,6 @@ msgstr "Ièr"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 #: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Uèi"
@@ -603,13 +601,13 @@ msgstr "Copyright © 2012–%d Los autors d’Agenda"
 msgid "The GNOME Project"
 msgstr "Lo projècte GNOME"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "Cédric Valmary <cvalmary@yahoo.fr>, 2016-2018\n"
 "Quentin PAGÈS 2021"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
 msgid "Weather"
 msgstr "Metèo"
 
@@ -617,16 +615,20 @@ msgstr "Metèo"
 msgid "Manage your calendars"
 msgstr "Gerissètz vòstres agendas"
 
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "_Agendas"
+
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Sincronizacion dels agendas alonhats…"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
 msgstr "_Sincronizar los agendas"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
 msgstr "Gerir los agendas…"
 
@@ -812,7 +814,11 @@ msgstr "Whereby"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "Servici desconegut"
 
@@ -1074,23 +1080,31 @@ msgstr "Eveniment suprimit"
 msgid "_Undo"
 msgstr "_Anullar"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "Setmana"
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "Menú principal"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "Mes"
+#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+msgid "_Today"
+msgstr "_Uèi"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:222
+msgid "_Week"
+msgstr "_Setmana"
+
+#: src/gui/gcal-window.ui:237
+msgid "_Month"
+msgstr "_Mes"
+
+#: src/gui/gcal-window.ui:278
 msgid "_Online Accounts…"
 msgstr "_Compte en linha…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:290
 msgid "_Keyboard Shortcuts"
 msgstr "_Acorchis de clavièr"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:294
 msgid "_About Calendar"
 msgstr "_A prepaus d’Agenda"
 
@@ -1180,7 +1194,7 @@ msgstr[1] "Importar %d eveniments"
 msgid "Import Files…"
 msgstr "Importar de fichièrs…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1324
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_Anullar"
 
@@ -1228,6 +1242,10 @@ msgstr "Lo fichièr es pas un fichièr iCalendar (.ics)"
 msgid "Description"
 msgstr "Descripcion"
 
+#: src/gui/views/gcal-agenda-view.c:373
+msgid "On-going"
+msgstr "En cors"
+
 #: src/gui/views/gcal-agenda-view.ui:36
 msgid "No events"
 msgstr "Pas cap d'eveniment"
@@ -1256,7 +1274,7 @@ msgstr[1] "%d autres eveniment"
 msgid "week %d"
 msgstr "setmana %d"
 
-#: src/utils/gcal-utils.c:1321
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1264,15 +1282,15 @@ msgstr ""
 "L’eveniment que volètz modificar es recurrent. Las modificacions "
 "seleccionadas devon èsser aplicadas a :"
 
-#: src/utils/gcal-utils.c:1326
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "_Unicament aqueste eveniment"
 
-#: src/utils/gcal-utils.c:1333
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "Eveniments _seguents"
 
-#: src/utils/gcal-utils.c:1336
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "_Totes los eveniments"
 
@@ -1322,10 +1340,6 @@ msgstr "_Totes los eveniments"
 #~ msgid "Add Eve_nt…"
 #~ msgstr "Apondre un eveni_ment…"
 
-#~| msgid "Calendars"
-#~ msgid "_Calendars"
-#~ msgstr "_Agendas"
-
 #~ msgid "_About"
 #~ msgstr "A _prepaus"
 
@@ -1352,9 +1366,6 @@ msgstr "_Totes los eveniments"
 
 #~ msgid "Nextcloud"
 #~ msgstr "Nextcloud"
-
-#~ msgid "Microsoft Exchange"
-#~ msgstr "Microsoft Exchange"
 
 #~ msgid "Overview"
 #~ msgstr "Vista d'ensemble"
