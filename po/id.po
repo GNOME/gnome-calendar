@@ -2,14 +2,14 @@
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Andika Triwidada <andika@gmail.com>, 2013.
-# Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2022.
+# Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2022-08-22 17:07+0700\n"
+"POT-Creation-Date: 2023-01-25 18:24+0000\n"
+"PO-Revision-Date: 2023-01-30 11:24+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnomed@i15n.org>\n"
 "Language: id\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -243,7 +243,6 @@ msgid "Open a File"
 msgstr "Buka suatu berkas"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Kalender"
 
@@ -387,7 +386,7 @@ msgstr "Pengingat"
 msgid "Notes"
 msgstr "Catatan"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "Hapus Acara"
 
@@ -439,17 +438,19 @@ msgstr "%A yang lalu"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Kemarin"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Hari ini"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Besok"
 
@@ -587,13 +588,13 @@ msgstr "Hak Cipta © 2012–%d para penulis Kalender"
 msgid "The GNOME Project"
 msgstr "Proyek GNOME"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "Andika Triwidada <andika@gmail.com>, 2013, 2016, 2019, 2021.\n"
-"Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2022."
+"Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2023."
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
 msgid "Weather"
 msgstr "Cuaca"
 
@@ -601,16 +602,20 @@ msgstr "Cuaca"
 msgid "Manage your calendars"
 msgstr "Kelola kalender Anda"
 
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "_Kalender"
+
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Selaraskan kalender jauh…"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
 msgstr "_Selaraskan Kalender"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
 msgstr "Kelola Kalender…"
 
@@ -775,7 +780,7 @@ msgid "Edit…"
 msgstr "Sunting…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "Pada %s"
@@ -796,7 +801,11 @@ msgstr "Whereby"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "Layanan Tidak Dikenal"
 
@@ -1046,35 +1055,43 @@ msgstr "Tampilkan Cuaca"
 msgid "Automatic Location"
 msgstr "Lokasi Otomatis"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Another event deleted"
 msgstr "Acara lain dihapus"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Event deleted"
 msgstr "Acara dihapus"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:703
 msgid "_Undo"
 msgstr "_Tak Jadi"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "Minggu"
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "Menu Utama"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "Bulan"
+#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+msgid "_Today"
+msgstr "Hari _Ini"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:222
+msgid "_Week"
+msgstr "_Minggu"
+
+#: src/gui/gcal-window.ui:237
+msgid "_Month"
+msgstr "_Bulan"
+
+#: src/gui/gcal-window.ui:278
 msgid "_Online Accounts…"
 msgstr "Ak_un Daring…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:290
 msgid "_Keyboard Shortcuts"
 msgstr "Pintasan Papan Ti_k"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:294
 msgid "_About Calendar"
 msgstr "Ten_ang Kalender"
 
@@ -1163,7 +1180,7 @@ msgstr[0] "Impor %d acara"
 msgid "Import Files…"
 msgstr "Impor Berkas…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_Batal"
 
@@ -1211,15 +1228,23 @@ msgstr "Berkas bukan berkas iCalendar (.ics)"
 msgid "Description"
 msgstr "Deskripsi"
 
+#: src/gui/views/gcal-agenda-view.c:373
+msgid "On-going"
+msgstr "Sedang berlangsung"
+
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "Tidak ada acara"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "Acara Baru…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:584
 msgid "00:00"
 msgstr "00:00"
 
@@ -1234,7 +1259,7 @@ msgstr[0] "%d acara lain"
 msgid "week %d"
 msgstr "minggu %d"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1242,15 +1267,15 @@ msgstr ""
 "Acara yang ingin Anda ubah berulang. Perubahan yang telah Anda pilih harus "
 "diterapkan pada:"
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "Hanya Acara _Ini"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "A_cara berikutnya"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "Semu_a acara"
 
@@ -1269,9 +1294,6 @@ msgstr "Semu_a acara"
 
 #~ msgid "%B %d"
 #~ msgstr "%d %B"
-
-#~ msgid "No events"
-#~ msgstr "Tidak ada acara"
 
 #~ msgid "Add Event…"
 #~ msgstr "Tambah Acara…"
