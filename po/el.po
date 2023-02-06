@@ -9,16 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2022-09-08 23:59+0300\n"
-"Last-Translator: Efstathios Iosifidis <iosifidis@fedoraproject.org>\n"
+"POT-Creation-Date: 2023-01-25 18:24+0000\n"
+"PO-Revision-Date: 2023-02-06 23:41+0200\n"
+"Last-Translator: Efstathios Iosifidis <eiosifidis@gnome.org>\n"
 "Language-Team: Greek, Modern (1453-) <gnome-el-list@gnome.org>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 "X-Project-Style: gnome\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
@@ -247,7 +247,6 @@ msgid "Open a File"
 msgstr "Άνοιγμα αρχείου"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Ημερολόγια"
 
@@ -405,7 +404,7 @@ msgstr "Υπενθυμίσεις"
 msgid "Notes"
 msgstr "Σημειώσεις"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "Διαγραφή συμβάντος"
 
@@ -457,17 +456,19 @@ msgstr "Την τελευταία %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Χθες"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Σήμερα"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Αύριο"
 
@@ -605,7 +606,7 @@ msgstr "Πνευματικά δικαιώματα © 2012–%d Οι συγγρα
 msgid "The GNOME Project"
 msgstr "Έργο GNOME"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "Ελληνική μεταφραστική ομάδα GNOME\n"
@@ -616,7 +617,7 @@ msgstr ""
 "Για περισσότερες πληροφορίες, επισκεφθείτε τη σελίδα\n"
 "http://gnome.gr/"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
 msgid "Weather"
 msgstr "Καιρός"
 
@@ -624,16 +625,20 @@ msgstr "Καιρός"
 msgid "Manage your calendars"
 msgstr "Διαχειριστείτε τα ημερολόγιά σας"
 
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "_Ημερολόγια"
+
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Συγχρονισμός απομακρυσμένων ημερολογίων…"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
 msgstr "_Συγχρονισμός ημερολογίων"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
 msgstr "Διαχείριση ημερολογίων…"
 
@@ -798,7 +803,7 @@ msgid "Edit…"
 msgstr "Επεξεργασία…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "Στις %s"
@@ -819,7 +824,12 @@ msgstr "Whereby"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+#| msgid "Microsoft Exchange"
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "Άγνωστη υπηρεσία"
 
@@ -1069,35 +1079,43 @@ msgstr "Εμφάνιση καιρού"
 msgid "Automatic Location"
 msgstr "Αυτόματη τοποθεσία"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Another event deleted"
 msgstr "Διαγράφηκε ένα άλλο συμβάν"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Event deleted"
 msgstr "Διαγράφηκε το συμβάν"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:703
 msgid "_Undo"
 msgstr "_Αναίρεση"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "Εβδομάδα"
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "Κυρίως μενού"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "Μήνας"
+#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+msgid "_Today"
+msgstr "_Σήμερα"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:222
+msgid "_Week"
+msgstr "_Εβδομάδα"
+
+#: src/gui/gcal-window.ui:237
+msgid "_Month"
+msgstr "_Μήνας"
+
+#: src/gui/gcal-window.ui:278
 msgid "_Online Accounts…"
 msgstr "_Διαδικτυακοί λογαριασμοί…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:290
 msgid "_Keyboard Shortcuts"
 msgstr "Συντομεύσεις _πληκτρολογίου"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:294
 msgid "_About Calendar"
 msgstr "_Περί του Ημερολόγιο"
 
@@ -1187,7 +1205,7 @@ msgstr[1] "Εισαγωγή %d συμβάντων"
 msgid "Import Files…"
 msgstr "Εισαγωγή αρχείων…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_Aκύρωση"
 
@@ -1235,15 +1253,23 @@ msgstr "Το αρχείο δεν είναι αρχείο iCalendar (.ics)"
 msgid "Description"
 msgstr "Περιγραφή"
 
+#: src/gui/views/gcal-agenda-view.c:373
+msgid "On-going"
+msgstr "Σε εξέλιξη"
+
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "Χωρίς συμβάντα"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "Νέο συμβάν…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00 AM"
 msgstr "00 ΠΜ"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:584
 msgid "00:00"
 msgstr "00:00"
 
@@ -1259,7 +1285,7 @@ msgstr[1] "Άλλα %d συμβάντα"
 msgid "week %d"
 msgstr "εβδομάδα %d"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1267,15 +1293,15 @@ msgstr ""
 "Το συμβάν που προσπαθείτε να τροποποιήσετε είναι επαναλαμβανόμενο. Οι "
 "αλλαγές που έχετε επιλέξει πρέπει να εφαρμοστούν για:"
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "_Μόνο αυτό το συμβάν"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "_Μεταγενέστερα συμβάντα"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "Ό_λα τα συμβάντα"
 
@@ -1302,9 +1328,6 @@ msgstr "Ό_λα τα συμβάντα"
 
 #~ msgid "%B %d"
 #~ msgstr "%B %d"
-
-#~ msgid "No events"
-#~ msgstr "Χωρίς συμβάντα"
 
 #~ msgid "Add Event…"
 #~ msgstr "Προσθήκη συμβάντος…"
@@ -1359,9 +1382,6 @@ msgstr "Ό_λα τα συμβάντα"
 #~ msgid "Nextcloud"
 #~ msgstr "Nextcloud"
 
-#~ msgid "Microsoft Exchange"
-#~ msgstr "Microsoft Exchange"
-
 #~ msgid "Overview"
 #~ msgstr "Επισκόπηση"
 
@@ -1391,9 +1411,6 @@ msgstr "Ό_λα τα συμβάντα"
 
 #~ msgid "Use the entry above to search for events."
 #~ msgstr "Χρήση της παραπάνω καταχώρησης για αναζήτηση συμβάντων."
-
-#~ msgid "_Calendars"
-#~ msgstr "_Ημερολόγια"
 
 #~ msgid "_About"
 #~ msgstr "_Περί"
