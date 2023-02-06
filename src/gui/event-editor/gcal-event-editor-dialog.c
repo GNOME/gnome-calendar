@@ -446,6 +446,7 @@ on_done_button_clicked_cb (GtkButton             *button,
   GcalManager *manager;
   gboolean can_show_mod_all;
   gboolean was_recurrent;
+  gboolean calendar_changed;
   gint i;
 
   manager = gcal_context_get_manager (self->context);
@@ -454,10 +455,12 @@ on_done_button_clicked_cb (GtkButton             *button,
   if (gcal_calendar_is_read_only (calendar))
     GCAL_GOTO (out);
 
+  selected_calendar = g_steal_pointer (&self->selected_calendar);
+  calendar_changed = selected_calendar && calendar != selected_calendar;
   can_show_mod_all = TRUE;
   if (!self->event_is_new)
     {
-      gboolean anything_changed = FALSE;
+      gboolean anything_changed = calendar_changed;
 
       for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
         {
@@ -484,8 +487,7 @@ on_done_button_clicked_cb (GtkButton             *button,
   for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
     gcal_event_editor_section_apply (self->sections[i]);
 
-  selected_calendar = g_steal_pointer (&self->selected_calendar);
-  if (selected_calendar && calendar != selected_calendar)
+  if (calendar_changed)
     {
       if (self->event_is_new)
         {
