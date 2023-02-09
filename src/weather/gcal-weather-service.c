@@ -743,7 +743,8 @@ on_gclue_simple_creation_cb (GClueSimple        *_source,
     {
       g_assert_null (self->location_service);
 
-      if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+      if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED) &&
+          !(g_dbus_error_is_remote_error (error) && strcmp (g_dbus_error_get_remote_error (error), "org.freedesktop.DBus.Error.AccessDenied") == 0))
         g_warning ("Could not create GCLueSimple: %s", error->message);
 
       GCAL_RETURN ();
