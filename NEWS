@@ -1,3 +1,8 @@
+Major changes in 44.beta:
+* Fix moving event to different calendars
+* Improve default sizing of event editor dialog
+* Updated translations
+
 Major changes in 43.1:
 * Various fixes to recurrent events
 * Updated translations
