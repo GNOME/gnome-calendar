@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-22 21:39+0000\n"
-"PO-Revision-Date: 2022-08-23 06:44+0200\n"
+"POT-Creation-Date: 2023-02-15 08:32+0000\n"
+"PO-Revision-Date: 2023-02-17 07:30+0100\n"
 "Last-Translator: Марко М. Костић <marko.m.kostic@gmail.com>\n"
 "Language-Team: Serbian <(nothing)>\n"
 "Language: sr\n"
@@ -248,7 +248,6 @@ msgid "Open a File"
 msgstr "Отвори датотеку"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Календари"
 
@@ -431,7 +430,7 @@ msgstr "Подсетници"
 msgid "Notes"
 msgstr "Белешке"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "Обриши догађај"
 
@@ -483,17 +482,19 @@ msgstr "Последњи %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Јуче"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Данас"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Сутра"
 
@@ -631,7 +632,7 @@ msgstr "Ауторска права © 2012–%d аутори Календара
 msgid "The GNOME Project"
 msgstr "Гном пројекат"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
@@ -641,7 +642,7 @@ msgstr ""
 "\n"
 "https://гном.срб — превод Гнома на српски језик"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
 msgid "Weather"
 msgstr "Временска прогноза"
 
@@ -649,16 +650,20 @@ msgstr "Временска прогноза"
 msgid "Manage your calendars"
 msgstr "Управљајте вашим календарима"
 
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "_Календари"
+
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Усклађујем удаљене календаре…"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
 msgstr "_Усагласи календаре"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
 msgstr "Управљај календарима…"
 
@@ -823,7 +828,7 @@ msgid "Edit…"
 msgstr "Уреди…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "У %s"
@@ -844,7 +849,11 @@ msgstr "Вербај (Whereby)"
 msgid "Zoom"
 msgstr "Зум (Zoom)"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+msgid "Microsoft Teams"
+msgstr "Мајкрософт Тимс"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "Непозната услуга"
 
@@ -1094,35 +1103,43 @@ msgstr "Прикажи прогнозу…"
 msgid "Automatic Location"
 msgstr "Аутоматска локација"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Another event deleted"
 msgstr "Други догађај је обрисан"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Event deleted"
 msgstr "Догађај је обрисан"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:703
 msgid "_Undo"
 msgstr "_Опозови"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "Седмица"
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "Главни мени"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "Месец"
+#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
+msgid "_Today"
+msgstr "_Данас"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:223
+msgid "_Week"
+msgstr "Седмиц_а"
+
+#: src/gui/gcal-window.ui:238
+msgid "_Month"
+msgstr "_Месец"
+
+#: src/gui/gcal-window.ui:279
 msgid "_Online Accounts…"
 msgstr "Нал_ози на мрежи…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:291
 msgid "_Keyboard Shortcuts"
 msgstr "Пречице _тастатуре"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:295
 msgid "_About Calendar"
 msgstr "_О Календару"
 
@@ -1214,7 +1231,7 @@ msgstr[3] "Увези један догађај"
 msgid "Import Files…"
 msgstr "Увези датотеке…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_Откажи"
 
@@ -1262,15 +1279,23 @@ msgstr "Датотека није iCalendar (.ics) врсте"
 msgid "Description"
 msgstr "Опис"
 
+#: src/gui/views/gcal-agenda-view.c:373
+msgid "On-going"
+msgstr "Текуће"
+
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "Без догађаја"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "Нови догађај…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00 AM"
 msgstr "00 ПрП"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:584
 msgid "00:00"
 msgstr "00:00"
 
@@ -1288,7 +1313,7 @@ msgstr[3] "Други догађај"
 msgid "week %d"
 msgstr "недеља %d"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1296,15 +1321,15 @@ msgstr ""
 "Догађај који покушавате да измените се понавља. Измене коje желите да "
 "направите се односе на:"
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "_Само за овај догађај"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "_Пратећи догађаји"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "Сви догађаји"
 
@@ -1330,9 +1355,6 @@ msgstr "Сви догађаји"
 
 #~ msgid "%B %d"
 #~ msgstr "%d. %B"
-
-#~ msgid "No events"
-#~ msgstr "Без догађаја"
 
 #~ msgid "Add Event…"
 #~ msgstr "Додај догађај…"
@@ -1389,9 +1411,6 @@ msgstr "Сви догађаји"
 #~ msgid "Nextcloud"
 #~ msgstr "мојОблак (Nextcloud)"
 
-#~ msgid "Microsoft Exchange"
-#~ msgstr "Мајкрософтова размена"
-
 #~ msgid "Overview"
 #~ msgstr "Преглед"
 
@@ -1421,9 +1440,6 @@ msgstr "Сви догађаји"
 
 #~ msgid "Expired"
 #~ msgstr "Истекао"
-
-#~ msgid "_Calendars"
-#~ msgstr "_Календари"
 
 #~ msgid "_About"
 #~ msgstr "_О програму"
