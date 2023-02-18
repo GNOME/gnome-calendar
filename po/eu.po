@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2015, 2016, 2017.
-# Asier Sarasua Garmendia <asiersarasua@ni.eus>, 2019, 2020, 2021, 2022.
+# Asier Sarasua Garmendia <asiersarasua@ni.eus>, 2019, 2020, 2021, 2022, 2023.
 # Porrumentzio <porrumentzio@riseup.net>, 2022.
 #
 msgid ""
 msgstr "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-26 14:27+0000\n"
-"PO-Revision-Date: 2022-09-10 19:41+0200\n"
+"POT-Creation-Date: 2023-01-25 18:24+0000\n"
+"PO-Revision-Date: 2023-02-18 19:41+0200\n"
 "Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <Librezale>\n"
 "Language: eu\n"
@@ -230,7 +230,6 @@ msgid "Open a File"
 msgstr "Ireki fitxategia"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Egutegiak"
 
@@ -385,7 +384,7 @@ msgstr "Oroigarriak"
 msgid "Notes"
 msgstr "Oharrak"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "Ezabatu gertaera"
 
@@ -437,17 +436,19 @@ msgstr "Azken %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Atzo"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Gaur"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Bihar"
 
@@ -585,11 +586,11 @@ msgstr "Copyright © 2012–%d Calendar egileak"
 msgid "The GNOME Project"
 msgstr "GNOME proiektua"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr "translator-credits"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
 msgid "Weather"
 msgstr "Eguraldia"
 
@@ -597,16 +598,20 @@ msgstr "Eguraldia"
 msgid "Manage your calendars"
 msgstr "Kudeatu zure egutegiak"
 
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "_Egutegiak"
+
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Urreneko egutegiak sinkronizatzen…"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
 msgstr "_Sinkronizatu egutegiak"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
 msgstr "Kudeatu egutegiak…"
 
@@ -771,7 +776,7 @@ msgid "Edit…"
 msgstr "Editatu…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "Lekua: %s"
@@ -792,7 +797,11 @@ msgstr "Whereby"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "Zerbitzu ezezaguna"
 
@@ -1042,35 +1051,43 @@ msgstr "Erakutsi eguraldia"
 msgid "Automatic Location"
 msgstr "Kokaleku automatikoa"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Another event deleted"
 msgstr "Beste gertaera ezabatuta"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Event deleted"
 msgstr "Gertaera ezabatuta"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:703
 msgid "_Undo"
 msgstr "_Desegin"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "Astea"
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "Menu nagusia"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "Hila"
+#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+msgid "_Today"
+msgstr "_Gaur"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:222
+msgid "_Week"
+msgstr "_Astea"
+
+#: src/gui/gcal-window.ui:237
+msgid "_Month"
+msgstr "_Hilabetea"
+
+#: src/gui/gcal-window.ui:278
 msgid "_Online Accounts…"
 msgstr "_Lineako kontuak…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:290
 msgid "_Keyboard Shortcuts"
 msgstr "Las_ter-teklak"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:294
 msgid "_About Calendar"
 msgstr "Calendar aplikazioari _buruz"
 
@@ -1160,7 +1177,7 @@ msgstr[1] "Inportatu %d gertaera"
 msgid "Import Files…"
 msgstr "Inportau fitxategiak…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_Utzi"
 
@@ -1208,15 +1225,23 @@ msgstr "Fitxategia ez da iCalendar (.ics) motakoa"
 msgid "Description"
 msgstr "Deskribapena"
 
+#: src/gui/views/gcal-agenda-view.c:373
+msgid "On-going"
+msgstr "Abian"
+
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "Gertaerarik ez"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "Gertaera berria…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:584
 msgid "00:00"
 msgstr "00:00"
 
@@ -1232,21 +1257,21 @@ msgstr[1] "Beste %d gertaera"
 msgid "week %d"
 msgstr "%d. astea"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr "Aldatu nahi duzun gertaera errepikakorra da. Hautatu dituzun aldaketek honi eragingo die:"
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "_Soilik gertaera hau"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "_Honako gertaerak"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "_Gertaera guztiak"
 
@@ -1271,9 +1296,6 @@ msgstr "_Gertaera guztiak"
 
 #~ msgid "%B %d"
 #~ msgstr "%B %d"
-
-#~ msgid "No events"
-#~ msgstr "Gertaerarik ez"
 
 #~ msgid "Add Event…"
 #~ msgstr "Gehitu gertaera…"
