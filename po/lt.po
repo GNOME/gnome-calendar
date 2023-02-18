@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the gnome-calendar package.
 # brennus <jonas.ska@gmail.com>, 2015.
 # Jonas Skarulskis <jonas.ska@gmail.com>, 2015.
-# Aurimas Černius <aurisc4@gmail.com>, 2015-2022.
+# Aurimas Černius <aurisc4@gmail.com>, 2015-2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2022-08-22 23:06+0300\n"
+"POT-Creation-Date: 2023-01-25 18:24+0000\n"
+"PO-Revision-Date: 2023-02-18 22:06+0200\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "(n%100<10 || n%100>=20) ? 1 : 2)\n"
-"X-Generator: Gtranslator 40.0\n"
+"X-Generator: Gtranslator 42.0\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -57,13 +57,10 @@ msgid "Week view"
 msgstr "Savaitės rodinys"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
-#| msgctxt "shortcut window"
-#| msgid "Month view"
 msgid "Month view"
 msgstr "Mėnėsio rodinys"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
-#| msgid "Event deleted"
 msgid "Event editor"
 msgstr "Įvykio redaktorius"
 
@@ -246,7 +243,6 @@ msgid "Open a File"
 msgstr "Atverti failą"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Kalendoriai"
 
@@ -416,7 +412,7 @@ msgstr "Priminimai"
 msgid "Notes"
 msgstr "Užrašai"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "Pašalinti įvykį"
 
@@ -468,17 +464,19 @@ msgstr "Paskutinį %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Vakar"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Šiandien"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Rytoj"
 
@@ -616,13 +614,13 @@ msgstr "Autorių teisės saugomos © 2012–%d Kalendoriaus kūrėjai"
 msgid "The GNOME Project"
 msgstr "GNOME projektas"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "Išvertė:\n"
 "Jonas Skarulskis <jonas.ska@gmail.com>"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
 msgid "Weather"
 msgstr "Oras"
 
@@ -630,16 +628,20 @@ msgstr "Oras"
 msgid "Manage your calendars"
 msgstr "Tvarkykite savo kalendorius"
 
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "_Kalendoriai"
+
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Sinchronizuojami nuotoliniai kalendoriai…"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
 msgstr "_Sinchronizuoti kalendorius"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
 msgstr "Tvarkyti kalendorius…"
 
@@ -804,7 +806,7 @@ msgid "Edit…"
 msgstr "Keisti…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "Ties %s"
@@ -825,7 +827,11 @@ msgstr "Whereby"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "Nežinoma tarnyba"
 
@@ -1075,35 +1081,43 @@ msgstr "Rodyti orus"
 msgid "Automatic Location"
 msgstr "Automatinė vieta"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Another event deleted"
 msgstr "Dar vienas įvykis ištrintas"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Event deleted"
 msgstr "Įvykis ištrintas"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:703
 msgid "_Undo"
 msgstr "_Atšaukti"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "Savaitė"
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "Pagrindinis meniu"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "Mėnuo"
+#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+msgid "_Today"
+msgstr "Šian_dien"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:222
+msgid "_Week"
+msgstr "_Savaitė"
+
+#: src/gui/gcal-window.ui:237
+msgid "_Month"
+msgstr "_Mėnuo"
+
+#: src/gui/gcal-window.ui:278
 msgid "_Online Accounts…"
 msgstr "_Internetinės paskyros…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:290
 msgid "_Keyboard Shortcuts"
 msgstr "_Klaviatūros trumpiniai"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:294
 msgid "_About Calendar"
 msgstr "_Apie kalendorių"
 
@@ -1194,7 +1208,7 @@ msgstr[2] "Importuoti %d įvykius"
 msgid "Import Files…"
 msgstr "Importuoti failus…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_Atsisakyti"
 
@@ -1242,15 +1256,23 @@ msgstr "Failas nėra iCalendar (.ics) failas"
 msgid "Description"
 msgstr "Aprašymas"
 
+#: src/gui/views/gcal-agenda-view.c:373
+msgid "On-going"
+msgstr "Vyksta"
+
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "Įvykių nėra"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "Naujas įvykis…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:584
 msgid "00:00"
 msgstr "00:00"
 
@@ -1267,7 +1289,7 @@ msgstr[2] "Kitų %d įvykių"
 msgid "week %d"
 msgstr "%d savaitė"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1275,15 +1297,15 @@ msgstr ""
 "Keičiamas įvykis yra pasikartojantis. Jūsų pasirinkti pakeitimai turi būti "
 "taikomi:"
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "_Tik šiam įvykiui"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "Vė_lesniems įvykimas"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "_Visiems įvykiams"
 
@@ -1309,9 +1331,6 @@ msgstr "_Visiems įvykiams"
 
 #~ msgid "%B %d"
 #~ msgstr "%B %d"
-
-#~ msgid "No events"
-#~ msgstr "Įvykių nėra"
 
 #~ msgid "Add Event…"
 #~ msgstr "Pridėti įvykį..."
@@ -1367,9 +1386,6 @@ msgstr "_Visiems įvykiams"
 #~ msgid "Nextcloud"
 #~ msgstr "Nextcloud"
 
-#~ msgid "Microsoft Exchange"
-#~ msgstr "Microsoft Exchange"
-
 #~ msgid "Overview"
 #~ msgstr "Apžvalga"
 
@@ -1399,9 +1415,6 @@ msgstr "_Visiems įvykiams"
 
 #~ msgid "Expired"
 #~ msgstr "Nebegalioja"
-
-#~ msgid "_Calendars"
-#~ msgstr "_Kalendoriai"
 
 #~ msgid "_About"
 #~ msgstr "_Apie"
