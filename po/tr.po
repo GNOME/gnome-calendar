@@ -14,16 +14,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-01-19 19:17+0000\n"
-"PO-Revision-Date: 2023-01-22 22:06+0300\n"
-"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
+"POT-Creation-Date: 2023-02-15 01:30+0000\n"
+"PO-Revision-Date: 2023-02-20 18:33+0300\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1.1\n"
 "X-POOTLE-MTIME: 1433367259.000000\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
@@ -599,7 +599,7 @@ msgstr ""
 "Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Muhammet Kara <muhammetk@gmail.com>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
 msgid "Weather"
 msgstr "Hava Durumu"
 
@@ -1076,27 +1076,27 @@ msgstr "_Geri Al"
 msgid "Main Menu"
 msgstr "Ana Menü"
 
-#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
 msgid "_Today"
 msgstr "_Bugün"
 
-#: src/gui/gcal-window.ui:222
+#: src/gui/gcal-window.ui:223
 msgid "_Week"
 msgstr "_Hafta"
 
-#: src/gui/gcal-window.ui:237
+#: src/gui/gcal-window.ui:238
 msgid "_Month"
 msgstr "_Ay"
 
-#: src/gui/gcal-window.ui:278
+#: src/gui/gcal-window.ui:279
 msgid "_Online Accounts…"
 msgstr "Çevrim İçi _Hesaplar…"
 
-#: src/gui/gcal-window.ui:290
+#: src/gui/gcal-window.ui:291
 msgid "_Keyboard Shortcuts"
 msgstr "_Klavye Kısayolları"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:295
 msgid "_About Calendar"
 msgstr "Takvim _Hakkında"
 
@@ -1207,7 +1207,7 @@ msgstr "İşleve hatalı argüman"
 
 #: src/gui/importer/gcal-importer.c:40
 msgid "Failed to allocate a new object in memory"
-msgstr "Belleğe yeni nesne ataması başarısız"
+msgstr "Bellekte yeni nesne ayrılamadı"
 
 #: src/gui/importer/gcal-importer.c:43
 msgid "File is malformed, invalid, or corrupted"
@@ -1215,11 +1215,11 @@ msgstr "Dosya kusurla, geçersiz veya bozuk"
 
 #: src/gui/importer/gcal-importer.c:46
 msgid "Failed to parse the calendar contents"
-msgstr "Takvim içeriklerinin ayrıştırılması başarısız"
+msgstr "Takvim içerikleri ayrıştırılamadı"
 
 #: src/gui/importer/gcal-importer.c:49
 msgid "Failed to read file"
-msgstr "Dosya okuma başarısız"
+msgstr "Dosya okunamadı"
 
 #: src/gui/importer/gcal-importer.c:56
 msgid "Internal error"
