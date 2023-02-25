@@ -1,14 +1,14 @@
 # Hindi translation for gnome-calendar.
 # Copyright (C) 2022 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
-# Hemish <hemish04082005@gmail.com>, 2022.
+# Hemish <hemish04082005@gmail.com>, 2022-2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-01-11 14:14+0000\n"
-"PO-Revision-Date: 2022-12-28 18:02+0530\n"
+"POT-Creation-Date: 2023-02-13 16:40+0000\n"
+"PO-Revision-Date: 2023-01-28 13:32+0530\n"
 "Last-Translator: Hemish <hemish04082005@gmail.com>\n"
 "Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net https://indlinux."
 "org/hindi>\n"
@@ -603,7 +603,7 @@ msgstr "दी गनोम प्रॉजेक्ट"
 msgid "translator-credits"
 msgstr "Hemish (हेमिश) <hemish04082005@gmail.com>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
 msgid "Weather"
 msgstr "मौसम"
 
@@ -812,7 +812,7 @@ msgstr "ज़ूम"
 
 #: src/gui/gcal-meeting-row.c:69
 msgid "Microsoft Teams"
-msgstr ""
+msgstr "माइक्रोसॉफ्ट टीम्ज़"
 
 #: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
@@ -1079,29 +1079,29 @@ msgstr "पहले जैसा (_U)"
 
 #: src/gui/gcal-window.ui:117
 msgid "Main Menu"
-msgstr ""
+msgstr "मुख्य मेन्यू"
 
-#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
 msgid "_Today"
 msgstr "आज (_T)"
 
-#: src/gui/gcal-window.ui:222
+#: src/gui/gcal-window.ui:223
 msgid "_Week"
 msgstr "सप्ताह (_W)"
 
-#: src/gui/gcal-window.ui:237
+#: src/gui/gcal-window.ui:238
 msgid "_Month"
 msgstr "महीना (_M)"
 
-#: src/gui/gcal-window.ui:278
+#: src/gui/gcal-window.ui:279
 msgid "_Online Accounts…"
 msgstr "ऑनलॉइन खाते… (_O)"
 
-#: src/gui/gcal-window.ui:290
+#: src/gui/gcal-window.ui:291
 msgid "_Keyboard Shortcuts"
 msgstr "कुंजीपट शॉर्टकट (_K)"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:295
 msgid "_About Calendar"
 msgstr "'पंचांग' का परिचय"
 
@@ -1242,7 +1242,7 @@ msgstr "विवरण"
 
 #: src/gui/views/gcal-agenda-view.c:373
 msgid "On-going"
-msgstr ""
+msgstr "सक्रिय"
 
 #: src/gui/views/gcal-agenda-view.ui:36
 msgid "No events"
