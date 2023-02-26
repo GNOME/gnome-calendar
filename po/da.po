@@ -5,14 +5,14 @@
 # Kenneth Nielsen <k.nielsen81@gmail.com>, 2015.
 # Ask Hjorth Larsen <asklarsen@gmail.com>, 2015, 2016.
 # scootergrisen, 2016, 2019-2021.
-# Alan Mortensen <alanmortensen.am@gmail.com>, 2016-19, 2021-22.
+# Alan Mortensen <alanmortensen.am@gmail.com>, 2016-19, 2021-23.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2022-08-29 18:47+0200\n"
+"POT-Creation-Date: 2023-01-25 18:24+0000\n"
+"PO-Revision-Date: 2023-02-25 12:31+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -243,7 +243,6 @@ msgid "Open a File"
 msgstr "Åbn en fil"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Kalendere"
 
@@ -400,7 +399,7 @@ msgstr "Påmindelser"
 msgid "Notes"
 msgstr "Noter"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "Slet begivenhed"
 
@@ -452,17 +451,19 @@ msgstr "Sidste %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "I går"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "I dag"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "I morgen"
 
@@ -600,7 +601,7 @@ msgstr "Ophavsret © 2012–%d Kalenderens forfattere"
 msgid "The GNOME Project"
 msgstr "GNOME-projektet"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "Kris Thomsen\n"
@@ -613,7 +614,7 @@ msgstr ""
 "Websted http://dansk-gruppen.dk\n"
 "E-mail <dansk@dansk-gruppen.dk>"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
 msgid "Weather"
 msgstr "Vejret"
 
@@ -621,16 +622,20 @@ msgstr "Vejret"
 msgid "Manage your calendars"
 msgstr "Håndtér dine kalendere"
 
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "_Kalendere"
+
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Synkroniserer fjernkalendere …"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
 msgstr "_Synkronisér kalendere"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
 msgstr "Håndtér kalendere …"
 
@@ -796,7 +801,7 @@ msgstr "Redigér …"
 
 # "At" kan dårligt oversættes til at dække alle muligheder på dansk (hos/ved/på)
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "Sted: %s"
@@ -817,7 +822,11 @@ msgstr "Whereby"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "Ukendt tjeneste"
 
@@ -1067,35 +1076,43 @@ msgstr "Vis vejret"
 msgid "Automatic Location"
 msgstr "Automatisk placering"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Another event deleted"
 msgstr "Anden begivenhed slettet"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:701
 msgid "Event deleted"
 msgstr "Begivenhed slettet"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:703
 msgid "_Undo"
 msgstr "_Fortryd"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "Uge"
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "Hovedmenu"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "Måned"
+#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+msgid "_Today"
+msgstr "I _dag"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:222
+msgid "_Week"
+msgstr "_Uge"
+
+#: src/gui/gcal-window.ui:237
+msgid "_Month"
+msgstr "_Måned"
+
+#: src/gui/gcal-window.ui:278
 msgid "_Online Accounts…"
 msgstr "_Onlinekonti …"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:290
 msgid "_Keyboard Shortcuts"
 msgstr "_Tastaturgenveje"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:294
 msgid "_About Calendar"
 msgstr "_Om Kalender"
 
@@ -1185,7 +1202,7 @@ msgstr[1] "Importér %d begivenheder"
 msgid "Import Files…"
 msgstr "Importér filer …"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_Annullér"
 
@@ -1233,15 +1250,23 @@ msgstr "Filen er ikke en iCalendar-fil (.ics)"
 msgid "Description"
 msgstr "Beskrivelse"
 
+#: src/gui/views/gcal-agenda-view.c:373
+msgid "On-going"
+msgstr "I gang"
+
+#: src/gui/views/gcal-agenda-view.ui:36
+msgid "No events"
+msgstr "Ingen begivenheder"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "Ny begivenhed …"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:584
 msgid "00:00"
 msgstr "00:00"
 
@@ -1257,7 +1282,7 @@ msgstr[1] "%d andre begivenheder"
 msgid "week %d"
 msgstr "uge %d"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1265,15 +1290,15 @@ msgstr ""
 "Begivenheden, du prøver at ændre, er tilbagevendende. De valgte ændringer "
 "skal gælde for:"
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "_Kun denne begivenhed"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "_Efterfølgende begivenheder"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "A_lle begivenheder"
 
@@ -1298,9 +1323,6 @@ msgstr "A_lle begivenheder"
 
 #~ msgid "%B %d"
 #~ msgstr "%d. %B"
-
-#~ msgid "No events"
-#~ msgstr "Ingen begivenheder"
 
 #~ msgid "Add Event…"
 #~ msgstr "Tilføj begivenhed …"
