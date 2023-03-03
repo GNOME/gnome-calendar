@@ -194,13 +194,6 @@ new_date_header_string (GDateTime *date)
  */
 
 static void
-on_event_activated (GcalAgendaView *self,
-                    GtkWidget      *widget)
-{
-  g_signal_emit_by_name (self, "event-activated", widget);
-}
-
-static void
 stack_visible_child_changed_cb (AdwViewStack   *stack,
                                 GParamSpec     *pspec,
                                 GcalAgendaView *self)
@@ -725,8 +718,6 @@ gcal_agenda_view_class_init (GcalAgendaViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, list_box);
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, no_events_row);
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, scrolled_window);
-
-  gtk_widget_class_bind_template_callback (widget_class, on_event_activated);
 
   gtk_widget_class_set_css_name (widget_class, "agenda-view");
 }

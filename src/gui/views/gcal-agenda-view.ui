@@ -2,23 +2,6 @@
 <interface>
   <template class="GcalAgendaView" parent="GtkBox">
     <property name="orientation">vertical</property>
-    <style>
-      <class name="week-view" />
-    </style>
-    <child>
-      <object class="GcalWeekHeader" id="header">
-        <property name="visible">False</property>
-        <signal name="event-activated" handler="on_event_activated" object="GcalAgendaView" swapped="yes" />
-      </object>
-    </child>
-    <child>
-      <object class="GcalWeekGrid" id="week_grid">
-        <property name="visible">False</property>
-        <property name="hexpand">True</property>
-        <property name="vexpand">True</property>
-        <signal name="event-activated" handler="on_event_activated" object="GcalAgendaView" swapped="yes" />
-      </object>
-    </child>
     <child>
       <object class="GtkScrolledWindow" id="scrolled_window">
         <property name="hexpand">True</property>
