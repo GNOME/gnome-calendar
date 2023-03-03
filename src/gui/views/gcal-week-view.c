@@ -23,7 +23,7 @@
 #include "gcal-event-widget.h"
 #include "gcal-timeline-subscriber.h"
 #include "gcal-utils.h"
-#include "gcal-view.h"
+#include "gcal-view-private.h"
 #include "gcal-week-header.h"
 #include "gcal-week-hour-bar.h"
 #include "gcal-week-grid.h"
@@ -93,7 +93,7 @@ static void
 on_event_activated (GcalWeekView *self,
                     GtkWidget    *widget)
 {
-  g_signal_emit_by_name (self, "event-activated", widget);
+  gcal_view_event_activated (GCAL_VIEW (self), GCAL_EVENT_WIDGET (widget));
 }
 
 static void
