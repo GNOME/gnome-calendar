@@ -25,7 +25,7 @@
 #include "gcal-range-tree.h"
 #include "gcal-timeline-subscriber.h"
 #include "gcal-utils.h"
-#include "gcal-view.h"
+#include "gcal-view-private.h"
 
 #include <adwaita.h>
 #include <glib/gi18n.h>
@@ -488,6 +488,13 @@ gcal_view_interface_init (GcalViewInterface *iface)
  * GcalTimelineSubscriber iface
  */
 
+static void
+on_event_widget_activated_cb (GcalEventWidget *event_widget,
+                              GcalAgendaView  *self)
+{
+  gcal_view_event_activated (GCAL_VIEW (self), event_widget);
+}
+
 static GcalRange*
 gcal_agenda_view_get_range (GcalTimelineSubscriber *subscriber)
 {
@@ -540,8 +547,7 @@ gcal_agenda_view_add_event (GcalTimelineSubscriber *subscriber,
                              gcal_event_get_range (event),
                              child_data_new (row, event, self));
 
-  /* FIXME */
-  /* g_signal_connect (widget, "activate", G_CALLBACK (on_event_widget_activated_cb), self); */
+  g_signal_connect (widget, "activate", G_CALLBACK (on_event_widget_activated_cb), self);
 
   gtk_list_box_append (GTK_LIST_BOX (self->list_box), row);
 
