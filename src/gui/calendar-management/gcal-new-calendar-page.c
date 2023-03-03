@@ -52,8 +52,8 @@ struct _GcalNewCalendarPage
   GtkWidget          *cancel_button;
   GtkWidget          *credentials_cancel_button;
   GtkWidget          *credentials_connect_button;
+  GtkWindow          *credentials_dialog;
   GtkEntry           *credentials_password_entry;
-  GtkWidget          *credentials_popover;
   GtkEntry           *credentials_user_entry;
   GtkColorChooser    *local_calendar_color_button;
   GtkEntry           *local_calendar_name_entry;
@@ -238,12 +238,12 @@ discover_sources (GcalNewCalendarPage *self)
 }
 
 static void
-popdown_credentials_popover (GcalNewCalendarPage *self)
+hide_credentials_dialog (GcalNewCalendarPage *self)
 {
   gtk_editable_set_text (GTK_EDITABLE (self->credentials_user_entry), "");
   gtk_editable_set_text (GTK_EDITABLE (self->credentials_password_entry), "");
 
-  gtk_popover_popdown (GTK_POPOVER (self->credentials_popover));
+  gtk_window_close (self->credentials_dialog);
 }
 
 /*
@@ -322,8 +322,13 @@ sources_discovered_cb (GObject      *source_object,
                            GCAL_SOURCE_DISCOVERER_ERROR,
                            GCAL_SOURCE_DISCOVERER_ERROR_UNAUTHORIZED))
         {
+          GtkRoot *root;
+
           g_debug ("Unauthorized, asking for credentials...");
-          gtk_popover_popup (GTK_POPOVER (self->credentials_popover));
+
+          root = gtk_widget_get_root (GTK_WIDGET (self));
+          gtk_window_set_transient_for (self->credentials_dialog, GTK_WINDOW (root));
+          gtk_window_present (self->credentials_dialog);
         }
       else
         {
@@ -410,7 +415,7 @@ on_credential_button_clicked_cb (GtkWidget           *button,
   else
     update_url_entry_state (self, ENTRY_STATE_INVALID);
 
-  popdown_credentials_popover (self);
+  hide_credentials_dialog (self);
 }
 
 static void
@@ -418,7 +423,7 @@ on_credential_entry_activate_cb (GtkEntry            *entry,
                                  GcalNewCalendarPage *self)
 {
   discover_sources (self);
-  popdown_credentials_popover (self);
+  hide_credentials_dialog (self);
 }
 
 static void
@@ -658,8 +663,8 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_connect_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_password_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_user_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, local_calendar_color_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, local_calendar_name_entry);
@@ -691,6 +696,4 @@ gcal_new_calendar_page_init (GcalNewCalendarPage *self)
 
   chooser = gcal_file_chooser_button_get_filechooser (self->calendar_file_chooser_button);
   gtk_file_chooser_add_filter (chooser, self->calendar_file_filter);
-
-  gtk_widget_set_parent (self->credentials_popover, GTK_WIDGET (self->calendar_address_entry));
 }

@@ -171,8 +171,39 @@
   </template>
 
   <!-- Credentials popover -->
-  <object class="GtkPopover" id="credentials_popover">
-    <property name="position">top</property>
+  <object class="GtkWindow" id="credentials_dialog">
+    <property name="title" translatable="yes">Credentials</property>
+    <property name="modal">True</property>
+    <property name="hide-on-close">True</property>
+    <property name="default-width">350</property>
+    <property name="default-height">150</property>
+
+    <child type="titlebar">
+      <object class="GtkHeaderBar">
+        <property name="show-title-buttons">False</property>
+
+        <child type="start">
+          <object class="GtkButton" id="credentials_cancel_button">
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes">Cancel</property>
+            <signal name="clicked" handler="on_credential_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
+          </object>
+        </child>
+
+        <child type="end">
+          <object class="GtkButton" id="credentials_connect_button">
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes">Connect</property>
+            <signal name="clicked" handler="on_credential_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
+            <style>
+              <class name="suggested-action" />
+            </style>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
     <child>
       <object class="GtkBox">
         <property name="orientation">vertical</property>
@@ -239,28 +270,6 @@
           </object>
         </child>
 
-        <child>
-          <object class="GtkBox">
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkButton" id="credentials_cancel_button">
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Cancel</property>
-                <signal name="clicked" handler="on_credential_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="credentials_connect_button">
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Connect</property>
-                <signal name="clicked" handler="on_credential_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
-                <style>
-                  <class name="suggested-action" />
-                </style>
-              </object>
-            </child>
-          </object>
-        </child>
       </object>
     </child>
   </object>
