@@ -21,7 +21,7 @@
 
 #include "gcal-debug.h"
 #include "gcal-event-widget.h"
-#include "gcal-view.h"
+#include "gcal-view-private.h"
 #include "gcal-utils.h"
 
 #include <glib.h>
@@ -263,4 +263,39 @@ gcal_view_get_previous_date (GcalView *self)
 #endif
 
   return g_steal_pointer (&previous_date);
+}
+
+void
+gcal_view_create_event (GcalView  *self,
+                        GDateTime *start,
+                        GDateTime *end,
+                        gdouble    x,
+                        gdouble    y)
+{
+  g_assert (GCAL_IS_VIEW (self));
+  g_assert (start != NULL);
+  g_assert (end != NULL);
+
+  g_signal_emit (self, signals[CREATE_EVENT], 0, start, end, x, y);
+}
+
+void
+gcal_view_create_event_detailed (GcalView  *self,
+                                 GDateTime *start,
+                                 GDateTime *end)
+{
+  g_assert (GCAL_IS_VIEW (self));
+  g_assert (start != NULL);
+
+  g_signal_emit (self, signals[CREATE_EVENT_DETAILED], 0, start, end);
+}
+
+void
+gcal_view_event_activated (GcalView        *self,
+                           GcalEventWidget *event_widget)
+{
+  g_assert (GCAL_IS_VIEW (self));
+  g_assert (GCAL_IS_EVENT_WIDGET (event_widget));
+
+  g_signal_emit (self, signals[EVENT_ACTIVATED], 0, event_widget);
 }
