@@ -27,7 +27,7 @@
 #include "gcal-debug.h"
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
-#include "gcal-view.h"
+#include "gcal-view-private.h"
 #include "gcal-week-header.h"
 #include "gcal-week-view.h"
 #include "gcal-week-view-common.h"
@@ -349,12 +349,7 @@ on_button_released (GtkGestureClick *click_gesture,
                                     NULL,
                                     &out_y);
 
-  g_signal_emit_by_name (weekview,
-                         "create-event",
-                         selection_start,
-                         selection_end,
-                         out_x,
-                         out_y);
+  gcal_view_create_event (GCAL_VIEW (weekview), selection_start, selection_end, out_x, out_y);
 
   gtk_event_controller_set_propagation_phase (self->motion_controller, GTK_PHASE_NONE);
 }
