@@ -72,7 +72,7 @@ update_search_hit (GcalSearchHitRow *self)
     }
   else
     {
-      gtk_widget_hide (self->separator);
+      gtk_widget_set_visible (self->separator, FALSE);
     }
 }
 

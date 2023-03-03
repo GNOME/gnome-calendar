@@ -753,7 +753,7 @@ fix_popover_menu_icons (GtkPopover *popover)
             {
               gtk_widget_add_css_class (child2, "calendar-color-image");
               gtk_widget_set_margin_end (child2, 12);
-              gtk_widget_show (child2);
+              gtk_widget_set_visible (child2, TRUE);
               break;
             }
         }

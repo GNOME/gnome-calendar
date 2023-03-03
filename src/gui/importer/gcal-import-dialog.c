@@ -158,7 +158,7 @@ setup_files (GcalImportDialog  *self,
       adw_preferences_page_add (self->preferences_page, group);
       self->rows = g_list_prepend (self->rows, row);
 
-      gtk_widget_hide (self->placeholder_spinner);
+      gtk_widget_set_visible (self->placeholder_spinner, FALSE);
     }
 
   GCAL_EXIT;
@@ -399,7 +399,7 @@ on_import_row_file_loaded_cb (GcalImportFileRow *row,
                            self->n_events);
   gtk_window_set_title (GTK_WINDOW (self), title);
 
-  gtk_widget_show (GTK_WIDGET (row));
+  gtk_widget_set_visible (GTK_WIDGET (row), TRUE);
 
   GCAL_EXIT;
 }

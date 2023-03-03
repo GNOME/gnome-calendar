@@ -311,6 +311,17 @@ load_css_providers (GcalWindow *self)
                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
 }
 
+static void
+show_widget (GtkWidget *widget)
+{
+  gtk_widget_set_visible (widget, TRUE);
+}
+
+static void
+hide_widget (GtkWidget *widget)
+{
+  gtk_widget_set_visible (widget, FALSE);
+}
 
 /*
  * Callbacks
@@ -323,7 +334,7 @@ on_show_calendars_action_activated (GSimpleAction *action,
 {
   GcalWindow *window = GCAL_WINDOW (user_data);
 
-  gtk_widget_show (window->calendar_management_dialog);
+  gtk_widget_set_visible (window->calendar_management_dialog, TRUE);
 }
 
 static void
@@ -395,7 +406,7 @@ on_window_new_event_cb (GSimpleAction *action,
   event = gcal_event_new (default_calendar, comp, NULL);
 
   gcal_event_editor_dialog_set_event (self->event_editor, event, TRUE);
-  gtk_widget_show (GTK_WIDGET (self->event_editor));
+  gtk_widget_set_visible (GTK_WIDGET (self->event_editor), TRUE);
 }
 
 static void
@@ -464,7 +475,8 @@ on_window_undo_delete_event_cb (GSimpleAction *action,
   widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (self->views[self->active_view]),
                                             modifier,
                                             gcal_event_get_uid (event));
-  g_list_foreach (widgets, (GFunc) gtk_widget_show, NULL);
+
+  g_list_foreach (widgets, (GFunc) show_widget, NULL);
 
   g_clear_object (&self->delete_event_toast);
 
@@ -590,7 +602,7 @@ edit_event (GcalQuickAddPopover *popover,
             GcalWindow          *window)
 {
   gcal_event_editor_dialog_set_event (window->event_editor, event, TRUE);
-  gtk_widget_show (GTK_WIDGET (window->event_editor));
+  gtk_widget_set_visible (GTK_WIDGET (window->event_editor), TRUE);
 }
 
 static void
@@ -611,7 +623,7 @@ create_event_detailed_cb (GcalView *view,
   event = gcal_event_new (default_calendar, comp, NULL);
 
   gcal_event_editor_dialog_set_event (window->event_editor, event, TRUE);
-  gtk_widget_show (GTK_WIDGET (window->event_editor));
+  gtk_widget_set_visible (GTK_WIDGET (window->event_editor), TRUE);
 
   g_clear_object (&comp);
 }
@@ -715,9 +727,9 @@ on_event_editor_dialog_remove_event_cb (GcalEventEditorDialog *edit_dialog,
   agenda_view_widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (self->agenda_view), modifier, gcal_event_get_uid (event));
   date_chooser_widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (self->date_chooser), modifier, gcal_event_get_uid (event));
 
-  g_list_foreach (widgets, (GFunc) gtk_widget_hide, NULL);
-  g_list_foreach (agenda_view_widgets, (GFunc) gtk_widget_hide, NULL);
-  g_list_foreach (date_chooser_widgets, (GFunc) gtk_widget_hide, NULL);
+  g_list_foreach (widgets, (GFunc) hide_widget, NULL);
+  g_list_foreach (agenda_view_widgets, (GFunc) hide_widget, NULL);
+  g_list_foreach (date_chooser_widgets, (GFunc) hide_widget, NULL);
 
   GCAL_EXIT;
 }
@@ -871,7 +883,7 @@ gcal_window_set_property (GObject      *object,
     {
     case PROP_ACTIVE_VIEW:
       self->active_view = g_value_get_enum (value);
-      gtk_widget_show (self->views[self->active_view]);
+      gtk_widget_set_visible (self->views[self->active_view], TRUE);
       adw_view_stack_set_visible_child (self->views_stack, self->views[self->active_view]);
       break;
 

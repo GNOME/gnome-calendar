@@ -100,7 +100,7 @@ create_calendar_row (GcalManager  *manager,
 
   /* Selected icon */
   selected_icon = gtk_image_new_from_icon_name ("emblem-ok-symbolic");
-  gtk_widget_hide (selected_icon);
+  gtk_widget_set_visible (selected_icon, FALSE);
   gtk_box_append (GTK_BOX (box), selected_icon);
 
   /* The row itself */
@@ -687,7 +687,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
   else
     g_signal_emit (self, signals[EDIT_EVENT], 0, event);
 
-  gtk_widget_hide (GTK_WIDGET (self));
+  gtk_widget_set_visible (GTK_WIDGET (self), FALSE);
 
   g_clear_pointer (&date_start, g_date_time_unref);
   g_clear_pointer (&date_end, g_date_time_unref);

@@ -144,7 +144,7 @@ setup_context (GcalCalendarManagementDialog *self)
       page = g_object_new (pages[i].gtype,
                            "context", self->context,
                            NULL);
-      gtk_widget_show (GTK_WIDGET (page));
+      gtk_widget_set_visible (GTK_WIDGET (page), TRUE);
 
       gtk_stack_add_titled (GTK_STACK (self->stack),
                             GTK_WIDGET (page),

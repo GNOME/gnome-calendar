@@ -467,12 +467,12 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
 
   if (frequency == GCAL_RECURRENCE_NO_REPEAT)
     {
-      gtk_widget_hide (self->repeat_duration_combo);
+      gtk_widget_set_visible (self->repeat_duration_combo, FALSE);
     }
   else
     {
-      gtk_widget_show (self->repeat_duration_combo);
-      gtk_widget_show (self->repeat_duration_combo);
+      gtk_widget_set_visible (self->repeat_duration_combo, TRUE);
+      gtk_widget_set_visible (self->repeat_duration_combo, TRUE);
     }
 
   switch (limit_type)

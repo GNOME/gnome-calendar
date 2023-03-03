@@ -398,7 +398,7 @@ gcal_multi_choice_state_flags_changed (GtkWidget    *widget,
   if (!gtk_widget_is_sensitive (widget))
     {
       if (self->popover)
-        gtk_widget_hide (self->popover);
+        gtk_widget_set_visible (self->popover, FALSE);
     }
 }
 
@@ -572,7 +572,7 @@ gcal_multi_choice_set_choices (GcalMultiChoice  *self,
   for (i = 0; i < self->n_choices; i++)
     {
       self->choices[i] = gtk_label_new (choices[i]);
-      gtk_widget_show (self->choices[i]);
+      gtk_widget_set_visible (self->choices[i], TRUE);
       gtk_stack_add_named (GTK_STACK (self->stack),
                            self->choices[i],
                            choices[i]);
@@ -609,7 +609,7 @@ gcal_multi_choice_set_popover (GcalMultiChoice *self,
   if (self->popover)
     {
       if (gtk_widget_get_visible (self->popover))
-        gtk_widget_hide (self->popover);
+        gtk_widget_set_visible (self->popover, FALSE);
 
       g_signal_handlers_disconnect_by_func (self->popover,
                                             menu_deactivate_cb,

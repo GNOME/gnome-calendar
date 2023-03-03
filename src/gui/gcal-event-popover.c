@@ -424,7 +424,7 @@ add_meeting (GcalEventPopover *self,
   g_signal_connect (row, "join-meeting", G_CALLBACK (on_join_meeting_cb), self);
   gtk_list_box_append (self->meetings_listbox, row);
 
-  gtk_widget_show (GTK_WIDGET (self->meetings_listbox));
+  gtk_widget_set_visible (GTK_WIDGET (self->meetings_listbox), TRUE);
 }
 
 static void
@@ -524,7 +524,7 @@ on_join_meeting_cb (GcalMeetingRow   *meeting_row,
   gtk_show_uri (window, url, GDK_CURRENT_TIME);
 
   /* For some reason, gtk_popover_popdown() crashes when called here */
-  gtk_widget_hide (GTK_WIDGET (self));
+  gtk_widget_set_visible (GTK_WIDGET (self), FALSE);
 }
 
 static void

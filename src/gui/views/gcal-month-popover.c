@@ -207,7 +207,7 @@ on_animation_done_cb (AdwAnimation     *animation,
                       GcalMonthPopover *self)
 {
   if (adw_animation_get_value (animation) == 0.0)
-    gtk_widget_hide (GTK_WIDGET (self));
+    gtk_widget_set_visible (GTK_WIDGET (self), FALSE);
 }
 
 static void
@@ -425,7 +425,7 @@ gcal_month_popover_popup (GcalMonthPopover *self)
 
   GCAL_ENTRY;
 
-  gtk_widget_show (GTK_WIDGET (self));
+  gtk_widget_set_visible (GTK_WIDGET (self), TRUE);
 
   adw_timed_animation_set_reverse (ADW_TIMED_ANIMATION (self->animation), FALSE);
   adw_timed_animation_set_easing (ADW_TIMED_ANIMATION (self->animation), ADW_EASE_OUT_EXPO);

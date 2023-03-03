@@ -279,7 +279,7 @@ gcal_application_activate (GApplication *application)
                                     NULL);
 
       g_object_add_weak_pointer (G_OBJECT (self->window), (gpointer*) &self->window);
-      gtk_widget_show (self->window);
+      gtk_widget_set_visible (self->window, TRUE);
     }
 
   gtk_window_present (GTK_WINDOW (self->window));

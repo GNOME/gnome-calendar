@@ -75,7 +75,7 @@ on_filechooser_dialog_response_cb (GtkFileChooser        *filechooser,
       gcal_file_chooser_button_set_file (self, file);
     }
 
-  gtk_widget_hide (GTK_WIDGET (filechooser));
+  gtk_widget_set_visible (GTK_WIDGET (filechooser), FALSE);
 }
 static void
 ensure_filechooser (GcalFileChooserButton *self)

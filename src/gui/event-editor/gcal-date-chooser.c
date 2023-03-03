@@ -955,7 +955,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
       gtk_grid_attach (GTK_GRID (self->grid), self->rows[row], -1, row, 1, 1);
 
       self->week[row] = adw_bin_new ();
-      gtk_widget_hide (self->week[row]);
+      gtk_widget_set_visible (self->week[row], FALSE);
       gtk_widget_add_css_class (self->week[row], "current-week");
       gtk_grid_attach (GTK_GRID (self->grid), self->week[row], -1, row, 8, 1);
 
