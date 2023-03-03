@@ -575,7 +575,7 @@ gcal_new_calendar_page_dispose (GObject *object)
 {
   GcalNewCalendarPage *self = (GcalNewCalendarPage *)object;
 
-  g_clear_pointer (&self->credentials_popover, gtk_widget_unparent);
+  gtk_widget_dispose_template (GTK_WIDGET (self), GCAL_TYPE_NEW_CALENDAR_PAGE);
 
   G_OBJECT_CLASS (gcal_new_calendar_page_parent_class)->dispose (object);
 }
