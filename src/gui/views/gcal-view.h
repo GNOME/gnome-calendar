@@ -16,8 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __GCAL_VIEW_H__
-#define __GCAL_VIEW_H__
+#pragma once
 
 #include "gcal-context.h"
 #include "gcal-event-widget.h"
@@ -78,5 +77,3 @@ GDateTime*           gcal_view_get_next_date                     (GcalView      
 GDateTime*           gcal_view_get_previous_date                 (GcalView              *self);
 
 G_END_DECLS
-
-#endif /* __GCAL_MONTH_VIEW_H__ */
