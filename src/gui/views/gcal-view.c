@@ -29,6 +29,16 @@
 
 G_DEFINE_INTERFACE (GcalView, gcal_view, GTK_TYPE_WIDGET)
 
+enum
+{
+  CREATE_EVENT,
+  CREATE_EVENT_DETAILED,
+  EVENT_ACTIVATED,
+  N_SIGNALS,
+};
+
+static guint signals[N_SIGNALS] = { 0, };
+
 static void
 gcal_view_default_init (GcalViewInterface *iface)
 {
@@ -61,17 +71,17 @@ gcal_view_default_init (GcalViewInterface *iface)
    *
    * Emitted when the view wants to create an event.
    */
-  g_signal_new ("create-event",
-                GCAL_TYPE_VIEW,
-                G_SIGNAL_RUN_LAST,
-                G_STRUCT_OFFSET (GcalViewInterface, create_event),
-                NULL, NULL, NULL,
-                G_TYPE_NONE,
-                4,
-                G_TYPE_DATE_TIME,
-                G_TYPE_DATE_TIME,
-                G_TYPE_DOUBLE,
-                G_TYPE_DOUBLE);
+  signals[CREATE_EVENT] = g_signal_new ("create-event",
+                                        GCAL_TYPE_VIEW,
+                                        G_SIGNAL_RUN_LAST,
+                                        G_STRUCT_OFFSET (GcalViewInterface, create_event),
+                                        NULL, NULL, NULL,
+                                        G_TYPE_NONE,
+                                        4,
+                                        G_TYPE_DATE_TIME,
+                                        G_TYPE_DATE_TIME,
+                                        G_TYPE_DOUBLE,
+                                        G_TYPE_DOUBLE);
 
   /**
    * GcalView::create-event-detailed:
@@ -79,27 +89,27 @@ gcal_view_default_init (GcalViewInterface *iface)
    * Emitted when the view wants to create an event and immediately
    * edit it.
    */
-  g_signal_new ("create-event-detailed",
-                GCAL_TYPE_VIEW,
-                G_SIGNAL_RUN_LAST,
-                G_STRUCT_OFFSET (GcalViewInterface, create_event_detailed),
-                NULL, NULL, NULL,
-                G_TYPE_NONE, 2,
-                G_TYPE_DATE_TIME,
-                G_TYPE_DATE_TIME);
+  signals[CREATE_EVENT_DETAILED] = g_signal_new ("create-event-detailed",
+                                                 GCAL_TYPE_VIEW,
+                                                 G_SIGNAL_RUN_LAST,
+                                                 G_STRUCT_OFFSET (GcalViewInterface, create_event_detailed),
+                                                 NULL, NULL, NULL,
+                                                 G_TYPE_NONE, 2,
+                                                 G_TYPE_DATE_TIME,
+                                                 G_TYPE_DATE_TIME);
 
   /**
    * GcalView::event-activated:
    *
    * Emitted when an event widget inside the view is activated.
    */
-  g_signal_new ("event-activated",
-                GCAL_TYPE_VIEW,
-                G_SIGNAL_RUN_LAST,
-                0, NULL, NULL, NULL,
-                G_TYPE_NONE,
-                1,
-                GCAL_TYPE_EVENT_WIDGET);
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
+                                           GCAL_TYPE_VIEW,
+                                           G_SIGNAL_RUN_LAST,
+                                           0, NULL, NULL, NULL,
+                                           G_TYPE_NONE,
+                                           1,
+                                           GCAL_TYPE_EVENT_WIDGET);
 }
 
 /**
