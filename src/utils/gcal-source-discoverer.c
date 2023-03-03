@@ -97,6 +97,13 @@ create_source_for_uri (DiscovererData  *data)
   webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
   e_source_webdav_set_uri (webdav, guri);
 
+  /* Security */
+  if (g_strcmp0 (g_uri_get_scheme (guri), "https") == 0)
+    {
+      ESourceSecurity *security = e_source_get_extension (source, E_SOURCE_EXTENSION_SECURITY);
+      e_source_security_set_secure (security, TRUE);
+    }
+
   return source;
 }
 
@@ -152,6 +159,22 @@ create_discovered_source (ESource                 *source,
 
       e_source_set_parent (new_source, "webcal-stub");
       e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "webcal");
+    }
+
+  /* Security */
+  if (e_source_has_extension (source, E_SOURCE_EXTENSION_SECURITY))
+    {
+      ESourceSecurity *new_security, *parent_security;
+      const gchar *method;
+
+      parent_security = e_source_get_extension (source, E_SOURCE_EXTENSION_SECURITY);
+      new_security = e_source_get_extension (new_source, E_SOURCE_EXTENSION_SECURITY);
+
+      method = e_source_security_get_method (parent_security);
+
+      GCAL_TRACE_MSG ("New source '%s' has security method \"%s\"", e_source_get_display_name (new_source), method);
+
+      e_source_security_set_method (new_security, method);
     }
 
   /* build up the new source */
