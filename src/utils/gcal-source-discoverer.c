@@ -250,7 +250,7 @@ discover_file_in_thread (DiscovererData  *data,
 
   GCAL_ENTRY;
 
-  guri = g_uri_parse (data->uri, SOUP_HTTP_URI_FLAGS | G_URI_FLAGS_PARSE_RELAXED, NULL);
+  guri = g_uri_parse (data->uri, SOUP_HTTP_URI_FLAGS | G_URI_FLAGS_PARSE_RELAXED, error);
 
   if (!guri)
     GCAL_RETURN (NULL);
