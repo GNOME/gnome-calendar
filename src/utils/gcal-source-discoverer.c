@@ -157,8 +157,8 @@ create_discovered_source (ESource                 *source,
       e_source_webdav_set_email_address (new_webdav, e_source_webdav_get_email_address (parent_webdav));
       e_source_webdav_set_ssl_trust (new_webdav, e_source_webdav_get_ssl_trust (parent_webdav));
 
-      e_source_set_parent (new_source, "webcal-stub");
-      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "webcal");
+      e_source_set_parent (new_source, "caldav-stub");
+      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "caldav");
     }
 
   /* Security */
