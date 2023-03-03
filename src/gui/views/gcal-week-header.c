@@ -356,8 +356,7 @@ on_button_released (GtkGestureClick *click_gesture,
                          out_x,
                          out_y);
 
-  gtk_event_controller_set_propagation_phase (self->motion_controller,
-                                              GTK_PHASE_NONE);
+  gtk_event_controller_set_propagation_phase (self->motion_controller, GTK_PHASE_NONE);
 }
 
 static void
