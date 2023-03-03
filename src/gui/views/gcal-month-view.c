@@ -29,7 +29,7 @@
 #include "gcal-month-view.h"
 #include "gcal-timeline-subscriber.h"
 #include "gcal-utils.h"
-#include "gcal-view.h"
+#include "gcal-view-private.h"
 
 #include <glib/gi18n.h>
 
@@ -179,7 +179,7 @@ activate_event (GcalMonthView   *self,
   cancel_selection (self);
   gcal_month_popover_popdown (GCAL_MONTH_POPOVER (self->overflow.popover));
 
-  g_signal_emit_by_name (self, "event-activated", event_widget);
+  gcal_view_event_activated (GCAL_VIEW (self), event_widget);
 }
 
 static void
@@ -248,7 +248,7 @@ emit_create_event (GcalMonthView *self)
                                     x, y,
                                     &x, &y);
 
-  g_signal_emit_by_name (self, "create-event", start_dt, end_dt, x, y);
+  gcal_view_create_event (GCAL_VIEW (self), start_dt, end_dt, x, y);
 
   if (should_clear_end)
     g_clear_pointer (&end_dt, g_date_time_unref);
@@ -1334,8 +1334,8 @@ static void
 add_new_event_button_cb (GtkWidget *button,
                          gpointer   user_data)
 {
+  g_autoptr(GDateTime) start_date = NULL;
   GcalMonthView *self;
-  GDateTime *start_date;
   gint day;
 
   self = GCAL_MONTH_VIEW (user_data);
@@ -1347,9 +1347,7 @@ add_new_event_button_cb (GtkWidget *button,
                                       g_date_time_get_month (self->date),
                                       day, 0, 0, 0);
 
-  g_signal_emit_by_name (GCAL_VIEW (user_data), "create-event-detailed", start_date, NULL);
-
-  g_date_time_unref (start_date);
+  gcal_view_create_event_detailed (GCAL_VIEW (self), start_date, NULL);
 }
 
 static void
@@ -1629,7 +1627,7 @@ on_month_popover_event_activated_cb (GcalMonthPopover *month_popover,
                                      GcalMonthView    *self)
 {
   cancel_selection (self);
-  g_signal_emit_by_name (self, "event-activated", event_widget);
+  gcal_view_event_activated (GCAL_VIEW (self), event_widget);
 }
 
 static void
