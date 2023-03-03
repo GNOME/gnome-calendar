@@ -257,7 +257,7 @@ discover_file_in_thread (DiscovererData  *data,
                            NULL);
 
   is_calendar_header = header_string_read_len == strlen (ICAL_HEADER_STRING) &&
-                       strcmp (ICAL_HEADER_STRING, header_string) == 0;
+                       g_strcmp0 (ICAL_HEADER_STRING, header_string) == 0;
 
   g_input_stream_close (input_stream, cancellable, error);
 
