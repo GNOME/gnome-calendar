@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-01-25 18:24+0000\n"
-"PO-Revision-Date: 2023-03-02 21:05+0100\n"
+"POT-Creation-Date: 2023-03-03 22:56+0000\n"
+"PO-Revision-Date: 2023-03-04 07:37+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -205,8 +205,8 @@ msgid "Select a file"
 msgstr "Vybrat soubor"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 msgid "Cancel"
 msgstr "Zrušit"
@@ -215,11 +215,11 @@ msgstr "Zrušit"
 msgid "Open"
 msgstr "Otevřít"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:512
+#: src/gui/calendar-management/gcal-new-calendar-page.c:517
 msgid "New Calendar"
 msgstr "Nový kalendář"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:690
+#: src/gui/calendar-management/gcal-new-calendar-page.c:695
 msgid "Calendar files"
 msgstr "Kalendářové soubory"
 
@@ -256,19 +256,23 @@ msgstr ""
 "Pokud kalendář náleží k jednomu z vašich účtů on-line, můžete jej přidat "
 "přes <a href=\"GOA\">nastavení účtů on-line</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
-msgid "User"
-msgstr "Uživatel"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+msgid "Credentials"
+msgstr "Pověření"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-msgid "Password"
-msgstr "Heslo"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Connect"
 msgstr "Připojit se"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+msgid "User"
+msgstr "Uživatel"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "Password"
+msgstr "Heslo"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Přidat"
@@ -622,7 +626,7 @@ msgstr ""
 "Adam Matoušek <adamatousek@gmail.com>\n"
 "Marek Černocký <marek@manet.cz>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
 msgid "Weather"
 msgstr "Počasí"
 
@@ -1083,15 +1087,15 @@ msgstr "Zobrazovat počasí"
 msgid "Automatic Location"
 msgstr "Místo automaticky"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:713
 msgid "Another event deleted"
 msgstr "Smazána ještě jedna událost"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:713
 msgid "Event deleted"
 msgstr "Událost smazána"
 
-#: src/gui/gcal-window.c:703
+#: src/gui/gcal-window.c:715
 msgid "_Undo"
 msgstr "_Zpět"
 
@@ -1099,27 +1103,27 @@ msgstr "_Zpět"
 msgid "Main Menu"
 msgstr "Hlavní nabídka"
 
-#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
 msgid "_Today"
 msgstr "_Dnes"
 
-#: src/gui/gcal-window.ui:222
+#: src/gui/gcal-window.ui:223
 msgid "_Week"
 msgstr "_Týden"
 
-#: src/gui/gcal-window.ui:237
+#: src/gui/gcal-window.ui:238
 msgid "_Month"
 msgstr "_Měsíc"
 
-#: src/gui/gcal-window.ui:278
+#: src/gui/gcal-window.ui:279
 msgid "_Online Accounts…"
 msgstr "Účty _on-line…"
 
-#: src/gui/gcal-window.ui:290
+#: src/gui/gcal-window.ui:291
 msgid "_Keyboard Shortcuts"
 msgstr "_Klávesové zkratky"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:295
 msgid "_About Calendar"
 msgstr "O _aplikaci Kalendář"
 
@@ -1258,11 +1262,11 @@ msgstr "Soubor není iCalendar (.ics)"
 msgid "Description"
 msgstr "Popis"
 
-#: src/gui/views/gcal-agenda-view.c:373
+#: src/gui/views/gcal-agenda-view.c:366
 msgid "On-going"
 msgstr "Stále"
 
-#: src/gui/views/gcal-agenda-view.ui:36
+#: src/gui/views/gcal-agenda-view.ui:19
 msgid "No events"
 msgstr "Žádné události"
 
@@ -1270,15 +1274,15 @@ msgstr "Žádné události"
 msgid "New Event…"
 msgstr "Nová událost…"
 
-#: src/gui/views/gcal-week-grid.c:581
+#: src/gui/views/gcal-week-grid.c:576
 msgid "00 AM"
 msgstr "00 dop."
 
-#: src/gui/views/gcal-week-grid.c:584
+#: src/gui/views/gcal-week-grid.c:579
 msgid "00:00"
 msgstr "00∶00"
 
-#: src/gui/views/gcal-week-header.c:478
+#: src/gui/views/gcal-week-header.c:472
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1286,7 +1290,7 @@ msgstr[0] "Další událost"
 msgstr[1] "Další %d události"
 msgstr[2] "Další %d událostí"
 
-#: src/gui/views/gcal-week-header.c:1006
+#: src/gui/views/gcal-week-header.c:1000
 #, c-format
 msgid "week %d"
 msgstr "%d. týden"
