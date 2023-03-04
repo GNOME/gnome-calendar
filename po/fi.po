@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-01-25 18:24+0000\n"
-"PO-Revision-Date: 2023-03-01 23:37+0200\n"
+"POT-Creation-Date: 2023-03-03 22:56+0000\n"
+"PO-Revision-Date: 2023-03-04 12:37+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -199,8 +199,8 @@ msgid "Select a file"
 msgstr "Valitse tiedosto"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 msgid "Cancel"
 msgstr "Peru"
@@ -209,11 +209,11 @@ msgstr "Peru"
 msgid "Open"
 msgstr "Avaa"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:512
+#: src/gui/calendar-management/gcal-new-calendar-page.c:517
 msgid "New Calendar"
 msgstr "Uusi kalenteri"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:690
+#: src/gui/calendar-management/gcal-new-calendar-page.c:695
 msgid "Calendar files"
 msgstr "Kalenteritiedostot"
 
@@ -250,19 +250,23 @@ msgstr ""
 "Jos kalenteri kuuluu johonkin verkkotileistäsi, voit lisätä kalenterin <a "
 "href=\"GOA\">verkkotilien asetuksissa</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
-msgid "User"
-msgstr "Käyttäjä"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+msgid "Credentials"
+msgstr "Kirjautumistiedot"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-msgid "Password"
-msgstr "Salasana"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Connect"
 msgstr "Yhdistä"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+msgid "User"
+msgstr "Käyttäjä"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "Password"
+msgstr "Salasana"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Lisää"
@@ -601,7 +605,7 @@ msgstr "Gnome-projekti"
 msgid "translator-credits"
 msgstr "Jiri Grönroos"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
 msgid "Weather"
 msgstr "Sää"
 
@@ -809,7 +813,6 @@ msgid "Zoom"
 msgstr "Zoom"
 
 #: src/gui/gcal-meeting-row.c:69
-#| msgid "Microsoft Exchange"
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
@@ -1063,15 +1066,15 @@ msgstr "Näytä sää"
 msgid "Automatic Location"
 msgstr "Automaattinen sijainti"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:713
 msgid "Another event deleted"
 msgstr "Toinen tapahtuma poistettu"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:713
 msgid "Event deleted"
 msgstr "Tapahtuma poistettu"
 
-#: src/gui/gcal-window.c:703
+#: src/gui/gcal-window.c:715
 msgid "_Undo"
 msgstr "_Kumoa"
 
@@ -1079,27 +1082,27 @@ msgstr "_Kumoa"
 msgid "Main Menu"
 msgstr "Päävalikko"
 
-#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
 msgid "_Today"
 msgstr "_Tänään"
 
-#: src/gui/gcal-window.ui:222
+#: src/gui/gcal-window.ui:223
 msgid "_Week"
 msgstr "_Viikko"
 
-#: src/gui/gcal-window.ui:237
+#: src/gui/gcal-window.ui:238
 msgid "_Month"
 msgstr "_Kuukausi"
 
-#: src/gui/gcal-window.ui:278
+#: src/gui/gcal-window.ui:279
 msgid "_Online Accounts…"
 msgstr "_Verkkotilit…"
 
-#: src/gui/gcal-window.ui:290
+#: src/gui/gcal-window.ui:291
 msgid "_Keyboard Shortcuts"
 msgstr "_Pikanäppäimet"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:295
 msgid "_About Calendar"
 msgstr "_Tietoja - Kalenteri"
 
@@ -1237,11 +1240,11 @@ msgstr "Tiedosto ei ole iCalendar-tiedosto (.ics)"
 msgid "Description"
 msgstr "Kuvaus"
 
-#: src/gui/views/gcal-agenda-view.c:373
+#: src/gui/views/gcal-agenda-view.c:366
 msgid "On-going"
 msgstr "Meneillään"
 
-#: src/gui/views/gcal-agenda-view.ui:36
+#: src/gui/views/gcal-agenda-view.ui:19
 msgid "No events"
 msgstr "Ei tapahtumia"
 
@@ -1249,22 +1252,22 @@ msgstr "Ei tapahtumia"
 msgid "New Event…"
 msgstr "Uusi tapahtuma…"
 
-#: src/gui/views/gcal-week-grid.c:581
+#: src/gui/views/gcal-week-grid.c:576
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:584
+#: src/gui/views/gcal-week-grid.c:579
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:478
+#: src/gui/views/gcal-week-header.c:472
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Muu tapahtuma"
 msgstr[1] "Muut %d tapahtumaa"
 
-#: src/gui/views/gcal-week-header.c:1006
+#: src/gui/views/gcal-week-header.c:1000
 #, c-format
 msgid "week %d"
 msgstr "viikko %d"
@@ -1372,9 +1375,6 @@ msgstr "_Kaikkiin tapahtumiin"
 
 #~ msgid "Calendar Address"
 #~ msgstr "Kalenterin osoite"
-
-#~ msgid "Enter your credentials"
-#~ msgstr "Anna kirjautumistietosi"
 
 #~ msgid "All day"
 #~ msgstr "Koko päivä"
