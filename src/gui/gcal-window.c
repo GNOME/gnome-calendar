@@ -106,6 +106,7 @@ struct _GcalWindow
   GtkWidget          *agenda_view;
   GtkWidget          *date_chooser;
   GtkWidget          *action_bar;
+  GcalToolbarEnd     *toolbar_end;
 
   /* header_bar widets */
   GtkWidget          *calendars_button;
@@ -855,6 +856,7 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->date_chooser, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->event_editor, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->toolbar_end, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   /* CSS */
   load_css_providers (self);
@@ -1044,6 +1046,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_management_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, overlay);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, toolbar_end);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, weather_settings);

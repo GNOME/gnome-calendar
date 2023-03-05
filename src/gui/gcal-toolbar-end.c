@@ -18,24 +18,111 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include "gcal-toolbar-end.h"
-
+#include "gcal-context.h"
 #include "gcal-search-button.h"
+#include "gcal-toolbar-end.h"
 
 struct _GcalToolbarEnd
 {
-  AdwBin parent_instance;
+  AdwBin               parent_instance;
+
+  GcalSearchButton    *search_button;
+
+  GcalContext         *context;
 };
 
 G_DEFINE_FINAL_TYPE (GcalToolbarEnd, gcal_toolbar_end, ADW_TYPE_BIN)
 
+enum
+{
+  PROP_0,
+  PROP_CONTEXT,
+  N_PROPS
+};
+
+static GParamSpec *properties [N_PROPS];
+
+
+/*
+ * GObject overrides
+ */
+
+static void
+gcal_toolbar_end_finalize (GObject *object)
+{
+  GcalToolbarEnd *self = (GcalToolbarEnd *)object;
+
+  g_clear_object (&self->context);
+
+  G_OBJECT_CLASS (gcal_toolbar_end_parent_class)->finalize (object);
+}
+
+static void
+gcal_toolbar_end_get_property (GObject    *object,
+                               guint       prop_id,
+                               GValue     *value,
+                               GParamSpec *pspec)
+{
+  GcalToolbarEnd *self = GCAL_TOOLBAR_END (object);
+
+  switch (prop_id)
+    {
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gcal_toolbar_end_set_property (GObject      *object,
+                               guint         prop_id,
+                               const GValue *value,
+                               GParamSpec   *pspec)
+{
+  GcalToolbarEnd *self = GCAL_TOOLBAR_END (object);
+
+  switch (prop_id)
+    {
+    case PROP_CONTEXT:
+      g_assert (self->context == NULL);
+      self->context = g_value_dup_object (value);
+      g_object_bind_property (self, "context", self->search_button, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
 static void
 gcal_toolbar_end_class_init (GcalToolbarEndClass *klass)
 {
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  gtk_widget_class_set_template_from_resource (widget_class,
-                                               "/org/gnome/calendar/ui/gui/gcal-toolbar-end.ui");
+  object_class->finalize = gcal_toolbar_end_finalize;
+  object_class->get_property = gcal_toolbar_end_get_property;
+  object_class->set_property = gcal_toolbar_end_set_property;
+
+  /**
+   * GcalToolbarEnd::context:
+   *
+   * The #GcalContext of the application.
+   */
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "Context of the application",
+                                                  "The context of the application",
+                                                  GCAL_TYPE_CONTEXT,
+                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
+
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-toolbar-end.ui");
+
+  gtk_widget_class_bind_template_child (widget_class, GcalToolbarEnd, search_button);
 }
 
 static void

@@ -200,7 +200,7 @@
                       </object>
                     </child>
                     <child type="end">
-                      <object class="GcalToolbarEnd"/>
+                      <object class="GcalToolbarEnd" id="toolbar_end" />
                     </child>
                   </object>
                 </child>
