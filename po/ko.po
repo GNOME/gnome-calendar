@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-01-25 18:24+0000\n"
-"PO-Revision-Date: 2023-03-04 19:07+0900\n"
+"POT-Creation-Date: 2023-03-04 13:46+0000\n"
+"PO-Revision-Date: 2023-03-04 23:49+0900\n"
 "Last-Translator: Seong-ho Cho <shcho@gnome.org>\n"
 "Language-Team: GNOME Korea <gnome-kr@googlegroups.com>\n"
 "Language: ko\n"
@@ -204,8 +204,8 @@ msgid "Select a file"
 msgstr "파일 선택"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 msgid "Cancel"
 msgstr "취소"
@@ -214,11 +214,11 @@ msgstr "취소"
 msgid "Open"
 msgstr "열기"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:512
+#: src/gui/calendar-management/gcal-new-calendar-page.c:517
 msgid "New Calendar"
 msgstr "새 달력"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:690
+#: src/gui/calendar-management/gcal-new-calendar-page.c:695
 msgid "Calendar files"
 msgstr "달력 파일"
 
@@ -254,19 +254,23 @@ msgstr ""
 "추가할 달력의 주소를 입력하십시오. 달력이 온라인 계정에 들어있다면, <a "
 "href=\"GOA\">온라인 계정 설정</a>에서 추가할 수 있습니다."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
-msgid "User"
-msgstr "사용자"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+msgid "Credentials"
+msgstr "인증 정보"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-msgid "Password"
-msgstr "암호"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Connect"
 msgstr "연결"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+msgid "User"
+msgstr "사용자"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "Password"
+msgstr "암호"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "추가"
@@ -592,7 +596,7 @@ msgstr "그놈 프로젝트"
 msgid "translator-credits"
 msgstr "조성호 <shcho@gnome.org>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
 msgid "Weather"
 msgstr "날씨"
 
@@ -1056,15 +1060,15 @@ msgstr "날씨 정보 표시"
 msgid "Automatic Location"
 msgstr "자동 위치 정보"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:713
 msgid "Another event deleted"
 msgstr "삭제한 다른 행사"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:713
 msgid "Event deleted"
 msgstr "삭제한 행사"
 
-#: src/gui/gcal-window.c:703
+#: src/gui/gcal-window.c:715
 msgid "_Undo"
 msgstr "실행 취소(_U)"
 
@@ -1072,27 +1076,27 @@ msgstr "실행 취소(_U)"
 msgid "Main Menu"
 msgstr "주 메뉴"
 
-#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
 msgid "_Today"
 msgstr "오늘(_T)"
 
-#: src/gui/gcal-window.ui:222
+#: src/gui/gcal-window.ui:223
 msgid "_Week"
 msgstr "주(_W)"
 
-#: src/gui/gcal-window.ui:237
+#: src/gui/gcal-window.ui:238
 msgid "_Month"
 msgstr "월(_M)"
 
-#: src/gui/gcal-window.ui:278
+#: src/gui/gcal-window.ui:279
 msgid "_Online Accounts…"
 msgstr "온라인 계정(_O)…"
 
-#: src/gui/gcal-window.ui:290
+#: src/gui/gcal-window.ui:291
 msgid "_Keyboard Shortcuts"
 msgstr "키보드 바로 가기 키(_K)"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:295
 msgid "_About Calendar"
 msgstr "달력 정보(_A)"
 
@@ -1229,11 +1233,11 @@ msgstr "iCalendar(.ics) 파일이 아닙니다"
 msgid "Description"
 msgstr "설명"
 
-#: src/gui/views/gcal-agenda-view.c:373
+#: src/gui/views/gcal-agenda-view.c:366
 msgid "On-going"
 msgstr "진행중"
 
-#: src/gui/views/gcal-agenda-view.ui:36
+#: src/gui/views/gcal-agenda-view.ui:19
 msgid "No events"
 msgstr "행사 없음"
 
@@ -1241,21 +1245,21 @@ msgstr "행사 없음"
 msgid "New Event…"
 msgstr "새 행사…"
 
-#: src/gui/views/gcal-week-grid.c:581
+#: src/gui/views/gcal-week-grid.c:576
 msgid "00 AM"
 msgstr "오전 00"
 
-#: src/gui/views/gcal-week-grid.c:584
+#: src/gui/views/gcal-week-grid.c:579
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:478
+#: src/gui/views/gcal-week-header.c:472
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "다른 행사 %d개"
 
-#: src/gui/views/gcal-week-header.c:1006
+#: src/gui/views/gcal-week-header.c:1000
 #, c-format
 msgid "week %d"
 msgstr "%d주"
@@ -1360,9 +1364,6 @@ msgstr "모든 행사(_A)"
 
 #~ msgid "Calendar Address"
 #~ msgstr "달력 주소"
-
-#~ msgid "Enter your credentials"
-#~ msgstr "인증 정보 입력"
 
 #~ msgid "All day"
 #~ msgstr "종일"
