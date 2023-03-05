@@ -272,6 +272,7 @@ main (gint   argc,
       gchar *argv[])
 {
   g_test_init (&argc, &argv, NULL);
+  g_test_bug_base ("https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/");
 
   g_test_add_func ("/server/init", server_init);
   g_test_add_func ("/server/no-auth/empty", server_request_no_auth_empty);

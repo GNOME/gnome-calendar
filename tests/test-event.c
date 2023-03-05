@@ -250,6 +250,7 @@ main (gint   argc,
   g_setenv ("TZ", "UTC", TRUE);
 
   g_test_init (&argc, &argv, NULL);
+  g_test_bug_base ("https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/");
 
   g_test_add_func ("/event/new", event_new);
   g_test_add_func ("/event/clone", event_clone);
