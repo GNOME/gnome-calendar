@@ -1134,13 +1134,12 @@ void
 gcal_window_set_search_query (GcalWindow  *self,
                               const gchar *query)
 {
-  //GtkEntry *entry;
+  GtkWidget *search_button;
 
   g_return_if_fail (GCAL_IS_WINDOW (self));
 
-  // TODO
-  //entry = gcal_search_button_get_entry (self->search_button);
-  //gtk_entry_set_text (GTK_ENTRY (entry), query);
+  search_button = gcal_toolbar_end_get_search_button (self->toolbar_end);
+  gcal_search_button_search (GCAL_SEARCH_BUTTON (search_button), query);
 }
 
 /**

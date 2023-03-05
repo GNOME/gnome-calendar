@@ -132,3 +132,11 @@ gcal_toolbar_end_init (GcalToolbarEnd *self)
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }
+
+GtkWidget *
+gcal_toolbar_end_get_search_button (GcalToolbarEnd *self)
+{
+  g_return_val_if_fail (GCAL_IS_TOOLBAR_END (self), NULL);
+
+  return GTK_WIDGET (self->search_button);
+}

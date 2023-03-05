@@ -26,7 +26,8 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_TOOLBAR_END (gcal_toolbar_end_get_type())
-
 G_DECLARE_FINAL_TYPE (GcalToolbarEnd, gcal_toolbar_end, GCAL, TOOLBAR_END, AdwBin)
+
+GtkWidget *          gcal_toolbar_end_get_search_button          (GcalToolbarEnd     *self);
 
 G_END_DECLS

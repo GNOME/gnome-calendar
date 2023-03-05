@@ -372,3 +372,13 @@ gcal_search_button_init (GcalSearchButton *self)
 
   gtk_widget_set_parent (GTK_WIDGET (self->popover), GTK_WIDGET (self));
 }
+
+void
+gcal_search_button_search (GcalSearchButton *self,
+                           const gchar      *search_text)
+{
+  g_return_if_fail (GCAL_IS_SEARCH_BUTTON (self));
+
+  gtk_widget_grab_focus (GTK_WIDGET (self));
+  gtk_editable_set_text (self->entry, search_text);
+}
