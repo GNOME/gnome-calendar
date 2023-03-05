@@ -82,6 +82,43 @@ discoverer_file (void)
 
 /*********************************************************************************************************************/
 
+static void
+discoverer_invalid_https_only_cb (GObject      *source_object,
+                                  GAsyncResult *result,
+                                  gpointer      user_data)
+{
+  g_autoptr (GPtrArray) sources = NULL;
+  g_autoptr (GError) error = NULL;
+  GMainLoop *mainloop = user_data;
+
+  sources = gcal_discover_sources_from_uri_finish (result, &error);
+  g_assert_error (error, G_URI_ERROR, G_URI_ERROR_FAILED);
+  g_assert_null (sources);
+
+  g_main_loop_quit (mainloop);
+}
+
+static void
+discoverer_invalid_https_only (void)
+{
+  g_autoptr (GMainLoop) mainloop = NULL;
+
+  g_test_bug ("794");
+
+  mainloop = g_main_loop_new (NULL, FALSE);
+
+  gcal_discover_sources_from_uri ("https://",
+                                  NULL,
+                                  NULL,
+                                  NULL,
+                                  discoverer_invalid_https_only_cb,
+                                  mainloop);
+
+  g_main_loop_run (mainloop);
+}
+
+/*********************************************************************************************************************/
+
 #if 0
 
 static void
@@ -184,6 +221,7 @@ main (gint   argc,
   g_test_bug_base ("https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/");
 
   g_test_add_func ("/discoverer/file", discoverer_file);
+  g_test_add_func ("/discoverer/invalid-https-only", discoverer_invalid_https_only);
   //g_test_add_func ("/discoverer/webdav/unauthorized", discoverer_webdav_unauthorized);
 
   return g_test_run ();

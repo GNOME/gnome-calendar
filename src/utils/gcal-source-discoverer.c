@@ -208,6 +208,26 @@ is_authentication_error (gint code)
   return FALSE;
 }
 
+static GUri *
+create_and_validate_uri (const gchar  *uri,
+                         GError      **error)
+{
+  g_autoptr (GUri) guri = NULL;
+
+  guri = g_uri_parse (uri, SOUP_HTTP_URI_FLAGS | G_URI_FLAGS_PARSE_RELAXED, error);
+
+  if (!guri)
+    GCAL_RETURN (NULL);
+
+  if (!g_uri_get_host (guri) || g_uri_get_host (guri)[0] == '\0')
+    {
+      g_set_error (error, G_URI_ERROR, G_URI_ERROR_FAILED, "Invalid URI");
+      return NULL;
+    }
+
+  return g_steal_pointer (&guri);
+}
+
 
 /*
  * Callbacks
@@ -250,7 +270,7 @@ discover_file_in_thread (DiscovererData  *data,
 
   GCAL_ENTRY;
 
-  guri = g_uri_parse (data->uri, SOUP_HTTP_URI_FLAGS | G_URI_FLAGS_PARSE_RELAXED, error);
+  guri = create_and_validate_uri (data->uri, error);
 
   if (!guri)
     GCAL_RETURN (NULL);
@@ -319,12 +339,18 @@ discover_webdav_in_thread (DiscovererData  *data,
   g_autoptr (ESource) source = NULL;
   g_autoptr (GError) local_error = NULL;
   g_autofree gchar *certificate_pem = NULL;
+  g_autoptr (GUri) guri = NULL;
   GTlsCertificateFlags flags;
   GSList *discovered_sources = NULL;
   GSList *user_addresses = NULL;
   GSList *l;
 
   GCAL_ENTRY;
+
+  guri = create_and_validate_uri (data->uri, error);
+
+  if (!guri)
+    GCAL_RETURN (NULL);
 
   credentials = e_named_parameters_new ();
   e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, data->username);
