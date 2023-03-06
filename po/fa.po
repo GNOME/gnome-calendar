@@ -9,16 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2022-08-21 01:53+0430\n"
-"Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
+"POT-Creation-Date: 2023-03-03 22:56+0000\n"
+"PO-Revision-Date: 2023-03-06 12:04+0330\n"
+"Last-Translator: MohammadSaleh Kamyab <mskf1383@envs.net>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -200,8 +200,8 @@ msgid "Select a file"
 msgstr "گزینش یک پرونده"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 msgid "Cancel"
 msgstr "لغو"
@@ -210,11 +210,11 @@ msgstr "لغو"
 msgid "Open"
 msgstr "بازکردن"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:512
+#: src/gui/calendar-management/gcal-new-calendar-page.c:517
 msgid "New Calendar"
 msgstr "تقویم جدید"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:690
+#: src/gui/calendar-management/gcal-new-calendar-page.c:695
 msgid "Calendar files"
 msgstr "پرونده‌های تقویم"
 
@@ -240,7 +240,6 @@ msgid "Open a File"
 msgstr "گشودن یک پرونده"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "تقویم‌ها"
 
@@ -252,19 +251,23 @@ msgstr ""
 "اگر تقویم مربوط به یکی از حساب‌های برخطتان است، می‌توانید آن را از طریق <a "
 "href=\"GOA\">تنظیمات حساب‌های برخط</a> بیفزایید."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
-msgid "User"
-msgstr "کاربر"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+msgid "Credentials"
+msgstr "اعتبارنامه‌ها"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-msgid "Password"
-msgstr "گذرواژه"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Connect"
 msgstr "اتصال"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+msgid "User"
+msgstr "کاربر"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "Password"
+msgstr "گذرواژه"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "افزودن"
@@ -384,7 +387,7 @@ msgstr "یادآوری‌ها"
 msgid "Notes"
 msgstr "یادداشت‌ها"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "حذف رویداد"
 
@@ -436,17 +439,19 @@ msgstr "%Aٔ پیش"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "دیروز"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "امروز"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "فردا"
 
@@ -584,14 +589,14 @@ msgstr "رونوشت © ۲۰۱۲-%Id نگارندگان تقویم"
 msgid "The GNOME Project"
 msgstr "پروژهٔ گنوم"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "آرش موسوی<mousavi.arash@gmail.com>\n"
 "دانیال بهزادی <dani.behzi@ubuntu.com>\n"
 "امیر فارسی <amir_farsi@ymail.com>"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
 msgid "Weather"
 msgstr "آب‌وهوا"
 
@@ -599,16 +604,20 @@ msgstr "آب‌وهوا"
 msgid "Manage your calendars"
 msgstr "مدیریت تقویم‌هایتان"
 
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "_تقویم‌ها"
+
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "همگام‌سازی تقویم‌های دوردست…"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
 msgstr "_همگام‌سازی تقویم‌ها"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
 msgstr "مدیریت تقویم‌ها…"
 
@@ -773,7 +782,7 @@ msgid "Edit…"
 msgstr "ویرایش…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "در %s"
@@ -794,7 +803,11 @@ msgstr "وربای"
 msgid "Zoom"
 msgstr "زوم"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+msgid "Microsoft Teams"
+msgstr "تیمز مایکروسافت"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "خدمت ناشناخته"
 
@@ -1044,35 +1057,43 @@ msgstr "نمایش آب‌وهوا"
 msgid "Automatic Location"
 msgstr "موقعیت خودکار"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:713
 msgid "Another event deleted"
 msgstr "رویدادی دیگر حذف شد"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:713
 msgid "Event deleted"
 msgstr "رویداد حذف شد"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:715
 msgid "_Undo"
 msgstr "_برگردان"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "هفته"
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "فهرست اصلی"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "ماه"
+#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
+msgid "_Today"
+msgstr "ا_مروز"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:223
+msgid "_Week"
+msgstr "_هفته"
+
+#: src/gui/gcal-window.ui:238
+msgid "_Month"
+msgstr "م_اه"
+
+#: src/gui/gcal-window.ui:279
 msgid "_Online Accounts…"
 msgstr "حساب‌های _برخط…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:291
 msgid "_Keyboard Shortcuts"
 msgstr "_میان‌برهای صفحه‌کلید"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:295
 msgid "_About Calendar"
 msgstr "_دربارهٔ تقویم"
 
@@ -1161,7 +1182,7 @@ msgstr[0] "درون‌ریزی %Id تقویم"
 msgid "Import Files…"
 msgstr "درون‌ریزی پرونده…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_لغو"
 
@@ -1209,30 +1230,38 @@ msgstr "یک پروندهٔ آی‌کلندر (‪.ics‬) نیست"
 msgid "Description"
 msgstr "شرح"
 
+#: src/gui/views/gcal-agenda-view.c:366
+msgid "On-going"
+msgstr "در دست اقدام"
+
+#: src/gui/views/gcal-agenda-view.ui:19
+msgid "No events"
+msgstr "بدون رویداد"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "رویداد جدید…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:576
 msgid "00 AM"
 msgstr "نیمه‌شب"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:579
 msgid "00:00"
 msgstr "۰۰:۰۰"
 
-#: src/gui/views/gcal-week-header.c:478
+#: src/gui/views/gcal-week-header.c:472
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "%Id رویداد دیگر"
 
-#: src/gui/views/gcal-week-header.c:1006
+#: src/gui/views/gcal-week-header.c:1000
 #, c-format
 msgid "week %d"
 msgstr "هفتهٔ %Id"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have selected "
 "should be applied to:"
@@ -1240,15 +1269,15 @@ msgstr ""
 "رویدادی که می‌خواهید ویرایش کنید تکرار می‌شود. تغییراتی که انتخاب کرده‌اید باید "
 "اعمال شود به:"
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "_فقط این رویداد"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "_تمام رویدادهای بعدی"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "_تمام رویدادها"
 
@@ -1273,9 +1302,6 @@ msgstr "_تمام رویدادها"
 
 #~ msgid "%B %d"
 #~ msgstr "%Od %OB"
-
-#~ msgid "No events"
-#~ msgstr "بدون رویداد"
 
 #~ msgid "Add Event…"
 #~ msgstr "افزودن رویداد…"
@@ -1323,9 +1349,6 @@ msgstr "_تمام رویدادها"
 #~ msgid "Add Eve_nt…"
 #~ msgstr "اضافه کردن _رویداد…"
 
-#~ msgid "_Calendars"
-#~ msgstr "_تقویم‌ها"
-
 #~ msgid "_About"
 #~ msgstr "_درباره"
 
@@ -1341,17 +1364,11 @@ msgstr "_تمام رویدادها"
 #~ msgid "Nextcloud"
 #~ msgstr "Nextcloud"
 
-#~ msgid "Microsoft Exchange"
-#~ msgstr "مایکروسافت Exchange"
-
 #~ msgid "Overview"
 #~ msgstr "نمای کلی"
 
 #~ msgid "Calendar Address"
 #~ msgstr "آدرس تقویم"
-
-#~ msgid "Enter your credentials"
-#~ msgstr "اطلاعات خود را وارد کنید"
 
 #~ msgid "Copyright © %d The Calendar authors"
 #~ msgstr "حق رونوشت محفوظ © %Id مؤلفان تقویم"
