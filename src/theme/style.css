@@ -133,16 +133,12 @@ popover.event-popover > contents {
 
 /* Edit dialog's header button */
 .sources-button {
-    margin-top: 0;
-    margin-bottom: 0;
-    border-radius: 0;
-    border-top-style: none;
-    border-bottom-style: none;
+    margin-top: -6px;
+    margin-bottom: -6px;
 }
 
-.sources-button:hover:not(:backdrop) {
-    background-image: none;
-    text-shadow: none;
+.sources-button > button {
+    border-radius: 0;
 }
 
 /* defeats the ugly hover effect of the calendar color dot on buttons */
