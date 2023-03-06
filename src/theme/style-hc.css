@@ -1,0 +1,5 @@
+.sources-button > button:hover,
+.sources-button > button:active,
+.sources-button > button:checked {
+    box-shadow: inset 1px 0 @borders, inset -1px 0 @borders;
+}
