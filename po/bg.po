@@ -1,13 +1,14 @@
 # Bulgarian translation of gnome-calendar po-file.
 # Copyright (C) 2022 Free Software Foundation, Inc.
+# Copyright (C) 2023 Alexander Shopov <ash@kambanaria.org>.
 # This file is distributed under the same license as the gnome-calendar package.
-# Alexander Shopov <ash@kambanaria.org> 2022.
+# Alexander Shopov <ash@kambanaria.org> 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-09-16 18:47+0000\n"
-"PO-Revision-Date: 2022-10-02 18:30+0200\n"
+"POT-Creation-Date: 2023-03-03 22:56+0000\n"
+"PO-Revision-Date: 2023-03-07 10:42+0200\n"
 "Last-Translator: Alexander Shopov <ash@kambanaria.org>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "Language: bg\n"
@@ -199,8 +200,8 @@ msgid "Select a file"
 msgstr "Избор на файл"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 msgid "Cancel"
 msgstr "Отказ"
@@ -209,11 +210,11 @@ msgstr "Отказ"
 msgid "Open"
 msgstr "Отваряне"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:512
+#: src/gui/calendar-management/gcal-new-calendar-page.c:517
 msgid "New Calendar"
 msgstr "Нов календар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:690
+#: src/gui/calendar-management/gcal-new-calendar-page.c:695
 msgid "Calendar files"
 msgstr "Файлове с календари"
 
@@ -239,7 +240,6 @@ msgid "Open a File"
 msgstr "Отваряне на файл"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
 msgid "Calendars"
 msgstr "Календари"
 
@@ -247,23 +247,25 @@ msgstr "Календари"
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
-msgstr ""
-"Ако календарът принадлежи към някоя от регистрациите ви в Интернет, може да "
-"го добавите през <a href=\"GOA\">настройките на Регистрациите в Интернет</a>."
+msgstr "Ако календарът принадлежи към някоя от регистрациите ви в Интернет, може да го добавите през <a href='GOA'>настройките на Регистрациите в Интернет</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
-msgid "User"
-msgstr "Потребител"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+msgid "Credentials"
+msgstr "Идентификация"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-msgid "Password"
-msgstr "Парола"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Connect"
 msgstr "Свързване"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+msgid "User"
+msgstr "Потребител"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "Password"
+msgstr "Парола"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Добавяне"
@@ -396,7 +398,7 @@ msgstr "Напомняния"
 msgid "Notes"
 msgstr "Бележки"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "Изтриване на събитие"
 
@@ -454,7 +456,6 @@ msgstr "Вчера"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 #: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Днес"
@@ -599,7 +600,7 @@ msgstr "Авторски права © 2012—%d Сътрудниците на �
 msgid "The GNOME Project"
 msgstr "Проектът GNOME"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "Александър Шопов &lt;<a href='mailto:ash@kambanaria.org'>ash@kambanaria.org</"
@@ -612,7 +613,7 @@ msgstr ""
 "Докладвайте за грешки в превода в <a href='https://fsa-bg.org/project/gtp/"
 "newticket'>съответния раздел</a>."
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
 msgid "Weather"
 msgstr "Прогноза за времето"
 
@@ -620,16 +621,20 @@ msgstr "Прогноза за времето"
 msgid "Manage your calendars"
 msgstr "Управление на календарите"
 
-#: src/gui/gcal-calendar-button.ui:41
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "_Календари"
+
+#: src/gui/gcal-calendar-button.ui:42
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Синхронизиране с отдалечените календари…"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:72
 msgid "_Synchronize Calendars"
 msgstr "_Синхронизиране на календарите"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:76
 msgid "Manage Calendars…"
 msgstr "Управление на календарите…"
 
@@ -794,7 +799,7 @@ msgid "Edit…"
 msgstr "Редактиране…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "При %s"
@@ -815,7 +820,11 @@ msgstr "Whereby"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "Непозната услуга"
 
@@ -1065,35 +1074,43 @@ msgstr "Прогноза на времето"
 msgid "Automatic Location"
 msgstr "Автоматично местоположение"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:713
 msgid "Another event deleted"
 msgstr "Друго събитие е изтрито"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:713
 msgid "Event deleted"
 msgstr "Събитието е изтрито"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:715
 msgid "_Undo"
 msgstr "_Отмяна"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "Седмица"
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "Основно меню"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "Месец"
+#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
+msgid "_Today"
+msgstr "_Днес"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:223
+msgid "_Week"
+msgstr "_Седмица"
+
+#: src/gui/gcal-window.ui:238
+msgid "_Month"
+msgstr "_Месец"
+
+#: src/gui/gcal-window.ui:279
 msgid "_Online Accounts…"
 msgstr "Регистрации в Интернет…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:291
 msgid "_Keyboard Shortcuts"
 msgstr "_Клавишни комбинации"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:295
 msgid "_About Calendar"
 msgstr "_Относно „Календари“"
 
@@ -1183,7 +1200,7 @@ msgstr[1] "Внасяне на %d събития"
 msgid "Import Files…"
 msgstr "_Внасяне на файлове…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "_Отказ"
 
@@ -1231,7 +1248,11 @@ msgstr "Файлът не е във формат iCalendar (ics)"
 msgid "Description"
 msgstr "Описание"
 
-#: src/gui/views/gcal-agenda-view.ui:36
+#: src/gui/views/gcal-agenda-view.c:366
+msgid "On-going"
+msgstr "Продължава"
+
+#: src/gui/views/gcal-agenda-view.ui:19
 msgid "No events"
 msgstr "Няма събития"
 
@@ -1239,41 +1260,41 @@ msgstr "Няма събития"
 msgid "New Event…"
 msgstr "Ново събитие…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:576
 msgid "00 AM"
 msgstr "00 пр.об."
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:579
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:478
+#: src/gui/views/gcal-week-header.c:472
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Друго събитие"
 msgstr[1] "%d други събития"
 
-#: src/gui/views/gcal-week-header.c:1006
+#: src/gui/views/gcal-week-header.c:1000
 #, c-format
 msgid "week %d"
 msgstr "%d-а седмица"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr ""
 "Събитието, което редактирате, се повтаря. Промените да се приложат към:"
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "Само _това събитие"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "_Следващите събития"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "_Всички събития"
