@@ -1,3 +1,9 @@
+Major changes in 44.rc:
+* Various fixes to calendar parsing
+* Fix sidebar not opening events
+* Fix search not working anymore
+* Updated translations
+
 Major changes in 44.beta:
 * Fix moving event to different calendars
 * Improve default sizing of event editor dialog
