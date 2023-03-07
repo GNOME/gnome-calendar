@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-01-25 18:24+0000\n"
-"PO-Revision-Date: 2023-02-28 00:45+0100\n"
+"POT-Creation-Date: 2023-03-03 22:56+0000\n"
+"PO-Revision-Date: 2023-03-07 01:05+0100\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
@@ -204,8 +204,8 @@ msgid "Select a file"
 msgstr "Válasszon egy fájlt"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 msgid "Cancel"
 msgstr "Mégse"
@@ -214,11 +214,11 @@ msgstr "Mégse"
 msgid "Open"
 msgstr "Megnyitás"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:512
+#: src/gui/calendar-management/gcal-new-calendar-page.c:517
 msgid "New Calendar"
 msgstr "Új naptár"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:690
+#: src/gui/calendar-management/gcal-new-calendar-page.c:695
 msgid "Calendar files"
 msgstr "Naptárfájlok"
 
@@ -252,22 +252,26 @@ msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"Ha a naptár az online fiókjai egyikéhez tartozik, akkor az <a href=\"GOA"
-"\">online fiókbeállításokon</a> keresztül is hozzáadhatja."
+"Ha a naptár az online fiókjai egyikéhez tartozik, akkor az <a "
+"href=\"GOA\">online fiókbeállításokon</a> keresztül is hozzáadhatja."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
-msgid "User"
-msgstr "Felhasználó"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+msgid "Credentials"
+msgstr "Hitelesítési adatok"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-msgid "Password"
-msgstr "Jelszó"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Connect"
 msgstr "Kapcsolódás"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+msgid "User"
+msgstr "Felhasználó"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "Password"
+msgstr "Jelszó"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Hozzáadás"
@@ -608,7 +612,7 @@ msgstr ""
 "Úr Balázs <ur dot balazs at fsf dot hu>\n"
 "Meskó Balázs <mesko dot balazs at fsf dot hu>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
 msgid "Weather"
 msgstr "Időjárás"
 
@@ -617,7 +621,6 @@ msgid "Manage your calendars"
 msgstr "Naptárak kezelése"
 
 #: src/gui/gcal-calendar-button.ui:23
-#| msgid "Calendars"
 msgid "_Calendars"
 msgstr "_Naptárak"
 
@@ -1070,15 +1073,15 @@ msgstr "Időjárás megjelenítése"
 msgid "Automatic Location"
 msgstr "Automatikus helymeghatározás"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:713
 msgid "Another event deleted"
 msgstr "Egy másik esemény törölve"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:713
 msgid "Event deleted"
 msgstr "Esemény törölve"
 
-#: src/gui/gcal-window.c:703
+#: src/gui/gcal-window.c:715
 msgid "_Undo"
 msgstr "_Visszavonás"
 
@@ -1086,30 +1089,27 @@ msgstr "_Visszavonás"
 msgid "Main Menu"
 msgstr "Főmenü"
 
-#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
-#| msgid "Today"
+#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
 msgid "_Today"
 msgstr "_Ma"
 
-#: src/gui/gcal-window.ui:222
-#| msgid "Week"
+#: src/gui/gcal-window.ui:223
 msgid "_Week"
 msgstr "_Hét"
 
-#: src/gui/gcal-window.ui:237
-#| msgid "Month"
+#: src/gui/gcal-window.ui:238
 msgid "_Month"
 msgstr "Hó_nap"
 
-#: src/gui/gcal-window.ui:278
+#: src/gui/gcal-window.ui:279
 msgid "_Online Accounts…"
 msgstr "_Online fiókok…"
 
-#: src/gui/gcal-window.ui:290
+#: src/gui/gcal-window.ui:291
 msgid "_Keyboard Shortcuts"
 msgstr "_Gyorsbillentyűk"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:295
 msgid "_About Calendar"
 msgstr "A Naptár _névjegye"
 
@@ -1247,11 +1247,11 @@ msgstr "A fájl nem iCalendar-fájl (.ics)"
 msgid "Description"
 msgstr "Leírás"
 
-#: src/gui/views/gcal-agenda-view.c:373
+#: src/gui/views/gcal-agenda-view.c:366
 msgid "On-going"
 msgstr "Folyamatban lévő"
 
-#: src/gui/views/gcal-agenda-view.ui:36
+#: src/gui/views/gcal-agenda-view.ui:19
 msgid "No events"
 msgstr "Nincsenek események"
 
@@ -1259,22 +1259,22 @@ msgstr "Nincsenek események"
 msgid "New Event…"
 msgstr "Új esemény…"
 
-#: src/gui/views/gcal-week-grid.c:581
+#: src/gui/views/gcal-week-grid.c:576
 msgid "00 AM"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-grid.c:584
+#: src/gui/views/gcal-week-grid.c:579
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:478
+#: src/gui/views/gcal-week-header.c:472
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Egyéb esemény"
 msgstr[1] "Egyéb %d esemény"
 
-#: src/gui/views/gcal-week-header.c:1006
+#: src/gui/views/gcal-week-header.c:1000
 #, c-format
 msgid "week %d"
 msgstr "%d. hét"
