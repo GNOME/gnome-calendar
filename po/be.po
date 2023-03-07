@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-01-19 19:17+0000\n"
-"PO-Revision-Date: 2023-01-20 19:20+0300\n"
+"POT-Creation-Date: 2023-03-07 10:08+0000\n"
+"PO-Revision-Date: 2023-03-08 00:19+0300\n"
 "Last-Translator: Yuras Shumovich <shumovichy@gmail.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -85,11 +85,11 @@ msgstr "Памер акна (шырыня і вышыня)."
 
 #: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Window position"
-msgstr "Размяшчэнне акна"
+msgstr "Пазіцыя акна"
 
 #: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
-msgstr "Размяшчэнне акна (x, y)."
+msgstr "Пазіцыя акна (x і y)."
 
 #: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
@@ -157,7 +157,7 @@ msgstr "Дадаць каляндар…"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:19
 msgid "Account"
-msgstr "Акаўнт"
+msgstr "Уліковы запіс"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:46
 msgid "Settings"
@@ -196,8 +196,8 @@ msgid "Select a file"
 msgstr "Выбраць файл"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 msgid "Cancel"
 msgstr "Скасаваць"
@@ -206,11 +206,11 @@ msgstr "Скасаваць"
 msgid "Open"
 msgstr "Адкрыць"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:512
+#: src/gui/calendar-management/gcal-new-calendar-page.c:517
 msgid "New Calendar"
 msgstr "Новы каляндар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:690
+#: src/gui/calendar-management/gcal-new-calendar-page.c:695
 msgid "Calendar files"
 msgstr "Файлы календара"
 
@@ -244,22 +244,26 @@ msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"Калі каляндар знаходзіцца ў адным з вашых сеціўных акаўнтаў, яго можна "
-"дадаць праз <a href=\"GOA\">налады сеціўных акаўнтаў</a>."
+"Калі каляндар знаходзіцца ў адным з вашых сеткавых уліковых запісаў, яго "
+"можна дадаць праз <a href=\"GOA\">налады ўліковых запісаў у сетцы</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
-msgid "User"
-msgstr "Карыстальнік"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+msgid "Credentials"
+msgstr "Уліковыя даныя"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-msgid "Password"
-msgstr "Пароль"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Connect"
 msgstr "Падлучыцца"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+msgid "User"
+msgstr "Карыстальнік"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "Password"
+msgstr "Пароль"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Дадаць"
@@ -613,7 +617,7 @@ msgstr ""
 "Uladzimir Manulenka <vlma@tut.by>\n"
 "Юрась Шумовіч <shumovichy@gmail.com>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
 msgid "Weather"
 msgstr "Надвор'е"
 
@@ -656,7 +660,7 @@ msgstr "Красавік"
 
 #: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:259
 msgid "May"
-msgstr "Травень"
+msgstr "Май"
 
 #: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:260
 msgid "June"
@@ -1015,7 +1019,7 @@ msgstr "Новая падзея %d красавіка"
 #: src/gui/gcal-quick-add-popover.c:398
 #, c-format
 msgid "New Event on May %d"
-msgstr "Новая падзея %d траўня"
+msgstr "Новая падзея %d мая"
 
 #: src/gui/gcal-quick-add-popover.c:399
 #, c-format
@@ -1074,15 +1078,15 @@ msgstr "Паказваць надвор'е"
 msgid "Automatic Location"
 msgstr "Аўтаматычна вызначаць месцазнаходжанне"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:714
 msgid "Another event deleted"
 msgstr "Выдалена яшчэ адна падзея"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:714
 msgid "Event deleted"
-msgstr "Падзея выдаленая"
+msgstr "Падзея выдалена"
 
-#: src/gui/gcal-window.c:703
+#: src/gui/gcal-window.c:716
 msgid "_Undo"
 msgstr "_Адрабіць"
 
@@ -1090,34 +1094,34 @@ msgstr "_Адрабіць"
 msgid "Main Menu"
 msgstr "Галоўнае меню"
 
-#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
 msgid "_Today"
 msgstr "_Сёння"
 
-#: src/gui/gcal-window.ui:222
+#: src/gui/gcal-window.ui:223
 msgid "_Week"
 msgstr "_Тыдзень"
 
-#: src/gui/gcal-window.ui:237
+#: src/gui/gcal-window.ui:238
 msgid "_Month"
 msgstr "_Месяц"
 
-#: src/gui/gcal-window.ui:278
+#: src/gui/gcal-window.ui:279
 msgid "_Online Accounts…"
-msgstr "_Сеціўныя акаўнты…"
+msgstr "_Уліковыя запісы ў сетцы…"
 
-#: src/gui/gcal-window.ui:290
+#: src/gui/gcal-window.ui:291
 msgid "_Keyboard Shortcuts"
 msgstr "Спалучэнні _клавіш"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:295
 msgid "_About Calendar"
 msgstr "Пр_а каляндар"
 
 #: src/gui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
-msgstr "Агульнае"
+msgstr "Агульныя"
 
 #: src/gui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
@@ -1249,11 +1253,11 @@ msgstr "Файл не з'яўляецца файлам iCalendar (.ics)"
 msgid "Description"
 msgstr "Апісанне"
 
-#: src/gui/views/gcal-agenda-view.c:373
+#: src/gui/views/gcal-agenda-view.c:366
 msgid "On-going"
 msgstr "Працягваецца"
 
-#: src/gui/views/gcal-agenda-view.ui:36
+#: src/gui/views/gcal-agenda-view.ui:19
 msgid "No events"
 msgstr "Няма падзей"
 
@@ -1261,15 +1265,15 @@ msgstr "Няма падзей"
 msgid "New Event…"
 msgstr "Новая падзея…"
 
-#: src/gui/views/gcal-week-grid.c:581
+#: src/gui/views/gcal-week-grid.c:576
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:584
+#: src/gui/views/gcal-week-grid.c:579
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:478
+#: src/gui/views/gcal-week-header.c:472
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1277,7 +1281,7 @@ msgstr[0] "%d іншая падзея"
 msgstr[1] "%d іншыя падзеі"
 msgstr[2] "%d іншых падзей"
 
-#: src/gui/views/gcal-week-header.c:1006
+#: src/gui/views/gcal-week-header.c:1000
 #, c-format
 msgid "week %d"
 msgstr "%d тыдзень"
