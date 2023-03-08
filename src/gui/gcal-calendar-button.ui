@@ -38,7 +38,6 @@
                 <property name="name">spinner</property>
                 <property name="child">
                   <object class="GtkSpinner" id="refreshing_spinner">
-                    <property name="spinning">True</property>
                     <property name="tooltip_text" translatable="yes" context="tooltip">Synchronizing remote calendars…</property>
                   </object>
                 </property>
