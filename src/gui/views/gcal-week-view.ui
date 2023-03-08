@@ -18,8 +18,8 @@
         <!-- Zoom Gesture -->
         <child>
           <object class="GtkGestureZoom">
-            <signal name="scale-changed" handler="on_zoom_gesture_scale_changed_cb" object="GcalWeekView" swapped="yes" />
-            <signal name="begin" handler="on_zoom_gesture_begin_cb" object="GcalWeekView" swapped="yes" />
+            <signal name="scale-changed" handler="on_zoom_gesture_scale_changed_cb" object="GcalWeekView" swapped="no" />
+            <signal name="begin" handler="on_zoom_gesture_begin_cb" object="GcalWeekView" swapped="no" />
             <signal name="end" handler="on_zoom_gesture_end_cb" object="GcalWeekView" swapped="no" />
           </object>
         </child>
@@ -29,8 +29,8 @@
           <object class="GtkEventControllerScroll">
             <property name="propagation-phase">capture</property>
             <property name="flags">vertical|kinetic</property>
-            <signal name="scroll-begin" handler="on_scroll_controller_scroll_begin_cb" object="GcalWeekView" swapped="yes" />
-            <signal name="scroll" handler="on_scroll_controller_scroll_cb" object="GcalWeekView" swapped="yes" />
+            <signal name="scroll-begin" handler="on_scroll_controller_scroll_begin_cb" object="GcalWeekView" swapped="no" />
+            <signal name="scroll" handler="on_scroll_controller_scroll_cb" object="GcalWeekView" swapped="no" />
             <signal name="scroll-end" handler="on_scroll_controller_scroll_end_cb" object="GcalWeekView" swapped="no" />
           </object>
         </child>
@@ -39,9 +39,9 @@
         <child>
           <object class="GtkEventControllerMotion">
             <property name="propagation-phase">capture</property>
-            <signal name="enter" handler="on_motion_controller_enter_cb" object="GcalWeekView" swapped="yes" />
-            <signal name="motion" handler="on_motion_controller_motion_cb" object="GcalWeekView" swapped="yes" />
-            <signal name="leave" handler="on_motion_controller_leave_cb" object="GcalWeekView" swapped="yes" />
+            <signal name="enter" handler="on_motion_controller_enter_cb" object="GcalWeekView" swapped="no" />
+            <signal name="motion" handler="on_motion_controller_motion_cb" object="GcalWeekView" swapped="no" />
+            <signal name="leave" handler="on_motion_controller_leave_cb" object="GcalWeekView" swapped="no" />
           </object>
         </child>
 
