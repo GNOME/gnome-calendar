@@ -54,11 +54,13 @@ struct _GcalWeekView
   gint                clicked_cell;
 
   gdouble             gesture_zoom_center;
-  gint                gesture_zoom_initial_height;
 
   gboolean            pointer_position_valid;
   gdouble             pointer_position_y;
   gdouble             scroll_scale;
+
+  gdouble             initial_zoom_level;
+  gdouble             zoom_level;
 };
 
 static void          schedule_position_scroll                    (GcalWeekView       *self);
@@ -81,12 +83,11 @@ G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
                                                 gcal_timeline_subscriber_interface_init));
 
-/* 60px * ⅓ * 48 rows + 1px * 47 lines = 1007px */
-#define HEIGHT_MIN 1007
 /* 60px * 1 * 48 rows + 1px * 47 lines = 2927px */
 #define HEIGHT_DEFAULT 2927
-/* 60px * 3 * 48 rows + 1px * 47 lines = 8687px */
-#define HEIGHT_MAX 8687
+
+#define MIN_ZOOM_LEVEL 0.334
+#define MAX_ZOOM_LEVEL 3.0
 
 /* Callbacks */
 static void
@@ -109,7 +110,8 @@ begin_zoom (GcalWeekView *self,
   height = gtk_adjustment_get_upper (vadjustment) - gtk_adjustment_get_lower (vadjustment);
 
   self->gesture_zoom_center = center / height;
-  self->gesture_zoom_initial_height = gtk_widget_get_allocated_height (self->content);
+
+  self->initial_zoom_level = self->zoom_level;
 }
 
 static void
@@ -120,10 +122,13 @@ apply_zoom (GcalWeekView *self,
   GtkAdjustment *vadjustment;
   gdouble height;
 
+  self->zoom_level = CLAMP (self->initial_zoom_level + (scale - 1.0),
+                            MIN_ZOOM_LEVEL,
+                            MAX_ZOOM_LEVEL);
+
   vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));
 
-  height = self->gesture_zoom_initial_height * scale;
-  height = CLAMP (height, HEIGHT_MIN, HEIGHT_MAX);
+  height = HEIGHT_DEFAULT * self->zoom_level;
 
   gtk_widget_set_size_request (self->content, -1, height);
   gtk_adjustment_set_lower (vadjustment, 0);
@@ -589,6 +594,8 @@ gcal_week_view_init (GcalWeekView *self)
   GtkSizeGroup *size_group;
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  self->zoom_level = 1.0;
 
   gtk_widget_set_size_request (self->content, -1, HEIGHT_DEFAULT);
 
