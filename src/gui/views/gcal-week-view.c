@@ -241,35 +241,35 @@ on_event_activated (GcalWeekView *self,
 }
 
 static void
-on_motion_controller_enter_cb (GcalWeekView             *self,
+on_motion_controller_enter_cb (GtkEventControllerMotion *controller,
                                gdouble                   x,
                                gdouble                   y,
-                               GtkEventControllerMotion *controller)
+                               GcalWeekView             *self)
 {
   self->pointer_position_valid = TRUE;
   self->pointer_position_y = y;
 }
 
 static void
-on_motion_controller_motion_cb (GcalWeekView             *self,
-                               gdouble                   x,
-                               gdouble                   y,
-                               GtkEventControllerMotion *controller)
+on_motion_controller_motion_cb (GtkEventControllerMotion *controller,
+                                gdouble                   x,
+                                gdouble                   y,
+                                GcalWeekView             *self)
 {
   self->pointer_position_valid = TRUE;
   self->pointer_position_y = y;
 }
 
 static void
-on_motion_controller_leave_cb (GcalWeekView             *self,
-                               GtkEventControllerMotion *controller)
+on_motion_controller_leave_cb (GtkEventControllerMotion *controller,
+                               GcalWeekView             *self)
 {
   self->pointer_position_valid = FALSE;
 }
 
 static void
-on_scroll_controller_scroll_begin_cb (GcalWeekView             *self,
-                                      GtkEventControllerScroll *controller)
+on_scroll_controller_scroll_begin_cb (GtkEventControllerScroll *controller,
+                                      GcalWeekView             *self)
 {
   gdouble view_center_y;
 
@@ -284,10 +284,10 @@ on_scroll_controller_scroll_begin_cb (GcalWeekView             *self,
 }
 
 static gboolean
-on_scroll_controller_scroll_cb (GcalWeekView             *self,
+on_scroll_controller_scroll_cb (GtkEventControllerScroll *controller,
                                 gdouble                   dx,
                                 gdouble                   dy,
-                                GtkEventControllerScroll *controller)
+                                GcalWeekView             *self)
 {
   gdouble scale, view_center_y;
 
@@ -315,9 +315,9 @@ on_scroll_controller_scroll_end_cb (GtkEventControllerScroll *controller,
 }
 
 static void
-on_zoom_gesture_scale_changed_cb (GcalWeekView   *self,
+on_zoom_gesture_scale_changed_cb (GtkGestureZoom *gesture,
                                   gdouble         scale,
-                                  GtkGestureZoom *gesture)
+                                  GcalWeekView   *self)
 {
   gdouble view_center_x, view_center_y;
 
@@ -327,9 +327,9 @@ on_zoom_gesture_scale_changed_cb (GcalWeekView   *self,
 }
 
 static void
-on_zoom_gesture_begin_cb (GcalWeekView     *self,
+on_zoom_gesture_begin_cb (GtkGesture       *gesture,
                           GdkEventSequence *sequence,
-                          GtkGesture       *gesture)
+                          GcalWeekView     *self)
 {
   gdouble view_center_x, view_center_y;
 
