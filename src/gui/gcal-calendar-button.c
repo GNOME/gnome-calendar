@@ -31,6 +31,7 @@ struct _GcalCalendarButton
 
   GtkWidget          *calendar_listbox;
   GtkStack           *icon_stack;
+  GtkSpinner         *refreshing_spinner;
 
   GcalContext        *context;
 
@@ -168,16 +169,16 @@ icon_change_timeout_cb (gpointer data)
 {
   GcalCalendarButton *self;
   GcalManager *manager;
+  gboolean synchronizing;
 
   self = GCAL_CALENDAR_BUTTON (data);
   manager = gcal_context_get_manager (self->context);
+  synchronizing = gcal_manager_get_synchronizing (manager);
 
   g_debug ("Updating calendar icon to spinner");
 
-  if (gcal_manager_get_synchronizing (manager))
-    gtk_stack_set_visible_child_name (self->icon_stack, "spinner");
-  else
-    gtk_stack_set_visible_child_name (self->icon_stack, "icon");
+  gtk_stack_set_visible_child_name (self->icon_stack, synchronizing ? "spinner" : "icon");
+  gtk_spinner_set_spinning (self->refreshing_spinner, synchronizing);
 
   self->icon_changed_source_id = 0;
   return G_SOURCE_REMOVE;
@@ -355,6 +356,7 @@ gcal_calendar_button_class_init (GcalCalendarButtonClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarButton, calendar_listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarButton, icon_stack);
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarButton, refreshing_spinner);
 
   gtk_widget_class_bind_template_callback (widget_class, on_listbox_row_activated_cb);
 }
