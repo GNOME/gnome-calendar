@@ -289,20 +289,47 @@ on_scroll_controller_scroll_cb (GtkEventControllerScroll *controller,
                                 gdouble                   dy,
                                 GcalWeekView             *self)
 {
-  gdouble scale, view_center_y;
+  GdkEvent *event;
+  gboolean discrete;
+  gdouble view_center_y;
+  gdouble scale;
 
   if (!(gtk_event_controller_get_current_event_state (GTK_EVENT_CONTROLLER (controller)) & GDK_CONTROL_MASK))
     return FALSE;
 
-  scale = dy / 100.0 + self->scroll_scale;
+  event = gtk_event_controller_get_current_event (GTK_EVENT_CONTROLLER (controller));
+
+  switch (gdk_scroll_event_get_direction (event))
+    {
+    case GDK_SCROLL_SMOOTH:
+      scale = dy / 100.0 + 1.0;
+      discrete = FALSE;
+      break;
+
+    case GDK_SCROLL_UP:
+    case GDK_SCROLL_DOWN:
+      scale = dy / 10.0 + 1.0;
+      discrete = TRUE;
+      break;
+
+    case GDK_SCROLL_LEFT:
+    case GDK_SCROLL_RIGHT:
+    default:
+      g_assert_not_reached ();
+    }
 
   if (self->pointer_position_valid)
     view_center_y = self->pointer_position_y;
   else
     view_center_y = gtk_widget_get_allocated_height (self->scrolled_window) / 2.0;
 
-  begin_zoom (self, view_center_y);
+  if (discrete)
+    begin_zoom (self, view_center_y);
+
   apply_zoom (self, view_center_y, scale);
+
+  if (discrete)
+    save_zoom_level (self);
 
   return TRUE;
 }
