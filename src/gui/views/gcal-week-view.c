@@ -57,7 +57,6 @@ struct _GcalWeekView
 
   gboolean            pointer_position_valid;
   gdouble             pointer_position_y;
-  gdouble             scroll_scale;
 
   gdouble             initial_zoom_level;
   gdouble             zoom_level;
@@ -272,8 +271,6 @@ on_scroll_controller_scroll_begin_cb (GtkEventControllerScroll *controller,
                                       GcalWeekView             *self)
 {
   gdouble view_center_y;
-
-  self->scroll_scale = 1.0;
 
   if (self->pointer_position_valid)
     view_center_y = self->pointer_position_y;
