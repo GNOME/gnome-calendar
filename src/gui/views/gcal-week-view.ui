@@ -28,7 +28,7 @@
           <object class="GtkEventControllerScroll">
             <property name="propagation-phase">capture</property>
             <property name="flags">vertical|kinetic</property>
-            <signal name="scroll" handler="on_scroll_controller_scroll_begin_cb" object="GcalWeekView" swapped="yes" />
+            <signal name="scroll-begin" handler="on_scroll_controller_scroll_begin_cb" object="GcalWeekView" swapped="yes" />
             <signal name="scroll" handler="on_scroll_controller_scroll_cb" object="GcalWeekView" swapped="yes" />
           </object>
         </child>
