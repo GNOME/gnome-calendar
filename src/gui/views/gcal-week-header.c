@@ -1211,9 +1211,9 @@ move_event_to_cell (GcalWeekHeader        *self,
   dnd_date = g_date_time_add_days (tmp_dt, cell);
 
   /* End date */
-  difference = g_date_time_difference (end_date, start_date) / G_TIME_SPAN_HOUR;
+  difference = g_date_time_difference (end_date, start_date) / G_TIME_SPAN_MINUTE;
 
-  new_end = g_date_time_add_hours (dnd_date, difference);
+  new_end = g_date_time_add_minutes (dnd_date, difference);
   gcal_event_set_date_end (changed_event, new_end);
 
   /*
