@@ -1175,7 +1175,6 @@ move_event_to_cell (GcalWeekHeader        *self,
   GDateTime *start_date;
   GDateTime *end_date;
   GTimeSpan difference;
-  gboolean turn_all_day;
 
   GCAL_ENTRY;
 
@@ -1188,9 +1187,7 @@ move_event_to_cell (GcalWeekHeader        *self,
   end_date = gcal_event_get_date_end (changed_event);
   week_start = gcal_date_time_get_start_of_week (self->active_date);
 
-  turn_all_day = !gcal_event_is_multiday (changed_event) || gcal_event_get_all_day (changed_event);
-
-  if (!turn_all_day)
+  if (!gcal_event_get_all_day (changed_event))
     {
       /*
        * The only case where we don't touch the timezone is for
@@ -1214,7 +1211,7 @@ move_event_to_cell (GcalWeekHeader        *self,
   dnd_date = g_date_time_add_days (tmp_dt, cell);
 
   /* End date */
-  difference = turn_all_day ? 24 : g_date_time_difference (end_date, start_date) / G_TIME_SPAN_HOUR;
+  difference = g_date_time_difference (end_date, start_date) / G_TIME_SPAN_HOUR;
 
   new_end = g_date_time_add_hours (dnd_date, difference);
   gcal_event_set_date_end (changed_event, new_end);
@@ -1224,9 +1221,6 @@ move_event_to_cell (GcalWeekHeader        *self,
    * the event's start and end dates above
    */
   gcal_event_set_date_start (changed_event, dnd_date);
-
-  if (turn_all_day)
-    gcal_event_set_all_day (changed_event, TRUE);
 
   /* Commit the changes */
   gcal_manager_update_event (gcal_context_get_manager (self->context), changed_event, mod_type);
