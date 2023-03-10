@@ -22,19 +22,11 @@
 
 #include "gcal-context.h"
 #include "gcal-date-time-utils.h"
+#include "gcal-debug.h"
 #include "gcal-search-engine.h"
 #include "gcal-search-model.h"
 #include "gcal-timeline.h"
 #include "gcal-timeline-subscriber.h"
-
-typedef struct
-{
-  GcalSearchEngine   *engine;
-  gchar              *query;
-  gint                max_results;
-  GDateTime          *range_start;
-  GDateTime          *range_end;
-} SearchData;
 
 struct _GcalSearchEngine
 {
@@ -58,57 +50,8 @@ static GParamSpec *properties [N_PROPS];
 
 
 /*
- * Auxiliary methods
- */
-
-static void
-search_data_free (gpointer data)
-{
-  SearchData *search_data = data;
-
-  if (!data)
-    return;
-
-  gcal_clear_date_time (&search_data->range_start);
-  gcal_clear_date_time (&search_data->range_end);
-  g_clear_pointer (&search_data->query, g_free);
-  g_clear_object (&search_data->engine);
-  g_slice_free (SearchData, data);
-}
-
-
-/*
  * Callbacks
  */
-
-static void
-search_func (GTask        *task,
-             gpointer      source_object,
-             gpointer      task_data,
-             GCancellable *cancellable)
-{
-  g_autoptr (GcalSearchModel) model = NULL;
-  GcalSearchEngine *self;
-  SearchData *data;
-
-  self = GCAL_SEARCH_ENGINE (source_object);
-  data = (SearchData*) task_data;
-
-  model = gcal_search_model_new (cancellable,
-                                 data->max_results,
-                                 data->range_start,
-                                 data->range_end);
-
-  gcal_timeline_set_filter (self->timeline, data->query);
-  gcal_timeline_add_subscriber (self->timeline, GCAL_TIMELINE_SUBSCRIBER (model));
-
-  gcal_search_model_wait_for_hits (model, cancellable);
-
-  if (g_cancellable_is_cancelled (cancellable))
-    g_task_return_new_error (task, G_IO_ERROR, G_IO_ERROR_CANCELLED, "Cancelled");
-  else
-    g_task_return_pointer (task, g_steal_pointer (&model), g_object_unref);
-}
 
 static void
 on_manager_calendar_added_cb (GcalManager      *manager,
@@ -128,6 +71,31 @@ on_manager_calendar_removed_cb (GcalManager      *manager,
   g_debug ("Removing calendar %s from search results", gcal_calendar_get_id (calendar));
 
   gcal_timeline_remove_calendar (self->timeline, calendar);
+}
+
+static void
+search_model_hits_cb (GObject      *source,
+                      GAsyncResult *result,
+                      gpointer      data)
+{
+  g_autoptr (GError) error = NULL;
+  g_autoptr (GTask) task = data;
+  GcalSearchModel *search_model;
+
+  GCAL_ENTRY;
+
+  search_model = GCAL_SEARCH_MODEL (source);
+  gcal_search_model_wait_for_hits_finish (search_model, result, &error);
+
+  if (error)
+    {
+      g_task_return_error (task, g_steal_pointer (&error));
+      GCAL_RETURN ();
+    }
+
+  g_task_return_pointer (task, g_object_ref (search_model), NULL);
+
+  GCAL_EXIT;
 }
 
 
@@ -246,9 +214,11 @@ gcal_search_engine_search (GcalSearchEngine    *self,
                            GAsyncReadyCallback  callback,
                            gpointer             user_data)
 {
+  g_autoptr (GcalSearchModel) model = NULL;
+  g_autoptr (GDateTime) range_start = NULL;
+  g_autoptr (GDateTime) range_end = NULL;
   g_autoptr (GDateTime) now = NULL;
   g_autoptr (GTask) task = NULL;
-  SearchData *data = NULL;
   GTimeZone *timezone;
 
   g_return_if_fail (GCAL_IS_SEARCH_ENGINE (self));
@@ -256,20 +226,18 @@ gcal_search_engine_search (GcalSearchEngine    *self,
 
   timezone = gcal_context_get_timezone (self->context);
   now = g_date_time_new_now (timezone);
+  range_start = g_date_time_add_weeks (now, -1);
+  range_end = g_date_time_add_weeks (now, 3);
+  model = gcal_search_model_new (cancellable, max_results, range_start, range_end);
 
-  data = g_slice_new0 (SearchData);
-  data->engine = g_object_ref (self);
-  data->query = g_strdup (search_query);
-  data->max_results = max_results;
-  data->range_start = g_date_time_add_weeks (now, -1);
-  data->range_end = g_date_time_add_weeks (now, 3);
+  gcal_timeline_set_filter (self->timeline, search_query);
+  gcal_timeline_add_subscriber (self->timeline, GCAL_TIMELINE_SUBSCRIBER (model));
 
   task = g_task_new (self, cancellable, callback, user_data);
   g_task_set_source_tag (task, gcal_search_engine_search);
   g_task_set_priority (task, G_PRIORITY_LOW);
-  g_task_set_task_data (task, data, (GDestroyNotify) search_data_free);
 
-  g_task_run_in_thread (task, search_func);
+  gcal_search_model_wait_for_hits (model, cancellable, search_model_hits_cb, g_object_ref (task));
 }
 
 GListModel*

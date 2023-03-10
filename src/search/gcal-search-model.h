@@ -33,6 +33,12 @@ GcalSearchModel*     gcal_search_model_new                       (GCancellable  
                                                                   GDateTime          *range_end);
 
 void                 gcal_search_model_wait_for_hits             (GcalSearchModel    *self,
-                                                                  GCancellable       *cancellable);
+                                                                  GCancellable       *cancellable,
+                                                                  GAsyncReadyCallback callback,
+                                                                  gpointer            user_data);
+
+gboolean             gcal_search_model_wait_for_hits_finish      (GcalSearchModel    *self,
+                                                                  GAsyncResult       *result,
+                                                                  GError            **error);
 
 G_END_DECLS

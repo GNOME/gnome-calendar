@@ -42,6 +42,9 @@ struct _GcalSearchModel
   GDateTime          *range_end;
 
   GListModel         *model;
+
+  GTimer             *timer;
+  guint               idle_id;
 };
 
 static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSubscriberInterface *iface);
@@ -57,6 +60,33 @@ G_DEFINE_TYPE_WITH_CODE (GcalSearchModel, gcal_search_model, G_TYPE_OBJECT,
 /*
  * Callbacks
  */
+
+static gboolean
+check_for_search_hits_cb (gpointer user_data)
+{
+  GcalSearchModel *self;
+  GTask *task;
+
+  task = G_TASK (user_data);
+  self = GCAL_SEARCH_MODEL (g_task_get_source_object (task));
+
+  if (g_task_return_error_if_cancelled (task))
+    goto stop_idle;
+
+  if (g_timer_elapsed (self->timer, NULL) >= WAIT_FOR_RESULTS_MS ||
+      g_list_model_get_n_items (self->model) >= MIN_RESULTS)
+    {
+      g_task_return_boolean (task, TRUE);
+      goto stop_idle;
+    }
+
+  return G_SOURCE_CONTINUE;
+
+stop_idle:
+  g_clear_pointer (&self->timer, g_timer_destroy);
+  self->idle_id = 0;
+  return G_SOURCE_REMOVE;
+}
 
 static void
 on_model_items_changed_cb (GListModel      *model,
@@ -208,6 +238,9 @@ gcal_search_model_finalize (GObject *object)
 {
   GcalSearchModel *self = (GcalSearchModel *)object;
 
+  g_assert (self->timer == NULL);
+  g_assert (self->idle_id == 0);
+
   g_cancellable_cancel (self->cancellable);
 
   gcal_clear_date_time (&self->range_start);
@@ -251,29 +284,38 @@ gcal_search_model_new (GCancellable *cancellable,
 }
 
 void
-gcal_search_model_wait_for_hits (GcalSearchModel *self,
-                                 GCancellable    *cancellable)
+gcal_search_model_wait_for_hits (GcalSearchModel     *self,
+                                 GCancellable        *cancellable,
+                                 GAsyncReadyCallback  callback,
+                                 gpointer             user_data)
 {
-  g_autoptr (GMainContext) thread_context = NULL;
-  g_autoptr (GTimer) timer = NULL;
+  g_autoptr (GTask) task = NULL;
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_SEARCH_MODEL (self));
+  g_assert (self->timer == NULL);
+  g_assert (self->idle_id == 0);
 
-  thread_context = g_main_context_ref_thread_default ();
-  timer = g_timer_new ();
+  task = g_task_new (self, cancellable, callback, user_data);
+  g_task_set_source_tag (task, gcal_search_model_wait_for_hits);
+  g_task_set_priority (task, G_PRIORITY_LOW);
 
-  g_timer_start (timer);
-
-  while (g_list_model_get_n_items (self->model) < MIN_RESULTS &&
-         g_timer_elapsed (timer, NULL) < WAIT_FOR_RESULTS_MS)
-    {
-      if (g_cancellable_is_cancelled (cancellable))
-        break;
-
-      g_main_context_iteration (thread_context, FALSE);
-    }
+  self->timer = g_timer_new ();
+  self->idle_id = g_idle_add_full (G_PRIORITY_LOW,
+                                   check_for_search_hits_cb,
+                                   g_object_ref (task),
+                                   g_object_unref);
 
   GCAL_EXIT;
+}
+
+gboolean
+gcal_search_model_wait_for_hits_finish (GcalSearchModel  *self,
+                                        GAsyncResult     *result,
+                                        GError          **error)
+{
+  g_return_val_if_fail (GCAL_IS_SEARCH_MODEL (self), FALSE);
+  g_return_val_if_fail (g_task_is_valid (result, self), FALSE);
+
+  return g_task_propagate_boolean (G_TASK (result), error);
 }
