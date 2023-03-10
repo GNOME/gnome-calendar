@@ -1022,8 +1022,12 @@ remove_all_events (GcalCalendarMonitor *self)
   g_hash_table_iter_init (&iter, self->shared.events);
   while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &event))
     {
+      g_object_ref (event);
+
       g_hash_table_iter_remove (&iter);
       g_signal_emit (self, signals[EVENT_REMOVED], 0, event);
+
+      g_object_unref (event);
     }
 }
 
