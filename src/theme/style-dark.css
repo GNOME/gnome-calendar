@@ -6,3 +6,11 @@ event.timed {
     color: @light_1;
     outline-color: rgba(0, 0, 0, 0.3);
 }
+
+/*
+ * Search
+ */
+
+searchbutton > popover listview > row:selected {
+  background-color: alpha(@accent_bg_color, 0.2);
+}

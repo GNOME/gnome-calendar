@@ -392,6 +392,10 @@ searchbutton > popover > arrow {
   border: none;
 }
 
+searchbutton > popover listview > row:selected {
+  background-color: alpha(@accent_bg_color, 0.11);
+}
+
 /*
  * Month selector
  */

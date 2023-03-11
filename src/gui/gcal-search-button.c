@@ -24,7 +24,6 @@
 #include "gcal-debug.h"
 #include "gcal-search-button.h"
 #include "gcal-search-hit.h"
-#include "gcal-search-hit-row.h"
 
 #include <math.h>
 
@@ -36,8 +35,9 @@ struct _GcalSearchButton
 
   GtkEditable         *entry;
   GtkWidget           *popover;
-  GtkListBox          *results_listbox;
+  GtkListView         *results_listview;
   GtkRevealer         *results_revealer;
+  GtkSingleSelection  *results_selection_model;
   GtkStack            *stack;
 
   GCancellable        *cancellable;
@@ -88,11 +88,14 @@ quit_search_entry (GcalSearchButton *self)
   gtk_editable_set_text (self->entry, "");
 }
 
-static GtkWidget *
-create_widget_func (gpointer item,
-                    gpointer user_data)
+static inline void
+scroll_to_result (GcalSearchButton *self,
+                  guint             position)
 {
-  return gcal_search_hit_row_new (item);
+  gtk_widget_activate_action (GTK_WIDGET (self->results_listview),
+                              "list.scroll-to-item",
+                              "u",
+                              position);
 }
 
 static void
@@ -101,11 +104,7 @@ set_model (GcalSearchButton *self,
 {
   GCAL_ENTRY;
 
-  gtk_list_box_bind_model (self->results_listbox,
-                           model,
-                           create_widget_func,
-                           self,
-                           NULL);
+  gtk_single_selection_set_model (self->results_selection_model, model);
 
   if (model)
     show_suggestions (self);
@@ -119,6 +118,18 @@ set_model (GcalSearchButton *self,
 /*
  * Callbacks
  */
+
+static gchar *
+escape_markup_cb (GcalSearchHit *hit,
+                  const gchar   *string)
+{
+  g_autofree gchar *escaped_string = NULL;
+
+  escaped_string = g_markup_escape_text (string, -1);
+  escaped_string = g_strstrip (escaped_string);
+
+  return g_steal_pointer (&escaped_string);
+}
 
 static void
 on_button_clicked_cb (GtkButton        *button,
@@ -165,6 +176,68 @@ on_search_finished_cb (GObject      *source_object,
 }
 
 static void
+on_entry_activate_cb (GtkSearchEntry   *entry,
+                      GcalSearchButton *self)
+{
+  GcalSearchHit *hit;
+
+  GCAL_ENTRY;
+
+  hit = gtk_single_selection_get_selected_item (self->results_selection_model);
+
+  if (hit)
+    {
+      GCAL_TRACE_MSG ("Activating \"%s\"", gcal_search_hit_get_title (hit));
+
+      gcal_search_hit_activate (hit, GTK_WIDGET (self));
+      quit_search_entry (self);
+    }
+
+  GCAL_EXIT;
+}
+
+static void
+on_entry_next_match_cb (GtkSearchEntry   *entry,
+                        GcalSearchButton *self)
+{
+  guint selected;
+
+  GCAL_ENTRY;
+
+  selected = gtk_single_selection_get_selected (self->results_selection_model);
+
+  if (selected != GTK_INVALID_LIST_POSITION &&
+      selected + 1 < g_list_model_get_n_items (G_LIST_MODEL (self->results_selection_model)))
+    {
+      GCAL_TRACE_MSG ("Changing selection to %u", selected + 1);
+      gtk_single_selection_set_selected (self->results_selection_model, selected + 1);
+      scroll_to_result (self, selected + 1);
+    }
+
+  GCAL_EXIT;
+}
+
+static void
+on_entry_previous_match_cb (GtkSearchEntry   *entry,
+                            GcalSearchButton *self)
+{
+  guint selected;
+
+  GCAL_ENTRY;
+
+  selected = gtk_single_selection_get_selected (self->results_selection_model);
+
+  if (selected > 0 && selected != GTK_INVALID_LIST_POSITION)
+    {
+      GCAL_TRACE_MSG ("Changing selection to %u", selected - 1);
+      gtk_single_selection_set_selected (self->results_selection_model, selected - 1);
+      scroll_to_result (self, selected - 1);
+    }
+
+  GCAL_EXIT;
+}
+
+static void
 on_entry_search_changed_cb (GtkSearchEntry   *entry,
                             GcalSearchButton *self)
 {
@@ -204,16 +277,18 @@ on_entry_stop_search_cb (GtkSearchEntry   *search_entry,
 }
 
 static void
-on_results_listbox_row_activated_cb (GtkListBox       *listbox,
-                                     GcalSearchHitRow *row,
-                                     GcalSearchButton *self)
+on_results_listview_activated_cb (GtkListBox       *listbox,
+                                  guint             position,
+                                  GcalSearchButton *self)
 {
   GcalSearchHit *search_hit;
 
-  search_hit = gcal_search_hit_row_get_search_hit (row);
+  search_hit = g_list_model_get_item (G_LIST_MODEL (self->results_selection_model), position);
+  g_assert (GCAL_IS_SEARCH_HIT (search_hit));
+
   gcal_search_hit_activate (search_hit, GTK_WIDGET (self));
 
-  hide_suggestions (self);
+  quit_search_entry (self);
 }
 
 static void
@@ -225,32 +300,11 @@ on_results_revealer_child_reveal_state_changed_cb (GtkRevealer      *revealer,
     gtk_popover_popdown (GTK_POPOVER (self->popover));
 }
 
-
-/*
- * GtkWidget overrides
- */
-
 static gboolean
-gcal_search_button_focus (GtkWidget        *widget,
-                          GtkDirectionType  direction)
+string_is_not_empty_cb (GcalSearchHit *hit,
+                        const gchar   *string)
 {
-  GcalSearchButton *self = GCAL_SEARCH_BUTTON (widget);
-
-  if (!gtk_widget_get_visible (GTK_WIDGET (self->popover)))
-    return gtk_widget_child_focus (GTK_WIDGET (self->stack), direction);
-
-  if (direction == GTK_DIR_DOWN)
-    {
-      GtkListBoxRow *first_row = gtk_list_box_get_row_at_index (self->results_listbox, 0);
-
-      if (!first_row)
-        return gtk_widget_child_focus (GTK_WIDGET (self->stack), direction);
-
-      gtk_widget_grab_focus (GTK_WIDGET (first_row));
-      return TRUE;
-    }
-
-  return gtk_widget_child_focus (GTK_WIDGET (self->stack), direction);
+  return string != NULL && *string != '\0';
 }
 
 
@@ -319,7 +373,6 @@ gcal_search_button_set_property (GObject      *object,
     }
 }
 
-
 static void
 gcal_search_button_class_init (GcalSearchButtonClass *klass)
 {
@@ -330,8 +383,6 @@ gcal_search_button_class_init (GcalSearchButtonClass *klass)
   object_class->finalize = gcal_search_button_finalize;
   object_class->get_property = gcal_search_button_get_property;
   object_class->set_property = gcal_search_button_set_property;
-
-  widget_class->focus = gcal_search_button_focus;
 
   /**
    * GcalSearchButton::context:
@@ -350,16 +401,22 @@ gcal_search_button_class_init (GcalSearchButtonClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalSearchButton, entry);
   gtk_widget_class_bind_template_child (widget_class, GcalSearchButton, popover);
-  gtk_widget_class_bind_template_child (widget_class, GcalSearchButton, results_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalSearchButton, results_listview);
+  gtk_widget_class_bind_template_child (widget_class, GcalSearchButton, results_selection_model);
   gtk_widget_class_bind_template_child (widget_class, GcalSearchButton, results_revealer);
   gtk_widget_class_bind_template_child (widget_class, GcalSearchButton, stack);
 
+  gtk_widget_class_bind_template_callback (widget_class, escape_markup_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_focus_controller_leave_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_entry_activate_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_entry_next_match_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_entry_previous_match_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_entry_search_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_entry_stop_search_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_results_listbox_row_activated_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_results_listview_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_results_revealer_child_reveal_state_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, string_is_not_empty_cb);
 
   gtk_widget_class_set_css_name (widget_class, "searchbutton");
 }
