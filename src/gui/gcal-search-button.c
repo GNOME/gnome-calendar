@@ -74,7 +74,6 @@ static void
 hide_suggestions (GcalSearchButton *self)
 {
   gtk_revealer_set_reveal_child (self->results_revealer, FALSE);
-  gtk_editable_set_text (self->entry, "");
 }
 
 static GtkWidget *
@@ -189,16 +188,6 @@ on_entry_search_changed_cb (GtkSearchEntry   *entry,
                              g_object_ref (self));
 
   GCAL_EXIT;
-}
-
-static void
-on_popover_closed_cb (GtkPopover       *popover,
-                      GcalSearchButton *self)
-{
-  gtk_editable_set_width_chars (self->entry, 0);
-  gtk_editable_set_max_width_chars (self->entry, 0);
-  gtk_editable_set_text (self->entry, "");
-  gtk_stack_set_visible_child_name (self->stack, "button");
 }
 
 static void
@@ -355,7 +344,6 @@ gcal_search_button_class_init (GcalSearchButtonClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_focus_controller_leave_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_entry_search_changed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_popover_closed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_results_listbox_row_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_results_revealer_child_reveal_state_changed_cb);
 

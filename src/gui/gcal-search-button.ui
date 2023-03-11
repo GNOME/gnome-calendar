@@ -78,7 +78,6 @@
     <property name="position">bottom</property>
     <property name="autohide">False</property>
     <property name="default-widget">results_listbox</property>
-    <signal name="closed" handler="on_popover_closed_cb" object="GcalSearchButton" swapped="no" />
     <style>
       <class name="menu" />
     </style>
