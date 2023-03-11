@@ -105,9 +105,12 @@ static gint
 gcal_search_hit_event_compare (GcalSearchHit *a,
                                GcalSearchHit *b)
 {
+  GcalCalendar *calendar_a;
+  GcalCalendar *calendar_b;
   GcalEvent *event_a;
   GcalEvent *event_b;
   time_t now_utc;
+  gint result;
 
   g_assert (GCAL_IS_SEARCH_HIT_EVENT (a));
   g_assert (GCAL_IS_SEARCH_HIT_EVENT (b));
@@ -116,7 +119,14 @@ gcal_search_hit_event_compare (GcalSearchHit *a,
   event_b = GCAL_SEARCH_HIT_EVENT (b)->event;
   now_utc = time (NULL);
 
-  return -gcal_event_compare_with_current (event_a, event_b, now_utc);
+  result = -gcal_event_compare_with_current (event_a, event_b, now_utc);
+  if (result != 0)
+    return result;
+
+  calendar_a = gcal_event_get_calendar (event_a);
+  calendar_b = gcal_event_get_calendar (event_b);
+
+  return g_strcmp0 (gcal_calendar_get_name (calendar_b), gcal_calendar_get_name (calendar_a));
 }
 
 
