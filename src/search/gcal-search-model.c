@@ -148,7 +148,7 @@ gcal_search_model_add_event (GcalTimelineSubscriber *subscriber,
 {
   g_autoptr (GcalSearchHitEvent) search_hit = NULL;
   GcalSearchModel *self;
-  guint position = -1;
+  gboolean found;
 
   self = GCAL_SEARCH_MODEL (subscriber);
 
@@ -159,12 +159,12 @@ gcal_search_model_add_event (GcalTimelineSubscriber *subscriber,
 
   search_hit = gcal_search_hit_event_new (event);
 
-  g_list_store_find_with_equal_func (G_LIST_STORE (self->model),
-                                     search_hit,
-                                     search_hits_equals_cb,
-                                     &position);
+  found = g_list_store_find_with_equal_func (G_LIST_STORE (self->model),
+                                             search_hit,
+                                             search_hits_equals_cb,
+                                             NULL);
 
-  if (position != -1)
+  if (found)
     return;
 
   g_list_store_insert_sorted (G_LIST_STORE (self->model),
