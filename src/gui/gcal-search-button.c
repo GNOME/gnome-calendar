@@ -149,10 +149,14 @@ on_search_finished_cb (GObject      *source_object,
   g_autoptr (GError) error = NULL;
   GcalSearchButton *self;
 
+  GCAL_ENTRY;
+
   self = GCAL_SEARCH_BUTTON (user_data);
   model = gcal_search_engine_search_finish (GCAL_SEARCH_ENGINE (source_object), result, &error);
 
   set_model (self, model);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -164,6 +168,8 @@ on_entry_text_changed_cb (GtkEntry         *entry,
   GcalSearchEngine *search_engine;
   const gchar *text;
 
+  GCAL_ENTRY;
+
   text = gtk_editable_get_text (self->entry);
 
   g_cancellable_cancel (self->cancellable);
@@ -171,7 +177,7 @@ on_entry_text_changed_cb (GtkEntry         *entry,
   if (!text || *text == '\0')
     {
       set_model (self, NULL);
-      return;
+      GCAL_RETURN ();
     }
 
   sexp_query = g_strdup_printf ("(contains? \"summary\" \"%s\")", text);
@@ -182,6 +188,8 @@ on_entry_text_changed_cb (GtkEntry         *entry,
                              self->cancellable,
                              on_search_finished_cb,
                              g_object_ref (self));
+
+  GCAL_EXIT;
 }
 
 static void
