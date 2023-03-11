@@ -49,11 +49,9 @@
           <object class="GtkStackPage">
             <property name="name">entry</property>
             <property name="child">
-              <object class="GtkEntry" id="entry">
+              <object class="GtkSearchEntry" id="entry">
                 <property name="max-width-chars">0</property>
-                <property name="primary-icon-name">edit-find-symbolic</property>
                 <property name="width-chars">0</property>
-                <signal name="icon-press" handler="on_entry_icon_pressed_cb" object="GcalSearchButton" swapped="no" />
                 <signal name="notify::text" handler="on_entry_text_changed_cb" object="GcalSearchButton" swapped="no" />
 
                 <child>

@@ -141,15 +141,6 @@ on_focus_controller_leave_cb (GtkEventControllerFocus *focus_controller,
 }
 
 static void
-on_entry_icon_pressed_cb (GtkEntry             *entry,
-                          GtkEntryIconPosition  position,
-                          GcalSearchButton     *self)
-{
-  if (position == GTK_ENTRY_ICON_PRIMARY)
-    gtk_stack_set_visible_child_name (self->stack, "button");
-}
-
-static void
 on_search_finished_cb (GObject      *source_object,
                        GAsyncResult *result,
                        gpointer      user_data)
@@ -356,7 +347,6 @@ gcal_search_button_class_init (GcalSearchButtonClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, on_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_focus_controller_leave_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_entry_icon_pressed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_entry_text_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_popover_closed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_results_listbox_row_activated_cb);
