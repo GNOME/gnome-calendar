@@ -76,6 +76,18 @@ hide_suggestions (GcalSearchButton *self)
   gtk_revealer_set_reveal_child (self->results_revealer, FALSE);
 }
 
+static void
+quit_search_entry (GcalSearchButton *self)
+{
+  gtk_editable_set_width_chars (self->entry, 0);
+  gtk_editable_set_max_width_chars (self->entry, 0);
+  gtk_stack_set_visible_child_name (self->stack, "button");
+
+  hide_suggestions (self);
+
+  gtk_editable_set_text (self->entry, "");
+}
+
 static GtkWidget *
 create_widget_func (gpointer item,
                     gpointer user_data)
@@ -130,13 +142,7 @@ static void
 on_focus_controller_leave_cb (GtkEventControllerFocus *focus_controller,
                               GcalSearchButton        *self)
 {
-  gtk_editable_set_width_chars (self->entry, 0);
-  gtk_editable_set_max_width_chars (self->entry, 0);
-  gtk_stack_set_visible_child_name (self->stack, "button");
-
-  hide_suggestions (self);
-
-  gtk_editable_set_text (self->entry, "");
+  quit_search_entry (self);
 }
 
 static void
@@ -188,6 +194,13 @@ on_entry_search_changed_cb (GtkSearchEntry   *entry,
                              g_object_ref (self));
 
   GCAL_EXIT;
+}
+
+static void
+on_entry_stop_search_cb (GtkSearchEntry   *search_entry,
+                         GcalSearchButton *self)
+{
+  quit_search_entry (self);
 }
 
 static void
@@ -344,6 +357,7 @@ gcal_search_button_class_init (GcalSearchButtonClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_focus_controller_leave_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_entry_search_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_entry_stop_search_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_results_listbox_row_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_results_revealer_child_reveal_state_changed_cb);
 

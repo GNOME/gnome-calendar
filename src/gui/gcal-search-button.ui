@@ -53,6 +53,7 @@
                 <property name="max-width-chars">0</property>
                 <property name="width-chars">0</property>
                 <signal name="search-changed" handler="on_entry_search_changed_cb" object="GcalSearchButton" swapped="no" />
+                <signal name="stop-search" handler="on_entry_stop_search_cb" object="GcalSearchButton" swapped="no" />
 
                 <child>
                   <object class='GtkShortcutController'>
