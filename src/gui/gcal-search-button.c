@@ -160,9 +160,8 @@ on_search_finished_cb (GObject      *source_object,
 }
 
 static void
-on_entry_text_changed_cb (GtkEntry         *entry,
-                          GParamSpec       *pspec,
-                          GcalSearchButton *self)
+on_entry_search_changed_cb (GtkSearchEntry   *entry,
+                            GcalSearchButton *self)
 {
   g_autofree gchar *sexp_query = NULL;
   GcalSearchEngine *search_engine;
@@ -355,7 +354,7 @@ gcal_search_button_class_init (GcalSearchButtonClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, on_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_focus_controller_leave_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_entry_text_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_entry_search_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_popover_closed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_results_listbox_row_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_results_revealer_child_reveal_state_changed_cb);
