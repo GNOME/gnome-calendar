@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-01-25 18:24+0000\n"
-"PO-Revision-Date: 2023-02-25 12:31+0100\n"
+"POT-Creation-Date: 2023-03-03 22:56+0000\n"
+"PO-Revision-Date: 2023-03-11 11:23+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -203,8 +203,8 @@ msgid "Select a file"
 msgstr "Vælg en fil"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 msgid "Cancel"
 msgstr "Annullér"
@@ -213,11 +213,11 @@ msgstr "Annullér"
 msgid "Open"
 msgstr "Åbn"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:512
+#: src/gui/calendar-management/gcal-new-calendar-page.c:517
 msgid "New Calendar"
 msgstr "Ny kalender"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:690
+#: src/gui/calendar-management/gcal-new-calendar-page.c:695
 msgid "Calendar files"
 msgstr "Kalenderfiler"
 
@@ -254,19 +254,23 @@ msgstr ""
 "Hvis kalenderen tilhører en af dine onlinekonti, kan du tilføje den gennem "
 "<a href=\"GOA\">indstillinger for onlinekonti</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
-msgid "User"
-msgstr "Bruger"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+msgid "Credentials"
+msgstr "Legitimationsoplysninger"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-msgid "Password"
-msgstr "Adgangskode"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Connect"
 msgstr "Tilslut"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+msgid "User"
+msgstr "Bruger"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "Password"
+msgstr "Adgangskode"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Tilføj"
@@ -614,7 +618,7 @@ msgstr ""
 "Websted http://dansk-gruppen.dk\n"
 "E-mail <dansk@dansk-gruppen.dk>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:282
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
 msgid "Weather"
 msgstr "Vejret"
 
@@ -1076,15 +1080,15 @@ msgstr "Vis vejret"
 msgid "Automatic Location"
 msgstr "Automatisk placering"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:713
 msgid "Another event deleted"
 msgstr "Anden begivenhed slettet"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:713
 msgid "Event deleted"
 msgstr "Begivenhed slettet"
 
-#: src/gui/gcal-window.c:703
+#: src/gui/gcal-window.c:715
 msgid "_Undo"
 msgstr "_Fortryd"
 
@@ -1092,27 +1096,27 @@ msgstr "_Fortryd"
 msgid "Main Menu"
 msgstr "Hovedmenu"
 
-#: src/gui/gcal-window.ui:155 src/gui/gcal-window.ui:188
+#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
 msgid "_Today"
 msgstr "I _dag"
 
-#: src/gui/gcal-window.ui:222
+#: src/gui/gcal-window.ui:223
 msgid "_Week"
 msgstr "_Uge"
 
-#: src/gui/gcal-window.ui:237
+#: src/gui/gcal-window.ui:238
 msgid "_Month"
 msgstr "_Måned"
 
-#: src/gui/gcal-window.ui:278
+#: src/gui/gcal-window.ui:279
 msgid "_Online Accounts…"
 msgstr "_Onlinekonti …"
 
-#: src/gui/gcal-window.ui:290
+#: src/gui/gcal-window.ui:291
 msgid "_Keyboard Shortcuts"
 msgstr "_Tastaturgenveje"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:295
 msgid "_About Calendar"
 msgstr "_Om Kalender"
 
@@ -1250,11 +1254,11 @@ msgstr "Filen er ikke en iCalendar-fil (.ics)"
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: src/gui/views/gcal-agenda-view.c:373
+#: src/gui/views/gcal-agenda-view.c:366
 msgid "On-going"
 msgstr "I gang"
 
-#: src/gui/views/gcal-agenda-view.ui:36
+#: src/gui/views/gcal-agenda-view.ui:19
 msgid "No events"
 msgstr "Ingen begivenheder"
 
@@ -1262,22 +1266,22 @@ msgstr "Ingen begivenheder"
 msgid "New Event…"
 msgstr "Ny begivenhed …"
 
-#: src/gui/views/gcal-week-grid.c:581
+#: src/gui/views/gcal-week-grid.c:576
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:584
+#: src/gui/views/gcal-week-grid.c:579
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:478
+#: src/gui/views/gcal-week-header.c:472
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Anden begivenhed"
 msgstr[1] "%d andre begivenheder"
 
-#: src/gui/views/gcal-week-header.c:1006
+#: src/gui/views/gcal-week-header.c:1000
 #, c-format
 msgid "week %d"
 msgstr "uge %d"
