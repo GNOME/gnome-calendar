@@ -88,16 +88,6 @@ stop_idle:
   return G_SOURCE_REMOVE;
 }
 
-static void
-on_model_items_changed_cb (GListModel      *model,
-                           guint            position,
-                           guint            removed,
-                           guint            added,
-                           GcalSearchModel *self)
-{
-  g_list_model_items_changed (G_LIST_MODEL (self), position, removed, added);
-}
-
 
 /*
  * GcalTimelineSubscriber interface
@@ -149,11 +139,9 @@ gcal_search_model_add_event (GcalTimelineSubscriber *subscriber,
   g_autoptr (GcalSearchHitEvent) search_hit = NULL;
   GcalSearchModel *self;
   gboolean found;
+  guint position;
 
   self = GCAL_SEARCH_MODEL (subscriber);
-
-  if (g_list_model_get_n_items (self->model) > self->max_results)
-    return;
 
   GCAL_TRACE_MSG ("Adding search hit '%s'", gcal_event_get_summary (event));
 
@@ -167,10 +155,16 @@ gcal_search_model_add_event (GcalTimelineSubscriber *subscriber,
   if (found)
     return;
 
-  g_list_store_insert_sorted (G_LIST_STORE (self->model),
-                              search_hit,
-                              compare_search_hits_cb,
-                              self);
+  position = g_list_store_insert_sorted (G_LIST_STORE (self->model),
+                                         search_hit,
+                                         compare_search_hits_cb,
+                                         self);
+  if (position < self->max_results)
+    {
+      if (g_list_model_get_n_items (self->model) > self->max_results)
+        g_list_model_items_changed (G_LIST_MODEL (self), self->max_results, 1, 0);
+      g_list_model_items_changed (G_LIST_MODEL (self), position, 0, 1);
+    }
 }
 
 static void
@@ -209,7 +203,7 @@ static guint
 gcal_search_model_get_n_items (GListModel *model)
 {
   GcalSearchModel *self = (GcalSearchModel *)model;
-  return g_list_model_get_n_items (self->model);
+  return CLAMP (g_list_model_get_n_items (self->model), 0, self->max_results);
 }
 
 static gpointer
@@ -263,7 +257,6 @@ static void
 gcal_search_model_init (GcalSearchModel *self)
 {
   self->model = (GListModel*) g_list_store_new (GCAL_TYPE_SEARCH_HIT);
-  g_signal_connect_object (self->model, "items-changed", G_CALLBACK (on_model_items_changed_cb), self, 0);
 }
 
 GcalSearchModel *
