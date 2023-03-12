@@ -389,8 +389,6 @@ calculate_multiday_event_blocks (GcalMonthView *self,
 
   for (i = first_cell; i <= last_cell; i++)
     {
-      GtkStyleContext *context;
-      GtkBorder margin;
       gboolean visible_at_range;
       gboolean different_row;
       gboolean will_overflow;
@@ -401,16 +399,11 @@ calculate_multiday_event_blocks (GcalMonthView *self,
       real_height = size_left[i];
 
       /* Calculate the minimum event height */
-      context = gtk_widget_get_style_context (GTK_WIDGET (event_widget));
-
-      gtk_style_context_get_margin (context, &margin);
       gtk_widget_measure (GTK_WIDGET (event_widget),
                           GTK_ORIENTATION_VERTICAL,
                           -1,
                           &minimum_height,
                           NULL, NULL, NULL);
-
-      minimum_height += margin.top + margin.bottom;
 
       /* Count this event at this cell */
       different_row = i / 7 != (i - 1) / 7;
@@ -551,23 +544,6 @@ count_events_per_day (GcalMonthView *self,
     }
 }
 
-static gdouble
-get_real_event_widget_height (GtkWidget *widget)
-{
-  gint min_height;
-
-  gtk_widget_measure (GTK_WIDGET (widget),
-                      GTK_ORIENTATION_VERTICAL,
-                      -1,
-                      &min_height,
-                      NULL, NULL, NULL);
-
-  min_height += gtk_widget_get_margin_top (widget);
-  min_height += gtk_widget_get_margin_bottom (widget);
-
-  return min_height;
-}
-
 static inline gboolean
 month_view_contains_event (GcalRange *month_range,
                            GcalEvent *event)
@@ -588,7 +564,6 @@ allocate_multiday_events (GcalMonthView *self,
 {
   g_autoptr (GcalRange) month_range = NULL;
   GtkAllocation event_allocation;
-  GtkBorder margin;
   GList *l;
   gboolean is_rtl;
   gint header_height;
@@ -712,12 +687,8 @@ allocate_multiday_events (GcalMonthView *self,
           gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (child_widget), dt_start);
           gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (child_widget), dt_end);
 
-          /* Position and allocate the child widget */
-          gtk_style_context_get_margin (gtk_widget_get_style_context (child_widget), &margin);
-
-
-          pos_x = first_cell_allocation.x + margin.left;
-          pos_y = first_cell_allocation.y + margin.top + header_height;
+          pos_x = first_cell_allocation.x;
+          pos_y = first_cell_allocation.y + header_height;
           width = last_cell_allocation.x + last_cell_allocation.width - first_cell_allocation.x;
 
           remove_cell_border_and_padding (month_cell, &pos_x, &pos_y, &width);
@@ -726,21 +697,22 @@ allocate_multiday_events (GcalMonthView *self,
            * We can only get the minimum height after making all these calculations,
            * otherwise GTK complains about allocating without calling get_preferred_height.
            */
-          minimum_height = get_real_event_widget_height (child_widget);
+          gtk_widget_measure (GTK_WIDGET (child_widget),
+                              GTK_ORIENTATION_VERTICAL,
+                              -1,
+                              &minimum_height,
+                              NULL, NULL, NULL);
 
           event_allocation.x = pos_x;
           event_allocation.y = pos_y + vertical_cell_space[cell] - size_left[cell];
-          event_allocation.width = width - (margin.left + margin.right);
+          event_allocation.width = width;
           event_allocation.height = minimum_height;
 
           gtk_widget_size_allocate (child_widget, &event_allocation, baseline);
 
           /* update size_left */
           for (j = 0; j < length; j++)
-            {
-              size_left[cell + j] -= minimum_height;
-              size_left[cell + j] -= margin.top + margin.bottom;
-            }
+            size_left[cell + j] -= minimum_height;
         }
     }
 }
@@ -757,7 +729,6 @@ allocate_single_day_events (GcalMonthView *self,
   GHashTableIter iter;
   GtkAllocation event_allocation;
   GtkAllocation cell_allocation;
-  GtkBorder margin;
   gpointer key, value;
   gint header_height;
 
@@ -785,7 +756,6 @@ allocate_single_day_events (GcalMonthView *self,
       for (aux = l; aux; aux = g_list_next (aux))
         {
           GcalEvent *event;
-          GtkStyleContext *child_context;
           GtkWidget *child_widget;
           gdouble real_height;
           gdouble pos_y;
@@ -803,10 +773,11 @@ allocate_single_day_events (GcalMonthView *self,
           if (!month_view_contains_event (month_range, event))
             continue;
 
-          child_context = gtk_widget_get_style_context (child_widget);
-
-          gtk_style_context_get_margin (child_context, &margin);
-          minimum_height = get_real_event_widget_height (child_widget) + margin.top + margin.bottom;
+          gtk_widget_measure (GTK_WIDGET (child_widget),
+                              GTK_ORIENTATION_VERTICAL,
+                              -1,
+                              &minimum_height,
+                              NULL, NULL, NULL);
 
           /* Check for overflow */
           remaining_events = events_at_day[cell] - allocated_events_at_day[cell];
@@ -836,21 +807,21 @@ allocate_single_day_events (GcalMonthView *self,
 
           gtk_widget_set_child_visible (child_widget, TRUE);
 
-          pos_x = cell_allocation.x + margin.left;
-          pos_y = cell_allocation.y + margin.top + header_height;
+          pos_x = cell_allocation.x;
+          pos_y = cell_allocation.y + header_height;
           width = cell_allocation.width;
 
           remove_cell_border_and_padding (month_cell, &pos_x, &pos_y, &width);
 
           event_allocation.x = pos_x;
           event_allocation.y = pos_y + vertical_cell_space[cell] - size_left[cell];
-          event_allocation.width = width - (margin.left + margin.right);
+          event_allocation.width = width;
           event_allocation.height = minimum_height;
 
           gtk_widget_set_child_visible (child_widget, TRUE);
           gtk_widget_size_allocate (child_widget, &event_allocation, baseline);
 
-          size_left[cell] -= minimum_height + margin.top + margin.bottom;
+          size_left[cell] -= minimum_height;
         }
     }
 }
