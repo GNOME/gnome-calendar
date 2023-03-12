@@ -119,8 +119,14 @@
         </child>
 
         <child>
-          <object class="GtkColorButton" id="calendar_color_button">
+          <object class="GtkColorDialogButton" id="calendar_color_button">
             <property name="halign">start</property>
+            <property name="dialog">
+              <object class="GtkColorDialog">
+                <property name="modal">True</property>
+                <property name="with-alpha">False</property>
+              </object>
+            </property>
             <layout>
               <property name="row">3</property>
               <property name="column">1</property>
