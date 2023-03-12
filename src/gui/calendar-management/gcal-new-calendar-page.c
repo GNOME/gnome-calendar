@@ -48,7 +48,6 @@ struct _GcalNewCalendarPage
   GtkEntry           *calendar_address_entry;
   EntryState          calendar_address_entry_state;
   GcalFileChooserButton *calendar_file_chooser_button;
-  GtkFileFilter      *calendar_file_filter;
   GtkWidget          *cancel_button;
   GtkWidget          *credentials_cancel_button;
   GtkWidget          *credentials_connect_button;
@@ -659,7 +658,6 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, add_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_address_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_file_chooser_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_file_filter);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_connect_button);
@@ -686,14 +684,7 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
 static void
 gcal_new_calendar_page_init (GcalNewCalendarPage *self)
 {
-  GtkFileChooser *chooser;
-
   self->cancellable = g_cancellable_new ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
-
-  gtk_file_filter_set_name (self->calendar_file_filter, _("Calendar files"));
-
-  chooser = gcal_file_chooser_button_get_filechooser (self->calendar_file_chooser_button);
-  gtk_file_chooser_add_filter (chooser, self->calendar_file_filter);
 }
