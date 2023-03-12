@@ -54,7 +54,7 @@ struct _GcalNewCalendarPage
   GtkWindow          *credentials_dialog;
   GtkEntry           *credentials_password_entry;
   GtkEntry           *credentials_user_entry;
-  GtkColorChooser    *local_calendar_color_button;
+  GtkColorDialogButton *local_calendar_color_button;
   GtkEntry           *local_calendar_name_entry;
   GtkWidget          *web_sources_listbox;
   GtkWidget          *web_sources_revealer;
@@ -160,11 +160,11 @@ update_local_source (GcalNewCalendarPage *self)
     {
       g_autofree gchar *color_string = NULL;
       ESourceExtension *ext;
+      const GdkRGBA *color;
       ESource *source;
-      GdkRGBA color;
 
-      gtk_color_chooser_get_rgba (self->local_calendar_color_button, &color);
-      color_string = gdk_rgba_to_string (&color);
+      color = gtk_color_dialog_button_get_rgba (self->local_calendar_color_button);
+      color_string = gdk_rgba_to_string (color);
 
       /* Create the new source and add the needed extensions */
       source = e_source_new (NULL, NULL, NULL);
@@ -482,9 +482,9 @@ on_local_calendar_name_entry_text_changed_cb (GtkEntry            *entry,
 }
 
 static void
-on_local_calendar_color_button_color_changed_cb (GtkColorChooser     *chooser,
-                                                 GParamSpec          *pspec,
-                                                 GcalNewCalendarPage *self)
+on_local_calendar_color_button_rgba_changed_cb (GtkColorChooser     *chooser,
+                                                GParamSpec          *pspec,
+                                                GcalNewCalendarPage *self)
 {
   update_local_source (self);
 }
@@ -676,7 +676,7 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_credential_entry_activate_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_file_chooser_button_file_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_name_entry_text_changed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_color_button_color_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_color_button_rgba_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_url_entry_text_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_web_description_label_link_activated_cb);
 }

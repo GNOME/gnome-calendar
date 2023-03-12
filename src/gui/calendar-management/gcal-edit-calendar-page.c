@@ -34,7 +34,7 @@ struct _GcalEditCalendarPage
   GtkLabel           *account_label;
   GtkWidget          *account_dim_label;
   GtkWidget          *back_button;
-  GtkColorChooser    *calendar_color_button;
+  GtkColorDialogButton *calendar_color_button;
   GtkCheckButton     *calendar_visible_check;
   GtkWidget          *calendar_url_button;
   GtkCheckButton     *default_check;
@@ -186,7 +186,7 @@ setup_calendar (GcalEditCalendarPage *self,
       gtk_label_set_label (self->account_label, name);
     }
 
-  gtk_color_chooser_set_rgba (self->calendar_color_button, gcal_calendar_get_color (calendar));
+  gtk_color_dialog_button_set_rgba (self->calendar_color_button, gcal_calendar_get_color (calendar));
   gtk_editable_set_text (GTK_EDITABLE (self->name_entry), gcal_calendar_get_name (calendar));
   gtk_check_button_set_active (self->calendar_visible_check, gcal_calendar_get_visible (calendar));
 
@@ -199,17 +199,17 @@ static void
 update_calendar (GcalEditCalendarPage *self)
 {
   GcalManager *manager;
-  GdkRGBA color;
+  const GdkRGBA *color;
 
   GCAL_ENTRY;
 
   g_assert (self->calendar != NULL);
 
   manager = gcal_context_get_manager (self->context);
-  gtk_color_chooser_get_rgba (self->calendar_color_button, &color);
+  color = gtk_color_dialog_button_get_rgba (self->calendar_color_button);
 
   gcal_calendar_set_name (self->calendar, gtk_editable_get_text (GTK_EDITABLE (self->name_entry)));
-  gcal_calendar_set_color (self->calendar, &color);
+  gcal_calendar_set_color (self->calendar, color);
 
   if (gtk_check_button_get_active (self->default_check))
     gcal_manager_set_default_calendar (manager, self->calendar);

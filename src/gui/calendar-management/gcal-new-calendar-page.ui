@@ -34,9 +34,15 @@
                 <property name="activatable-widget">local_calendar_color_button</property>
 
                 <child>
-                  <object class="GtkColorButton" id="local_calendar_color_button">
+                  <object class="GtkColorDialogButton" id="local_calendar_color_button">
                     <property name="valign">center</property>
-                    <signal name="notify::color" handler="on_local_calendar_color_button_color_changed_cb" object="GcalNewCalendarPage" swapped="no" />
+                    <property name="dialog">
+                      <object class="GtkColorDialog">
+                        <property name="modal">True</property>
+                        <property name="with-alpha">False</property>
+                      </object>
+                    </property>
+                    <signal name="notify::rgba" handler="on_local_calendar_color_button_rgba_changed_cb" object="GcalNewCalendarPage" swapped="no" />
                   </object>
                 </child>
 
