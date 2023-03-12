@@ -39,6 +39,7 @@ void                 gcal_file_chooser_button_set_title          (GcalFileChoose
 
 const gchar*         gcal_file_chooser_button_get_title          (GcalFileChooserButton *self);
 
-GtkFileChooser*      gcal_file_chooser_button_get_filechooser    (GcalFileChooserButton *self);
+void                 gcal_file_chooser_button_set_filter         (GcalFileChooserButton *self,
+                                                                  GtkFileFilter         *filter);
 
 G_END_DECLS

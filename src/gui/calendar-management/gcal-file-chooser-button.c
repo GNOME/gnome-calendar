@@ -26,7 +26,8 @@ struct _GcalFileChooserButton
 {
   GtkButton           parent_instance;
 
-  GtkFileChooser     *filechooser;
+  GCancellable       *cancellable;
+  GtkFileFilter      *filter;
   GFile              *file;
   gchar              *title;
 };
@@ -37,6 +38,7 @@ enum
 {
   PROP_0,
   PROP_FILE,
+  PROP_FILTER,
   PROP_TITLE,
   N_PROPS
 };
@@ -63,62 +65,47 @@ update_label (GcalFileChooserButton *self)
 }
 
 static void
-on_filechooser_dialog_response_cb (GtkFileChooser        *filechooser,
-                                   gint                   response,
-                                   GcalFileChooserButton *self)
+on_file_opened_cb (GObject      *source,
+                   GAsyncResult *result,
+                   gpointer      user_data)
 {
-  if (response == GTK_RESPONSE_ACCEPT)
-    {
-      g_autoptr(GFile) file = NULL;
+  GcalFileChooserButton *self;
+  g_autoptr (GError) error = NULL;
+  g_autoptr (GFile) file = NULL;
 
-      file = gtk_file_chooser_get_file (filechooser);
-      gcal_file_chooser_button_set_file (self, file);
+  file = gtk_file_dialog_open_finish (GTK_FILE_DIALOG (source), result, &error);
+
+  if (error)
+    {
+      if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+        return;
+
+      g_warning ("Error opening file: %s", error->message);
     }
 
-  gtk_widget_set_visible (GTK_WIDGET (filechooser), FALSE);
+  self = GCAL_FILE_CHOOSER_BUTTON (user_data);
+  gcal_file_chooser_button_set_file (self, file);
 }
-static void
-ensure_filechooser (GcalFileChooserButton *self)
-{
-  GtkNative *native;
-  GtkWidget *dialog;
-
-  if (self->filechooser)
-    return;
-
-  native = gtk_widget_get_native (GTK_WIDGET (self));
-
-  dialog = gtk_file_chooser_dialog_new (get_title (self),
-                                        GTK_WINDOW (native),
-                                        GTK_FILE_CHOOSER_ACTION_OPEN,
-                                        _("Cancel"),
-                                        GTK_RESPONSE_CANCEL,
-                                        _("Open"),
-                                        GTK_RESPONSE_ACCEPT,
-                                        NULL);
-  gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
-  gtk_window_set_hide_on_close (GTK_WINDOW (dialog), TRUE);
-  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-
-  if (self->file)
-    gtk_file_chooser_set_file (GTK_FILE_CHOOSER (dialog), self->file, NULL);
-
-  g_signal_connect (dialog, "response", G_CALLBACK (on_filechooser_dialog_response_cb), self);
-
-  self->filechooser = GTK_FILE_CHOOSER (dialog);
-}
-
 
 static void
 gcal_file_chooser_button_clicked (GtkButton *button)
 {
-  GcalFileChooserButton *self = GCAL_FILE_CHOOSER_BUTTON (button);
-  GtkNative *native = gtk_widget_get_native (GTK_WIDGET (self));
+  g_autoptr (GtkFileDialog) file_dialog = NULL;
+  GcalFileChooserButton *self;
+  GtkRoot *root;
 
-  ensure_filechooser (self);
+  self = GCAL_FILE_CHOOSER_BUTTON (button);
+  root = gtk_widget_get_root (GTK_WIDGET (self));
 
-  gtk_window_set_transient_for (GTK_WINDOW (self->filechooser), GTK_WINDOW (native));
-  gtk_window_present (GTK_WINDOW (self->filechooser));
+  file_dialog = gtk_file_dialog_new ();
+  gtk_file_dialog_set_initial_file (file_dialog, self->file);
+  gtk_file_dialog_set_default_filter (file_dialog, self->filter);
+
+  gtk_file_dialog_open (file_dialog,
+                        GTK_WINDOW (root),
+                        self->cancellable,
+                        on_file_opened_cb,
+                        self);
 }
 
 static void
@@ -126,7 +113,11 @@ gcal_file_chooser_button_finalize (GObject *object)
 {
   GcalFileChooserButton *self = (GcalFileChooserButton *)object;
 
+  g_cancellable_cancel (self->cancellable);
+
   g_clear_pointer (&self->title, g_free);
+  g_clear_object (&self->cancellable);
+  g_clear_object (&self->filter);
   g_clear_object (&self->file);
 
   G_OBJECT_CLASS (gcal_file_chooser_button_parent_class)->finalize (object);
@@ -144,6 +135,10 @@ gcal_file_chooser_button_get_property (GObject    *object,
     {
     case PROP_FILE:
       g_value_set_object (value, self->file);
+      break;
+
+    case PROP_FILTER:
+      g_value_set_object (value, self->filter);
       break;
 
     case PROP_TITLE:
@@ -167,6 +162,10 @@ gcal_file_chooser_button_set_property (GObject      *object,
     {
     case PROP_FILE:
       gcal_file_chooser_button_set_file (self, g_value_get_object (value));
+      break;
+
+    case PROP_FILTER:
+      gcal_file_chooser_button_set_filter (self, g_value_get_object (value));
       break;
 
     case PROP_TITLE:
@@ -193,6 +192,9 @@ gcal_file_chooser_button_class_init (GcalFileChooserButtonClass *klass)
   properties[PROP_FILE] = g_param_spec_object ("file", "", "",
                                                G_TYPE_FILE,
                                                G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+  properties[PROP_FILTER] = g_param_spec_object ("filter", "", "",
+                                                 GTK_TYPE_FILE_FILTER,
+                                                 G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
   properties[PROP_TITLE] = g_param_spec_string ("title", "", "", NULL,
                                                 G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
   g_object_class_install_properties (object_class, N_PROPS, properties);
@@ -201,6 +203,8 @@ gcal_file_chooser_button_class_init (GcalFileChooserButtonClass *klass)
 static void
 gcal_file_chooser_button_init (GcalFileChooserButton *self)
 {
+  self->cancellable = g_cancellable_new ();
+
   update_label (self);
 }
 
@@ -218,9 +222,7 @@ gcal_file_chooser_button_set_file (GcalFileChooserButton *self,
 
   if (g_set_object (&self->file, file))
     {
-      gtk_file_chooser_set_file (self->filechooser, file, NULL);
       update_label (self);
-
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_FILE]);
     }
 }
@@ -257,12 +259,13 @@ gcal_file_chooser_button_get_title (GcalFileChooserButton *self)
   return self->title;
 }
 
-GtkFileChooser*
-gcal_file_chooser_button_get_filechooser (GcalFileChooserButton *self)
+void
+gcal_file_chooser_button_set_filter (GcalFileChooserButton *self,
+                                     GtkFileFilter         *filter)
 {
-  g_return_val_if_fail (GCAL_IS_FILE_CHOOSER_BUTTON (self), NULL);
+  g_return_if_fail (GCAL_IS_FILE_CHOOSER_BUTTON (self));
+  g_return_if_fail (filter == NULL || GTK_IS_FILE_FILTER (filter));
 
-  ensure_filechooser (self);
-
-  return self->filechooser;
+  if (g_set_object (&self->filter, filter))
+    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_FILTER]);
 }
