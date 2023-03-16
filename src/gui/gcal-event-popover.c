@@ -512,19 +512,39 @@ on_edit_button_clicked_cb (GtkButton        *edit_button,
 }
 
 static void
+on_uri_launched_cb (GObject      *source_object,
+                    GAsyncResult *result,
+                    gpointer      user_data)
+{
+  g_autoptr (GcalEventPopover) self = user_data;
+  g_autoptr (GError) error = NULL;
+
+  if (!gtk_uri_launcher_launch_finish (GTK_URI_LAUNCHER (source_object), result, &error))
+    {
+      g_warning ("Error launching URI: %s", error->message);
+      return;
+    }
+
+  gtk_popover_popdown (GTK_POPOVER (self));
+}
+
+static void
 on_join_meeting_cb (GcalMeetingRow   *meeting_row,
                     const gchar      *url,
                     GcalEventPopover *self)
 {
+  g_autoptr (GtkUriLauncher) uri_launcher = NULL;
   GtkWindow *window;
 
-  window = GTK_WINDOW (gtk_widget_get_native (GTK_WIDGET (self)));
+  window = GTK_WINDOW (gtk_widget_get_root (GTK_WIDGET (self)));
   g_assert (window != NULL);
 
-  gtk_show_uri (window, url, GDK_CURRENT_TIME);
-
-  /* For some reason, gtk_popover_popdown() crashes when called here */
-  gtk_widget_set_visible (GTK_WIDGET (self), FALSE);
+  uri_launcher = gtk_uri_launcher_new (url);
+  gtk_uri_launcher_launch (uri_launcher,
+                           window,
+                           NULL,
+                           on_uri_launched_cb,
+                           g_object_ref (self));
 }
 
 static void
