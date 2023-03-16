@@ -23,8 +23,10 @@
     </key>
     <key name="week-view-zoom-level" type="d">
       <default>1.0</default>
+      <!-- FIXME: uncomment after 45.alpha branches
       <summary>Zoom level of the week grid</summary>
       <description>The current zoom level of the week grid</description>
+      -->
     </key>
   </schema>
 </schemalist>
