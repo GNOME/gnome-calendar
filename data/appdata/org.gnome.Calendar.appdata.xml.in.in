@@ -46,6 +46,18 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2023-03-16" version="44.0">
+      <description>
+        <p>
+          <ul>
+            <li>Improve sizing of event editor dialog</li>
+            <li>Fix search not working anymore</li>
+            <li>Fix sidebar not opening events</li>
+            <li>New and updated translations</li>
+          </ul>
+        </p>
+      </description>
+    </release>
     <release date="2023-03-06" version="44~rc" />
     <release date="2023-02-14" version="44~beta" />
     <release date="2022-09-03" version="43.1" />
