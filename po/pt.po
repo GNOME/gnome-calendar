@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-03-03 22:56+0000\n"
-"PO-Revision-Date: 2023-03-06 16:50+0000\n"
+"POT-Creation-Date: 2023-03-16 12:30+0000\n"
+"PO-Revision-Date: 2023-03-16 13:35+0000\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Português (https://l10n.gnome.org/teams/pt/)\n"
 "Language: pt\n"
@@ -57,11 +57,11 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
 msgid "Week view"
-msgstr "Vista da semana"
+msgstr "Visualização da semana"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
 msgid "Month view"
-msgstr "Vista do mês"
+msgstr "Visualização do mês"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
 msgid "Event editor"
@@ -93,32 +93,33 @@ msgid "Window size (width and height)."
 msgstr "Tamanho da janela (largura e altura)."
 
 #: data/org.gnome.calendar.gschema.xml.in:16
-msgid "Window position"
-msgstr "Posição da janela"
+msgid "Type of the active view"
+msgstr "Tipo da visualização ativa"
 
 #: data/org.gnome.calendar.gschema.xml.in:17
-msgid "Window position (x and y)."
-msgstr "Posição da janela (x e y)."
+msgid "Type of the active window view, default value is: monthly view"
+msgstr ""
+"Tipo da visualização da janela ativa, sendo o padrão: visualização mensal"
 
 #: data/org.gnome.calendar.gschema.xml.in:21
-msgid "Type of the active view"
-msgstr "Tipo da visão ativa"
-
-#: data/org.gnome.calendar.gschema.xml.in:22
-msgid "Type of the active window view, default value is: monthly view"
-msgstr "Tipo da visão da janela ativa, sendo o padrão: visão mensal"
-
-#: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
 msgstr "Configuração do serviço de meteorologia"
 
-#: data/org.gnome.calendar.gschema.xml.in:27
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
 "Determine se são mostrados relatórios meteorológicos, se são usadas "
 "localizações automáticas, e o nome de uma localização"
+
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "Nível de zoom da grelha da semana"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "O atual nível de zoom da grelha da semana"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -189,51 +190,36 @@ msgstr "Nome do calendário"
 msgid "Color"
 msgstr "Cor"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:134
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:140
 msgid "Display calendar"
 msgstr "Mostrar calendário"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:146
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:152
 msgid "Add new events to this calendar by default"
 msgstr "Adicionar novos eventos a este calendário por predefinição"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:158
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:164
 msgid "Remove Calendar"
 msgstr "Remover calendário"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:49
+#: src/gui/calendar-management/gcal-file-chooser-button.c:51
 msgid "Select a file"
 msgstr "Selecionar um ficheiro"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:96
-msgid "Open"
-msgstr "Abrir"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:517
+#: src/gui/calendar-management/gcal-new-calendar-page.c:516
 msgid "New Calendar"
 msgstr "Novo calendário"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:695
-msgid "Calendar files"
-msgstr "Ficheiros de calendário"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:16
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:22
 msgid "Calendar Name"
 msgstr "Nome do calendário"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:55
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:61
 msgid "Import a Calendar"
 msgstr "Importar um calendário"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:78
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
@@ -241,15 +227,19 @@ msgstr ""
 "Alternativamente, introduza o endereço web de um calendário que deseje "
 "importar, ou abra um ficheiro de calendário suportado."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:100
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:106
 msgid "Open a File"
 msgstr "Abrir um ficheiro"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:124
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
+msgid "Calendar files"
+msgstr "Ficheiros de calendário"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:142
 msgid "Calendars"
 msgstr "Caléndários"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:148
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:166
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -257,23 +247,29 @@ msgstr ""
 "Se o calendário pertence a uma das suas contas online, pode adicioná-lo "
 "através das <a href=\"GOA\">definições de contas online</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
 msgid "Credentials"
 msgstr "Credenciais"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:206
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:297
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:214
 msgid "Connect"
 msgstr "Ligar"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:243
 msgid "User"
 msgstr "Utilizador"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:256
 msgid "Password"
 msgstr "Palavra-passe"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:301
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Adicionar"
@@ -629,16 +625,16 @@ msgstr "Gira os seus calendários"
 msgid "_Calendars"
 msgstr "_Caléndários"
 
-#: src/gui/gcal-calendar-button.ui:42
+#: src/gui/gcal-calendar-button.ui:41
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "A sincronizar os calendários remotos…"
 
-#: src/gui/gcal-calendar-button.ui:72
+#: src/gui/gcal-calendar-button.ui:71
 msgid "_Synchronize Calendars"
 msgstr "_Sincronizar calendários"
 
-#: src/gui/gcal-calendar-button.ui:76
+#: src/gui/gcal-calendar-button.ui:75
 msgid "Manage Calendars…"
 msgstr "Gerir calendários…"
 
@@ -1078,15 +1074,15 @@ msgstr "Mostrar meteorologia"
 msgid "Automatic Location"
 msgstr "Localização automática"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:714
 msgid "Another event deleted"
 msgstr "Outro evento eliminado"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:714
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
-#: src/gui/gcal-window.c:715
+#: src/gui/gcal-window.c:716
 msgid "_Undo"
 msgstr "An_ular"
 
@@ -1171,12 +1167,12 @@ msgstr "Mostrar hoje"
 #: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Next view"
-msgstr "Próxima vista"
+msgstr "Visualização seguinte"
 
 #: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Previous view"
-msgstr "Vista anterior"
+msgstr "Visualização anterior"
 
 #: src/gui/gtk/help-overlay.ui:81
 msgctxt "shortcut window"
@@ -1186,12 +1182,12 @@ msgstr "Ver"
 #: src/gui/gtk/help-overlay.ui:84
 msgctxt "shortcut window"
 msgid "Week view"
-msgstr "Vista da semana"
+msgstr "Visualização da semana"
 
 #: src/gui/gtk/help-overlay.ui:90
 msgctxt "shortcut window"
 msgid "Month view"
-msgstr "Vista do mês"
+msgstr "Visualização do mês"
 
 #: src/gui/importer/gcal-import-dialog.c:396
 #, c-format
@@ -1303,6 +1299,15 @@ msgstr "Eventos _subsequentes"
 #: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "_Todos os eventos"
+
+#~ msgid "Window position"
+#~ msgstr "Posição da janela"
+
+#~ msgid "Window position (x and y)."
+#~ msgstr "Posição da janela (x e y)."
+
+#~ msgid "Open"
+#~ msgstr "Abrir"
 
 #~ msgid "Year view"
 #~ msgstr "Vista de ano"
