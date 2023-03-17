@@ -33,7 +33,6 @@ GcalSearchEngine*    gcal_search_engine_new                      (GcalContext   
 
 void                 gcal_search_engine_search                   (GcalSearchEngine   *self,
                                                                   const gchar        *search_query,
-                                                                  gint                max_results,
                                                                   GCancellable       *cancellable,
                                                                   GAsyncReadyCallback callback,
                                                                   gpointer            user_data);
