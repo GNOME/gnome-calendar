@@ -119,7 +119,7 @@ gcal_search_hit_event_compare (GcalSearchHit *a,
   event_b = GCAL_SEARCH_HIT_EVENT (b)->event;
   now_utc = time (NULL);
 
-  result = -gcal_event_compare_with_current (event_a, event_b, now_utc);
+  result = gcal_event_compare_with_current (event_a, event_b, now_utc);
   if (result != 0)
     return result;
 
