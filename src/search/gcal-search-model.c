@@ -88,11 +88,6 @@ stop_idle:
   return G_SOURCE_REMOVE;
 }
 
-
-/*
- * GcalTimelineSubscriber interface
- */
-
 static gint
 compare_search_hits_cb (gconstpointer a,
                         gconstpointer b,
@@ -123,6 +118,11 @@ search_hits_equals_cb (gconstpointer a,
 
   return gcal_search_hit_compare (search_hit_a, search_hit_b) == 0;
 }
+
+
+/*
+ * GcalTimelineSubscriber interface
+ */
 
 static GcalRange*
 gcal_search_model_get_range (GcalTimelineSubscriber *subscriber)
