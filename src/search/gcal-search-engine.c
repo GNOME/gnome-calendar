@@ -225,8 +225,8 @@ gcal_search_engine_search (GcalSearchEngine    *self,
 
   timezone = gcal_context_get_timezone (self->context);
   now = g_date_time_new_now (timezone);
-  range_start = g_date_time_add_weeks (now, -1);
-  range_end = g_date_time_add_weeks (now, 3);
+  range_start = g_date_time_add_months (now, -6);
+  range_end = g_date_time_add_months (now, 6);
   model = gcal_search_model_new (cancellable, range_start, range_end);
 
   gcal_timeline_set_filter (self->timeline, search_query);
