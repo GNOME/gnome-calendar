@@ -209,7 +209,6 @@ gcal_search_engine_new (GcalContext *context)
 void
 gcal_search_engine_search (GcalSearchEngine    *self,
                            const gchar         *search_query,
-                           gint                 max_results,
                            GCancellable        *cancellable,
                            GAsyncReadyCallback  callback,
                            gpointer             user_data)
@@ -228,7 +227,7 @@ gcal_search_engine_search (GcalSearchEngine    *self,
   now = g_date_time_new_now (timezone);
   range_start = g_date_time_add_weeks (now, -1);
   range_end = g_date_time_add_weeks (now, 3);
-  model = gcal_search_model_new (cancellable, max_results, range_start, range_end);
+  model = gcal_search_model_new (cancellable, range_start, range_end);
 
   gcal_timeline_set_filter (self->timeline, search_query);
   gcal_timeline_add_subscriber (self->timeline, GCAL_TIMELINE_SUBSCRIBER (model));

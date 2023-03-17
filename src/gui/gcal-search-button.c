@@ -261,7 +261,6 @@ on_entry_search_changed_cb (GtkSearchEntry   *entry,
   search_engine = gcal_context_get_search_engine (self->context);
   gcal_search_engine_search (search_engine,
                              sexp_query,
-                             50,
                              self->cancellable,
                              on_search_finished_cb,
                              g_object_ref (self));

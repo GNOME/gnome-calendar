@@ -37,7 +37,6 @@ struct _GcalSearchModel
   GObject             parent;
 
   GCancellable       *cancellable;
-  gint                max_results;
   GDateTime          *range_start;
   GDateTime          *range_end;
 
@@ -119,6 +118,16 @@ search_hits_equals_cb (gconstpointer a,
   return gcal_search_hit_compare (search_hit_a, search_hit_b) == 0;
 }
 
+static void
+on_search_model_items_changed_cb (GListModel      *model,
+                                  guint            position,
+                                  guint            removed,
+                                  guint            added,
+                                  GcalSearchModel *self)
+{
+  g_list_model_items_changed (G_LIST_MODEL (self), position, removed, added);
+}
+
 
 /*
  * GcalTimelineSubscriber interface
@@ -139,7 +148,6 @@ gcal_search_model_add_event (GcalTimelineSubscriber *subscriber,
   g_autoptr (GcalSearchHitEvent) search_hit = NULL;
   GcalSearchModel *self;
   gboolean found;
-  guint position;
 
   self = GCAL_SEARCH_MODEL (subscriber);
 
@@ -155,16 +163,10 @@ gcal_search_model_add_event (GcalTimelineSubscriber *subscriber,
   if (found)
     return;
 
-  position = g_list_store_insert_sorted (G_LIST_STORE (self->model),
-                                         search_hit,
-                                         compare_search_hits_cb,
-                                         self);
-  if (position < self->max_results)
-    {
-      if (g_list_model_get_n_items (self->model) > self->max_results)
-        g_list_model_items_changed (G_LIST_MODEL (self), self->max_results, 1, 0);
-      g_list_model_items_changed (G_LIST_MODEL (self), position, 0, 1);
-    }
+  g_list_store_insert_sorted (G_LIST_STORE (self->model),
+                              search_hit,
+                              compare_search_hits_cb,
+                              self);
 }
 
 static void
@@ -203,7 +205,7 @@ static guint
 gcal_search_model_get_n_items (GListModel *model)
 {
   GcalSearchModel *self = (GcalSearchModel *)model;
-  return CLAMP (g_list_model_get_n_items (self->model), 0, self->max_results);
+  return g_list_model_get_n_items (self->model);
 }
 
 static gpointer
@@ -257,18 +259,17 @@ static void
 gcal_search_model_init (GcalSearchModel *self)
 {
   self->model = (GListModel*) g_list_store_new (GCAL_TYPE_SEARCH_HIT);
+  g_signal_connect (self->model, "items-changed", G_CALLBACK (on_search_model_items_changed_cb), self);
 }
 
 GcalSearchModel *
 gcal_search_model_new (GCancellable *cancellable,
-                       gint          max_results,
                        GDateTime    *range_start,
                        GDateTime    *range_end)
 {
   GcalSearchModel *model;
 
   model = g_object_new (GCAL_TYPE_SEARCH_MODEL, NULL);
-  model->max_results = max_results;
   model->cancellable = cancellable ? g_object_ref (cancellable) : NULL;
   model->range_start = g_date_time_ref (range_start);
   model->range_end = g_date_time_ref (range_end);
