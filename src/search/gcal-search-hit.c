@@ -109,7 +109,7 @@ gcal_search_hit_get_property (GObject    *object,
       break;
 
     case PROP_PRIMARY_ICON:
-      g_value_take_object (value, gcal_search_hit_get_primary_icon (self));
+      g_value_set_object (value, gcal_search_hit_get_primary_icon (self));
       break;
 
     default:
