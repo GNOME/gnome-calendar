@@ -11,11 +11,6 @@
         <property name="valign">center</property>
         <!-- Translators: "Join" as in "Join meeting" -->
         <property name="label" translatable="yes">Join</property>
-        <layout>
-          <property name="row">0</property>
-          <property name="column">1</property>
-          <property name="row-span">2</property>
-        </layout>
         <style>
           <class name="suggested-action" />
         </style>
