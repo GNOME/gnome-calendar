@@ -29,6 +29,8 @@ struct _GcalMeetingRow
 {
   AdwActionRow        parent_instance;
 
+  GtkWidget          *join_button;
+
   gchar              *url;
 };
 
@@ -103,6 +105,17 @@ on_join_button_clicked_cb (GtkButton      *button,
 }
 
 
+static gboolean
+gcal_meeting_row_grab_focus (GtkWidget *widget)
+{
+  GcalMeetingRow *self = (GcalMeetingRow *) widget;
+
+  gtk_widget_grab_focus (self->join_button);
+
+  return TRUE;
+}
+
+
 /*
  * GObject overrides
  */
@@ -167,6 +180,8 @@ gcal_meeting_row_class_init (GcalMeetingRowClass *klass)
   object_class->get_property = gcal_meeting_row_get_property;
   object_class->set_property = gcal_meeting_row_set_property;
 
+  widget_class->grab_focus = gcal_meeting_row_grab_focus;
+
   signals[JOIN_MEETING] = g_signal_new ("join-meeting",
                                         GCAL_TYPE_MEETING_ROW,
                                         G_SIGNAL_RUN_LAST,
@@ -184,6 +199,8 @@ gcal_meeting_row_class_init (GcalMeetingRowClass *klass)
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-meeting-row.ui");
+
+  gtk_widget_class_bind_template_child (widget_class, GcalMeetingRow, join_button);
 
   gtk_widget_class_bind_template_callback (widget_class, on_join_button_clicked_cb);
 
