@@ -2,6 +2,7 @@
 <interface>
   <template class="GcalMeetingRow" parent="AdwActionRow">
     <property name="activatable">False</property>
+    <property name="focusable">False</property>
 
     <child>
       <object class="GtkButton" id="join_button">
