@@ -384,24 +384,26 @@ out:
  */
 
 static void
-on_repeat_duration_changed_cb (GtkComboBox         *widget,
+on_repeat_duration_changed_cb (GtkWidget           *widget,
+                               GParamSpec          *pspec,
                                GcalScheduleSection *self)
 {
-  gint active = gtk_combo_box_get_active (widget);
+  gint active = adw_combo_row_get_selected (ADW_COMBO_ROW (widget));
 
   gtk_widget_set_visible (self->number_of_occurrences_spin, active == 1);
   gtk_widget_set_visible (self->until_date_selector, active == 2);
 }
 
 static void
-on_repeat_type_changed_cb (GtkComboBox         *combobox,
+on_repeat_type_changed_cb (GtkWidget           *widget,
+                           GParamSpec          *pspec,
                            GcalScheduleSection *self)
 {
   GcalRecurrenceFrequency frequency;
 
-  frequency = gtk_combo_box_get_active (combobox);
+  frequency = adw_combo_row_get_selected (ADW_COMBO_ROW (widget));
 
-  gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
+  adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
   gtk_widget_set_visible (self->repeat_duration_combo, frequency != GCAL_RECURRENCE_NO_REPEAT);
 }
 
@@ -462,8 +464,8 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   frequency = recur ? recur->frequency : GCAL_RECURRENCE_NO_REPEAT;
   limit_type = recur ? recur->limit_type : GCAL_RECURRENCE_FOREVER;
 
-  gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_combo), frequency);
-  gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_duration_combo), limit_type);
+  adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_combo), frequency);
+  adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_duration_combo), limit_type);
 
   if (frequency == GCAL_RECURRENCE_NO_REPEAT)
     {
@@ -605,7 +607,7 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
 
   /* Check Repeat popover and set recurrence-rules accordingly */
   old_recur = gcal_event_get_recurrence (self->event);
-  freq = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_combo));
+  freq = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_combo));
 
   if (freq != GCAL_RECURRENCE_NO_REPEAT)
     {
@@ -613,7 +615,7 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
 
       recur = gcal_recurrence_new ();
       recur->frequency = freq;
-      recur->limit_type = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_duration_combo));
+      recur->limit_type = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_duration_combo));
 
       if (recur->limit_type == GCAL_RECURRENCE_UNTIL)
         recur->limit.until = g_date_time_ref (gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector)));
@@ -813,13 +815,13 @@ gcal_schedule_section_recurrence_changed (GcalScheduleSection *self)
 
   g_return_val_if_fail (GCAL_IS_SCHEDULE_SECTION (self), FALSE);
 
-  freq = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_combo));
+  freq = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_combo));
   if (freq == GCAL_RECURRENCE_NO_REPEAT && !gcal_event_get_recurrence (self->event))
     GCAL_RETURN (FALSE);
 
   recurrence = gcal_recurrence_new ();
-  recurrence->frequency = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_combo));
-  recurrence->limit_type = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_duration_combo));
+  recurrence->frequency = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_combo));
+  recurrence->limit_type = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_duration_combo));
   if (recurrence->limit_type == GCAL_RECURRENCE_UNTIL)
     recurrence->limit.until = g_date_time_ref (gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector)));
   else if (recurrence->limit_type == GCAL_RECURRENCE_COUNT)

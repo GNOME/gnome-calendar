@@ -116,49 +116,40 @@
 
         <!-- Repeat -->
         <child>
-          <object class="AdwActionRow">
+          <object class="AdwComboRow" id="repeat_combo">
             <property name="title" translatable="yes">Repeat</property>
-            <property name="activatable-widget">repeat_combo</property>
-
-            <child>
-              <object class="GtkComboBoxText" id="repeat_combo">
-                <property name="valign">center</property>
-                <signal name="changed" handler="on_repeat_type_changed_cb" object="GcalScheduleSection" swapped="no"/>
+            <property name="valign">center</property>
+            <property name="model">
+              <object class="GtkStringList">
                 <items>
-                  <item translatable="yes" id="no_repeat">No Repeat</item>
-                  <item translatable="yes" id="daily">Daily</item>
-                  <item translatable="yes" id="mon_fri">Monday – Friday</item>
-                  <item translatable="yes" id="weekly">Weekly</item>
-                  <item translatable="yes" id="monthly">Monthly</item>
-                  <item translatable="yes" id="yearly">Yearly</item>
+                  <item translatable="yes">No Repeat</item>
+                  <item translatable="yes">Daily</item>
+                  <item translatable="yes">Monday – Friday</item>
+                  <item translatable="yes">Weekly</item>
+                  <item translatable="yes">Monthly</item>
+                  <item translatable="yes">Yearly</item>
                 </items>
-                <property name="active_id">no_repeat</property>
               </object>
-            </child>
-
+            </property>
+            <signal name="notify::selected-item" handler="on_repeat_type_changed_cb" swapped="no"/>
           </object>
         </child>
 
         <!-- End Repeat -->
         <child>
-          <object class="AdwActionRow">
-            <property name="visible" bind-source="repeat_duration_combo" bind-property="visible" bind-flags="default" />
+          <object class="AdwComboRow" id="repeat_duration_combo">
             <property name="title" translatable="yes">End Repeat</property>
-            <property name="activatable-widget">repeat_combo</property>
-
-            <child>
-              <object class="GtkComboBoxText" id="repeat_duration_combo">
-                <property name="valign">center</property>
-                <signal name="changed" handler="on_repeat_duration_changed_cb" object="GcalScheduleSection" swapped="no"/>
+            <property name="valign">center</property>
+            <property name="model">
+              <object class="GtkStringList">
                 <items>
-                  <item translatable="yes" id="forever">Forever</item>
-                  <item translatable="yes" id="number_of_occurrences_spin">No. of occurrences</item>
-                  <item translatable="yes" id="until_date">Until Date</item>
+                  <item translatable="yes">Forever</item>
+                  <item translatable="yes">No. of occurrences</item>
+                  <item translatable="yes">Until Date</item>
                 </items>
-                <property name="active_id">forever</property>
               </object>
-            </child>
-
+            </property>
+            <signal name="notify::selected-item" handler="on_repeat_duration_changed_cb" swapped="no"/>
           </object>
         </child>
 
