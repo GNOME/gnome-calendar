@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GcalEventPopover" parent="GtkPopover">
+    <property name="default-widget">edit_button</property>
 
     <style>
       <class name="event-popover" />
