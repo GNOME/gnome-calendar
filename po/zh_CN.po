@@ -14,17 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-08-20 21:05+0000\n"
-"PO-Revision-Date: 2022-08-21 14:29+0800\n"
+"POT-Creation-Date: 2023-03-16 14:29+0000\n"
+"PO-Revision-Date: 2023-03-22 18:21+0800\n"
 "Last-Translator: lumingzh <lumingzh@qq.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Launchpad-Export-Date: 2016-03-22 14:52+0000\n"
-"X-Generator: Gtranslator 42.0\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -93,26 +93,18 @@ msgid "Window size (width and height)."
 msgstr "窗口大小（宽度和高度）。"
 
 #: data/org.gnome.calendar.gschema.xml.in:16
-msgid "Window position"
-msgstr "窗口位置"
-
-#: data/org.gnome.calendar.gschema.xml.in:17
-msgid "Window position (x and y)."
-msgstr "窗口位置（水平和垂直）。"
-
-#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "活动视图类型"
 
-#: data/org.gnome.calendar.gschema.xml.in:22
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "活动窗口视图类型，默认值为：月份视图"
 
-#: data/org.gnome.calendar.gschema.xml.in:26
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
 msgstr "天气服务配置"
 
-#: data/org.gnome.calendar.gschema.xml.in:27
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
@@ -187,85 +179,83 @@ msgstr "日历名称"
 msgid "Color"
 msgstr "颜色"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:134
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:140
 msgid "Display calendar"
 msgstr "显示日历"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:146
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:152
 msgid "Add new events to this calendar by default"
 msgstr "默认情况下将新事件添加到该日历中"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:158
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:164
 msgid "Remove Calendar"
 msgstr "移除日历"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:49
+#: src/gui/calendar-management/gcal-file-chooser-button.c:51
 msgid "Select a file"
 msgstr "选择文件"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-msgid "Cancel"
-msgstr "取消"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:96
-msgid "Open"
-msgstr "打开"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:512
+#: src/gui/calendar-management/gcal-new-calendar-page.c:516
 msgid "New Calendar"
 msgstr "新建日历"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:690
-msgid "Calendar files"
-msgstr "日历文件"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:16
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:22
 msgid "Calendar Name"
 msgstr "日历名称"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:55
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:61
 msgid "Import a Calendar"
 msgstr "导入日历"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:78
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
 msgstr "此外，也可以输入您想导入的在线日历网址，或者打开支持的日历文件。"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:100
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:106
 msgid "Open a File"
 msgstr "打开文件"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
+msgid "Calendar files"
+msgstr "日历文件"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:142
 msgid "Calendars"
 msgstr "日历"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:148
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:166
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
 "如果日历属于您的在线帐户，可以通过<a href=\"GOA\">在线帐号设置</a>来添加。"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
-msgid "User"
-msgstr "用户"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
+msgid "Credentials"
+msgstr "凭据"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-msgid "Password"
-msgstr "密码"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:206
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:297
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
+msgid "Cancel"
+msgstr "取消"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:214
 msgid "Connect"
 msgstr "连接"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:243
+msgid "User"
+msgstr "用户"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:256
+msgid "Password"
+msgstr "密码"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:301
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "添加"
@@ -385,7 +375,7 @@ msgstr "提醒"
 msgid "Notes"
 msgstr "备注"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Delete Event"
 msgstr "删除事件"
 
@@ -437,17 +427,19 @@ msgstr "上周的%A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "昨天"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "今天"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "明天"
 
@@ -585,7 +577,7 @@ msgstr "Copyright © 2012–%d The Calendar 作者"
 msgid "The GNOME Project"
 msgstr "GNOME 项目"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "tuhaihe <1132321739qq@gmail.com>, 2013, 2020\n"
@@ -595,13 +587,17 @@ msgstr ""
 "Mingcong Bai <jeffbai@aosc.io>, 2018\n"
 "Dinzhong Chen <wsxy162@gmail.com>, 2017, 2019"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
 msgid "Weather"
 msgstr "天气"
 
 #: src/gui/gcal-calendar-button.ui:6
 msgid "Manage your calendars"
 msgstr "管理您的日历"
+
+#: src/gui/gcal-calendar-button.ui:23
+msgid "_Calendars"
+msgstr "日历(_C)"
 
 #: src/gui/gcal-calendar-button.ui:41
 msgctxt "tooltip"
@@ -777,7 +773,7 @@ msgid "Edit…"
 msgstr "编辑…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "位于 %s"
@@ -798,7 +794,11 @@ msgstr "Whereby"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:69
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:79
 msgid "Unknown Service"
 msgstr "未知服务"
 
@@ -1048,35 +1048,43 @@ msgstr "显示天气"
 msgid "Automatic Location"
 msgstr "自动定位"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:714
 msgid "Another event deleted"
 msgstr "另一个事件已删除"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:714
 msgid "Event deleted"
 msgstr "事件已删除"
 
-#: src/gui/gcal-window.c:701
+#: src/gui/gcal-window.c:716
 msgid "_Undo"
 msgstr "撤消(_U)"
 
-#: src/gui/gcal-window.ui:219
-msgid "Week"
-msgstr "周"
+#: src/gui/gcal-window.ui:117
+msgid "Main Menu"
+msgstr "主菜单"
 
-#: src/gui/gcal-window.ui:233
-msgid "Month"
-msgstr "月"
+#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
+msgid "_Today"
+msgstr "今天(_T)"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.ui:223
+msgid "_Week"
+msgstr "周(_W)"
+
+#: src/gui/gcal-window.ui:238
+msgid "_Month"
+msgstr "月(_M)"
+
+#: src/gui/gcal-window.ui:279
 msgid "_Online Accounts…"
 msgstr "在线帐号(_O)…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:291
 msgid "_Keyboard Shortcuts"
 msgstr "键盘快捷键(_K)"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:295
 msgid "_About Calendar"
 msgstr "关于日历(_A)"
 
@@ -1165,7 +1173,7 @@ msgstr[0] "导入 %d 个事件"
 msgid "Import Files…"
 msgstr "导入文件…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
 msgid "_Cancel"
 msgstr "取消(_C)"
 
@@ -1213,46 +1221,63 @@ msgstr "文件不是 iCalendar (.ics) 文件"
 msgid "Description"
 msgstr "描述"
 
+#: src/gui/views/gcal-agenda-view.c:366
+msgid "On-going"
+msgstr "进行中"
+
+#: src/gui/views/gcal-agenda-view.ui:19
+msgid "No events"
+msgstr "无事件"
+
 #: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "新建事件…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:576
 msgid "00 AM"
 msgstr "上午 00"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:579
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:478
+#: src/gui/views/gcal-week-header.c:472
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "其他 %d 个事件"
 
-#: src/gui/views/gcal-week-header.c:1006
+#: src/gui/views/gcal-week-header.c:1000
 #, c-format
 msgid "week %d"
 msgstr "第 %d 周"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1317
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr "您正在修改的事件是重复事件。您所作的修改会应用到："
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1322
 msgid "_Only This Event"
 msgstr "仅此事件(_O)"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1329
 msgid "_Subsequent events"
 msgstr "后续事件(_S)"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "所有事件(_A)"
+
+#~ msgid "Window position"
+#~ msgstr "窗口位置"
+
+#~ msgid "Window position (x and y)."
+#~ msgstr "窗口位置（水平和垂直）。"
+
+#~ msgid "Open"
+#~ msgstr "打开"
 
 #~ msgid "Year view"
 #~ msgstr "年视图"
@@ -1275,9 +1300,6 @@ msgstr "所有事件(_A)"
 
 #~ msgid "%B %d"
 #~ msgstr "%-m月%-d日"
-
-#~ msgid "No events"
-#~ msgstr "无事件"
 
 #~ msgid "Add Event…"
 #~ msgstr "添加事件…"
@@ -1322,9 +1344,6 @@ msgstr "所有事件(_A)"
 #~ msgid "org.gnome.Calendar"
 #~ msgstr "org.gnome.Calendar"
 
-#~ msgid "_Calendars"
-#~ msgstr "日历(_C)"
-
 #~ msgid "_About"
 #~ msgstr "关于(_A)"
 
@@ -1340,9 +1359,6 @@ msgstr "所有事件(_A)"
 #~ msgid "Nextcloud"
 #~ msgstr "Nextcloud"
 
-#~ msgid "Microsoft Exchange"
-#~ msgstr "微软 Exchange"
-
 #~ msgid "Overview"
 #~ msgstr "概览"
 
@@ -1351,9 +1367,6 @@ msgstr "所有事件(_A)"
 
 #~ msgid "Calendar Address"
 #~ msgstr "日历地址"
-
-#~ msgid "Enter your credentials"
-#~ msgstr "输入您的凭据"
 
 #~ msgid "All day"
 #~ msgstr "全天"
