@@ -571,7 +571,6 @@ gcal_event_popover_map (GtkWidget *widget)
   GTK_WIDGET_CLASS (gcal_event_popover_parent_class)->map (widget);
 
   first_meeting_row = gtk_list_box_get_row_at_index (self->meetings_listbox, 0);
-  g_message ("Meeting row: %p (%s)", first_meeting_row, first_meeting_row ? G_OBJECT_TYPE_NAME (first_meeting_row) : "none");
 
   if (first_meeting_row)
     gtk_widget_grab_focus (GTK_WIDGET (first_meeting_row));
