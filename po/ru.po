@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-03-03 22:56+0000\n"
-"PO-Revision-Date: 2023-03-04 12:47+0300\n"
+"POT-Creation-Date: 2023-03-16 12:30+0000\n"
+"PO-Revision-Date: 2023-03-16 16:12+0300\n"
 "Last-Translator: Aleksandr Melman <Alexmelman88@gmail.com>\n"
 "Language-Team: Russian <Alexmelman88@gmail.com>\n"
 "Language: ru\n"
@@ -99,32 +99,32 @@ msgid "Window size (width and height)."
 msgstr "Размер окна (ширина и высота)."
 
 #: data/org.gnome.calendar.gschema.xml.in:16
-msgid "Window position"
-msgstr "Расположение окна"
-
-#: data/org.gnome.calendar.gschema.xml.in:17
-msgid "Window position (x and y)."
-msgstr "Расположение окна (x и y)."
-
-#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Текущий режим просмотра"
 
-#: data/org.gnome.calendar.gschema.xml.in:22
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Текущий режим просмотра, по умолчанию используется месячный просмотр"
 
-#: data/org.gnome.calendar.gschema.xml.in:26
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
 msgstr "Конфигурация службы погоды"
 
-#: data/org.gnome.calendar.gschema.xml.in:27
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
 "Отображаются ли отчеты о погоде, используются автоматические местоположения "
 "и имя местопложения"
+
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "Уровень масштабирования недельной сетки"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "Текущий уровень масштабирования недельной сетки"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -195,51 +195,36 @@ msgstr "Имя календаря"
 msgid "Color"
 msgstr "Цвет"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:134
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:140
 msgid "Display calendar"
 msgstr "Показать календарь"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:146
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:152
 msgid "Add new events to this calendar by default"
 msgstr "Добавлять новые события в этот календарь по умолчанию"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:158
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:164
 msgid "Remove Calendar"
 msgstr "Удалить календарь"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:49
+#: src/gui/calendar-management/gcal-file-chooser-button.c:51
 msgid "Select a file"
 msgstr "Выбрать файл"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-msgid "Cancel"
-msgstr "Отмена"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:96
-msgid "Open"
-msgstr "Открыть"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:517
+#: src/gui/calendar-management/gcal-new-calendar-page.c:516
 msgid "New Calendar"
 msgstr "Создать календарь"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:695
-msgid "Calendar files"
-msgstr "Файлы календаря"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:16
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:22
 msgid "Calendar Name"
 msgstr "Имя календаря"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:55
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:61
 msgid "Import a Calendar"
 msgstr "Импортировать календарь"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:78
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
@@ -247,15 +232,19 @@ msgstr ""
 "Либо введите веб-адрес онлайн-календаря, который хотите импортировать, или "
 "откройте поддерживаемый файл календаря."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:100
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:106
 msgid "Open a File"
 msgstr "Открыть файл"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:124
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
+msgid "Calendar files"
+msgstr "Файлы календаря"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:142
 msgid "Calendars"
 msgstr "Календари"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:148
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:166
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -263,23 +252,29 @@ msgstr ""
 "Если календарь относится к одной из сетевых учётных записей, его можно "
 "добавить через <a href=\"GOA\">настройки сетевых учётных записей</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
 msgid "Credentials"
 msgstr "Учетные данные"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:206
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:297
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
+msgid "Cancel"
+msgstr "Отмена"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:214
 msgid "Connect"
 msgstr "Подключить"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:243
 msgid "User"
 msgstr "Пользователь"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:256
 msgid "Password"
 msgstr "Пароль"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:301
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Добавить"
@@ -647,16 +642,16 @@ msgstr "Управление календарями"
 msgid "_Calendars"
 msgstr "_Календари"
 
-#: src/gui/gcal-calendar-button.ui:42
+#: src/gui/gcal-calendar-button.ui:41
 msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Синхронизировать удалённые календари…"
 
-#: src/gui/gcal-calendar-button.ui:72
+#: src/gui/gcal-calendar-button.ui:71
 msgid "_Synchronize Calendars"
 msgstr "_Синхронизировать календари"
 
-#: src/gui/gcal-calendar-button.ui:76
+#: src/gui/gcal-calendar-button.ui:75
 msgid "Manage Calendars…"
 msgstr "Управление календарями…"
 
@@ -1096,15 +1091,15 @@ msgstr "Показывать погоду"
 msgid "Automatic Location"
 msgstr "Автоматическое местоположение"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:714
 msgid "Another event deleted"
 msgstr "Ещё одно событие удалено"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:714
 msgid "Event deleted"
 msgstr "Событие удалено"
 
-#: src/gui/gcal-window.c:715
+#: src/gui/gcal-window.c:716
 msgid "_Undo"
 msgstr "_Вернуть"
 
@@ -1323,6 +1318,15 @@ msgstr "_Последующие события"
 #: src/utils/gcal-utils.c:1332
 msgid "_All events"
 msgstr "_Все события"
+
+#~ msgid "Window position"
+#~ msgstr "Расположение окна"
+
+#~ msgid "Window position (x and y)."
+#~ msgstr "Расположение окна (x и y)."
+
+#~ msgid "Open"
+#~ msgstr "Открыть"
 
 #~ msgid "Year view"
 #~ msgstr "Просмотр года"
