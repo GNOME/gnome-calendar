@@ -1,3 +1,9 @@
+Major changes in 44.1:
+* Preserve week view zoom levels when closing the app
+* Lots of stability and performance improvements to search
+* Improve keyboard navigation of event preview popover
+* Updated translations
+
 Major changes in 44.0:
 * Updated translations
 
