@@ -44,6 +44,7 @@
   <url type="homepage">https://wiki.gnome.org/Apps/Calendar</url>
   <url type="bugtracker">https://gitlab.gnome.org/GNOME/gnome-calendar/issues</url>
   <url type="donation">https://www.gnome.org/donate/</url>
+  <url type="vcs-browser">https://gitlab.gnome.org/GNOME/gnome-calendar</url>
   <project_group>GNOME</project_group>
 
   <releases>
