@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="GcalMonthCell" parent="AdwBin">
+  <template class="GcalMonthCell" parent="AdwBreakpointBin">
+    <child>
+      <object class="AdwBreakpoint" id="breakpoint_narrow">
+        <condition>max-width: 120sp</condition>
+        <setter object="weather_icon" property="halign">end</setter>
+        <setter object="weather_icon" property="hexpand">True</setter>
+        <setter object="weather_icon" property="margin-start">6</setter>
+        <setter object="temp_label" property="visible">False</setter>
+      </object>
+    </child>
+
+    <property name="width-request">50</property>
+    <property name="height-request">50</property>
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
     <property name="focusable">True</property>

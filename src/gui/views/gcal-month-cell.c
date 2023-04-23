@@ -30,10 +30,12 @@
 
 struct _GcalMonthCell
 {
-  AdwBin              parent;
+  AdwBreakpointBin    parent;
 
   GDateTime          *date;
   guint               n_overflow;
+
+  AdwBreakpoint      *breakpoint_narrow;
 
   GtkLabel           *day_label;
   GtkWidget          *header_box;
@@ -51,9 +53,11 @@ struct _GcalMonthCell
   GcalContext        *context;
 
   GcalWeatherInfo    *weather_info;
+
+  GBinding           *icon_tooltip_binding;
 };
 
-G_DEFINE_TYPE (GcalMonthCell, gcal_month_cell, ADW_TYPE_BIN)
+G_DEFINE_TYPE (GcalMonthCell, gcal_month_cell, ADW_TYPE_BREAKPOINT_BIN)
 
 enum
 {
@@ -303,6 +307,27 @@ on_weather_service_weather_changed_cb (GcalWeatherService *weather_service,
   update_weather (self);
 }
 
+static void
+on_breakpoint_changed_cb (GcalMonthCell *self,
+                          GParamSpec    *pspec)
+{
+  AdwBreakpoint *current_breakpoint = adw_breakpoint_bin_get_current_breakpoint (ADW_BREAKPOINT_BIN (self));
+
+  if (current_breakpoint == self->breakpoint_narrow)
+    {
+      self->icon_tooltip_binding = g_object_bind_property (self->temp_label, "label",
+                                                           self->weather_icon, "tooltip-text",
+                                                           G_BINDING_SYNC_CREATE);
+    }
+  else
+    {
+      g_assert (G_IS_BINDING (self->icon_tooltip_binding));
+
+      g_clear_pointer (&self->icon_tooltip_binding, g_binding_unbind);
+      gtk_widget_set_tooltip_text (GTK_WIDGET (self->weather_icon), NULL);
+    }
+}
+
 
 /*
  * GObject overrides
@@ -391,6 +416,7 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-month-cell.ui");
 
+  gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, breakpoint_narrow);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, day_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, header_box);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, month_name_label);
@@ -416,6 +442,8 @@ gcal_month_cell_init (GcalMonthCell *self)
   g_signal_connect (drop_target, "accept", G_CALLBACK (on_drop_target_accept_cb), self);
   g_signal_connect (drop_target, "drop", G_CALLBACK (on_drop_target_drop_cb), self);
   gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
+
+  g_signal_connect(self, "notify::current-breakpoint", G_CALLBACK (on_breakpoint_changed_cb), 0);
 }
 
 GtkWidget*
