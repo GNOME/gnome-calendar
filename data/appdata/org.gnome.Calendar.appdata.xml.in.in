@@ -48,14 +48,12 @@
   <releases>
     <release date="2023-03-16" version="44.0">
       <description>
-        <p>
-          <ul>
-            <li>Improve sizing of event editor dialog</li>
-            <li>Fix search not working anymore</li>
-            <li>Fix sidebar not opening events</li>
-            <li>New and updated translations</li>
-          </ul>
-        </p>
+        <ul>
+          <li>Improve sizing of event editor dialog</li>
+          <li>Fix search not working anymore</li>
+          <li>Fix sidebar not opening events</li>
+          <li>New and updated translations</li>
+        </ul>
       </description>
     </release>
     <release date="2023-03-06" version="44~rc" />
@@ -63,12 +61,10 @@
     <release date="2022-09-03" version="43.1" />
     <release date="2022-09-03" version="43.0">
       <description>
-        <p>
-          <ul>
-            <li>Navigation sidebar with weekly events</li>
-            <li>New and updated translations</li>
-          </ul>
-        </p>
+        <ul>
+          <li>Navigation sidebar with weekly events</li>
+          <li>New and updated translations</li>
+        </ul>
       </description>
     </release>
     <release date="2022-09-03" version="43~rc" />
@@ -76,13 +72,11 @@
     <release date="2022-07-09" version="43~alpha" />
     <release date="2022-03-18" version="42.0">
       <description>
-        <p>
-          <ul>
-            <li>Port to GTK4</li>
-            <li>Various UI tweaks</li>
-            <li>Much improved timezone handling</li>
-          </ul>
-        </p>
+        <ul>
+          <li>Port to GTK4</li>
+          <li>Various UI tweaks</li>
+          <li>Much improved timezone handling</li>
+        </ul>
       </description>
     </release>
 
@@ -147,12 +141,12 @@
         <p>GNOME Calendar 3.36 release is here!</p>
         <p>
           This is an exciting release with many improvements and new features:
-          <ul>
-            <li>The event editor dialog was redesigned and reimplemented</li>
-            <li>Minor tweaks to the main interface</li>
-            <li>Many improvements and fixes</li>
-          </ul>
         </p>
+        <ul>
+          <li>The event editor dialog was redesigned and reimplemented</li>
+          <li>Minor tweaks to the main interface</li>
+          <li>Many improvements and fixes</li>
+        </ul>
       </description>
     </release>
 
@@ -161,12 +155,12 @@
         <p>GNOME Calendar 3.34 release is here!</p>
         <p>
           This release comes with many improvements and new features:
-          <ul>
-            <li>The calendar management dialog was redesigned and reimplemented</li>
-            <li>Discovering online calendars is much more reliable</li>
-            <li>Minor tweaks to the main interface</li>
-          </ul>
         </p>
+        <ul>
+          <li>The calendar management dialog was redesigned and reimplemented</li>
+          <li>Discovering online calendars is much more reliable</li>
+          <li>Minor tweaks to the main interface</li>
+        </ul>
       </description>
     </release>
 
@@ -343,12 +337,12 @@
           This release candidate for GNOME 3.24 adds many new features and improvements. The
           major highlight is the new Week view, besides the many stability and bugs that
           were fixed.
-          <ul>
-            <li>The new Week view is here!</li>
-            <li>GNOME Calendar now has an official Flatpak manifest</li>
-            <li>Keyboard interaction was improved</li>
-          </ul>
         </p>
+        <ul>
+          <li>The new Week view is here!</li>
+          <li>GNOME Calendar now has an official Flatpak manifest</li>
+          <li>Keyboard interaction was improved</li>
+        </ul>
         <p>
           This release also updates translations, and adds new translations. GNOME Calendar
           if officially supported on more then 50 languages now.
@@ -362,14 +356,14 @@
         <p>
           This is the third stable release for GNOME Calendar 3.22, and focuses on
           bugfixes and stability issues.
-          <ul>
-            <li>Online calendars are now downloaded offline and synchronized</li>
-            <li>Properly draw the current month after scrolling</li>
-            <li>Add an animation on the new month chooser widget</li>
-            <li>Correctly escape strings</li>
-            <li>Plug a memory leak</li>
-          </ul>
         </p>
+        <ul>
+          <li>Online calendars are now downloaded offline and synchronized</li>
+          <li>Properly draw the current month after scrolling</li>
+          <li>Add an animation on the new month chooser widget</li>
+          <li>Correctly escape strings</li>
+          <li>Plug a memory leak</li>
+        </ul>
         <p>This release also updates translations, and adds new translations.</p>
         <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
       </description>
