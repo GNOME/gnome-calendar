@@ -48,7 +48,7 @@
   <project_group>GNOME</project_group>
 
   <releases>
-    <release date="2023-03-16" version="44.0">
+    <release date="2023-03-16" version="44.0" type="stable">
       <description>
         <ul>
           <li>Improve sizing of event editor dialog</li>
@@ -58,10 +58,10 @@
         </ul>
       </description>
     </release>
-    <release date="2023-03-06" version="44~rc" />
-    <release date="2023-02-14" version="44~beta" />
-    <release date="2022-09-03" version="43.1" />
-    <release date="2022-09-03" version="43.0">
+    <release date="2023-03-06" version="44~rc" type="development" />
+    <release date="2023-02-14" version="44~beta" type="development" />
+    <release date="2022-09-03" version="43.1" type="stable" />
+    <release date="2022-09-03" version="43.0" type="stable">
       <description>
         <ul>
           <li>Navigation sidebar with weekly events</li>
@@ -69,10 +69,10 @@
         </ul>
       </description>
     </release>
-    <release date="2022-09-03" version="43~rc" />
-    <release date="2022-08-12" version="43~beta" />
-    <release date="2022-07-09" version="43~alpha" />
-    <release date="2022-03-18" version="42.0">
+    <release date="2022-09-03" version="43~rc" type="development" />
+    <release date="2022-08-12" version="43~beta" type="development" />
+    <release date="2022-07-09" version="43~alpha" type="development" />
+    <release date="2022-03-18" version="42.0" type="stable">
       <description>
         <ul>
           <li>Port to GTK4</li>
@@ -82,7 +82,7 @@
       </description>
     </release>
 
-    <release date="2021-09-17" version="41.0">
+    <release date="2021-09-17" version="41.0" type="stable">
       <description>
         <p>
           GNOME Calendar 41.0 release brings updated translations, and new event preview
@@ -91,7 +91,7 @@
       </description>
     </release>
 
-    <release date="2021-06-03" version="40.2">
+    <release date="2021-06-03" version="40.2" type="stable">
       <description>
         <p>
           GNOME Calendar 40.2 release brings updated translations, and a fix to
@@ -100,7 +100,7 @@
       </description>
     </release>
 
-    <release date="2021-05-11" version="40.1">
+    <release date="2021-05-11" version="40.1" type="stable">
       <description>
         <p>
           GNOME Calendar 40.1 release brings stability improvements, updated translations.
@@ -119,7 +119,7 @@
       </description>
     </release>
 
-    <release date="2021-03-22" version="40.0">
+    <release date="2021-03-22" version="40.0" type="stable">
       <description>
         <p>
           GNOME Calendar 40.0 release brings stability improvements, updated translations,
@@ -404,3 +404,4 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
 </component>
+
