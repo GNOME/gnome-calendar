@@ -380,8 +380,12 @@
   <translation type="gettext">gnome-calendar</translation>
 
   <requires>
-    <display_length compare="gt">xsmall</display_length>
+    <display_length compare="ge">small</display_length>
   </requires>
+
+  <recommends>
+    <display_length compare="ge">medium</display_length>
+  </recommends>
 
   <content_rating type="oars-1.1">
     <content_attribute id="violence-cartoon">none</content_attribute>
