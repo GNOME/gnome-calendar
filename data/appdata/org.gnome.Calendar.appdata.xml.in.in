@@ -380,10 +380,15 @@
   <translation type="gettext">gnome-calendar</translation>
 
   <requires>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
     <display_length compare="ge">small</display_length>
   </requires>
 
   <recommends>
+    <control>pointing</control>
+    <control>keyboard</control>
     <display_length compare="ge">medium</display_length>
   </recommends>
 
