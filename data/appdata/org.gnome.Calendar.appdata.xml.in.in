@@ -378,6 +378,11 @@
 
   <update_contact>gbsneto@gnome.org</update_contact>
   <translation type="gettext">gnome-calendar</translation>
+
+  <requires>
+    <display_length compare="gt">xsmall</display_length>
+  </requires>
+
   <content_rating type="oars-1.1">
     <content_attribute id="violence-cartoon">none</content_attribute>
     <content_attribute id="violence-fantasy">none</content_attribute>
