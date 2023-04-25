@@ -128,7 +128,7 @@
       </description>
     </release>
 
-    <release date="2020-09-12" version="3.38.0">
+    <release date="2020-09-12" version="3.38.0" type="stable">
       <description>
         <p>
           GNOME Calendar 3.38 release is here! This release brings stability
@@ -138,7 +138,7 @@
       </description>
     </release>
 
-    <release date="2020-03-06" version="3.36.0">
+    <release date="2020-03-06" version="3.36.0" type="stable">
       <description>
         <p>GNOME Calendar 3.36 release is here!</p>
         <p>
@@ -152,7 +152,7 @@
       </description>
     </release>
 
-    <release date="2019-09-09" version="3.34.0">
+    <release date="2019-09-09" version="3.34.0" type="stable">
       <description>
         <p>GNOME Calendar 3.34 release is here!</p>
         <p>
@@ -166,14 +166,14 @@
       </description>
     </release>
 
-    <release date="2019-03-11" version="3.32.0">
+    <release date="2019-03-11" version="3.32.0" type="stable">
       <description>
         <p>GNOME Calendar 3.32.0 release is here!</p>
         <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
       </description>
     </release>
 
-    <release date="2018-09-03" version="3.30.0">
+    <release date="2018-09-03" version="3.30.0" type="stable">
       <description>
         <p>GNOME Calendar 3.30.0 release is here!</p>
         <p>The major highlight of this release is the integration with GNOME's Night Light, making GNOME Calendar use the dark variant of the theme when Night Light is active.</p>
@@ -181,21 +181,21 @@
       </description>
     </release>
 
-    <release date="2018-08-27" version="3.29.92">
+    <release date="2018-08-27" version="3.29.92" type="development">
       <description>
         <p>This release bring a small improvement and updates many translations.</p>
         <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
       </description>
     </release>
 
-    <release date="2018-07-30" version="3.29.90">
+    <release date="2018-07-30" version="3.29.90" type="development">
       <description>
         <p>This release brings small improvements, bug fixes, and updates many translations.</p>
         <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
       </description>
     </release>
 
-    <release date="2018-03-05" version="3.27.92">
+    <release date="2018-03-05" version="3.27.92" type="development">
       <description>
         <p>This is the release candidate version of the next big release of GNOME Calendar, and it brings a few Flatpak improvements.</p>
         <p>This release also updates many translations.</p>
@@ -203,7 +203,7 @@
       </description>
     </release>
 
-    <release date="2018-02-12" version="3.27.90">
+    <release date="2018-02-12" version="3.27.90" type="development">
       <description>
         <p>This is the alpha version of the next big release of GNOME Calendar, and it brings the following new features and improvements:</p>
         <ul>
@@ -219,7 +219,7 @@
       </description>
     </release>
 
-    <release date="2017-11-15" version="3.27.2">
+    <release date="2017-11-15" version="3.27.2" type="development">
       <description>
         <p>This release brings the following new features and improvements:</p>
         <ul>
@@ -232,7 +232,7 @@
       </description>
     </release>
 
-    <release date="2017-08-11" version="3.25.90">
+    <release date="2017-08-11" version="3.25.90" type="development">
       <description>
         <p>
           The GNOME Calendar team is proud to announce the 3.25.90 release of
@@ -249,7 +249,7 @@
       </description>
     </release>
 
-    <release date="2017-06-19" version="3.25.3">
+    <release date="2017-06-19" version="3.25.3" type="development">
       <description>
         <p>
           The GNOME Calendar team is proud to announce the 3.25.3 release of
@@ -262,7 +262,7 @@
       </description>
     </release>
 
-    <release date="2017-04-24" version="3.25.1">
+    <release date="2017-04-24" version="3.25.1" type="development">
       <description>
         <p>
           The GNOME Calendar team is proud to announce the 3.25.1 release of
@@ -275,7 +275,7 @@
       </description>
     </release>
 
-    <release date="2017-04-24" version="3.24.1">
+    <release date="2017-04-24" version="3.24.1" type="stable">
       <description>
         <p>
           The GNOME Calendar team is proud to announce the 3.24.1 release of
@@ -287,7 +287,7 @@
       </description>
     </release>
 
-    <release date="2017-03-20" version="3.24.0">
+    <release date="2017-03-20" version="3.24.0" type="stable">
       <description>
         <p>
           The GNOME Calendar team is proud to announce the 3.24 release of
@@ -301,7 +301,7 @@
       </description>
     </release>
 
-    <release date="2017-03-16" version="3.23.92">
+    <release date="2017-03-16" version="3.23.92" type="development">
       <description>
         <p>
           In this release, many bugs were fixed in the Week view. GNOME Calendar is
@@ -312,7 +312,7 @@
       </description>
     </release>
 
-    <release date="2017-02-28" version="3.23.91.1">
+    <release date="2017-02-28" version="3.23.91.1" type="development">
       <description>
         <p>
           In this release, a couple of minor bugs were fixed. GNOME Calendar is
@@ -322,7 +322,7 @@
       </description>
     </release>
 
-    <release date="2017-02-27" version="3.23.91">
+    <release date="2017-02-27" version="3.23.91" type="development">
       <description>
         <p>
           In this release, a couple of minor bugs were fixed. GNOME Calendar is
@@ -333,7 +333,7 @@
       </description>
     </release>
 
-    <release date="2017-02-14" version="3.23.90">
+    <release date="2017-02-14" version="3.23.90" type="development">
       <description>
         <p>
           This release candidate for GNOME 3.24 adds many new features and improvements. The
@@ -353,7 +353,7 @@
       </description>
     </release>
 
-    <release date="2016-12-19" version="3.22.2">
+    <release date="2016-12-19" version="3.22.2" type="stable">
       <description>
         <p>
           This is the third stable release for GNOME Calendar 3.22, and focuses on
