@@ -58,9 +58,11 @@
         </ul>
       </description>
     </release>
+
     <release date="2023-03-06" version="44~rc" type="development" />
     <release date="2023-02-14" version="44~beta" type="development" />
     <release date="2022-09-03" version="43.1" type="stable" />
+
     <release date="2022-09-03" version="43.0" type="stable">
       <description>
         <ul>
@@ -69,9 +71,11 @@
         </ul>
       </description>
     </release>
+
     <release date="2022-09-03" version="43~rc" type="development" />
     <release date="2022-08-12" version="43~beta" type="development" />
     <release date="2022-07-09" version="43~alpha" type="development" />
+
     <release date="2022-03-18" version="42.0" type="stable">
       <description>
         <ul>
