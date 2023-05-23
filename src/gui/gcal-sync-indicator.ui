@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalSyncIndicator" parent="AdwBin">
+    <property name="child">
+      <object class="GtkStack" id="stack">
+        <property name="transition-type">crossfade</property>
+        <property name="transition-duration">250</property>
+        <child>
+          <object class="GtkStackPage">
+            <property name="name">empty</property>
+            <property name="child">
+              <object class="GtkBox" />
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkStackPage">
+            <property name="name">spinner</property>
+            <property name="child">
+              <object class="GtkSpinner" id="refreshing_spinner">
+                <property name="tooltip_text" translatable="yes" context="tooltip">Synchronizing remote calendars…</property>
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkStackPage">
+            <property name="name">success</property>
+            <property name="child">
+              <object class="GtkImage" id="success_image">
+                <property name="icon_name">emblem-ok-symbolic</property>
+              </object>
+            </property>
+          </object>
+        </child>
+      </object>
+    </property>
+  </template>
+</interface>

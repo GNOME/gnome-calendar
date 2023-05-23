@@ -113,6 +113,9 @@
                     <child>
                       <object class="AdwHeaderBar">
                         <property name="show-end-title-buttons" bind-source="leaflet" bind-property="folded" bind-flags="sync-create"/>
+                        <child type="start">
+                          <object class="GcalSyncIndicator" id="sync_indicator" />
+                        </child>
                         <property name="title-widget">
                           <object class="GcalCalendarButton" id="calendars_button" />
                         </property>

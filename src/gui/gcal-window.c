@@ -33,6 +33,7 @@
 #include "gcal-month-view.h"
 #include "gcal-quick-add-popover.h"
 #include "gcal-search-button.h"
+#include "gcal-sync-indicator.h"
 #include "gcal-timeline.h"
 #include "gcal-timeline-subscriber.h"
 #include "gcal-toolbar-end.h"
@@ -106,6 +107,7 @@ struct _GcalWindow
   GtkWidget          *agenda_view;
   GtkWidget          *date_chooser;
   GtkWidget          *action_bar;
+  GcalSyncIndicator  *sync_indicator;
   GcalToolbarEnd     *toolbar_end;
 
   /* header_bar widets */
@@ -856,6 +858,7 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->date_chooser, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->event_editor, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->sync_indicator, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->toolbar_end, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   /* CSS */
@@ -989,6 +992,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
   g_type_ensure (GCAL_TYPE_QUICK_ADD_POPOVER);
+  g_type_ensure (GCAL_TYPE_SYNC_INDICATOR);
   g_type_ensure (GCAL_TYPE_TOOLBAR_END);
   g_type_ensure (GCAL_TYPE_WEATHER_SETTINGS);
   g_type_ensure (GCAL_TYPE_WEEK_VIEW);
@@ -1046,6 +1050,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_management_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, overlay);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, sync_indicator);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, toolbar_end);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);

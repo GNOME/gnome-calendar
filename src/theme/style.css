@@ -409,3 +409,11 @@ datechooser .current-week {
 menubutton stack > box {
   border-spacing: 4px;
 }
+
+/*
+ * Sync Indicator
+ */
+
+syncindicator {
+  padding: 6px;
+}

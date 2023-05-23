@@ -30,15 +30,9 @@ struct _GcalCalendarButton
   AdwBin              parent;
 
   GtkWidget          *calendar_listbox;
-  GtkStack           *icon_stack;
-  GtkSpinner         *refreshing_spinner;
 
   GcalContext        *context;
-
-  guint               icon_changed_source_id;
 };
-
-static gboolean      icon_change_timeout_cb                      (gpointer           data);
 
 G_DEFINE_TYPE (GcalCalendarButton, gcal_calendar_button, ADW_TYPE_BIN)
 
@@ -136,53 +130,10 @@ remove_calendar (GcalCalendarButton *self,
     }
 }
 
-static void
-schedule_switch_to_spinner (GcalCalendarButton *self)
-{
-  if (self->icon_changed_source_id > 0)
-    return;
-
-  g_debug ("Scheduling synchronization icon update");
-
-  self->icon_changed_source_id = g_timeout_add (500, icon_change_timeout_cb, self);
-}
-
-static void
-schedule_switch_to_success (GcalCalendarButton *self)
-{
-  g_clear_handle_id (&self->icon_changed_source_id, g_source_remove);
-
-  g_debug ("Switching to success icon");
-
-  gtk_stack_set_visible_child_name (self->icon_stack, "success");
-
-  self->icon_changed_source_id = g_timeout_add (2000, icon_change_timeout_cb, self);
-}
-
 
 /*
  * Callbacks
  */
-
-static gboolean
-icon_change_timeout_cb (gpointer data)
-{
-  GcalCalendarButton *self;
-  GcalManager *manager;
-  gboolean synchronizing;
-
-  self = GCAL_CALENDAR_BUTTON (data);
-  manager = gcal_context_get_manager (self->context);
-  synchronizing = gcal_manager_get_synchronizing (manager);
-
-  g_debug ("Updating calendar icon to spinner");
-
-  gtk_stack_set_visible_child_name (self->icon_stack, synchronizing ? "spinner" : "icon");
-  gtk_spinner_set_spinning (self->refreshing_spinner, synchronizing);
-
-  self->icon_changed_source_id = 0;
-  return G_SOURCE_REMOVE;
-}
 
 static gint
 listbox_sort_func (GtkListBoxRow *row1,
@@ -229,17 +180,6 @@ on_manager_calendar_removed_cb (GcalManager         *manager,
 }
 
 static void
-on_manager_synchronizing_changed_cb (GcalManager         *manager,
-                                     GParamSpec          *pspec,
-                                     GcalCalendarButton *self)
-{
-  if (gcal_manager_get_synchronizing (manager))
-    schedule_switch_to_spinner (self);
-  else
-    schedule_switch_to_success (self);
-}
-
-static void
 on_listbox_row_activated_cb (GtkListBox          *listbox,
                              GtkListBoxRow       *row,
                              GcalCalendarButton *self)
@@ -259,7 +199,6 @@ gcal_calendar_button_finalize (GObject *object)
 {
   GcalCalendarButton *self = (GcalCalendarButton *)object;
 
-  g_clear_handle_id (&self->icon_changed_source_id, g_source_remove);
   g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_calendar_button_parent_class)->finalize (object);
@@ -320,7 +259,6 @@ gcal_calendar_button_set_property (GObject      *object,
         g_signal_connect_object (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), object, 0);
         g_signal_connect_object (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), object, 0);
         g_signal_connect_object (manager, "calendar-changed", G_CALLBACK (on_manager_calendar_changed_cb), object, 0);
-        g_signal_connect_object (manager, "notify::synchronizing", G_CALLBACK (on_manager_synchronizing_changed_cb), object, 0);
       }
       break;
 
@@ -355,8 +293,6 @@ gcal_calendar_button_class_init (GcalCalendarButtonClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-calendar-button.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarButton, calendar_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarButton, icon_stack);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarButton, refreshing_spinner);
 
   gtk_widget_class_bind_template_callback (widget_class, on_listbox_row_activated_cb);
 }
