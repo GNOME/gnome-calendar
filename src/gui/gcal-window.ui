@@ -100,52 +100,56 @@
         <child>
           <object class="AdwLeaflet" id="leaflet">
             <property name="homogeneous">False</property>
+
+            <!-- Sidebar -->
             <child>
-              <object class="GtkBox">
+              <object class="AdwToolbarView">
                 <property name="hexpand">False</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="AdwHeaderBar">
-                    <property name="show-end-title-buttons" bind-source="leaflet" bind-property="folded" bind-flags="sync-create"/>
-                    <property name="title-widget">
-                      <object class="GcalCalendarButton" id="calendars_button" />
-                    </property>
-                    <child type="end">
-                      <object class="GtkMenuButton" id="menu_button">
-                        <property name="icon-name">open-menu-symbolic</property>
-                        <property name="popover">win_menu</property>
-                        <property name="tooltip-text" translatable="yes">Main Menu</property>
-                        <property name="primary">True</property>
+
+                <child type="top">
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+
+                    <child>
+                      <object class="AdwHeaderBar">
+                        <property name="show-end-title-buttons" bind-source="leaflet" bind-property="folded" bind-flags="sync-create"/>
+                        <property name="title-widget">
+                          <object class="GcalCalendarButton" id="calendars_button" />
+                        </property>
+                        <child type="end">
+                          <object class="GtkMenuButton" id="menu_button">
+                            <property name="icon-name">open-menu-symbolic</property>
+                            <property name="popover">win_menu</property>
+                            <property name="tooltip-text" translatable="yes">Main Menu</property>
+                            <property name="primary">True</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
+
+                    <child>
+                      <object class="GcalDateChooser" id="date_chooser">
+                        <property name="split-month-year">False</property>
+                        <property name="vexpand">False</property>
+                        <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
+                        <signal name="day-selected" handler="day_selected" object="GcalWindow" swapped="yes"/>
+                      </object>
+                    </child>
+
                   </object>
+
                 </child>
-                <child>
-                  <object class="GcalDateChooser" id="date_chooser">
-                    <property name="split-month-year">False</property>
-                    <property name="vexpand">False</property>
-                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
-                    <signal name="day-selected" handler="day_selected" object="GcalWindow" swapped="yes"/>
-                    <style>
-                      <class name="view"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkSeparator"/>
-                </child>
-                <child>
+
+                <property name="content">
                   <object class="GcalAgendaView" id="agenda_view">
                     <property name="vexpand">True</property>
                     <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
                     <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
                     <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
-                    <style>
-                      <class name="view"/>
-                    </style>
                   </object>
-                </child>
-                <child>
+                </property>
+
+                <child type="bottom">
                   <object class="GtkActionBar" id="action_bar">
                     <property name="revealed" bind-source="leaflet" bind-property="folded" bind-flags="sync-create"/>
                     <child type="start">
@@ -175,10 +179,15 @@
                 </property>
               </object>
             </child>
+
+            <!-- Main content -->
             <child>
-              <object class="GtkBox">
-                <property name="orientation">vertical</property>
-                <child>
+              <object class="AdwToolbarView">
+                <style>
+                  <class name="view" />
+                </style>
+
+                <child type="top">
                   <object class="AdwHeaderBar" id="header_bar">
                     <property name="show-start-title-buttons" bind-source="leaflet" bind-property="folded" bind-flags="sync-create"/>
                     <child>
@@ -204,7 +213,8 @@
                     </child>
                   </object>
                 </child>
-                <child>
+
+                <property name="content">
                   <object class="GtkBox" id="main_box">
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
@@ -251,7 +261,8 @@
                       </object>
                     </child>
                   </object>
-                </child>
+                </property>
+
               </object>
             </child>
           </object>

@@ -11,6 +11,9 @@
             <property name="hexpand">True</property>
             <property name="selection-mode">none</property>
             <property name="vexpand">True</property>
+            <style>
+              <class name="background" />
+            </style>
             <child>
               <object class="GtkListBoxRow" id="no_events_row">
                 <property name="activatable">False</property>
