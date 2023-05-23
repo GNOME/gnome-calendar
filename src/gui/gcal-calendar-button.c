@@ -57,12 +57,9 @@ make_calendar_row (GcalCalendar *calendar)
   GtkWidget *label, *icon, *checkbox, *box, *row;
   const GdkRGBA *color;
 
-  row = gtk_list_box_row_new ();
-
-  /* apply some nice styling */
-  gtk_widget_add_css_class (row, "button");
-  gtk_widget_add_css_class (row, "flat");
-  gtk_widget_add_css_class (row, "menuitem");
+  row = g_object_new (GTK_TYPE_LIST_BOX_ROW,
+                      "css-name", "modelbutton",
+                      NULL);
 
   /* main box */
   box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
