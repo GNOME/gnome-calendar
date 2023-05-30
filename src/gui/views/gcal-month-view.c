@@ -240,8 +240,8 @@ emit_create_event (GcalMonthView *self)
   cell = g_date_time_get_day_of_month (self->end_mark_cell) + self->days_delay - 1;
   month_cell = self->month_cell[cell / 7][cell % 7];
 
-  x = gtk_widget_get_allocated_width (month_cell) / 2.0;
-  y = gtk_widget_get_allocated_height (month_cell) / 2.0;
+  x = gtk_widget_get_width (month_cell) / 2.0;
+  y = gtk_widget_get_height (month_cell) / 2.0;
 
   gtk_widget_translate_coordinates (month_cell,
                                     GTK_WIDGET (self),
@@ -570,7 +570,7 @@ allocate_multiday_events (GcalMonthView *self,
 
   is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
   month_range = gcal_timeline_subscriber_get_range (GCAL_TIMELINE_SUBSCRIBER (self));
-  header_height = gtk_widget_get_allocated_height (self->header);
+  header_height = gtk_widget_get_height (self->header);
 
   for (l = self->multi_cell_children; l; l = g_list_next (l))
     {
@@ -733,7 +733,7 @@ allocate_single_day_events (GcalMonthView *self,
   gint header_height;
 
   month_range = gcal_timeline_subscriber_get_range (GCAL_TIMELINE_SUBSCRIBER (self));
-  header_height = gtk_widget_get_allocated_height (self->header);
+  header_height = gtk_widget_get_height (self->header);
 
   g_hash_table_iter_init (&iter, self->single_cell_children);
 
@@ -842,7 +842,7 @@ allocate_overflow_popover (GcalMonthView *self,
 
   g_assert (self->overflow.relative_to != NULL);
 
-  header_height = gtk_widget_get_allocated_height (self->header);
+  header_height = gtk_widget_get_height (self->header);
 
   gtk_widget_get_allocation (self->overflow.relative_to, &allocation);
   allocation.y += header_height;

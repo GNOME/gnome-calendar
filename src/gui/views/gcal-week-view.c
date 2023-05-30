@@ -275,7 +275,7 @@ on_scroll_controller_scroll_begin_cb (GtkEventControllerScroll *controller,
   if (self->pointer_position_valid)
     view_center_y = self->pointer_position_y;
   else
-    view_center_y = gtk_widget_get_allocated_height (self->scrolled_window) / 2.0;
+    view_center_y = gtk_widget_get_height (self->scrolled_window) / 2.0;
 
   begin_zoom (self, view_center_y);
 }
@@ -318,7 +318,7 @@ on_scroll_controller_scroll_cb (GtkEventControllerScroll *controller,
   if (self->pointer_position_valid)
     view_center_y = self->pointer_position_y;
   else
-    view_center_y = gtk_widget_get_allocated_height (self->scrolled_window) / 2.0;
+    view_center_y = gtk_widget_get_height (self->scrolled_window) / 2.0;
 
   if (discrete)
     begin_zoom (self, view_center_y);

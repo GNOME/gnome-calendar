@@ -1015,3 +1015,4 @@ gcal_week_grid_set_date (GcalWeekGrid *self,
   gtk_widget_queue_resize (GTK_WIDGET (self));
   gtk_widget_queue_draw (GTK_WIDGET (self));
 }
+

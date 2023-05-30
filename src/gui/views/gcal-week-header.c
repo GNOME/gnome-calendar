@@ -257,7 +257,7 @@ on_button_pressed (GtkGestureClick *click_gesture,
   gint width;
 
   ltr = gtk_widget_get_direction (GTK_WIDGET (self)) != GTK_TEXT_DIR_RTL;
-  width = gtk_widget_get_allocated_width (self->scrolledwindow);
+  width = gtk_widget_get_width (self->scrolledwindow);
   column_width = width / 7.0;
   column = ltr ? (x / column_width) : (7  - x / column_width);
 
@@ -282,7 +282,7 @@ on_motion_notify (GtkEventControllerMotion *motion_event,
   gint width;
 
   ltr = gtk_widget_get_direction (GTK_WIDGET (self)) != GTK_TEXT_DIR_RTL;
-  width = gtk_widget_get_allocated_width (self->scrolledwindow);
+  width = gtk_widget_get_width (self->scrolledwindow);
   column_width = width / 7.0;
   column = ltr ? (x / column_width) : (7  - x / column_width);
 
@@ -311,7 +311,7 @@ on_button_released (GtkGestureClick *click_gesture,
   gint end;
 
   ltr = gtk_widget_get_direction (GTK_WIDGET (self)) != GTK_TEXT_DIR_RTL;
-  width = gtk_widget_get_allocated_width (self->scrolledwindow);
+  width = gtk_widget_get_width (self->scrolledwindow);
   column_width = width / 7.0;
   column = ltr ? (x / column_width) : (7  - x / column_width);
 
@@ -345,7 +345,7 @@ on_button_released (GtkGestureClick *click_gesture,
   gtk_widget_translate_coordinates (GTK_WIDGET (self),
                                     weekview,
                                     0,
-                                    gtk_widget_get_allocated_height (GTK_WIDGET (self)),
+                                    gtk_widget_get_height (GTK_WIDGET (self)),
                                     NULL,
                                     &out_y);
 
@@ -1106,7 +1106,7 @@ header_expand (GcalWeekHeader *self)
 
   /* TODO: animate this transition */
   gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolledwindow),
-                                              gtk_widget_get_allocated_height (week_view) / 2);
+                                              gtk_widget_get_height (week_view) / 2);
 
   gtk_button_set_icon_name (self->expand_button, "go-up-symbolic");
 
@@ -1156,7 +1156,7 @@ get_dnd_cell (GcalWeekHeader *self,
 {
   gdouble column_width;
 
-  column_width = gtk_widget_get_allocated_width (GTK_WIDGET (self)) / 7.0;
+  column_width = gtk_widget_get_width (GTK_WIDGET (self)) / 7.0;
 
   return x / column_width;
 }
@@ -1337,13 +1337,13 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   state = gtk_style_context_get_state (context);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
-  start_x = ltr ? gtk_widget_get_allocated_width (self->expand_button_box) : 0;
-  start_y = gtk_widget_get_allocated_height (self->header_labels_box);
+  start_x = ltr ? gtk_widget_get_width (self->expand_button_box) : 0;
+  start_y = gtk_widget_get_height (self->header_labels_box);
 
   gtk_widget_get_allocation (widget, &alloc);
 
   if (!ltr)
-    alloc.width -= gtk_widget_get_allocated_width (self->expand_button_box);
+    alloc.width -= gtk_widget_get_width (self->expand_button_box);
 
   week_start = gcal_date_time_get_start_of_week (self->active_date);
   week_end = g_date_time_add_days (week_start, 6);

@@ -506,7 +506,7 @@ gcal_month_cell_get_content_space (GcalMonthCell *self)
   gtk_style_context_get_padding (context, &padding);
   gtk_style_context_get_border (context, &border);
 
-  return gtk_widget_get_allocated_height (GTK_WIDGET (self)) -
+  return gtk_widget_get_height (GTK_WIDGET (self)) -
          gcal_month_cell_get_header_height (self) -
          padding.top - padding.bottom -
          border.top - border.bottom;
@@ -525,7 +525,7 @@ gcal_month_cell_get_header_height (GcalMonthCell *self)
   gtk_style_context_get_padding (context, &padding);
   gtk_style_context_get_border (context, &border);
 
-  return gtk_widget_get_allocated_height (self->header_box) +
+  return gtk_widget_get_height (self->header_box) +
          gtk_widget_get_margin_top (self->header_box) +
          gtk_widget_get_margin_bottom (self->header_box) +
          padding.top + padding.bottom +
@@ -537,7 +537,7 @@ gcal_month_cell_get_overflow_height (GcalMonthCell *self)
 {
   g_return_val_if_fail (GCAL_IS_MONTH_CELL (self), -1);
 
-  return gtk_widget_get_allocated_height (self->overflow_button);
+  return gtk_widget_get_height (self->overflow_button);
 }
 
 gboolean
