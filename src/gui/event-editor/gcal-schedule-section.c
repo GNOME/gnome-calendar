@@ -403,7 +403,9 @@ on_repeat_type_changed_cb (GtkWidget           *widget,
 
   frequency = adw_combo_row_get_selected (ADW_COMBO_ROW (widget));
 
-  adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
+  if (frequency == GCAL_RECURRENCE_NO_REPEAT)
+    adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
+
   gtk_widget_set_visible (self->repeat_duration_combo, frequency != GCAL_RECURRENCE_NO_REPEAT);
 }
 
