@@ -35,7 +35,7 @@ calendar_schemadir = calendar_datadir / 'glib-2.0' / 'schemas'
 
 if get_option('profile') == 'development'
   find_program('git')
-  rev_txt = run_command('git','rev-parse','--short','HEAD').stdout().strip()
+  rev_txt = run_command('git','rev-parse','--short','HEAD', check: true).stdout().strip()
   profile = 'Devel'
   name_suffix = ' (Development)'
   rev = '-@0@'.format(rev_txt)
