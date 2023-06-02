@@ -22,11 +22,11 @@ calendar_minor_version = version_array[1]
 #################
 
 calendar_prefix = get_option('prefix')
-calendar_bindir = join_paths(calendar_prefix, get_option('bindir'))
-calendar_localedir = join_paths(calendar_prefix, get_option('localedir'))
-calendar_datadir = join_paths(calendar_prefix, get_option('datadir'))
-calendar_pkgdatadir = join_paths(calendar_datadir, meson.project_name())
-calendar_schemadir = join_paths(calendar_datadir, 'glib-2.0', 'schemas')
+calendar_bindir = calendar_prefix / get_option('bindir')
+calendar_localedir = calendar_prefix / get_option('localedir')
+calendar_datadir = calendar_prefix / get_option('datadir')
+calendar_pkgdatadir = calendar_datadir / meson.project_name()
+calendar_schemadir = calendar_datadir / 'glib-2.0' / 'schemas'
 
 
 ###########
@@ -129,7 +129,7 @@ common_flags = [
   '-DHAVE_CONFIG_H',
   '-DPACKAGE_LOCALE_DIR="@0@"'.format(calendar_localedir),
   '-DPACKAGE_DATA_DIR="@0@"'.format(calendar_pkgdatadir),
-  '-DUI_DATA_DIR="@0@"'.format(join_paths(calendar_datadir), 'style'),
+  '-DUI_DATA_DIR="@0@"'.format(calendar_datadir, 'style'),
   '-DEDS_DISABLE_DEPRECATED',
   '-DGWEATHER_I_KNOW_THIS_IS_UNSTABLE'
 ]
@@ -178,9 +178,9 @@ pkg = import('pkgconfig')
 
 top_inc = include_directories('.')
 
-data_dir = join_paths(meson.source_root(), 'data')
-po_dir = join_paths(meson.source_root(), 'po')
-src_dir = join_paths(meson.source_root(), 'src')
+data_dir = meson.source_root() / 'data'
+po_dir = meson.source_root() / 'po'
+src_dir = meson.source_root() / 'src'
 
 
 ###########

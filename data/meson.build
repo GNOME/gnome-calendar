@@ -1,7 +1,7 @@
 subdir('icons')
 subdir('appdata')
 
-enum_headers = files(join_paths(src_dir, 'gcal-enums.h'))
+enum_headers = files(src_dir / 'gcal-enums.h')
 
 enums_xml = gnome.mkenums(
   'org.gnome.calendar.enums.xml',
@@ -30,7 +30,7 @@ desktop = i18n.merge_file(
   output: '@0@.desktop'.format(application_id),
   po_dir: po_dir,
   install: true,
-  install_dir: join_paths(calendar_datadir, 'applications')
+  install_dir: calendar_datadir / 'applications'
 )
 
 # GNOME Shell search provider
@@ -40,7 +40,7 @@ search_provider_conf.set('profile',  profile)
 configure_file(
   configuration: search_provider_conf,
   input: files('org.gnome.Calendar.search-provider.ini.in'),
-  install_dir: join_paths(calendar_datadir, 'gnome-shell', 'search-providers'),
+  install_dir: calendar_datadir / 'gnome-shell' / 'search-providers',
   output: '@0@.search-provider.ini'.format(application_id)
 )
 
@@ -79,7 +79,7 @@ configure_file(
           input: service + '.in',
          output: '@0@.service'.format(application_id),
         install: true,
-    install_dir: join_paths(calendar_datadir, 'dbus-1', 'services'),
+    install_dir: calendar_datadir / 'dbus-1' / 'services',
   configuration: service_conf
 )
 

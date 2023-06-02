@@ -9,5 +9,5 @@ appdata = i18n.merge_file(
   output: '@0@.appdata.xml'.format(application_id),
   po_dir: po_dir,
   install: true,
-  install_dir: join_paths(calendar_datadir, 'metainfo')
+  install_dir: calendar_datadir / 'metainfo'
 )
