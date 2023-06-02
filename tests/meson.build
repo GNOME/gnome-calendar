@@ -1,12 +1,12 @@
 test_env = [
          'G_TEST_SRCDIR=' + meson.current_source_dir(),
        'G_TEST_BUILDDIR=' + meson.current_build_dir(),
-  'GSETTINGS_SCHEMA_DIR=' + meson.build_root() / 'data',
+  'GSETTINGS_SCHEMA_DIR=' + meson.current_build_dir() / 'data',
      'GSETTINGS_BACKEND=memory',
          'MALLOC_CHECK_=2'
 ]
 
-test_cflags = '-DTEST_DATA_DIR="@0@"'.format(meson.source_root() / 'data')
+test_cflags = '-DTEST_DATA_DIR="@0@"'.format(meson.global_source_root() / 'data')
 
 ################
 # libgcal-test #
@@ -52,3 +52,4 @@ foreach test : tests
 
   test(test, test_executable, env: test_env)
 endforeach
+

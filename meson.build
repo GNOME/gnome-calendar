@@ -3,7 +3,7 @@ project(
                'c',
            version: '45.alpha',
            license: 'GPL3+',
-     meson_version: '>= 0.57.0'
+     meson_version: '>= 0.58.0'
 )
 
 
@@ -178,9 +178,9 @@ pkg = import('pkgconfig')
 
 top_inc = include_directories('.')
 
-data_dir = meson.source_root() / 'data'
-po_dir = meson.source_root() / 'po'
-src_dir = meson.source_root() / 'src'
+data_dir = meson.global_source_root() / 'data'
+po_dir = meson.global_source_root() / 'po'
+src_dir = meson.global_source_root() / 'src'
 
 
 ###########
@@ -198,7 +198,7 @@ configure_file(
 )
 
 summary({
-  'Source': meson.source_root(),
+  'Source': meson.global_source_root(),
   'Prefix': calendar_prefix,
 })
 summary({
