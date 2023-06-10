@@ -55,7 +55,7 @@ struct _GcalNewCalendarPage
   GtkEntry           *credentials_password_entry;
   GtkEntry           *credentials_user_entry;
   GtkColorDialogButton *local_calendar_color_button;
-  GtkEntry           *local_calendar_name_entry;
+  AdwEntryRow        *local_calendar_name_row;
   GtkWidget          *web_sources_listbox;
   GtkWidget          *web_sources_revealer;
 
@@ -153,7 +153,7 @@ update_local_source (GcalNewCalendarPage *self)
 
   g_clear_object (&self->local_source);
 
-  calendar_name = g_strdup (gtk_editable_get_text (GTK_EDITABLE (self->local_calendar_name_entry)));
+  calendar_name = g_strdup (gtk_editable_get_text (GTK_EDITABLE (self->local_calendar_name_row)));
   calendar_name = g_strstrip (calendar_name);
 
   if (calendar_name && g_utf8_strlen (calendar_name, -1) > 0)
@@ -474,9 +474,9 @@ on_cancel_button_clicked_cb (GtkWidget                  *button,
 }
 
 static void
-on_local_calendar_name_entry_text_changed_cb (GtkEntry            *entry,
-                                              GParamSpec          *pspec,
-                                              GcalNewCalendarPage *self)
+on_local_calendar_name_row_text_changed_cb (AdwEntryRow         *entry_row,
+                                            GParamSpec          *pspec,
+                                            GcalNewCalendarPage *self)
 {
   update_local_source (self);
 }
@@ -553,7 +553,7 @@ gcal_new_calendar_page_deactivate (GcalCalendarManagementPage *page)
   g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
   update_add_button (self);
 
-  gtk_editable_set_text (GTK_EDITABLE (self->local_calendar_name_entry), "");
+  gtk_editable_set_text (GTK_EDITABLE (self->local_calendar_name_row), "");
   gtk_editable_set_text (GTK_EDITABLE (self->calendar_address_entry), "");
 
   toggle_url_entry_pulsing (self, FALSE);
@@ -665,7 +665,7 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_password_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_user_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, local_calendar_color_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, local_calendar_name_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, local_calendar_name_row);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, web_sources_listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, web_sources_revealer);
 
@@ -675,7 +675,7 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_credential_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_credential_entry_activate_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_file_chooser_button_file_changed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_name_entry_text_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_name_row_text_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_color_button_rgba_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_url_entry_text_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_web_description_label_link_activated_cb);

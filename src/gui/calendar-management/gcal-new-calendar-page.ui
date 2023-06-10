@@ -12,18 +12,9 @@
 
             <!-- Calendar name -->
             <child>
-              <object class="AdwActionRow">
+              <object class="AdwEntryRow" id="local_calendar_name_row">
                 <property name="title" translatable="yes">Calendar Name</property>
-                <property name="activatable-widget">local_calendar_name_entry</property>
-
-                <child>
-                  <object class="GtkEntry" id="local_calendar_name_entry">
-                    <property name="valign">center</property>
-                    <property name="placeholder-text" translatable="yes">Calendar Name</property>
-                    <signal name="notify::text" handler="on_local_calendar_name_entry_text_changed_cb" object="GcalNewCalendarPage" swapped="no" />
-                  </object>
-                </child>
-
+                <signal name="notify::text" handler="on_local_calendar_name_row_text_changed_cb" object="GcalNewCalendarPage" swapped="no" />
               </object>
             </child>
 
