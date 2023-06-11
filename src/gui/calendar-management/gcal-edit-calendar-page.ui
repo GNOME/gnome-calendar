@@ -1,181 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GcalEditCalendarPage" parent="GtkBox">
+    <property name="orientation">vertical</property>
+
     <child>
-      <object class="GtkGrid">
-        <property name="hexpand">True</property>
-        <property name="vexpand">True</property>
-        <property name="margin-top">18</property>
-        <property name="margin-bottom">18</property>
-        <property name="margin-start">18</property>
-        <property name="margin-end">18</property>
-        <property name="row_spacing">12</property>
-        <property name="column_spacing">12</property>
-
-        <!-- Online Accounts -->
+      <object class="AdwPreferencesPage">
         <child>
-          <object class="GtkLabel" id="account_dim_label">
-            <property name="visible" bind-source="account_box" bind-property="visible" bind-flags="default" />
-            <property name="label" translatable="yes">Account</property>
-            <property name="xalign">1</property>
-            <layout>
-              <property name="column">0</property>
-              <property name="row">0</property>
-            </layout>
-            <style>
-              <class name="dim-label" />
-            </style>
-          </object>
-        </child>
+          <object class="AdwPreferencesGroup">
 
-        <child>
-          <object class="GtkBox" id="account_box">
-            <property name="spacing">12</property>
-            <layout>
-              <property name="row">0</property>
-              <property name="column">1</property>
-            </layout>
+            <!-- Online Accounts -->
             <child>
-              <object class="GtkLabel" id="account_label">
-                <property name="hexpand">True</property>
-                <property name="xalign">0</property>
+              <object class="AdwActionRow" id="account_row">
+                <property name="title" translatable="yes">Account</property>
+                <property name="activatable-widget">settings_button</property>
+                <style>
+                  <class name="property"/>
+                </style>
+
+                <child>
+                  <object class="GtkButton" id="settings_button">
+                    <property name="tooltip-text" translatable="yes">Open in Settings</property>
+                    <property name="valign">center</property>
+                    <signal name="clicked" handler="on_settings_button_clicked_cb" object="GcalEditCalendarPage" swapped="no" />
+
+                    <style>
+                      <class name="flat"/>
+                    </style>
+
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">settings-symbolic</property>
+                      </object>
+                    </child>
+
+                  </object>
+                </child>
+
               </object>
             </child>
+
+            <!-- Location (URL, file path) -->
             <child>
-              <object class="GtkButton" id="settings_button">
-                <property name="label" translatable="yes">Settings</property>
-                <signal name="clicked" handler="on_settings_button_clicked_cb" object="GcalEditCalendarPage" swapped="no" />
+              <object class="AdwActionRow" id="calendar_url_row">
+                <property name="title" translatable="yes">Location</property>
+                <property name="visible" bind-source="calendar_url_row" bind-property="visible" bind-flags="default" />
+                <style>
+                  <class name="property"/>
+                </style>
               </object>
             </child>
-          </object>
-        </child>
 
-        <!-- Location (URL, file path) -->
-        <child>
-          <object class="GtkLabel" id="location_dim_label">
-            <property name="visible" bind-source="calendar_url_button" bind-property="visible" bind-flags="default" />
-            <property name="label" translatable="yes">Location</property>
-            <property name="xalign">1</property>
-            <layout>
-              <property name="row">1</property>
-              <property name="column">0</property>
-            </layout>
-            <style>
-              <class name="dim-label" />
-            </style>
-          </object>
-        </child>
-
-        <child>
-          <object class="GtkLinkButton" id="calendar_url_button">
-            <layout>
-              <property name="row">1</property>
-              <property name="column">1</property>
-            </layout>
-            <style>
-              <class name="flat" />
-            </style>
-          </object>
-        </child>
-
-        <!-- Calendar name -->
-        <child>
-          <object class="GtkLabel" id="calendar_dim_label">
-            <property name="label" translatable="yes">Calendar name</property>
-            <property name="xalign">1</property>
-            <layout>
-              <property name="row">2</property>
-              <property name="column">0</property>
-            </layout>
-            <style>
-              <class name="dim-label" />
-            </style>
-          </object>
-        </child>
-
-        <child>
-          <object class="GtkEntry" id="name_entry">
-            <property name="hexpand">True</property>
-            <layout>
-              <property name="row">2</property>
-              <property name="column">1</property>
-            </layout>
-          </object>
-        </child>
-
-        <!-- Color -->
-        <child>
-          <object class="GtkLabel" id="color_dim_label">
-            <property name="label" translatable="yes">Color</property>
-            <property name="xalign">1</property>
-            <layout>
-              <property name="row">3</property>
-              <property name="column">0</property>
-            </layout>
-            <style>
-              <class name="dim-label" />
-            </style>
-          </object>
-        </child>
-
-        <child>
-          <object class="GtkColorDialogButton" id="calendar_color_button">
-            <property name="halign">start</property>
-            <property name="dialog">
-              <object class="GtkColorDialog">
-                <property name="modal">True</property>
-                <property name="with-alpha">False</property>
+            <!-- Calendar name -->
+            <child>
+              <object class="AdwEntryRow" id="name_entry">
+                <property name="title" translatable="yes">Calendar Name</property>
               </object>
-            </property>
-            <layout>
-              <property name="row">3</property>
-              <property name="column">1</property>
-            </layout>
-          </object>
-        </child>
+            </child>
 
-        <!-- Calendar visibility -->
-        <child>
-          <object class="GtkCheckButton" id="calendar_visible_check">
-            <property name="label" translatable="yes">Display calendar</property>
-            <layout>
-              <property name="row">4</property>
-              <property name="column">0</property>
-              <property name="column-span">2</property>
-            </layout>
-          </object>
-        </child>
+            <!-- Color -->
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Color</property>
+                <property name="activatable-widget">calendar_color_button</property>
 
-        <!-- Default calendar -->
-        <child>
-          <object class="GtkCheckButton" id="default_check">
-            <property name="label" translatable="yes">Add new events to this calendar by default</property>
-            <layout>
-              <property name="row">5</property>
-              <property name="column">0</property>
-              <property name="column-span">2</property>
-            </layout>
-          </object>
-        </child>
+                <child>
+                  <object class="GtkColorDialogButton" id="calendar_color_button">
+                    <property name="valign">center</property>
+                    <property name="dialog">
+                      <object class="GtkColorDialog">
+                        <property name="modal">True</property>
+                        <property name="with-alpha">False</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
 
-        <!-- Remove button -->
-        <child>
-          <object class="GtkButton" id="remove_button">
-            <property name="label" translatable="yes">Remove Calendar</property>
-            <property name="halign">end</property>
-            <property name="valign">end</property>
-            <property name="margin_top">6</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">True</property>
-            <signal name="clicked" handler="on_remove_button_clicked_cb" object="GcalEditCalendarPage" swapped="no" />
-            <layout>
-              <property name="row">6</property>
-              <property name="column">0</property>
-              <property name="column-span">2</property>
-            </layout>
-            <style>
-              <class name="destructive-action" />
-            </style>
+              </object>
+            </child>
+
+            <!-- Calendar visibility -->
+            <child>
+              <object class="AdwSwitchRow" id="calendar_visible_row">
+                <property name="title" translatable="yes">_Display Calendar</property>
+                <property name="use-underline">true</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwSwitchRow" id="default_row">
+                <property name="title" translatable="yes">Default _Calendar</property>
+                <property name="subtitle" translatable="yes">Add new events to this calendar by default.</property>
+                <property name="use-underline">true</property>
+              </object>
+            </child>
+
+            <!-- Remove button -->
+            <child>
+              <object class="GtkButton" id="remove_button">
+                <property name="label" translatable="yes">_Remove Calendar</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <property name="margin-top">24</property>
+                <property name="use-underline">true</property>
+                <signal name="clicked" handler="on_remove_button_clicked_cb" object="GcalEditCalendarPage" swapped="no" />
+                <style>
+                  <class name="destructive-action" />
+                  <class name="pill"/>
+                </style>
+              </object>
+            </child>
+
           </object>
         </child>
 
@@ -186,6 +120,7 @@
   <!-- Headerbar buttons -->
   <object class="GtkButton" id="back_button">
     <property name="icon-name">go-previous-symbolic</property>
+    <property name="tooltip-text" translatable="yes">Back</property>
     <signal name="clicked" handler="on_back_button_clicked_cb" object="GcalEditCalendarPage" swapped="no" />
   </object>
 </interface>

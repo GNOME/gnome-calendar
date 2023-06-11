@@ -30,16 +30,13 @@ struct _GcalEditCalendarPage
 {
   GtkBox              parent;
 
-  GtkWidget          *account_box;
-  GtkLabel           *account_label;
-  GtkWidget          *account_dim_label;
+  AdwActionRow       *account_row;
   GtkWidget          *back_button;
   GtkColorDialogButton *calendar_color_button;
-  GtkCheckButton     *calendar_visible_check;
-  GtkWidget          *calendar_url_button;
-  GtkCheckButton     *default_check;
-  GtkWidget          *location_dim_label;
-  GtkEntry           *name_entry;
+  AdwSwitchRow       *calendar_visible_row;
+  AdwActionRow       *calendar_url_row;
+  AdwSwitchRow       *default_row;
+  AdwEntryRow        *name_entry;
   GtkWidget          *remove_button;
 
   GcalCalendar       *calendar;
@@ -145,12 +142,13 @@ setup_calendar (GcalEditCalendarPage *self,
 
   get_source_parent_name_color (manager, source, &parent_name, NULL);
 
-  gtk_widget_set_visible (self->account_box, is_goa);
-  gtk_widget_set_visible (self->calendar_url_button, !is_goa && (is_file || is_remote));
+  gtk_widget_set_visible (GTK_WIDGET (self->account_row), is_goa);
+  gtk_widget_set_visible (GTK_WIDGET (self->calendar_url_row), !is_goa && (is_file || is_remote));
 
   /* If it's a file, set the file path */
   if (is_file)
     {
+      g_autofree gchar *text = NULL;
       g_autofree gchar *uri = NULL;
       ESourceLocal *local;
       GFile *file;
@@ -159,14 +157,15 @@ setup_calendar (GcalEditCalendarPage *self,
       file = e_source_local_get_custom_file (local);
       uri = g_file_get_uri (file);
 
-      gtk_link_button_set_uri (GTK_LINK_BUTTON (self->calendar_url_button), uri);
-      gtk_button_set_label (GTK_BUTTON (self->calendar_url_button), uri);
+      text = g_strdup_printf ("<a href=\"%s\">%s</a>", uri, uri);
+      adw_action_row_set_subtitle (self->calendar_url_row, text);
     }
 
   /* If it's remote, build the uri */
   if (is_remote)
     {
       g_autoptr (GUri) guri = NULL;
+      g_autofree gchar *text = NULL;
       g_autofree gchar *uri = NULL;
       ESourceWebdav *webdav;
 
@@ -174,8 +173,8 @@ setup_calendar (GcalEditCalendarPage *self,
       guri = e_source_webdav_dup_uri (webdav);
       uri = g_uri_to_string_partial (guri, G_URI_HIDE_PASSWORD);
 
-      gtk_link_button_set_uri (GTK_LINK_BUTTON (self->calendar_url_button), uri);
-      gtk_button_set_label (GTK_BUTTON (self->calendar_url_button), uri);
+      text = g_strdup_printf ("<a href=\"%s\">%s</a>", uri, uri);
+      adw_action_row_set_subtitle (self->calendar_url_row, text);
     }
 
   if (is_goa)
@@ -183,15 +182,15 @@ setup_calendar (GcalEditCalendarPage *self,
       g_autofree gchar *name = NULL;
 
       get_source_parent_name_color (manager, source, &name, NULL);
-      gtk_label_set_label (self->account_label, name);
+      adw_action_row_set_subtitle (self->account_row, name);
     }
 
   gtk_color_dialog_button_set_rgba (self->calendar_color_button, gcal_calendar_get_color (calendar));
   gtk_editable_set_text (GTK_EDITABLE (self->name_entry), gcal_calendar_get_name (calendar));
-  gtk_check_button_set_active (self->calendar_visible_check, gcal_calendar_get_visible (calendar));
+  adw_switch_row_set_active (self->calendar_visible_row, gcal_calendar_get_visible (calendar));
 
-  gtk_check_button_set_active (self->default_check, source == default_source);
-  gtk_widget_set_visible (GTK_WIDGET (self->default_check), !gcal_calendar_is_read_only (calendar));
+  adw_switch_row_set_active (self->default_row, source == default_source);
+  gtk_widget_set_visible (GTK_WIDGET (self->default_row), !gcal_calendar_is_read_only (calendar));
   gtk_widget_set_visible (self->remove_button, e_source_get_removable (source));
 }
 
@@ -211,7 +210,7 @@ update_calendar (GcalEditCalendarPage *self)
   gcal_calendar_set_name (self->calendar, gtk_editable_get_text (GTK_EDITABLE (self->name_entry)));
   gcal_calendar_set_color (self->calendar, color);
 
-  if (gtk_check_button_get_active (self->default_check))
+  if (adw_switch_row_get_active (self->default_row))
     gcal_manager_set_default_calendar (manager, self->calendar);
 
   GCAL_EXIT;
@@ -411,14 +410,12 @@ gcal_edit_calendar_page_class_init (GcalEditCalendarPageClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-edit-calendar-page.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, account_box);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, account_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, account_row);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, back_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_color_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_url_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_visible_check);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, default_check);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, location_dim_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_url_row);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_visible_row);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, default_row);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, name_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, remove_button);
 
