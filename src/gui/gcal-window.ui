@@ -162,6 +162,7 @@
                                 <property name="label" translatable="yes">_Today</property>
                                 <property name="use-underline">True</property>
                                 <property name="icon-name">calendar-today-symbolic</property>
+                                <property name="can-shrink">True</property>
                               </object>
                             </property>
                           </object>
@@ -200,6 +201,7 @@
                                 <property name="label" translatable="yes">_Today</property>
                                 <property name="use-underline">True</property>
                                 <property name="icon-name">calendar-today-symbolic</property>
+                                <property name="can-shrink">True</property>
                               </object>
                             </property>
                           </object>

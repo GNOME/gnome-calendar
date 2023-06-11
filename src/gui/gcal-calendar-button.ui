@@ -7,6 +7,7 @@
         <property name="use-underline">True</property>
         <property name="label" translatable="yes">_Calendars</property>
         <property name="popover">popover</property>
+        <property name="can-shrink">True</property>
         <style>
           <class name="image-button" />
         </style>
