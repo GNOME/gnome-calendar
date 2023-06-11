@@ -109,6 +109,8 @@ struct _GcalWindow
   GtkWidget          *action_bar;
   GcalSyncIndicator  *sync_indicator;
   GcalToolbarEnd     *toolbar_end;
+  GcalToolbarEnd     *sidebar_toolbar_end;
+  AdwLeaflet         *leaflet;
 
   /* header_bar widets */
   GtkWidget          *calendars_button;
@@ -860,6 +862,7 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->sync_indicator, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->toolbar_end, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->sidebar_toolbar_end, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   /* CSS */
   load_css_providers (self);
@@ -1052,6 +1055,8 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, sync_indicator);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, toolbar_end);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, sidebar_toolbar_end);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, leaflet);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, weather_settings);
@@ -1140,10 +1145,16 @@ gcal_window_set_search_query (GcalWindow  *self,
                               const gchar *query)
 {
   GtkWidget *search_button;
+  GcalToolbarEnd *toolbar_end;
 
   g_return_if_fail (GCAL_IS_WINDOW (self));
 
-  search_button = gcal_toolbar_end_get_search_button (self->toolbar_end);
+  if (adw_leaflet_get_folded (self->leaflet))
+    toolbar_end = self->sidebar_toolbar_end;
+  else
+    toolbar_end = self->toolbar_end;
+
+  search_button = gcal_toolbar_end_get_search_button (toolbar_end);
   gcal_search_button_search (GCAL_SEARCH_BUTTON (search_button), query);
 }
 

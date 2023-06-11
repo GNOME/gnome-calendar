@@ -7,11 +7,6 @@
         <child>
           <object class="GcalSearchButton" id="search_button">
             <property name="tooltip_text" translatable="yes" context="tooltip">Search for events</property>
-            <binding name="context">
-              <lookup type="GcalWindow" name="context">
-                <lookup type="GtkWidget" name="root">GcalToolbarEnd</lookup>
-              </lookup>
-            </binding>
           </object>
         </child>
         <child>
