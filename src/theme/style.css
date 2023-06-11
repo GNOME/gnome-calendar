@@ -375,6 +375,11 @@ agenda-view list > label {
   padding: 6px 12px;
 }
 
+.sidebar-pane agenda-view .background {
+  background: none;
+  color: inherit;
+}
+
 label.no-events {
   font-style: italic;
 }

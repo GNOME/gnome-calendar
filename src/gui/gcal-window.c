@@ -97,20 +97,20 @@ struct _GcalWindow
   AdwApplicationWindow parent;
 
   /* upper level widgets */
-  GtkWidget          *main_box;
+  GtkWidget              *main_box;
 
-  GtkWidget          *header_bar;
-  AdwToastOverlay    *overlay;
-  AdwViewStack       *views_stack;
-  GtkWidget          *week_view;
-  GtkWidget          *month_view;
-  GtkWidget          *agenda_view;
-  GtkWidget          *date_chooser;
-  GtkWidget          *action_bar;
-  GcalSyncIndicator  *sync_indicator;
-  GcalToolbarEnd     *toolbar_end;
-  GcalToolbarEnd     *sidebar_toolbar_end;
-  AdwLeaflet         *leaflet;
+  GtkWidget              *header_bar;
+  AdwToastOverlay        *overlay;
+  AdwViewStack           *views_stack;
+  GtkWidget              *week_view;
+  GtkWidget              *month_view;
+  GtkWidget              *agenda_view;
+  GtkWidget              *date_chooser;
+  GtkWidget              *action_bar;
+  GcalSyncIndicator      *sync_indicator;
+  GcalToolbarEnd         *toolbar_end;
+  GcalToolbarEnd         *sidebar_toolbar_end;
+  AdwNavigationSplitView *split_view;
 
   /* header_bar widets */
   GtkWidget          *calendars_button;
@@ -326,6 +326,17 @@ static void
 hide_widget (GtkWidget *widget)
 {
   gtk_widget_set_visible (widget, FALSE);
+}
+
+static char *
+content_title (GcalWindow     *self,
+               GcalWindowView  active_view)
+{
+  /* We check for NULL so we get the right page name during initialization */
+  if (active_view == GCAL_WINDOW_VIEW_WEEK)
+    return g_strdup (_("Week"));
+  else
+    return g_strdup (_("Month"));
 }
 
 /*
@@ -1053,10 +1064,10 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_management_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, overlay);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, sidebar_toolbar_end);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, split_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, sync_indicator);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, toolbar_end);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, sidebar_toolbar_end);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, leaflet);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, weather_settings);
@@ -1065,12 +1076,13 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
 
   /* Event creation related */
-  gtk_widget_class_bind_template_callback (widget_class, edit_event);
-  gtk_widget_class_bind_template_callback (widget_class, create_event_detailed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, show_new_event_widget);
   gtk_widget_class_bind_template_callback (widget_class, close_new_event_widget);
+  gtk_widget_class_bind_template_callback (widget_class, content_title);
+  gtk_widget_class_bind_template_callback (widget_class, create_event_detailed_cb);
   gtk_widget_class_bind_template_callback (widget_class, day_selected);
+  gtk_widget_class_bind_template_callback (widget_class, edit_event);
   gtk_widget_class_bind_template_callback (widget_class, event_activated);
+  gtk_widget_class_bind_template_callback (widget_class, show_new_event_widget);
 
   /* Edit dialog related */
   gtk_widget_class_bind_template_callback (widget_class, on_event_editor_dialog_remove_event_cb);
@@ -1149,7 +1161,7 @@ gcal_window_set_search_query (GcalWindow  *self,
 
   g_return_if_fail (GCAL_IS_WINDOW (self));
 
-  if (adw_leaflet_get_folded (self->leaflet))
+  if (adw_navigation_split_view_get_collapsed (self->split_view))
     toolbar_end = self->sidebar_toolbar_end;
   else
     toolbar_end = self->toolbar_end;
