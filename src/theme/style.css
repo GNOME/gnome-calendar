@@ -406,7 +406,7 @@ datechooser {
 }
 
 datechooser .current-week {
-  background: alpha(@headerbar_bg_color, 0.7);
+  background: alpha(currentColor, 0.1);
   color: @headerbar_fg_color;
   border-radius: 6px;
 }
