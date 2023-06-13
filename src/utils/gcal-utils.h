@@ -120,6 +120,10 @@ GList*               filter_children_by_uid_and_modtype          (GtkWidget     
                                                                   GcalRecurrenceModType  mod,
                                                                   const gchar           *uid);
 
+void                 gcal_utils_launch_date_time_settings_panel  (GDBusConnection     *connection,
+                                                                  const gchar         *action,
+                                                                  const gchar         *arg);
+
 void                 gcal_utils_launch_online_accounts_panel     (GDBusConnection     *connection,
                                                                   const gchar         *action,
                                                                   const gchar         *arg);

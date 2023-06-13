@@ -303,6 +303,10 @@
   <menu id='menu'>
     <section>
       <item>
+        <attribute name="label" translatable="yes">_Date &amp; Time Settings…</attribute>
+        <attribute name="action">win.open-date-time-settings</attribute>
+      </item>
+      <item>
         <attribute name="label" translatable="yes">_Online Accounts…</attribute>
         <attribute name="action">win.open-online-accounts</attribute>
       </item>
