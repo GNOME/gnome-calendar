@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <adwaita.h>
+
 #include "gcal-event.h"
 #include "gcal-manager.h"
 
@@ -26,7 +28,7 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_EVENT_EDITOR_DIALOG (gcal_event_editor_dialog_get_type ())
-G_DECLARE_FINAL_TYPE (GcalEventEditorDialog, gcal_event_editor_dialog, GCAL, EVENT_EDITOR_DIALOG, GtkDialog);
+G_DECLARE_FINAL_TYPE (GcalEventEditorDialog, gcal_event_editor_dialog, GCAL, EVENT_EDITOR_DIALOG, AdwWindow);
 
 GtkWidget*           gcal_event_editor_dialog_new                (void);
 

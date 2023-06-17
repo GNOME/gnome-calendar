@@ -1,99 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="GcalEventEditorDialog" parent="GtkDialog">
+  <template class="GcalEventEditorDialog" parent="AdwWindow">
     <property name="modal">True</property>
     <property name="default-width">700</property>
     <property name="default-height">1000</property>
-    <property name="use_header_bar">1</property>
-    <property name="destroy_with_parent">True</property>
+    <property name="destroy-with-parent">True</property>
     <property name="hide-on-close">True</property>
-    <child type="titlebar">
-      <object class="GtkHeaderBar" id="titlebar">
-        <property name="show-title-buttons">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
         <child>
-          <object class="GtkButton" id="cancel_button">
-            <property name="label" translatable="yes">Cancel</property>
-            <signal name="clicked" handler="on_cancel_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkImage" id="lock">
-            <property name="visible" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|invert-boolean|sync-create" />
-            <property name="icon_name">changes-prevent-symbolic</property>
-          </object>
-        </child>
-        <child type="title">
-          <object class="GtkMenuButton" id="sources_button">
-            <property name="popover">sources_popover</property>
-            <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
-            <property name="tooltip-text" translatable="yes">Click to select the calendar</property>
-            <style>
-              <class name="flat"/>
-              <class name="sources-button"/>
-            </style>
+          <object class="GtkHeaderBar" id="titlebar">
+            <property name="show-title-buttons">False</property>
             <child>
-              <object class="GtkBox">
-                <property name="spacing">6</property>
+              <object class="GtkButton" id="cancel_button">
+                <property name="label" translatable="yes">Cancel</property>
+                <signal name="clicked" handler="on_cancel_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage" id="lock">
+                <property name="visible" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|invert-boolean|sync-create" />
+                <property name="icon_name">changes-prevent-symbolic</property>
+              </object>
+            </child>
+            <child type="title">
+              <object class="GtkMenuButton" id="sources_button">
+                <property name="popover">sources_popover</property>
+                <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
+                <property name="tooltip-text" translatable="yes">Click to select the calendar</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="sources-button"/>
+                </style>
                 <child>
-                  <object class="GtkBox" id="title_label_box">
-                    <property name="orientation">vertical</property>
-                    <property name="valign">center</property>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
                     <child>
-                      <object class="GtkLabel" id="title_label">
-                        <property name="ellipsize">middle</property>
-                        <property name="max_width_chars">40</property>
-                        <style>
-                          <class name="title"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkBox" id="subtitle_box">
-                        <property name="orientation">horizontal</property>
-                        <property name="halign">center</property>
+                      <object class="GtkBox" id="title_label_box">
+                        <property name="orientation">vertical</property>
+                        <property name="valign">center</property>
                         <child>
-                          <object class="GtkImage" id="source_image">
+                          <object class="GtkLabel" id="title_label">
+                            <property name="ellipsize">middle</property>
+                            <property name="max_width_chars">40</property>
                             <style>
-                              <class name="calendar-color-image"/>
+                              <class name="title"/>
                             </style>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="subtitle_label">
+                          <object class="GtkBox" id="subtitle_box">
+                            <property name="orientation">horizontal</property>
+                            <property name="halign">center</property>
+                            <child>
+                              <object class="GtkImage" id="source_image">
+                                <style>
+                                  <class name="calendar-color-image"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="subtitle_label">
+                                <style>
+                                  <class name="subtitle"/>
+                                </style>
+                              </object>
+                            </child>
                             <style>
                               <class name="subtitle"/>
                             </style>
                           </object>
                         </child>
-                        <style>
-                          <class name="subtitle"/>
-                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="pan_down_image">
+                        <property name="icon_name">pan-down-symbolic</property>
                       </object>
                     </child>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkImage" id="pan_down_image">
-                    <property name="icon_name">pan-down-symbolic</property>
-                  </object>
-                </child>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkButton" id="done_button">
+                <property name="label" translatable="yes">Done</property>
+                <signal name="clicked" handler="on_done_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
               </object>
             </child>
           </object>
         </child>
-        <child type="end">
-          <object class="GtkButton" id="done_button">
-            <property name="label" translatable="yes">Done</property>
-            <signal name="clicked" handler="on_done_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
-            <style>
-              <class name="suggested-action"/>
-            </style>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
         <child>
           <object class="AdwPreferencesPage">
             <property name="vexpand">True</property>

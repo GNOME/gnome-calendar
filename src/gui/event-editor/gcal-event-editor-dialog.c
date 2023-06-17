@@ -48,7 +48,7 @@
 
 struct _GcalEventEditorDialog
 {
-  GtkDialog         parent;
+  AdwWindow               parent;
 
   GtkWidget              *cancel_button;
   GtkWidget              *delete_button;
@@ -89,7 +89,7 @@ static void          on_calendar_selected_action_cb              (GSimpleAction 
                                                                   GVariant           *value,
                                                                   gpointer            user_data);
 
-G_DEFINE_TYPE (GcalEventEditorDialog, gcal_event_editor_dialog, GTK_TYPE_DIALOG)
+G_DEFINE_TYPE (GcalEventEditorDialog, gcal_event_editor_dialog, ADW_TYPE_WINDOW)
 
 enum
 {
@@ -558,9 +558,6 @@ gcal_event_editor_dialog_constructed (GObject* object)
   G_OBJECT_CLASS (gcal_event_editor_dialog_parent_class)->constructed (object);
 
   gtk_window_set_title (GTK_WINDOW (object), "");
-
-  /* titlebar */
-  gtk_window_set_titlebar (GTK_WINDOW (object), self->titlebar);
 
   /* Actions */
   self->action_group = g_simple_action_group_new ();
