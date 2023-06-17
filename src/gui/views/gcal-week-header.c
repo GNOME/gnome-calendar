@@ -486,6 +486,7 @@ update_overflow (GcalWeekHeader *self)
             }
 
           gtk_label_set_label (GTK_LABEL (label), text);
+          gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
           g_free (text);
         }
       else if (label)
