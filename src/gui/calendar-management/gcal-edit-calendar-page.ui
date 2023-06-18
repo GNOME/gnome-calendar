@@ -43,6 +43,7 @@
             <child>
               <object class="AdwActionRow" id="calendar_url_row">
                 <property name="title" translatable="yes">Location</property>
+                <property name="subtitle-lines">1</property>
                 <property name="visible" bind-source="calendar_url_row" bind-property="visible" bind-flags="default" />
                 <style>
                   <class name="property"/>

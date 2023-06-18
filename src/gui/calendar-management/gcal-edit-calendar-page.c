@@ -148,6 +148,7 @@ setup_calendar (GcalEditCalendarPage *self,
   /* If it's a file, set the file path */
   if (is_file)
     {
+      g_autofree gchar *basename = NULL;
       g_autofree gchar *text = NULL;
       g_autofree gchar *uri = NULL;
       ESourceLocal *local;
@@ -155,10 +156,12 @@ setup_calendar (GcalEditCalendarPage *self,
 
       local = e_source_get_extension (source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
       file = e_source_local_get_custom_file (local);
+      basename = g_file_get_basename (file);
       uri = g_file_get_uri (file);
 
-      text = g_strdup_printf ("<a href=\"%s\">%s</a>", uri, uri);
+      text = g_strdup_printf ("<a href=\"%s\">%s</a>", uri, basename);
       adw_action_row_set_subtitle (self->calendar_url_row, text);
+      gtk_widget_set_tooltip_text (GTK_WIDGET (self->calendar_url_row), basename);
     }
 
   /* If it's remote, build the uri */
@@ -175,6 +178,7 @@ setup_calendar (GcalEditCalendarPage *self,
 
       text = g_strdup_printf ("<a href=\"%s\">%s</a>", uri, uri);
       adw_action_row_set_subtitle (self->calendar_url_row, text);
+      gtk_widget_set_tooltip_text (GTK_WIDGET (self->calendar_url_row), uri);
     }
 
   if (is_goa)
