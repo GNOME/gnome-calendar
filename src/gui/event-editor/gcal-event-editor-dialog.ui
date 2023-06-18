@@ -7,9 +7,8 @@
     <property name="destroy-with-parent">True</property>
     <property name="hide-on-close">True</property>
     <child>
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
-        <child>
+      <object class="AdwToolbarView">
+        <child type="top">
           <object class="GtkHeaderBar" id="titlebar">
             <property name="show-title-buttons">False</property>
             <child>
@@ -94,7 +93,7 @@
             </child>
           </object>
         </child>
-        <child>
+        <property name="content">
           <object class="AdwPreferencesPage">
             <property name="vexpand">True</property>
 
@@ -168,7 +167,7 @@
             </child>
 
           </object>
-        </child>
+        </property>
       </object>
     </child>
   </template>
