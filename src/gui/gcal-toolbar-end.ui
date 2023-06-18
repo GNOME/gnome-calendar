@@ -6,14 +6,14 @@
         <property name="spacing">6</property>
         <child>
           <object class="GcalSearchButton" id="search_button">
-            <property name="tooltip_text" translatable="yes" context="tooltip">Search for events</property>
+            <property name="tooltip_text" translatable="yes" context="tooltip">Search</property>
           </object>
         </child>
         <child>
           <object class="GtkButton">
             <property name="icon-name">list-add-symbolic</property>
             <property name="action-name">win.new-event</property>
-            <property name="tooltip_text" translatable="yes" context="tooltip">Add a new event</property>
+            <property name="tooltip_text" translatable="yes" context="tooltip">Add Event</property>
           </object>
         </child>
       </object>

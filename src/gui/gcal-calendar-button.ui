@@ -3,7 +3,7 @@
   <template class="GcalCalendarButton" parent="AdwBin">
     <child>
       <object class="GtkMenuButton">
-        <property name="tooltip_text" translatable="yes">Manage your calendars</property>
+        <property name="tooltip_text" translatable="yes">Manage Calendars</property>
         <property name="use-underline">True</property>
         <property name="label" translatable="yes">_Calendars</property>
         <property name="popover">popover</property>
