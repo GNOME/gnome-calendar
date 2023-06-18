@@ -50,6 +50,7 @@
             <property name="name">entry</property>
             <property name="child">
               <object class="GtkSearchEntry" id="entry">
+                <property name="placeholder-text" translatable="yes">Search events</property>
                 <property name="max-width-chars">0</property>
                 <property name="width-chars">0</property>
                 <signal name="activate" handler="on_entry_activate_cb" object="GcalSearchButton" swapped="no" />

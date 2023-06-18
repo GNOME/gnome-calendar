@@ -43,6 +43,7 @@
     </child>
     <child>
       <object class="GtkEntry" id="weather_location_entry">
+        <property name="placeholder-text" translatable="yes">Search locations</property>
         <property name="primary_icon_name">edit-find-symbolic</property>
         <property name="primary_icon_activatable">False</property>
         <property name="primary_icon_sensitive">False</property>
