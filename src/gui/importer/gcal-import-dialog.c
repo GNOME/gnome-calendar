@@ -39,7 +39,7 @@ typedef struct
 
 struct _GcalImportDialog
 {
-  GtkDialog           parent;
+  AdwWindow           parent;
 
   GtkWidget          *cancel_button;
   AdwComboRow        *calendar_combo_row;
@@ -64,7 +64,7 @@ static void          on_import_row_file_loaded_cb                 (GcalImportFil
                                                                    GPtrArray         *events,
                                                                    GcalImportDialog  *self);
 
-G_DEFINE_TYPE (GcalImportDialog, gcal_import_dialog, GTK_TYPE_DIALOG)
+G_DEFINE_TYPE (GcalImportDialog, gcal_import_dialog, ADW_TYPE_WINDOW)
 
 enum
 {
