@@ -51,7 +51,7 @@ struct _GcalNewCalendarPage
   GtkWidget          *cancel_button;
   GtkWidget          *credentials_cancel_button;
   GtkWidget          *credentials_connect_button;
-  GtkWindow          *credentials_dialog;
+  AdwWindow          *credentials_dialog;
   GtkEntry           *credentials_password_entry;
   GtkEntry           *credentials_user_entry;
   GtkColorDialogButton *local_calendar_color_button;
