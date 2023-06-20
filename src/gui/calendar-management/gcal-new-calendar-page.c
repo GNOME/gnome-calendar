@@ -48,10 +48,9 @@ struct _GcalNewCalendarPage
   GtkEntry           *calendar_address_entry;
   EntryState          calendar_address_entry_state;
   GcalFileChooserButton *calendar_file_chooser_button;
-  GtkWidget          *cancel_button;
   GtkWidget          *credentials_cancel_button;
   GtkWidget          *credentials_connect_button;
-  AdwWindow          *credentials_dialog;
+  GtkWindow          *credentials_dialog;
   GtkEntry           *credentials_password_entry;
   GtkEntry           *credentials_user_entry;
   GtkColorDialogButton *local_calendar_color_button;
@@ -467,13 +466,6 @@ on_url_entry_text_changed_cb (GtkEntry            *entry,
 }
 
 static void
-on_cancel_button_clicked_cb (GtkWidget                  *button,
-                             GcalCalendarManagementPage *page)
-{
-  gcal_calendar_management_page_switch_page (page, "calendars", NULL);
-}
-
-static void
 on_local_calendar_name_row_text_changed_cb (AdwEntryRow         *entry_row,
                                             GParamSpec          *pspec,
                                             GcalNewCalendarPage *self)
@@ -517,37 +509,13 @@ gcal_new_calendar_page_get_title (GcalCalendarManagementPage *page)
 }
 
 static void
-gcal_new_calendar_page_activate (GcalCalendarManagementPage *page,
-                                 GcalCalendar               *calendar)
-{
-  GcalNewCalendarPage *self;
-  GtkHeaderBar *headerbar;
-
-  GCAL_ENTRY;
-
-  self = GCAL_NEW_CALENDAR_PAGE (page);
-  headerbar = gcal_calendar_management_page_get_titlebar (page);
-
-  gtk_header_bar_pack_start (headerbar, self->cancel_button);
-  gtk_header_bar_pack_end (headerbar, self->add_button);
-  gtk_header_bar_set_show_title_buttons (headerbar, FALSE);
-
-  GCAL_EXIT;
-}
-static void
 gcal_new_calendar_page_deactivate (GcalCalendarManagementPage *page)
 {
   GcalNewCalendarPage *self;
-  GtkHeaderBar *headerbar;
 
   GCAL_ENTRY;
 
   self = GCAL_NEW_CALENDAR_PAGE (page);
-  headerbar = gcal_calendar_management_page_get_titlebar (page);
-
-  gtk_header_bar_remove (headerbar, self->cancel_button);
-  gtk_header_bar_remove (headerbar, self->add_button);
-  gtk_header_bar_set_show_title_buttons (headerbar, TRUE);
 
   g_clear_object (&self->local_source);
   g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
@@ -566,7 +534,6 @@ gcal_calendar_management_page_iface_init (GcalCalendarManagementPageInterface *i
 {
   iface->get_name = gcal_new_calendar_page_get_name;
   iface->get_title = gcal_new_calendar_page_get_title;
-  iface->activate = gcal_new_calendar_page_activate;
   iface->deactivate = gcal_new_calendar_page_deactivate;
 }
 
@@ -658,7 +625,6 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, add_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_address_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_file_chooser_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_connect_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_dialog);
@@ -671,7 +637,6 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, on_add_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_calendar_address_activated_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_cancel_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_credential_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_credential_entry_activate_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_file_chooser_button_file_changed_cb);

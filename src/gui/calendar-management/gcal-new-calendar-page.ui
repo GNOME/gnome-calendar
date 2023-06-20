@@ -4,166 +4,197 @@
     <property name="orientation">vertical</property>
 
     <child>
-      <object class="AdwPreferencesPage">
+      <object class="AdwToolbarView">
 
-        <!-- Local calendar -->
-        <child>
-          <object class="AdwPreferencesGroup">
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <property name="show-end-title-buttons">False</property>
+            <property name="show-start-title-buttons">False</property>
 
-            <!-- Calendar name -->
-            <child>
-              <object class="AdwEntryRow" id="local_calendar_name_row">
-                <property name="title" translatable="yes">Calendar Name</property>
-                <signal name="notify::text" handler="on_local_calendar_name_row_text_changed_cb" object="GcalNewCalendarPage" swapped="no" />
+            <property name="title-widget">
+              <object class="AdwWindowTitle">
+                <property name="title" translatable="yes">New Calendar</property>
               </object>
-            </child>
+            </property>
 
-            <!-- Color -->
-            <child>
-              <object class="AdwActionRow">
-                <property name="title" translatable="yes">Color</property>
-                <property name="activatable-widget">local_calendar_color_button</property>
-
-                <child>
-                  <object class="GtkColorDialogButton" id="local_calendar_color_button">
-                    <property name="valign">center</property>
-                    <property name="dialog">
-                      <object class="GtkColorDialog">
-                        <property name="modal">True</property>
-                        <property name="with-alpha">False</property>
-                      </object>
-                    </property>
-                    <signal name="notify::rgba" handler="on_local_calendar_color_button_rgba_changed_cb" object="GcalNewCalendarPage" swapped="no" />
-                  </object>
-                </child>
-
+            <child type="end">
+              <object class="GtkButton" id="add_button">
+                <property name="label" translatable="yes">Add</property>
+                <property name="sensitive">False</property>
+                <signal name="clicked" handler="on_add_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
+                <style>
+                  <class name="suggested-action"/>
+                </style>
               </object>
             </child>
 
           </object>
         </child>
 
-        <child>
-          <object class="AdwPreferencesGroup">
+        <property name="content">
+          <object class="AdwPreferencesPage">
 
+            <!-- Local calendar -->
             <child>
-              <object class="GtkLabel">
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Import a Calendar</property>
-                <property name="xalign">0.0</property>
-                <attributes>
-                  <attribute name="scale" value="1.3" />
-                  <attribute name="weight" value="bold" />
-                </attributes>
+              <object class="AdwPreferencesGroup">
+
+                <!-- Calendar name -->
+                <child>
+                  <object class="AdwEntryRow" id="local_calendar_name_row">
+                    <property name="title" translatable="yes">Calendar Name</property>
+                    <signal name="notify::text" handler="on_local_calendar_name_row_text_changed_cb" object="GcalNewCalendarPage" swapped="no" />
+                  </object>
+                </child>
+
+                <!-- Color -->
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="yes">Color</property>
+                    <property name="activatable-widget">local_calendar_color_button</property>
+
+                    <child>
+                      <object class="GtkColorDialogButton" id="local_calendar_color_button">
+                        <property name="valign">center</property>
+                        <property name="dialog">
+                          <object class="GtkColorDialog">
+                            <property name="modal">True</property>
+                            <property name="with-alpha">False</property>
+                          </object>
+                        </property>
+                        <signal name="notify::rgba" handler="on_local_calendar_color_button_rgba_changed_cb" object="GcalNewCalendarPage" swapped="no" />
+                      </object>
+                    </child>
+
+                  </object>
+                </child>
+
               </object>
             </child>
 
             <child>
-              <object class="GtkGrid">
-                <property name="row_spacing">12</property>
-                <property name="column_spacing">12</property>
+              <object class="AdwPreferencesGroup">
 
-                <!-- Online Accounts reference label-->
                 <child>
                   <object class="GtkLabel">
-                    <property name="label" translatable="yes">Alternatively, enter the web address of an online calendar you want to import, or open a supported calendar file.</property>
-                    <property name="wrap">True</property>
-                    <property name="xalign">0</property>
-                    <layout>
-                      <property name="column">0</property>
-                      <property name="row">0</property>
-                      <property name="column-span">2</property>
-                    </layout>
-                  </object>
-                </child>
-
-                <!-- URL entry -->
-                <child>
-                  <object class="GtkEntry" id="calendar_address_entry">
                     <property name="hexpand">True</property>
-                    <property name="placeholder-text">https://example.com/calendar.ics</property>
-                    <signal name="notify::text" handler="on_url_entry_text_changed_cb" object="GcalNewCalendarPage" swapped="no" />
-                    <signal name="activate" handler="on_calendar_address_activated_cb" object="GcalNewCalendarPage" swapped="no" />
-                    <layout>
-                      <property name="column">0</property>
-                      <property name="row">1</property>
-                    </layout>
-                  </object>
-                </child>
-
-                <!-- File Chooser button -->
-                <child>
-                  <object class="GcalFileChooserButton" id="calendar_file_chooser_button">
-                    <property name="title" translatable="yes">Open a File</property>
-                    <property name="filter">
-                      <object class="GtkFileFilter">
-                        <property name="name" translatable="yes">Calendar files</property>
-                        <patterns>
-                          <pattern>*.ical</pattern>
-                          <pattern>*.icalendar</pattern>
-                          <pattern>*.ics</pattern>
-                          <pattern>*.ifb</pattern>
-                          <pattern>*.vcs</pattern>
-                        </patterns>
-                      </object>
-                    </property>
-                    <signal name="notify::file" handler="on_file_chooser_button_file_changed_cb" object="GcalNewCalendarPage" swapped="no" />
-                    <layout>
-                      <property name="column">1</property>
-                      <property name="row">1</property>
-                    </layout>
+                    <property name="label" translatable="yes">Import a Calendar</property>
+                    <property name="xalign">0.0</property>
+                    <attributes>
+                      <attribute name="scale" value="1.3" />
+                      <attribute name="weight" value="bold" />
+                    </attributes>
                   </object>
                 </child>
 
                 <child>
-                  <object class="GtkRevealer" id="web_sources_revealer">
-                    <property name="transition_type">slide-down</property>
-                    <property name="transition_duration">200</property>
-                    <layout>
-                      <property name="column">0</property>
-                      <property name="row">2</property>
-                      <property name="column-span">2</property>
-                    </layout>
+                  <object class="GtkGrid">
+                    <property name="row_spacing">12</property>
+                    <property name="column_spacing">12</property>
+
+                    <!-- Online Accounts reference label-->
                     <child>
-                      <object class="GtkBox" id="web_sources_listbox_box">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkLabel" id="web_sources_calendar_label">
-                            <property name="label" translatable="yes">Calendars</property>
-                            <property name="xalign">0</property>
-                            <attributes>
-                              <attribute name="weight" value="bold" />
-                            </attributes>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Alternatively, enter the web address of an online calendar you want to import, or open a supported calendar file.</property>
+                        <property name="wrap">True</property>
+                        <property name="xalign">0</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">0</property>
+                          <property name="column-span">2</property>
+                        </layout>
+                      </object>
+                    </child>
+
+                    <!-- URL entry -->
+                    <child>
+                      <object class="GtkEntry" id="calendar_address_entry">
+                        <property name="hexpand">True</property>
+                        <property name="placeholder-text">https://example.com/calendar.ics</property>
+                        <signal name="notify::text" handler="on_url_entry_text_changed_cb" object="GcalNewCalendarPage" swapped="no" />
+                        <signal name="activate" handler="on_calendar_address_activated_cb" object="GcalNewCalendarPage" swapped="no" />
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">1</property>
+                        </layout>
+                      </object>
+                    </child>
+
+                    <!-- File Chooser button -->
+                    <child>
+                      <object class="GcalFileChooserButton" id="calendar_file_chooser_button">
+                        <property name="title" translatable="yes">Open a File</property>
+                        <property name="filter">
+                          <object class="GtkFileFilter">
+                            <property name="name" translatable="yes">Calendar files</property>
+                            <patterns>
+                              <pattern>*.ical</pattern>
+                              <pattern>*.icalendar</pattern>
+                              <pattern>*.ics</pattern>
+                              <pattern>*.ifb</pattern>
+                              <pattern>*.vcs</pattern>
+                            </patterns>
                           </object>
-                        </child>
+                        </property>
+                        <signal name="notify::file" handler="on_file_chooser_button_file_changed_cb" object="GcalNewCalendarPage" swapped="no" />
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="row">1</property>
+                        </layout>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkRevealer" id="web_sources_revealer">
+                        <property name="transition_type">slide-down</property>
+                        <property name="transition_duration">200</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">2</property>
+                          <property name="column-span">2</property>
+                        </layout>
                         <child>
-                          <object class="GtkListBox" id="web_sources_listbox">
-                            <property name="activate_on_single_click">False</property>
-                            <property name="selection_mode">none</property>
-                            <style>
-                              <class name="calendar-list" />
-                            </style>
+                          <object class="GtkBox" id="web_sources_listbox_box">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkLabel" id="web_sources_calendar_label">
+                                <property name="label" translatable="yes">Calendars</property>
+                                <property name="xalign">0</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold" />
+                                </attributes>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkListBox" id="web_sources_listbox">
+                                <property name="activate_on_single_click">False</property>
+                                <property name="selection_mode">none</property>
+                                <style>
+                                  <class name="calendar-list" />
+                                </style>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
                     </child>
-                  </object>
-                </child>
 
-                <!-- Online Accounts reference label-->
-                <child>
-                  <object class="GtkLabel" id="web_description_label">
-                    <property name="label" translatable="yes">If the calendar belongs to one of your online accounts, you can add it through the &lt;a href=&quot;GOA&quot;&gt;online account settings&lt;/a&gt;.</property>
-                    <property name="use_markup">True</property>
-                    <property name="wrap">True</property>
-                    <property name="xalign">0</property>
-                    <signal name="activate-link" handler="on_web_description_label_link_activated_cb" object="GcalNewCalendarPage" swapped="no" />
-                    <layout>
-                      <property name="column">0</property>
-                      <property name="row">3</property>
-                      <property name="column-span">2</property>
-                    </layout>
+                    <!-- Online Accounts reference label-->
+                    <child>
+                      <object class="GtkLabel" id="web_description_label">
+                        <property name="label" translatable="yes">If the calendar belongs to one of your online accounts, you can add it through the &lt;a href=&quot;GOA&quot;&gt;online account settings&lt;/a&gt;.</property>
+                        <property name="use_markup">True</property>
+                        <property name="wrap">True</property>
+                        <property name="xalign">0</property>
+                        <signal name="activate-link" handler="on_web_description_label_link_activated_cb" object="GcalNewCalendarPage" swapped="no" />
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">3</property>
+                          <property name="column-span">2</property>
+                        </layout>
+                      </object>
+                    </child>
+
                   </object>
                 </child>
 
@@ -171,8 +202,7 @@
             </child>
 
           </object>
-        </child>
-
+        </property>
 
       </object>
     </child>
@@ -286,17 +316,4 @@
     </property>
   </object>
 
-  <!-- Headerbar buttons -->
-  <object class="GtkButton" id="cancel_button">
-    <property name="label" translatable="yes">Cancel</property>
-    <signal name="clicked" handler="on_cancel_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
-  </object>
-  <object class="GtkButton" id="add_button">
-    <property name="label" translatable="yes">Add</property>
-    <property name="sensitive">False</property>
-    <signal name="clicked" handler="on_add_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
-    <style>
-      <class name="suggested-action"/>
-    </style>
-  </object>
 </interface>

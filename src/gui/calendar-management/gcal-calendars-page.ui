@@ -46,46 +46,64 @@
         </child>
 
         <child>
-          <object class="GtkScrolledWindow">
-            <property name="hexpand">True</property>
-            <property name="vexpand">True</property>
-            <property name="hscrollbar_policy">never</property>
-            <property name="max_content_height">600</property>
-            <property name="propagate_natural_height">True</property>
+          <object class="AdwToolbarView">
 
-            <child>
-              <object class="GtkListBox" id="listbox">
-                <property name="margin-top">24</property>
-                <property name="margin-bottom">24</property>
-                <property name="margin-start">24</property>
-                <property name="margin-end">24</property>
-                <property name="valign">start</property>
-                <property name="selection-mode">none</property>
-                <signal name="row-activated" handler="on_listbox_row_activated_cb" object="GcalCalendarsPage" swapped="no" />
-                <style>
-                  <class name="calendars-list"/>
-                  <class name="content"/>
-                </style>
+            <child type="top">
+              <object class="GtkHeaderBar">
+                <property name="show-title-buttons">True</property>
+                <property name="title-widget">
+                  <object class="AdwWindowTitle">
+                    <property name="title" translatable="yes">Calendars</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <property name="content">
+              <object class="GtkScrolledWindow">
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="hscrollbar_policy">never</property>
+                <property name="max_content_height">600</property>
+                <property name="propagate_natural_height">True</property>
 
                 <child>
-                  <object class="GtkListBoxRow" id="add_calendar_row">
+                  <object class="GtkListBox" id="listbox">
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">24</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+                    <property name="valign">start</property>
+                    <property name="selection-mode">none</property>
+                    <signal name="row-activated" handler="on_listbox_row_activated_cb" object="GcalCalendarsPage" swapped="no" />
+                    <style>
+                      <class name="calendars-list"/>
+                      <class name="content"/>
+                    </style>
 
                     <child>
-                      <object class="GtkLabel">
-                        <property name="hexpand">True</property>
-                        <property name="vexpand">True</property>
-                        <property name="xalign">0.5</property>
-                        <property name="yalign">0.5</property>
-                        <property name="label" translatable="yes">Add Calendar…</property>
+                      <object class="GtkListBoxRow" id="add_calendar_row">
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
+                            <property name="xalign">0.5</property>
+                            <property name="yalign">0.5</property>
+                            <property name="label" translatable="yes">Add Calendar…</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
                 </child>
+
               </object>
-            </child>
+            </property>
 
           </object>
         </child>
+
       </object>
     </child>
   </template>

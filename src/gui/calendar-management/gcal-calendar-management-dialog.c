@@ -55,10 +55,7 @@ struct _GcalCalendarManagementDialog
 {
   AdwWindow           parent;
 
-  GtkHeaderBar       *headerbar;
-  GtkWidget          *notebook;
-  GtkWidget          *stack;
-  AdwWindowTitle    *window_title;
+  AdwNavigationView  *navigation_view;
 
   /* flags */
   ESource            *source;
@@ -97,29 +94,21 @@ set_page (GcalCalendarManagementDialog *self,
           const gchar                  *page_name,
           GcalCalendar                 *calendar)
 {
-  GcalCalendarManagementPage *current_page;
-  guint i;
+  GcalCalendarManagementPage *next_page;
+  AdwNavigationPage *page;
 
   GCAL_TRACE_MSG ("Switching to page '%s'", page_name);
 
-  current_page = (GcalCalendarManagementPage*) gtk_stack_get_visible_child (GTK_STACK (self->stack));
+  page = adw_navigation_view_find_page (self->navigation_view, page_name);
+  g_assert (page != NULL);
+  next_page = GCAL_CALENDAR_MANAGEMENT_PAGE (adw_navigation_page_get_child (page));
 
-  for (i = 0; i < N_PAGES; i++)
-    {
-      GcalCalendarManagementPage *page = self->pages[i];
+  gcal_calendar_management_page_activate (next_page, calendar);
 
-      if (g_strcmp0 (page_name, gcal_calendar_management_page_get_name (page)) != 0)
-        continue;
+  adw_navigation_view_pop (self->navigation_view);
 
-      gtk_stack_set_visible_child (GTK_STACK (self->stack), GTK_WIDGET (page));
-      gcal_calendar_management_page_activate (page, calendar);
-
-      adw_window_title_set_title (self->window_title,
-                                  gcal_calendar_management_page_get_title (page));
-      break;
-    }
-
-  gcal_calendar_management_page_deactivate (current_page);
+  if (page != adw_navigation_view_get_visible_page (self->navigation_view))
+    adw_navigation_view_push (self->navigation_view, page);
 }
 
 static void
@@ -140,16 +129,16 @@ setup_context (GcalCalendarManagementDialog *self)
   for (i = 0; i < N_PAGES; i++)
     {
       GcalCalendarManagementPage *page;
+      AdwNavigationPage *navigation_page;
 
       page = g_object_new (pages[i].gtype,
                            "context", self->context,
                            NULL);
-      gtk_widget_set_visible (GTK_WIDGET (page), TRUE);
 
-      gtk_stack_add_titled (GTK_STACK (self->stack),
-                            GTK_WIDGET (page),
-                            gcal_calendar_management_page_get_name (page),
-                            gcal_calendar_management_page_get_title (page));
+      navigation_page = adw_navigation_page_new (GTK_WIDGET (page),
+                                                 gcal_calendar_management_page_get_title (page));
+      adw_navigation_page_set_tag (navigation_page, gcal_calendar_management_page_get_name (page));
+      adw_navigation_view_add (self->navigation_view, navigation_page);
 
       g_signal_connect_object (page,
                                "switch-page",
@@ -169,6 +158,19 @@ setup_context (GcalCalendarManagementDialog *self)
 /*
  * Callbacks
  */
+
+static void
+on_navigation_view_popped_cb (AdwNavigationView            *navigation_view,
+                              AdwNavigationPage            *popped_page,
+                              GcalCalendarManagementDialog *self)
+{
+  GcalCalendarManagementPage *page;
+
+  page = GCAL_CALENDAR_MANAGEMENT_PAGE (adw_navigation_page_get_child (popped_page));
+  g_assert (page != NULL);
+
+  gcal_calendar_management_page_deactivate (page);
+}
 
 static void
 on_page_switched_cb (GcalCalendarManagementPage   *page,
@@ -266,21 +268,13 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-calendar-management-dialog.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, headerbar);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, stack);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, window_title);
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, navigation_view);
+
+  gtk_widget_class_bind_template_callback (widget_class, on_navigation_view_popped_cb);
 }
 
 static void
 gcal_calendar_management_dialog_init (GcalCalendarManagementDialog *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
-}
-
-GtkHeaderBar*
-gcal_calendar_management_dialog_get_titlebar (GcalCalendarManagementDialog *self)
-{
-  g_return_val_if_fail (GCAL_IS_CALENDAR_MANAGEMENT_DIALOG (self), NULL);
-
-  return self->headerbar;
 }

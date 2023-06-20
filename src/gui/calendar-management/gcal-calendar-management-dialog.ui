@@ -9,32 +9,8 @@
     <property name="destroy_with_parent">True</property>
     <property name="hide-on-close">True</property>
     <child>
-      <object class="AdwLeaflet">
-        <property name="can-unfold">False</property>
-        <child>
-          <object class="AdwToolbarView" id="vbox">
-            <child type="top">
-              <object class="GtkHeaderBar" id="headerbar">
-                <property name="show-title-buttons">True</property>
-                <property name="title-widget">
-                  <object class="AdwWindowTitle" id="window_title" />
-                </property>
-              </object>
-            </child>
-
-            <property name="content">
-              <object class="GtkOverlay" id="overlay">
-                <child>
-                  <object class="GtkStack" id="stack">
-                    <property name="hexpand">True</property>
-                    <property name="vhomogeneous">False</property>
-                    <property name="transition_type">crossfade</property>
-                  </object>
-                </child>
-              </object>
-            </property>
-          </object>
-        </child>
+      <object class="AdwNavigationView" id="navigation_view">
+        <signal name="popped" handler="on_navigation_view_popped_cb" object="GcalCalendarManagementDialog" swapped="no" />
       </object>
     </child>
   </template>

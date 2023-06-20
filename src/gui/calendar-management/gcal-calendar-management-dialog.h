@@ -36,6 +36,4 @@ G_DECLARE_FINAL_TYPE (GcalCalendarManagementDialog,
                       GCAL, CALENDAR_MANAGEMENT_DIALOG,
                       AdwWindow)
 
-GtkHeaderBar*        gcal_calendar_management_dialog_get_titlebar (GcalCalendarManagementDialog *self);
-
 G_END_DECLS
