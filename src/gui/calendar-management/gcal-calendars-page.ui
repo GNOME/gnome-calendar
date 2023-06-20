@@ -2,47 +2,7 @@
 <interface>
   <template class="GcalCalendarsPage" parent="AdwBin">
     <child>
-      <object class="GtkOverlay">
-
-        <child type="overlay">
-          <object class="GtkRevealer" id="notification_revealer">
-            <property name="halign">center</property>
-            <property name="valign">start</property>
-            <child>
-              <object class="GtkFrame">
-                <child>
-                  <object class="GtkBox">
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkLabel" id="notification_label">
-                        <property name="use_markup">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="notification_action_button">
-                        <property name="label" translatable="yes">Undo</property>
-                        <signal name="clicked" handler="on_undo_remove_button_clicked_cb" object="GcalCalendarsPage" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="icon-name">window-close-symbolic</property>
-                        <property name="focus_on_click">False</property>
-                        <signal name="clicked" handler="on_close_notification_button_clicked_cb" object="GcalCalendarsPage" swapped="no"/>
-                        <style>
-                          <class name="flat" />
-                        </style>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <style>
-                  <class name="app-notification"/>
-                </style>
-              </object>
-            </child>
-          </object>
-        </child>
+      <object class="AdwToastOverlay" id="toast_overlay">
 
         <child>
           <object class="AdwToolbarView">

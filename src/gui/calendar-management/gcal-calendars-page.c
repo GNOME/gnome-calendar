@@ -34,12 +34,10 @@ struct _GcalCalendarsPage
 
   GtkListBoxRow      *add_calendar_row;
   GtkListBox         *listbox;
-  GtkLabel           *notification_label;
-  GtkRevealer        *notification_revealer;
   GtkSizeGroup       *sizegroup;
+  AdwToastOverlay    *toast_overlay;
 
-  GcalCalendar       *removed_calendar;
-  gint                notification_timeout_id;
+  AdwToast           *toast;
 
   GcalContext        *context;
 };
@@ -189,17 +187,14 @@ delete_calendar (GcalCalendarsPage *self,
     return;
 
   /* Enable the source again to remove it's name from disabled list */
-  gcal_calendar_set_visible (self->removed_calendar, TRUE);
+  gcal_calendar_set_visible (calendar, TRUE);
   e_source_remove_sync (removed_source, NULL, &error);
 
   if (error != NULL)
     {
       g_warning ("[source-dialog] Error removing source: %s", error->message);
-      add_calendar (self, self->removed_calendar);
+      add_calendar (self, calendar);
     }
-
-  gtk_revealer_set_reveal_child (self->notification_revealer, FALSE);
-  g_clear_handle_id (&self->notification_timeout_id, g_source_remove);
 }
 
 
@@ -244,22 +239,6 @@ listbox_sort_func (GtkListBoxRow *row1,
   return g_strcmp0 (parent_name1, parent_name2);
 }
 
-static gboolean
-remove_calendar_after_delay_cb (gpointer data)
-{
-  GcalCalendarsPage *self = GCAL_CALENDARS_PAGE (data);
-
-  g_assert (self->removed_calendar != NULL);
-
-  delete_calendar (self, self->removed_calendar);
-  g_clear_object (&self->removed_calendar);
-
-  gtk_revealer_set_reveal_child (self->notification_revealer, FALSE);
-  self->notification_timeout_id = 0;
-
-  return G_SOURCE_REMOVE;
-}
-
 static void
 on_calendar_color_changed_cb (GcalCalendar *calendar,
                               GParamSpec   *pspec,
@@ -271,19 +250,6 @@ on_calendar_color_changed_cb (GcalCalendar *calendar,
   color = gcal_calendar_get_color (calendar);
   color_paintable = get_circle_paintable_from_color (color, 24);
   gtk_image_set_from_paintable (GTK_IMAGE (icon), color_paintable);
-}
-
-static void
-on_close_notification_button_clicked_cb (GtkWidget         *button,
-                                         GcalCalendarsPage *self)
-{
-  g_assert (self->removed_calendar != NULL);
-
-  delete_calendar (self, self->removed_calendar);
-  g_clear_object (&self->removed_calendar);
-
-  gtk_revealer_set_reveal_child (self->notification_revealer, FALSE);
-  g_clear_handle_id (&self->notification_timeout_id, g_source_remove);
 }
 
 static void
@@ -322,19 +288,47 @@ on_manager_calendar_removed_cb (GcalManager       *manager,
 }
 
 static void
-on_undo_remove_button_clicked_cb (GtkButton         *button,
-                                  GcalCalendarsPage *self)
+on_toast_button_clicked_cb (AdwToast          *toast,
+                            GcalCalendarsPage *self)
 {
-  if (!self->removed_calendar)
-    return;
+  GcalCalendar *calendar;
 
-  gcal_calendar_set_visible (self->removed_calendar, TRUE);
+  GCAL_ENTRY;
 
-  add_calendar (self, self->removed_calendar);
-  g_clear_object (&self->removed_calendar);
+  calendar = g_object_get_data (G_OBJECT (toast), "calendar");
+  g_assert (calendar != NULL);
 
-  gtk_revealer_set_reveal_child (self->notification_revealer, FALSE);
-  g_clear_handle_id (&self->notification_timeout_id, g_source_remove);
+  gcal_calendar_set_visible (calendar, TRUE);
+  add_calendar (self, calendar);
+
+  g_object_set_data (G_OBJECT (toast), "calendar", NULL);
+
+  g_clear_object (&self->toast);
+
+  GCAL_EXIT;
+}
+
+static void
+on_toast_dismissed_cb (AdwToast          *toast,
+                       GcalCalendarsPage *self)
+{
+  GcalCalendar *calendar;
+
+  GCAL_ENTRY;
+
+  calendar = g_object_get_data (G_OBJECT (toast), "calendar");
+
+  if (!calendar)
+    {
+      g_assert (self->toast == NULL);
+      GCAL_RETURN ();
+    }
+
+  delete_calendar (self, calendar);
+
+  g_clear_object (&self->toast);
+
+  GCAL_EXIT;
 }
 
 
@@ -359,6 +353,7 @@ gcal_calendars_page_activate (GcalCalendarManagementPage *page,
                               GcalCalendar               *calendar)
 {
   g_autofree gchar *new_string = NULL;
+  g_autoptr (AdwToast) toast = NULL;
   GcalCalendarsPage *self;
 
   GCAL_ENTRY;
@@ -369,32 +364,26 @@ gcal_calendars_page_activate (GcalCalendarManagementPage *page,
   self = GCAL_CALENDARS_PAGE (page);
 
   /* Remove the previously deleted calendar, if any */
-  if (self->removed_calendar)
-    {
-      delete_calendar (self, self->removed_calendar);
-      g_clear_object (&self->removed_calendar);
-    }
-
-  self->removed_calendar = g_object_ref (calendar);
+  g_clear_pointer (&self->toast, adw_toast_dismiss);
 
   /* Remove the listbox entry (if any) */
   remove_calendar (self, calendar);
 
-  /* Update notification label */
+  /* Create the new toast */
   new_string = g_markup_printf_escaped (_("Calendar <b>%s</b> removed"),
-                                        gcal_calendar_get_name (self->removed_calendar));
-  gtk_label_set_markup (self->notification_label, new_string);
+                                        gcal_calendar_get_name (calendar));
 
-  gtk_revealer_set_reveal_child (self->notification_revealer, TRUE);
+  toast = adw_toast_new (new_string);
+  adw_toast_set_timeout (toast, 7);
+  adw_toast_set_button_label (toast, _("Undo"));
+  g_object_set_data_full (G_OBJECT (toast), "calendar", g_object_ref (calendar), g_object_unref);
+  g_signal_connect (toast, "dismissed", G_CALLBACK (on_toast_dismissed_cb), self);
+  g_signal_connect (toast, "button-clicked", G_CALLBACK (on_toast_button_clicked_cb), self);
+  adw_toast_overlay_add_toast (self->toast_overlay, g_object_ref (toast));
 
-  /* Remove old notifications */
-  if (self->notification_timeout_id != 0)
-    g_source_remove (self->notification_timeout_id);
+  self->toast = g_steal_pointer (&toast);
 
-  self->notification_timeout_id = g_timeout_add_seconds (7, remove_calendar_after_delay_cb, self);
-
-  gcal_calendar_set_visible (self->removed_calendar, FALSE);
-
+  gcal_calendar_set_visible (calendar, FALSE);
 
   GCAL_EXIT;
 }
@@ -416,7 +405,7 @@ gcal_calendars_page_finalize (GObject *object)
 {
   GcalCalendarsPage *self = (GcalCalendarsPage *)object;
 
-  g_clear_handle_id (&self->notification_timeout_id, g_source_remove);
+  g_clear_object (&self->toast);
   g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_calendars_page_parent_class)->finalize (object);
@@ -491,13 +480,10 @@ gcal_calendars_page_class_init (GcalCalendarsPageClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, add_calendar_row);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, notification_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, notification_revealer);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, sizegroup);
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, toast_overlay);
 
-  gtk_widget_class_bind_template_callback (widget_class, on_close_notification_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_listbox_row_activated_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_undo_remove_button_clicked_cb);
 }
 
 static void
