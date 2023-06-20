@@ -2,9 +2,8 @@
 <interface>
   <template class="GcalCalendarManagementDialog" parent="AdwWindow">
     <property name="title" translatable="yes">Calendar Settings</property>
-    <property name="width_request">450</property>
-    <property name="default_width">550</property>
-    <property name="default_height">500</property>
+    <property name="default-width">500</property>
+    <property name="default-height">600</property>
     <property name="modal">True</property>
     <property name="destroy_with_parent">True</property>
     <property name="hide-on-close">True</property>
