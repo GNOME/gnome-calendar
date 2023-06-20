@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="GcalEditCalendarPage" parent="GtkBox">
-    <property name="orientation">vertical</property>
-
+  <template class="GcalEditCalendarPage" parent="AdwBin">
     <child>
       <object class="AdwToolbarView">
 

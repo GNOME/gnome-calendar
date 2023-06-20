@@ -30,7 +30,7 @@
 
 struct _GcalCalendarsPage
 {
-  GtkBox              parent;
+  AdwBin              parent;
 
   GtkListBoxRow      *add_calendar_row;
   GtkListBox         *listbox;
@@ -50,7 +50,7 @@ static void          on_calendar_color_changed_cb                (GcalCalendar  
                                                                   GParamSpec         *pspec,
                                                                   GtkImage           *icon);
 
-G_DEFINE_TYPE_WITH_CODE (GcalCalendarsPage, gcal_calendars_page, GTK_TYPE_BOX,
+G_DEFINE_TYPE_WITH_CODE (GcalCalendarsPage, gcal_calendars_page, ADW_TYPE_BIN,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_CALENDAR_MANAGEMENT_PAGE,
                                                 gcal_calendar_management_page_iface_init))
 

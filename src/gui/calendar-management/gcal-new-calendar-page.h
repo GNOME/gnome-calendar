@@ -20,11 +20,11 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
+#include <adwaita.h>
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_NEW_CALENDAR_PAGE (gcal_new_calendar_page_get_type())
-G_DECLARE_FINAL_TYPE (GcalNewCalendarPage, gcal_new_calendar_page, GCAL, NEW_CALENDAR_PAGE, GtkBox)
+G_DECLARE_FINAL_TYPE (GcalNewCalendarPage, gcal_new_calendar_page, GCAL, NEW_CALENDAR_PAGE, AdwBin)
 
 G_END_DECLS
