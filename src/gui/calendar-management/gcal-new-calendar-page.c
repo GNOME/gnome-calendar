@@ -20,6 +20,8 @@
 
 #define G_LOG_DOMAIN "GcalNewCalendarPage"
 
+#include "config.h"
+
 #include <glib/gi18n.h>
 
 #include "gcal-context.h"
@@ -136,13 +138,36 @@ calendar_path_to_name_suggestion (GFile *file)
 static void
 update_add_button (GcalNewCalendarPage *self)
 {
+  g_autofree gchar *add_button_label = NULL;
   gboolean valid;
+  uint32_t n_calendars;
 
   valid = (self->local_source != NULL || self->remote_sources != NULL) &&
       self->calendar_address_entry_state != ENTRY_STATE_VALIDATING &&
       self->calendar_address_entry_state != ENTRY_STATE_INVALID;
 
   gtk_widget_set_sensitive (self->add_button, valid);
+
+  n_calendars = 0;
+  if (self->local_source)
+    n_calendars++;
+  if (self->remote_sources)
+    n_calendars += self->remote_sources->len;
+
+  if (n_calendars > 0)
+    {
+      add_button_label = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE,
+                                                       "Add Calendar",
+                                                       "Add %1$u Calendars",
+                                                       n_calendars),
+                                          n_calendars);
+    }
+  else
+    {
+      add_button_label = g_strdup (_("Add Calendar"));
+    }
+
+  gtk_button_set_label (GTK_BUTTON (self->add_button), add_button_label);
 }
 
 static void

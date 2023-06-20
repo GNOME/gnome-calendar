@@ -15,17 +15,6 @@
               </object>
             </property>
 
-            <child type="end">
-              <object class="GtkButton" id="add_button">
-                <property name="label" translatable="yes">Add</property>
-                <property name="sensitive">False</property>
-                <signal name="clicked" handler="on_add_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
-                <style>
-                  <class name="suggested-action"/>
-                </style>
-              </object>
-            </child>
-
           </object>
         </child>
 
@@ -193,6 +182,25 @@
                       </object>
                     </child>
 
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwPreferencesGroup">
+
+                <child>
+                  <object class="GtkButton" id="add_button">
+                    <property name="halign">center</property>
+                    <property name="label" translatable="yes">Add Calendar</property>
+                    <property name="sensitive">False</property>
+                    <signal name="clicked" handler="on_add_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
+                    <style>
+                      <class name="pill"/>
+                      <class name="suggested-action"/>
+                    </style>
                   </object>
                 </child>
 
