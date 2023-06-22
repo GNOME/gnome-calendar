@@ -210,6 +210,7 @@ update_calendar (GcalEditCalendarPage *self)
   manager = gcal_context_get_manager (self->context);
   color = gtk_color_dialog_button_get_rgba (self->calendar_color_button);
 
+  gcal_calendar_set_visible (self->calendar, adw_switch_row_get_active (self->calendar_visible_row));
   gcal_calendar_set_name (self->calendar, gtk_editable_get_text (GTK_EDITABLE (self->name_entry)));
   gcal_calendar_set_color (self->calendar, color);
 
