@@ -345,7 +345,7 @@ gcal_calendars_page_get_name (GcalCalendarManagementPage *page)
 static const gchar*
 gcal_calendars_page_get_title (GcalCalendarManagementPage *page)
 {
-  return _("Manage Calendars");
+  return _("Calendars");
 }
 
 static void
