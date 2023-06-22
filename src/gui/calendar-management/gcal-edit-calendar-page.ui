@@ -8,9 +8,6 @@
           <object class="AdwHeaderBar">
             <property name="show-end-title-buttons">False</property>
             <property name="show-start-title-buttons">False</property>
-            <property name="title-widget">
-              <object class="AdwWindowTitle" />
-            </property>
           </object>
         </child>
 
