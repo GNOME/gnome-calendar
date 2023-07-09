@@ -33,13 +33,31 @@
               </object>
             </child>
 
-            <!-- Date & Time -->
             <child>
-              <object class="GtkLabel" id="date_time_label">
-                <property name="ellipsize">end</property>
-                <style>
-                  <class name="dim-label" />
-                </style>
+              <object class="GtkBox">
+                <property name="spacing">16</property>
+                <property name="orientation">horizontal</property>
+                <property name="halign">center</property>
+
+                <!-- Date & Time -->
+                <child>
+                  <object class="GtkLabel" id="date_time_label">
+                    <property name="ellipsize">end</property>
+                    <style>
+                      <class name="dim-label" />
+                    </style>
+                  </object>
+                </child>
+
+                <!-- Time Left -->
+                <child>
+                  <object class="GtkLabel" id="timeleft_label">
+                    <property name="ellipsize">end</property>
+                    <style>
+                      <class name="dim-label" />
+                    </style>
+                  </object>
+                </child>
               </object>
             </child>
 

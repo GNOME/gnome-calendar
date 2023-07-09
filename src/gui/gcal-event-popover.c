@@ -31,6 +31,7 @@ struct _GcalEventPopover
 {
   GtkPopover          parent;
 
+  GtkLabel           *timeleft_label;
   GtkLabel           *date_time_label;
   GtkLabel           *description_label;
   GtkWidget          *edit_button;
@@ -405,6 +406,39 @@ update_date_time_label (GcalEventPopover *self)
 }
 
 static void
+update_timeleft_label (GcalEventPopover *self)
+{
+  GDateTime *start_time = gcal_event_get_date_start (self->event);
+  GDateTime *now = g_date_time_new_now_local ();
+
+  GTimeSpan time_diff = g_date_time_difference (start_time, now);
+  GString *string = g_string_new ("");
+
+  // Show nothing if the event has passed
+  if (time_diff < 0)
+    return;
+
+  int days = time_diff / G_TIME_SPAN_DAY;
+  int hours = time_diff / G_TIME_SPAN_HOUR;
+  int minutes = time_diff / G_TIME_SPAN_MINUTE;
+
+  if (days > 0)
+    {
+      g_string_printf(string, "in %d days", days);
+    }
+  else if (hours > 0)
+    {
+      g_string_printf(string, "in %d hours", hours);
+    }
+  else
+    {
+      g_string_printf(string, "in %d minutes", minutes);
+    }
+
+  gtk_label_set_label (self->timeleft_label, string->str);
+}
+
+static void
 update_placeholder_label (GcalEventPopover *self)
 {
   gboolean placeholder_visible = FALSE;
@@ -494,6 +528,7 @@ set_event_internal (GcalEventPopover *self,
   setup_location_label (self);
   update_placeholder_label (self);
   update_date_time_label (self);
+  update_timeleft_label (self);
 
   gtk_widget_grab_focus (self->edit_button);
 }
@@ -694,6 +729,7 @@ gcal_event_popover_class_init (GcalEventPopoverClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-event-popover.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, date_time_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, timeleft_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, description_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, edit_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, location_box);
