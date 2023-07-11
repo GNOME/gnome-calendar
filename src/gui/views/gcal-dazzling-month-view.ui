@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalDazzlingMonthView" parent="GtkWidget">
+    <property name="overflow">hidden</property>
+
+    <child>
+      <object class="GtkEventControllerScroll">
+        <!-- TODO: Kinetic -->
+        <property name="flags">vertical|kinetic</property>
+        <signal name="scroll-begin" handler="on_scroll_controller_scroll_begin_cb" object="GcalDazzlingMonthView" swapped="no" />
+        <signal name="scroll" handler="on_scroll_controller_scroll_cb" object="GcalDazzlingMonthView" swapped="no" />
+        <signal name="scroll-end" handler="on_scroll_controller_scroll_end_cb" object="GcalDazzlingMonthView" swapped="no" />
+        <signal name="decelerate" handler="on_scroll_controller_decelerate_cb" object="GcalDazzlingMonthView" swapped="no" />
+      </object>
+    </child>
+
+    <!-- Header -->
+    <child type="header">
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkBox">
+            <child>
+              <object class="GtkLabel" id="month_label">
+                <property name="hexpand">true</property>
+                <property name="xalign">0.0</property>
+                <style>
+                  <class name="month-name" />
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="year_label">
+                <property name="hexpand">true</property>
+                <property name="xalign">1.0</property>
+                <style>
+                  <class name="secondary-label" />
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkBox">
+            <property name="margin-bottom">6</property>
+            <child>
+              <object class="GtkLabel" id="label_0">
+                <property name="margin-start">6</property>
+                <property name="hexpand">true</property>
+                <property name="xalign">0.0</property>
+                <style>
+                  <class name="header" />
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel" id="label_1">
+                <property name="margin-start">6</property>
+                <property name="hexpand">true</property>
+                <property name="xalign">0.0</property>
+                <style>
+                  <class name="header" />
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel" id="label_2">
+                <property name="margin-start">6</property>
+                <property name="hexpand">true</property>
+                <property name="xalign">0.0</property>
+                <style>
+                  <class name="header" />
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel" id="label_3">
+                <property name="margin-start">6</property>
+                <property name="hexpand">true</property>
+                <property name="xalign">0.0</property>
+                <style>
+                  <class name="header" />
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel" id="label_4">
+                <property name="margin-start">6</property>
+                <property name="hexpand">true</property>
+                <property name="xalign">0.0</property>
+                <style>
+                  <class name="header" />
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel" id="label_5">
+                <property name="margin-start">6</property>
+                <property name="hexpand">true</property>
+                <property name="xalign">0.0</property>
+                <style>
+                  <class name="header" />
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel" id="label_6">
+                <property name="margin-start">6</property>
+                <property name="hexpand">true</property>
+                <property name="xalign">0.0</property>
+                <style>
+                  <class name="header" />
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+  </template>
+</interface>

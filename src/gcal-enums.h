@@ -42,6 +42,7 @@ typedef enum
 {
   GCAL_WINDOW_VIEW_WEEK,
   GCAL_WINDOW_VIEW_MONTH,
+  GCAL_WINDOW_VIEW_DAZZLING_MONTH,
 } GcalWindowView;
 
 typedef enum

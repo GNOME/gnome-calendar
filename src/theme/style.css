@@ -317,8 +317,13 @@ monthcell:nth-child(7n + 1) { border-left-width: 0; }
 monthcell.today { background-color: alpha(@accent_bg_color, 0.25); }
 monthcell:selected.today { background-color: alpha(@accent_bg_color, 0.33); }
 
-monthcell.out-of-month {
+monthcell.out-of-month,
+monthcell:not(.workday) {
     background-color: alpha(@theme_bg_color, 0.4);
+}
+
+monthcell.today:not(.workday) {
+    background-color: alpha(@accent_bg_color, 0.15);
 }
 
 monthcell label {
@@ -344,6 +349,21 @@ monthcell button {
     border-radius: 0;
     border-bottom: none;
     border-right: none;
+}
+
+/*
+ * Month row
+ */
+
+calendar-view.scrolling > box {
+  background-color: transparent;
+  box-shadow: @headerbar_shade_color 0 2px 4px;
+  transition: box-shadow 200ms;
+}
+
+
+calendar-view:not(.scrolling) > box {
+  transition: box-shadow 200ms;
 }
 
 /*

@@ -78,6 +78,7 @@ static void
 update_style_flags (GcalMonthCell *self)
 {
   g_autoptr (GDateTime) today = NULL;
+  gint weekday;
 
   /* Today */
   today = g_date_time_new_now_local ();
@@ -86,6 +87,12 @@ update_style_flags (GcalMonthCell *self)
     gtk_widget_add_css_class (GTK_WIDGET (self), "today");
   else
     gtk_widget_remove_css_class (GTK_WIDGET (self), "today");
+
+  weekday = g_date_time_get_day_of_week (self->date);
+  if (is_workday (weekday))
+    gtk_widget_add_css_class (GTK_WIDGET (self), "workday");
+  else
+    gtk_widget_remove_css_class (GTK_WIDGET (self), "workday");
 }
 
 static void

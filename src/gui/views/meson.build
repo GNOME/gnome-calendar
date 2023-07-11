@@ -8,9 +8,11 @@ built_sources += gnome.compile_resources(
 
 sources += files(
   'gcal-agenda-view.c',
+  'gcal-dazzling-month-view.c',
   'gcal-month-cell.c',
   'gcal-month-popover.c',
   'gcal-month-view.c',
+  'gcal-month-view-row.c',
   'gcal-view.c',
   'gcal-week-grid.c',
   'gcal-week-header.c',

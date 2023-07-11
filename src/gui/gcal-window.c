@@ -25,6 +25,7 @@
 #include "gcal-calendar-button.h"
 #include "config.h"
 #include "gcal-date-chooser.h"
+#include "gcal-dazzling-month-view.h"
 #include "gcal-debug.h"
 #include "gcal-event-editor-dialog.h"
 #include "gcal-event-widget.h"
@@ -104,6 +105,7 @@ struct _GcalWindow
   AdwViewStack           *views_stack;
   GtkWidget              *week_view;
   GtkWidget              *month_view;
+  GtkWidget              *dazzling_month_view;
   GtkWidget              *agenda_view;
   GtkWidget              *date_chooser;
   GtkWidget              *action_bar;
@@ -204,6 +206,7 @@ update_today_action_enabled (GcalWindow *window)
       break;
 
     case GCAL_WINDOW_VIEW_MONTH:
+    case GCAL_WINDOW_VIEW_DAZZLING_MONTH:
       enabled = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
                 g_date_time_get_month (window->active_date) != g_date_time_get_month (now);
       break;
@@ -877,6 +880,7 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->calendar_management_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->week_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->dazzling_month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->agenda_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->date_chooser, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->event_editor, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
@@ -1012,6 +1016,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   g_type_ensure (GCAL_TYPE_CALENDAR_MANAGEMENT_DIALOG);
   g_type_ensure (GCAL_TYPE_CALENDAR_BUTTON);
   g_type_ensure (GCAL_TYPE_DATE_CHOOSER);
+  g_type_ensure (GCAL_TYPE_DAZZLING_MONTH_VIEW);
   g_type_ensure (GCAL_TYPE_EVENT_EDITOR_DIALOG);
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
@@ -1065,6 +1070,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, agenda_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, date_chooser);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, dazzling_month_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, event_editor);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, main_box);
@@ -1123,6 +1129,7 @@ gcal_window_init (GcalWindow *self)
 
   self->views[GCAL_WINDOW_VIEW_WEEK] = self->week_view;
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;
+  self->views[GCAL_WINDOW_VIEW_DAZZLING_MONTH] = self->dazzling_month_view;
 
   self->active_date = g_date_time_new_from_unix_local (0);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
