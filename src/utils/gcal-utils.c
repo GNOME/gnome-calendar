@@ -1124,9 +1124,9 @@ create_dbus_proxy (GDBusConnection *connection,
 }
 
 void
-gcal_utils_launch_date_time_settings_panel (GDBusConnection *connection,
-                                            const gchar     *action,
-                                            const gchar     *arg)
+gcal_utils_launch_gnome_settings (GDBusConnection *connection,
+                                  const gchar     *panel_id,
+                                  const gchar     *action)
 {
   g_autoptr (GDBusProxy) proxy = NULL;
   GVariantBuilder builder;
@@ -1135,20 +1135,18 @@ gcal_utils_launch_date_time_settings_panel (GDBusConnection *connection,
 
   g_variant_builder_init (&builder, G_VARIANT_TYPE ("av"));
 
-  if (!action && !arg)
+  g_assert (panel_id != NULL && *panel_id != '\0');
+
+  if (!action)
     {
       g_variant_builder_add (&builder, "v", g_variant_new_string (""));
     }
   else
     {
-      if (action)
-        g_variant_builder_add (&builder, "v", g_variant_new_string (action));
-
-      if (arg)
-        g_variant_builder_add (&builder, "v", g_variant_new_string (arg));
+      g_variant_builder_add (&builder, "v", g_variant_new_string (action));
     }
 
-  array[0] = g_variant_new ("v", g_variant_new ("(sav)", "datetime", &builder));
+  array[0] = g_variant_new ("v", g_variant_new ("(sav)", panel_id, &builder));
 
   params[0] = g_variant_new_string ("launch-panel");
   params[1] = g_variant_new_array (G_VARIANT_TYPE ("v"), array, 1);
@@ -1162,59 +1160,7 @@ gcal_utils_launch_date_time_settings_panel (GDBusConnection *connection,
 
   if (!proxy)
     {
-      g_warning ("Couldn't open Date & Time panel");
-      return;
-    }
-
-  g_dbus_proxy_call_sync (proxy,
-                          "Activate",
-                          g_variant_new_tuple (params, 3),
-                          G_DBUS_CALL_FLAGS_NONE,
-                          -1,
-                          NULL,
-                          NULL);
-}
-
-void
-gcal_utils_launch_online_accounts_panel (GDBusConnection *connection,
-                                         const gchar     *action,
-                                         const gchar     *arg)
-{
-  g_autoptr (GDBusProxy) proxy = NULL;
-  GVariantBuilder builder;
-  GVariant *params[3];
-  GVariant *array[1];
-
-  g_variant_builder_init (&builder, G_VARIANT_TYPE ("av"));
-
-  if (!action && !arg)
-    {
-      g_variant_builder_add (&builder, "v", g_variant_new_string (""));
-    }
-  else
-    {
-      if (action)
-        g_variant_builder_add (&builder, "v", g_variant_new_string (action));
-
-      if (arg)
-        g_variant_builder_add (&builder, "v", g_variant_new_string (arg));
-    }
-
-  array[0] = g_variant_new ("v", g_variant_new ("(sav)", "online-accounts", &builder));
-
-  params[0] = g_variant_new_string ("launch-panel");
-  params[1] = g_variant_new_array (G_VARIANT_TYPE ("v"), array, 1);
-  params[2] = g_variant_new_array (G_VARIANT_TYPE ("{sv}"), NULL, 0);
-
-  proxy = create_dbus_proxy (connection, "org.gnome.Settings", "/org/gnome/Settings");
-
-  /* Fallback for old GNOME versions */
-  if (!proxy)
-    proxy = create_dbus_proxy (connection, "org.gnome.ControlCenter", "/org/gnome/ControlCenter");
-
-  if (!proxy)
-    {
-      g_warning ("Couldn't open Online Accounts panel");
+      g_warning ("Couldn't open panel '%s'", panel_id);
       return;
     }
 

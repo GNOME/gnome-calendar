@@ -430,9 +430,9 @@ on_window_open_date_time_settings_cb (GSimpleAction *action,
                                       GVariant      *param,
                                       gpointer       user_data)
 {
-  GApplication *application = g_application_get_default ();
+  GDBusConnection *connection = g_application_get_dbus_connection (g_application_get_default ());
 
-  gcal_utils_launch_date_time_settings_panel (g_application_get_dbus_connection (application), NULL, NULL);
+  gcal_utils_launch_gnome_settings (connection, "datetime", NULL);
 }
 
 static void
@@ -440,9 +440,9 @@ on_window_open_online_accounts_cb (GSimpleAction *action,
                                    GVariant      *param,
                                    gpointer       user_data)
 {
-  GApplication *application = g_application_get_default ();
+  GDBusConnection *connection = g_application_get_dbus_connection (g_application_get_default ());
 
-  gcal_utils_launch_online_accounts_panel (g_application_get_dbus_connection (application), NULL, NULL);
+  gcal_utils_launch_gnome_settings (connection, "online-accounts", NULL);
 }
 
 static void
