@@ -209,110 +209,36 @@
   </template>
 
   <!-- Credentials popover -->
-  <object class="AdwWindow" id="credentials_dialog">
-    <property name="title" translatable="yes">Credentials</property>
-    <property name="modal">True</property>
-    <property name="hide-on-close">True</property>
-    <property name="default-width">350</property>
-    <property name="default-height">150</property>
-
-    <property name="content">
-      <object class="AdwToolbarView">
-        <child type="top">
-          <object class="GtkHeaderBar">
-            <property name="show-title-buttons">False</property>
-
-            <child type="start">
-              <object class="GtkButton" id="credentials_cancel_button">
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Cancel</property>
-                <signal name="clicked" handler="on_credential_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
+  <object class="AdwMessageDialog" id="credentials_dialog">
+    <property name="heading" translatable="true">Credentials</property>
+    <property name="extra-child">
+      <object class="AdwClamp">
+        <child>
+          <object class="GtkListBox">
+            <child>
+              <object class="AdwEntryRow" id="credentials_user_entry">
+                <property name="title" translatable="true">User</property>
               </object>
             </child>
-
-            <child type="end">
-              <object class="GtkButton" id="credentials_connect_button">
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Connect</property>
-                <signal name="clicked" handler="on_credential_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
-                <style>
-                  <class name="suggested-action" />
-                </style>
+            <child>
+              <object class="AdwEntryRow" id="credentials_password_entry">
+                <property name="title" translatable="true">Password</property>
               </object>
             </child>
-
+            <style>
+              <class name="boxed-list"/>
+            </style>
           </object>
         </child>
-        <property name="content">
-          <object class="GtkBox">
-            <property name="orientation">vertical</property>
-            <property name="margin-top">12</property>
-            <property name="margin-bottom">12</property>
-            <property name="margin-start">12</property>
-            <property name="margin-end">12</property>
-            <child>
-              <object class="GtkGrid" id="credentials_grid">
-                <property name="hexpand">True</property>
-                <property name="margin-top">12</property>
-                <property name="margin-bottom">12</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
-                <property name="row_spacing">6</property>
-                <property name="column_spacing">12</property>
-                <child>
-                  <object class="GtkLabel" id="credentials_user_dim_label">
-                    <property name="label" translatable="yes">User</property>
-                    <property name="xalign">1</property>
-                    <layout>
-                      <property name="column">0</property>
-                      <property name="row">0</property>
-                    </layout>
-                    <style>
-                      <class name="dim-label" />
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="credentials_password_dim_label">
-                    <property name="label" translatable="yes">Password</property>
-                    <property name="xalign">1</property>
-                    <layout>
-                      <property name="column">0</property>
-                      <property name="row">1</property>
-                    </layout>
-                    <style>
-                      <class name="dim-label" />
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="credentials_user_entry">
-                    <property name="hexpand">True</property>
-                    <signal name="activate" handler="on_credential_entry_activate_cb" object="GcalNewCalendarPage" swapped="no" />
-                    <layout>
-                      <property name="column">1</property>
-                      <property name="row">0</property>
-                    </layout>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="credentials_password_entry">
-                    <property name="hexpand">True</property>
-                    <property name="visibility">False</property>
-                    <signal name="activate" handler="on_credential_entry_activate_cb" object="GcalNewCalendarPage" swapped="no" />
-                    <layout>
-                      <property name="column">1</property>
-                      <property name="row">1</property>
-                    </layout>
-                  </object>
-                </child>
-              </object>
-            </child>
-
-          </object>
-        </property>
       </object>
     </property>
+    <responses>
+      <response id="cancel" translatable="yes">_Cancel</response>
+      <response id="connect" translatable="yes" appearance="suggested">_Connect</response>
+    </responses>
+    <property name="default-response">connect</property>
+    <property name="close-response">cancel</property>
+    <signal name="response" handler="on_credentials_dialog_response_cb" object="GcalNewCalendarPage" swapped="no"/>
   </object>
 
 </interface>

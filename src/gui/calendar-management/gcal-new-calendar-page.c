@@ -50,9 +50,7 @@ struct _GcalNewCalendarPage
   GtkEntry           *calendar_address_entry;
   EntryState          calendar_address_entry_state;
   GcalFileChooserButton *calendar_file_chooser_button;
-  GtkWidget          *credentials_cancel_button;
-  GtkWidget          *credentials_connect_button;
-  GtkWindow          *credentials_dialog;
+  AdwMessageDialog   *credentials_dialog;
   GtkEntry           *credentials_password_entry;
   GtkEntry           *credentials_user_entry;
   GtkColorDialogButton *local_calendar_color_button;
@@ -260,15 +258,6 @@ discover_sources (GcalNewCalendarPage *self)
   GCAL_EXIT;
 }
 
-static void
-hide_credentials_dialog (GcalNewCalendarPage *self)
-{
-  gtk_editable_set_text (GTK_EDITABLE (self->credentials_user_entry), "");
-  gtk_editable_set_text (GTK_EDITABLE (self->credentials_password_entry), "");
-
-  gtk_window_close (self->credentials_dialog);
-}
-
 /*
  * Callbacks
  */
@@ -350,8 +339,8 @@ sources_discovered_cb (GObject      *source_object,
           g_debug ("Unauthorized, asking for credentials...");
 
           root = gtk_widget_get_root (GTK_WIDGET (self));
-          gtk_window_set_transient_for (self->credentials_dialog, GTK_WINDOW (root));
-          gtk_window_present (self->credentials_dialog);
+          gtk_window_set_transient_for (GTK_WINDOW (self->credentials_dialog), GTK_WINDOW (root));
+          gtk_window_present (GTK_WINDOW (self->credentials_dialog));
         }
       else
         {
@@ -430,23 +419,17 @@ on_calendar_address_activated_cb (GtkEntry            *entry,
 }
 
 static void
-on_credential_button_clicked_cb (GtkWidget           *button,
+on_credentials_dialog_response_cb (AdwMessageDialog    *dialog,
+                                 const gchar         *response,
                                  GcalNewCalendarPage *self)
 {
-  if (button == self->credentials_connect_button)
+  if (g_str_equal (response, "connect"))
     discover_sources (self);
-  else
+  else if (g_str_equal (response, "cancel"))
     update_url_entry_state (self, ENTRY_STATE_INVALID);
 
-  hide_credentials_dialog (self);
-}
-
-static void
-on_credential_entry_activate_cb (GtkEntry            *entry,
-                                 GcalNewCalendarPage *self)
-{
-  discover_sources (self);
-  hide_credentials_dialog (self);
+  gtk_editable_set_text (GTK_EDITABLE (self->credentials_user_entry), "");
+  gtk_editable_set_text (GTK_EDITABLE (self->credentials_password_entry), "");
 }
 
 static void
@@ -650,8 +633,6 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, add_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_address_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_file_chooser_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_cancel_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_connect_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_password_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_user_entry);
@@ -662,8 +643,7 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, on_add_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_calendar_address_activated_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_credential_button_clicked_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_credential_entry_activate_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_credentials_dialog_response_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_file_chooser_button_file_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_name_row_text_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_color_button_rgba_changed_cb);
