@@ -17,6 +17,12 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Manage calendars</property>
+                <property name="accelerator">&lt;Ctrl&gt;&lt;Alt&gt;m</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Close window</property>
                 <property name="accelerator">&lt;Primary&gt;Q</property>
               </object>

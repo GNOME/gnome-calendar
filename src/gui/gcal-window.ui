@@ -92,6 +92,12 @@
             <property name="action">action(app.quit)</property>
           </object>
         </child>
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Ctrl&gt;&lt;Alt&gt;m</property>
+            <property name="action">action(win.show-calendars)</property>
+          </object>
+        </child>
       </object>
     </child>
 
