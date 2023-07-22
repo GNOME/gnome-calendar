@@ -7,13 +7,25 @@
     <property name="destroy-with-parent">True</property>
     <property name="hide-on-close">True</property>
     <child>
+      <object class="GtkShortcutController">
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">Escape</property>
+            <property name="action">action(window.close)</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
       <object class="AdwToolbarView">
         <child type="top">
           <object class="GtkHeaderBar" id="titlebar">
             <property name="show-title-buttons">False</property>
             <child>
               <object class="GtkButton" id="cancel_button">
-                <property name="label" translatable="yes">Cancel</property>
+                <property name="use-underline">True</property>
+                <property name="label" translatable="yes">_Cancel</property>
                 <signal name="clicked" handler="on_cancel_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
               </object>
             </child>
@@ -84,7 +96,8 @@
             </child>
             <child type="end">
               <object class="GtkButton" id="done_button">
-                <property name="label" translatable="yes">Done</property>
+                <property name="use-underline">True</property>
+                <property name="label" translatable="yes">_Done</property>
                 <signal name="clicked" handler="on_done_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
                 <style>
                   <class name="suggested-action"/>
