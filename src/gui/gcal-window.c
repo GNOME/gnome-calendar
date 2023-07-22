@@ -112,7 +112,7 @@ struct _GcalWindow
   GcalToolbarEnd         *sidebar_toolbar_end;
   AdwNavigationSplitView *split_view;
 
-  /* header_bar widets */
+  /* header_bar widgets */
   GtkWidget          *calendars_button;
   GtkWidget          *menu_button;
   GtkWidget          *views_switcher;
