@@ -375,7 +375,7 @@ gcal_calendars_page_activate (GcalCalendarManagementPage *page,
 
   toast = adw_toast_new (new_string);
   adw_toast_set_timeout (toast, 7);
-  adw_toast_set_button_label (toast, _("Undo"));
+  adw_toast_set_button_label (toast, _("_Undo"));
   g_object_set_data_full (G_OBJECT (toast), "calendar", g_object_ref (calendar), g_object_unref);
   g_signal_connect (toast, "dismissed", G_CALLBACK (on_toast_dismissed_cb), self);
   g_signal_connect (toast, "button-clicked", G_CALLBACK (on_toast_button_clicked_cb), self);
