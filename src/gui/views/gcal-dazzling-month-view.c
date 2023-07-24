@@ -26,6 +26,7 @@
 #include "gcal-dazzling-month-view.h"
 #include "gcal-debug.h"
 #include "gcal-month-view-row.h"
+#include "gcal-timeline-subscriber.h"
 #include "gcal-utils.h"
 #include "gcal-view-private.h"
 
@@ -65,7 +66,11 @@ static void          gcal_view_interface_init                    (GcalViewInterf
 
 static void          gtk_buildable_interface_init                (GtkBuildableIface  *iface);
 
+static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSubscriberInterface *iface);
+
+
 G_DEFINE_FINAL_TYPE_WITH_CODE (GcalDazzlingMonthView, gcal_dazzling_month_view, GTK_TYPE_WIDGET,
+                               G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER, gcal_timeline_subscriber_interface_init)
                                G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
                                G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE, gtk_buildable_interface_init))
 
@@ -483,6 +488,54 @@ on_scroll_controller_decelerate_cb (GtkEventControllerScroll *scroll_controller,
 
 
 /*
+ * GcalTimelineSubscriber iface
+ */
+
+static GcalRange*
+gcal_dazzling_month_view_get_range (GcalTimelineSubscriber *subscriber)
+{
+  g_autoptr (GcalRange) first_row_range = NULL;
+  g_autoptr (GcalRange) last_row_range = NULL;
+  GcalDazzlingMonthView *self;
+
+  self = GCAL_DAZZLING_MONTH_VIEW (subscriber);
+
+  first_row_range = gcal_month_view_row_get_range (g_ptr_array_index (self->week_rows, 0));
+  last_row_range = gcal_month_view_row_get_range (g_ptr_array_index (self->week_rows,
+                                                                     self->week_rows->len - 1));
+
+  return gcal_range_union (first_row_range, last_row_range);
+}
+
+static void
+gcal_dazzling_month_view_add_event (GcalTimelineSubscriber *subscriber,
+                                    GcalEvent              *event)
+{
+}
+
+static void
+gcal_dazzling_month_view_update_event (GcalTimelineSubscriber *subscriber,
+                                       GcalEvent              *event)
+{
+}
+
+static void
+gcal_dazzling_month_view_remove_event (GcalTimelineSubscriber *subscriber,
+                                       GcalEvent              *event)
+{
+}
+
+static void
+gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
+{
+  iface->get_range = gcal_dazzling_month_view_get_range;
+  iface->add_event = gcal_dazzling_month_view_add_event;
+  iface->update_event = gcal_dazzling_month_view_update_event;
+  iface->remove_event = gcal_dazzling_month_view_remove_event;
+}
+
+
+/*
  * GcalView interface
  */
 
@@ -524,6 +577,8 @@ gcal_dazzling_month_view_set_date (GcalView  *view,
 
   update_header_labels (self);
   update_week_ranges (self);
+
+  gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
 
   GCAL_EXIT;
 }

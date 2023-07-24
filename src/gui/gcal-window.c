@@ -233,6 +233,7 @@ maybe_add_subscribers_to_timeline (GcalWindow *self)
 
   timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
+  gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->dazzling_month_view));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->agenda_view));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->date_chooser));
@@ -833,6 +834,7 @@ gcal_window_dispose (GObject *object)
 
   timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
+  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->dazzling_month_view));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->agenda_view));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->date_chooser));
