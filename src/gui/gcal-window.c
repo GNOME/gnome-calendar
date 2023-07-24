@@ -296,7 +296,7 @@ recalculate_calendar_colors_css (GcalWindow *self)
     }
 
   new_css_data = g_strjoinv ("\n", new_css_snippets);
-  gtk_css_provider_load_from_data (self->colors_provider, new_css_data, -1);
+  gtk_css_provider_load_from_string (self->colors_provider, new_css_data);
 
   if (error)
     g_warning ("Error creating custom stylesheet. %s", error->message);
