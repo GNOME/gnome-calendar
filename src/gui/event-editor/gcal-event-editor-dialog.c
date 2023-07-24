@@ -85,10 +85,6 @@ struct _GcalEventEditorDialog
   gboolean          writable;
 };
 
-static void          on_calendar_selected_action_cb              (GSimpleAction      *menu_item,
-                                                                  GVariant           *value,
-                                                                  gpointer            user_data);
-
 G_DEFINE_TYPE (GcalEventEditorDialog, gcal_event_editor_dialog, ADW_TYPE_WINDOW)
 
 enum
@@ -108,11 +104,6 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 static GParamSpec* properties[N_PROPS] = { NULL, };
-
-static const GActionEntry action_entries[] =
-{
-  { "select-calendar", on_calendar_selected_action_cb, "s" },
-};
 
 
 /*
@@ -550,6 +541,11 @@ gcal_event_editor_dialog_finalize (GObject *object)
 static void
 gcal_event_editor_dialog_constructed (GObject* object)
 {
+  const GActionEntry action_entries[] =
+  {
+    { "select-calendar", on_calendar_selected_action_cb, "s" },
+  };
+
   GcalEventEditorDialog *self;
 
   self = GCAL_EVENT_EDITOR_DIALOG (object);
