@@ -870,6 +870,8 @@ gcal_dazzling_month_view_class_init (GcalDazzlingMonthViewClass *klass)
 static void
 gcal_dazzling_month_view_init (GcalDazzlingMonthView *self)
 {
+  g_autoptr (GDateTime) now = NULL;
+
   gtk_widget_init_template (GTK_WIDGET (self));
   update_weekday_labels (self);
 
@@ -882,4 +884,7 @@ gcal_dazzling_month_view_init (GcalDazzlingMonthView *self)
     }
 
   gtk_widget_insert_after (self->header, GTK_WIDGET (self), NULL);
+
+  now = g_date_time_new_now_local ();
+  gcal_view_set_date (GCAL_VIEW (self), now);
 }
