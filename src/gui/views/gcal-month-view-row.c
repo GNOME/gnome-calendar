@@ -66,8 +66,6 @@ gcal_month_view_row_measure (GtkWidget      *widget,
 
   for (guint i = 0; i < 7; i++)
     {
-      gint child_minimum_baseline;
-      gint child_natural_baseline;
       gint child_minimum;
       gint child_natural;
 
