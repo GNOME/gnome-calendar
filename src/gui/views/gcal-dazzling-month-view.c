@@ -168,6 +168,7 @@ update_active_date (GcalDazzlingMonthView *self)
   g_assert (top_row_range != NULL);
 
   gcal_view_set_date (GCAL_VIEW (self), gcal_range_get_start (top_row_range));
+  g_object_notify (G_OBJECT (self), "active-date");
 }
 
 static void
