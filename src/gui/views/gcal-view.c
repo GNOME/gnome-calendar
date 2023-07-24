@@ -120,7 +120,7 @@ gcal_view_default_init (GcalViewInterface *iface)
  * Sets the date of @view.
  */
 void
-gcal_view_set_date (GcalView     *view,
+gcal_view_set_date (GcalView  *view,
                     GDateTime *date)
 {
   g_return_if_fail (GCAL_IS_VIEW (view));
