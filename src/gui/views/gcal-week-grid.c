@@ -956,7 +956,7 @@ void
 gcal_week_grid_remove_event (GcalWeekGrid *self,
                              const gchar  *uid)
 {
-  GPtrArray *widgets;
+  g_autoptr (GPtrArray) widgets = NULL;
   guint i;
 
   g_return_if_fail (GCAL_IS_WEEK_GRID (self));
@@ -977,8 +977,6 @@ gcal_week_grid_remove_event (GcalWeekGrid *self,
       gcal_range_tree_remove_range (self->events, gcal_event_get_range (event), data);
       gtk_widget_queue_allocate (GTK_WIDGET (self));
     }
-
-  g_clear_pointer (&widgets, g_ptr_array_unref);
 }
 
 GList*
