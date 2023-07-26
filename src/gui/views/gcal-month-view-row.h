@@ -23,6 +23,7 @@
 
 #include <gtk/gtk.h>
 
+#include "gcal-context.h"
 #include "gcal-range.h"
 
 G_BEGIN_DECLS
@@ -31,6 +32,11 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (GcalMonthViewRow, gcal_month_view_row, GCAL, MONTH_VIEW_ROW, GtkWidget)
 
 GtkWidget *          gcal_month_view_row_new                     (void);
+
+GcalContext *        gcal_month_view_row_get_context             (GcalMonthViewRow   *self);
+
+void                 gcal_month_view_row_set_context             (GcalMonthViewRow   *self,
+                                                                  GcalContext        *context);
 
 GcalRange *          gcal_month_view_row_get_range               (GcalMonthViewRow   *self);
 

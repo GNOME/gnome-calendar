@@ -876,6 +876,10 @@ gcal_dazzling_month_view_set_property (GObject      *object,
     case PROP_CONTEXT:
       g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
+
+      for (gint i = 0; i < N_TOTAL_ROWS; i++)
+        gcal_month_view_row_set_context (g_ptr_array_index (self->week_rows, i), self->context);
+
       g_object_notify (object, "context");
       break;
 

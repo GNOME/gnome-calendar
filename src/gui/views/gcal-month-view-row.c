@@ -34,6 +34,7 @@ struct _GcalMonthViewRow
   GtkWidget          *day_cells[7];
 
   GcalRange          *range;
+  GcalContext        *context;
 };
 
 G_DEFINE_FINAL_TYPE (GcalMonthViewRow, gcal_month_view_row, GTK_TYPE_WIDGET)
@@ -41,6 +42,7 @@ G_DEFINE_FINAL_TYPE (GcalMonthViewRow, gcal_month_view_row, GTK_TYPE_WIDGET)
 enum
 {
   PROP_0,
+  PROP_CONTEXT,
   N_PROPS,
 };
 
@@ -169,6 +171,10 @@ gcal_month_view_row_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -184,6 +190,10 @@ gcal_month_view_row_set_property (GObject      *object,
 
   switch (prop_id)
     {
+    case PROP_CONTEXT:
+      gcal_month_view_row_set_context (self, g_value_get_object (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -204,6 +214,14 @@ gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
   widget_class->size_allocate = gcal_month_view_row_size_allocate;
   widget_class->snapshot = gcal_month_view_row_snapshot;
 
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "Context",
+                                                  "The GcalContext of the application",
+                                                  GCAL_TYPE_CONTEXT,
+                                                  G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
+
   gtk_widget_class_set_css_name (widget_class, "monthviewrow");
 }
 
@@ -222,6 +240,29 @@ GtkWidget *
 gcal_month_view_row_new (void)
 {
   return g_object_new (GCAL_TYPE_MONTH_VIEW_ROW, NULL);
+}
+
+GcalContext*
+gcal_month_view_row_get_context (GcalMonthViewRow *self)
+{
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+
+  return self->context;
+}
+
+void
+gcal_month_view_row_set_context (GcalMonthViewRow *self,
+                                 GcalContext      *context)
+{
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+
+  if (g_set_object (&self->context, context))
+    {
+      for (guint i = 0; i < 7; i++)
+        gcal_month_cell_set_context (GCAL_MONTH_CELL (self->day_cells[i]), context);
+
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CONTEXT]);
+    }
 }
 
 GcalRange *
