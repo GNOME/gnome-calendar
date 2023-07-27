@@ -9,21 +9,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-03-03 22:56+0000\n"
-"PO-Revision-Date: 2023-03-07 01:05+0100\n"
+"POT-Creation-Date: 2023-07-25 07:40+0000\n"
+"PO-Revision-Date: 2023-07-28 00:22+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
-"Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
+"Language-Team: Hungarian <openscope at fsf dot hu>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.08.2\n"
+"X-Generator: Lokalize 23.04.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:112
 msgid "Calendar"
 msgstr "Naptár"
 
@@ -91,26 +91,18 @@ msgid "Window size (width and height)."
 msgstr "Ablak mérete (szélesség és magasság)."
 
 #: data/org.gnome.calendar.gschema.xml.in:16
-msgid "Window position"
-msgstr "Ablakpozíció"
-
-#: data/org.gnome.calendar.gschema.xml.in:17
-msgid "Window position (x and y)."
-msgstr "Ablakpozíció (x és y)."
-
-#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Az aktív nézet típusa"
 
-#: data/org.gnome.calendar.gschema.xml.in:22
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Az aktív ablaknézet típusa, az alapértelmezett érték: havi nézet"
 
-#: data/org.gnome.calendar.gschema.xml.in:26
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
 msgstr "Időjárási szolgáltatás beállítása"
 
-#: data/org.gnome.calendar.gschema.xml.in:27
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
@@ -145,93 +137,95 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "Naptárbeállítások"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:354
-msgid "Manage Calendars"
-msgstr "Naptárak kezelése"
+#: src/gui/calendar-management/gcal-calendars-page.c:348
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:141
+msgid "Calendars"
+msgstr "Naptárak"
 
-#. Update notification label
-#: src/gui/calendar-management/gcal-calendars-page.c:384
+#. Create the new toast
+#: src/gui/calendar-management/gcal-calendars-page.c:373
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "A(z) <b>%s</b> naptár eltávolítva"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:24
-msgid "Undo"
-msgstr "Visszavonás"
+#: src/gui/calendar-management/gcal-calendars-page.c:378
+#: src/gui/gcal-window.c:741
+msgid "_Undo"
+msgstr "_Visszavonás"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:78
+#: src/gui/calendar-management/gcal-calendars-page.ui:55
 msgid "Add Calendar…"
 msgstr "Naptár hozzáadása…"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:19
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
 msgid "Account"
 msgstr "Fiók"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:46
-msgid "Settings"
-msgstr "Beállítások"
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:30
+#| msgid "Calendar Settings"
+msgid "Open in Settings"
+msgstr "Megnyitás a beállításokban"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:53
 #: src/gui/event-editor/gcal-summary-section.ui:23
-#: src/gui/gcal-event-popover.ui:111
+#: src/gui/gcal-event-popover.ui:113
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "Hely"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:84
-msgid "Calendar name"
-msgstr "Naptár neve"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
-msgid "Color"
-msgstr "Szín"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:134
-msgid "Display calendar"
-msgstr "Naptár megjelenítése"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:146
-msgid "Add new events to this calendar by default"
-msgstr "Új események hozzáadása alapértelmezetten ehhez a naptárhoz"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:158
-msgid "Remove Calendar"
-msgstr "Naptár eltávolítása"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:49
-msgid "Select a file"
-msgstr "Válasszon egy fájlt"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-msgid "Cancel"
-msgstr "Mégse"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:96
-msgid "Open"
-msgstr "Megnyitás"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:517
-msgid "New Calendar"
-msgstr "Új naptár"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:695
-msgid "Calendar files"
-msgstr "Naptárfájlok"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:16
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:22
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:24
 msgid "Calendar Name"
 msgstr "Naptár neve"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:55
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:32
+msgid "Color"
+msgstr "Szín"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+#| msgid "Display calendar"
+msgid "_Display Calendar"
+msgstr "Naptár _megjelenítése"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
+#| msgid "New Calendar"
+msgid "Default _Calendar"
+msgstr "Alapértelmezett _naptár"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
+#| msgid "Add new events to this calendar by default"
+msgid "Add new events to this calendar by default."
+msgstr "Új események hozzáadása alapértelmezetten ehhez a naptárhoz."
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+#| msgid "Remove Calendar"
+msgid "_Remove Calendar"
+msgstr "Naptár _eltávolítása"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:51
+msgid "Select a file"
+msgstr "Válasszon egy fájlt"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:190
+#, c-format
+#| msgid "Add Calendar…"
+msgid "Add Calendar"
+msgid_plural "Add %1$u Calendars"
+msgstr[0] "Naptár hozzáadása"
+msgstr[1] "%1$u naptár hozzáadása"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:516
+msgid "New Calendar"
+msgstr "Új naptár"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
 msgid "Import a Calendar"
 msgstr "Naptár importálása"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:77
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
@@ -239,15 +233,15 @@ msgstr ""
 "Alternatívaként adja meg egy internetes naptár webcímét, amelyet importálni "
 "szeretne, vagy nyisson meg egy támogatott naptárfájlt."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:100
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
 msgid "Open a File"
 msgstr "Fájl megnyitása"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-msgid "Calendars"
-msgstr "Naptárak"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:108
+msgid "Calendar files"
+msgstr "Naptárfájlok"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:148
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:165
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -255,26 +249,28 @@ msgstr ""
 "Ha a naptár az online fiókjai egyikéhez tartozik, akkor az <a "
 "href=\"GOA\">online fiókbeállításokon</a> keresztül is hozzáadhatja."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:213
 msgid "Credentials"
 msgstr "Hitelesítési adatok"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
-msgid "Connect"
-msgstr "Kapcsolódás"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:220
 msgid "User"
 msgstr "Felhasználó"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
 msgid "Password"
 msgstr "Jelszó"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
-#: src/gui/gcal-quick-add-popover.ui:98
-msgid "Add"
-msgstr "Hozzáadás"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:236
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:28
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
+msgid "_Cancel"
+msgstr "_Mégse"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+#| msgid "Connect"
+msgid "_Connect"
+msgstr "_Kapcsolódás"
 
 #: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
@@ -384,27 +380,31 @@ msgid "Save"
 msgstr "Mentés"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:196
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:86
 msgid "Done"
 msgstr "Kész"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
 msgid "Click to select the calendar"
 msgstr "Kattintson a naptár kiválasztásához"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:115
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
+#| msgid "Done"
+msgid "_Done"
+msgstr "_Kész"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
 msgid "Schedule"
 msgstr "Ütemterv"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
 msgid "Reminders"
 msgstr "Emlékeztetők"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:151
 msgid "Notes"
 msgstr "Megjegyzések"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:171
 msgid "Delete Event"
 msgstr "Esemény törlése"
 
@@ -505,51 +505,51 @@ msgstr "Befejezés"
 msgid "Repeat"
 msgstr "Ismétlés"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:128
+#: src/gui/event-editor/gcal-schedule-section.ui:125
 msgid "No Repeat"
 msgstr "Nincs ismétlés"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:129
+#: src/gui/event-editor/gcal-schedule-section.ui:126
 msgid "Daily"
 msgstr "Naponta"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:130
+#: src/gui/event-editor/gcal-schedule-section.ui:127
 msgid "Monday – Friday"
 msgstr "Hétfőtől péntekig"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:131
+#: src/gui/event-editor/gcal-schedule-section.ui:128
 msgid "Weekly"
 msgstr "Hetente"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:132
+#: src/gui/event-editor/gcal-schedule-section.ui:129
 msgid "Monthly"
 msgstr "Havonta"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:133
+#: src/gui/event-editor/gcal-schedule-section.ui:130
 msgid "Yearly"
 msgstr "Évente"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:146
+#: src/gui/event-editor/gcal-schedule-section.ui:141
 msgid "End Repeat"
 msgstr "Ismétlés vége"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:154
+#: src/gui/event-editor/gcal-schedule-section.ui:146
 msgid "Forever"
 msgstr "Örökké"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:155
+#: src/gui/event-editor/gcal-schedule-section.ui:147
 msgid "No. of occurrences"
 msgstr "Előfordulások száma"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:156
+#: src/gui/event-editor/gcal-schedule-section.ui:148
 msgid "Until Date"
 msgstr "Dátumig"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:169
+#: src/gui/event-editor/gcal-schedule-section.ui:160
 msgid "Number of Occurrences"
 msgstr "Előfordulások száma"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:188
+#: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "Ismétlés végének dátuma"
 
@@ -612,28 +612,23 @@ msgstr ""
 "Úr Balázs <ur dot balazs at fsf dot hu>\n"
 "Meskó Balázs <mesko dot balazs at fsf dot hu>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:320
 msgid "Weather"
 msgstr "Időjárás"
 
 #: src/gui/gcal-calendar-button.ui:6
-msgid "Manage your calendars"
+msgid "Manage Calendars"
 msgstr "Naptárak kezelése"
 
-#: src/gui/gcal-calendar-button.ui:23
+#: src/gui/gcal-calendar-button.ui:8
 msgid "_Calendars"
 msgstr "_Naptárak"
 
-#: src/gui/gcal-calendar-button.ui:42
-msgctxt "tooltip"
-msgid "Synchronizing remote calendars…"
-msgstr "Távoli naptárak szinkronizálása…"
-
-#: src/gui/gcal-calendar-button.ui:72
+#: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
 msgstr "Naptárak _szinkronizálása"
 
-#: src/gui/gcal-calendar-button.ui:76
+#: src/gui/gcal-calendar-button.ui:41
 msgid "Manage Calendars…"
 msgstr "Naptárak kezelése…"
 
@@ -789,11 +784,11 @@ msgstr "%1$s %2$d., %3$s–%4$s"
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%3$d. %1$s %2$d., %4$s–%5$s"
 
-#: src/gui/gcal-event-popover.ui:71
+#: src/gui/gcal-event-popover.ui:73
 msgid "No event information"
 msgstr "Nincs eseményinformáció"
 
-#: src/gui/gcal-event-popover.ui:169
+#: src/gui/gcal-event-popover.ui:171
 msgid "Edit…"
 msgstr "Szerkesztés…"
 
@@ -803,32 +798,32 @@ msgstr "Szerkesztés…"
 msgid "At %s"
 msgstr "Ekkor: %s"
 
-#: src/gui/gcal-meeting-row.c:65
+#: src/gui/gcal-meeting-row.c:67
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/gui/gcal-meeting-row.c:66
+#: src/gui/gcal-meeting-row.c:68
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/gui/gcal-meeting-row.c:67
+#: src/gui/gcal-meeting-row.c:69
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/gui/gcal-meeting-row.c:68
+#: src/gui/gcal-meeting-row.c:70
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:69
+#: src/gui/gcal-meeting-row.c:71
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
-#: src/gui/gcal-meeting-row.c:79
+#: src/gui/gcal-meeting-row.c:81
 msgid "Unknown Service"
 msgstr "Ismeretlen szolgáltatás"
 
 #. Translators: "Join" as in "Join meeting"
-#: src/gui/gcal-meeting-row.ui:12
+#: src/gui/gcal-meeting-row.ui:13
 msgid "Join"
 msgstr "Csatlakozás"
 
@@ -1055,15 +1050,36 @@ msgstr "Új esemény december %d. napján"
 msgid "Edit Details…"
 msgstr "Részletek szerkesztése…"
 
-#: src/gui/gcal-toolbar-end.ui:9
-msgctxt "tooltip"
-msgid "Search for events"
+#: src/gui/gcal-quick-add-popover.ui:98
+msgid "Add"
+msgstr "Hozzáadás"
+
+#: src/gui/gcal-search-button.ui:53
+#| msgctxt "tooltip"
+#| msgid "Search for events"
+msgid "Search events"
 msgstr "Események keresése"
 
-#: src/gui/gcal-toolbar-end.ui:21
+#: src/gui/gcal-sync-indicator.ui:21
+#| msgctxt "tooltip"
+#| msgid "Synchronizing remote calendars…"
 msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "Új esemény hozzáadása"
+msgid "Synchronizing Remote Calendars…"
+msgstr "Távoli naptárak szinkronizálása…"
+
+#: src/gui/gcal-toolbar-end.ui:9
+#| msgctxt "shortcut window"
+#| msgid "Search"
+msgctxt "tooltip"
+msgid "Search"
+msgstr "Keresés"
+
+#: src/gui/gcal-toolbar-end.ui:16
+#| msgctxt "tooltip"
+#| msgid "Add a new event"
+msgctxt "tooltip"
+msgid "Add Event"
+msgstr "Esemény hozzáadása"
 
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
@@ -1073,43 +1089,59 @@ msgstr "Időjárás megjelenítése"
 msgid "Automatic Location"
 msgstr "Automatikus helymeghatározás"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-weather-settings.ui:46
+#| msgctxt "tooltip"
+#| msgid "Search for events"
+msgid "Search locations"
+msgstr "Helyek keresése"
+
+#: src/gui/gcal-window.c:337
+#| msgid "_Week"
+msgid "Week"
+msgstr "Hét"
+
+#: src/gui/gcal-window.c:339
+#| msgid "_Month"
+msgid "Month"
+msgstr "Hónap"
+
+#: src/gui/gcal-window.c:739
 msgid "Another event deleted"
 msgstr "Egy másik esemény törölve"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:739
 msgid "Event deleted"
 msgstr "Esemény törölve"
 
-#: src/gui/gcal-window.c:715
-msgid "_Undo"
-msgstr "_Visszavonás"
-
-#: src/gui/gcal-window.ui:117
+#: src/gui/gcal-window.ui:131
 msgid "Main Menu"
 msgstr "Főmenü"
 
-#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
+#: src/gui/gcal-window.ui:168 src/gui/gcal-window.ui:207
 msgid "_Today"
 msgstr "_Ma"
 
-#: src/gui/gcal-window.ui:223
+#: src/gui/gcal-window.ui:243
 msgid "_Week"
 msgstr "_Hét"
 
-#: src/gui/gcal-window.ui:238
+#: src/gui/gcal-window.ui:258
 msgid "_Month"
 msgstr "Hó_nap"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:312
+msgid "_Date & Time Settings…"
+msgstr "_Dátum és idő beállítások…"
+
+#: src/gui/gcal-window.ui:316
 msgid "_Online Accounts…"
 msgstr "_Online fiókok…"
 
-#: src/gui/gcal-window.ui:291
+#: src/gui/gcal-window.ui:328
 msgid "_Keyboard Shortcuts"
 msgstr "_Gyorsbillentyűk"
 
-#: src/gui/gcal-window.ui:295
+#: src/gui/gcal-window.ui:332
 msgid "_About Calendar"
 msgstr "A Naptár _névjegye"
 
@@ -1124,66 +1156,72 @@ msgid "New event"
 msgstr "Ú_j esemény"
 
 #: src/gui/gtk/help-overlay.ui:20
+#| msgid "Manage Calendars"
+msgctxt "shortcut window"
+msgid "Manage calendars"
+msgstr "Naptárak kezelése"
+
+#: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Ablak bezárása"
 
-#: src/gui/gtk/help-overlay.ui:26
+#: src/gui/gtk/help-overlay.ui:32
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Keresés"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Súgó megjelenítése"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Gyorsbillentyűk"
 
-#: src/gui/gtk/help-overlay.ui:46
+#: src/gui/gtk/help-overlay.ui:52
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Navigáció"
 
-#: src/gui/gtk/help-overlay.ui:49
+#: src/gui/gtk/help-overlay.ui:55
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "Ugrás vissza"
 
-#: src/gui/gtk/help-overlay.ui:55
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "Ugrás előre"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "Mai nap megjelenítése"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "Következő nézet"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "Előző nézet"
 
-#: src/gui/gtk/help-overlay.ui:81
+#: src/gui/gtk/help-overlay.ui:87
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Nézet"
 
-#: src/gui/gtk/help-overlay.ui:84
+#: src/gui/gtk/help-overlay.ui:90
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Hét nézet"
 
-#: src/gui/gtk/help-overlay.ui:90
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Hónap nézet"
@@ -1199,15 +1237,11 @@ msgstr[1] "%d esemény importálása"
 msgid "Import Files…"
 msgstr "Fájlok importálása…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
-msgid "_Cancel"
-msgstr "_Mégse"
-
 #: src/gui/importer/gcal-import-dialog.ui:29
 msgid "_Import"
 msgstr "_Importálás"
 
-#: src/gui/importer/gcal-import-dialog.ui:50
+#: src/gui/importer/gcal-import-dialog.ui:49
 msgid "C_alendar"
 msgstr "N_aptár"
 
@@ -1251,7 +1285,7 @@ msgstr "Leírás"
 msgid "On-going"
 msgstr "Folyamatban lévő"
 
-#: src/gui/views/gcal-agenda-view.ui:19
+#: src/gui/views/gcal-agenda-view.ui:22
 msgid "No events"
 msgstr "Nincsenek események"
 
@@ -1274,25 +1308,33 @@ msgid_plural "Other %d events"
 msgstr[0] "Egyéb esemény"
 msgstr[1] "Egyéb %d esemény"
 
-#: src/gui/views/gcal-week-header.c:1000
+#: src/gui/views/gcal-week-header.c:1001
 #, c-format
 msgid "week %d"
 msgstr "%d. hét"
 
-#: src/utils/gcal-utils.c:1317
+#: src/utils/gcal-utils.c:1297
+msgid "Modify Multiple Events?"
+msgstr "Módosít több eseményt?"
+
+#: src/utils/gcal-utils.c:1298
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
-msgstr "A módosítani próbált esemény ismétlődő. A változások vonatkozzanak:"
+msgstr ""
+"A módosítani próbált esemény ismétlődő. A kijelölt változtatások ezekre"
+" vonatkozzanak:"
 
-#: src/utils/gcal-utils.c:1322
+#: src/utils/gcal-utils.c:1302
 msgid "_Only This Event"
-msgstr "Csak _erre az eseményre"
+msgstr "Csak _ez az esemény"
 
-#: src/utils/gcal-utils.c:1329
-msgid "_Subsequent events"
-msgstr "Az ezt _követő eseményekre"
+#: src/utils/gcal-utils.c:1308
+#| msgid "_Subsequent events"
+msgid "_Subsequent Events"
+msgstr "Az ezt _követő események"
 
-#: src/utils/gcal-utils.c:1332
-msgid "_All events"
-msgstr "_Minden eseményre"
+#: src/utils/gcal-utils.c:1311
+#| msgid "_All events"
+msgid "_All Events"
+msgstr "Öss_zes esemény"
