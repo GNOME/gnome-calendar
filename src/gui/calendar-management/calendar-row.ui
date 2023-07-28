@@ -58,6 +58,20 @@
             </layout>
           </object>
         </child>
+
+        <!-- Arrow indicator -->
+        <child>
+          <object class="GtkImage">
+            <property name="halign">end</property>
+            <property name="valign">center</property>
+            <layout>
+              <property name="column">3</property>
+              <property name="row">0</property>
+              <property name="row-span">3</property>
+            </layout>
+            <property name="icon-name">go-next-symbolic</property>
+          </object>
+        </child>
       </object>
     </child>
   </object>
