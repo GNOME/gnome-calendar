@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-06-24 15:19+0000\n"
-"PO-Revision-Date: 2023-06-28 10:29+0300\n"
+"POT-Creation-Date: 2023-07-25 07:40+0000\n"
+"PO-Revision-Date: 2023-07-28 08:09+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: Hebrew <yoseforb@gmail.com>\n"
 "Language: he\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:106
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:112
 msgid "Calendar"
 msgstr "לוח שנה"
 
@@ -147,10 +147,11 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "לוח שנה <b>%s</b> נמחק"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:378
-msgid "Undo"
-msgstr "ביטול"
+#: src/gui/gcal-window.c:741
+msgid "_Undo"
+msgstr "_ביטול"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:44
+#: src/gui/calendar-management/gcal-calendars-page.ui:55
 msgid "Add Calendar…"
 msgstr "הוספת לוח שנה…"
 
@@ -199,8 +200,8 @@ msgstr "_מחיקת לוח שנה"
 msgid "Select a file"
 msgstr "בחירת קובץ"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:190
 #, c-format
 msgid "Add Calendar"
@@ -210,7 +211,7 @@ msgstr[1] "הוספת שני לוחות שנה"
 msgstr[2] "הוספת %1$u לוחות שנה"
 msgstr[3] "הוספת %1$u לוחות שנה"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:533
+#: src/gui/calendar-management/gcal-new-calendar-page.c:516
 msgid "New Calendar"
 msgstr "לוח שנה חדש"
 
@@ -246,22 +247,23 @@ msgstr ""
 msgid "Credentials"
 msgstr "אישורים"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:228
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:16
-msgid "Cancel"
-msgstr "ביטול"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:236
-msgid "Connect"
-msgstr "התחברות"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:264
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:220
 msgid "User"
 msgstr "משתמה"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:277
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
 msgid "Password"
 msgstr "ססמה"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:236
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:28
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
+msgid "_Cancel"
+msgstr "_ביטול"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+msgid "_Connect"
+msgstr "_התחברות"
 
 #: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
@@ -397,27 +399,30 @@ msgid "Save"
 msgstr "שמירה"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:196
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:87
 msgid "Done"
 msgstr "בוצע"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:30
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
 msgid "Click to select the calendar"
 msgstr "יש ללחוץ על מנת לבחור לוח שנה"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
+msgid "_Done"
+msgstr "_בוצע"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
 msgid "Schedule"
 msgstr "לוח זמנים"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:126
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
 msgid "Reminders"
 msgstr "תזכורות"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:138
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:151
 msgid "Notes"
 msgstr "הערות"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:171
 msgid "Delete Event"
 msgstr "מחיקת אירוע"
 
@@ -625,7 +630,7 @@ msgstr ""
 "יוסף אור בוצ׳קו <yoseforb@gmail.com>\n"
 "מיזם תרגום GNOME לעברית https://l10n.gnome.org/teams/he/"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:310
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:320
 msgid "Weather"
 msgstr "מזג אוויר"
 
@@ -637,11 +642,11 @@ msgstr "ניהול לוחות שנה"
 msgid "_Calendars"
 msgstr "_לוחות שנה"
 
-#: src/gui/gcal-calendar-button.ui:26
+#: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
 msgstr "_תזמון לוחות שנה"
 
-#: src/gui/gcal-calendar-button.ui:30
+#: src/gui/gcal-calendar-button.ui:41
 msgid "Manage Calendars…"
 msgstr "ניהול לוחות שנה…"
 
@@ -1071,14 +1076,14 @@ msgstr "הוספה"
 msgid "Search events"
 msgstr "חיפוש אירועים"
 
-#: src/gui/gcal-sync-indicator.ui:21
 # msgctxt "tooltip"
+#: src/gui/gcal-sync-indicator.ui:21
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars…"
 msgstr "תיאום לוחות שנה מרוחקים…"
 
-#: src/gui/gcal-toolbar-end.ui:9
 # msgctxt "shortcut window"
+#: src/gui/gcal-toolbar-end.ui:9
 msgctxt "tooltip"
 msgid "Search"
 msgstr "חיפוש"
@@ -1108,43 +1113,43 @@ msgstr "שבוע"
 msgid "Month"
 msgstr "חודש"
 
-#: src/gui/gcal-window.c:729
+#: src/gui/gcal-window.c:739
 msgid "Another event deleted"
 msgstr "אירוע נוסף נמחק"
 
-#: src/gui/gcal-window.c:729
+#: src/gui/gcal-window.c:739
 msgid "Event deleted"
 msgstr "מחיקת אירוע"
 
-#: src/gui/gcal-window.c:731
-msgid "_Undo"
-msgstr "_ביטול"
-
-#: src/gui/gcal-window.ui:125
+#: src/gui/gcal-window.ui:131
 msgid "Main Menu"
 msgstr "תפריט ראשי"
 
-#: src/gui/gcal-window.ui:162 src/gui/gcal-window.ui:201
+#: src/gui/gcal-window.ui:168 src/gui/gcal-window.ui:207
 msgid "_Today"
 msgstr "_היום"
 
-#: src/gui/gcal-window.ui:237
+#: src/gui/gcal-window.ui:243
 msgid "_Week"
 msgstr "_שבוע"
 
-#: src/gui/gcal-window.ui:252
+#: src/gui/gcal-window.ui:258
 msgid "_Month"
 msgstr "_חודש"
 
-#: src/gui/gcal-window.ui:306
+#: src/gui/gcal-window.ui:312
+msgid "_Date & Time Settings…"
+msgstr "הגדרות _תאריך ושעה…"
+
+#: src/gui/gcal-window.ui:316
 msgid "_Online Accounts…"
 msgstr "_חשבונות מקוונים…"
 
-#: src/gui/gcal-window.ui:318
+#: src/gui/gcal-window.ui:328
 msgid "_Keyboard Shortcuts"
 msgstr "_צירופי מקשים"
 
-#: src/gui/gcal-window.ui:322
+#: src/gui/gcal-window.ui:332
 msgid "_About Calendar"
 msgstr "על אודות _לוח שנה"
 
@@ -1160,65 +1165,70 @@ msgstr "אירוע חדש"
 
 #: src/gui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
+msgid "Manage calendars"
+msgstr "ניהול לוחות שנה"
+
+#: src/gui/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
 msgid "Close window"
 msgstr "סגירת חלון"
 
-#: src/gui/gtk/help-overlay.ui:26
+#: src/gui/gtk/help-overlay.ui:32
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "חיפוש"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "הצגת עזרה"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "צירופי מקשים"
 
-#: src/gui/gtk/help-overlay.ui:46
+#: src/gui/gtk/help-overlay.ui:52
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "ניווט"
 
-#: src/gui/gtk/help-overlay.ui:49
+#: src/gui/gtk/help-overlay.ui:55
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "חזרה"
 
-#: src/gui/gtk/help-overlay.ui:55
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "קדימה"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "הצגת היום"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "תצוגה הבאה"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "תצוגה קודמת"
 
-#: src/gui/gtk/help-overlay.ui:81
+#: src/gui/gtk/help-overlay.ui:87
 msgctxt "shortcut window"
 msgid "View"
 msgstr "תצוגה"
 
-#: src/gui/gtk/help-overlay.ui:84
+#: src/gui/gtk/help-overlay.ui:90
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "תצוגה שבועית"
 
-#: src/gui/gtk/help-overlay.ui:90
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "תצוגה חודשית"
@@ -1235,10 +1245,6 @@ msgstr[3] "‫%d אירועים יובאו"
 #: src/gui/importer/gcal-import-dialog.ui:4
 msgid "Import Files…"
 msgstr "ייבוא קבצים…"
-
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1303
-msgid "_Cancel"
-msgstr "_ביטול"
 
 #: src/gui/importer/gcal-import-dialog.ui:29
 msgid "_Import"
@@ -1318,27 +1324,33 @@ msgstr[3] "‫‏‫%d אירועים אחרים"
 msgid "week %d"
 msgstr "שבוע %d"
 
-#: src/utils/gcal-utils.c:1299
+#: src/utils/gcal-utils.c:1297
 msgid "Modify Multiple Events?"
 msgstr "שינוים מספר רב של אירועים?"
 
-#: src/utils/gcal-utils.c:1300
+#: src/utils/gcal-utils.c:1298
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr "האירוע שברצונך לשנות הוא מחזורי. השינויים שלך יחולו על:"
 
-#: src/utils/gcal-utils.c:1304
+#: src/utils/gcal-utils.c:1302
 msgid "_Only This Event"
 msgstr "אירוע זה _בלבד"
 
-#: src/utils/gcal-utils.c:1310
+#: src/utils/gcal-utils.c:1308
 msgid "_Subsequent Events"
 msgstr "מאורעות _עוקבים"
 
-#: src/utils/gcal-utils.c:1313
+#: src/utils/gcal-utils.c:1311
 msgid "_All Events"
 msgstr "_כל האירועים"
+
+#~ msgid "Undo"
+#~ msgstr "ביטול"
+
+#~ msgid "Cancel"
+#~ msgstr "ביטול"
 
 #~ msgid "Window position"
 #~ msgstr "Window position"
