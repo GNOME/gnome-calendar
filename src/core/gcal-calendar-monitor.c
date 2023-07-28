@@ -65,7 +65,7 @@ struct _GcalCalendarMonitor
    */
   struct {
     gboolean          populated;
-    GHashTable       *events_to_add;
+    GPtrArray        *events_to_add;
     ECalClientView   *view;
   } monitor_thread;
 
@@ -164,12 +164,7 @@ maybe_init_event_arrays (GcalCalendarMonitor *self)
     return;
 
   if (!self->monitor_thread.events_to_add)
-    {
-      self->monitor_thread.events_to_add = g_hash_table_new_full (g_str_hash,
-                                                                  g_str_equal,
-                                                                  g_free,
-                                                                  g_object_unref);
-    }
+    self->monitor_thread.events_to_add = g_ptr_array_new_with_free_func (g_object_unref);
 }
 
 static GcalRange*
@@ -362,19 +357,9 @@ on_client_view_objects_added_cb (ECalClientView      *view,
         }
 
       if (!self->monitor_thread.populated)
-        {
-          g_autofree gchar *event_id = NULL;
-
-          event_id = g_strdup (gcal_event_get_uid (event));
-
-          g_hash_table_insert (self->monitor_thread.events_to_add,
-                               g_steal_pointer (&event_id),
-                               g_object_ref (event));
-        }
+        g_ptr_array_add (self->monitor_thread.events_to_add, g_object_ref (event));
       else
-        {
-          add_event_in_idle (self, event);
-        }
+        add_event_in_idle (self, event);
     }
 
   /* Recurrent events */
@@ -449,19 +434,9 @@ on_client_view_objects_added_cb (ECalClientView      *view,
             return;
 
           if (!self->monitor_thread.populated)
-            {
-              g_autofree gchar *event_id = NULL;
-
-              event_id = g_strdup (gcal_event_get_uid (event));
-
-              g_hash_table_insert (self->monitor_thread.events_to_add,
-                                   g_steal_pointer (&event_id),
-                                   g_object_ref (event));
-            }
+            g_ptr_array_add (self->monitor_thread.events_to_add, g_object_ref (event));
           else
-            {
-              add_event_in_idle (self, event);
-            }
+            add_event_in_idle (self, event);
         }
     }
 
@@ -485,7 +460,7 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
 
   if (!self->monitor_thread.populated && self->monitor_thread.events_to_add)
     {
-      g_clear_pointer (&self->monitor_thread.events_to_add, g_hash_table_destroy);
+      g_clear_pointer (&self->monitor_thread.events_to_add, g_ptr_array_unref);
       return;
     }
 
@@ -718,7 +693,7 @@ on_client_view_complete_cb (ECalClientView      *view,
                             const GError        *error,
                             GcalCalendarMonitor *self)
 {
-  g_autoptr (GHashTable) events_to_add = NULL;
+  g_autoptr (GPtrArray) events_to_add = NULL;
 
   GCAL_ENTRY;
 
@@ -727,23 +702,20 @@ on_client_view_complete_cb (ECalClientView      *view,
   events_to_add = g_steal_pointer (&self->monitor_thread.events_to_add);
 
   /* Process all these instances */
-  if (events_to_add)
+  for (guint i = 0; events_to_add && i < events_to_add->len; i++)
     {
-      GHashTableIter iter;
       GcalEvent *event;
 
-      g_hash_table_iter_init (&iter, events_to_add);
-      while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &event))
-        {
-          if (g_cancellable_is_cancelled (self->cancellable))
-            return;
+      if (g_cancellable_is_cancelled (self->cancellable))
+        return;
 
-          GCAL_TRACE_MSG ("Sending event '%s' (%s) to main thead's idle",
-                          gcal_event_get_summary (event),
-                          gcal_event_get_uid (event));
+      event = g_ptr_array_index (events_to_add, i);
 
-          add_event_in_idle (self, event);
-        }
+      GCAL_TRACE_MSG ("Sending event '%s' (%s) to main thead's idle",
+                      gcal_event_get_summary (event),
+                      gcal_event_get_uid (event));
+
+      add_event_in_idle (self, event);
     }
 
   self->monitor_thread.populated = TRUE;
