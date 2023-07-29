@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 
 #include "gcal-context.h"
+#include "gcal-event.h"
 #include "gcal-range.h"
 
 G_BEGIN_DECLS
@@ -42,5 +43,11 @@ GcalRange *          gcal_month_view_row_get_range               (GcalMonthViewR
 
 void                 gcal_month_view_row_set_range               (GcalMonthViewRow   *self,
                                                                   GcalRange          *range);
+
+void                 gcal_month_view_row_add_event               (GcalMonthViewRow   *self,
+                                                                  GcalEvent          *event);
+
+void                 gcal_month_view_row_remove_event            (GcalMonthViewRow   *self,
+                                                                  GcalEvent          *event);
 
 G_END_DECLS
