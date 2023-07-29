@@ -106,6 +106,9 @@ GcalRange*           gcal_range_union                            (GcalRange     
 
 gchar*               gcal_range_to_string                        (GcalRange          *self);
 
+gboolean             gcal_range_contains_datetime                (GcalRange          *self,
+                                                                  GDateTime          *datetime);
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalRange, gcal_range_unref)
 
 G_END_DECLS

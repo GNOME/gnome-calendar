@@ -508,3 +508,34 @@ gcal_range_to_string (GcalRange *self)
 
   return g_strdup_printf ("[%s | %s)", start_string, end_string);
 }
+
+/**
+ * gcal_range_contains_datetime:
+ * @self: a #GcalRange
+ * @datetime: a #GDateTime
+ *
+ * Checks if @datetime is contained within @self.
+ *
+ * Returns: %TRUE is @datetime is within the range described
+ * by @self, %FALSE otherwise
+ */
+gboolean
+gcal_range_contains_datetime (GcalRange *self,
+                              GDateTime *datetime)
+{
+  g_return_val_if_fail (self, FALSE);
+  g_return_val_if_fail (datetime, FALSE);
+
+  switch (self->range_type)
+    {
+    case GCAL_RANGE_DEFAULT:
+      return g_date_time_compare (datetime, self->range_start) >= 0 &&
+             g_date_time_compare (datetime, self->range_end) < 0;
+
+    case GCAL_RANGE_DATE_ONLY:
+      return gcal_date_time_compare_date (datetime, self->range_start) >= 0 &&
+             gcal_date_time_compare_date (datetime, self->range_end) <= 0;
+    default:
+      g_assert_not_reached ();
+    }
+}
