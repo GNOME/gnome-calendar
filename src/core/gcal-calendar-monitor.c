@@ -31,8 +31,8 @@
 typedef struct
 {
   GcalCalendarMonitor *monitor;
-  GcalEvent           *event;
-  gchar               *event_id;
+  GPtrArray           *events;
+  GPtrArray           *event_ids;
   gboolean             complete;
 } IdleData;
 
@@ -81,9 +81,9 @@ struct _GcalCalendarMonitor
   } shared;
 };
 
-static gboolean      add_event_to_timeline_in_idle_cb            (gpointer           user_data);
-static gboolean      update_event_in_idle_cb                     (gpointer           user_data);
-static gboolean      remove_event_from_timeline_in_idle_cb       (gpointer           user_data);
+static gboolean      add_events_to_timeline_in_idle_cb           (gpointer           user_data);
+static gboolean      update_events_in_idle_cb                    (gpointer           user_data);
+static gboolean      remove_events_from_timeline_in_idle_cb      (gpointer           user_data);
 static gboolean      complete_in_idle_cb                         (gpointer           user_data);
 
 G_DEFINE_TYPE (GcalCalendarMonitor, gcal_calendar_monitor, G_TYPE_OBJECT)
@@ -183,58 +183,58 @@ static void
 idle_data_free (IdleData *data)
 {
   g_clear_object (&data->monitor);
-  g_clear_object (&data->event);
-  g_clear_pointer (&data->event_id, g_free);
+  g_clear_pointer (&data->events, g_ptr_array_unref);
+  g_clear_pointer (&data->event_ids, g_ptr_array_unref);
   g_free (data);
 }
 
 static void
-add_event_in_idle (GcalCalendarMonitor *self,
-                   GcalEvent        *event)
+add_events_in_idle (GcalCalendarMonitor *self,
+                    GPtrArray           *events)
 {
   IdleData *idle_data;
 
   idle_data = g_new0 (IdleData, 1);
   idle_data->monitor = g_object_ref (self);
-  idle_data->event = g_object_ref (event);
+  idle_data->events = g_ptr_array_ref (events);
 
   g_main_context_invoke_full (self->main_context,
                               G_PRIORITY_DEFAULT_IDLE,
-                              add_event_to_timeline_in_idle_cb,
+                              add_events_to_timeline_in_idle_cb,
                               idle_data,
                               (GDestroyNotify) idle_data_free);
 }
 
 static void
-update_event_in_idle (GcalCalendarMonitor *self,
-                      GcalEvent           *event)
+update_events_in_idle (GcalCalendarMonitor *self,
+                       GPtrArray           *events)
 {
   IdleData *idle_data;
 
   idle_data = g_new0 (IdleData, 1);
   idle_data->monitor = g_object_ref (self);
-  idle_data->event = g_object_ref (event);
+  idle_data->events = g_ptr_array_ref (events);
 
   g_main_context_invoke_full (self->main_context,
                               G_PRIORITY_DEFAULT_IDLE,
-                              update_event_in_idle_cb,
+                              update_events_in_idle_cb,
                               idle_data,
                               (GDestroyNotify) idle_data_free);
 }
 
 static void
-remove_event_in_idle (GcalCalendarMonitor *self,
-                      const gchar         *event_id)
+remove_events_in_idle (GcalCalendarMonitor *self,
+                       GPtrArray           *events)
 {
   IdleData *idle_data;
 
   idle_data = g_new0 (IdleData, 1);
   idle_data->monitor = g_object_ref (self);
-  idle_data->event_id = g_strdup (event_id);
+  idle_data->events = g_ptr_array_ref (events);
 
   g_main_context_invoke_full (self->main_context,
                               G_PRIORITY_DEFAULT_IDLE,
-                              remove_event_from_timeline_in_idle_cb,
+                              remove_events_from_timeline_in_idle_cb,
                               idle_data,
                               (GDestroyNotify) idle_data_free);
 }
@@ -305,6 +305,7 @@ on_client_view_objects_added_cb (ECalClientView      *view,
                                  GcalCalendarMonitor *self)
 {
   g_autoptr (GPtrArray) components_to_expand = NULL;
+  g_autoptr (GPtrArray) events_to_add = NULL;
   g_autoptr (GcalRange) range = NULL;
   const GSList *l;
   gint i;
@@ -315,6 +316,7 @@ on_client_view_objects_added_cb (ECalClientView      *view,
 
   maybe_init_event_arrays (self);
   components_to_expand = g_ptr_array_new ();
+  events_to_add = g_ptr_array_new_with_free_func (g_object_unref);
 
   for (l = objects; l; l = l->next)
     {
@@ -359,13 +361,12 @@ on_client_view_objects_added_cb (ECalClientView      *view,
       if (!self->monitor_thread.populated)
         g_ptr_array_add (self->monitor_thread.events_to_add, g_object_ref (event));
       else
-        add_event_in_idle (self, event);
+        g_ptr_array_add (events_to_add, g_object_ref (event));
     }
 
   /* Recurrent events */
   if (components_to_expand->len > 0)
     {
-      g_autoptr (GPtrArray) expanded_events = NULL;
       g_autoptr (GDateTime) range_start = NULL;
       g_autoptr (GDateTime) range_end = NULL;
       ECalClient *client;
@@ -380,8 +381,6 @@ on_client_view_objects_added_cb (ECalClientView      *view,
       range_end = gcal_range_get_end (range);
       range_start_time = g_date_time_to_unix (range_start);
       range_end_time = g_date_time_to_unix (range_end) - 1;
-
-      expanded_events = g_ptr_array_new_with_free_func (g_object_unref);
 
       /* Generate the instances */
       for (i = 0; i < components_to_expand->len; i++)
@@ -398,10 +397,14 @@ on_client_view_objects_added_cb (ECalClientView      *view,
           icomponent = g_ptr_array_index (components_to_expand, i);
 
           recurrences_data.monitor = self;
-          recurrences_data.expanded_events = expanded_events;
+
+          if (!self->monitor_thread.populated)
+            recurrences_data.expanded_events = self->monitor_thread.events_to_add;
+          else
+            recurrences_data.expanded_events = events_to_add;
 
 #if GCAL_ENABLE_TRACE
-          old_size = expanded_events->len;
+          old_size = recurrences_data.expanded_events->len;
 #endif
 
           e_cal_client_generate_instances_for_object_sync (client,
@@ -419,26 +422,15 @@ on_client_view_objects_added_cb (ECalClientView      *view,
               GCAL_TRACE_MSG ("Component %s (%s) added %d instance(s) between %s",
                               i_cal_component_get_summary (icomponent),
                               i_cal_component_get_uid (icomponent),
-                              expanded_events->len - old_size,
+                              recurrences_data.expanded_events->len - old_size,
                               range_str);
             }
 #endif
         }
-
-      /* Process all these instances */
-      for (i = 0; i < expanded_events->len; i++)
-        {
-          GcalEvent *event = g_ptr_array_index (expanded_events, i);
-
-          if (g_cancellable_is_cancelled (self->cancellable))
-            return;
-
-          if (!self->monitor_thread.populated)
-            g_ptr_array_add (self->monitor_thread.events_to_add, g_object_ref (event));
-          else
-            add_event_in_idle (self, event);
-        }
     }
+
+  if (events_to_add->len > 0)
+    add_events_in_idle (self, events_to_add);
 
   GCAL_EXIT;
 }
@@ -451,10 +443,10 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
   g_autoptr (GRWLockReaderLocker) reader_locker = NULL;
   g_autoptr (GHashTable) events_to_remove = NULL;
   g_autoptr (GPtrArray) components_to_expand = NULL;
+  g_autoptr (GPtrArray) event_ids_to_remove = NULL;
+  g_autoptr (GPtrArray) events_to_update = NULL;
   g_autoptr (GcalRange) range = NULL;
-  GHashTableIter iter;
   const GSList *l;
-  const gchar *aux;
 
   GCAL_ENTRY;
 
@@ -467,6 +459,7 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
   reader_locker = g_rw_lock_reader_locker_new (&self->shared.lock);
   components_to_expand = g_ptr_array_new ();
   events_to_remove = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+  events_to_update = g_ptr_array_new_with_free_func (g_object_unref);
   range = gcal_range_copy (self->shared.range);
 
   for (l = objects; l; l = l->next)
@@ -506,6 +499,9 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
 
       if (!e_cal_component_id_get_rid (component_id))
         {
+          GHashTableIter iter;
+          const gchar *aux;
+
           g_hash_table_iter_init (&iter, self->shared.events);
           while (g_hash_table_iter_next (&iter, (gpointer*) &aux, NULL))
             {
@@ -537,13 +533,14 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
           continue;
         }
 
-      update_event_in_idle (self, event);
+      g_ptr_array_add (events_to_update, g_steal_pointer (&event));
     }
 
   /* Recurrent events */
   if (components_to_expand->len > 0)
     {
       g_autoptr (GPtrArray) expanded_events = NULL;
+      g_autoptr (GPtrArray) events_to_add = NULL;
       g_autoptr (GDateTime) range_start = NULL;
       g_autoptr (GDateTime) range_end = NULL;
       ECalClient *client;
@@ -560,6 +557,7 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
       range_end_time = g_date_time_to_unix (range_end) - 1;
 
       expanded_events = g_ptr_array_new_with_free_func (g_object_unref);
+      events_to_add = g_ptr_array_new_with_free_func (g_object_unref);
 
       /* Generate the instances */
       for (guint i = 0; i < components_to_expand->len; i++)
@@ -614,20 +612,26 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
           old_event = g_hash_table_lookup (self->shared.events, gcal_event_get_uid (event));
           if (old_event)
             {
-              update_event_in_idle (self, event);
               g_hash_table_remove (events_to_remove, gcal_event_get_uid (event));
+              g_ptr_array_add (events_to_update, g_steal_pointer (&event));
             }
           else
             {
-              add_event_in_idle (self, event);
+              g_ptr_array_add (events_to_add, g_steal_pointer (&event));
             }
         }
+
+      if (events_to_add->len > 0)
+        add_events_in_idle (self, events_to_add);
     }
 
+  if (events_to_update->len > 0)
+    update_events_in_idle (self, events_to_update);
+
   /* Now remove lingering events */
-  g_hash_table_iter_init (&iter, events_to_remove);
-  while (g_hash_table_iter_next (&iter, (gpointer*) &aux, NULL))
-    remove_event_in_idle (self, aux);
+  event_ids_to_remove = g_hash_table_steal_all_keys (events_to_remove);
+  if (event_ids_to_remove->len > 0)
+    remove_events_in_idle (self, event_ids_to_remove);
 
   GCAL_EXIT;
 }
@@ -637,9 +641,12 @@ on_client_view_objects_removed_cb (ECalClientView      *view,
                                    const GSList        *objects,
                                    GcalCalendarMonitor *self)
 {
+  g_autoptr (GPtrArray) event_ids = NULL;
   const GSList *l;
 
   GCAL_ENTRY;
+
+  event_ids = g_ptr_array_new_with_free_func (g_free);
 
   for (l = objects; l; l = l->next)
     {
@@ -678,12 +685,15 @@ on_client_view_objects_removed_cb (ECalClientView      *view,
           while (g_hash_table_iter_next (&iter, (gpointer*) &aux, NULL))
             {
               if (!g_str_equal (aux, event_id) && g_str_has_prefix (aux, event_id))
-                remove_event_in_idle (self, aux);
+                g_ptr_array_add (event_ids, g_strdup (aux));
             }
         }
 
-      remove_event_in_idle (self, event_id);
+      g_ptr_array_add (event_ids, g_strdup (event_id));
     }
+
+  if (event_ids->len > 0)
+    remove_events_in_idle (self, event_ids);
 
   GCAL_EXIT;
 }
@@ -701,22 +711,8 @@ on_client_view_complete_cb (ECalClientView      *view,
 
   events_to_add = g_steal_pointer (&self->monitor_thread.events_to_add);
 
-  /* Process all these instances */
-  for (guint i = 0; events_to_add && i < events_to_add->len; i++)
-    {
-      GcalEvent *event;
-
-      if (g_cancellable_is_cancelled (self->cancellable))
-        return;
-
-      event = g_ptr_array_index (events_to_add, i);
-
-      GCAL_TRACE_MSG ("Sending event '%s' (%s) to main thead's idle",
-                      gcal_event_get_summary (event),
-                      gcal_event_get_uid (event));
-
-      add_event_in_idle (self, event);
-    }
+  if (events_to_add)
+    add_events_in_idle (self, events_to_add);
 
   self->monitor_thread.populated = TRUE;
 
@@ -1022,86 +1018,105 @@ set_complete (GcalCalendarMonitor *self,
  */
 
 static gboolean
-add_event_to_timeline_in_idle_cb (gpointer user_data)
+add_events_to_timeline_in_idle_cb (gpointer user_data)
 {
   g_autoptr (GRWLockWriterLocker) writer_locker = NULL;
   GcalCalendarMonitor *self;
-  GcalEvent *event;
+  GPtrArray *events;
   IdleData *idle_data;
-  const gchar *event_id;
 
   GCAL_ENTRY;
 
   idle_data = user_data;
   self = idle_data->monitor;
-  event = idle_data->event;
-  g_assert (idle_data->event_id == NULL);
-
-  event_id = gcal_event_get_uid (event);
+  events = idle_data->events;
+  g_assert (idle_data->event_ids == NULL);
 
   writer_locker = g_rw_lock_writer_locker_new (&self->shared.lock);
-  if (g_hash_table_insert (self->shared.events, g_strdup (event_id), g_object_ref (event)))
-    g_signal_emit (self, signals[EVENT_ADDED], 0, event);
-
-  GCAL_RETURN (G_SOURCE_REMOVE);
-}
-
-static gboolean
-update_event_in_idle_cb (gpointer user_data)
-{
-  g_autoptr (GRWLockWriterLocker) writer_locker = NULL;
-  GcalCalendarMonitor *self;
-  GcalEvent *old_event;
-  GcalEvent *event;
-  IdleData *idle_data;
-  const gchar *event_id;
-
-  GCAL_ENTRY;
-
-  idle_data = user_data;
-  self = idle_data->monitor;
-  event = idle_data->event;
-  g_assert (idle_data->event_id == NULL);
-
-  event_id = gcal_event_get_uid (event);
-
-  writer_locker = g_rw_lock_writer_locker_new (&self->shared.lock);
-  old_event = g_hash_table_lookup (self->shared.events, event_id);
-  if (old_event)
+  for (guint i = 0; i < events->len; i++)
     {
-      g_hash_table_insert (self->shared.events, g_strdup (event_id), g_object_ref (event));
-      g_signal_emit (self, signals[EVENT_UPDATED], 0, old_event, event);
+      GcalEvent *event;
+      const gchar *uid;
+
+      event = g_ptr_array_index (events, i);
+      uid = gcal_event_get_uid (event);
+
+      if (g_hash_table_insert (self->shared.events, g_strdup (uid), g_object_ref (event)))
+        g_signal_emit (self, signals[EVENT_ADDED], 0, event);
     }
 
   GCAL_RETURN (G_SOURCE_REMOVE);
 }
 
 static gboolean
-remove_event_from_timeline_in_idle_cb (gpointer user_data)
+update_events_in_idle_cb (gpointer user_data)
 {
   g_autoptr (GRWLockWriterLocker) writer_locker = NULL;
-  g_autoptr (GcalEvent) event = NULL;
+  g_autoptr (GPtrArray) events = NULL;
   GcalCalendarMonitor *self;
   IdleData *idle_data;
-  gchar *event_id;
 
   GCAL_ENTRY;
 
   idle_data = user_data;
   self = idle_data->monitor;
-  g_assert (idle_data->event == NULL);
-  event_id = idle_data->event_id;
+  events = g_steal_pointer (&idle_data->events);
+  g_assert (idle_data->event_ids == NULL);
 
   writer_locker = g_rw_lock_writer_locker_new (&self->shared.lock);
-  event = g_hash_table_lookup (self->shared.events, event_id);
-
-  if (event)
+  for (guint i = 0; i < events->len; i++)
     {
-      /* Keep the event alive until the signal is emitted */
-      g_object_ref (event);
+      GcalEvent *old_event;
+      GcalEvent *event;
+      const gchar *event_id;
 
-      g_hash_table_remove (self->shared.events, event_id);
-      g_signal_emit (self, signals[EVENT_REMOVED], 0, event);
+      event = g_ptr_array_index (events, i);
+      event_id = gcal_event_get_uid (event);
+
+      old_event = g_hash_table_lookup (self->shared.events, event_id);
+      if (old_event)
+        {
+          g_hash_table_insert (self->shared.events, g_strdup (event_id), g_object_ref (event));
+          g_signal_emit (self, signals[EVENT_UPDATED], 0, old_event, event);
+        }
+    }
+
+  GCAL_RETURN (G_SOURCE_REMOVE);
+}
+
+static gboolean
+remove_events_from_timeline_in_idle_cb (gpointer user_data)
+{
+  g_autoptr (GRWLockWriterLocker) writer_locker = NULL;
+  g_autoptr (GPtrArray) event_ids = NULL;
+  GcalCalendarMonitor *self;
+  IdleData *idle_data;
+
+  GCAL_ENTRY;
+
+  idle_data = user_data;
+  self = idle_data->monitor;
+  event_ids = g_steal_pointer (&idle_data->event_ids);
+  g_assert (idle_data->events == NULL);
+
+  writer_locker = g_rw_lock_writer_locker_new (&self->shared.lock);
+
+  for (guint i = 0; i < event_ids->len; i++)
+    {
+      g_autoptr (GcalEvent) event = NULL;
+      const gchar *event_id;
+
+      event_id = g_ptr_array_index (event_ids, i);
+      event = g_hash_table_lookup (self->shared.events, event_id);
+
+      if (event)
+        {
+          /* Keep the event alive until the signal is emitted */
+          g_object_ref (event);
+
+          g_hash_table_remove (self->shared.events, event_id);
+          g_signal_emit (self, signals[EVENT_REMOVED], 0, event);
+        }
     }
 
   GCAL_RETURN (G_SOURCE_REMOVE);
@@ -1133,8 +1148,8 @@ complete_in_idle_cb (gpointer user_data)
 
   idle_data = user_data;
   self = idle_data->monitor;
-  g_assert (idle_data->event == NULL);
-  g_assert (idle_data->event_id == NULL);
+  g_assert (idle_data->events == NULL);
+  g_assert (idle_data->event_ids == NULL);
 
   set_complete (self, idle_data->complete);
 
