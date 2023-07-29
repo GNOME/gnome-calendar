@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-07-25 07:40+0000\n"
-"PO-Revision-Date: 2023-07-29 10:01+0300\n"
+"POT-Creation-Date: 2023-07-29 07:02+0000\n"
+"PO-Revision-Date: 2023-07-29 10:03+0300\n"
 "Last-Translator: Efstathios Iosifidis <iosifidis@opensuse.org>\n"
 "Language-Team: Greek, Modern (1453-) <gnome-el-list@gnome.org>\n"
 "Language: el\n"
@@ -1120,7 +1120,7 @@ msgstr "_Μήνας"
 
 #: src/gui/gcal-window.ui:312
 msgid "_Date & Time Settings…"
-msgstr ""
+msgstr "_Ρυθμίσεις ημερομηνίας και ώρας…"
 
 #: src/gui/gcal-window.ui:316
 msgid "_Online Accounts…"
@@ -1303,7 +1303,7 @@ msgstr "εβδομάδα %d"
 
 #: src/utils/gcal-utils.c:1297
 msgid "Modify Multiple Events?"
-msgstr ""
+msgstr "Τροποποίηση πολλών συμβάντων;"
 
 #: src/utils/gcal-utils.c:1298
 msgid ""
