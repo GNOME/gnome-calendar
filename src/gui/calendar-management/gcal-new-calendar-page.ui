@@ -211,6 +211,7 @@
   <!-- Credentials popover -->
   <object class="AdwMessageDialog" id="credentials_dialog">
     <property name="heading" translatable="true">Credentials</property>
+    <property name="hide-on-close">True</property>
     <property name="extra-child">
       <object class="AdwClamp">
         <child>
@@ -221,7 +222,7 @@
               </object>
             </child>
             <child>
-              <object class="AdwEntryRow" id="credentials_password_entry">
+              <object class="AdwPasswordEntryRow" id="credentials_password_entry">
                 <property name="title" translatable="true">Password</property>
               </object>
             </child>
