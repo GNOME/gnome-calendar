@@ -73,11 +73,8 @@ make_calendar_row (GcalCalendarsPage *self,
   g_autoptr (GtkBuilder) builder = NULL;
   const GdkRGBA *color;
   GcalManager *manager;
-  GtkWidget *bottom_label;
-  GtkWidget *top_label;
   GtkWidget *icon;
   GtkWidget *row;
-  GtkWidget *sw;
 
   manager = gcal_context_get_manager (self->context);
   get_source_parent_name_color (manager, gcal_calendar_get_source (calendar), &parent_name, NULL);
@@ -98,9 +95,9 @@ make_calendar_row (GcalCalendarsPage *self,
   gtk_image_set_from_paintable (GTK_IMAGE (icon), color_paintable);
 
   /* source name label */
-  top_label = GTK_WIDGET (gtk_builder_get_object (builder, "title"));
-  gtk_label_set_label (GTK_LABEL (top_label), gcal_calendar_get_name (calendar));
-  g_object_bind_property (calendar, "name", top_label, "label", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  adw_preferences_row_set_title (ADW_PREFERENCES_ROW (row), gcal_calendar_get_name (calendar));
+  g_object_bind_property (calendar, "name", row, "title", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+
   g_signal_connect_object (calendar,
                            "notify::name",
                            G_CALLBACK (gtk_list_box_invalidate_sort),
@@ -114,12 +111,10 @@ make_calendar_row (GcalCalendarsPage *self,
                            0);
 
   /* visibility switch */
-  sw = GTK_WIDGET (gtk_builder_get_object (builder, "switch"));
-  g_object_bind_property (calendar, "visible", sw, "active", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (calendar, "visible", row, "active", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
 
   /* parent source name label */
-  bottom_label = GTK_WIDGET (gtk_builder_get_object (builder, "subtitle"));
-  gtk_label_set_label (GTK_LABEL (bottom_label), parent_name);
+  adw_action_row_set_subtitle (ADW_ACTION_ROW (row), parent_name);
 
   gtk_size_group_add_widget (self->sizegroup, row);
 
