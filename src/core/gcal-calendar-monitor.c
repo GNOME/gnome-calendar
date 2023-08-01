@@ -1071,7 +1071,7 @@ update_events_in_idle_cb (gpointer user_data)
   writer_locker = g_rw_lock_writer_locker_new (&self->shared.lock);
   for (guint i = 0; i < events->len; i++)
     {
-      GcalEvent *old_event;
+      g_autoptr (GcalEvent) old_event = NULL;
       GcalEvent *event;
       const gchar *event_id;
 
@@ -1081,6 +1081,8 @@ update_events_in_idle_cb (gpointer user_data)
       old_event = g_hash_table_lookup (self->shared.events, event_id);
       if (old_event)
         {
+          g_object_ref (old_event);
+
           g_hash_table_insert (self->shared.events, g_strdup (event_id), g_object_ref (event));
           g_signal_emit (self, signals[EVENT_UPDATED], 0, old_event, event);
         }
