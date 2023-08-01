@@ -1046,8 +1046,11 @@ add_events_to_timeline_in_idle_cb (gpointer user_data)
       event = g_ptr_array_index (events, i);
       uid = gcal_event_get_uid (event);
 
-      if (g_hash_table_insert (self->shared.events, g_strdup (uid), g_object_ref (event)))
-        g_signal_emit (self, signals[EVENT_ADDED], 0, event);
+      if (!g_hash_table_contains (self->shared.events, uid))
+        {
+          g_hash_table_insert (self->shared.events, g_strdup (uid), g_object_ref (event));
+          g_signal_emit (self, signals[EVENT_ADDED], 0, event);
+        }
     }
 
   GCAL_RETURN (G_SOURCE_REMOVE);
