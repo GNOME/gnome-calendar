@@ -967,6 +967,11 @@ remove_events_outside_range (GcalCalendarMonitor *self,
   g_hash_table_iter_init (&iter, self->shared.events);
   while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &event))
     {
+      GcalRange *event_range = gcal_event_get_range (event);
+
+      if (gcal_range_calculate_overlap (range, event_range, NULL) != GCAL_RANGE_NO_OVERLAP)
+        continue;
+
       g_object_ref (event);
 
       g_hash_table_iter_remove (&iter);
