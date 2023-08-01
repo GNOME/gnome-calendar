@@ -250,7 +250,7 @@ format_datetime_for_display (GDateTime      *date,
       formatted_date = g_strdup (_("Tomorrow"));
       break;
 
-    case 2 ... 7:
+    case 2 ... 6:
       /* Translators: %A is the weekday name (e.g. Sunday, Monday, etc) */
       formatted_date = g_date_time_format (local_dt, gcal_util_translate_time_string (_("This %A")));
       break;
