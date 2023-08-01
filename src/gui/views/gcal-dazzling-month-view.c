@@ -388,12 +388,60 @@ on_scroll_controller_scroll_cb (GtkEventControllerScroll *scroll_controller,
                                 gdouble                   dy,
                                 GcalDazzlingMonthView    *self)
 {
+  GdkEvent *current_event;
+
   GCAL_ENTRY;
 
+  current_event = gtk_event_controller_get_current_event (GTK_EVENT_CONTROLLER (scroll_controller));
+
+  switch (gdk_scroll_event_get_direction (current_event))
+    {
+    case GDK_SCROLL_SMOOTH:
+      cancel_row_offset_animation (self);
+      cancel_deceleration (self);
+      offset_and_shuffle_rows (self, dy);
+      GCAL_RETURN (GDK_EVENT_STOP);
+
+    default:
+      GCAL_RETURN (GDK_EVENT_PROPAGATE);
+    }
+}
+
+static gboolean
+on_discrete_scroll_controller_scroll_cb (GtkEventControllerScroll *scroll_controller,
+                                         gdouble                   dx,
+                                         gdouble                   dy,
+                                         GcalDazzlingMonthView    *self)
+{
+  GdkEvent *current_event;
+
+  GCAL_ENTRY;
+
+  current_event = gtk_event_controller_get_current_event (GTK_EVENT_CONTROLLER (scroll_controller));
+
+  switch (gdk_scroll_event_get_direction (current_event))
+    {
+    case GDK_SCROLL_UP:
+      move_bottom_row_to_top (self);
+      break;
+
+    case GDK_SCROLL_DOWN:
+      move_top_row_to_bottom (self);
+      break;
+
+    default:
+      GCAL_RETURN (GDK_EVENT_PROPAGATE);
+    }
+
+  gtk_widget_remove_css_class (GTK_WIDGET (self), "scrolling");
   cancel_row_offset_animation (self);
   cancel_deceleration (self);
+  update_active_date (self);
+  dump_row_ranges (self);
 
-  offset_and_shuffle_rows (self, dy);
+  self->row_offset = 0.0;
+
+  gtk_widget_queue_allocate (GTK_WIDGET (self));
 
   GCAL_RETURN (GDK_EVENT_STOP);
 }
@@ -1005,6 +1053,7 @@ gcal_dazzling_month_view_class_init (GcalDazzlingMonthViewClass *klass)
   gtk_widget_class_bind_template_child_full (widget_class, "label_5", FALSE, G_STRUCT_OFFSET (GcalDazzlingMonthView, weekday_label[5]));
   gtk_widget_class_bind_template_child_full (widget_class, "label_6", FALSE, G_STRUCT_OFFSET (GcalDazzlingMonthView, weekday_label[6]));
 
+  gtk_widget_class_bind_template_callback (widget_class, on_discrete_scroll_controller_scroll_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_scroll_begin_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_scroll_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_scroll_end_cb);

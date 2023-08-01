@@ -5,12 +5,18 @@
 
     <child>
       <object class="GtkEventControllerScroll">
-        <!-- TODO: Kinetic -->
         <property name="flags">vertical|kinetic</property>
         <signal name="scroll-begin" handler="on_scroll_controller_scroll_begin_cb" object="GcalDazzlingMonthView" swapped="no" />
         <signal name="scroll" handler="on_scroll_controller_scroll_cb" object="GcalDazzlingMonthView" swapped="no" />
         <signal name="scroll-end" handler="on_scroll_controller_scroll_end_cb" object="GcalDazzlingMonthView" swapped="no" />
         <signal name="decelerate" handler="on_scroll_controller_decelerate_cb" object="GcalDazzlingMonthView" swapped="no" />
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkEventControllerScroll">
+        <property name="flags">vertical|discrete</property>
+        <signal name="scroll" handler="on_discrete_scroll_controller_scroll_cb" object="GcalDazzlingMonthView" swapped="no" />
       </object>
     </child>
 
