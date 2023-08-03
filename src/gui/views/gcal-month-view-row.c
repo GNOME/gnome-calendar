@@ -33,7 +33,6 @@ typedef struct
   GtkWidget          *event_widget;
   gboolean            visible;
   guint8              length;
-  guint8              height;
   guint8              cell;
 } GcalEventBlock;
 
@@ -495,7 +494,6 @@ calculate_multiday_event_blocks (GcalMonthViewRow *self,
           block = g_new (GcalEventBlock, 1);
           block->event_widget = event_widget;
           block->visible = visible_at_range;
-          block->height = minimum_height;
           block->length = 1;
           block->cell = i;
 
