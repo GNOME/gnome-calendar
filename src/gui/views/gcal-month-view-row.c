@@ -77,6 +77,11 @@ struct _GcalMonthViewRow
 static void          on_event_widget_activated_cb                (GcalEventWidget    *widget,
                                                                   GcalMonthViewRow   *self);
 
+
+static void          on_event_widget_visibility_changed_cb       (GtkWidget          *event_widget,
+                                                                  GParamSpec         *pspec,
+                                                                  GcalMonthViewRow   *self);
+
 G_DEFINE_FINAL_TYPE (GcalMonthViewRow, gcal_month_view_row, GTK_TYPE_WIDGET)
 
 enum
@@ -104,7 +109,7 @@ setup_child_widget (GcalMonthViewRow *self,
   gtk_widget_insert_after (widget, GTK_WIDGET (self), self->day_cells[6]);
 
   g_signal_connect_object (widget, "activate", G_CALLBACK (on_event_widget_activated_cb), self, 0);
-  // g_signal_connect_object (widget, "notify::visible", G_CALLBACK (on_event_widget_visibility_changed_cb), self, 0);
+  g_signal_connect_object (widget, "notify::visible", G_CALLBACK (on_event_widget_visibility_changed_cb), self, 0);
 }
 
 static inline guint
@@ -776,6 +781,15 @@ on_event_widget_activated_cb (GcalEventWidget  *widget,
 {
   g_signal_emit (self, signals[EVENT_ACTIVATED], 0, widget);
 }
+
+static void
+on_event_widget_visibility_changed_cb (GtkWidget        *event_widget,
+                                       GParamSpec       *pspec,
+                                       GcalMonthViewRow *self)
+{
+  self->needs_reallocation = TRUE;
+}
+
 
 
 /*
