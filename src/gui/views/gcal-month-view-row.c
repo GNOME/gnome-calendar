@@ -436,7 +436,6 @@ calculate_multiday_event_blocks (GcalMonthViewRow *self,
   for (i = first_cell; i <= last_cell; i++)
     {
       gboolean visible_at_range;
-      gboolean different_row;
       gboolean will_overflow;
       gdouble real_height;
       gint remaining_events;
@@ -452,7 +451,6 @@ calculate_multiday_event_blocks (GcalMonthViewRow *self,
                           NULL, NULL, NULL);
 
       /* Count this event at this cell */
-      different_row = i / 7 != (i - 1) / 7;
       remaining_events = events_at_day[i] - allocated_events_at_day[i];
       will_overflow = remaining_events * minimum_height > real_height;
 
@@ -470,7 +468,7 @@ calculate_multiday_event_blocks (GcalMonthViewRow *self,
       if (i == first_cell)
         was_visible = visible_at_range;
 
-      if (!block || y != old_y || different_row || was_visible != visible_at_range)
+      if (!block || y != old_y || was_visible != visible_at_range)
         {
           GCAL_TRACE_MSG ("Breaking event at cell %d", i);
 
@@ -789,7 +787,6 @@ on_event_widget_visibility_changed_cb (GtkWidget        *event_widget,
 {
   self->needs_reallocation = TRUE;
 }
-
 
 
 /*
