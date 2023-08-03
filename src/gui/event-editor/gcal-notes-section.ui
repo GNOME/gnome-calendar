@@ -18,6 +18,7 @@
             <property name="right_margin">6</property>
             <property name="sensitive">True</property>
             <property name="wrap_mode">word-char</property>
+            <property name="accepts-tab">False</property>
           </object>
         </child>
       </object>
