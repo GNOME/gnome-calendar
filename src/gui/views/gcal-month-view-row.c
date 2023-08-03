@@ -74,6 +74,9 @@ struct _GcalMonthViewRow
   GcalContext        *context;
 };
 
+static void          on_event_widget_activated_cb                (GcalEventWidget    *widget,
+                                                                  GcalMonthViewRow   *self);
+
 G_DEFINE_FINAL_TYPE (GcalMonthViewRow, gcal_month_view_row, GTK_TYPE_WIDGET)
 
 enum
@@ -83,6 +86,13 @@ enum
   N_PROPS,
 };
 
+enum
+{
+  EVENT_ACTIVATED,
+  N_SIGNALS,
+};
+
+static guint signals[N_SIGNALS] = { 0, };
 static GParamSpec *properties [N_PROPS];
 
 
@@ -93,7 +103,7 @@ setup_child_widget (GcalMonthViewRow *self,
 {
   gtk_widget_insert_after (widget, GTK_WIDGET (self), self->day_cells[6]);
 
-  // g_signal_connect_object (widget, "activate", G_CALLBACK (on_event_activated_cb), self, 0);
+  g_signal_connect_object (widget, "activate", G_CALLBACK (on_event_widget_activated_cb), self, 0);
   // g_signal_connect_object (widget, "notify::visible", G_CALLBACK (on_event_widget_visibility_changed_cb), self, 0);
 }
 
@@ -757,6 +767,18 @@ allocate_single_day_events (GcalMonthViewRow *self,
 
 
 /*
+ * Callbacks
+ */
+
+static void
+on_event_widget_activated_cb (GcalEventWidget  *widget,
+                              GcalMonthViewRow *self)
+{
+  g_signal_emit (self, signals[EVENT_ACTIVATED], 0, widget);
+}
+
+
+/*
  * GtkWidget overrides
  */
 
@@ -974,6 +996,14 @@ gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
                                                   G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
+
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
+                                           GCAL_TYPE_MONTH_VIEW_ROW,
+                                           G_SIGNAL_RUN_FIRST,
+                                           0,  NULL, NULL, NULL,
+                                           G_TYPE_NONE,
+                                           1,
+                                           GCAL_TYPE_EVENT_WIDGET);
 
   gtk_widget_class_set_css_name (widget_class, "monthviewrow");
 }

@@ -363,6 +363,14 @@ snap_to_top_row (GcalDazzlingMonthView *self)
  */
 
 static void
+on_event_widget_activated_cb (GcalMonthViewRow      *row,
+                              GcalEventWidget       *event_widget,
+                              GcalDazzlingMonthView *self)
+{
+  gcal_view_event_activated (GCAL_VIEW (self), event_widget);
+}
+
+static void
 on_scroll_controller_scroll_begin_cb (GtkEventControllerScroll *scroll_controller,
                                       GcalDazzlingMonthView    *self)
 {
@@ -1077,6 +1085,7 @@ gcal_dazzling_month_view_init (GcalDazzlingMonthView *self)
   for (gint i = 0; i < N_TOTAL_ROWS; i++)
     {
       GtkWidget *row = gcal_month_view_row_new ();
+      g_signal_connect (row, "event-activated", G_CALLBACK (on_event_widget_activated_cb), self);
       gtk_widget_set_parent (row, GTK_WIDGET (self));
       g_ptr_array_add (self->week_rows, row);
     }
