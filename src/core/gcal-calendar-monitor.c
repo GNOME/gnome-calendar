@@ -230,7 +230,7 @@ remove_events_in_idle (GcalCalendarMonitor *self,
 
   idle_data = g_new0 (IdleData, 1);
   idle_data->monitor = g_object_ref (self);
-  idle_data->events = g_ptr_array_ref (events);
+  idle_data->event_ids = g_ptr_array_ref (events);
 
   g_main_context_invoke_full (self->main_context,
                               G_PRIORITY_DEFAULT_IDLE,
