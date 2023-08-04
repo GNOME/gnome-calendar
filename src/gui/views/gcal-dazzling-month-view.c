@@ -116,35 +116,6 @@ update_weekday_labels (GcalDazzlingMonthView *self)
 }
 
 static void
-update_week_ranges (GcalDazzlingMonthView *self)
-{
-  gint n_weeks_before;
-
-  /*
-   * The current date corresponds to the week of the first
-   * visible row.
-   */
-  n_weeks_before = N_ROWS_PER_PAGE * (N_PAGES - 1) / 2;
-
-  for (gint i = 0; i < self->week_rows->len; i++)
-    {
-      g_autoptr (GDateTime) week_start = NULL;
-      g_autoptr (GDateTime) week_end = NULL;
-      g_autoptr (GcalRange) range = NULL;
-      g_autoptr (GDateTime) date = NULL;
-      GcalMonthViewRow *row;
-
-      date = g_date_time_add_weeks (self->date, i - n_weeks_before);
-      week_start = gcal_date_time_get_start_of_week (date);
-      week_end = gcal_date_time_get_end_of_week (date);
-      range = gcal_range_new (week_start, week_end, GCAL_RANGE_DATE_ONLY);
-
-      row = g_ptr_array_index (self->week_rows, i);
-      gcal_month_view_row_set_range (row, range);
-    }
-}
-
-static void
 cancel_deceleration (GcalDazzlingMonthView *self)
 {
   if (self->kinetic_scroll_animation == 0)
@@ -257,6 +228,71 @@ dump_row_ranges (GcalDazzlingMonthView *self)
       GCAL_TRACE_MSG ("    Row %u: %s", i, range_str);
     }
 #endif
+}
+
+static void
+update_week_ranges (GcalDazzlingMonthView *self,
+                    GDateTime             *new_date)
+{
+  g_autoptr (GcalRange) current_range = NULL;
+  g_autoptr (GDateTime) current_date = NULL;
+  gint n_weeks_before;
+
+  /*
+   * The current date corresponds to the week of the first
+   * visible row.
+   */
+  n_weeks_before = N_ROWS_PER_PAGE * (N_PAGES - 1) / 2;
+
+  current_range = gcal_timeline_subscriber_get_range (GCAL_TIMELINE_SUBSCRIBER (self));
+  current_date = g_steal_pointer (&self->date);
+
+  gcal_set_date_time (&self->date, new_date);
+
+  if (gcal_range_contains_datetime (current_range, new_date))
+    {
+      g_autoptr (GcalRange) row_range = NULL;
+      GcalMonthViewRow *row;
+      gint diff;
+
+      diff = g_date_time_compare (new_date, current_date);
+      row = g_ptr_array_index (self->week_rows, n_weeks_before);
+      row_range = gcal_month_view_row_get_range (row);
+
+      while (!gcal_range_contains_datetime (row_range, new_date))
+        {
+          if (diff > 0)
+            move_top_row_to_bottom (self);
+          else
+            move_bottom_row_to_top (self);
+
+          g_clear_pointer (&row_range, gcal_range_unref);
+
+          row = g_ptr_array_index (self->week_rows, n_weeks_before);
+          row_range = gcal_month_view_row_get_range (row);
+        }
+    }
+  else
+    {
+      for (gint i = 0; i < self->week_rows->len; i++)
+        {
+          g_autoptr (GDateTime) week_start = NULL;
+          g_autoptr (GDateTime) week_end = NULL;
+          g_autoptr (GcalRange) range = NULL;
+          g_autoptr (GDateTime) date = NULL;
+          GcalMonthViewRow *row;
+
+          date = g_date_time_add_weeks (self->date, i - n_weeks_before);
+          week_start = gcal_date_time_get_start_of_week (date);
+          week_end = gcal_date_time_get_end_of_week (date);
+          range = gcal_range_new (week_start, week_end, GCAL_RANGE_DATE_ONLY);
+
+          row = g_ptr_array_index (self->week_rows, i);
+          gcal_month_view_row_set_range (row, range);
+        }
+    }
+
+  dump_row_ranges (self);
 }
 
 static inline gint
@@ -699,8 +735,6 @@ gcal_dazzling_month_view_set_date (GcalView  *view,
                   g_date_time_get_month (self->date) != g_date_time_get_month (date) ||
                   g_date_time_get_year (self->date) != g_date_time_get_year (date);
 
-  gcal_set_date_time (&self->date, date);
-
   if (!month_changed)
     GCAL_RETURN ();
 
@@ -711,8 +745,8 @@ gcal_dazzling_month_view_set_date (GcalView  *view,
   }
 #endif
 
+  update_week_ranges (self, date);
   update_header_labels (self);
-  update_week_ranges (self);
 
   gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
 
