@@ -54,8 +54,8 @@
             <child>
               <object class="GtkBox">
                 <child>
-                  <object class="GtkLabel" id="overflow_label">
-                    <property name="ellipsize">end</property>
+                  <object class="GtkInscription" id="overflow_inscription">
+                    <property name="text-overflow">ellipsize-end</property>
                   </object>
                 </child>
               </object>

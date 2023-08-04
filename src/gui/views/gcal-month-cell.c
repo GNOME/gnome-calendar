@@ -40,7 +40,7 @@ struct _GcalMonthCell
   GtkLabel           *temp_label;
 
   GtkWidget          *overflow_button;
-  GtkWidget          *overflow_label;
+  GtkInscription     *overflow_inscription;
   GtkWidget          *overlay;
 
   gboolean            different_month;
@@ -322,7 +322,7 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, day_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, header_box);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overflow_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overflow_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overflow_inscription);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, temp_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, weather_icon);
@@ -488,7 +488,7 @@ gcal_month_cell_set_overflow (GcalMonthCell *self,
 
   g_return_if_fail (GCAL_IS_MONTH_CELL (self));
 
-  gtk_widget_set_visible (self->overflow_label, n_overflow > 0);
+  gtk_widget_set_child_visible (GTK_WIDGET (self->overflow_inscription), n_overflow > 0);
   gtk_widget_set_sensitive (self->overflow_button, n_overflow > 0);
 
   if (self->n_overflow == n_overflow)
@@ -497,7 +497,7 @@ gcal_month_cell_set_overflow (GcalMonthCell *self,
   self->n_overflow = n_overflow;
 
   text = g_strdup_printf ("+%d", n_overflow);
-  gtk_label_set_text (GTK_LABEL (self->overflow_label), text);
+  gtk_inscription_set_text (self->overflow_inscription, text);
 }
 
 gint
