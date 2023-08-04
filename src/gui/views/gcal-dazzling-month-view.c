@@ -597,7 +597,6 @@ gcal_dazzling_month_view_add_event (GcalTimelineSubscriber *subscriber,
       overlap = gcal_range_calculate_overlap (row_range, gcal_event_get_range (event), &position);
       if (overlap != GCAL_RANGE_NO_OVERLAP)
         {
-          g_message ("Adding event %s to row %u", gcal_event_get_uid (event), i);
           gcal_month_view_row_add_event (row, event);
         }
       else
@@ -651,7 +650,6 @@ gcal_dazzling_month_view_remove_event (GcalTimelineSubscriber *subscriber,
       overlap = gcal_range_calculate_overlap (row_range, gcal_event_get_range (event), &position);
       if (overlap != GCAL_RANGE_NO_OVERLAP)
         {
-          g_message ("Remove event %s to row %u", gcal_event_get_uid (event), i);
           gcal_month_view_row_remove_event (row, event);
         }
       else
