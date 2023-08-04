@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-07-25 07:40+0000\n"
-"PO-Revision-Date: 2023-07-28 17:22+0300\n"
+"POT-Creation-Date: 2023-08-02 16:28+0000\n"
+"PO-Revision-Date: 2023-08-04 22:37+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -111,6 +111,14 @@ msgid ""
 msgstr ""
 "Незалежно, чи показується погода, використовується місцевість і її назва"
 
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "Рівень масштабування таблиці тижня"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "Поточний рівень масштабування таблиці тижня"
+
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
 #: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
@@ -163,7 +171,6 @@ msgid "Account"
 msgstr "Обліковий запис"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:30
-#| msgid "Open online account settings"
 msgid "Open in Settings"
 msgstr "Відкрити у «Параметрах»"
 
@@ -185,22 +192,18 @@ msgid "Color"
 msgstr "Колір"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
-#| msgid "Display calendar"
 msgid "_Display Calendar"
 msgstr "П_оказати календар"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
-#| msgid "New Calendar"
 msgid "Default _Calendar"
 msgstr "Типовий _календар"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
-#| msgid "Add new events to this calendar by default"
 msgid "Add new events to this calendar by default."
 msgstr "Типово додати нову подію до цього календаря."
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
-#| msgid "Remove Calendar"
 msgid "_Remove Calendar"
 msgstr "Ви_лучити календар"
 
@@ -212,7 +215,6 @@ msgstr "Виберіть файл"
 #: src/gui/calendar-management/gcal-new-calendar-page.c:165
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:190
 #, c-format
-#| msgid "Add Calendar…"
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "Додати %1$u календар"
@@ -257,22 +259,21 @@ msgstr ""
 msgid "Credentials"
 msgstr "Реєстраційні дані"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:220
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
 msgid "User"
 msgstr "Користувач"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
 msgid "Password"
 msgstr "Пароль"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:236
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:28
 #: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
 msgid "_Cancel"
 msgstr "_Скасувати"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
-#| msgid "Connect"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
 msgid "_Connect"
 msgstr "З'_єднатись"
 
@@ -405,11 +406,11 @@ msgstr "Перемикає звук нагадування"
 msgid "Remove the alarm"
 msgstr "Вилучити нагадування"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Save"
 msgstr "Зберегти"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Done"
 msgstr "Зроблено"
 
@@ -418,7 +419,6 @@ msgid "Click to select the calendar"
 msgstr "Натисніть, щоб вибрати календар"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:100
-#| msgid "Done"
 msgid "_Done"
 msgstr "В_иконано"
 
@@ -1085,26 +1085,20 @@ msgid "Add"
 msgstr "Додати"
 
 #: src/gui/gcal-search-button.ui:53
-#| msgid "Search for events"
 msgid "Search events"
 msgstr "Пошук подій"
 
 #: src/gui/gcal-sync-indicator.ui:21
-#| msgctxt "tooltip"
-#| msgid "Synchronizing remote calendars…"
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars…"
 msgstr "Синхронізування віддалених календарів…"
 
 #: src/gui/gcal-toolbar-end.ui:9
-#| msgctxt "shortcut window"
-#| msgid "Search"
 msgctxt "tooltip"
 msgid "Search"
 msgstr "Пошук"
 
 #: src/gui/gcal-toolbar-end.ui:16
-#| msgid "Add Event…"
 msgctxt "tooltip"
 msgid "Add Event"
 msgstr "Додати подію"
@@ -1118,17 +1112,14 @@ msgid "Automatic Location"
 msgstr "Автоматичне визначення місцевості"
 
 #: src/gui/gcal-weather-settings.ui:46
-#| msgid "Search for events"
 msgid "Search locations"
 msgstr "Пошук за місцями"
 
 #: src/gui/gcal-window.c:337
-#| msgid "_Week"
 msgid "Week"
 msgstr "Тиждень"
 
 #: src/gui/gcal-window.c:339
-#| msgid "_Month"
 msgid "Month"
 msgstr "Місяць"
 
@@ -1183,7 +1174,6 @@ msgid "New event"
 msgstr "Створити подію"
 
 #: src/gui/gtk/help-overlay.ui:20
-#| msgid "Manage Calendars"
 msgctxt "shortcut window"
 msgid "Manage calendars"
 msgstr "Керування календарями"
@@ -1362,12 +1352,10 @@ msgid "_Only This Event"
 msgstr "_Лише для цієї події"
 
 #: src/utils/gcal-utils.c:1308
-#| msgid "_Subsequent events"
 msgid "_Subsequent Events"
 msgstr "Для _наступних подій"
 
 #: src/utils/gcal-utils.c:1311
-#| msgid "_All events"
 msgid "_All Events"
 msgstr "Для _всіх подій"
 
