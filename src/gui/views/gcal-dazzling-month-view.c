@@ -51,8 +51,7 @@ struct _GcalDazzlingMonthView
   GtkWidget          *weekday_label[7];
 
   GPtrArray          *week_rows;
-  GcalRangeTree      *events;
-  GHashTable         *events2;
+  GHashTable         *events;
 
   /* Ranges from [0.0, 1.0] */
   gdouble             row_offset;
@@ -578,7 +577,7 @@ gcal_dazzling_month_view_add_event (GcalTimelineSubscriber *subscriber,
 
   self = GCAL_DAZZLING_MONTH_VIEW (subscriber);
 
-  if (!g_hash_table_add (self->events2, g_object_ref (event)))
+  if (!g_hash_table_add (self->events, g_object_ref (event)))
     {
       g_warning ("Event with uuid: %s already added", gcal_event_get_uid (event));
       GCAL_RETURN ();
@@ -631,7 +630,7 @@ gcal_dazzling_month_view_remove_event (GcalTimelineSubscriber *subscriber,
   /* Keep event alive while removing it */
   owned_event = g_object_ref (event);
 
-  if (!g_hash_table_remove (self->events2, event))
+  if (!g_hash_table_remove (self->events, event))
     {
       g_warning ("Event with uuid: %s not in %s", gcal_event_get_uid (event), G_OBJECT_TYPE_NAME (self));
       GCAL_RETURN ();
@@ -951,8 +950,7 @@ gcal_dazzling_month_view_dispose (GObject *object)
 
   GCAL_ENTRY;
 
-  g_clear_pointer (&self->events2, g_hash_table_destroy);
-  g_clear_pointer (&self->events, gcal_range_tree_unref);
+  g_clear_pointer (&self->events, g_hash_table_destroy);
 
   g_clear_object (&self->kinetic_scroll_animation);
   g_clear_object (&self->row_offset_animation);
@@ -1073,8 +1071,7 @@ gcal_dazzling_month_view_init (GcalDazzlingMonthView *self)
 {
   g_autoptr (GDateTime) now = NULL;
 
-  self->events = gcal_range_tree_new_with_free_func (g_object_unref);
-  self->events2 = g_hash_table_new_full (g_direct_hash, g_direct_equal, g_object_unref, NULL);
+  self->events = g_hash_table_new_full (g_direct_hash, g_direct_equal, g_object_unref, NULL);
 
   gtk_widget_init_template (GTK_WIDGET (self));
   update_weekday_labels (self);
