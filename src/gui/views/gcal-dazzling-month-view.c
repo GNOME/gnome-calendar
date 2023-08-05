@@ -170,8 +170,9 @@ move_bottom_row_to_top (GcalDazzlingMonthView *self)
 
 #ifdef GCAL_ENABLE_TRACE
     {
+      g_autofree gchar *first_row_range_str = gcal_range_to_string (first_row_range);
       g_autofree gchar *new_range_str = gcal_range_to_string (new_range);
-      GCAL_TRACE_MSG ("Moved bottom row to top, new range: %s", new_range_str);
+      GCAL_TRACE_MSG ("Moved bottom row to top, new range: %s (first row range: %s)", new_range_str, first_row_range_str);
     }
 #endif
 
@@ -201,8 +202,9 @@ move_top_row_to_bottom (GcalDazzlingMonthView *self)
 
 #ifdef GCAL_ENABLE_TRACE
     {
+      g_autofree gchar *last_row_range_str = gcal_range_to_string (last_row_range);
       g_autofree gchar *new_range_str = gcal_range_to_string (new_range);
-      GCAL_TRACE_MSG ("Moved top row to bottom, new range: %s", new_range_str);
+      GCAL_TRACE_MSG ("Moved top row to bottom, new range: %s (last row range: %s)", new_range_str, last_row_range_str);
     }
 #endif
 
