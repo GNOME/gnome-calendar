@@ -764,6 +764,9 @@ apply_overflow_at_weekday (GcalWeekHeader *self,
 
   child = gtk_grid_get_child_at (self->grid, weekday, 3);
 
+  if (!child)
+    return;
+
   split_event_widget_at_column (self, child, weekday);
   gtk_widget_set_visible (child, FALSE);
 }
