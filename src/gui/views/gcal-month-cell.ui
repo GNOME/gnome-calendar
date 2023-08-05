@@ -4,6 +4,7 @@
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
     <property name="focusable">True</property>
+    <property name="sensitive">False</property>
     <child>
       <object class="GtkOverlay" id="overlay">
 
