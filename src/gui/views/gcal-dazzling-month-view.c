@@ -726,18 +726,18 @@ gcal_dazzling_month_view_set_date (GcalView  *view,
                                    GDateTime *date)
 {
   GcalDazzlingMonthView *self;
-  gboolean month_changed;
+  gboolean week_changed;
 
   GCAL_ENTRY;
 
   self = GCAL_DAZZLING_MONTH_VIEW (view);
 
-  month_changed = !self->date ||
-                  !date ||
-                  g_date_time_get_month (self->date) != g_date_time_get_month (date) ||
-                  g_date_time_get_year (self->date) != g_date_time_get_year (date);
+  week_changed = !self->date ||
+                 !date ||
+                 g_date_time_get_month (self->date) != g_date_time_get_month (date) ||
+                 g_date_time_get_week_of_year (self->date) != g_date_time_get_week_of_year (date);
 
-  if (!month_changed)
+  if (!week_changed)
     GCAL_RETURN ();
 
 #ifdef GCAL_ENABLE_TRACE
