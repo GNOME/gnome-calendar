@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-08-02 16:28+0000\n"
-"PO-Revision-Date: 2023-08-04 18:01+0330\n"
+"POT-Creation-Date: 2023-08-04 23:11+0000\n"
+"PO-Revision-Date: 2023-08-05 15:00+0330\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "Language: fa\n"
@@ -18,12 +18,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:112
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
 msgid "Calendar"
 msgstr "تقویم"
 
@@ -142,18 +142,18 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "تنظیمات تقویم"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:348
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "تقویم‌ها"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "تقویم <b>%s</b> حذف شد"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:378 src/gui/gcal-window.c:741
+#: src/gui/calendar-management/gcal-calendars-page.c:373 src/gui/gcal-window.c:741
 msgid "_Undo"
 msgstr "_برگردان"
 
@@ -594,7 +594,7 @@ msgstr ""
 "دانیال بهزادی <dani.behzi@ubuntu.com>\n"
 "امیر فارسی <amir_farsi@ymail.com>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:320
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
 msgid "Weather"
 msgstr "آب‌وهوا"
 
@@ -1083,35 +1083,35 @@ msgstr "رویدادی دیگر حذف شد"
 msgid "Event deleted"
 msgstr "رویداد حذف شد"
 
-#: src/gui/gcal-window.ui:131
+#: src/gui/gcal-window.ui:137
 msgid "Main Menu"
 msgstr "فهرست اصلی"
 
-#: src/gui/gcal-window.ui:168 src/gui/gcal-window.ui:207
+#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
 msgid "_Today"
 msgstr "ا_مروز"
 
-#: src/gui/gcal-window.ui:243
+#: src/gui/gcal-window.ui:249
 msgid "_Week"
 msgstr "_هفته"
 
-#: src/gui/gcal-window.ui:258
+#: src/gui/gcal-window.ui:264
 msgid "_Month"
 msgstr "م_اه"
 
-#: src/gui/gcal-window.ui:312
+#: src/gui/gcal-window.ui:318
 msgid "_Date & Time Settings…"
 msgstr "_تنظیمات تاریخ و زمان…"
 
-#: src/gui/gcal-window.ui:316
+#: src/gui/gcal-window.ui:322
 msgid "_Online Accounts…"
 msgstr "حساب‌های _برخط…"
 
-#: src/gui/gcal-window.ui:328
+#: src/gui/gcal-window.ui:334
 msgid "_Keyboard Shortcuts"
 msgstr "_میان‌برهای صفحه‌کلید"
 
-#: src/gui/gcal-window.ui:332
+#: src/gui/gcal-window.ui:338
 msgid "_About Calendar"
 msgstr "_دربارهٔ تقویم"
 
@@ -1132,65 +1132,70 @@ msgstr "مدیریت تقویم‌ها"
 
 #: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
+msgid "Synchronize calendars"
+msgstr "همگام‌سازی تقویم‌ها"
+
+#: src/gui/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
 msgid "Close window"
 msgstr "بستن پنجره"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "جست‌وجو"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "نمایش راهنما"
 
-#: src/gui/gtk/help-overlay.ui:44
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "میان‌برها"
 
-#: src/gui/gtk/help-overlay.ui:52
+#: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "ناوبری"
 
-#: src/gui/gtk/help-overlay.ui:55
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "عقب رفتن"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "جلو رفتن"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "نمایش امروز"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "نمای بعدی"
 
-#: src/gui/gtk/help-overlay.ui:79
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "نمای پیشین"
 
-#: src/gui/gtk/help-overlay.ui:87
+#: src/gui/gtk/help-overlay.ui:93
 msgctxt "shortcut window"
 msgid "View"
 msgstr "نما"
 
-#: src/gui/gtk/help-overlay.ui:90
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "نمای هفتگی"
 
-#: src/gui/gtk/help-overlay.ui:96
+#: src/gui/gtk/help-overlay.ui:102
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "نمای ماهانه"
