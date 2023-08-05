@@ -204,6 +204,7 @@
                                     <property name="use-underline">True</property>
                                     <property name="icon-name">calendar-today-symbolic</property>
                                     <property name="can-shrink">True</property>
+                                    <property name="tooltip-text" translatable="yes">Go to Today</property>
                                   </object>
                                 </property>
                               </object>
@@ -243,6 +244,7 @@
                                     <property name="use-underline">True</property>
                                     <property name="icon-name">calendar-today-symbolic</property>
                                     <property name="can-shrink">True</property>
+                                    <property name="tooltip-text" translatable="yes">Go to Today</property>
                                   </object>
                                 </property>
                               </object>
