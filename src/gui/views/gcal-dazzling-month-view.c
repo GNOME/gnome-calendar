@@ -161,7 +161,7 @@ move_bottom_row_to_top (GcalDazzlingMonthView *self)
   first_row = g_ptr_array_index (self->week_rows, 0);
   first_row_range = gcal_month_view_row_get_range (GCAL_MONTH_VIEW_ROW (first_row));
   g_assert (first_row_range != NULL);
-  first_row_range_start = gcal_range_get_end (first_row_range);
+  first_row_range_start = gcal_range_get_start (first_row_range);
   g_assert (first_row_range_start != NULL);
 
   new_range = gcal_range_new_take (g_date_time_add_weeks (first_row_range_start, -1),
