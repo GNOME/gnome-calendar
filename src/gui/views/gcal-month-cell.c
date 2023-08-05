@@ -484,20 +484,24 @@ void
 gcal_month_cell_set_overflow (GcalMonthCell *self,
                               guint          n_overflow)
 {
-  g_autofree gchar *text = NULL;
-
   g_return_if_fail (GCAL_IS_MONTH_CELL (self));
-
-  gtk_widget_set_child_visible (GTK_WIDGET (self->overflow_inscription), n_overflow > 0);
-  gtk_widget_set_sensitive (self->overflow_button, n_overflow > 0);
 
   if (self->n_overflow == n_overflow)
     return;
 
   self->n_overflow = n_overflow;
 
-  text = g_strdup_printf ("+%d", n_overflow);
-  gtk_inscription_set_text (self->overflow_inscription, text);
+  gtk_widget_set_sensitive (self->overflow_button, n_overflow > 0);
+
+  if (n_overflow > 0)
+    {
+      g_autofree gchar *text = g_strdup_printf ("+%d", n_overflow);
+      gtk_inscription_set_text (self->overflow_inscription, text);
+    }
+  else
+    {
+      gtk_inscription_set_text (self->overflow_inscription, "");
+    }
 }
 
 gint
