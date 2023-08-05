@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-08-02 16:28+0000\n"
-"PO-Revision-Date: 2023-08-04 22:37+0300\n"
+"POT-Creation-Date: 2023-08-04 23:11+0000\n"
+"PO-Revision-Date: 2023-08-05 09:47+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:112
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
 msgid "Calendar"
 msgstr "Календар"
 
@@ -146,18 +146,18 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "Параметри календаря"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:348
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Календарі"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Календар <b>%s</b> вилучено"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:378
+#: src/gui/calendar-management/gcal-calendars-page.c:373
 #: src/gui/gcal-window.c:741
 msgid "_Undo"
 msgstr "_Скасувати"
@@ -642,7 +642,7 @@ msgstr ""
 "Daniel Korostil <ted.korostiled@gmail.com>, 2015-2016.\n"
 "Mykola Tkach <Stuartlittle1970@gmail.com>, 2014-2016."
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:320
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
 msgid "Weather"
 msgstr "Погода"
 
@@ -1131,35 +1131,35 @@ msgstr "Іншу подію вилучено"
 msgid "Event deleted"
 msgstr "Подію вилучено"
 
-#: src/gui/gcal-window.ui:131
+#: src/gui/gcal-window.ui:137
 msgid "Main Menu"
 msgstr "Головне меню"
 
-#: src/gui/gcal-window.ui:168 src/gui/gcal-window.ui:207
+#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
 msgid "_Today"
 msgstr "С_ьогодні"
 
-#: src/gui/gcal-window.ui:243
+#: src/gui/gcal-window.ui:249
 msgid "_Week"
 msgstr "_Тиждень"
 
-#: src/gui/gcal-window.ui:258
+#: src/gui/gcal-window.ui:264
 msgid "_Month"
 msgstr "_Місяць"
 
-#: src/gui/gcal-window.ui:312
+#: src/gui/gcal-window.ui:318
 msgid "_Date & Time Settings…"
 msgstr "П_араметри дати і часу…"
 
-#: src/gui/gcal-window.ui:316
+#: src/gui/gcal-window.ui:322
 msgid "_Online Accounts…"
 msgstr "Мережеві _облікові записи"
 
-#: src/gui/gcal-window.ui:328
+#: src/gui/gcal-window.ui:334
 msgid "_Keyboard Shortcuts"
 msgstr "_Клавіатурні скорочення"
 
-#: src/gui/gcal-window.ui:332
+#: src/gui/gcal-window.ui:338
 msgid "_About Calendar"
 msgstr "Про _Календар"
 
@@ -1179,66 +1179,72 @@ msgid "Manage calendars"
 msgstr "Керування календарями"
 
 #: src/gui/gtk/help-overlay.ui:26
+#| msgid "_Synchronize Calendars"
+msgctxt "shortcut window"
+msgid "Synchronize calendars"
+msgstr "Синхронізувати календарі"
+
+#: src/gui/gtk/help-overlay.ui:32
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Закрити вікно"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Пошук"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Показати довідку"
 
-#: src/gui/gtk/help-overlay.ui:44
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Скорочення"
 
-#: src/gui/gtk/help-overlay.ui:52
+#: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Пересування"
 
-#: src/gui/gtk/help-overlay.ui:55
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "Перейти назад"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "Перейти вперед"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "Показати сьогодні"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "Наступний перегляд"
 
-#: src/gui/gtk/help-overlay.ui:79
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "Попередній перегляд"
 
-#: src/gui/gtk/help-overlay.ui:87
+#: src/gui/gtk/help-overlay.ui:93
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Переглянути"
 
-#: src/gui/gtk/help-overlay.ui:90
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Перегляд тижня"
 
-#: src/gui/gtk/help-overlay.ui:96
+#: src/gui/gtk/help-overlay.ui:102
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Перегляд місяця"
