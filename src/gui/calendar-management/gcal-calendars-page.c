@@ -75,6 +75,7 @@ make_calendar_row (GcalCalendarsPage *self,
   GcalManager *manager;
   GtkWidget *icon;
   GtkWidget *row;
+  GtkWidget *sw;
 
   manager = gcal_context_get_manager (self->context);
   get_source_parent_name_color (manager, gcal_calendar_get_source (calendar), &parent_name, NULL);
@@ -111,7 +112,8 @@ make_calendar_row (GcalCalendarsPage *self,
                            0);
 
   /* visibility switch */
-  g_object_bind_property (calendar, "visible", row, "active", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
+  sw = GTK_WIDGET (gtk_builder_get_object (builder, "switch"));
+  g_object_bind_property (calendar, "visible", sw, "active", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
 
   /* parent source name label */
   adw_action_row_set_subtitle (ADW_ACTION_ROW (row), parent_name);

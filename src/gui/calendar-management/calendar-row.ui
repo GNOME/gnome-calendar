@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object class="AdwSwitchRow" id="row">
+  <object class="AdwActionRow" id="row">
     <property name="use-markup">False</property>
+    <property name="activatable">True</property>
     <child type="prefix">
       <object class="GtkImage" id="icon">
         <property name="pixel-size">24</property>
         <style>
           <class name="calendar-color-image"/>
         </style>
+      </object>
+    </child>
+
+    <child type="suffix">
+      <object class="GtkSwitch" id="switch">
+        <property name="valign">center</property>
       </object>
     </child>
 
