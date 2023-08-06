@@ -4,7 +4,6 @@
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
     <property name="focusable">True</property>
-    <property name="sensitive">False</property>
     <child>
       <object class="GtkOverlay" id="overlay">
 
@@ -48,6 +47,7 @@
         <child type="overlay">
           <object class="GtkButton" id="overflow_button">
             <property name="valign">end</property>
+            <property name="sensitive">False</property>
             <signal name="clicked" handler="overflow_button_clicked_cb" object="GcalMonthCell" swapped="no" />
             <style>
               <class name="flat" />
