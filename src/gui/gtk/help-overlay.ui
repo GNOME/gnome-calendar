@@ -24,7 +24,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Synchronize calendars</property>
-                <property name="accelerator">F5</property>
+                <property name="accelerator">F5 &lt;Ctrl&gt;r</property>
               </object>
             </child>
             <child>
