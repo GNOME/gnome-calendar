@@ -259,9 +259,11 @@ prepare_layout_blocks (GcalMonthViewRow *self,
 static void
 recalculate_layout_blocks (GcalMonthViewRow *self)
 {
+  g_autoptr (GDateTime) range_start = NULL;
   guint events_at_weekday[7] = { 0, };
   guint n_events;
 
+  range_start = gcal_range_get_start (self->range);
   n_events = g_list_model_get_n_items (G_LIST_MODEL (self->events));
 
   g_hash_table_remove_all (self->layout_blocks);
@@ -319,6 +321,32 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
           else
             {
               block->length++;
+            }
+        }
+
+      /* Adjust slanted edges of multiday events */
+      if (gcal_event_is_multiday (event))
+        {
+          g_autoptr (GDateTime) adjusted_range_start = NULL;
+
+          adjusted_range_start = g_date_time_new (g_date_time_get_timezone (gcal_event_get_date_start (event)),
+                                                  g_date_time_get_year (range_start),
+                                                  g_date_time_get_month (range_start),
+                                                  g_date_time_get_day_of_month (range_start),
+                                                  0, 0, 0);
+
+
+          for (guint j = 0; j < blocks->len; j++)
+            {
+              g_autoptr (GDateTime) block_start = NULL;
+              g_autoptr (GDateTime) block_end = NULL;
+
+              block = g_ptr_array_index (blocks, j);
+              block_start = g_date_time_add_days (adjusted_range_start, block->cell);
+              block_end = g_date_time_add_days (block_start, block->length); /* FIXME: use end date's timezone here */
+
+              gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (block->event_widget), block_start);
+              gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (block->event_widget), block_end);
             }
         }
 
