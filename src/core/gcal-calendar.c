@@ -198,10 +198,9 @@ gcal_calendar_initable_init (GInitable     *initable,
                                                     G_CALLBACK (on_source_name_changed_cb),
                                                     self);
 
-  /* 15s is arbitrary, but very rarely this will be reached */
   client = e_cal_client_connect_sync (priv->source,
                                       E_CAL_CLIENT_SOURCE_TYPE_EVENTS,
-                                      15,
+                                      (guint32) -1,
                                       cancellable,
                                       &local_error);
 
