@@ -25,7 +25,6 @@
 #include "gcal-calendar-button.h"
 #include "config.h"
 #include "gcal-date-chooser.h"
-#include "gcal-dazzling-month-view.h"
 #include "gcal-debug.h"
 #include "gcal-event-editor-dialog.h"
 #include "gcal-event-widget.h"
@@ -105,7 +104,6 @@ struct _GcalWindow
   AdwViewStack           *views_stack;
   GtkWidget              *week_view;
   GtkWidget              *month_view;
-  GtkWidget              *dazzling_month_view;
   GtkWidget              *agenda_view;
   GtkWidget              *date_chooser;
   GtkWidget              *action_bar;
@@ -206,7 +204,6 @@ update_today_action_enabled (GcalWindow *window)
       break;
 
     case GCAL_WINDOW_VIEW_MONTH:
-    case GCAL_WINDOW_VIEW_DAZZLING_MONTH:
       enabled = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
                 g_date_time_get_month (window->active_date) != g_date_time_get_month (now);
       break;
@@ -233,7 +230,6 @@ maybe_add_subscribers_to_timeline (GcalWindow *self)
 
   timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
-  gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->dazzling_month_view));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->agenda_view));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->date_chooser));
@@ -255,7 +251,7 @@ update_active_date (GcalWindow *window,
 
   gcal_set_date_time (&window->active_date, new_date);
 
-  for (i = GCAL_WINDOW_VIEW_WEEK; i <= GCAL_WINDOW_VIEW_DAZZLING_MONTH; i++)
+  for (i = GCAL_WINDOW_VIEW_WEEK; i <= GCAL_WINDOW_VIEW_MONTH; i++)
     gcal_view_set_date (GCAL_VIEW (window->views[i]), new_date);
   gcal_view_set_date (GCAL_VIEW (window->agenda_view), new_date);
   gcal_view_set_date (GCAL_VIEW (window->date_chooser), new_date);
@@ -375,7 +371,7 @@ on_view_action_activated (GSimpleAction *action,
   else if (view == -2)
     view = --(window->active_view);
 
-  window->active_view = CLAMP (view, GCAL_WINDOW_VIEW_WEEK, GCAL_WINDOW_VIEW_DAZZLING_MONTH);
+  window->active_view = CLAMP (view, GCAL_WINDOW_VIEW_WEEK, GCAL_WINDOW_VIEW_MONTH);
   adw_view_stack_set_visible_child (window->views_stack, window->views[window->active_view]);
 
   g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
@@ -834,7 +830,6 @@ gcal_window_dispose (GObject *object)
 
   timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
-  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->dazzling_month_view));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->agenda_view));
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->date_chooser));
@@ -882,7 +877,6 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->calendar_management_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->week_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "context", self->dazzling_month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->agenda_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->date_chooser, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->event_editor, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
@@ -1018,7 +1012,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   g_type_ensure (GCAL_TYPE_CALENDAR_MANAGEMENT_DIALOG);
   g_type_ensure (GCAL_TYPE_CALENDAR_BUTTON);
   g_type_ensure (GCAL_TYPE_DATE_CHOOSER);
-  g_type_ensure (GCAL_TYPE_DAZZLING_MONTH_VIEW);
   g_type_ensure (GCAL_TYPE_EVENT_EDITOR_DIALOG);
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
@@ -1072,7 +1065,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, agenda_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, date_chooser);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, dazzling_month_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, event_editor);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, main_box);
@@ -1131,7 +1123,6 @@ gcal_window_init (GcalWindow *self)
 
   self->views[GCAL_WINDOW_VIEW_WEEK] = self->week_view;
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;
-  self->views[GCAL_WINDOW_VIEW_DAZZLING_MONTH] = self->dazzling_month_view;
 
   self->active_date = g_date_time_new_from_unix_local (0);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;

@@ -1,32 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GcalMonthView" parent="GtkWidget">
+    <property name="overflow">hidden</property>
 
     <child>
-      <object class="GtkGestureClick">
-        <property name="button">1</property>
-        <signal name="pressed" handler="on_click_gesture_pressed_cb" object="GcalMonthView" swapped="no" />
-        <signal name="released" handler="on_click_gesture_released_cb" object="GcalMonthView" swapped="no" />
-      </object>
-    </child>
-
-    <child>
-      <object class="GtkEventControllerMotion" id="motion_controller">
-        <property name="propagation-phase">none</property>
-        <signal name="motion" handler="on_motion_controller_motion_cb" object="GcalMonthView" swapped="no" />
-      </object>
-    </child>
-
-    <child>
-      <object class="GtkEventControllerKey">
-        <signal name="key-pressed" handler="on_key_controller_key_pressed_cb" object="GcalMonthView" swapped="no" />
+      <object class="GtkEventControllerScroll">
+        <property name="flags">vertical|kinetic</property>
+        <signal name="scroll-begin" handler="on_scroll_controller_scroll_begin_cb" object="GcalMonthView" swapped="no" />
+        <signal name="scroll" handler="on_scroll_controller_scroll_cb" object="GcalMonthView" swapped="no" />
+        <signal name="scroll-end" handler="on_scroll_controller_scroll_end_cb" object="GcalMonthView" swapped="no" />
+        <signal name="decelerate" handler="on_scroll_controller_decelerate_cb" object="GcalMonthView" swapped="no" />
       </object>
     </child>
 
     <child>
       <object class="GtkEventControllerScroll">
-        <property name="flags">vertical</property>
-        <signal name="scroll" handler="on_scroll_controller_scrolled_cb" object="GcalMonthView" swapped="no" />
+        <property name="flags">vertical|discrete</property>
+        <signal name="scroll" handler="on_discrete_scroll_controller_scroll_cb" object="GcalMonthView" swapped="no" />
       </object>
     </child>
 
@@ -59,12 +49,10 @@
 
         <child>
           <object class="GtkBox">
-            <property name="spacing">6</property>
-            <property name="margin-start">6</property>
-            <property name="margin-end">6</property>
             <property name="margin-bottom">6</property>
             <child>
               <object class="GtkLabel" id="label_0">
+                <property name="margin-start">6</property>
                 <property name="hexpand">true</property>
                 <property name="xalign">0.0</property>
                 <style>
@@ -75,6 +63,7 @@
 
             <child>
               <object class="GtkLabel" id="label_1">
+                <property name="margin-start">6</property>
                 <property name="hexpand">true</property>
                 <property name="xalign">0.0</property>
                 <style>
@@ -85,6 +74,7 @@
 
             <child>
               <object class="GtkLabel" id="label_2">
+                <property name="margin-start">6</property>
                 <property name="hexpand">true</property>
                 <property name="xalign">0.0</property>
                 <style>
@@ -95,6 +85,7 @@
 
             <child>
               <object class="GtkLabel" id="label_3">
+                <property name="margin-start">6</property>
                 <property name="hexpand">true</property>
                 <property name="xalign">0.0</property>
                 <style>
@@ -105,6 +96,7 @@
 
             <child>
               <object class="GtkLabel" id="label_4">
+                <property name="margin-start">6</property>
                 <property name="hexpand">true</property>
                 <property name="xalign">0.0</property>
                 <style>
@@ -115,6 +107,7 @@
 
             <child>
               <object class="GtkLabel" id="label_5">
+                <property name="margin-start">6</property>
                 <property name="hexpand">true</property>
                 <property name="xalign">0.0</property>
                 <style>
@@ -125,6 +118,7 @@
 
             <child>
               <object class="GtkLabel" id="label_6">
+                <property name="margin-start">6</property>
                 <property name="hexpand">true</property>
                 <property name="xalign">0.0</property>
                 <style>
@@ -138,12 +132,5 @@
       </object>
     </child>
 
-    <!-- Grid -->
-    <child type="grid">
-      <object class="GtkGrid" id="grid">
-        <property name="row-homogeneous">true</property>
-        <property name="column-homogeneous">true</property>
-      </object>
-    </child>
   </template>
 </interface>
