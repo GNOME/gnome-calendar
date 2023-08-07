@@ -12,6 +12,7 @@
             <property name="valign">start</property>
             <property name="spacing">6</property>
             <property name="margin-top">6</property>
+            <property name="margin-bottom">2</property>
             <property name="margin-start">6</property>
             <property name="margin-end">6</property>
             <child>
