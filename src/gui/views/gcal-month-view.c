@@ -320,6 +320,12 @@ update_week_ranges (GcalMonthView *self,
         }
     }
 
+  for (gint i = 0; i < self->week_rows->len; i++)
+    {
+      GcalMonthViewRow *row = g_ptr_array_index (self->week_rows, i);
+      gcal_month_view_row_update_style_for_date (row, new_date);
+    }
+
   dump_row_ranges (self);
 }
 

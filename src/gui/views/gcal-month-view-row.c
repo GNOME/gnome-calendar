@@ -721,3 +721,28 @@ gcal_month_view_row_remove_event (GcalMonthViewRow *self,
 
   GCAL_EXIT;
 }
+
+void
+gcal_month_view_row_update_style_for_date   (GcalMonthViewRow *self,
+                                             GDateTime        *date)
+{
+  g_autoptr (GDateTime) range_start = NULL;
+
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+  g_assert (date != NULL);
+  g_assert (self->range != NULL);
+
+  range_start = gcal_range_get_start (self->range);
+
+  for (guint i = 0; i < 7; i++)
+    {
+      g_autoptr (GDateTime) cell_date = NULL;
+      gboolean different_month;
+
+      cell_date = g_date_time_add_days (range_start, i);
+      different_month = g_date_time_get_year (cell_date) != g_date_time_get_year (date) ||
+                        g_date_time_get_month (cell_date) != g_date_time_get_month (date);
+
+      gcal_month_cell_set_different_month (GCAL_MONTH_CELL (self->day_cells[i]), different_month);
+    }
+}

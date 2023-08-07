@@ -50,4 +50,7 @@ void                 gcal_month_view_row_add_event               (GcalMonthViewR
 void                 gcal_month_view_row_remove_event            (GcalMonthViewRow   *self,
                                                                   GcalEvent          *event);
 
+void                 gcal_month_view_row_update_style_for_date   (GcalMonthViewRow   *self,
+                                                                  GDateTime          *date);
+
 G_END_DECLS
