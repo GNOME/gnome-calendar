@@ -453,7 +453,7 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
       allocation.width = round (cell_width * (i + 1)) - allocation.x;
       allocation.height = height;
 
-      cell = is_ltr ? self->day_cells[i] : self->day_cells[7 - i + 1];
+      cell = is_ltr ? self->day_cells[i] : self->day_cells[7 - i - 1];
       gtk_widget_size_allocate (cell, &allocation, baseline);
     }
 
@@ -487,8 +487,7 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
 
               block = g_ptr_array_index (blocks, block_index);
 
-              /* TODO: RTL */
-              allocation.x = block->cell * cell_width;
+              allocation.x = (is_ltr ? block->cell : 7 - block->cell - block->length) * cell_width;
               allocation.y = cell_y[block->cell];
               allocation.width = block->length * cell_width;
               allocation.height = block->height;
