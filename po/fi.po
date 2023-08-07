@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-03-03 22:56+0000\n"
-"PO-Revision-Date: 2023-03-04 12:37+0200\n"
+"POT-Creation-Date: 2023-08-04 23:11+0000\n"
+"PO-Revision-Date: 2023-08-07 19:20+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -16,12 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
 msgid "Calendar"
 msgstr "Kalenteri"
 
@@ -86,32 +86,32 @@ msgid "Window size (width and height)."
 msgstr "Ikkunan koko (leveys ja korkeus)."
 
 #: data/org.gnome.calendar.gschema.xml.in:16
-msgid "Window position"
-msgstr "Ikkunan sijainti"
-
-#: data/org.gnome.calendar.gschema.xml.in:17
-msgid "Window position (x and y)."
-msgstr "Ikkunan sijainti (x ja y)"
-
-#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Aktiivisen näkymän tyyppi"
 
-#: data/org.gnome.calendar.gschema.xml.in:22
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Aktiivisen näkymän tyyppi, oletusarvo on: monthly view"
 
-#: data/org.gnome.calendar.gschema.xml.in:26
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
 msgstr "Sääpalvelun asetukset"
 
-#: data/org.gnome.calendar.gschema.xml.in:27
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
 "Näytetäänkö sääilmoitukset, käytetäänkö automaattista sijaintia ja paikan "
 "nimi"
+
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "Viikkoruudukon lähennystaso"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "Viikkoruudukon nykyinen lähennystaso"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -140,93 +140,89 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "Kalenterin asetukset"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:354
-msgid "Manage Calendars"
-msgstr "Hallitse kalentereita"
+#: src/gui/calendar-management/gcal-calendars-page.c:343
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:141
+msgid "Calendars"
+msgstr "Kalenterit"
 
-#. Update notification label
-#: src/gui/calendar-management/gcal-calendars-page.c:384
+#. Create the new toast
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalenteri <b>%s</b> poistettu"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:24
-msgid "Undo"
-msgstr "Kumoa"
+#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/gcal-window.c:741
+msgid "_Undo"
+msgstr "_Kumoa"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:78
+#: src/gui/calendar-management/gcal-calendars-page.ui:55
 msgid "Add Calendar…"
 msgstr "Lisää kalenteri…"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:19
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
 msgid "Account"
 msgstr "Tili"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:46
-msgid "Settings"
-msgstr "Asetukset"
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:30
+msgid "Open in Settings"
+msgstr "Avaa asetuksissa"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:53
 #: src/gui/event-editor/gcal-summary-section.ui:23
-#: src/gui/gcal-event-popover.ui:111
+#: src/gui/gcal-event-popover.ui:113
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "Sijainti"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:84
-msgid "Calendar name"
-msgstr "Kalenterin nimi"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
-msgid "Color"
-msgstr "Väri"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:134
-msgid "Display calendar"
-msgstr "Näytä kalenteri"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:146
-msgid "Add new events to this calendar by default"
-msgstr "Lisää uudet tapahtumat oletuksena tähän kalenteriin"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:158
-msgid "Remove Calendar"
-msgstr "Poista kalenteri"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:49
-msgid "Select a file"
-msgstr "Valitse tiedosto"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-msgid "Cancel"
-msgstr "Peru"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:96
-msgid "Open"
-msgstr "Avaa"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:517
-msgid "New Calendar"
-msgstr "Uusi kalenteri"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:695
-msgid "Calendar files"
-msgstr "Kalenteritiedostot"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:16
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:22
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:24
 msgid "Calendar Name"
 msgstr "Kalenterin nimi"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:55
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:32
+msgid "Color"
+msgstr "Väri"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+msgid "_Display Calendar"
+msgstr "_Näytä kalenteri"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
+msgid "Default _Calendar"
+msgstr "_Oletuskalenteri"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
+msgid "Add new events to this calendar by default."
+msgstr "Lisää uudet tapahtumat oletuksena tähän kalenteriin."
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+msgid "_Remove Calendar"
+msgstr "_Poista kalenteri"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:51
+msgid "Select a file"
+msgstr "Valitse tiedosto"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:190
+#, c-format
+msgid "Add Calendar"
+msgid_plural "Add %1$u Calendars"
+msgstr[0] "Lisää kalenteri"
+msgstr[1] "Lisää %1$u kalenteria"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:516
+msgid "New Calendar"
+msgstr "Uusi kalenteri"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
 msgid "Import a Calendar"
 msgstr "Tuo kalenteri"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:77
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
@@ -234,15 +230,15 @@ msgstr ""
 "Vaihtoehtoisesti kirjoita verkkokalenterin osoite tai avaa tuettu "
 "verkkokalenteritiedosto."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:100
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
 msgid "Open a File"
 msgstr "Avaa tiedosto"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-msgid "Calendars"
-msgstr "Kalenterit"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:108
+msgid "Calendar files"
+msgstr "Kalenteritiedostot"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:148
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:165
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -250,26 +246,27 @@ msgstr ""
 "Jos kalenteri kuuluu johonkin verkkotileistäsi, voit lisätä kalenterin <a "
 "href=\"GOA\">verkkotilien asetuksissa</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:213
 msgid "Credentials"
 msgstr "Kirjautumistiedot"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
-msgid "Connect"
-msgstr "Yhdistä"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
 msgid "User"
 msgstr "Käyttäjä"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
 msgid "Password"
 msgstr "Salasana"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
-#: src/gui/gcal-quick-add-popover.ui:98
-msgid "Add"
-msgstr "Lisää"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:28
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
+msgid "_Cancel"
+msgstr "_Peru"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "_Connect"
+msgstr "_Yhdistä"
 
 #: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
@@ -374,32 +371,35 @@ msgstr "Hälytyksen ääni päälle/pois"
 msgid "Remove the alarm"
 msgstr "Poista hälytys"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Save"
 msgstr "Tallenna"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:86
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Done"
 msgstr "Valmis"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
 msgid "Click to select the calendar"
 msgstr "Napsauta valitaksesi kalenterin"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:115
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
+msgid "_Done"
+msgstr "_Valmis"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
 msgid "Schedule"
 msgstr "Aikataulu"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
 msgid "Reminders"
 msgstr "Muistutukset"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:151
 msgid "Notes"
 msgstr "Kommentit"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:171
 msgid "Delete Event"
 msgstr "Poista tapahtuma"
 
@@ -500,51 +500,51 @@ msgstr "Päättyy"
 msgid "Repeat"
 msgstr "Toisto"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:128
+#: src/gui/event-editor/gcal-schedule-section.ui:125
 msgid "No Repeat"
 msgstr "Ei toistoa"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:129
+#: src/gui/event-editor/gcal-schedule-section.ui:126
 msgid "Daily"
 msgstr "Päivittäin"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:130
+#: src/gui/event-editor/gcal-schedule-section.ui:127
 msgid "Monday – Friday"
 msgstr "Maanantai – perjantai"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:131
+#: src/gui/event-editor/gcal-schedule-section.ui:128
 msgid "Weekly"
 msgstr "Viikoittain"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:132
+#: src/gui/event-editor/gcal-schedule-section.ui:129
 msgid "Monthly"
 msgstr "Kuukausittain"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:133
+#: src/gui/event-editor/gcal-schedule-section.ui:130
 msgid "Yearly"
 msgstr "Vuosittain"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:146
+#: src/gui/event-editor/gcal-schedule-section.ui:141
 msgid "End Repeat"
 msgstr "Toiston lopetus"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:154
+#: src/gui/event-editor/gcal-schedule-section.ui:146
 msgid "Forever"
 msgstr "Ei lopetusta"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:155
+#: src/gui/event-editor/gcal-schedule-section.ui:147
 msgid "No. of occurrences"
 msgstr "Toistokertojen mukaan"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:156
+#: src/gui/event-editor/gcal-schedule-section.ui:148
 msgid "Until Date"
 msgstr "Tiettyyn päivään asti"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:169
+#: src/gui/event-editor/gcal-schedule-section.ui:160
 msgid "Number of Occurrences"
 msgstr "Toistokertojen määrä"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:188
+#: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "Toiston lopetuspäivä"
 
@@ -605,28 +605,23 @@ msgstr "Gnome-projekti"
 msgid "translator-credits"
 msgstr "Jiri Grönroos"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
 msgid "Weather"
 msgstr "Sää"
 
 #: src/gui/gcal-calendar-button.ui:6
-msgid "Manage your calendars"
-msgstr "Hallitse kalentereitasi"
+msgid "Manage Calendars"
+msgstr "Hallitse kalentereita"
 
-#: src/gui/gcal-calendar-button.ui:23
+#: src/gui/gcal-calendar-button.ui:8
 msgid "_Calendars"
 msgstr "_Kalenterit"
 
-#: src/gui/gcal-calendar-button.ui:42
-msgctxt "tooltip"
-msgid "Synchronizing remote calendars…"
-msgstr "Synkronoidaan etäkalentereita…"
-
-#: src/gui/gcal-calendar-button.ui:72
+#: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
 msgstr "_Synkronoi kalenterit"
 
-#: src/gui/gcal-calendar-button.ui:76
+#: src/gui/gcal-calendar-button.ui:41
 msgid "Manage Calendars…"
 msgstr "Hallitse kalentereita…"
 
@@ -782,11 +777,11 @@ msgstr "%1$s %2$d, %3$s – %4$s"
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%1$s %2$d, %3$d, %4$s – %5$s"
 
-#: src/gui/gcal-event-popover.ui:71
+#: src/gui/gcal-event-popover.ui:73
 msgid "No event information"
 msgstr "Ei tapahtuman tietoja"
 
-#: src/gui/gcal-event-popover.ui:169
+#: src/gui/gcal-event-popover.ui:171
 msgid "Edit…"
 msgstr "Muokkaa…"
 
@@ -796,32 +791,32 @@ msgstr "Muokkaa…"
 msgid "At %s"
 msgstr "Tapahtuman sijainti %s"
 
-#: src/gui/gcal-meeting-row.c:65
+#: src/gui/gcal-meeting-row.c:67
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/gui/gcal-meeting-row.c:66
+#: src/gui/gcal-meeting-row.c:68
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/gui/gcal-meeting-row.c:67
+#: src/gui/gcal-meeting-row.c:69
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/gui/gcal-meeting-row.c:68
+#: src/gui/gcal-meeting-row.c:70
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:69
+#: src/gui/gcal-meeting-row.c:71
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
-#: src/gui/gcal-meeting-row.c:79
+#: src/gui/gcal-meeting-row.c:81
 msgid "Unknown Service"
 msgstr "Tuntematon palvelu"
 
 #. Translators: "Join" as in "Join meeting"
-#: src/gui/gcal-meeting-row.ui:12
+#: src/gui/gcal-meeting-row.ui:13
 msgid "Join"
 msgstr "Liity"
 
@@ -1048,15 +1043,28 @@ msgstr "Uusi tapahtuma %-d. joulukuuta"
 msgid "Edit Details…"
 msgstr "Muokkaa tietoja…"
 
-#: src/gui/gcal-toolbar-end.ui:9
-msgctxt "tooltip"
-msgid "Search for events"
+#: src/gui/gcal-quick-add-popover.ui:98
+msgid "Add"
+msgstr "Lisää"
+
+#: src/gui/gcal-search-button.ui:53
+msgid "Search events"
 msgstr "Etsi tapahtumia"
 
-#: src/gui/gcal-toolbar-end.ui:21
+#: src/gui/gcal-sync-indicator.ui:21
 msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "Lisää uusi tapahtuma"
+msgid "Synchronizing Remote Calendars…"
+msgstr "Synkronoidaan etäkalentereita…"
+
+#: src/gui/gcal-toolbar-end.ui:9
+msgctxt "tooltip"
+msgid "Search"
+msgstr "Etsi"
+
+#: src/gui/gcal-toolbar-end.ui:16
+msgctxt "tooltip"
+msgid "Add Event"
+msgstr "Lisää tapahtuma"
 
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
@@ -1066,43 +1074,55 @@ msgstr "Näytä sää"
 msgid "Automatic Location"
 msgstr "Automaattinen sijainti"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-weather-settings.ui:46
+msgid "Search locations"
+msgstr "Etsi sijainteja"
+
+#: src/gui/gcal-window.c:337
+msgid "Week"
+msgstr "Viikko"
+
+#: src/gui/gcal-window.c:339
+msgid "Month"
+msgstr "Kuukausi"
+
+#: src/gui/gcal-window.c:739
 msgid "Another event deleted"
 msgstr "Toinen tapahtuma poistettu"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:739
 msgid "Event deleted"
 msgstr "Tapahtuma poistettu"
 
-#: src/gui/gcal-window.c:715
-msgid "_Undo"
-msgstr "_Kumoa"
-
-#: src/gui/gcal-window.ui:117
+#: src/gui/gcal-window.ui:137
 msgid "Main Menu"
 msgstr "Päävalikko"
 
-#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
+#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
 msgid "_Today"
 msgstr "_Tänään"
 
-#: src/gui/gcal-window.ui:223
+#: src/gui/gcal-window.ui:249
 msgid "_Week"
 msgstr "_Viikko"
 
-#: src/gui/gcal-window.ui:238
+#: src/gui/gcal-window.ui:264
 msgid "_Month"
 msgstr "_Kuukausi"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:318
+msgid "_Date & Time Settings…"
+msgstr "_Päivän ja ajan asetukset…"
+
+#: src/gui/gcal-window.ui:322
 msgid "_Online Accounts…"
 msgstr "_Verkkotilit…"
 
-#: src/gui/gcal-window.ui:291
+#: src/gui/gcal-window.ui:334
 msgid "_Keyboard Shortcuts"
 msgstr "_Pikanäppäimet"
 
-#: src/gui/gcal-window.ui:295
+#: src/gui/gcal-window.ui:338
 msgid "_About Calendar"
 msgstr "_Tietoja - Kalenteri"
 
@@ -1118,65 +1138,75 @@ msgstr "Uusi tapahtuma"
 
 #: src/gui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
+msgid "Manage calendars"
+msgstr "Hallitse kalentereita"
+
+#: src/gui/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Synchronize calendars"
+msgstr "Synkronoi kalenterit"
+
+#: src/gui/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Sulje ikkuna"
 
-#: src/gui/gtk/help-overlay.ui:26
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Etsi"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Näytä ohje"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Pikanäppäimet"
 
-#: src/gui/gtk/help-overlay.ui:46
+#: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Liikkuminen"
 
-#: src/gui/gtk/help-overlay.ui:49
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "Takaisin"
 
-#: src/gui/gtk/help-overlay.ui:55
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "Seuraava"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "Näytä kuluva päivä"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "Seuraava näkymä"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "Edellinen näkymä"
 
-#: src/gui/gtk/help-overlay.ui:81
+#: src/gui/gtk/help-overlay.ui:93
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Näkymä"
 
-#: src/gui/gtk/help-overlay.ui:84
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Viikkonäkymä"
 
-#: src/gui/gtk/help-overlay.ui:90
+#: src/gui/gtk/help-overlay.ui:102
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Kuukausinäkymä"
@@ -1192,15 +1222,11 @@ msgstr[1] "Tuo %d tapahtumaa"
 msgid "Import Files…"
 msgstr "Tuo tiedostot…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
-msgid "_Cancel"
-msgstr "_Peru"
-
 #: src/gui/importer/gcal-import-dialog.ui:29
 msgid "_Import"
 msgstr "_Tuo"
 
-#: src/gui/importer/gcal-import-dialog.ui:50
+#: src/gui/importer/gcal-import-dialog.ui:49
 msgid "C_alendar"
 msgstr "_Kalenteri"
 
@@ -1244,7 +1270,7 @@ msgstr "Kuvaus"
 msgid "On-going"
 msgstr "Meneillään"
 
-#: src/gui/views/gcal-agenda-view.ui:19
+#: src/gui/views/gcal-agenda-view.ui:22
 msgid "No events"
 msgstr "Ei tapahtumia"
 
@@ -1267,12 +1293,16 @@ msgid_plural "Other %d events"
 msgstr[0] "Muu tapahtuma"
 msgstr[1] "Muut %d tapahtumaa"
 
-#: src/gui/views/gcal-week-header.c:1000
+#: src/gui/views/gcal-week-header.c:1001
 #, c-format
 msgid "week %d"
 msgstr "viikko %d"
 
-#: src/utils/gcal-utils.c:1317
+#: src/utils/gcal-utils.c:1297
+msgid "Modify Multiple Events?"
+msgstr "Muokataanko useita tapahtumia?"
+
+#: src/utils/gcal-utils.c:1298
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1280,17 +1310,49 @@ msgstr ""
 "Tapahtuma, jota koetat muokata, on toistuva. Tekemäsi muutokset tulee "
 "toteuttaa:"
 
-#: src/utils/gcal-utils.c:1322
+#: src/utils/gcal-utils.c:1302
 msgid "_Only This Event"
 msgstr "_Vain tähän tapahtumaan"
 
-#: src/utils/gcal-utils.c:1329
-msgid "_Subsequent events"
+#: src/utils/gcal-utils.c:1308
+msgid "_Subsequent Events"
 msgstr "_Myöhempiin tapahtumiin"
 
-#: src/utils/gcal-utils.c:1332
-msgid "_All events"
+#: src/utils/gcal-utils.c:1311
+msgid "_All Events"
 msgstr "_Kaikkiin tapahtumiin"
+
+#~ msgid "Window position"
+#~ msgstr "Ikkunan sijainti"
+
+#~ msgid "Window position (x and y)."
+#~ msgstr "Ikkunan sijainti (x ja y)"
+
+#~ msgid "Undo"
+#~ msgstr "Kumoa"
+
+#~ msgid "Settings"
+#~ msgstr "Asetukset"
+
+#~ msgid "Calendar name"
+#~ msgstr "Kalenterin nimi"
+
+#~ msgid "Cancel"
+#~ msgstr "Peru"
+
+#~ msgid "Open"
+#~ msgstr "Avaa"
+
+#~ msgid "Manage your calendars"
+#~ msgstr "Hallitse kalentereitasi"
+
+#~ msgctxt "tooltip"
+#~ msgid "Search for events"
+#~ msgstr "Etsi tapahtumia"
+
+#~ msgctxt "tooltip"
+#~ msgid "Add a new event"
+#~ msgstr "Lisää uusi tapahtuma"
 
 #~ msgid "Year view"
 #~ msgstr "Vuosinäkymä"
@@ -1319,9 +1381,6 @@ msgstr "_Kaikkiin tapahtumiin"
 
 #~ msgid "Check this out!"
 #~ msgstr "Tutustu tähän!"
-
-#~ msgid "Search for events"
-#~ msgstr "Etsi tapahtumia"
 
 #~ msgid "Calendar management"
 #~ msgstr "Kalenterin hallinta"
@@ -1357,9 +1416,6 @@ msgstr "_Kaikkiin tapahtumiin"
 
 #~ msgid "org.gnome.Calendar"
 #~ msgstr "org.gnome.Calendar"
-
-#~ msgid "Open online account settings"
-#~ msgstr "Avaa verkkotilien asetukset"
 
 #~ msgid "Click to set up"
 #~ msgstr "Napsauta tehdäksesi asetukset"
@@ -1402,9 +1458,6 @@ msgstr "_Kaikkiin tapahtumiin"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "Lisä_ä tapahtuma…"
-
-#~ msgid "Add Eve_nt"
-#~ msgstr "Lisä_ä tapahtuma"
 
 #~ msgid "Copyright © %d The Calendar authors"
 #~ msgstr "Tekijänoikeus © %d Kalenterin tekijät"
