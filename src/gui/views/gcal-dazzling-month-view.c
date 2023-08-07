@@ -150,6 +150,28 @@ update_active_date (GcalDazzlingMonthView *self)
 }
 
 static void
+add_cached_events_to_row (GcalDazzlingMonthView *self,
+                          GcalMonthViewRow      *row)
+{
+  g_autoptr (GcalRange) row_range = NULL;
+  GHashTableIter iter;
+  GcalEvent *event;
+
+  row_range = gcal_month_view_row_get_range (row);
+
+  g_hash_table_iter_init (&iter, self->events);
+  while (g_hash_table_iter_next (&iter, (gpointer *) &event, NULL))
+    {
+      GcalRangeOverlap overlap = gcal_range_calculate_overlap (row_range, gcal_event_get_range (event), NULL);
+
+      if (overlap == GCAL_RANGE_NO_OVERLAP)
+        continue;
+
+      gcal_month_view_row_add_event (row, event);
+    }
+}
+
+static void
 move_bottom_row_to_top (GcalDazzlingMonthView *self)
 {
   g_autoptr (GcalRange) first_row_range = NULL;
@@ -179,6 +201,8 @@ move_bottom_row_to_top (GcalDazzlingMonthView *self)
   last_row = g_ptr_array_steal_index (self->week_rows, self->week_rows->len - 1);
   gcal_month_view_row_set_range (GCAL_MONTH_VIEW_ROW (last_row), new_range);
   g_ptr_array_insert (self->week_rows, 0, last_row);
+
+  add_cached_events_to_row (self, GCAL_MONTH_VIEW_ROW (last_row));
 }
 
 static void
@@ -211,6 +235,8 @@ move_top_row_to_bottom (GcalDazzlingMonthView *self)
   first_row = g_ptr_array_steal_index (self->week_rows, 0);
   gcal_month_view_row_set_range (GCAL_MONTH_VIEW_ROW (first_row), new_range);
   g_ptr_array_insert (self->week_rows, -1, first_row);
+
+  add_cached_events_to_row (self, GCAL_MONTH_VIEW_ROW (first_row));
 }
 
 static inline void
