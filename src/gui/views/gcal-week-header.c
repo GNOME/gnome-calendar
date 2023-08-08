@@ -301,6 +301,7 @@ on_button_released (GtkGestureClick *click_gesture,
   g_autoptr (GDateTime) selection_start = NULL;
   g_autoptr (GDateTime) selection_end = NULL;
   g_autoptr (GDateTime) week_start = NULL;
+  g_autoptr (GcalRange) range = NULL;
   GtkWidget *weekview;
   gboolean ltr;
   gdouble column_width;
@@ -349,7 +350,8 @@ on_button_released (GtkGestureClick *click_gesture,
                                     NULL,
                                     &out_y);
 
-  gcal_view_create_event (GCAL_VIEW (weekview), selection_start, selection_end, out_x, out_y);
+  range = gcal_range_new (selection_start, selection_end, GCAL_RANGE_DATE_ONLY);
+  gcal_view_create_event (GCAL_VIEW (weekview), range, out_x, out_y);
 
   gtk_event_controller_set_propagation_phase (self->motion_controller, GTK_PHASE_NONE);
 }

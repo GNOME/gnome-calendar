@@ -25,14 +25,12 @@
 G_BEGIN_DECLS
 
 void                 gcal_view_create_event                      (GcalView              *self,
-                                                                  GDateTime             *start,
-                                                                  GDateTime             *end,
+                                                                  GcalRange             *range,
                                                                   gdouble                x,
                                                                   gdouble                y);
 
 void                 gcal_view_create_event_detailed             (GcalView              *self,
-                                                                  GDateTime             *start,
-                                                                  GDateTime             *end);
+                                                                  GcalRange             *range);
 
 void                 gcal_view_event_activated                   (GcalView              *self,
                                                                   GcalEventWidget       *event_widget);

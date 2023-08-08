@@ -77,9 +77,8 @@ gcal_view_default_init (GcalViewInterface *iface)
                                         G_STRUCT_OFFSET (GcalViewInterface, create_event),
                                         NULL, NULL, NULL,
                                         G_TYPE_NONE,
-                                        4,
-                                        G_TYPE_DATE_TIME,
-                                        G_TYPE_DATE_TIME,
+                                        3,
+                                        GCAL_TYPE_RANGE,
                                         G_TYPE_DOUBLE,
                                         G_TYPE_DOUBLE);
 
@@ -94,9 +93,8 @@ gcal_view_default_init (GcalViewInterface *iface)
                                                  G_SIGNAL_RUN_LAST,
                                                  G_STRUCT_OFFSET (GcalViewInterface, create_event_detailed),
                                                  NULL, NULL, NULL,
-                                                 G_TYPE_NONE, 2,
-                                                 G_TYPE_DATE_TIME,
-                                                 G_TYPE_DATE_TIME);
+                                                 G_TYPE_NONE, 1,
+                                                 GCAL_TYPE_RANGE);
 
   /**
    * GcalView::event-activated:
@@ -267,27 +265,24 @@ gcal_view_get_previous_date (GcalView *self)
 
 void
 gcal_view_create_event (GcalView  *self,
-                        GDateTime *start,
-                        GDateTime *end,
+                        GcalRange *range,
                         gdouble    x,
                         gdouble    y)
 {
   g_assert (GCAL_IS_VIEW (self));
-  g_assert (start != NULL);
-  g_assert (end != NULL);
+  g_assert (range != NULL);
 
-  g_signal_emit (self, signals[CREATE_EVENT], 0, start, end, x, y);
+  g_signal_emit (self, signals[CREATE_EVENT], 0, range, x, y);
 }
 
 void
 gcal_view_create_event_detailed (GcalView  *self,
-                                 GDateTime *start,
-                                 GDateTime *end)
+                                 GcalRange *range)
 {
   g_assert (GCAL_IS_VIEW (self));
-  g_assert (start != NULL);
+  g_assert (range != NULL);
 
-  g_signal_emit (self, signals[CREATE_EVENT_DETAILED], 0, start, end);
+  g_signal_emit (self, signals[CREATE_EVENT_DETAILED], 0, range);
 }
 
 void

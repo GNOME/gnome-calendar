@@ -562,8 +562,7 @@ set_new_event_mode (GcalWindow *window,
 /* new-event interaction: second variant */
 static void
 show_new_event_widget (GcalView   *view,
-                       GDateTime  *start_span,
-                       GDateTime  *end_span,
+                       GcalRange  *range,
                        gdouble     x,
                        gdouble     y,
                        GcalWindow *window)
@@ -573,6 +572,8 @@ show_new_event_widget (GcalView   *view,
   gdouble out_y;
 
   GCAL_ENTRY;
+
+  g_assert (range != NULL);
 
   /* 1st and 2nd steps */
   set_new_event_mode (window, TRUE);
@@ -587,14 +588,16 @@ show_new_event_widget (GcalView   *view,
   window->event_creation_data = g_new0 (NewEventData, 1);
   window->event_creation_data->x = x;
   window->event_creation_data->y = y;
-  window->event_creation_data->start_date = g_date_time_ref (start_span);
-  window->event_creation_data->end_date = end_span ? g_date_time_ref (end_span) : NULL;
+  window->event_creation_data->start_date = gcal_range_get_start (range);
+  window->event_creation_data->end_date = gcal_range_get_end (range);
 
   g_debug ("Quick add popover position (%f, %f)", x, y);
 
   /* Setup the quick add popover's dates */
-  gcal_quick_add_popover_set_date_start (GCAL_QUICK_ADD_POPOVER (window->quick_add_popover), start_span);
-  gcal_quick_add_popover_set_date_end (GCAL_QUICK_ADD_POPOVER (window->quick_add_popover), end_span);
+  gcal_quick_add_popover_set_date_start (GCAL_QUICK_ADD_POPOVER (window->quick_add_popover),
+                                         window->event_creation_data->start_date);
+  gcal_quick_add_popover_set_date_end (GCAL_QUICK_ADD_POPOVER (window->quick_add_popover),
+                                       window->event_creation_data->end_date);
 
   /* Position and place the quick add popover */
   gtk_widget_translate_coordinates (window->views[window->active_view],
@@ -632,24 +635,26 @@ edit_event (GcalQuickAddPopover *popover,
 }
 
 static void
-create_event_detailed_cb (GcalView *view,
-                          gpointer  start_span,
-                          gpointer  end_span,
-                          gpointer  user_data)
+create_event_detailed_cb (GcalView   *view,
+                          GcalRange  *range,
+                          GcalWindow *self)
 {
-  GcalWindow *window = GCAL_WINDOW (user_data);
+  g_autoptr (GDateTime) range_start = NULL;
+  g_autoptr (GDateTime) range_end = NULL;
   GcalCalendar *default_calendar;
   GcalManager *manager;
   ECalComponent *comp;
   GcalEvent *event;
 
-  manager = gcal_context_get_manager (window->context);
-  comp = build_component_from_details ("", start_span, end_span);
+  manager = gcal_context_get_manager (self->context);
+  range_start = gcal_range_get_start (range);
+  range_end = gcal_range_get_end (range);
+  comp = build_component_from_details ("", range_start, range_end);
   default_calendar = gcal_manager_get_default_calendar (manager);
   event = gcal_event_new (default_calendar, comp, NULL);
 
-  gcal_event_editor_dialog_set_event (window->event_editor, event, TRUE);
-  gtk_widget_set_visible (GTK_WIDGET (window->event_editor), TRUE);
+  gcal_event_editor_dialog_set_event (self->event_editor, event, TRUE);
+  gtk_widget_set_visible (GTK_WIDGET (self->event_editor), TRUE);
 
   g_clear_object (&comp);
 }

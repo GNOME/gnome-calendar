@@ -250,6 +250,7 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
                               GcalWeekGrid    *self)
 {
   g_autoptr (GDateTime) week_start = NULL;
+  g_autoptr (GcalRange) range = NULL;
   g_autoptr (GDateTime) start = NULL;
   g_autoptr (GDateTime) end = NULL;
   GtkAllocation alloc;
@@ -319,7 +320,8 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
                                     &out_x,
                                     &out_y);
 
-  gcal_view_create_event (GCAL_VIEW (weekview), start, end, out_x, out_y);
+  range = gcal_range_new (start, end, GCAL_RANGE_DEFAULT);
+  gcal_view_create_event (GCAL_VIEW (weekview), range, out_x, out_y);
 
   gtk_event_controller_set_propagation_phase (self->motion_controller, GTK_PHASE_NONE);
 }
