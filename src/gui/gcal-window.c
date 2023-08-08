@@ -195,17 +195,13 @@ update_today_action_enabled (GcalWindow *window)
   switch (window->active_view)
     {
     case GCAL_WINDOW_VIEW_WEEK:
+    case GCAL_WINDOW_VIEW_MONTH:
       enabled = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
                 g_date_time_get_week_of_year (window->active_date) !=  g_date_time_get_week_of_year (now);
 
-      GCAL_TRACE_MSG ("Week: active date's week is %d, current week is %d",
+      GCAL_TRACE_MSG ("Active date's week is %d, current week is %d",
                       g_date_time_get_week_of_year (window->active_date),
                       g_date_time_get_week_of_year (now));
-      break;
-
-    case GCAL_WINDOW_VIEW_MONTH:
-      enabled = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
-                g_date_time_get_month (window->active_date) != g_date_time_get_month (now);
       break;
 
     default:
