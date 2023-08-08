@@ -320,13 +320,41 @@ update_week_ranges (GcalMonthView *self,
         }
     }
 
+  dump_row_ranges (self);
+}
+
+static void
+update_row_visuals (GcalMonthView *self)
+{
+  g_autoptr (GcalRange) first_visible_row_range = NULL;
+  g_autoptr (GcalRange) last_visible_row_range = NULL;
+  g_autoptr (GcalRange) union_range = NULL;
+  g_autoptr (GDateTime) start = NULL;
+  g_autoptr (GDateTime) middle = NULL;
+  g_autoptr (GDateTime) end = NULL;
+  GcalMonthViewRow *first_visible_row;
+  GcalMonthViewRow *last_visible_row;
+  gint first_visible_row_index;
+  gint last_visible_row_index;
+
+  first_visible_row_index = N_ROWS_PER_PAGE * (N_PAGES - 1) / 2;
+  first_visible_row = g_ptr_array_index (self->week_rows, first_visible_row_index);
+  first_visible_row_range = gcal_month_view_row_get_range (first_visible_row);
+
+  last_visible_row_index = first_visible_row_index + N_ROWS_PER_PAGE - 1;
+  last_visible_row = g_ptr_array_index (self->week_rows, last_visible_row_index);
+  last_visible_row_range = gcal_month_view_row_get_range (last_visible_row);
+
+  union_range = gcal_range_union (first_visible_row_range, last_visible_row_range);
+  start = gcal_range_get_start (union_range);
+  end = gcal_range_get_end (union_range);
+  middle = g_date_time_add_days (start, gcal_date_time_compare_date (end, start) / 2);
+
   for (gint i = 0; i < self->week_rows->len; i++)
     {
       GcalMonthViewRow *row = g_ptr_array_index (self->week_rows, i);
-      gcal_month_view_row_update_style_for_date (row, new_date);
+      gcal_month_view_row_update_style_for_date (row, middle);
     }
-
-  dump_row_ranges (self);
 }
 
 static inline gint
@@ -782,6 +810,7 @@ gcal_month_view_set_date (GcalView  *view,
 
   update_week_ranges (self, date);
   update_header_labels (self);
+  update_row_visuals (self);
 
   gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
 
