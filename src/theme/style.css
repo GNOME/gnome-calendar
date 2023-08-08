@@ -317,9 +317,12 @@ monthcell:nth-child(7n + 1) { border-left-width: 0; }
 monthcell.today { background-color: alpha(@accent_bg_color, 0.25); }
 monthcell:selected.today { background-color: alpha(@accent_bg_color, 0.33); }
 
-monthcell.out-of-month,
+monthcell.out-of-month:not(.today) {
+    background-color: alpha(@theme_bg_color, 0.75);
+}
+
 monthcell:not(.workday) {
-    background-color: alpha(@theme_bg_color, 0.4);
+    background-color: alpha(@theme_bg_color, 0.33);
 }
 
 monthcell.today:not(.workday) {
@@ -339,7 +342,8 @@ monthcell.out-of-month label {
     color: alpha(@theme_fg_color, 0.66);
 }
 
-monthcell:hover:not(.out-of-month) {
+monthcell:hover,
+monthcell.out-of-month:hover {
     background-color: @theme_bg_color;
     transition: background-color 200ms;
 }
