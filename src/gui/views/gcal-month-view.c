@@ -24,6 +24,8 @@
 #include "config.h"
 #include "gcal-context.h"
 #include "gcal-debug.h"
+#include "gcal-month-cell.h"
+#include "gcal-month-popover.h"
 #include "gcal-month-view.h"
 #include "gcal-month-view-row.h"
 #include "gcal-range-tree.h"
@@ -52,6 +54,12 @@ struct _GcalMonthView
 
   GPtrArray          *week_rows;
   GHashTable         *events;
+
+  struct {
+    GtkWidget        *popover;
+    GcalMonthViewRow *row;
+    GtkWidget        *relative_to;
+  } overflow;
 
   /* Ranges from [0.0, 1.0] */
   gdouble             row_offset;
@@ -88,6 +96,78 @@ enum
 /*
  * Auxiliary methods
  */
+
+static void
+allocate_overflow_popover (GcalMonthView *self,
+                           gint           width,
+                           gint           height,
+                           gint           baseline)
+{
+  graphene_point_t origin, end;
+  GtkAllocation popover_allocation;
+  GtkAllocation allocation;
+  gint popover_min_width;
+  gint popover_nat_width;
+  gint popover_height;
+  gint popover_width;
+  gint header_height;
+
+  g_assert (self->overflow.relative_to != NULL);
+
+  header_height = gtk_widget_get_height (self->header);
+
+  if (!gtk_widget_compute_point (self->overflow.relative_to,
+                                 GTK_WIDGET (self),
+                                 &GRAPHENE_POINT_INIT (0, 0),
+                                 &origin))
+    g_assert_not_reached ();
+
+  if (!gtk_widget_compute_point (self->overflow.relative_to,
+                                 GTK_WIDGET (self),
+                                 &GRAPHENE_POINT_INIT (gtk_widget_get_width (self->overflow.relative_to),
+                                                       gtk_widget_get_height (self->overflow.relative_to)),
+                                 &end))
+    g_assert_not_reached ();
+
+  allocation = (GtkAllocation) {
+    .x = origin.x,
+    .y = origin.y,
+    .width = end.x - origin.x,
+    .height = end.y - origin.y,
+  };
+
+  gtk_widget_measure (GTK_WIDGET (self->overflow.popover),
+                      GTK_ORIENTATION_HORIZONTAL,
+                      -1,
+                      &popover_min_width,
+                      &popover_nat_width,
+                      NULL, NULL);
+
+  gtk_widget_measure (GTK_WIDGET (self->overflow.popover),
+                      GTK_ORIENTATION_VERTICAL,
+                      -1,
+                      NULL,
+                      &popover_height,
+                      NULL, NULL);
+
+  popover_width = CLAMP (popover_nat_width, popover_min_width, allocation.width * 1.5);
+  popover_height = CLAMP (popover_height, allocation.height * 1.5, height);
+
+  popover_allocation = (GtkAllocation) {
+    .x = MAX (0, allocation.x - (popover_width - allocation.width) / 2.0),
+    .y = MAX (header_height, allocation.y - (popover_height - allocation.height) / 2.0),
+    .width = popover_width,
+    .height = popover_height,
+  };
+
+  if (popover_allocation.x + popover_allocation.width > width)
+    popover_allocation.x -= (popover_allocation.x + popover_allocation.width - width);
+
+  if (popover_allocation.y + popover_allocation.height > height)
+    popover_allocation.y -= (popover_allocation.y + popover_allocation.height - height);
+
+  gtk_widget_size_allocate (self->overflow.popover, &popover_allocation, baseline);
+}
 
 static void
 update_header_labels (GcalMonthView *self)
@@ -169,6 +249,22 @@ add_cached_events_to_row (GcalMonthView    *self,
 
       gcal_month_view_row_add_event (row, event);
     }
+}
+
+static inline void
+maybe_popdown_overflow_popover (GcalMonthView *self)
+{
+  uint32_t row_index;
+  gboolean found;
+
+  if (!self->overflow.row)
+    return;
+
+  found = g_ptr_array_find (self->week_rows, self->overflow.row, &row_index);
+  g_assert (found);
+
+  if (floor (row_index / (gdouble) N_ROWS_PER_PAGE) != floor (N_PAGES / 2.0))
+    gcal_month_popover_popdown (GCAL_MONTH_POPOVER (self->overflow.popover));
 }
 
 static void
@@ -320,6 +416,7 @@ update_week_ranges (GcalMonthView *self,
         }
     }
 
+  maybe_popdown_overflow_popover (self);
   dump_row_ranges (self);
 }
 
@@ -397,6 +494,7 @@ offset_and_shuffle_rows (GcalMonthView *self,
           self->row_offset = fmod (self->row_offset, 0.5) + 0.5;
         }
 
+      maybe_popdown_overflow_popover (self);
       update_active_date (self);
       dump_row_ranges (self);
     }
@@ -539,6 +637,7 @@ on_discrete_scroll_controller_scroll_cb (GtkEventControllerScroll *scroll_contro
     }
 
   gtk_widget_remove_css_class (GTK_WIDGET (self), "scrolling");
+  maybe_popdown_overflow_popover (self);
   cancel_row_offset_animation (self);
   cancel_deceleration (self);
   update_active_date (self);
@@ -640,6 +739,34 @@ on_scroll_controller_decelerate_cb (GtkEventControllerScroll *scroll_controller,
   adw_animation_play (self->kinetic_scroll_animation);
 
   GCAL_EXIT;
+}
+
+static void
+on_month_row_show_overflow_cb (GcalMonthViewRow *row,
+                               GcalMonthCell    *cell,
+                               GcalMonthView    *self)
+{
+  GcalMonthPopover *popover;
+
+  GCAL_ENTRY;
+
+  popover = GCAL_MONTH_POPOVER (self->overflow.popover);
+
+  self->overflow.row = row;
+  self->overflow.relative_to = GTK_WIDGET (cell);
+
+  gcal_month_popover_set_date (popover, gcal_month_cell_get_date (cell));
+  gcal_month_popover_popup (popover);
+
+  GCAL_EXIT;
+}
+
+static void
+on_month_popover_event_activated_cb (GcalMonthPopover *month_popover,
+                                     GcalEventWidget  *event_widget,
+                                     GcalMonthViewRow *self)
+{
+  gcal_view_event_activated (GCAL_VIEW (self), event_widget);
 }
 
 
@@ -1007,6 +1134,10 @@ gcal_month_view_size_allocate (GtkWidget *widget,
 
       gtk_widget_size_allocate (row, &row_allocation, baseline);
     }
+
+  /* Overflow popover */
+  if (gtk_widget_should_layout (self->overflow.popover))
+    allocate_overflow_popover (self, width, height, baseline);
 }
 
 static void
@@ -1034,6 +1165,9 @@ gcal_month_view_snapshot (GtkWidget   *widget,
 
   /* Snapshot header */
   gtk_widget_snapshot_child (widget, self->header, snapshot);
+
+  /* Overflow popover */
+  gtk_widget_snapshot_child (widget, self->overflow.popover, snapshot);
 }
 
 
@@ -1179,11 +1313,19 @@ gcal_month_view_init (GcalMonthView *self)
     {
       GtkWidget *row = gcal_month_view_row_new ();
       g_signal_connect (row, "event-activated", G_CALLBACK (on_event_widget_activated_cb), self);
+      g_signal_connect (row, "show-overflow", G_CALLBACK (on_month_row_show_overflow_cb), self);
       gtk_widget_set_parent (row, GTK_WIDGET (self));
       g_ptr_array_add (self->week_rows, row);
     }
 
   gtk_widget_insert_after (self->header, GTK_WIDGET (self), NULL);
+
+  /* Overflow popover */
+  self->overflow.popover = gcal_month_popover_new ();
+  g_object_bind_property (self, "context", self->overflow.popover, "context", G_BINDING_DEFAULT);
+  g_signal_connect (self->overflow.popover, "event-activated", G_CALLBACK (on_month_popover_event_activated_cb), self);
+
+  gtk_widget_set_parent (self->overflow.popover, GTK_WIDGET (self));
 
   now = g_date_time_new_now_local ();
   gcal_view_set_date (GCAL_VIEW (self), now);
