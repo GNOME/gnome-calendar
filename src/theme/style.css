@@ -329,15 +329,6 @@ monthcell.today:not(.workday) {
     background-color: alpha(@accent_bg_color, 0.15);
 }
 
-monthcell label {
-    color: @theme_fg_color;
-    font-size: 0.9rem;
-}
-
-monthcell label.day-label {
-    font-size: 1rem;
-}
-
 monthcell.out-of-month label {
     color: alpha(@theme_fg_color, 0.66);
 }
@@ -349,6 +340,7 @@ monthcell.out-of-month:hover {
 }
 
 monthcell button {
+    font-weight: normal;
     padding: 0 4px;
     border-radius: 0;
     border-bottom: none;
