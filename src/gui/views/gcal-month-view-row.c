@@ -73,6 +73,7 @@ enum
 enum
 {
   EVENT_ACTIVATED,
+  SHOW_OVERFLOW,
   N_SIGNALS,
 };
 
@@ -380,6 +381,14 @@ on_event_widget_activated_cb (GcalEventWidget  *widget,
   g_signal_emit (self, signals[EVENT_ACTIVATED], 0, widget);
 }
 
+static void
+on_month_cell_show_overflow_cb (GcalMonthCell    *cell,
+                                GtkWidget        *button,
+                                GcalMonthViewRow *self)
+{
+  g_signal_emit (self, signals[SHOW_OVERFLOW], 0, cell);
+}
+
 
 /*
  * GtkWidget overrides
@@ -602,6 +611,14 @@ gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
                                            1,
                                            GCAL_TYPE_EVENT_WIDGET);
 
+  signals[SHOW_OVERFLOW] = g_signal_new ("show-overflow",
+                                         GCAL_TYPE_MONTH_VIEW_ROW,
+                                         G_SIGNAL_RUN_FIRST,
+                                         0,  NULL, NULL, NULL,
+                                         G_TYPE_NONE,
+                                         1,
+                                         GCAL_TYPE_MONTH_CELL);
+
   gtk_widget_class_set_css_name (widget_class, "monthviewrow");
 }
 
@@ -616,6 +633,7 @@ gcal_month_view_row_init (GcalMonthViewRow *self)
       self->day_cells[i] = gcal_month_cell_new ();
       gcal_month_cell_set_overflow (GCAL_MONTH_CELL (self->day_cells[i]), 0);
       gtk_widget_set_parent (self->day_cells[i], GTK_WIDGET (self));
+      g_signal_connect (self->day_cells[i], "show-overflow", G_CALLBACK (on_month_cell_show_overflow_cb), self);
     }
 }
 
