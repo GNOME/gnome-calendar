@@ -563,9 +563,8 @@ show_new_event_widget (GcalView   *view,
                        gdouble     y,
                        GcalWindow *window)
 {
+  graphene_point_t p;
   GdkRectangle rect;
-  gdouble out_x;
-  gdouble out_y;
 
   GCAL_ENTRY;
 
@@ -596,15 +595,17 @@ show_new_event_widget (GcalView   *view,
                                        window->event_creation_data->end_date);
 
   /* Position and place the quick add popover */
-  gtk_widget_translate_coordinates (window->views[window->active_view],
-                                    GTK_WIDGET (window),
-                                    x, y,
-                                    &out_x,
-                                    &out_y);
+  if (!gtk_widget_compute_point (window->views[window->active_view],
+                                 GTK_WIDGET (window),
+                                 &GRAPHENE_POINT_INIT (x, y),
+                                 &p))
+    {
+      g_assert_not_reached ();
+    }
 
   /* Place popover over the given (x,y) position */
-  rect.x = out_x;
-  rect.y = out_y;
+  rect.x = p.x;
+  rect.y = p.y;
   rect.width = 1;
   rect.height = 1;
 
