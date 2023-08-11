@@ -29,16 +29,15 @@ struct _GcalQuickAddPopover
 
   GtkWidget          *add_button;
   GtkWidget          *calendars_listbox;
-  GtkWidget          *calendar_name_label;
   GtkWidget          *color_image;
-  GtkWidget          *stack;
+  GtkWidget          *edit_button;
   GtkWidget          *summary_entry;
   GtkWidget          *title_label;
 
   /* Internal data */
   GcalRange          *range;
 
-  GtkWidget          *selected_row;
+  GtkWidget          *selected_check_button;
   GListModel         *read_write_calendars_model;
 
   GcalContext        *context;
@@ -65,64 +64,71 @@ static guint signals[NUM_SIGNALS] = { 0, };
  * Utility functions
  */
 
+static void
+select_check_button (GtkCheckButton      *check_button,
+                     GcalQuickAddPopover *self)
+{
+  self->selected_check_button = GTK_WIDGET (check_button);
+
+  /* Focus back the event Entry */
+  if (gtk_widget_get_visible (GTK_WIDGET (self)))
+    adw_entry_row_grab_focus_without_selecting (ADW_ENTRY_ROW (self->summary_entry));
+}
+
 static GtkWidget*
 create_row_func (gpointer data,
                  gpointer user_data)
 {
+  GcalCalendar *default_calendar;
   GcalCalendar *calendar = data;
+  GcalQuickAddPopover *self = user_data;
+  GcalManager *manager;
   g_autoptr (GdkPaintable) paintable = NULL;
   g_autofree gchar *parent_name = NULL;
   g_autofree gchar *tooltip = NULL;
   const GdkRGBA *color;
-  GtkWidget *row, *box, *icon, *label, *selected_icon;
+  GtkWidget *row, *color_icon, *check_button;
+  GtkWidget *first_row, *first_check_button;
 
-  /* The main box */
-  box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
-  gtk_widget_set_margin_start (box, 6);
-  gtk_widget_set_margin_end (box, 6);
-  gtk_widget_set_margin_top (box, 3);
-  gtk_widget_set_margin_bottom (box, 3);
+  manager = gcal_context_get_manager (self->context);
 
-  /* The icon with the source color */
+  default_calendar = gcal_manager_get_default_calendar (manager);
+
   color = gcal_calendar_get_color (calendar);
   paintable = get_circle_paintable_from_color (color, 16);
-  icon = gtk_image_new_from_paintable (paintable);
+  color_icon = gtk_image_new_from_paintable (paintable);
 
-  gtk_box_append (GTK_BOX (box), icon);
+  gtk_widget_add_css_class (color_icon, "calendar-color-image");
 
-  gtk_widget_add_css_class (icon, "calendar-color-image");
+  /* The check button */
+  check_button = gtk_check_button_new ();
+  gtk_widget_set_valign (check_button, GTK_ALIGN_CENTER);
 
-  /* Source name label */
-  label = gtk_label_new (gcal_calendar_get_name (calendar));
-  gtk_widget_set_margin_end (label, 12);
+  /* The row */
+  row = adw_action_row_new ();
+  adw_preferences_row_set_use_markup (ADW_PREFERENCES_ROW (row), FALSE);
+  adw_preferences_row_set_title (ADW_PREFERENCES_ROW (row), gcal_calendar_get_name (calendar));
+  adw_action_row_add_prefix (ADW_ACTION_ROW (row), color_icon);
+  adw_action_row_add_suffix (ADW_ACTION_ROW (row), check_button);
+  adw_action_row_set_activatable_widget (ADW_ACTION_ROW (row), check_button);
 
-  gtk_box_append (GTK_BOX (box), label);
+  first_row = gtk_widget_get_first_child (self->calendars_listbox);
+  first_check_button = adw_action_row_get_activatable_widget (ADW_ACTION_ROW (first_row));
 
-  /* Selected icon */
-  selected_icon = gtk_image_new_from_icon_name ("checkmark-small-symbolic");
-  gtk_widget_set_visible (selected_icon, FALSE);
-  gtk_box_append (GTK_BOX (box), selected_icon);
+  g_signal_connect_object (check_button, "activate", G_CALLBACK (select_check_button), self, 0);
+  g_signal_connect_object (check_button, "toggled", G_CALLBACK (select_check_button), self, 0);
 
-  /* The row itself */
-  row = gtk_list_box_row_new ();
-  gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), box);
-
-  /* Setup also a cool tooltip */
-  parent_name = e_source_dup_display_name (gcal_calendar_get_parent_source (calendar));
-
-  tooltip = g_strdup (parent_name);
-
-  gtk_widget_set_tooltip_text (row, tooltip);
+  /* Turn these check buttons into radio buttons */
+  gtk_check_button_set_group (GTK_CHECK_BUTTON (check_button), GTK_CHECK_BUTTON (first_check_button));
+  gtk_check_button_set_active (GTK_CHECK_BUTTON (check_button), calendar == default_calendar);
 
   /*
-   * Setup the row data. A reference for the source is
+   * Set up the row data. A reference for the source is
    * taken to make sure it is not destroyed before this
    * row.
    */
-  g_object_set_data_full (G_OBJECT (row), "calendar", g_object_ref (calendar), g_object_unref);
-  g_object_set_data (G_OBJECT (row), "selected-icon", selected_icon);
-  g_object_set_data (G_OBJECT (row), "color-icon", icon);
-  g_object_set_data (G_OBJECT (row), "name-label", label);
+  g_object_set_data_full (G_OBJECT (check_button), "calendar", g_object_ref (calendar), g_object_unref);
+  g_object_set_data (G_OBJECT (check_button), "color-icon", color_icon);
 
   return row;
 }
@@ -139,63 +145,29 @@ setup_context (GcalQuickAddPopover *self)
 }
 
 /*
- * Retrieves the corresponding row for the given
- * ESource from the listbox.
+ * Retrieves the corresponding check button for
+ * the given ESource from the listbox.
  */
-static GtkListBoxRow*
-get_row_for_calendar (GcalQuickAddPopover *self,
-                      GcalCalendar        *calendar)
+static GtkWidget*
+get_check_button_for_calendar (GcalQuickAddPopover *self,
+                               GcalCalendar        *calendar)
 {
-  guint n_items = g_list_model_get_n_items (self->read_write_calendars_model);
+  GtkWidget *row, *check_button;
 
-  for (guint i = 0; i < n_items; i++)
+  for (row = gtk_widget_get_first_child (self->calendars_listbox);
+       row;
+       row = gtk_widget_get_next_sibling (row))
     {
-      g_autoptr (GcalCalendar) item = g_list_model_get_item (self->read_write_calendars_model, i);
+      GcalCalendar *check_button_calendar;
 
-      if (item == calendar)
-        return gtk_list_box_get_row_at_index (GTK_LIST_BOX (self->calendars_listbox), i);
+      check_button = adw_action_row_get_activatable_widget (ADW_ACTION_ROW (row));
+      check_button_calendar = g_object_get_data (G_OBJECT (check_button), "calendar");
+
+      if (check_button_calendar == calendar)
+        return check_button;
     }
 
   return NULL;
-}
-
-static void
-select_row (GcalQuickAddPopover *self,
-            GtkListBoxRow       *row)
-{
-  g_autoptr (GdkPaintable) paintable = NULL;
-  const GdkRGBA *color;
-  GcalCalendar *calendar;
-  GtkWidget *icon;
-
-  /* First, unselect the previous row */
-  if (self->selected_row)
-    {
-      icon = g_object_get_data (G_OBJECT (self->selected_row), "selected-icon");
-      gtk_widget_set_visible (icon, FALSE);
-    }
-
-  /* Now, select and save the new row */
-  icon = g_object_get_data (G_OBJECT (row), "selected-icon");
-  gtk_widget_set_visible (icon, TRUE);
-
-  self->selected_row = GTK_WIDGET (row);
-
-  /* Setup the event page's source name and color */
-  calendar = g_object_get_data (G_OBJECT (row), "calendar");
-
-  gtk_label_set_label (GTK_LABEL (self->calendar_name_label), gcal_calendar_get_name (calendar));
-
-  color = gcal_calendar_get_color (calendar);
-  paintable = get_circle_paintable_from_color (color, 16);
-  gtk_image_set_from_paintable (GTK_IMAGE (self->color_image), paintable);
-
-  /* Return to the events page */
-  gtk_stack_set_visible_child_name (GTK_STACK (self->stack), "events");
-
-  /* Focus back the event Entry */
-  if (gtk_widget_get_visible (GTK_WIDGET (self)))
-    gtk_entry_grab_focus_without_selecting (GTK_ENTRY (self->summary_entry));
 }
 
 static gint
@@ -486,36 +458,24 @@ update_header (GcalQuickAddPopover *self)
 }
 
 static void
-update_default_calendar_row (GcalQuickAddPopover *self)
+update_default_calendar_check_button (GcalQuickAddPopover *self)
 {
   GcalCalendar *default_calendar;
   GcalManager *manager;
-  GtkListBoxRow *row;
+  GtkWidget *check_button;
 
   manager = gcal_context_get_manager (self->context);
   default_calendar = gcal_manager_get_default_calendar (manager);
 
-  row = get_row_for_calendar (self, default_calendar);
-  if (row != NULL)
-    select_row (self, row);
+  check_button = get_check_button_for_calendar (self, default_calendar);
+  if (check_button != NULL)
+    gtk_check_button_set_active (GTK_CHECK_BUTTON (check_button), TRUE);
 }
 
 
 /*
  * Callbacks
  */
-
-static void
-select_calendar_button_clicked (GcalQuickAddPopover *self)
-{
-  gtk_stack_set_visible_child_name (GTK_STACK (self->stack), "calendars");
-}
-
-static void
-back_button_clicked (GcalQuickAddPopover *self)
-{
-  gtk_stack_set_visible_child_name (GTK_STACK (self->stack), "events");
-}
 
 static void
 edit_or_create_event (GcalQuickAddPopover *self,
@@ -532,14 +492,14 @@ edit_or_create_event (GcalQuickAddPopover *self,
   const gchar *summary;
   gboolean all_day, single_day;
 
-  if (!self->selected_row)
+  if (!self->selected_check_button)
     return;
 
   range_start = gcal_range_get_start (self->range);
   range_end = gcal_range_get_end (self->range);
 
   manager = gcal_context_get_manager (self->context);
-  calendar = g_object_get_data (G_OBJECT (self->selected_row), "calendar");
+  calendar = g_object_get_data (G_OBJECT (self->selected_check_button), "calendar");
 
   single_day = gcal_date_time_compare_date (range_end, range_start) == 0;
   all_day = gcal_date_time_compare_date (range_end, range_start) > 1 ||
@@ -595,7 +555,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
 }
 
 static void
-summary_entry_text_changed (GtkEntry            *entry,
+summary_entry_text_changed (AdwEntryRow         *entry,
                             GParamSpec          *pspec,
                             GcalQuickAddPopover *self)
 {
@@ -612,11 +572,13 @@ summary_entry_text_changed (GtkEntry            *entry,
 }
 
 static void
-summary_entry_activated (GtkEntry            *entry,
+summary_entry_activated (AdwEntryRow         *entry,
                          GcalQuickAddPopover *self)
 {
   if (gcal_is_valid_event_name (gtk_editable_get_text (GTK_EDITABLE (entry))))
     edit_or_create_event (self, self->add_button);
+  else
+    edit_or_create_event (self, self->edit_button);
 }
 
 
@@ -682,7 +644,8 @@ gcal_quick_add_popover_set_property (GObject      *object,
           setup_context (self);
 
           /* Connect to the manager signals and keep the list updates */
-          g_signal_connect_object (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self, G_CONNECT_SWAPPED);
+          g_signal_connect_object (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_check_button),
+                                   self, G_CONNECT_SWAPPED);
 
           g_signal_connect_object (self->context,
                                    "notify::time-format",
@@ -707,8 +670,8 @@ gcal_quick_add_popover_closed (GtkPopover *popover)
   /* Clear text */
   gtk_editable_set_text (GTK_EDITABLE (self->summary_entry), "");
 
-  /* Select the default row again */
-  update_default_calendar_row (self);
+  /* Select the default check button again */
+  update_default_calendar_check_button (self);
 
   /* Remove "error" class */
   gtk_widget_remove_css_class (self->summary_entry, "error");
@@ -774,16 +737,12 @@ gcal_quick_add_popover_class_init (GcalQuickAddPopoverClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalQuickAddPopover, add_button);
   gtk_widget_class_bind_template_child (widget_class, GcalQuickAddPopover, calendars_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalQuickAddPopover, calendar_name_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalQuickAddPopover, color_image);
-  gtk_widget_class_bind_template_child (widget_class, GcalQuickAddPopover, stack);
+  gtk_widget_class_bind_template_child (widget_class, GcalQuickAddPopover, edit_button);
   gtk_widget_class_bind_template_child (widget_class, GcalQuickAddPopover, summary_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalQuickAddPopover, title_label);
 
-  gtk_widget_class_bind_template_callback (widget_class, back_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, edit_or_create_event);
-  gtk_widget_class_bind_template_callback (widget_class, select_calendar_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, select_row);
+  gtk_widget_class_bind_template_callback (widget_class, select_check_button);
   gtk_widget_class_bind_template_callback (widget_class, summary_entry_activated);
   gtk_widget_class_bind_template_callback (widget_class, summary_entry_text_changed);
 }

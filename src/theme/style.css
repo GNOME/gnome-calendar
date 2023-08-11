@@ -43,6 +43,11 @@ popover.alarms modelbutton:focus:focus-visible {
   outline-offset: -2px;
 }
 
+/* Quick Add Popover */
+popover.quick-add-popover > contents {
+  padding: 0;
+}
+
 /* Event Popover */
 popover.event-popover,
 popover.event-popover > contents {
@@ -56,6 +61,19 @@ popover.event-popover > contents {
 
 .calendar-list > list {
   border-radius: 4px;
+}
+
+list.compact > row > box.header {
+  margin-left: 9px;
+  margin-right: 4.5px;
+  border-spacing: 4.5px;
+  min-height: 37.5px;
+}
+
+entry.compact > text {
+  min-height: 24px;
+  padding: 12px 6px;
+  border-radius: 12px;
 }
 
 /* Date chooser */
