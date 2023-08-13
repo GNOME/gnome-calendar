@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-08-02 16:28+0000\n"
-"PO-Revision-Date: 2023-08-02 20:57+0300\n"
+"POT-Creation-Date: 2023-08-04 23:11+0000\n"
+"PO-Revision-Date: 2023-08-14 00:06+0300\n"
 "Last-Translator: Efstathios Iosifidis <eiosifidis@gnome.org>\n"
 "Language-Team: Greek, Modern (1453-) <gnome-el-list@gnome.org>\n"
 "Language: el\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:112
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
 msgid "Calendar"
 msgstr "Ημερολόγιο"
 
@@ -148,18 +148,18 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "Ρυθμίσεις ημερολογίου"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:348
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Ημερολόγια"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Το ημερολόγιο <b>%s</b> αφαιρέθηκε"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:378
+#: src/gui/calendar-management/gcal-calendars-page.c:373
 #: src/gui/gcal-window.c:741
 msgid "_Undo"
 msgstr "_Αναίρεση"
@@ -621,7 +621,7 @@ msgstr ""
 "Για περισσότερες πληροφορίες, επισκεφθείτε τη σελίδα\n"
 "http://gnome.gr/"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:320
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
 msgid "Weather"
 msgstr "Καιρός"
 
@@ -1110,35 +1110,35 @@ msgstr "Διαγράφηκε ένα άλλο συμβάν"
 msgid "Event deleted"
 msgstr "Διαγράφηκε το συμβάν"
 
-#: src/gui/gcal-window.ui:131
+#: src/gui/gcal-window.ui:137
 msgid "Main Menu"
 msgstr "Κυρίως μενού"
 
-#: src/gui/gcal-window.ui:168 src/gui/gcal-window.ui:207
+#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
 msgid "_Today"
 msgstr "_Σήμερα"
 
-#: src/gui/gcal-window.ui:243
+#: src/gui/gcal-window.ui:249
 msgid "_Week"
 msgstr "_Εβδομάδα"
 
-#: src/gui/gcal-window.ui:258
+#: src/gui/gcal-window.ui:264
 msgid "_Month"
 msgstr "_Μήνας"
 
-#: src/gui/gcal-window.ui:312
+#: src/gui/gcal-window.ui:318
 msgid "_Date & Time Settings…"
 msgstr "_Ρυθμίσεις ημερομηνίας και ώρας…"
 
-#: src/gui/gcal-window.ui:316
+#: src/gui/gcal-window.ui:322
 msgid "_Online Accounts…"
 msgstr "_Διαδικτυακοί λογαριασμοί…"
 
-#: src/gui/gcal-window.ui:328
+#: src/gui/gcal-window.ui:334
 msgid "_Keyboard Shortcuts"
 msgstr "Συντομεύσεις _πληκτρολογίου"
 
-#: src/gui/gcal-window.ui:332
+#: src/gui/gcal-window.ui:338
 msgid "_About Calendar"
 msgstr "_Περί του Ημερολόγιο"
 
@@ -1159,65 +1159,70 @@ msgstr "Διαχείριση ημερολογίων"
 
 #: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
+msgid "Synchronize calendars"
+msgstr "Συγχρονισμός ημερολογίων"
+
+#: src/gui/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Κλείσιμο παραθύρου"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Αναζήτηση"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Εμφάνιση βοήθειας"
 
-#: src/gui/gtk/help-overlay.ui:44
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Συντομεύσεις"
 
-#: src/gui/gtk/help-overlay.ui:52
+#: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Περιήγηση"
 
-#: src/gui/gtk/help-overlay.ui:55
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "Μετάβαση πίσω"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "Μετάβαση εμπρός"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "Εμφάνιση τρέχουσας ημέρας"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "Επόμενη προβολή"
 
-#: src/gui/gtk/help-overlay.ui:79
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "Προηγούμενη προβολή"
 
-#: src/gui/gtk/help-overlay.ui:87
+#: src/gui/gtk/help-overlay.ui:93
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Προβολή"
 
-#: src/gui/gtk/help-overlay.ui:90
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Προβολή εβδομάδας"
 
-#: src/gui/gtk/help-overlay.ui:96
+#: src/gui/gtk/help-overlay.ui:102
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Προβολή μήνα"
