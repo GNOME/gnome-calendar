@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-08-02 16:28+0000\n"
-"PO-Revision-Date: 2023-08-04 14:26+0100\n"
+"POT-Creation-Date: 2023-08-04 23:11+0000\n"
+"PO-Revision-Date: 2023-08-13 01:28+0100\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Português (https://l10n.gnome.org/teams/pt/)\n"
 "Language: pt\n"
@@ -26,7 +26,7 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:112
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
 msgid "Calendar"
 msgstr "Calendário"
 
@@ -148,18 +148,18 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "Definições do Calendário"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:348
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Caléndários"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Calendário <b>%s</b> removido"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:378
+#: src/gui/calendar-management/gcal-calendars-page.c:373
 #: src/gui/gcal-window.c:741
 msgid "_Undo"
 msgstr "An_ular"
@@ -618,7 +618,7 @@ msgstr ""
 "Juliano de Souza Camargo <julianosc@pm.me>\n"
 "Hugo Carvalho <hugokarvalho@hotmail.com>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:320
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
 msgid "Weather"
 msgstr "Meteorologia"
 
@@ -1107,35 +1107,35 @@ msgstr "Outro evento eliminado"
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
-#: src/gui/gcal-window.ui:131
+#: src/gui/gcal-window.ui:137
 msgid "Main Menu"
 msgstr "Menu principal"
 
-#: src/gui/gcal-window.ui:168 src/gui/gcal-window.ui:207
+#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
 msgid "_Today"
 msgstr "_Hoje"
 
-#: src/gui/gcal-window.ui:243
+#: src/gui/gcal-window.ui:249
 msgid "_Week"
 msgstr "_Semana"
 
-#: src/gui/gcal-window.ui:258
+#: src/gui/gcal-window.ui:264
 msgid "_Month"
 msgstr "_Mês"
 
-#: src/gui/gcal-window.ui:312
+#: src/gui/gcal-window.ui:318
 msgid "_Date & Time Settings…"
 msgstr "_Definições de data e hora…"
 
-#: src/gui/gcal-window.ui:316
+#: src/gui/gcal-window.ui:322
 msgid "_Online Accounts…"
 msgstr "Contas _online…"
 
-#: src/gui/gcal-window.ui:328
+#: src/gui/gcal-window.ui:334
 msgid "_Keyboard Shortcuts"
 msgstr "_Teclas de atalho"
 
-#: src/gui/gcal-window.ui:332
+#: src/gui/gcal-window.ui:338
 msgid "_About Calendar"
 msgstr "_Acerca do Calendário"
 
@@ -1156,65 +1156,70 @@ msgstr "Gerir calendários"
 
 #: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
+msgid "Synchronize calendars"
+msgstr "Sincronizar calendários"
+
+#: src/gui/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Fechar a janela"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Procurar"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Mostrar ajuda"
 
-#: src/gui/gtk/help-overlay.ui:44
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Atalhos"
 
-#: src/gui/gtk/help-overlay.ui:52
+#: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Navegação"
 
-#: src/gui/gtk/help-overlay.ui:55
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "Recuar"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "Avançar"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "Mostrar hoje"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "Visualização seguinte"
 
-#: src/gui/gtk/help-overlay.ui:79
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "Visualização anterior"
 
-#: src/gui/gtk/help-overlay.ui:87
+#: src/gui/gtk/help-overlay.ui:93
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Ver"
 
-#: src/gui/gtk/help-overlay.ui:90
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Visualização da semana"
 
-#: src/gui/gtk/help-overlay.ui:96
+#: src/gui/gtk/help-overlay.ui:102
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Visualização do mês"
