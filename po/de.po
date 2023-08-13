@@ -9,7 +9,7 @@
 # Paul Seyfert <pseyfert@mathphys.fsk.uni-heidelberg.de>, 2015, 2017.
 # Mario Blättermann <mario.blaettermann@gmail.com>, 2013, 2016-2018.
 # Tim Sabsch <tim@sabsch.com>, 2017-2020, 2022.
-# Philipp Kiemle <philipp.kiemle@gmail.com>, 2021.
+# Philipp Kiemle <philipp.kiemle@gmail.com>, 2021, 2023.
 # Jürgen Benvenuti <gastornis@posteo.org>, 2022, 2023.
 #
 #
@@ -17,21 +17,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-07-25 07:40+0000\n"
-"PO-Revision-Date: 2023-08-01 12:45+0200\n"
-"Last-Translator: Jürgen Benvenuti <gastornis@posteo.org>\n"
+"POT-Creation-Date: 2023-08-07 14:30+0000\n"
+"PO-Revision-Date: 2023-08-07 16:32+0200\n"
+"Last-Translator: Philipp Kiemle <philipp.kiemle@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:112
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -118,6 +118,14 @@ msgstr ""
 "Legt fest, ob Wetterberichte angezeigt werden, automatische Ortsbestimmung "
 "verwendet wird, sowie ein Ortsname"
 
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "Vergrößerungsstufe der Wochenansicht"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "Die aktuelle Vergrößerungsstufe der Wochenansicht"
+
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
 #: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
@@ -145,18 +153,18 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "Kalendereinstellungen"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:348
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Kalender"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalender <b>%s</b> wurde entfernt"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:378
+#: src/gui/calendar-management/gcal-calendars-page.c:373
 #: src/gui/gcal-window.c:741
 msgid "_Undo"
 msgstr "_Rückgängig"
@@ -255,21 +263,21 @@ msgstr ""
 msgid "Credentials"
 msgstr "Anmeldedaten"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:220
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
 msgid "User"
 msgstr "Benutzer"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
 msgid "Password"
 msgstr "Passwort"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:236
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:28
 #: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
 msgid "_Cancel"
 msgstr "_Abbrechen"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
 msgid "_Connect"
 msgstr "_Verbinden"
 
@@ -377,11 +385,11 @@ msgstr "Schaltet den Alarmton um"
 msgid "Remove the alarm"
 msgstr "Alarm entfernen"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Save"
 msgstr "Speichern"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Done"
 msgstr "Fertig"
 
@@ -620,7 +628,7 @@ msgstr ""
 "Christian Kirbach <christian.kirbach@gmail.com>\n"
 "Jürgen Benvenuti <gastornis@posteo.org>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:320
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:332
 msgid "Weather"
 msgstr "Wetter"
 
@@ -1112,35 +1120,35 @@ msgstr "Weiteren Termin gelöscht"
 msgid "Event deleted"
 msgstr "Termin gelöscht"
 
-#: src/gui/gcal-window.ui:131
+#: src/gui/gcal-window.ui:143
 msgid "Main Menu"
 msgstr "Hauptmenü"
 
-#: src/gui/gcal-window.ui:168 src/gui/gcal-window.ui:207
+#: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
 msgid "_Today"
 msgstr "_Heute"
 
-#: src/gui/gcal-window.ui:243
+#: src/gui/gcal-window.ui:255
 msgid "_Week"
 msgstr "_Woche"
 
-#: src/gui/gcal-window.ui:258
+#: src/gui/gcal-window.ui:270
 msgid "_Month"
 msgstr "_Monat"
 
-#: src/gui/gcal-window.ui:312
+#: src/gui/gcal-window.ui:324
 msgid "_Date & Time Settings…"
 msgstr "_Datums- und Uhrzeiteinstellungen …"
 
-#: src/gui/gcal-window.ui:316
+#: src/gui/gcal-window.ui:328
 msgid "_Online Accounts…"
 msgstr "_Online-Konten …"
 
-#: src/gui/gcal-window.ui:328
+#: src/gui/gcal-window.ui:340
 msgid "_Keyboard Shortcuts"
 msgstr "Tasten_kürzel"
 
-#: src/gui/gcal-window.ui:332
+#: src/gui/gcal-window.ui:344
 msgid "_About Calendar"
 msgstr "_Info zu Kalender"
 
@@ -1161,65 +1169,70 @@ msgstr "Kalender verwalten"
 
 #: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
+msgid "Synchronize calendars"
+msgstr "Kalender abgleichen"
+
+#: src/gui/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Fenster schließen"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Suchen"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Hilfe anzeigen"
 
-#: src/gui/gtk/help-overlay.ui:44
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Tastenkürzel"
 
-#: src/gui/gtk/help-overlay.ui:52
+#: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Navigation"
 
-#: src/gui/gtk/help-overlay.ui:55
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "Zurück gehen"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "Vorwärts gehen"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "Heutigen Tag anzeigen"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "Nächste Ansicht"
 
-#: src/gui/gtk/help-overlay.ui:79
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "Vorige Ansicht"
 
-#: src/gui/gtk/help-overlay.ui:87
+#: src/gui/gtk/help-overlay.ui:93
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Ansicht"
 
-#: src/gui/gtk/help-overlay.ui:90
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Wochenansicht"
 
-#: src/gui/gtk/help-overlay.ui:96
+#: src/gui/gtk/help-overlay.ui:102
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Monatsansicht"
