@@ -564,6 +564,79 @@ snap_to_top_row (GcalMonthView *self)
   GCAL_EXIT;
 }
 
+static void
+animate_row_scroll_cb (gdouble  value,
+                       gpointer user_data)
+{
+  GcalMonthView *self = GCAL_MONTH_VIEW (user_data);
+  gdouble *last_offset_location;
+  gdouble dy;
+
+  last_offset_location = g_object_get_data (G_OBJECT (self->row_offset_animation), "last-offset");
+  g_assert (last_offset_location != NULL);
+
+  dy = value - *last_offset_location;
+
+  offset_and_shuffle_rows (self, dy);
+
+  *last_offset_location = value;
+}
+
+static void
+animate_row_scroll (GcalMonthView *self,
+                    gint           n_rows)
+{
+
+  GCAL_ENTRY;
+
+  g_assert (n_rows != 0);
+
+  update_active_date (self);
+  dump_row_ranges (self);
+
+  if (!self->row_offset_animation)
+    {
+      g_autoptr (AdwAnimationTarget) animation_target = NULL;
+      g_autofree gdouble *last_offset_location = NULL;
+
+      animation_target = adw_callback_animation_target_new (animate_row_scroll_cb, self, NULL);
+
+      self->row_offset_animation = adw_timed_animation_new (GTK_WIDGET (self),
+                                                            self->row_offset,
+                                                            n_rows,
+                                                            150, // ms
+                                                            g_steal_pointer (&animation_target));
+      adw_timed_animation_set_easing (ADW_TIMED_ANIMATION (self->row_offset_animation),
+                                      ADW_EASE_OUT_QUAD);
+
+      g_signal_connect (self->row_offset_animation,
+                        "done",
+                        G_CALLBACK (on_row_offset_animation_done),
+                        self);
+
+      last_offset_location = g_malloc (sizeof (gdouble));
+      *last_offset_location = self->row_offset;
+      g_object_set_data_full (G_OBJECT (self->row_offset_animation),
+                              "last-offset",
+                              g_steal_pointer (&last_offset_location),
+                              g_free);
+
+      adw_animation_play (self->row_offset_animation);
+    }
+  else
+    {
+      gdouble target_value;
+
+      target_value = adw_timed_animation_get_value_to (ADW_TIMED_ANIMATION (self->row_offset_animation));
+
+      adw_animation_pause (self->row_offset_animation);
+      adw_timed_animation_set_value_to (ADW_TIMED_ANIMATION (self->row_offset_animation), target_value + n_rows);
+      adw_animation_play (self->row_offset_animation);
+    }
+
+  GCAL_EXIT;
+}
+
 
 /*
  * Callbacks
@@ -629,6 +702,7 @@ on_discrete_scroll_controller_scroll_cb (GtkEventControllerScroll *scroll_contro
                                          GcalMonthView            *self)
 {
   GdkEvent *current_event;
+  gint n_rows = 0;
 
   GCAL_ENTRY;
 
@@ -637,27 +711,24 @@ on_discrete_scroll_controller_scroll_cb (GtkEventControllerScroll *scroll_contro
   switch (gdk_scroll_event_get_direction (current_event))
     {
     case GDK_SCROLL_UP:
-      move_bottom_row_to_top (self);
+      n_rows = -1;
       break;
 
     case GDK_SCROLL_DOWN:
-      move_top_row_to_bottom (self);
+      n_rows = 1;
       break;
 
     default:
       GCAL_RETURN (GDK_EVENT_PROPAGATE);
     }
 
-  gtk_widget_remove_css_class (GTK_WIDGET (self), "scrolling");
+  gtk_widget_add_css_class (GTK_WIDGET (self), "scrolling");
+
   maybe_popdown_overflow_popover (self);
   cancel_row_offset_animation (self);
   cancel_deceleration (self);
-  update_active_date (self);
-  dump_row_ranges (self);
 
-  self->row_offset = 0.0;
-
-  gtk_widget_queue_allocate (GTK_WIDGET (self));
+  animate_row_scroll (self, n_rows);
 
   GCAL_RETURN (GDK_EVENT_STOP);
 }
