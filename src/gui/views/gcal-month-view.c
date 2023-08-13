@@ -461,8 +461,8 @@ get_grid_height (GcalMonthView *self)
 }
 
 static void
-offset_and_shuffle_rows (GcalMonthView *self,
-                         gdouble        dy)
+offset_and_shuffle_rows_by_pixels (GcalMonthView *self,
+                                   gdouble        dy_pixels)
 {
   gdouble row_height;
   gint grid_height;
@@ -471,7 +471,7 @@ offset_and_shuffle_rows (GcalMonthView *self,
 
   grid_height = get_grid_height (self);
   row_height = grid_height / (gdouble) N_ROWS_PER_PAGE;
-  self->row_offset += dy / row_height;
+  self->row_offset += dy_pixels / row_height;
 
   if (fabs (self->row_offset) > 0.5)
     {
@@ -602,7 +602,7 @@ on_scroll_controller_scroll_cb (GtkEventControllerScroll *scroll_controller,
     case GDK_SCROLL_SMOOTH:
       cancel_row_offset_animation (self);
       cancel_deceleration (self);
-      offset_and_shuffle_rows (self, dy);
+      offset_and_shuffle_rows_by_pixels (self, dy);
       GCAL_RETURN (GDK_EVENT_STOP);
 
     default:
@@ -672,7 +672,7 @@ decelerate_scroll_cb (gdouble  value,
   self->last_velocity = value;
 
   if (fabs (value) > (get_grid_height (self) / (gdouble) N_ROWS_PER_PAGE / 5.0))
-    offset_and_shuffle_rows (self, dy);
+    offset_and_shuffle_rows_by_pixels (self, dy);
   else
     adw_animation_skip (self->kinetic_scroll_animation);
 }
