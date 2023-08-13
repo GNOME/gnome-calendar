@@ -461,17 +461,12 @@ get_grid_height (GcalMonthView *self)
 }
 
 static void
-offset_and_shuffle_rows_by_pixels (GcalMonthView *self,
-                                   gdouble        dy_pixels)
+offset_and_shuffle_rows (GcalMonthView *self,
+                         gdouble        dy)
 {
-  gdouble row_height;
-  gint grid_height;
-
   GCAL_ENTRY;
 
-  grid_height = get_grid_height (self);
-  row_height = grid_height / (gdouble) N_ROWS_PER_PAGE;
-  self->row_offset += dy_pixels / row_height;
+  self->row_offset += dy;
 
   if (fabs (self->row_offset) > 0.5)
     {
@@ -500,6 +495,23 @@ offset_and_shuffle_rows_by_pixels (GcalMonthView *self,
     }
 
   gtk_widget_queue_allocate (GTK_WIDGET (self));
+
+  GCAL_EXIT;
+}
+
+static void
+offset_and_shuffle_rows_by_pixels (GcalMonthView *self,
+                                   gdouble        dy_pixels)
+{
+  gdouble row_height;
+  gint grid_height;
+
+  GCAL_ENTRY;
+
+  grid_height = get_grid_height (self);
+  row_height = grid_height / (gdouble) N_ROWS_PER_PAGE;
+
+  offset_and_shuffle_rows (self, dy_pixels / row_height);
 
   GCAL_EXIT;
 }
