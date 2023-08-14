@@ -28,6 +28,7 @@
 #include "gcal-month-cell.h"
 #include "gcal-month-view-row.h"
 #include "gcal-range-tree.h"
+#include "gcal-utils.h"
 
 typedef struct
 {
@@ -763,4 +764,14 @@ gcal_month_view_row_update_style_for_date   (GcalMonthViewRow *self,
 
       gcal_month_cell_set_different_month (GCAL_MONTH_CELL (self->day_cells[i]), different_month);
     }
+}
+
+GList*
+gcal_month_view_row_get_children_by_uuid (GcalMonthViewRow      *self,
+                                          GcalRecurrenceModType  mod,
+                                          const gchar           *uuid)
+{
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+
+  return filter_children_by_uid_and_modtype (GTK_WIDGET (self), mod, uuid);
 }

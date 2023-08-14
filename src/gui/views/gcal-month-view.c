@@ -1045,7 +1045,25 @@ gcal_month_view_get_children_by_uuid (GcalView              *view,
                                       GcalRecurrenceModType  mod,
                                       const gchar           *uuid)
 {
-  return filter_children_by_uid_and_modtype (GTK_WIDGET (view), mod, uuid);
+  g_autoptr (GList) children = NULL;
+  GcalMonthView *self;
+
+  GCAL_ENTRY;
+
+  self = GCAL_MONTH_VIEW (view);
+
+  for (guint i = 0; i < self->week_rows->len; i++)
+    {
+      g_autoptr (GList) row_children = NULL;
+      GcalMonthViewRow *row;
+
+      row = g_ptr_array_index (self->week_rows, i);
+      row_children = gcal_month_view_row_get_children_by_uuid (row, mod, uuid);
+
+      children = g_list_concat (children, g_steal_pointer (&row_children));
+    }
+
+  GCAL_RETURN (g_steal_pointer (&children));
 }
 
 static GDateTime*

@@ -53,4 +53,8 @@ void                 gcal_month_view_row_remove_event            (GcalMonthViewR
 void                 gcal_month_view_row_update_style_for_date   (GcalMonthViewRow   *self,
                                                                   GDateTime          *date);
 
+GList*               gcal_month_view_row_get_children_by_uuid    (GcalMonthViewRow      *self,
+                                                                  GcalRecurrenceModType  mod,
+                                                                  const gchar           *uuid);
+
 G_END_DECLS
