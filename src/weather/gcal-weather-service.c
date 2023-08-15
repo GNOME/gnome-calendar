@@ -18,7 +18,6 @@
 
 #define G_LOG_DOMAIN      "GcalWeatherService"
 
-#include <geocode-glib/geocode-glib.h>
 #include <geoclue.h>
 #include <string.h>
 #include <math.h>

@@ -13,7 +13,6 @@ gcal_deps = [
   gio_dep,
   gweather_dep,
   geoclue_dep,
-  geocode_dep,
   m_dep,
 ]
 
