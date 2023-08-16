@@ -19,6 +19,7 @@
               <object class="GtkLabel" id="day_label">
                 <style>
                   <class name="day-label" />
+                  <class name="numeric" />
                 </style>
               </object>
             </child>
