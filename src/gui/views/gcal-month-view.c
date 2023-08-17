@@ -174,6 +174,7 @@ update_header_labels (GcalMonthView *self)
 {
   g_autoptr (GcalRange) first_visible_row_range = NULL;
   g_autoptr (GcalRange) last_visible_row_range = NULL;
+  g_autoptr (GDateTime) last_visible_date_exclusive = NULL;
   g_autoptr (GDateTime) first_visible_date = NULL;
   g_autoptr (GDateTime) last_visible_date = NULL;
   g_autofree gchar *month_string = NULL;
@@ -189,7 +190,8 @@ update_header_labels (GcalMonthView *self)
 
   last_visible_row = g_ptr_array_index (self->week_rows, first_visible_row_index + N_ROWS_PER_PAGE - 1);
   last_visible_row_range = gcal_month_view_row_get_range (GCAL_MONTH_VIEW_ROW (last_visible_row));
-  last_visible_date = gcal_range_get_end (last_visible_row_range);
+  last_visible_date_exclusive = gcal_range_get_end (last_visible_row_range);
+  last_visible_date = g_date_time_add_seconds (last_visible_date_exclusive, -1);
 
   if (g_date_time_get_month (first_visible_date) == g_date_time_get_month (last_visible_date))
     {
