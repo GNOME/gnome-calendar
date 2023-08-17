@@ -172,12 +172,49 @@ allocate_overflow_popover (GcalMonthView *self,
 static void
 update_header_labels (GcalMonthView *self)
 {
-  gchar year_str[10] = { 0, };
+  g_autoptr (GcalRange) first_visible_row_range = NULL;
+  g_autoptr (GcalRange) last_visible_row_range = NULL;
+  g_autoptr (GDateTime) first_visible_date = NULL;
+  g_autoptr (GDateTime) last_visible_date = NULL;
+  g_autofree gchar *month_string = NULL;
+  g_autofree gchar *year_string = NULL;
+  GtkWidget *first_visible_row;
+  GtkWidget *last_visible_row;
+  gint first_visible_row_index;
 
-  g_snprintf (year_str, 10, "%d", g_date_time_get_year (self->date));
+  first_visible_row_index = N_ROWS_PER_PAGE * (N_PAGES - 1) / 2;
+  first_visible_row = g_ptr_array_index (self->week_rows, first_visible_row_index);
+  first_visible_row_range = gcal_month_view_row_get_range (GCAL_MONTH_VIEW_ROW (first_visible_row));
+  first_visible_date = gcal_range_get_start (first_visible_row_range);
 
-  gtk_label_set_label (GTK_LABEL (self->month_label), gcal_get_month_name (g_date_time_get_month (self->date) - 1));
-  gtk_label_set_label (GTK_LABEL (self->year_label), year_str);
+  last_visible_row = g_ptr_array_index (self->week_rows, first_visible_row_index + N_ROWS_PER_PAGE - 1);
+  last_visible_row_range = gcal_month_view_row_get_range (GCAL_MONTH_VIEW_ROW (last_visible_row));
+  last_visible_date = gcal_range_get_end (last_visible_row_range);
+
+  if (g_date_time_get_month (first_visible_date) == g_date_time_get_month (last_visible_date))
+    {
+      month_string = g_strdup_printf ("%s", gcal_get_month_name (g_date_time_get_month (first_visible_date) - 1));
+    }
+  else
+    {
+      month_string = g_strdup_printf("%s - %s ",
+                                     gcal_get_month_name (g_date_time_get_month (first_visible_date) -1),
+                                     gcal_get_month_name (g_date_time_get_month (last_visible_date) - 1));
+    }
+
+  if (g_date_time_get_year (first_visible_date) == g_date_time_get_year (last_visible_date))
+    {
+      year_string = g_strdup_printf ("%d", g_date_time_get_year (first_visible_date));
+    }
+  else
+    {
+      year_string = g_strdup_printf ("%d - %d",
+                                    g_date_time_get_year (first_visible_date),
+                                    g_date_time_get_year (last_visible_date));
+    }
+
+  gtk_label_set_label (GTK_LABEL (self->month_label), month_string);
+  gtk_label_set_label (GTK_LABEL (self->year_label), year_string);
 }
 
 static inline void
