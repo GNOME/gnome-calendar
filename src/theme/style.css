@@ -318,7 +318,7 @@ monthcell.today { background-color: alpha(@accent_bg_color, 0.25); }
 monthcell:selected.today { background-color: alpha(@accent_bg_color, 0.33); }
 
 monthcell.out-of-month:not(.today) {
-    background-color: alpha(@theme_bg_color, 0.75);
+    background-color: alpha(@sidebar_bg_color, 0.5);
 }
 
 monthcell:not(.workday) {
