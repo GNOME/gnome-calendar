@@ -431,8 +431,16 @@ gcal_month_view_row_measure (GtkWidget      *widget,
                           NULL);
 
 
-      minimum += child_minimum;
-      natural += child_natural;
+      if (orientation == GTK_ORIENTATION_HORIZONTAL)
+        {
+          minimum += child_minimum;
+          natural += child_natural;
+        }
+      else
+        {
+          minimum = MAX(minimum, child_minimum);
+          natural = MAX(natural, child_natural);
+        }
     }
 
   if (out_minimum)

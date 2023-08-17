@@ -1419,11 +1419,23 @@ gcal_month_view_measure (GtkWidget      *widget,
         }
     }
 
-  if (minimum)
-    *minimum = minimum_header_size + minimum_row_size;
 
-  if (natural)
-    *natural = natural_header_size + natural_row_size;
+  if (orientation == GTK_ORIENTATION_VERTICAL)
+    {
+      if (minimum)
+        *minimum = minimum_header_size + minimum_row_size;
+
+      if (natural)
+        *natural = natural_header_size + natural_row_size;
+    }
+  else
+    {
+      if (minimum)
+        *minimum = MAX(minimum_header_size, minimum_row_size);
+
+      if (natural)
+        *natural = MAX(natural_header_size, natural_row_size);
+    }
 
   if (minimum_baseline)
     *minimum_baseline = -1;
