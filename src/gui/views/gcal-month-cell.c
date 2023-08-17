@@ -151,6 +151,49 @@ move_event (GcalMonthCell         *self,
     }
 }
 
+static void
+update_weather (GcalMonthCell *self)
+{
+  GcalWeatherService *weather_service;
+  GcalWeatherInfo *weather_info;
+  GDate date;
+
+  if (!self->context)
+    return;
+
+  g_date_set_dmy (&date,
+                  g_date_time_get_day_of_month (self->date),
+                  g_date_time_get_month (self->date),
+                  g_date_time_get_year (self->date));
+
+  weather_service = gcal_context_get_weather_service (self->context);
+  weather_info = gcal_weather_service_get_weather_info_for_date (weather_service, &date);
+
+  g_assert (!weather_info || GCAL_IS_WEATHER_INFO (weather_info));
+
+  if (self->weather_info == weather_info)
+    return;
+
+  self->weather_info = weather_info;
+
+  if (weather_info)
+    {
+      const gchar *icon_name; /* unowned */
+      const gchar *temp_str;  /* unwoned */
+
+      icon_name = gcal_weather_info_get_icon_name (weather_info);
+      temp_str = gcal_weather_info_get_temperature (weather_info);
+
+      gtk_image_set_from_icon_name (self->weather_icon, icon_name);
+      gtk_label_set_text (self->temp_label, temp_str);
+    }
+  else
+    {
+      gtk_image_clear (self->weather_icon);
+      gtk_label_set_text (self->temp_label, "");
+    }
+}
+
 
 /*
  * Callbacks
@@ -233,6 +276,13 @@ on_drop_target_drop_cb (GtkDropTarget *drop_target,
     }
 
   GCAL_RETURN (TRUE);
+}
+
+static void
+on_weather_service_weather_changed_cb (GcalWeatherService *weather_service,
+                                       GcalMonthCell      *self)
+{
+  update_weather (self);
 }
 
 
@@ -391,6 +441,8 @@ gcal_month_cell_set_date (GcalMonthCell *self,
       g_autofree gchar *month_name = g_date_time_format (date, "%b");
       gtk_label_set_text (self->month_name_label, month_name);
     }
+
+  update_weather (self);
 }
 
 /**
@@ -480,6 +532,14 @@ gcal_month_cell_set_context (GcalMonthCell *self,
                            G_CALLBACK (day_changed_cb),
                            self,
                            0);
+
+  g_signal_connect_object (gcal_context_get_weather_service (self->context),
+                           "weather-changed",
+                           G_CALLBACK (on_weather_service_weather_changed_cb),
+                           self,
+                           0);
+
+  update_weather (self);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CONTEXT]);
 }
