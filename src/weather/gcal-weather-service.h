@@ -31,28 +31,31 @@ G_DECLARE_FINAL_TYPE (GcalWeatherService, gcal_weather_service, GCAL, WEATHER_SE
 
 typedef void (*GcalWeatherUpdateFunc) (GtkWidget *widget);
 
-GcalWeatherService*  gcal_weather_service_new                    (void);
+GcalWeatherService*  gcal_weather_service_new                       (void);
 
-GTimeZone*           gcal_weather_service_get_time_zone          (GcalWeatherService *self);
+GTimeZone*           gcal_weather_service_get_time_zone             (GcalWeatherService *self);
 
-void                 gcal_weather_service_set_time_zone          (GcalWeatherService *self,
-                                                                  GTimeZone          *value);
+void                 gcal_weather_service_set_time_zone             (GcalWeatherService *self,
+                                                                     GTimeZone          *value);
 
-GPtrArray*           gcal_weather_service_get_weather_infos      (GcalWeatherService *self);
+GcalWeatherInfo*     gcal_weather_service_get_weather_info_for_date (GcalWeatherService *self,
+                                                                     GDate              *date);
 
-const gchar*         gcal_weather_service_get_attribution        (GcalWeatherService *self);
+GPtrArray*           gcal_weather_service_get_weather_infos         (GcalWeatherService *self);
 
-void                 gcal_weather_service_update                 (GcalWeatherService *self);
+const gchar*         gcal_weather_service_get_attribution           (GcalWeatherService *self);
 
-void                 gcal_weather_service_run                    (GcalWeatherService *self,
-                                                                  GWeatherLocation   *location);
+void                 gcal_weather_service_update                    (GcalWeatherService *self);
 
-void                 gcal_weather_service_stop                   (GcalWeatherService *self);
+void                 gcal_weather_service_run                       (GcalWeatherService *self,
+                                                                     GWeatherLocation   *location);
 
-void                 gcal_weather_service_connect_widget         (GcalWeatherService    *self,
-                                                                  GcalWeatherUpdateFunc  update_func,
-                                                                  GCallback              weather_changed_cb,
-                                                                  GtkWidget             *data);
+void                 gcal_weather_service_stop                      (GcalWeatherService *self);
+
+void                 gcal_weather_service_connect_widget            (GcalWeatherService    *self,
+                                                                     GcalWeatherUpdateFunc  update_func,
+                                                                     GCallback              weather_changed_cb,
+                                                                     GtkWidget             *data);
 
 G_END_DECLS
 

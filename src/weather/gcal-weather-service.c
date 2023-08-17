@@ -1034,6 +1034,37 @@ gcal_weather_service_set_time_zone (GcalWeatherService *self,
 }
 
 /**
+ * gcal_weather_service_get_weather_info_for_date:
+ * @self: The #GcalWeatherService instance.
+ * @date: The #GDate for which to get the current forecast.
+ *
+ * Retrieves the available weather information for @date.
+ *
+ * Returns: (transfer none)(nullable): a #GcalWeatherInfo
+ */
+GcalWeatherInfo*
+gcal_weather_service_get_weather_info_for_date (GcalWeatherService *self,
+                                                GDate              *date)
+{
+  g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), NULL);
+
+  for (guint i = 0; self->weather_infos && i < self->weather_infos->len; i++)
+    {
+      GcalWeatherInfo *info;
+      GDate weather_date;
+
+      info = g_ptr_array_index (self->weather_infos, i);
+
+      gcal_weather_info_get_date (info, &weather_date);
+
+      if (g_date_compare (&weather_date, date) == 0)
+        return info;
+    }
+
+  return NULL;
+}
+
+/**
  * gcal_weather_service_get_weather_infos:
  * @self: The #GcalWeatherService instance.
  *
