@@ -321,6 +321,12 @@ monthcell.out-of-month:not(.today) {
     background-color: alpha(@sidebar_bg_color, 0.5);
 }
 
+monthcell:selected.out-of-month:not(.today) {
+    background-color: mix(alpha(@sidebar_bg_color, 0.5),
+                          alpha(@accent_bg_color, 0.1),
+                          0.5);
+}
+
 monthcell:not(.workday) {
     background-color: alpha(@theme_bg_color, 0.33);
 }
@@ -336,6 +342,14 @@ monthcell.out-of-month label {
 monthcell:hover,
 monthcell.out-of-month:hover {
     background-color: @theme_bg_color;
+    transition: background-color 200ms;
+}
+
+monthcell:selected:hover,
+monthcell:selected.out-of-month:hover {
+    background-color: mix(alpha(@theme_bg_color, 0.5),
+                          alpha(@accent_bg_color, 0.1),
+                          0.5);
     transition: background-color 200ms;
 }
 
