@@ -1,3 +1,19 @@
+Major changes in 45.beta:
+* Redesign the Month view to scroll infinitely to the future
+  and past. It also displays events from other months, and
+  allows creating events that span multiple months. Overall,
+  it's pretty nice. I think I'm happy about it.
+* Use modern widgets in the event editor dialog
+* Use modern widgets in the calendar management dialog
+* Use modern widgets in the event editor dialog
+* Improve search performance and increase the range
+* Various improvements to the event preview popover
+* Add a menu shortcut for the Date & Time panel
+* Port various message dialogs to AdwMessageDialog
+* Add various shortcuts to common actions
+* Load cached events immediately on startup
+* Updated translations
+
 Major changes in 44.1:
 * Preserve week view zoom levels when closing the app
 * Lots of stability and performance improvements to search
