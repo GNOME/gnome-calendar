@@ -30,7 +30,24 @@ G_BEGIN_DECLS
 #define GCAL_TYPE_CALENDAR_MONITOR (gcal_calendar_monitor_get_type())
 G_DECLARE_FINAL_TYPE (GcalCalendarMonitor, gcal_calendar_monitor, GCAL, CALENDAR_MONITOR, GObject)
 
-GcalCalendarMonitor* gcal_calendar_monitor_new                   (GcalCalendar        *calendar);
+typedef struct {
+  void               (*add_events)                               (GcalCalendarMonitor *self,
+                                                                  GPtrArray           *events,
+                                                                  gpointer             user_data);
+
+  void               (*update_events)                            (GcalCalendarMonitor *self,
+                                                                  GPtrArray           *old_events,
+                                                                  GPtrArray           *events,
+                                                                  gpointer             user_data);
+
+  void               (*remove_events)                            (GcalCalendarMonitor *self,
+                                                                  GPtrArray           *events,
+                                                                  gpointer             user_data);
+} GcalCalendarMonitorListener;
+
+GcalCalendarMonitor* gcal_calendar_monitor_new                   (GcalCalendar                      *calendar,
+                                                                  const GcalCalendarMonitorListener *listener,
+                                                                  gpointer                           user_data);
 
 void                 gcal_calendar_monitor_set_range             (GcalCalendarMonitor *self,
                                                                   GcalRange           *range);
