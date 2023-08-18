@@ -171,6 +171,7 @@ gcal_search_model_add_event (GcalTimelineSubscriber *subscriber,
 
 static void
 gcal_search_model_update_event (GcalTimelineSubscriber *subscriber,
+                                GcalEvent              *old_event,
                                 GcalEvent              *event)
 {
 }

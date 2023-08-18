@@ -1161,13 +1161,14 @@ gcal_month_view_remove_event (GcalTimelineSubscriber *subscriber,
 
 static void
 gcal_month_view_update_event (GcalTimelineSubscriber *subscriber,
+                              GcalEvent              *old_event,
                               GcalEvent              *event)
 {
   GCAL_ENTRY;
 
   g_assert (event != NULL);
 
-  gcal_month_view_remove_event (subscriber, event);
+  gcal_month_view_remove_event (subscriber, old_event);
   gcal_month_view_add_event (subscriber, event);
 
   GCAL_EXIT;

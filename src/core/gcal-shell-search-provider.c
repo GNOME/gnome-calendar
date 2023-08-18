@@ -407,6 +407,7 @@ gcal_shell_search_provider_add_event (GcalTimelineSubscriber *subscriber,
 
 static void
 gcal_shell_search_provider_update_event (GcalTimelineSubscriber *subscriber,
+                                         GcalEvent              *old_event,
                                          GcalEvent              *event)
 {
 }

@@ -207,6 +207,7 @@ add_event_to_subscriber (GcalTimelineSubscriber *subscriber,
 
 static void
 update_subscriber_event (GcalTimelineSubscriber *subscriber,
+                         GcalEvent              *old_event,
                          GcalEvent              *event)
 {
   GCAL_TRACE_MSG ("Updating event '%s' (%s) at subscriber %s",
@@ -214,7 +215,7 @@ update_subscriber_event (GcalTimelineSubscriber *subscriber,
                   gcal_event_get_uid (event),
                   G_OBJECT_TYPE_NAME (subscriber));
 
-  GCAL_TIMELINE_SUBSCRIBER_GET_IFACE (subscriber)->update_event (subscriber, event);
+  GCAL_TIMELINE_SUBSCRIBER_GET_IFACE (subscriber)->update_event (subscriber, old_event, event);
 }
 static void
 remove_event_from_subscriber (GcalTimelineSubscriber *subscriber,
@@ -741,7 +742,7 @@ timeline_source_dispatch (GSource     *source,
               }
 
             if (subscriber)
-              update_subscriber_event (subscriber, event);
+              update_subscriber_event (subscriber, queue_data->old_event, event);
           }
           break;
 

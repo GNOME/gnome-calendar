@@ -44,6 +44,7 @@ struct _GcalTimelineSubscriberInterface
                                                                   GcalEvent              *event);
 
   void               (*update_event)                             (GcalTimelineSubscriber *self,
+                                                                  GcalEvent              *old_event,
                                                                   GcalEvent              *event);
 
   void               (*remove_event)                             (GcalTimelineSubscriber *self,

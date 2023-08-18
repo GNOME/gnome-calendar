@@ -580,9 +580,10 @@ gcal_date_chooser_remove_event (GcalTimelineSubscriber *subscriber,
 
 static void
 gcal_date_chooser_update_event (GcalTimelineSubscriber *subscriber,
+                                GcalEvent              *old_event,
                                 GcalEvent              *event)
 {
-  gcal_date_chooser_remove_event (subscriber, event);
+  gcal_date_chooser_remove_event (subscriber, old_event);
   gcal_date_chooser_add_event (subscriber, event);
 }
 

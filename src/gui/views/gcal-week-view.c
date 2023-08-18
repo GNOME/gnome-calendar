@@ -503,6 +503,7 @@ gcal_week_view_add_event (GcalTimelineSubscriber *subscriber,
 
 static void
 gcal_week_view_update_event (GcalTimelineSubscriber *subscriber,
+                             GcalEvent              *old_event,
                              GcalEvent              *event)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
@@ -510,7 +511,7 @@ gcal_week_view_update_event (GcalTimelineSubscriber *subscriber,
 
   GCAL_ENTRY;
 
-  event_id = gcal_event_get_uid (event);
+  event_id = gcal_event_get_uid (old_event);
   gcal_week_header_remove_event (GCAL_WEEK_HEADER (self->header), event_id);
   gcal_week_grid_remove_event (GCAL_WEEK_GRID (self->week_grid), event_id);
 
