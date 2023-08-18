@@ -52,6 +52,8 @@ struct _GcalMonthView
   GtkWidget          *year_label;
   GtkWidget          *weekday_label[7];
 
+  GtkEventController *motion_controller;
+
   GPtrArray          *week_rows;
   GHashTable         *events;
 
@@ -60,6 +62,11 @@ struct _GcalMonthView
     GcalMonthViewRow *row;
     GtkWidget        *relative_to;
   } overflow;
+
+  struct {
+    GDateTime        *start;
+    GDateTime        *end;
+  } selection;
 
   /* Ranges from [0.0, 1.0] */
   gdouble             row_offset;
@@ -676,10 +683,160 @@ animate_row_scroll (GcalMonthView *self,
   GCAL_EXIT;
 }
 
+static void
+update_selection_range (GcalMonthView *self)
+{
+  g_autoptr (GcalRange) selection_range = NULL;
+  GDateTime *selection_start;
+  GDateTime *selection_end;
+
+  selection_start = self->selection.start;
+  selection_end = self->selection.end;
+
+  if (selection_start)
+    {
+      if (!selection_end)
+        selection_end = selection_start;
+
+      /* Swap dates if end is before start */
+      if (gcal_date_time_compare_date (selection_start, selection_end) > 0)
+        {
+          GDateTime *aux = selection_end;
+          selection_end = selection_start;
+          selection_start = aux;
+        }
+
+      selection_range = gcal_range_new (selection_start, selection_end, GCAL_RANGE_DATE_ONLY);
+    }
+  else
+    {
+      g_assert (selection_end == NULL);
+      selection_range = NULL;
+    }
+
+  for (gint i = 0; i < self->week_rows->len; i++)
+    {
+      GcalMonthViewRow *row = g_ptr_array_index (self->week_rows, i);
+      gcal_month_view_row_update_selection (row, selection_range);
+    }
+}
+
+
 
 /*
  * Callbacks
  */
+
+static void
+on_click_gesture_pressed_cb (GtkGestureClick *click_gesture,
+                             gint             n_press,
+                             gdouble          x,
+                             gdouble          y,
+                             GcalMonthView   *self)
+{
+  GtkWidget *widget_at_position;
+  GtkWidget *day_cell;
+
+  GCAL_ENTRY;
+
+  widget_at_position = gtk_widget_pick (GTK_WIDGET (self), x, y, GTK_PICK_DEFAULT);
+  day_cell = gtk_widget_get_ancestor (widget_at_position, GCAL_TYPE_MONTH_CELL);
+
+  if (!day_cell)
+    GCAL_RETURN ();
+
+  g_assert (GCAL_IS_MONTH_CELL (day_cell));
+
+  gcal_clear_date_time (&self->selection.start);
+  self->selection.start = g_date_time_ref (gcal_month_cell_get_date (GCAL_MONTH_CELL (day_cell)));
+
+  gtk_event_controller_set_propagation_phase (self->motion_controller, GTK_PHASE_BUBBLE);
+
+  update_selection_range (self);
+
+  GCAL_EXIT;
+}
+
+static void
+on_click_gesture_released_cb (GtkGestureClick *click_gesture,
+                              gint             n_press,
+                              gdouble          x,
+                              gdouble          y,
+                              GcalMonthView   *self)
+{
+  g_autoptr (GcalRange) selection_range = NULL;
+  g_autoptr (GDateTime) selection_start = NULL;
+  g_autoptr (GDateTime) selection_end = NULL;
+  GtkWidget *widget_at_position;
+
+  GCAL_ENTRY;
+
+  gtk_event_controller_set_propagation_phase (self->motion_controller, GTK_PHASE_NONE);
+
+  widget_at_position = gtk_widget_pick (GTK_WIDGET (self), x, y, GTK_PICK_DEFAULT);
+
+  if (!widget_at_position || !gtk_widget_get_ancestor (widget_at_position, GCAL_TYPE_MONTH_VIEW_ROW))
+    {
+      gcal_view_clear_marks (GCAL_VIEW (self));
+      GCAL_RETURN ();
+    }
+
+  g_assert (self->selection.start != NULL);
+
+  selection_start = self->selection.start;
+  selection_end = self->selection.end ?: selection_start;
+
+  /* Swap dates if end is before start */
+  if (gcal_date_time_compare_date (selection_start, selection_end) > 0)
+    {
+      GDateTime *aux = selection_end;
+      selection_end = selection_start;
+      selection_start = aux;
+    }
+
+  selection_start = g_date_time_ref (selection_start);
+  selection_end = g_date_time_add_days (selection_end, 1);
+
+  selection_range = gcal_range_new (selection_start, selection_end, GCAL_RANGE_DEFAULT);
+  gcal_view_create_event (GCAL_VIEW (self), selection_range, x, y);
+
+  GCAL_EXIT;
+}
+
+static void
+on_motion_controller_motion_cb (GtkEventControllerMotion *motion_controller,
+                                gdouble                   x,
+                                gdouble                   y,
+                                GcalMonthView            *self)
+{
+  GtkWidget *widget_at_position;
+  GtkWidget *day_cell;
+  GtkWidget *row;
+
+  GCAL_ENTRY;
+
+  widget_at_position = gtk_widget_pick (GTK_WIDGET (self), x, y, GTK_PICK_DEFAULT);
+
+  if (!widget_at_position)
+    GCAL_RETURN ();
+
+  row = gtk_widget_get_ancestor (widget_at_position, GCAL_TYPE_MONTH_VIEW_ROW);
+
+  if (!row)
+    GCAL_RETURN ();
+
+  day_cell = gcal_month_view_row_get_cell_at_x (GCAL_MONTH_VIEW_ROW (row), x);
+
+  g_assert (day_cell != NULL);
+  g_assert (GCAL_IS_MONTH_CELL (day_cell));
+
+  gcal_clear_date_time (&self->selection.end);
+  self->selection.end = g_date_time_ref (gcal_month_cell_get_date (GCAL_MONTH_CELL (day_cell)));
+
+  update_selection_range (self);
+
+  GCAL_EXIT;
+}
 
 static void
 on_event_widget_activated_cb (GcalMonthViewRow *row,
@@ -1076,7 +1233,18 @@ gcal_month_view_set_date (GcalView  *view,
 static void
 gcal_month_view_clear_marks (GcalView *view)
 {
-  GCAL_TODO ("gcal_month_view_clear_marks");
+  GcalMonthView *self;
+
+  GCAL_ENTRY;
+
+  self = GCAL_MONTH_VIEW (view);
+
+  gcal_clear_date_time (&self->selection.start);
+  gcal_clear_date_time (&self->selection.end);
+
+  update_selection_range (self);
+
+  GCAL_EXIT;
 }
 
 static GList*
@@ -1347,6 +1515,8 @@ gcal_month_view_finalize (GObject *object)
 {
   GcalMonthView *self = (GcalMonthView *)object;
 
+  gcal_clear_date_time (&self->selection.start);
+  gcal_clear_date_time (&self->selection.end);
   gcal_clear_date_time (&self->date);
   g_clear_object (&self->context);
 
@@ -1426,6 +1596,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-month-view.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, month_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalMonthView, motion_controller);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, year_label);
 
   gtk_widget_class_bind_template_child_full (widget_class, "label_0", FALSE, G_STRUCT_OFFSET (GcalMonthView, weekday_label[0]));
@@ -1436,7 +1607,10 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   gtk_widget_class_bind_template_child_full (widget_class, "label_5", FALSE, G_STRUCT_OFFSET (GcalMonthView, weekday_label[5]));
   gtk_widget_class_bind_template_child_full (widget_class, "label_6", FALSE, G_STRUCT_OFFSET (GcalMonthView, weekday_label[6]));
 
+  gtk_widget_class_bind_template_callback (widget_class, on_click_gesture_pressed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_click_gesture_released_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_discrete_scroll_controller_scroll_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_motion_controller_motion_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_scroll_begin_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_scroll_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_scroll_end_cb);

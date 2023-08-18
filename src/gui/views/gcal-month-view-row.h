@@ -57,4 +57,9 @@ GList*               gcal_month_view_row_get_children_by_uuid    (GcalMonthViewR
                                                                   GcalRecurrenceModType  mod,
                                                                   const gchar           *uuid);
 
+GtkWidget*           gcal_month_view_row_get_cell_at_x           (GcalMonthViewRow   *self,
+                                                                  gdouble             x);
+
+void                 gcal_month_view_row_update_selection       (GcalMonthViewRow    *self,
+                                                                 GcalRange           *selection_range);
 G_END_DECLS

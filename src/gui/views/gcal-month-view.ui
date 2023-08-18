@@ -20,6 +20,21 @@
       </object>
     </child>
 
+    <child>
+      <object class="GtkGestureClick">
+        <property name="button">1</property>
+        <signal name="pressed" handler="on_click_gesture_pressed_cb" object="GcalMonthView" swapped="no" />
+        <signal name="released" handler="on_click_gesture_released_cb" object="GcalMonthView" swapped="no" />
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkEventControllerMotion" id="motion_controller">
+        <property name="propagation-phase">none</property>
+        <signal name="motion" handler="on_motion_controller_motion_cb" object="GcalMonthView" swapped="no" />
+      </object>
+    </child>
+
     <!-- Header -->
     <child type="header">
       <object class="GtkBox">

@@ -775,3 +775,44 @@ gcal_month_view_row_get_children_by_uuid (GcalMonthViewRow      *self,
 
   return filter_children_by_uid_and_modtype (GTK_WIDGET (self), mod, uuid);
 }
+
+GtkWidget*
+gcal_month_view_row_get_cell_at_x (GcalMonthViewRow *self,
+                                   gdouble           x)
+{
+  gint column;
+  gint width;
+
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+
+  width = gtk_widget_get_width (GTK_WIDGET (self));
+  if (x < 0.0 || x > width)
+    return NULL;
+
+  column = floor (7.0 * x / (gdouble) width);
+
+  if (gtk_widget_get_direction (GTK_WIDGET (self)) != GTK_TEXT_DIR_RTL)
+    return self->day_cells[column];
+  else
+    return self->day_cells[7 - column - 1];
+}
+
+void
+gcal_month_view_row_update_selection (GcalMonthViewRow *self,
+                                      GcalRange        *selection_range)
+{
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+
+  for (guint i = 0; i < 7; i++)
+    {
+      GcalMonthCell *month_cell;
+      GDateTime *cell_date;
+      gboolean selected;
+
+      month_cell = GCAL_MONTH_CELL (self->day_cells[i]);
+      cell_date = gcal_month_cell_get_date (month_cell);
+      selected = selection_range && gcal_range_contains_datetime (selection_range, cell_date);
+
+      gcal_month_cell_set_selected (month_cell, selected);
+    }
+}
