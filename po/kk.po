@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2022-09-16 18:47+0000\n"
-"PO-Revision-Date: 2022-09-18 09:26+0600\n"
+"POT-Creation-Date: 2023-08-04 23:11+0000\n"
+"PO-Revision-Date: 2023-08-19 22:18+0600\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -16,12 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
 msgid "Calendar"
 msgstr "Күнтізбе"
 
@@ -88,32 +88,32 @@ msgid "Window size (width and height)."
 msgstr "Терезе өлшемі (ені мен биіктігі)."
 
 #: data/org.gnome.calendar.gschema.xml.in:16
-msgid "Window position"
-msgstr "Терезе орны"
-
-#: data/org.gnome.calendar.gschema.xml.in:17
-msgid "Window position (x and y)."
-msgstr "Терезе орны (x және y)."
-
-#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Белсенді көрініс түрі"
 
-#: data/org.gnome.calendar.gschema.xml.in:22
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Белсенді терезе көрінісінің түрі, бастапқы мәні: ай көрінісі"
 
-#: data/org.gnome.calendar.gschema.xml.in:26
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
 msgstr "Ауа райы қызметін баптау"
 
-#: data/org.gnome.calendar.gschema.xml.in:27
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
 "Ауа райы болжамы көрсетіле ме, автоанықталған орналасу қолданыла ма және "
 "орналасудың аты"
+
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "Апта торының масштабтау деңгейі"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "Апта торының ағымдағы масштабтау деңгейі"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -142,93 +142,88 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "Күнтізбе баптаулары"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:354
-msgid "Manage Calendars"
-msgstr "Күнтізбелерді басқару"
+#: src/gui/calendar-management/gcal-calendars-page.c:343
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:141
+msgid "Calendars"
+msgstr "Күнтізбелер"
 
-#. Update notification label
-#: src/gui/calendar-management/gcal-calendars-page.c:384
+#. Create the new toast
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "<b>%s</b> күнтізбесі өшірілген"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:24
-msgid "Undo"
-msgstr "Болдырмау"
+#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/gcal-window.c:741
+msgid "_Undo"
+msgstr "Бол_дырмау"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:78
+#: src/gui/calendar-management/gcal-calendars-page.ui:55
 msgid "Add Calendar…"
 msgstr "Күнтізбені қосу…"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:19
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
 msgid "Account"
 msgstr "Тіркелгі"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:46
-msgid "Settings"
-msgstr "Баптаулар"
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:30
+msgid "Open in Settings"
+msgstr "Баптауларда ашу"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:53
 #: src/gui/event-editor/gcal-summary-section.ui:23
-#: src/gui/gcal-event-popover.ui:111
+#: src/gui/gcal-event-popover.ui:113
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "Орны"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:84
-msgid "Calendar name"
-msgstr "Күнтізбе атауы"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
-msgid "Color"
-msgstr "Түс"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:134
-msgid "Display calendar"
-msgstr "Күнтізбені көрсету"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:146
-msgid "Add new events to this calendar by default"
-msgstr "Жаңа оқиғаларды үнсіз келісім бойынша бұл күнтізбеге қосу"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:158
-msgid "Remove Calendar"
-msgstr "Күнтізбені өшіру"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:49
-msgid "Select a file"
-msgstr "Файлды таңдау"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:248
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:281
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-msgid "Cancel"
-msgstr "Бас тарту"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:96
-msgid "Open"
-msgstr "Ашу"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:512
-msgid "New Calendar"
-msgstr "Жаңа күнтізбе"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:690
-msgid "Calendar files"
-msgstr "Күнтізбелер файлдары"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:16
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:22
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:24
 msgid "Calendar Name"
 msgstr "Күнтізбе атауы"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:55
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:32
+msgid "Color"
+msgstr "Түс"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+msgid "_Display Calendar"
+msgstr "Күнтізбені кө_рсету"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
+msgid "Default _Calendar"
+msgstr "Үнсіз келісім _күнтізбесі"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
+msgid "Add new events to this calendar by default."
+msgstr "Жаңа оқиғаларды үнсіз келісім бойынша бұл күнтізбеге қосу."
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+msgid "_Remove Calendar"
+msgstr "Күнтізбені ө_шіру"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:51
+msgid "Select a file"
+msgstr "Файлды таңдау"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:190
+#, c-format
+msgid "Add Calendar"
+msgid_plural "Add %1$u Calendars"
+msgstr[0] "%1$u күнтізбені қосу"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:516
+msgid "New Calendar"
+msgstr "Жаңа күнтізбе"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
 msgid "Import a Calendar"
 msgstr "Күнтізбені импорттау"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:77
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
@@ -236,39 +231,43 @@ msgstr ""
 "Сонымен қатар, импорттағыңыз келетін онлайн күнтізбенің веб адресін "
 "енгізіңіз немесе қолдауы бар күнтізбе файлын ашыңыз."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:100
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
 msgid "Open a File"
 msgstr "Файлды ашу"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-#: src/gui/gcal-calendar-button.ui:23
-msgid "Calendars"
-msgstr "Күнтізбелер"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:108
+msgid "Calendar files"
+msgstr "Күнтізбелер файлдары"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:148
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:165
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"Егер күнтізбе желілік тіркелгілеріңіздің біреуіне тиісті болса, оны <a href="
-"\"GOA\">желілік тіркелгі баптаулары</a> арқылы қоса аласыз."
+"Егер күнтізбе желілік тіркелгілеріңіздің біреуіне тиісті болса, оны <a "
+"href=\"GOA\">желілік тіркелгі баптаулары</a> арқылы қоса аласыз."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:213
+msgid "Credentials"
+msgstr "Тіркелу мәліметтері"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
 msgid "User"
 msgstr "Пайдаланушы"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
 msgid "Password"
 msgstr "Пароль"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
-msgid "Connect"
-msgstr "Байланысу"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:28
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
+msgid "_Cancel"
+msgstr "_Бас тарту"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:285
-#: src/gui/gcal-quick-add-popover.ui:98
-msgid "Add"
-msgstr "Қосу"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "_Connect"
+msgstr "_Байланысу"
 
 #: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
@@ -360,32 +359,35 @@ msgstr "Оятқыш дыбысын іске қосады/сөндіреді"
 msgid "Remove the alarm"
 msgstr "Оятқышты өшіру"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Save"
 msgstr "Сақтау"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:86
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Done"
 msgstr "Дайын"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
 msgid "Click to select the calendar"
 msgstr "Күнтізбені таңдау үшін шертіңіз"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:115
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
+msgid "_Done"
+msgstr "_Дайын"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
 msgid "Schedule"
 msgstr "Жоспар"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
 msgid "Reminders"
 msgstr "Еске салулар"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:151
 msgid "Notes"
 msgstr "Естеліктер"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:171
 msgid "Delete Event"
 msgstr "Оқиғаны өшіру"
 
@@ -443,7 +445,6 @@ msgstr "Кеше"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/gcal-window.ui:154 src/gui/gcal-window.ui:186
 #: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Бүгін"
@@ -487,51 +488,51 @@ msgstr "Аяқталады"
 msgid "Repeat"
 msgstr "Қайталау"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:128
+#: src/gui/event-editor/gcal-schedule-section.ui:125
 msgid "No Repeat"
 msgstr "Қайталамау"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:129
+#: src/gui/event-editor/gcal-schedule-section.ui:126
 msgid "Daily"
 msgstr "Күнде"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:130
+#: src/gui/event-editor/gcal-schedule-section.ui:127
 msgid "Monday – Friday"
 msgstr "Дүйсенбі – Жұма"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:131
+#: src/gui/event-editor/gcal-schedule-section.ui:128
 msgid "Weekly"
 msgstr "Апта сайын"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:132
+#: src/gui/event-editor/gcal-schedule-section.ui:129
 msgid "Monthly"
 msgstr "Ай сайын"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:133
+#: src/gui/event-editor/gcal-schedule-section.ui:130
 msgid "Yearly"
 msgstr "Жыл сайын"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:146
+#: src/gui/event-editor/gcal-schedule-section.ui:141
 msgid "End Repeat"
 msgstr "Қайталауды аяқтау"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:154
+#: src/gui/event-editor/gcal-schedule-section.ui:146
 msgid "Forever"
 msgstr "Әрқашан"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:155
+#: src/gui/event-editor/gcal-schedule-section.ui:147
 msgid "No. of occurrences"
 msgstr "Қайталаулар саны"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:156
+#: src/gui/event-editor/gcal-schedule-section.ui:148
 msgid "Until Date"
 msgstr "Күнге дейін"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:169
+#: src/gui/event-editor/gcal-schedule-section.ui:160
 msgid "Number of Occurrences"
 msgstr "Қайталанулар саны"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:188
+#: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "Қайталанудың соңғы күні"
 
@@ -588,28 +589,27 @@ msgstr "Copyright © 2012–%d Calendar авторлары"
 msgid "The GNOME Project"
 msgstr "GNOME жобасы"
 
-#: src/gui/gcal-application.c:188
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr "Baurzhan Muftakhidinov <baurthefirst@gmail.com>"
 
-#: src/gui/gcal-application.c:193 src/gui/gcal-window.ui:277
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
 msgid "Weather"
 msgstr "Ауа райы"
 
 #: src/gui/gcal-calendar-button.ui:6
-msgid "Manage your calendars"
-msgstr "Күнтізбелеріңізді басқарыңыз"
+msgid "Manage Calendars"
+msgstr "Күнтізбелерді басқару"
 
-#: src/gui/gcal-calendar-button.ui:41
-msgctxt "tooltip"
-msgid "Synchronizing remote calendars…"
-msgstr "Қашықтағы күнтізбелерді синхрондау…"
+#: src/gui/gcal-calendar-button.ui:8
+msgid "_Calendars"
+msgstr "_Күнтізбелер"
 
-#: src/gui/gcal-calendar-button.ui:71
+#: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
 msgstr "Күнтізбелерді _синхрондау"
 
-#: src/gui/gcal-calendar-button.ui:75
+#: src/gui/gcal-calendar-button.ui:41
 msgid "Manage Calendars…"
 msgstr "Күнтізбелерді басқару…"
 
@@ -765,42 +765,47 @@ msgstr "%2$d %1$s, %3$s – %4$s"
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%2$d %1$s, %3$d, %4$s – %5$s"
 
-#: src/gui/gcal-event-popover.ui:71
+#: src/gui/gcal-event-popover.ui:73
 msgid "No event information"
 msgstr "Оқиға ақпараты жоқ"
 
-#: src/gui/gcal-event-popover.ui:169
+#: src/gui/gcal-event-popover.ui:171
 msgid "Edit…"
 msgstr "Түзету…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:350
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "Уақыты %s"
 
-#: src/gui/gcal-meeting-row.c:65
+#: src/gui/gcal-meeting-row.c:67
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/gui/gcal-meeting-row.c:66
+#: src/gui/gcal-meeting-row.c:68
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/gui/gcal-meeting-row.c:67
+#: src/gui/gcal-meeting-row.c:69
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/gui/gcal-meeting-row.c:68
+#: src/gui/gcal-meeting-row.c:70
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/gui/gcal-meeting-row.c:78
+#: src/gui/gcal-meeting-row.c:71
+#| msgid "Microsoft Exchange"
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:81
 msgid "Unknown Service"
 msgstr "Белгісіз қызмет"
 
 #. Translators: "Join" as in "Join meeting"
-#: src/gui/gcal-meeting-row.ui:12
+#: src/gui/gcal-meeting-row.ui:13
 msgid "Join"
 msgstr "Қосылу"
 
@@ -1027,15 +1032,28 @@ msgstr "Жаңа оқиға %d желтоқсанда"
 msgid "Edit Details…"
 msgstr "Ақпаратын түзету…"
 
-#: src/gui/gcal-toolbar-end.ui:9
-msgctxt "tooltip"
-msgid "Search for events"
+#: src/gui/gcal-quick-add-popover.ui:98
+msgid "Add"
+msgstr "Қосу"
+
+#: src/gui/gcal-search-button.ui:53
+msgid "Search events"
 msgstr "Оқиғаларды іздеу"
 
-#: src/gui/gcal-toolbar-end.ui:21
+#: src/gui/gcal-sync-indicator.ui:21
 msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "Жаңа оқиғаны қосу"
+msgid "Synchronizing Remote Calendars…"
+msgstr "Қашықтағы күнтізбелерді синхрондау…"
+
+#: src/gui/gcal-toolbar-end.ui:9
+msgctxt "tooltip"
+msgid "Search"
+msgstr "Іздеу"
+
+#: src/gui/gcal-toolbar-end.ui:16
+msgctxt "tooltip"
+msgid "Add Event"
+msgstr "Оқиғаны қосу"
 
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
@@ -1045,35 +1063,55 @@ msgstr "Ауа райын көрсету"
 msgid "Automatic Location"
 msgstr "Автоматты орны"
 
-#: src/gui/gcal-window.c:699
-msgid "Another event deleted"
-msgstr "Басқа оқиға өшірілді"
+#: src/gui/gcal-weather-settings.ui:46
+msgid "Search locations"
+msgstr "Орналасуларды іздеу"
 
-#: src/gui/gcal-window.c:699
-msgid "Event deleted"
-msgstr "Оқиға өшірілді"
-
-#: src/gui/gcal-window.c:701
-msgid "_Undo"
-msgstr "Бол_дырмау"
-
-#: src/gui/gcal-window.ui:219
+#: src/gui/gcal-window.c:337
 msgid "Week"
 msgstr "Апта"
 
-#: src/gui/gcal-window.ui:233
+#: src/gui/gcal-window.c:339
 msgid "Month"
 msgstr "Ай"
 
-#: src/gui/gcal-window.ui:273
+#: src/gui/gcal-window.c:739
+msgid "Another event deleted"
+msgstr "Басқа оқиға өшірілді"
+
+#: src/gui/gcal-window.c:739
+msgid "Event deleted"
+msgstr "Оқиға өшірілді"
+
+#: src/gui/gcal-window.ui:137
+msgid "Main Menu"
+msgstr "Басты мәзір"
+
+#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
+msgid "_Today"
+msgstr "_Бүгін"
+
+#: src/gui/gcal-window.ui:249
+msgid "_Week"
+msgstr "А_пта"
+
+#: src/gui/gcal-window.ui:264
+msgid "_Month"
+msgstr "_Ай"
+
+#: src/gui/gcal-window.ui:318
+msgid "_Date & Time Settings…"
+msgstr "_Күн және уақыт баптаулары…"
+
+#: src/gui/gcal-window.ui:322
 msgid "_Online Accounts…"
 msgstr "Же_лілік тіркелгілер…"
 
-#: src/gui/gcal-window.ui:285
+#: src/gui/gcal-window.ui:334
 msgid "_Keyboard Shortcuts"
 msgstr "П_ернетақта жарлықтары"
 
-#: src/gui/gcal-window.ui:289
+#: src/gui/gcal-window.ui:338
 msgid "_About Calendar"
 msgstr "_Күнтізбе қолданбасы туралы"
 
@@ -1089,65 +1127,75 @@ msgstr "Жаңа оқиға"
 
 #: src/gui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
+msgid "Manage calendars"
+msgstr "Күнтізбелерді басқару"
+
+#: src/gui/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Synchronize calendars"
+msgstr "Күнтізбелерді синхрондау"
+
+#: src/gui/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Терезені жабу"
 
-#: src/gui/gtk/help-overlay.ui:26
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Іздеу"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Көмекті көрсету"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Жарлықтар"
 
-#: src/gui/gtk/help-overlay.ui:46
+#: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Навигация"
 
-#: src/gui/gtk/help-overlay.ui:49
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "Артқа өту"
 
-#: src/gui/gtk/help-overlay.ui:55
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "Алға өту"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "Бүгінгі күнді көрсету"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "Келесі көрініс"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "Алдыңғы көрініс"
 
-#: src/gui/gtk/help-overlay.ui:81
+#: src/gui/gtk/help-overlay.ui:93
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Көрініс"
 
-#: src/gui/gtk/help-overlay.ui:84
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Апта көрінісі"
 
-#: src/gui/gtk/help-overlay.ui:90
+#: src/gui/gtk/help-overlay.ui:102
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Ай"
@@ -1162,15 +1210,11 @@ msgstr[0] "%d оқиғаны импорттау"
 msgid "Import Files…"
 msgstr "Файлдарды импорттау…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1323
-msgid "_Cancel"
-msgstr "_Бас тарту"
-
 #: src/gui/importer/gcal-import-dialog.ui:29
 msgid "_Import"
 msgstr "_Импорттау"
 
-#: src/gui/importer/gcal-import-dialog.ui:50
+#: src/gui/importer/gcal-import-dialog.ui:49
 msgid "C_alendar"
 msgstr "Кү_нтізбе"
 
@@ -1210,7 +1254,11 @@ msgstr "Файл iCalendar (.ics) файлы емес"
 msgid "Description"
 msgstr "Сипаттамасы"
 
-#: src/gui/views/gcal-agenda-view.ui:36
+#: src/gui/views/gcal-agenda-view.c:366
+msgid "On-going"
+msgstr "Болып жатқан"
+
+#: src/gui/views/gcal-agenda-view.ui:22
 msgid "No events"
 msgstr "Оқиғалар жоқ"
 
@@ -1218,26 +1266,30 @@ msgstr "Оқиғалар жоқ"
 msgid "New Event…"
 msgstr "Жаңа оқиға…"
 
-#: src/gui/views/gcal-week-grid.c:580
+#: src/gui/views/gcal-week-grid.c:576
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:583
+#: src/gui/views/gcal-week-grid.c:579
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:478
+#: src/gui/views/gcal-week-header.c:472
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Басқа %d оқиға"
 
-#: src/gui/views/gcal-week-header.c:1006
+#: src/gui/views/gcal-week-header.c:1001
 #, c-format
 msgid "week %d"
 msgstr "апта %d"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1297
+msgid "Modify Multiple Events?"
+msgstr "Бірнеше оқиғаны түзету керек пе?"
+
+#: src/utils/gcal-utils.c:1298
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1245,17 +1297,49 @@ msgstr ""
 "Сіз түзетем деген оқиға қайталанады. Сіз таңдаған өзгерістер келесі үшін "
 "іске асырылуы керек:"
 
-#: src/utils/gcal-utils.c:1325
+#: src/utils/gcal-utils.c:1302
 msgid "_Only This Event"
 msgstr "_Тек бұл оқиға"
 
-#: src/utils/gcal-utils.c:1332
-msgid "_Subsequent events"
+#: src/utils/gcal-utils.c:1308
+msgid "_Subsequent Events"
 msgstr "Барлық к_елесі оқиғалар"
 
-#: src/utils/gcal-utils.c:1334
-msgid "_All events"
+#: src/utils/gcal-utils.c:1311
+msgid "_All Events"
 msgstr "Б_арлық оқиғалар"
+
+#~ msgid "Window position"
+#~ msgstr "Терезе орны"
+
+#~ msgid "Window position (x and y)."
+#~ msgstr "Терезе орны (x және y)."
+
+#~ msgid "Undo"
+#~ msgstr "Болдырмау"
+
+#~ msgid "Settings"
+#~ msgstr "Баптаулар"
+
+#~ msgid "Calendar name"
+#~ msgstr "Күнтізбе атауы"
+
+#~ msgid "Cancel"
+#~ msgstr "Бас тарту"
+
+#~ msgid "Open"
+#~ msgstr "Ашу"
+
+#~ msgid "Manage your calendars"
+#~ msgstr "Күнтізбелеріңізді басқарыңыз"
+
+#~ msgctxt "tooltip"
+#~ msgid "Search for events"
+#~ msgstr "Оқиғаларды іздеу"
+
+#~ msgctxt "tooltip"
+#~ msgid "Add a new event"
+#~ msgstr "Жаңа оқиғаны қосу"
 
 #~ msgid "Year view"
 #~ msgstr "Жыл көрінісі"
@@ -1287,9 +1371,6 @@ msgstr "Б_арлық оқиғалар"
 #~ msgid "Check this out!"
 #~ msgstr "Мынаны тексеріп көріңіз!"
 
-#~ msgid "Search for events"
-#~ msgstr "Оқиғаларды іздеу"
-
 #~ msgid "Calendar management"
 #~ msgstr "Күнтізбені басқару"
 
@@ -1314,17 +1395,11 @@ msgstr "Б_арлық оқиғалар"
 #~ msgid "Try a different search"
 #~ msgstr "Басқа сөздерді іздеп көріңіз"
 
-#~ msgid "Open online account settings"
-#~ msgstr "Желілік тіркелгі баптауларын ашу"
-
 #~ msgid "Click to set up"
 #~ msgstr "Баптау үшін шертіңіз"
 
 #~ msgid "Nextcloud"
 #~ msgstr "Nextcloud"
-
-#~ msgid "Microsoft Exchange"
-#~ msgstr "Microsoft Exchange"
 
 #~ msgid "Overview"
 #~ msgstr "Шолу"
@@ -1334,9 +1409,6 @@ msgstr "Б_арлық оқиғалар"
 
 #~ msgid "Calendar Address"
 #~ msgstr "Күнтізбе адресі"
-
-#~ msgid "Enter your credentials"
-#~ msgstr "Тіркелу мәліметтеріңізді енгізіңіз"
 
 #~ msgid "%d week before"
 #~ msgid_plural "%d weeks before"
@@ -1366,9 +1438,6 @@ msgstr "Б_арлық оқиғалар"
 #~ msgid "%s PM"
 #~ msgstr "%s PM"
 
-#~ msgid "_Calendars"
-#~ msgstr "_Күнтізбелер"
-
 #~ msgid "_About"
 #~ msgstr "О_сы туралы"
 
@@ -1377,9 +1446,6 @@ msgstr "Б_арлық оқиғалар"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "Оқиға_ны қосу…"
-
-#~ msgid "Add Eve_nt"
-#~ msgstr "Оқиға_ны қосу"
 
 #~ msgid "— Calendar management"
 #~ msgstr "— Күнтізбені басқару"
