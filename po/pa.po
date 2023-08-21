@@ -2,13 +2,13 @@
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 #
-# A S Alam <aalam@users.sf.net>, 2013, 2015, 2019, 2020, 2021.
+# A S Alam <aalam@users.sf.net>, 2013, 2015, 2019, 2020, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-11-07 10:58+0000\n"
-"PO-Revision-Date: 2021-02-13 21:07-0800\n"
+"POT-Creation-Date: 2023-08-04 23:11+0000\n"
+"PO-Revision-Date: 2023-08-20 17:13-0700\n"
 "Last-Translator: A S Alam <aalam@satluj.org>\n"
 "Language-Team: Punjabi <punjabi-users@lists.sf.net>\n"
 "Language: pa\n"
@@ -16,12 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 20.08.1\n"
+"X-Generator: Lokalize 23.04.3\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
-#: src/gui/gcal-window.ui:170
+#: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
 msgid "Calendar"
 msgstr "ਕੈਲੰਡਰ"
 
@@ -53,15 +53,20 @@ msgstr ""
 " ਕਿ ਜਿਵੇਂ ਤੁਸੀਂ ਇਸ ਨੂੰ "
 "ਸਾਲਾਂ ਤੋਂ ਵਰਤ ਰਹੇ ਹੋ।"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
 msgid "Week view"
 msgstr "ਹਫਤਾ ਝਲਕ"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
 #| msgctxt "shortcut window"
-#| msgid "Year view"
-msgid "Year view"
-msgstr "ਸਾਲ ਝਲਕ"
+#| msgid "Month view"
+msgid "Month view"
+msgstr "ਮਹੀਨਾ ਝਲਕ"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
+#| msgid "Event deleted"
+msgid "Event editor"
+msgstr "ਈਵੈਂਟ ਐਡੀਟਰ"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -89,26 +94,18 @@ msgid "Window size (width and height)."
 msgstr "ਵਿੰਡੋ ਆਕਾਰ (ਉਚਾਈ ਤੇ ਚੌੜਾਈ)।"
 
 #: data/org.gnome.calendar.gschema.xml.in:16
-msgid "Window position"
-msgstr "ਵਿੰਡੋ ਸਥਿਤੀ"
-
-#: data/org.gnome.calendar.gschema.xml.in:17
-msgid "Window position (x and y)."
-msgstr "ਵਿੰਡੋ ਸਥਿਤੀ (x ਤੇ y)।"
-
-#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "ਸਰਗਰਮ ਝਲਕ ਦੀ ਕਿਸਮ"
 
-#: data/org.gnome.calendar.gschema.xml.in:22
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "ਸਰਗਰਮ ਵਿੰਡੋ ਝਲਕ ਦੀ ਕਿਸਮ, ਮੂਲ ਮੁੱਲ: ਮਹੀਨਾ ਝਲਕ "
 
-#: data/org.gnome.calendar.gschema.xml.in:26
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
 msgstr "ਮੌਸਮ ਸੇਵਾ ਸੰਰਚਨਾ"
 
-#: data/org.gnome.calendar.gschema.xml.in:27
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
@@ -116,16 +113,17 @@ msgstr ""
 "ਕੀ ਮੌਸਮ ਦੀਆਂ ਰਿਪੋਰਟਾਂ ਵਿਖਾਉਣੀਆਂ ਹਨ, ਆਪਣੇ-ਆਪ ਟਿਕਾਣੇ ਵਰਤੇ ਜਾਂਦੇ ਹਨ ਅਤੇ"
 " ਟਿਕਾਣਾ-ਨਾਂ"
 
-#: data/org.gnome.calendar.gschema.xml.in:31
-msgid "Follow system night light"
-msgstr "ਸਿਸਟਮ ਰਾਤ ਦੀ ਰੋਸ਼ਨੀ ਮੁਤਾਬਕ"
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "ਹਫ਼ਤੇ ਗਰਿੱਡ ਦਾ ਜ਼ੂਮ ਪੱਧਰ"
 
-#: data/org.gnome.calendar.gschema.xml.in:32
-msgid "Use GNOME night light setting to activate night-mode."
-msgstr "ਰਾਤ ਮੋਡ ਚਾਲੂ ਕਰਨ ਲਈ ਗਨੋਲ ਰਾਤ ਦੀ ਰੋਸ਼ਨੀ ਸੈਟਿੰਗ ਨੂੰ ਵਰਤੋਂ।"
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "ਹਫ਼ਤਾ ਗਰਿੱਡ ਦਾ ਮੌਜੂਦਾ ਜ਼ੂਮ ਪੱਧਰ"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1882
+#. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
+#: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -134,93 +132,112 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1890
+#: src/core/gcal-event.c:1914
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1906 src/gui/gcal-quick-add-popover.c:472
+#: src/core/gcal-event.c:1930 src/gui/gcal-quick-add-popover.c:461
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
-#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:42
+#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
 msgstr "ਕੈਲੰਡਰ ਸੈਟਿੰਗਾਂ"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:359
-msgid "Manage Calendars"
-msgstr "ਕੈਲੰਡਰਾਂ ਦਾ ਬੰਦੋਬਸਤ ਕਰੋ"
+#: src/gui/calendar-management/gcal-calendars-page.c:343
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:141
+msgid "Calendars"
+msgstr "ਕੈਲੰਡਰ"
 
-#. Update notification label
-#: src/gui/calendar-management/gcal-calendars-page.c:389
+#. Create the new toast
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "ਕੈਲੰਡਰ <b>%s</b> ਹਟਾਇਆ"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:672 src/gui/gcal-window.c:676
-msgid "Undo"
-msgstr "ਵਾਪਸ"
+#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/gcal-window.c:741
+#| msgid "Undo"
+msgid "_Undo"
+msgstr "ਵਾਪਸ(_U)"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:97
+#: src/gui/calendar-management/gcal-calendars-page.ui:55
 msgid "Add Calendar…"
 msgstr "…ਕੈਲੰਡਰ ਜੋੜੋ"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:18
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
 msgid "Account"
 msgstr "ਖਾਤਾ"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:43
-msgid "Settings"
-msgstr "ਸੈਟਿੰਗਾਂ"
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:30
+#| msgid "Calendar Settings"
+msgid "Open in Settings"
+msgstr "ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਖੋਲ੍ਹੋ"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
-#: src/gui/event-editor/gcal-summary-section.ui:37
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:53
+#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/gcal-event-popover.ui:113
+#: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "ਟਿਕਾਣਾ"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
-msgid "Calendar name"
-msgstr "ਕੈਲੰਡਰ ਦਾ ਨਾਂ"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:121
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:65
-msgid "Color"
-msgstr "ਰੰਗ"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:155
-msgid "Display calendar"
-msgstr "ਕੈਲੰਡਰ ਦਿਖਾਓ"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:175
-msgid "Add new events to this calendar by default"
-msgstr "ਨਵੇਂ ਈਵੈਂਟ ਮੂਲ ਰੂਪ ਵਿੱਚ ਇਸ ਕੈਲੰਡਰ 'ਚ ਜੋੜੋ"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:190
-msgid "Remove Calendar"
-msgstr "ਕੈਲੰਡਰ ਹਟਾਓ"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:505
-msgid "New Calendar"
-msgstr "ਨਵਾਂ ਕੈਲੰਡਰ"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:667
-msgid "Calendar files"
-msgstr "ਕੈਲੰਡਰ ਫਾਇਲਾਂ"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:41
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:24
 msgid "Calendar Name"
 msgstr "ਕੈਲੰਡਰ ਦਾ ਨਾਂ"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:86
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:32
+msgid "Color"
+msgstr "ਰੰਗ"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+#| msgid "Display calendar"
+msgid "_Display Calendar"
+msgstr "ਕੈਲੰਡਰ ਦਿਖਾਓ(_D)"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
+#| msgid "New Calendar"
+msgid "Default _Calendar"
+msgstr "ਮੂਲ ਕੈਲੰਡਰ(_C)"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
+#| msgid "Add new events to this calendar by default"
+msgid "Add new events to this calendar by default."
+msgstr "ਨਵੇਂ ਈਵੈਂਟ ਮੂਲ ਰੂਪ ਵਿੱਚ ਇਸ ਕੈਲੰਡਰ 'ਚ ਜੋੜੋ"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+#| msgid "Remove Calendar"
+msgid "_Remove Calendar"
+msgstr "ਕੈਲੰਡਰ ਹਟਾਓ(_R)"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:51
+msgid "Select a file"
+msgstr "ਫਾਇਲ ਚੁਣੋ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:190
+#, c-format
+#| msgid "Add Calendar…"
+msgid "Add Calendar"
+msgid_plural "Add %1$u Calendars"
+msgstr[0] "ਕੈਲੰਡਰ ਜੋੜੋ"
+msgstr[1] "%1$u ਕੈਲੰਡਰ ਜੋੜੋ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:516
+msgid "New Calendar"
+msgstr "ਨਵਾਂ ਕੈਲੰਡਰ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
 msgid "Import a Calendar"
 msgstr "ਕੈਲੰਡਰ ਇੰਪੋਰਟ ਕਰੋ"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:77
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
@@ -229,15 +246,15 @@ msgstr ""
 " ਸਿਰਨਾਵਾਂ ਦਿਓ ਜਾਂ "
 "ਸਹਾਇਤਾ ਪ੍ਰਾਪਤ ਫਾਇਲ ਖੋਲ੍ਹੋ।"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:137
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
 msgid "Open a File"
 msgstr "ਫਾਇਲ ਖੋਲ੍ਹੋ"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:158
-msgid "Calendars"
-msgstr "ਕੈਲੰਡਰ"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:108
+msgid "Calendar files"
+msgstr "ਕੈਲੰਡਰ ਫਾਇਲਾਂ"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:204
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:165
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -246,224 +263,231 @@ msgstr ""
 " href=\"GOA\">ਆਨਲਾਈਨ ਖਾਤਾ "
 "ਸੈਟਿੰਗਾਂ</a> ਰਾਹੀਂ ਵੀ ਜੋੜ ਸਕਦੇ ਹੋ।"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:240
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:213
+msgid "Credentials"
+msgstr "ਸਨਦਾਂ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
 msgid "User"
 msgstr "ਵਰਤੋਂਕਾਰ"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:254
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
 msgid "Password"
 msgstr "ਪਾਸਵਰਡ"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:302
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:341
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:17
-msgid "Cancel"
-msgstr "ਰੱਦ ਕਰੋ"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:28
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
+msgid "_Cancel"
+msgstr "ਰੱਦ ਕਰੋ(_C)"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:311
-msgid "Connect"
-msgstr "ਕਨੈਕਟ ਕਰੋ"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+#| msgid "Connect"
+msgid "_Connect"
+msgstr "ਕਨੈਕਟ ਕਰੋ(_C)"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:348
-#: src/gui/gcal-quick-add-popover.ui:130
-msgid "Add"
-msgstr "ਜੋੜੋ"
-
-#: src/gui/event-editor/gcal-alarm-row.c:85
+#: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u ਦਿਨ, %2$u ਘੰਟਾ, ਅਤੇ %3$u ਮਿੰਟ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਦਿਨ, %2$u ਘੰਟਾ, ਅਤੇ %3$u ਮਿੰਟ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:89
+#: src/gui/event-editor/gcal-alarm-row.c:88
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u ਦਿਨ, %2$u ਘੰਟੇ, ਅਤੇ %3$u ਮਿੰਟ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਦਿਨ, %2$u ਘੰਟੇ, ਅਤੇ %3$u ਮਿੰਟ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:95
+#: src/gui/event-editor/gcal-alarm-row.c:94
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u ਦਿਨ, %2$u ਘੰਟਾ, ਅਤੇ %3$u ਮਿੰਟ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਦਿਨ, %2$u ਘੰਟਾ, ਅਤੇ %3$u ਮਿੰਟ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:99
+#: src/gui/event-editor/gcal-alarm-row.c:98
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u ਦਿਨ, %2$u ਘੰਟੇ, ਅਤੇ %3$u ਮਿੰਟ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਦਿਨ, %2$u ਘੰਟੇ, ਅਤੇ %3$u ਮਿੰਟ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:114
+#: src/gui/event-editor/gcal-alarm-row.c:113
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
 msgstr[0] "%1$u ਦਿਨ ਅਤੇ %2$u ਘੰਟਾ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਦਿਨ ਅਤੇ %2$u ਘੰਟੇ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:118
+#: src/gui/event-editor/gcal-alarm-row.c:117
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
 msgstr[0] "%1$u ਦਿਨ ਅਤੇ %2$u ਘੰਟਾ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਦਿਨ ਅਤੇ %2$u ਘੰਟੇ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:134
+#: src/gui/event-editor/gcal-alarm-row.c:133
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
 msgstr[0] "%1$u ਦਿਨ ਅਤੇ %2$u ਮਿੰਟ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਦਿਨ ਅਤੇ %2$u ਮਿੰਟ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:138
+#: src/gui/event-editor/gcal-alarm-row.c:137
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
 msgstr[0] "%1$u ਦਿਨ ਅਤੇ %2$u ਮਿੰਟ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਦਿਨ ਅਤੇ %2$u ਮਿੰਟ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:148
+#: src/gui/event-editor/gcal-alarm-row.c:147
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "%1$u ਦਿਨ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਦਿਨ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:166
+#: src/gui/event-editor/gcal-alarm-row.c:165
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "%1$u ਘੰਟਾ ਅਤੇ %2$u ਮਿੰਟ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਘੰਟੇ ਅਤੇ %2$u ਮਿੰਟ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:170
+#: src/gui/event-editor/gcal-alarm-row.c:169
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "%1$u ਘੰਟੇ ਅਤੇ %2$u ਮਿੰਟ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਘੰਟੇ ਅਤੇ %2$u ਮਿੰਟ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:180
+#: src/gui/event-editor/gcal-alarm-row.c:179
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "%1$u ਘੰਟਾ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਘੰਟੇ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:192
+#: src/gui/event-editor/gcal-alarm-row.c:191
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "%1$u ਮਿੰਟ ਪਹਿਲਾਂ"
 msgstr[1] "%1$u ਮਿੰਟ ਪਹਿਲਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.c:199
+#: src/gui/event-editor/gcal-alarm-row.c:198
 msgid "Event start time"
 msgstr "ਈਵੈਂਟ ਸ਼ੁਰੂ ਸਮਾਂ"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:18
+#: src/gui/event-editor/gcal-alarm-row.ui:11
 msgid "Toggles the sound of the alarm"
 msgstr "ਅਲਾਰਮ ਦੀ ਆਵਾਜ਼ ਬਦਲੋ"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:35
+#: src/gui/event-editor/gcal-alarm-row.ui:21
 msgid "Remove the alarm"
 msgstr "ਅਲਾਰਮ ਹਟਾਓ"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:201
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Save"
 msgstr "ਸੰਭਾਲੋ"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:201
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:108
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Done"
 msgstr "ਮੁਕੰਮਲ"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:37
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
 msgid "Click to select the calendar"
 msgstr "ਕੈਲੰਡਰ ਚੁਣਨ ਲਈ ਕਲਿੱਕ ਕਰੋ"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:157
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
+#| msgid "Done"
+msgid "_Done"
+msgstr "ਮੁਕੰਮਲ(_D)"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
 msgid "Schedule"
 msgstr "ਸੈਡਿਊਲ"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:178
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
 msgid "Reminders"
 msgstr "ਰਿਮਾਈਂਡਰ"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:201
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:151
 msgid "Notes"
 msgstr "ਨੋਟ"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:226
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:171
 msgid "Delete Event"
 msgstr "ਈਵੈਂਟ ਹਟਾਓ"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:28
+#: src/gui/event-editor/gcal-reminders-section.ui:26
 msgid "Add a Reminder…"
 msgstr "…ਰੀਮਾਈਂਡਰ ਜੋੜੋ"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:55
+#: src/gui/event-editor/gcal-reminders-section.ui:52
 msgid "5 minutes"
 msgstr "5 ਮਿੰਟ"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:64
+#: src/gui/event-editor/gcal-reminders-section.ui:58
 msgid "10 minutes"
 msgstr "10 ਮਿੰਟ"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:73
-#| msgid "5 minutes"
+#: src/gui/event-editor/gcal-reminders-section.ui:64
 msgid "15 minutes"
 msgstr "15 ਮਿੰਟ"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:82
+#: src/gui/event-editor/gcal-reminders-section.ui:70
 msgid "30 minutes"
 msgstr "30 ਮਿੰਟ"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:91
+#: src/gui/event-editor/gcal-reminders-section.ui:76
 msgid "1 hour"
 msgstr "1 ਘੰਟਾ"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:99
+#: src/gui/event-editor/gcal-reminders-section.ui:82
 msgid "1 day"
 msgstr "1 ਦਿਨ"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:108
+#: src/gui/event-editor/gcal-reminders-section.ui:88
 msgid "2 days"
 msgstr "2 ਦਿਨ"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:117
+#: src/gui/event-editor/gcal-reminders-section.ui:94
 msgid "3 days"
 msgstr "3 ਦਿਨ"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:126
+#: src/gui/event-editor/gcal-reminders-section.ui:100
 msgid "1 week"
 msgstr "1 ਹਫਤਾ"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:241
+#: src/gui/event-editor/gcal-schedule-section.c:238
 #, c-format
 msgid "Last %A"
 msgstr "ਆਖਰੀ %A"
 
-#: src/gui/event-editor/gcal-schedule-section.c:245
+#: src/gui/event-editor/gcal-schedule-section.c:242
+#: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "ਕੱਲ੍ਹ"
 
-#: src/gui/event-editor/gcal-schedule-section.c:249 src/gui/gcal-window.ui:187
-#: src/gui/views/gcal-year-view.c:282 src/gui/views/gcal-year-view.c:560
-#: src/gui/views/gcal-year-view.ui:88
+#: src/gui/event-editor/gcal-schedule-section.c:246
+#: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
+#: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "ਅੱਜ"
 
-#: src/gui/event-editor/gcal-schedule-section.c:253
+#: src/gui/event-editor/gcal-schedule-section.c:250
+#: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "ਭਲਕ"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:263
+#: src/gui/event-editor/gcal-schedule-section.c:255
 #, c-format
 msgid "This %A"
 msgstr "ਇਹ %A"
@@ -472,81 +496,84 @@ msgstr "ਇਹ %A"
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
-#: src/gui/event-editor/gcal-schedule-section.c:293
+#: src/gui/event-editor/gcal-schedule-section.c:285
 #, c-format
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:20
+#: src/gui/event-editor/gcal-schedule-section.ui:17
 msgid "All Day"
 msgstr "ਸਭ ਦਿਨ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:40
+#: src/gui/event-editor/gcal-schedule-section.ui:34
+#: src/gui/importer/gcal-import-file-row.c:152
 msgid "Starts"
 msgstr "ਸ਼ੁਰੂ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:90
+#: src/gui/event-editor/gcal-schedule-section.ui:77
+#: src/gui/importer/gcal-import-file-row.c:153
 msgid "Ends"
 msgstr "ਅੰਤ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:140
+#: src/gui/event-editor/gcal-schedule-section.ui:120
 msgid "Repeat"
 msgstr "ਦੁਹਰਾਓ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:150
+#: src/gui/event-editor/gcal-schedule-section.ui:125
 msgid "No Repeat"
 msgstr "ਦੁਹਰਾਉਣਾ ਨਹੀਂ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:151
+#: src/gui/event-editor/gcal-schedule-section.ui:126
 msgid "Daily"
 msgstr "ਰੋਜ਼ਾਨਾ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:152
+#: src/gui/event-editor/gcal-schedule-section.ui:127
 msgid "Monday – Friday"
 msgstr "ਸੋਮਵਾਰ - ਸ਼ੁੱਕਰਵਾਰ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:153
+#: src/gui/event-editor/gcal-schedule-section.ui:128
 msgid "Weekly"
 msgstr "ਹਫ਼ਤੇਵਾਰ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:154
+#: src/gui/event-editor/gcal-schedule-section.ui:129
 msgid "Monthly"
 msgstr "ਮਹੀਨੇਵਾਰ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:155
+#: src/gui/event-editor/gcal-schedule-section.ui:130
 msgid "Yearly"
 msgstr "ਸਾਲਨਾ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:168
+#: src/gui/event-editor/gcal-schedule-section.ui:141
 msgid "End Repeat"
 msgstr "ਦੁਹਰਾਉਣਾ ਖਤਮ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:178
+#: src/gui/event-editor/gcal-schedule-section.ui:146
 msgid "Forever"
 msgstr "ਹਮੇਸ਼ਾ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:179
+#: src/gui/event-editor/gcal-schedule-section.ui:147
 msgid "No. of occurrences"
 msgstr "ਹੋਣ ਦੀ ਗਿਣਤੀ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:180
+#: src/gui/event-editor/gcal-schedule-section.ui:148
 msgid "Until Date"
 msgstr "ਤਾਰੀਖ ਤੱਕ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:193
+#: src/gui/event-editor/gcal-schedule-section.ui:160
 msgid "Number of Occurrences"
 msgstr "ਵਾਪਰਨ ਦੀ ਗਿਣਤੀ"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:213
+#: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "ਦੁਹਰਾਉਣਾ ਖਤਮ ਕਰਨ ਦੀ ਮਿਤੀ"
 
 #: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:689
+#: src/gui/gcal-quick-add-popover.c:676
 msgid "Unnamed event"
 msgstr "ਬਿਨਾਂ-ਨਾਂ ਈਵੈਂਟ"
 
-#: src/gui/event-editor/gcal-summary-section.ui:19
+#: src/gui/event-editor/gcal-summary-section.ui:16
+#: src/gui/importer/gcal-import-file-row.c:150
 msgid "Title"
 msgstr "ਟਾਈਟਲ"
 
@@ -554,186 +581,353 @@ msgstr "ਟਾਈਟਲ"
 msgid ":"
 msgstr ":"
 
-#: src/gui/event-editor/gcal-time-selector.ui:47
-#: src/gui/views/gcal-week-view.c:440
+#: src/gui/event-editor/gcal-time-selector.ui:46
+#: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "ਸਵੇਰ"
 
-#: src/gui/event-editor/gcal-time-selector.ui:48
-#: src/gui/views/gcal-week-view.c:440
+#: src/gui/event-editor/gcal-time-selector.ui:47
+#: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "ਸ਼ਾਮ"
 
-#: src/gui/gcal-application.c:63
+#: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
 msgstr "ਗਨੋਮ ਕੈਲੰਡਰ ਬੰਦ ਕਰੋ"
 
-#: src/gui/gcal-application.c:68
+#: src/gui/gcal-application.c:63
 msgid "Display version number"
 msgstr "ਵਰਜ਼ਨ ਨੰਬਰ ਦਿਖਾਓ"
 
-#: src/gui/gcal-application.c:73
+#: src/gui/gcal-application.c:68
 msgid "Enable debug messages"
 msgstr "ਡੀਬੱਗ ਸੁਨੇਹੇ ਸਮਰੱਥ ਕਰੋ"
 
-#: src/gui/gcal-application.c:78
+#: src/gui/gcal-application.c:73
 msgid "Open calendar on the passed date"
 msgstr "ਲੰਘੀ ਮਿਤੀ ਦੇ ਨਾਲ ਕੈਲੰਡਰ ਖੋਲ੍ਹੋ"
 
-#: src/gui/gcal-application.c:83
+#: src/gui/gcal-application.c:78
 msgid "Open calendar showing the passed event"
 msgstr "ਲੰਘੇ ਈਵੈਂਟ ਵਿਖਾਉਣ ਦੇ ਨਾਲ ਕੈਲੰਡਰ ਖੋਲ੍ਹੋ"
 
-#: src/gui/gcal-application.c:234
+#: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "ਕਾਪੀਰਾਈਟ © 2012–%d The Calendar authors"
 
-#: src/gui/gcal-application.c:288
+#: src/gui/gcal-application.c:180
+msgid "The GNOME Project"
+msgstr "ਗਨੋਮ ਪਰੋਜੈਕਟ"
+
+#: src/gui/gcal-application.c:189
 msgid "translator-credits"
 msgstr ""
 "ਅ ਸ ਆਲਮ (A S Alam) ੨੦੨੧\n"
 "Punjabi OpenSource Team (POST) satluj.org"
 
-#: src/gui/gcal-calendar-popover.ui:43
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
+#| msgid "_Weather"
+msgid "Weather"
+msgstr "ਮੌਸਮ"
+
+#: src/gui/gcal-calendar-button.ui:6
+msgid "Manage Calendars"
+msgstr "ਕੈਲੰਡਰਾਂ ਦਾ ਬੰਦੋਬਸਤ ਕਰੋ"
+
+#: src/gui/gcal-calendar-button.ui:8
+#| msgid "Calendars"
+msgid "_Calendars"
+msgstr "ਕੈਲੰਡਰ(_C)"
+
+#: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
 msgstr "ਕੈਲੰਡਰ ਸਿੰਕਰੋਨਾਈਜ਼ ਕਰੋ(_S)"
 
-#: src/gui/gcal-calendar-popover.ui:51
+#: src/gui/gcal-calendar-button.ui:41
 msgid "Manage Calendars…"
 msgstr "…ਕੈਲੰਡਰਾਂ ਦਾ ਬੰਦੋਬਸਤ ਕਰੋ"
 
-#: src/gui/gcal-calendar-popover.ui:75
-msgctxt "tooltip"
-msgid "Synchronizing remote calendars…"
-msgstr "…ਰਿਮੋਟ ਕੈਲੰਡਰ ਸਿੰਕਰੋਨਾਈਜ਼ ਕੀਤੇ ਜਾ ਰਹੇ ਹਨ"
+#: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:255
+msgid "January"
+msgstr "ਜਨਵਰੀ"
+
+#: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:256
+msgid "February"
+msgstr "ਫਰਵਰੀ"
+
+#: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:257
+msgid "March"
+msgstr "ਮਾਰਚ"
+
+#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:258
+msgid "April"
+msgstr "ਅਪਰੈਲ"
+
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:259
+msgid "May"
+msgstr "ਮਈ"
+
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:260
+msgid "June"
+msgstr "ਜੂਨ"
+
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:261
+msgid "July"
+msgstr "ਜੁਲਾਈ"
+
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:262
+msgid "August"
+msgstr "ਅਗਸਤ"
+
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:263
+msgid "September"
+msgstr "ਸਤੰਬਰ"
+
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:264
+msgid "October"
+msgstr "ਅਕਤੂਬਰ"
+
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:265
+msgid "November"
+msgstr "ਨਵੰਬਰ"
+
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:266
+msgid "December"
+msgstr "ਦਸੰਬਰ"
+
+#: src/gui/gcal-event-popover.c:158
+#, c-format
+#| msgid "Today"
+msgid "Today %s"
+msgstr "ਅੱਜ %s"
+
+#: src/gui/gcal-event-popover.c:162
+#, c-format
+#| msgid "Tomorrow"
+msgid "Tomorrow %s"
+msgstr "ਭਲਕ %s"
+
+#: src/gui/gcal-event-popover.c:166
+#, c-format
+#| msgid "Yesterday"
+msgid "Yesterday %s"
+msgstr "ਕਲ੍ਹ %s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, and %3$ is the hour. This format string results in dates
+#. * like "November 21, 22:00".
+#.
+#: src/gui/gcal-event-popover.c:175
+#, c-format
+#| msgid "%1$s, %2$s – %3$s"
+msgid "%1$s %2$d, %3$s"
+msgstr "%2$d %1$s, %3$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$d is the year, and %4$s is the hour. This format string
+#. * results in dates like "November 21, 2020, 22:00".
+#.
+#: src/gui/gcal-event-popover.c:187
+#, c-format
+#| msgid "%1$s %2$s — %3$s %4$s"
+msgid "%1$s %2$d, %3$d, %4$s"
+msgstr "%2$d %1$s %3$d, %4$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), and %2$d is
+#. * the day of month. This format string results in dates like
+#. * "November 21".
+#.
+#: src/gui/gcal-event-popover.c:216 src/gui/gcal-event-popover.c:330
+#, c-format
+#| msgid "%1$s, %2$s"
+msgid "%1$s %2$d"
+msgstr "%2$d %1$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, and %3$d is the year. This format string results in dates
+#. * like "November 21, 2020".
+#.
+#: src/gui/gcal-event-popover.c:227 src/gui/gcal-event-popover.c:341
+#, c-format
+#| msgid "%1$s, %2$s – %3$s"
+msgid "%1$s %2$d, %3$d"
+msgstr "%2$d %1$s – %3$d"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Today, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:261
+#, c-format
+#| msgid "%1$s — %2$s"
+msgid "Today, %1$s — %2$s"
+msgstr "ਅੱਜ, %1$s — %2$s"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Tomorrow, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:269
+#, c-format
+#| msgid "%1$s — %2$s"
+msgid "Tomorrow, %1$s – %2$s"
+msgstr "ਭਲਕੇ, %1$s – %2$s"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Tomorrow, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:277
+#, c-format
+#| msgid "%1$s, %2$s – %3$s"
+msgid "Yesterday, %1$s – %2$s"
+msgstr "ਕਲ੍ਹ, %1$s – %2$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$s is the start hour, and %4$s is the end hour. This
+#. * format string results in dates like "November 21, 19:00 — 22:00".
+#.
+#: src/gui/gcal-event-popover.c:286
+#, c-format
+#| msgid "%1$s, %2$s – %3$s"
+msgid "%1$s %2$d, %3$s – %4$s"
+msgstr "%2$d %1$s %3$s – %4$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$d is the year, %4$s is the start hour, and %5$s is the
+#. * end hour. This format string results in dates like:
+#. *
+#. * "November 21, 2021, 19:00 — 22:00".
+#.
+#: src/gui/gcal-event-popover.c:301
+#, c-format
+#| msgid "%1$s, %2$s – %3$s"
+msgid "%1$s %2$d, %3$d, %4$s – %5$s"
+msgstr "%2$d %1$s %3$d, %4$s – %5$s"
+
+#: src/gui/gcal-event-popover.ui:73
+msgid "No event information"
+msgstr "ਕੋਈ ਈਵੈਂਟ ਜਾਣਕਾਰੀ ਨਹੀਂ ਹੈ"
+
+#: src/gui/gcal-event-popover.ui:171
+#| msgid "Edit"
+msgid "Edit…"
+msgstr "…ਸੋਧੋ"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:428
+#: src/gui/gcal-event-widget.c:351
 #, c-format
 msgid "At %s"
 msgstr "%s ਵਿਖੇ"
 
-#: src/gui/gcal-quick-add-popover.c:117
+#: src/gui/gcal-meeting-row.c:67
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#: src/gui/gcal-meeting-row.c:68
+msgid "Jitsi"
+msgstr "Jitsi"
+
+#: src/gui/gcal-meeting-row.c:69
+msgid "Whereby"
+msgstr "Whereby"
+
+#: src/gui/gcal-meeting-row.c:70
+msgid "Zoom"
+msgstr "Zoom"
+
+#: src/gui/gcal-meeting-row.c:71
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/gui/gcal-meeting-row.c:81
+msgid "Unknown Service"
+msgstr "ਅਣਪਛਾਤੀ ਸੇਵਾ"
+
+#. Translators: "Join" as in "Join meeting"
+#: src/gui/gcal-meeting-row.ui:13
+msgid "Join"
+msgstr "ਹਿੱਸਾ ਲਵੋ"
+
+#: src/gui/gcal-quick-add-popover.c:118
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (ਇਹ ਕੈਲੰਡਰ ਕੇਵਲ ਪੜ੍ਹਨ ਲਈ ਹੀ ਹੈ)"
 
-#: src/gui/gcal-quick-add-popover.c:244
+#: src/gui/gcal-quick-add-popover.c:233
 msgid "from next Monday"
 msgstr "ਅਗਲੇ ਸੋਮਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:245
+#: src/gui/gcal-quick-add-popover.c:234
 msgid "from next Tuesday"
 msgstr "ਅਗਲੇ ਮੰਗਲਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:246
+#: src/gui/gcal-quick-add-popover.c:235
 msgid "from next Wednesday"
 msgstr "ਅਗਲੇ ਬੁੱਧਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:247
+#: src/gui/gcal-quick-add-popover.c:236
 msgid "from next Thursday"
 msgstr "ਅਗਲੇ ਵੀਰਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:248
+#: src/gui/gcal-quick-add-popover.c:237
 msgid "from next Friday"
 msgstr "ਅਗਲੇ ਸ਼ੁੱਕਰਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:249
+#: src/gui/gcal-quick-add-popover.c:238
 msgid "from next Saturday"
 msgstr "ਅਗਲੇ ਸ਼ਨਿੱਚਰਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:250
+#: src/gui/gcal-quick-add-popover.c:239
 msgid "from next Sunday"
 msgstr "ਅਗਲੇ ਐਤਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:255
+#: src/gui/gcal-quick-add-popover.c:244
 msgid "to next Monday"
 msgstr "ਅਗਲੇ ਸੋਮਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:256
+#: src/gui/gcal-quick-add-popover.c:245
 msgid "to next Tuesday"
 msgstr "ਅਗਲੇ ਮੰਗਲਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:257
+#: src/gui/gcal-quick-add-popover.c:246
 msgid "to next Wednesday"
 msgstr "ਅਗਲੇ ਬੁੱਧਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:258
+#: src/gui/gcal-quick-add-popover.c:247
 msgid "to next Thursday"
 msgstr "ਅਗਲੇ ਵੀਰਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:259
+#: src/gui/gcal-quick-add-popover.c:248
 msgid "to next Friday"
 msgstr "ਅਗਲੇ ਸ਼ੁੱਕਰਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:260
+#: src/gui/gcal-quick-add-popover.c:249
 msgid "to next Saturday"
 msgstr "ਅਗਲੇ ਸ਼ਨਿੱਚਰਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:261
+#: src/gui/gcal-quick-add-popover.c:250
 msgid "to next Sunday"
 msgstr "ਅਗਲੇ ਐਤਵਾਰ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:266
-msgid "January"
-msgstr "ਜਨਵਰੀ"
-
-#: src/gui/gcal-quick-add-popover.c:267
-msgid "February"
-msgstr "ਫਰਵਰੀ"
-
-#: src/gui/gcal-quick-add-popover.c:268
-msgid "March"
-msgstr "ਮਾਰਚ"
-
-#: src/gui/gcal-quick-add-popover.c:269
-msgid "April"
-msgstr "ਅਪਰੈਲ"
-
-#: src/gui/gcal-quick-add-popover.c:270
-msgid "May"
-msgstr "ਮਈ"
-
-#: src/gui/gcal-quick-add-popover.c:271
-msgid "June"
-msgstr "ਜੂਨ"
-
-#: src/gui/gcal-quick-add-popover.c:272
-msgid "July"
-msgstr "ਜੁਲਾਈ"
-
-#: src/gui/gcal-quick-add-popover.c:273
-msgid "August"
-msgstr "ਅਗਸਤ"
-
-#: src/gui/gcal-quick-add-popover.c:274
-msgid "September"
-msgstr "ਸਤੰਬਰ"
-
 #: src/gui/gcal-quick-add-popover.c:275
-msgid "October"
-msgstr "ਅਕਤੂਬਰ"
-
-#: src/gui/gcal-quick-add-popover.c:276
-msgid "November"
-msgstr "ਨਵੰਬਰ"
-
-#: src/gui/gcal-quick-add-popover.c:277
-msgid "December"
-msgstr "ਦਸੰਬਰ"
-
-#: src/gui/gcal-quick-add-popover.c:286
 #, c-format
 msgid "from Today"
 msgstr "ਅੱਜ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:290
+#: src/gui/gcal-quick-add-popover.c:279
 #, c-format
 msgid "from Tomorrow"
 msgstr "ਭਲਕ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:294
+#: src/gui/gcal-quick-add-popover.c:283
 #, c-format
 msgid "from Yesterday"
 msgstr "ਕੱਲ੍ਹ ਤੋਂ"
@@ -742,22 +936,22 @@ msgstr "ਕੱਲ੍ਹ ਤੋਂ"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:312
+#: src/gui/gcal-quick-add-popover.c:301
 #, c-format
 msgid "from %1$s %2$s"
 msgstr "%1$s %2$s ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:323
+#: src/gui/gcal-quick-add-popover.c:312
 #, c-format
 msgid "to Today"
 msgstr "ਅੱਜ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:327
+#: src/gui/gcal-quick-add-popover.c:316
 #, c-format
 msgid "to Tomorrow"
 msgstr "ਭਲਕ ਤੋਂ"
 
-#: src/gui/gcal-quick-add-popover.c:331
+#: src/gui/gcal-quick-add-popover.c:320
 #, c-format
 msgid "to Yesterday"
 msgstr "ਕੱਲ੍ਹ ਤੋਂ"
@@ -766,229 +960,276 @@ msgstr "ਕੱਲ੍ਹ ਤੋਂ"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:349
+#: src/gui/gcal-quick-add-popover.c:338
 #, c-format
 msgid "to %1$s %2$s"
 msgstr "%1$s %2$s ਤੱਕ"
 
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
-#: src/gui/gcal-quick-add-popover.c:356
+#: src/gui/gcal-quick-add-popover.c:345
 #, c-format
 msgid "New Event %1$s %2$s"
 msgstr "ਨਵਾਂ ਈਵੈਂਟ %1$s %2$s"
 
-#: src/gui/gcal-quick-add-popover.c:373
+#: src/gui/gcal-quick-add-popover.c:362
 #, c-format
 msgid "New Event Today"
 msgstr "ਅੱਜ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:377
+#: src/gui/gcal-quick-add-popover.c:366
 #, c-format
 msgid "New Event Tomorrow"
 msgstr "ਭਲਕੇ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:381
+#: src/gui/gcal-quick-add-popover.c:370
 #, c-format
 msgid "New Event Yesterday"
 msgstr "ਕੱਲ੍ਹ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:387
+#: src/gui/gcal-quick-add-popover.c:376
 msgid "New Event next Monday"
 msgstr "ਅਗਲੇ ਸੋਮਵਾਰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:388
+#: src/gui/gcal-quick-add-popover.c:377
 msgid "New Event next Tuesday"
 msgstr "ਅਗਲੇ ਮੰਗਲਵਾਰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:389
+#: src/gui/gcal-quick-add-popover.c:378
 msgid "New Event next Wednesday"
 msgstr "ਅਗਲੇ ਬੁੱਧਵਾਰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:390
+#: src/gui/gcal-quick-add-popover.c:379
 msgid "New Event next Thursday"
 msgstr "ਅਗਲੇ ਵੀਰਵਾਰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:391
+#: src/gui/gcal-quick-add-popover.c:380
 msgid "New Event next Friday"
 msgstr "ਅਗਲੇ ਸ਼ੁੱਕਰਵਾਰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:392
+#: src/gui/gcal-quick-add-popover.c:381
 msgid "New Event next Saturday"
 msgstr "ਅਗਲੇ ਸ਼ਨਿੱਚਰਵਾਰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:393
+#: src/gui/gcal-quick-add-popover.c:382
 msgid "New Event next Sunday"
 msgstr "ਅਗਲੇ ਐਤਵਾਰ ਨਵਾਂ ਈਵੈਂਟ"
 
 #. Translators: %d is the numeric day of month
-#: src/gui/gcal-quick-add-popover.c:405
+#: src/gui/gcal-quick-add-popover.c:394
 #, c-format
 msgid "New Event on January %d"
 msgstr "%d ਜਨਵਰੀ ਨੂੰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:406
+#: src/gui/gcal-quick-add-popover.c:395
 #, c-format
 msgid "New Event on February %d"
 msgstr "%d ਫਰਵਰੀ ਨੂੰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:407
+#: src/gui/gcal-quick-add-popover.c:396
 #, c-format
 msgid "New Event on March %d"
 msgstr "%d ਮਾਰਚ ਨੂੰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:408
+#: src/gui/gcal-quick-add-popover.c:397
 #, c-format
 msgid "New Event on April %d"
 msgstr "%d ਅਪਰੈਲ ਨੂੰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:409
+#: src/gui/gcal-quick-add-popover.c:398
 #, c-format
 msgid "New Event on May %d"
 msgstr "%d ਮਈ ਨੂੰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:410
+#: src/gui/gcal-quick-add-popover.c:399
 #, c-format
 msgid "New Event on June %d"
 msgstr "%d ਜੂਨ ਨੂੰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:411
+#: src/gui/gcal-quick-add-popover.c:400
 #, c-format
 msgid "New Event on July %d"
 msgstr "%d ਜੁਲਾਈ ਨੂੰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:412
+#: src/gui/gcal-quick-add-popover.c:401
 #, c-format
 msgid "New Event on August %d"
 msgstr "%d ਅਗਸਤ ਨੂੰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:413
+#: src/gui/gcal-quick-add-popover.c:402
 #, c-format
 msgid "New Event on September %d"
 msgstr "%d ਸਤੰਬਰ ਨੂੰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:414
+#: src/gui/gcal-quick-add-popover.c:403
 #, c-format
 msgid "New Event on October %d"
 msgstr "%d ਅਕਤੂਬਰ ਨੂੰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:415
+#: src/gui/gcal-quick-add-popover.c:404
 #, c-format
 msgid "New Event on November %d"
 msgstr "%d ਨਵੰਬਰ ਨੂੰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.c:416
+#: src/gui/gcal-quick-add-popover.c:405
 #, c-format
 msgid "New Event on December %d"
 msgstr "%d ਦਸੰਬਰ ਨੂੰ ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gcal-quick-add-popover.ui:117
+#: src/gui/gcal-quick-add-popover.ui:87
 msgid "Edit Details…"
 msgstr "…ਵੇਰਵੇ ਸੋਧੋ"
 
-#: src/gui/gcal-weather-settings.ui:12 src/gui/gcal-window.ui:327
-msgid "_Weather"
-msgstr "ਮੌਸਮ(_W)"
+#: src/gui/gcal-quick-add-popover.ui:98
+msgid "Add"
+msgstr "ਜੋੜੋ"
 
-#: src/gui/gcal-weather-settings.ui:30
+#: src/gui/gcal-search-button.ui:53
+#| msgid "Search for events"
+msgid "Search events"
+msgstr "ਈਵੈਂਟ ਲੱਭੋ"
+
+#: src/gui/gcal-sync-indicator.ui:21
+#| msgctxt "tooltip"
+#| msgid "Synchronizing remote calendars…"
+msgctxt "tooltip"
+msgid "Synchronizing Remote Calendars…"
+msgstr "…ਰਿਮੋਟ ਕੈਲੰਡਰ ਸਿੰਕਰੋਨਾਈਜ਼ ਕੀਤੇ ਜਾ ਰਹੇ ਹਨ"
+
+#: src/gui/gcal-toolbar-end.ui:9
+#| msgctxt "shortcut window"
+#| msgid "Search"
+msgctxt "tooltip"
+msgid "Search"
+msgstr "ਖੋਜੋ"
+
+#: src/gui/gcal-toolbar-end.ui:16
+#| msgid "Add Event…"
+msgctxt "tooltip"
+msgid "Add Event"
+msgstr "ਈਵੈਂਟ ਜੋੜੋ"
+
+#: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
 msgstr "ਮੌਸਮ ਵੇਖਾਓ"
 
-#: src/gui/gcal-weather-settings.ui:53
+#: src/gui/gcal-weather-settings.ui:34
 msgid "Automatic Location"
 msgstr "ਆਪਣੇ-ਆਪ ਟਿਕਾਣਾ ਲਵੋ"
 
-#: src/gui/gcal-window.c:672
-msgid "Another event deleted"
-msgstr "ਹੋਰ ਈਵੈਂਟ ਹਟਾਇਆ"
+#: src/gui/gcal-weather-settings.ui:46
+#| msgid "Search for events"
+msgid "Search locations"
+msgstr "ਟਿਕਾਣਾ ਲੱਭੋ"
 
-#: src/gui/gcal-window.c:676
-msgid "Event deleted"
-msgstr "ਈਵੈਂਟ ਹਟਾਇਆ ਗਿਆ"
-
-#: src/gui/gcal-window.ui:47
+#: src/gui/gcal-window.c:337
 msgid "Week"
 msgstr "ਹਫਤਾ"
 
-#: src/gui/gcal-window.ui:62
+#: src/gui/gcal-window.c:339
 msgid "Month"
 msgstr "ਮਹੀਨਾ"
 
-#: src/gui/gcal-window.ui:76
-msgid "Year"
-msgstr "ਸਾਲ"
+#: src/gui/gcal-window.c:739
+msgid "Another event deleted"
+msgstr "ਹੋਰ ਈਵੈਂਟ ਹਟਾਇਆ"
 
-#: src/gui/gcal-window.ui:176
-msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "ਨਵਾਂ ਈਵੈਂਟ ਜੋੜੋ"
+#: src/gui/gcal-window.c:739
+msgid "Event deleted"
+msgstr "ਈਵੈਂਟ ਹਟਾਇਆ ਗਿਆ"
 
-#: src/gui/gcal-window.ui:265
-msgid "Manage your calendars"
-msgstr "ਆਪਣੇ ਕੈਲੰਡਰਾਂ ਦਾ ਬੰਦੋਬਸਤ ਕਰੋ"
+#: src/gui/gcal-window.ui:137
+msgid "Main Menu"
+msgstr "ਮੁੱਖ ਮੇਨੂ"
 
-#: src/gui/gcal-window.ui:276
-msgctxt "tooltip"
-msgid "Search for events"
-msgstr "ਈਵੈਂਟਾਂ ਲਈ ਲੱਭੋ"
+#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
+#| msgid "Today"
+msgid "_Today"
+msgstr "ਅੱਜ(_T)"
+
+#: src/gui/gcal-window.ui:249
+#| msgid "Week"
+msgid "_Week"
+msgstr "ਹਫ਼ਤਾ(_W)"
+
+#: src/gui/gcal-window.ui:264
+#| msgid "Month"
+msgid "_Month"
+msgstr "ਮਹੀਨਾ(_M)"
 
 #: src/gui/gcal-window.ui:318
-msgid "_Online Accounts…"
-msgstr "…ਆਨਲਾਈਨ ਖਾਤੇ"
+msgid "_Date & Time Settings…"
+msgstr "ਤਾਰੀਖ ਅਤੇ ਸਮਾਂ ਸੈਟਿੰਗਾਂ(_D)…"
 
-#: src/gui/gcal-window.ui:342
+#: src/gui/gcal-window.ui:322
+msgid "_Online Accounts…"
+msgstr "ਆਨਲਾਈਨ ਖਾਤੇ(_O)…"
+
+#: src/gui/gcal-window.ui:334
 msgid "_Keyboard Shortcuts"
 msgstr "ਕੀ-ਬੋਰਡ ਸ਼ਾਰਟਕੱਟ(_K)"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:338
 msgid "_About Calendar"
 msgstr "ਕੈਲੰਡਰ ਬਾਰੇ(_A)"
 
-#: src/gui/gtk/help-overlay.ui:13
+#: src/gui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
 msgstr "ਆਮ"
 
-#: src/gui/gtk/help-overlay.ui:17
+#: src/gui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "New event"
 msgstr "ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/gtk/help-overlay.ui:24
+#: src/gui/gtk/help-overlay.ui:20
+#| msgid "Manage Calendars"
+msgctxt "shortcut window"
+msgid "Manage calendars"
+msgstr "ਕੈਲੰਡਰਾਂ ਦਾ ਬੰਦੋਬਸਤ ਕਰੋ"
+
+#: src/gui/gtk/help-overlay.ui:26
+#| msgid "_Synchronize Calendars"
+msgctxt "shortcut window"
+msgid "Synchronize calendars"
+msgstr "ਕੈਲੰਡਰ ਸਿੰਕਰੋਨਾਈਜ਼ ਕਰੋ"
+
+#: src/gui/gtk/help-overlay.ui:32
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "ਵਿੰਡੋ ਬੰਦ ਕਰੋ"
 
-#: src/gui/gtk/help-overlay.ui:31
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "ਖੋਜੋ"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "ਮਦਦ ਵੇਖਾਓ"
 
-#: src/gui/gtk/help-overlay.ui:45
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "ਸ਼ਾਰਟਕੱਟ"
 
-#: src/gui/gtk/help-overlay.ui:54
+#: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "ਨੇਵੀਗੇਸ਼ਨ"
 
-#: src/gui/gtk/help-overlay.ui:58
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "ਪਿੱਛੇ ਜਾਓ"
 
-#: src/gui/gtk/help-overlay.ui:65
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "ਅੱਗੇ ਜਾਓ"
 
-#: src/gui/gtk/help-overlay.ui:72
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "ਅੱਜ ਵੇਖਾਓ"
@@ -998,78 +1239,123 @@ msgctxt "shortcut window"
 msgid "Next view"
 msgstr "ਅਗਲੀ ਝਲਕ"
 
-#: src/gui/gtk/help-overlay.ui:86
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "ਪਿਛਲੀ ਝਲਕ"
 
-#: src/gui/gtk/help-overlay.ui:95
+#: src/gui/gtk/help-overlay.ui:93
 msgctxt "shortcut window"
 msgid "View"
 msgstr "ਵੇਖੋ"
 
-#: src/gui/gtk/help-overlay.ui:99
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "ਹਫਤਾ ਝਲਕ"
 
-#: src/gui/gtk/help-overlay.ui:106
+#: src/gui/gtk/help-overlay.ui:102
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "ਮਹੀਨਾ ਝਲਕ"
 
-#: src/gui/gtk/help-overlay.ui:113
-msgctxt "shortcut window"
-msgid "Year view"
-msgstr "ਸਾਲ ਝਲਕ"
+#: src/gui/importer/gcal-import-dialog.c:396
+#, c-format
+#| msgid "Import a Calendar"
+msgid "Import %d event"
+msgid_plural "Import %d events"
+msgstr[0] "%d ਈਵੈਂਟ ਇੰਪੋਰਟ ਕਰੋ"
+msgstr[1] "%d ਈਵੈਂਟ ਇੰਪੋਰਟ ਕਰੋ"
 
-#: src/gui/views/gcal-month-popover.ui:91
+#: src/gui/importer/gcal-import-dialog.ui:4
+#| msgid "From File…"
+msgid "Import Files…"
+msgstr "…ਫਾਇਲਾਂ ਇੰਪੋਰਟ ਕਰੋ"
+
+#: src/gui/importer/gcal-import-dialog.ui:29
+msgid "_Import"
+msgstr "ਇੰਪੋਰਟ ਕਰੋ(_I)"
+
+#: src/gui/importer/gcal-import-dialog.ui:49
+#| msgid "Calendar"
+msgid "C_alendar"
+msgstr "ਕੈਲੰਡਰ(_a)"
+
+#: src/gui/importer/gcal-importer.c:33
+msgid "No error"
+msgstr "ਕੋਈ ਗਲਤੀ ਨਹੀਂ ਹੈ"
+
+#: src/gui/importer/gcal-importer.c:36
+msgid "Bad argument to function"
+msgstr "ਫ਼ੰਕਸ਼ਨ ਲਈ ਗਲਤ ਆਰਗੂਮੈਂਟ"
+
+#: src/gui/importer/gcal-importer.c:40
+msgid "Failed to allocate a new object in memory"
+msgstr "ਮੈਮੋਰੀ ਵਿੱਚ ਨਵਾਂ ਆਬਜੈਕਟ ਜਾਰੀ ਕਰਨ ਲਈ ਅਸਫ਼ਲ ਹੈ"
+
+#: src/gui/importer/gcal-importer.c:43
+msgid "File is malformed, invalid, or corrupted"
+msgstr "ਫ਼ਾਇਲ ਵਿੱਚ ਗੜਬੜ, ਖ਼ਰਾਬ ਜਾਂ ਨਿਕਾਰਾ ਹੈ"
+
+#: src/gui/importer/gcal-importer.c:46
+#| msgid "Click to select the calendar"
+msgid "Failed to parse the calendar contents"
+msgstr "ਕੈਲੰਡਰ ਸਮੱਗਰੀ ਪਾਰਸ ਕਰਨ ਲਈ ਅਸਫ਼ਲ ਹੈ"
+
+#: src/gui/importer/gcal-importer.c:49
+#| msgid "Calendar files"
+msgid "Failed to read file"
+msgstr "ਫ਼ਾਇਲ ਪੜ੍ਹਨ ਲਈ ਅਸਫ਼ਲ ਹੈ"
+
+#: src/gui/importer/gcal-importer.c:56
+msgid "Internal error"
+msgstr "ਅੰਦਰੂਨੀ ਗਲਤੀ"
+
+#: src/gui/importer/gcal-importer.c:94
+msgid "File is not an iCalendar (.ics) file"
+msgstr "ਫ਼ਾਇਲ ਇੱਕ iCalendar (.ics) ਫ਼ਾਇਲ ਨਹੀਂ ਹੈ"
+
+#: src/gui/importer/gcal-import-file-row.c:154
+msgid "Description"
+msgstr "ਵਰਣਨ"
+
+#: src/gui/views/gcal-agenda-view.c:366
+msgid "On-going"
+msgstr "ਜਾਰੀ"
+
+#: src/gui/views/gcal-agenda-view.ui:22
+msgid "No events"
+msgstr "ਕੋਈ ਈਵੈਂਟ ਨਹੀਂ"
+
+#: src/gui/views/gcal-month-popover.ui:59
 msgid "New Event…"
 msgstr "…ਨਵਾਂ ਈਵੈਂਟ"
 
-#: src/gui/views/gcal-week-grid.c:681 src/gui/views/gcal-week-view.c:293
+#: src/gui/views/gcal-week-grid.c:576
 msgid "00 AM"
 msgstr "00 ਸਵੇਰ"
 
-#: src/gui/views/gcal-week-grid.c:684 src/gui/views/gcal-week-view.c:296
+#: src/gui/views/gcal-week-grid.c:579
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:465
+#: src/gui/views/gcal-week-header.c:472
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "ਹੋਰ ਈਵੈਂਟ"
 msgstr[1] "ਹੋਰ %d ਈਵੈਂਟ"
 
-#: src/gui/views/gcal-week-header.c:1004
+#: src/gui/views/gcal-week-header.c:1001
 #, c-format
 msgid "week %d"
 msgstr "ਹਫ਼ਤਾ %d"
 
-#. Translators: This is a date format in the sidebar of the year
-#. * view when the selection starts at the specified day and the
-#. * end is unspecified.
-#: src/gui/views/gcal-year-view.c:291
-msgid "%B %d…"
-msgstr "%B %d…"
+#: src/utils/gcal-utils.c:1297
+msgid "Modify Multiple Events?"
+msgstr "ਕਈ ਈਵੈੰਟਾਂ ਨੂੰ ਸੋਧਣਾ ਹੈ?"
 
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/gui/views/gcal-year-view.c:297 src/gui/views/gcal-year-view.c:563
-msgid "%B %d"
-msgstr "%B %d"
-
-#: src/gui/views/gcal-year-view.ui:133
-msgid "No events"
-msgstr "ਕੋਈ ਈਵੈਂਟ ਨਹੀਂ"
-
-#: src/gui/views/gcal-year-view.ui:155
-msgid "Add Event…"
-msgstr "...ਈਵੈਂਟ ਜੋੜੋ"
-
-#: src/utils/gcal-utils.c:958
+#: src/utils/gcal-utils.c:1298
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1078,24 +1364,69 @@ msgstr ""
 " ਚੁਣੀਆਂ ਤਬਦੀਲੀਆਂ ਨੂੰ "
 "ਲਾਗੂ ਕੀਤਾ ਜਾਵੇਗਾ:"
 
-#: src/utils/gcal-utils.c:961
-msgid "_Cancel"
-msgstr "ਰੱਦ ਕਰੋ(_C)"
-
-#: src/utils/gcal-utils.c:963
+#: src/utils/gcal-utils.c:1302
 msgid "_Only This Event"
 msgstr "ਕੇਵਲ ਇਹੀ ਈਵੈਂਟ(_O)"
 
-#: src/utils/gcal-utils.c:970
-msgid "_Subsequent events"
+#: src/utils/gcal-utils.c:1308
+#| msgid "_Subsequent events"
+msgid "_Subsequent Events"
 msgstr "ਅਗਲੇ ਈਵੈਂਟ(_S)"
 
-#: src/utils/gcal-utils.c:972
-msgid "_All events"
-msgstr "ਸਾਰੇ ਈਵੈਂਟ(_A)"
+#: src/utils/gcal-utils.c:1311
+#| msgid "_All events"
+msgid "_All Events"
+msgstr "ਸਾਰੀ ਈਵੈਂਟ(_A)"
 
+#~| msgctxt "shortcut window"
+#~| msgid "Year view"
+#~ msgid "Year view"
+#~ msgstr "ਸਾਲ ਝਲਕ"
+
+#~ msgid "Window position"
+#~ msgstr "ਵਿੰਡੋ ਸਥਿਤੀ"
+
+#~ msgid "Window position (x and y)."
+#~ msgstr "ਵਿੰਡੋ ਸਥਿਤੀ (x ਤੇ y)।"
+
+#~ msgid "Follow system night light"
+#~ msgstr "ਸਿਸਟਮ ਰਾਤ ਦੀ ਰੋਸ਼ਨੀ ਮੁਤਾਬਕ"
+
+#~ msgid "Use GNOME night light setting to activate night-mode."
+#~ msgstr "ਰਾਤ ਮੋਡ ਚਾਲੂ ਕਰਨ ਲਈ ਗਨੋਲ ਰਾਤ ਦੀ ਰੋਸ਼ਨੀ ਸੈਟਿੰਗ ਨੂੰ ਵਰਤੋਂ।"
+
+#~ msgid "Settings"
+#~ msgstr "ਸੈਟਿੰਗਾਂ"
+
+#~ msgid "Calendar name"
+#~ msgstr "ਕੈਲੰਡਰ ਦਾ ਨਾਂ"
+
+#~ msgid "Cancel"
+#~ msgstr "ਰੱਦ ਕਰੋ"
+
+#~ msgid "Year"
+#~ msgstr "ਸਾਲ"
+
+#~ msgctxt "tooltip"
+#~ msgid "Add a new event"
+#~ msgstr "ਨਵਾਂ ਈਵੈਂਟ ਜੋੜੋ"
+
+#~ msgid "Manage your calendars"
+#~ msgstr "ਆਪਣੇ ਕੈਲੰਡਰਾਂ ਦਾ ਬੰਦੋਬਸਤ ਕਰੋ"
+
+#~ msgctxt "tooltip"
 #~ msgid "Search for events"
-#~ msgstr "ਈਵੈਂਟ ਲੱਭੋ"
+#~ msgstr "ਈਵੈਂਟਾਂ ਲਈ ਲੱਭੋ"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Year view"
+#~ msgstr "ਸਾਲ ਝਲਕ"
+
+#~ msgid "%B %d…"
+#~ msgstr "%B %d…"
+
+#~ msgid "%B %d"
+#~ msgstr "%B %d"
 
 #~ msgid "Calendar management"
 #~ msgstr "ਕੈਲੰਡਰ ਦਾ ਬੰਦੋਬਸਤ"
@@ -1114,9 +1445,6 @@ msgstr "ਸਾਰੇ ਈਵੈਂਟ(_A)"
 
 #~ msgid "New Local Calendar…"
 #~ msgstr "…ਨਵਾਂ ਲੋਕਲ ਕੈਲੰਡਰ"
-
-#~ msgid "From File…"
-#~ msgstr "…ਫਾਇਲ ਤੋਂ"
 
 #~ msgid "No results found"
 #~ msgstr "ਕੋਈ ਨਤੀਜਾ ਨਹੀਂ ਲੱਭਿਆ"
@@ -1213,6 +1541,3 @@ msgstr "ਸਾਰੇ ਈਵੈਂਟ(_A)"
 
 #~ msgid "Back"
 #~ msgstr "ਪਿੱਛੇ"
-
-#~ msgid "Edit"
-#~ msgstr "ਸੋਧ"
