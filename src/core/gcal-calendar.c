@@ -109,7 +109,7 @@ on_source_color_changed_cb (ESourceSelectable *source,
                             GcalCalendar      *self)
 {
   update_color (self);
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_NAME]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COLOR]);
 }
 
 static void
