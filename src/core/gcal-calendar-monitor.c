@@ -21,6 +21,7 @@
 #define G_LOG_DOMAIN "GcalCalendarMonitor"
 
 #include "gcal-calendar-monitor.h"
+#include "gcal-core-macros.h"
 #include "gcal-date-time-utils.h"
 #include "gcal-debug.h"
 #include "gcal-event.h"
@@ -188,6 +189,8 @@ add_events_in_idle (GcalCalendarMonitor *self,
 {
   IdleData *idle_data;
 
+  g_assert (GCAL_IS_THREAD (self->thread));
+
   idle_data = g_new0 (IdleData, 1);
   idle_data->monitor = g_object_ref (self);
   idle_data->events = g_ptr_array_ref (events);
@@ -204,6 +207,8 @@ update_events_in_idle (GcalCalendarMonitor *self,
                        GPtrArray           *events)
 {
   IdleData *idle_data;
+
+  g_assert (GCAL_IS_THREAD (self->thread));
 
   idle_data = g_new0 (IdleData, 1);
   idle_data->monitor = g_object_ref (self);
@@ -222,6 +227,8 @@ remove_events_in_idle (GcalCalendarMonitor *self,
 {
   IdleData *idle_data;
 
+  g_assert (GCAL_IS_THREAD (self->thread));
+
   idle_data = g_new0 (IdleData, 1);
   idle_data->monitor = g_object_ref (self);
   idle_data->event_ids = g_ptr_array_ref (events);
@@ -238,6 +245,8 @@ set_complete_in_idle (GcalCalendarMonitor *self,
                       gboolean             complete)
 {
   IdleData *idle_data;
+
+  g_assert (GCAL_IS_THREAD (self->thread));
 
   idle_data = g_new0 (IdleData, 1);
   idle_data->monitor = g_object_ref (self);
@@ -273,6 +282,8 @@ client_instance_generated_cb (ICalComponent  *icomponent,
   data = user_data;
   self = data->monitor;
 
+  g_assert (GCAL_IS_THREAD (self->thread));
+
   if (g_cancellable_set_error_if_cancelled (cancellable, error))
     return FALSE;
 
@@ -305,6 +316,8 @@ on_client_view_objects_added_cb (ECalClientView      *view,
   gint i;
 
   GCAL_ENTRY;
+
+  g_assert (GCAL_IS_THREAD (self->thread));
 
   range = get_monitor_ranges (self);
 
@@ -443,6 +456,8 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
   const GSList *l;
 
   GCAL_ENTRY;
+
+  g_assert (GCAL_IS_THREAD (self->thread));
 
   if (!self->monitor_thread.populated && self->monitor_thread.events_to_add)
     {
@@ -640,6 +655,8 @@ on_client_view_objects_removed_cb (ECalClientView      *view,
 
   GCAL_ENTRY;
 
+  g_assert (GCAL_IS_THREAD (self->thread));
+
   event_ids = g_ptr_array_new_with_free_func (g_free);
 
   for (l = objects; l; l = l->next)
@@ -701,6 +718,7 @@ on_client_view_complete_cb (ECalClientView      *view,
 
   GCAL_ENTRY;
 
+  g_assert (GCAL_IS_THREAD (self->thread));
   g_assert (!self->monitor_thread.populated);
 
   events_to_add = g_steal_pointer (&self->monitor_thread.events_to_add);
@@ -727,6 +745,8 @@ create_view (GcalCalendarMonitor *self)
   ECalClient *client;
 
   GCAL_ENTRY;
+
+  g_assert (GCAL_IS_THREAD (self->thread));
 
   reader_locker = g_rw_lock_reader_locker_new (&self->shared.lock);
 
@@ -788,6 +808,8 @@ remove_view (GcalCalendarMonitor *self)
 
   GCAL_ENTRY;
 
+  g_assert (GCAL_IS_THREAD (self->thread));
+
   g_clear_object (&self->cancellable);
 
   if (!self->monitor_thread.view)
@@ -826,6 +848,8 @@ message_queue_source_prepare (GSource *source,
   queue_source = (MessageQueueSource*) source;
   self = queue_source->monitor;
 
+  g_assert (GCAL_IS_THREAD (self->thread));
+
   return g_async_queue_length (self->messages) > 0;
 }
 
@@ -843,6 +867,8 @@ message_queue_source_dispatch (GSource     *source,
   queue_source = (MessageQueueSource*) source;
   self = queue_source->monitor;
   event = GPOINTER_TO_INT (g_async_queue_pop (self->messages));
+
+  g_assert (GCAL_IS_THREAD (self->thread));
 
   switch (event)
     {
@@ -928,6 +954,8 @@ static void
 notify_view_thread (GcalCalendarMonitor *self,
                     MonitorThreadEvent   event)
 {
+  g_assert (GCAL_IS_MAIN_THREAD ());
+
   g_async_queue_push (self->messages, GINT_TO_POINTER (event));
   g_main_context_wakeup (self->thread_context);
 }
@@ -936,6 +964,8 @@ static void
 maybe_spawn_view_thread (GcalCalendarMonitor *self)
 {
   g_autofree gchar *thread_name = NULL;
+
+  g_assert (GCAL_IS_MAIN_THREAD ());
 
   if (self->thread || !self->shared.range)
     return;
@@ -954,6 +984,8 @@ remove_events_outside_range (GcalCalendarMonitor *self,
   g_autoptr (GPtrArray) events_to_remove = NULL;
   GHashTableIter iter;
   GcalEvent *event;
+
+  g_assert (GCAL_IS_MAIN_THREAD ());
 
   GCAL_TRACE_MSG ("Removing events outside range from monitor");
 
@@ -984,6 +1016,8 @@ remove_all_events (GcalCalendarMonitor *self)
   g_autoptr (GRWLockWriterLocker) writer_locker = NULL;
   g_autoptr (GPtrArray) events_to_remove = NULL;
 
+  g_assert (GCAL_IS_MAIN_THREAD ());
+
   GCAL_TRACE_MSG ("Removing all events from view");
 
   writer_locker = g_rw_lock_writer_locker_new (&self->shared.lock);
@@ -998,6 +1032,8 @@ static void
 set_complete (GcalCalendarMonitor *self,
               gboolean             complete)
 {
+  g_assert (GCAL_IS_MAIN_THREAD ());
+
   if (self->complete == complete)
     return;
 
@@ -1022,6 +1058,8 @@ add_events_to_timeline_in_idle_cb (gpointer user_data)
   IdleData *idle_data;
 
   GCAL_ENTRY;
+
+  g_assert (GCAL_IS_MAIN_THREAD ());
 
   idle_data = user_data;
   self = idle_data->monitor;
@@ -1063,6 +1101,8 @@ update_events_in_idle_cb (gpointer user_data)
   IdleData *idle_data;
 
   GCAL_ENTRY;
+
+  g_assert (GCAL_IS_MAIN_THREAD ());
 
   idle_data = user_data;
   self = idle_data->monitor;
@@ -1112,6 +1152,8 @@ remove_events_from_timeline_in_idle_cb (gpointer user_data)
   IdleData *idle_data;
 
   GCAL_ENTRY;
+
+  g_assert (GCAL_IS_MAIN_THREAD ());
 
   idle_data = user_data;
   self = idle_data->monitor;
@@ -1167,6 +1209,8 @@ complete_in_idle_cb (gpointer user_data)
   IdleData *idle_data;
 
   GCAL_ENTRY;
+
+  g_assert (GCAL_IS_MAIN_THREAD ());
 
   idle_data = user_data;
   self = idle_data->monitor;
