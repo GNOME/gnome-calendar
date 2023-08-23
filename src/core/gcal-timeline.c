@@ -997,6 +997,8 @@ gcal_timeline_add_calendar (GcalTimeline *self,
   if (self->range)
     gcal_calendar_monitor_set_range (monitor, self->range);
 
+  update_completed_calendars (self);
+
   GCAL_EXIT;
 }
 
@@ -1012,7 +1014,10 @@ gcal_timeline_remove_calendar (GcalTimeline *self,
   g_object_ref (calendar);
 
   if (g_hash_table_remove (self->calendars, calendar))
-    GCAL_TRACE_MSG ("Removing calendar '%s' from timeline %p", gcal_calendar_get_name (calendar), self);
+    {
+      GCAL_TRACE_MSG ("Removing calendar '%s' from timeline %p", gcal_calendar_get_name (calendar), self);
+      update_completed_calendars (self);
+    }
 
   g_object_unref (calendar);
 
