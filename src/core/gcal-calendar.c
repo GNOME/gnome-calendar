@@ -21,6 +21,7 @@
 #define G_LOG_DOMAIN "GcalCalendar"
 
 #include "gcal-calendar.h"
+#include "gcal-core-macros.h"
 #include "gcal-debug.h"
 #include "gcal-utils.h"
 
@@ -38,9 +39,20 @@ typedef struct
   gulong              readonly_changed_handler_id;
   gulong              visible_changed_handler_id;
   gboolean            initialized;
+
+  struct {
+    GMutex            mutex;
+    guint             update_idle_id;
+    gboolean          color_changed;
+    gboolean          name_changed;
+    gboolean          readonly_changed;
+    gboolean          visibility_changed;
+  } shared;
 } GcalCalendarPrivate;
 
 static void          g_initable_iface_init                       (GInitableIface     *iface);
+
+static gboolean      update_idle_cb                              (gpointer            data);
 
 G_DEFINE_TYPE_WITH_CODE (GcalCalendar, gcal_calendar, G_TYPE_OBJECT,
                          G_ADD_PRIVATE (GcalCalendar)
@@ -85,6 +97,18 @@ save_calendar (GcalCalendar *self)
 }
 
 static void
+schedule_idle_update_unlocked (GcalCalendar *self)
+{
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
+
+  if (priv->shared.update_idle_id == 0)
+    priv->shared.update_idle_id = g_idle_add_full (G_PRIORITY_DEFAULT_IDLE,
+                                                   update_idle_cb,
+                                                   g_object_ref (self),
+                                                   g_object_unref);
+}
+
+static void
 update_color (GcalCalendar *self)
 {
   GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
@@ -103,13 +127,76 @@ update_color (GcalCalendar *self)
  * Callbacks
  */
 
+static gboolean
+update_idle_cb (gpointer data)
+{
+  g_autoptr (GMutexLocker) locker = NULL;
+  GcalCalendarPrivate *priv;
+  GcalCalendar *self;
+
+  GCAL_ENTRY;
+
+  g_assert (GCAL_IS_MAIN_THREAD ());
+
+  self = GCAL_CALENDAR (data);
+  priv = gcal_calendar_get_instance_private (self);
+
+  locker = g_mutex_locker_new (&priv->shared.mutex);
+
+  if (priv->shared.name_changed)
+    {
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_NAME]);
+      priv->shared.name_changed = FALSE;
+    }
+
+  if (priv->shared.color_changed)
+    {
+      update_color (self);
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COLOR]);
+      priv->shared.color_changed = FALSE;
+    }
+
+  if (priv->shared.readonly_changed)
+    {
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_READ_ONLY]);
+      priv->shared.readonly_changed = FALSE;
+    }
+
+  if (priv->shared.visibility_changed)
+    {
+      ESourceSelectable *selectable_extension;
+      gboolean visible;
+
+      selectable_extension = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR);
+      visible = e_source_selectable_get_selected (selectable_extension);
+
+      if (visible != priv->visible)
+        {
+          priv->visible = visible;
+          g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_VISIBLE]);
+        }
+
+      priv->shared.visibility_changed = FALSE;
+    }
+
+  priv->shared.update_idle_id = 0;
+
+  GCAL_RETURN (G_SOURCE_REMOVE);
+}
+
 static void
 on_source_color_changed_cb (ESourceSelectable *source,
                             GParamSpec        *pspec,
                             GcalCalendar      *self)
 {
-  update_color (self);
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COLOR]);
+  g_autoptr (GMutexLocker) locker = NULL;
+  GcalCalendarPrivate *priv;
+
+  priv = gcal_calendar_get_instance_private (self);
+  locker = g_mutex_locker_new (&priv->shared.mutex);
+
+  priv->shared.color_changed = TRUE;
+  schedule_idle_update_unlocked (self);
 }
 
 static void
@@ -117,7 +204,14 @@ on_source_name_changed_cb (ESource      *source,
                            GParamSpec   *pspec,
                            GcalCalendar *self)
 {
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_NAME]);
+  g_autoptr (GMutexLocker) locker = NULL;
+  GcalCalendarPrivate *priv;
+
+  priv = gcal_calendar_get_instance_private (self);
+  locker = g_mutex_locker_new (&priv->shared.mutex);
+
+  priv->shared.name_changed = TRUE;
+  schedule_idle_update_unlocked (self);
 }
 
 static void
@@ -125,7 +219,14 @@ on_client_readonly_changed_cb (EClient      *client,
                                GParamSpec   *pspec,
                                GcalCalendar *self)
 {
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_READ_ONLY]);
+  g_autoptr (GMutexLocker) locker = NULL;
+  GcalCalendarPrivate *priv;
+
+  priv = gcal_calendar_get_instance_private (self);
+  locker = g_mutex_locker_new (&priv->shared.mutex);
+
+  priv->shared.readonly_changed = TRUE;
+  schedule_idle_update_unlocked (self);
 }
 
 static void
@@ -133,17 +234,14 @@ on_source_visible_changed_cb (ESourceSelectable *source,
                               GParamSpec        *pspec,
                               GcalCalendar      *self)
 {
+  g_autoptr (GMutexLocker) locker = NULL;
   GcalCalendarPrivate *priv;
-  gboolean visible;
 
   priv = gcal_calendar_get_instance_private (self);
-  visible = e_source_selectable_get_selected (source);
+  locker = g_mutex_locker_new (&priv->shared.mutex);
 
-  if (visible == priv->visible)
-    return;
-
-  priv->visible = visible;
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_VISIBLE]);
+  priv->shared.visibility_changed = TRUE;
+  schedule_idle_update_unlocked (self);
 }
 
 
@@ -245,6 +343,10 @@ gcal_calendar_finalize (GObject *object)
   gcal_clear_signal_handler (&priv->name_changed_handler_id, priv->source);
   gcal_clear_signal_handler (&priv->readonly_changed_handler_id, priv->client);
   gcal_clear_signal_handler (&priv->visible_changed_handler_id, selectable_extension);
+
+  g_mutex_lock (&priv->shared.mutex);
+  g_clear_handle_id (&priv->shared.update_idle_id, g_source_remove);
+  g_mutex_unlock (&priv->shared.mutex);
 
   g_clear_object (&priv->client);
   g_clear_object (&priv->source);
