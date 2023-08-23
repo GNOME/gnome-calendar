@@ -848,7 +848,14 @@ message_queue_source_prepare (GSource *source,
   queue_source = (MessageQueueSource*) source;
   self = queue_source->monitor;
 
-  g_assert (GCAL_IS_THREAD (self->thread));
+  /*
+   * The prepare function can be called before g_thread_new()
+   * returns, and that's valid. However, in that case, no messages
+   * should be available in the queue, as the main thread didn't
+   * return execution to the mainloop yet. Protect against that.
+   */
+  g_assert (GCAL_IS_THREAD (self->thread) ||
+            (!self->thread && g_async_queue_length (self->messages) == 0));
 
   return g_async_queue_length (self->messages) > 0;
 }
