@@ -946,7 +946,6 @@ calendar_view_thread_func (gpointer data)
   g_source_attach ((GSource*) queue_source, self->thread_context);
 
   g_main_loop_run (mainloop);
-  g_main_loop_quit (mainloop);
 
   g_main_context_pop_thread_default (self->thread_context);
 
