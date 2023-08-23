@@ -1234,7 +1234,12 @@ gcal_calendar_monitor_finalize (GObject *object)
 
   g_cancellable_cancel (self->cancellable);
   notify_view_thread (self, QUIT);
-  g_clear_pointer (&self->thread, g_thread_join);
+
+  if (self->thread)
+    {
+      g_thread_join (self->thread);
+      self->thread = NULL;
+    }
 
   remove_all_events (self);
 
