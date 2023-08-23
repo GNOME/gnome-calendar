@@ -351,6 +351,8 @@ gcal_calendar_finalize (GObject *object)
   g_clear_object (&priv->client);
   g_clear_object (&priv->source);
 
+  g_mutex_clear (&priv->shared.mutex);
+
   G_OBJECT_CLASS (gcal_calendar_parent_class)->finalize (object);
 }
 
@@ -503,6 +505,8 @@ gcal_calendar_init (GcalCalendar *self)
   GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
 
   gdk_rgba_parse (&priv->color, "#ffffff");
+
+  g_mutex_init (&priv->shared.mutex);
 }
 
 /**
