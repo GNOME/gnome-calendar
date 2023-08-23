@@ -70,7 +70,7 @@ struct _GcalTimeline
   gchar              *filter;
 
   GHashTable         *calendars; /* GcalCalendar* -> GcalCalendarMonitor* */
-  guint               completed_calendars;
+  gboolean            complete;
 
   GHashTable         *subscribers; /* GcalTimelineSubscriber* -> SubscriberData* */
   GcalRangeTree      *subscriber_ranges;
@@ -188,10 +188,36 @@ queue_event_data (GcalTimeline           *self,
     }
 }
 
-static inline gboolean
-is_timeline_complete (GcalTimeline *self)
+static void
+update_completed_calendars (GcalTimeline *self)
 {
-  return self->completed_calendars == g_hash_table_size (self->calendars);
+  GcalCalendarMonitor *calendar_monitor;
+  GcalCalendar *calendar;
+  GHashTableIter iter;
+  gboolean was_complete;
+  gboolean is_complete;
+
+  GCAL_ENTRY;
+
+  was_complete = self->complete;
+  is_complete = TRUE;
+
+  g_hash_table_iter_init (&iter, self->calendars);
+  while (g_hash_table_iter_next (&iter, (gpointer*) &calendar, (gpointer*) &calendar_monitor))
+    {
+      if (gcal_calendar_get_visible (calendar))
+        is_complete &= gcal_calendar_monitor_is_complete (calendar_monitor);
+    }
+
+  if (was_complete != is_complete)
+    {
+      GCAL_TRACE_MSG ("Timeline %p is %s", self, is_complete ? "complete" : "incomplete");
+
+      self->complete = is_complete;
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPLETE]);
+    }
+
+  GCAL_EXIT;
 }
 
 static void
@@ -610,15 +636,7 @@ on_calendar_monitor_completed_cb (GcalCalendarMonitor *monitor,
 {
   GCAL_ENTRY;
 
-  if (gcal_calendar_monitor_is_complete (monitor))
-    self->completed_calendars++;
-  else
-    self->completed_calendars--;
-
-  g_assert (self->completed_calendars <= g_hash_table_size (self->calendars));
-
-  if (is_timeline_complete (self))
-    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPLETE]);
+  update_completed_calendars (self);
 
   GCAL_EXIT;
 }
@@ -823,7 +841,7 @@ gcal_timeline_get_property (GObject    *object,
   switch (prop_id)
     {
     case PROP_COMPLETE:
-      g_value_set_boolean (value, is_timeline_complete (self));
+      g_value_set_boolean (value, self->complete);
       break;
 
     case PROP_CONTEXT:
@@ -1110,5 +1128,5 @@ gcal_timeline_is_complete (GcalTimeline *self)
 {
   g_return_val_if_fail (GCAL_IS_TIMELINE (self), FALSE);
 
-  return is_timeline_complete (self);
+  return self->complete;
 }
