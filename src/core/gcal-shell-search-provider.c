@@ -315,6 +315,9 @@ on_timeline_completed_cb (GcalTimeline            *timeline,
 
   GCAL_ENTRY;
 
+  if (!self->pending_search)
+    GCAL_RETURN ();
+
   if (!gcal_timeline_is_complete (timeline))
     GCAL_RETURN ();
 
