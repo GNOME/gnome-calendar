@@ -132,9 +132,9 @@ move_event (GcalMonthCell         *self,
                                    current_month - start_month,
                                    0, 0, 0, 0);
 
-  diff = g_date_time_get_day_of_month (self->date) - g_date_time_get_day_of_month (start_dt);
+  diff = gcal_date_time_compare_date (self->date, start_dt);
 
-  if (diff != 0 || current_month != start_month || current_year != start_year)
+  if (diff != 0)
     {
       g_autoptr (GDateTime) new_start = g_date_time_add_days (start_dt, diff);
 
@@ -227,7 +227,7 @@ on_drop_target_accept_cb (GtkDropTarget *drop_target,
   if (!gdk_content_formats_contain_gtype (gdk_drop_get_formats (drop), GCAL_TYPE_EVENT_WIDGET))
     GCAL_RETURN (FALSE);
 
-  GCAL_RETURN (!self->different_month);
+  GCAL_RETURN (TRUE);
 }
 
 static void
@@ -252,9 +252,6 @@ on_drop_target_drop_cb (GtkDropTarget *drop_target,
   GcalEvent *event;
 
   GCAL_ENTRY;
-
-  if (self->different_month)
-    GCAL_RETURN (FALSE);
 
   if (!G_VALUE_HOLDS (value, GCAL_TYPE_EVENT_WIDGET))
     GCAL_RETURN (FALSE);
