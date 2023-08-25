@@ -1234,7 +1234,7 @@ complete_in_idle_cb (gpointer user_data)
  */
 
 static void
-gcal_calendar_monitor_finalize (GObject *object)
+gcal_calendar_monitor_dispose (GObject *object)
 {
   GcalCalendarMonitor *self = (GcalCalendarMonitor *)object;
 
@@ -1248,6 +1248,16 @@ gcal_calendar_monitor_finalize (GObject *object)
     }
 
   remove_all_events (self);
+
+  g_clear_object (&self->cancellable);
+
+  G_OBJECT_CLASS (gcal_calendar_monitor_parent_class)->dispose (object);
+}
+
+static void
+gcal_calendar_monitor_finalize (GObject *object)
+{
+  GcalCalendarMonitor *self = (GcalCalendarMonitor *)object;
 
   g_clear_object (&self->calendar);
   g_clear_pointer (&self->thread_context, g_main_context_unref);
@@ -1313,6 +1323,7 @@ gcal_calendar_monitor_class_init (GcalCalendarMonitorClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+  object_class->dispose = gcal_calendar_monitor_dispose;
   object_class->finalize = gcal_calendar_monitor_finalize;
   object_class->get_property = gcal_calendar_monitor_get_property;
   object_class->set_property = gcal_calendar_monitor_set_property;
