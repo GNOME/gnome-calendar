@@ -182,12 +182,15 @@ update_weather (GcalMonthCell *self)
   GcalWeatherService *weather_service;
   GcalWeatherInfo *weather_info;
   GDate date;
+  gint day_of_month;
 
   if (!self->context)
     return;
 
+  day_of_month = g_date_time_get_day_of_month (self->date);
+
   g_date_set_dmy (&date,
-                  g_date_time_get_day_of_month (self->date),
+                  day_of_month,
                   g_date_time_get_month (self->date),
                   g_date_time_get_year (self->date));
 
@@ -211,11 +214,25 @@ update_weather (GcalMonthCell *self)
 
       gtk_image_set_from_icon_name (self->weather_icon, icon_name);
       gtk_label_set_text (self->temp_label, temp_str);
+
+      /* Use a short month name label to avoid conflicting with the weather forecast's labels */
+      if (day_of_month == 1)
+        {
+          g_autofree gchar *month_name = g_date_time_format (self->date, "%b");
+          gtk_label_set_text (self->month_name_label, month_name);
+        }
     }
   else
     {
       gtk_image_clear (self->weather_icon);
       gtk_label_set_text (self->temp_label, "");
+
+      /* No risk of conflicting with the weather forecast labels in their absence, use the full month name label */
+      if (day_of_month == 1)
+        {
+          g_autofree gchar *month_name = g_date_time_format (self->date, "%B");
+          gtk_label_set_text (self->month_name_label, month_name);
+        }
     }
 }
 
@@ -486,7 +503,7 @@ gcal_month_cell_set_date (GcalMonthCell *self,
   gtk_widget_set_visible (GTK_WIDGET (self->month_name_label), day_of_month == 1);
   if (day_of_month == 1)
     {
-      g_autofree gchar *month_name = g_date_time_format (date, "%b");
+      g_autofree gchar *month_name = g_date_time_format (date, "%B");
       gtk_label_set_text (self->month_name_label, month_name);
       gtk_widget_add_css_class (GTK_WIDGET (self->month_name_label), "heading");
       gtk_widget_add_css_class (GTK_WIDGET (self->day_label), "heading");
