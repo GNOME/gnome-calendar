@@ -488,6 +488,13 @@ gcal_month_cell_set_date (GcalMonthCell *self,
     {
       g_autofree gchar *month_name = g_date_time_format (date, "%b");
       gtk_label_set_text (self->month_name_label, month_name);
+      gtk_widget_add_css_class (GTK_WIDGET (self->month_name_label), "heading");
+      gtk_widget_add_css_class (GTK_WIDGET (self->day_label), "heading");
+    }
+  else
+    {
+      gtk_widget_remove_css_class (GTK_WIDGET (self->month_name_label), "heading");
+      gtk_widget_remove_css_class (GTK_WIDGET (self->day_label), "heading");
     }
 
   update_weather (self);
