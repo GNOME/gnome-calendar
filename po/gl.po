@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: unnamed project\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-08-04 23:11+0000\n"
-"PO-Revision-Date: 2023-08-09 21:19+0200\n"
+"POT-Creation-Date: 2023-08-09 19:19+0000\n"
+"PO-Revision-Date: 2023-08-29 23:48+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -31,7 +31,7 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
 msgid "Calendar"
 msgstr "Calendario"
 
@@ -45,10 +45,10 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"Calendario de GNOME é unha aplicación de calendario simple e bonito deseñado "
-"para adaptarse perfectamente ao escritorio GNOME. Ao reusar os compoñentes "
-"nos que está construído o escritorio GNOME, o Calendario intégrase "
-"perfectamente co ecosistema GNOME."
+"Calendario de GNOME é unha aplicación de calendario simple e bonita, "
+"deseñada para adaptarse perfectamente ao escritorio GNOME. Ao reusar os "
+"compoñentes nos que está construído o escritorio GNOME, o Calendario "
+"intégrase perfectamente co ecosistema GNOME."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
@@ -153,18 +153,18 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "Preferencias de Calendario"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:343
+#: src/gui/calendar-management/gcal-calendars-page.c:345
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Calendarios"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:368
+#: src/gui/calendar-management/gcal-calendars-page.c:370
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Calendario <b>%s</b> eliminado"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/calendar-management/gcal-calendars-page.c:375
 #: src/gui/gcal-window.c:741
 msgid "_Undo"
 msgstr "_Desfacer"
@@ -618,7 +618,7 @@ msgstr "O Proxecto GNOME"
 msgid "translator-credits"
 msgstr "Fran Diéguez <frandieguez@gnome.org>, 2012-2023"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:332
 msgid "Weather"
 msgstr "Tempo"
 
@@ -1107,35 +1107,35 @@ msgstr "Outro evento eliminado"
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
-#: src/gui/gcal-window.ui:137
+#: src/gui/gcal-window.ui:143
 msgid "Main Menu"
 msgstr "Menú principal"
 
-#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
+#: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
 msgid "_Today"
 msgstr "_Hoxe"
 
-#: src/gui/gcal-window.ui:249
+#: src/gui/gcal-window.ui:255
 msgid "_Week"
 msgstr "_Semana"
 
-#: src/gui/gcal-window.ui:264
+#: src/gui/gcal-window.ui:270
 msgid "_Month"
 msgstr "_Mes"
 
-#: src/gui/gcal-window.ui:318
+#: src/gui/gcal-window.ui:324
 msgid "_Date & Time Settings…"
 msgstr "Preferencias de _data e hora…"
 
-#: src/gui/gcal-window.ui:322
+#: src/gui/gcal-window.ui:328
 msgid "_Online Accounts…"
 msgstr "_Contas en liña…"
 
-#: src/gui/gcal-window.ui:334
+#: src/gui/gcal-window.ui:340
 msgid "_Keyboard Shortcuts"
 msgstr "Atallos de _teclado"
 
-#: src/gui/gcal-window.ui:338
+#: src/gui/gcal-window.ui:344
 msgid "_About Calendar"
 msgstr "_Sobre Calendario"
 
