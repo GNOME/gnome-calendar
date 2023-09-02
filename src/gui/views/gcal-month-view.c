@@ -578,6 +578,9 @@ on_row_offset_animation_done (AdwAnimation  *animation,
 {
   gtk_widget_remove_css_class (GTK_WIDGET (self), "scrolling");
   cancel_row_offset_animation (self);
+
+  self->row_offset = 0.0;
+  gtk_widget_queue_allocate (GTK_WIDGET (self));
 }
 
 static void
