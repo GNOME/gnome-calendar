@@ -113,22 +113,22 @@ calculate_event_cells (GcalMonthViewRow *self,
                        gint             *out_first_cell,
                        gint             *out_last_cell)
 {
+  g_autoptr (GDateTime) range_start = NULL;
+  g_autoptr (GDateTime) start_date = NULL;
   gboolean all_day;
+  gint first_cell;
+
+  g_assert (out_first_cell != NULL || out_last_cell != NULL);
 
   all_day = gcal_event_get_all_day (event);
+  range_start = gcal_range_get_start (self->range);
+  start_date = gcal_event_get_date_start (event);
+  start_date = all_day ? g_date_time_ref (start_date) : g_date_time_to_local (start_date);
+  first_cell = MAX (gcal_date_time_compare_date (start_date, range_start), 0);
 
   /* Start date */
   if (out_first_cell)
-    {
-      g_autoptr (GDateTime) range_start = NULL;
-      g_autoptr (GDateTime) start_date = NULL;
-
-      range_start = gcal_range_get_start (self->range);
-      start_date = gcal_event_get_date_start (event);
-      start_date = all_day ? g_date_time_ref (start_date) : g_date_time_to_local (start_date);
-
-      *out_first_cell = MAX (gcal_date_time_compare_date (start_date, range_start), 0);
-    }
+    *out_first_cell = first_cell;
 
   /*
    * The logic for the end date is the same, except that we have to check
@@ -149,7 +149,7 @@ calculate_event_cells (GcalMonthViewRow *self,
       if (all_day)
         last_cell--;
 
-      *out_last_cell = MIN (last_cell, 6);
+      *out_last_cell = CLAMP (last_cell, first_cell, 6);
     }
 }
 
