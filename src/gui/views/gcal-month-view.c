@@ -635,7 +635,6 @@ static void
 animate_row_scroll (GcalMonthView *self,
                     gint           n_rows)
 {
-
   GCAL_ENTRY;
 
   g_assert (n_rows != 0);
@@ -647,16 +646,23 @@ animate_row_scroll (GcalMonthView *self,
     {
       g_autoptr (AdwAnimationTarget) animation_target = NULL;
       g_autofree gdouble *last_offset_location = NULL;
+      gboolean animate;
+
+      g_object_get (gtk_widget_get_settings (GTK_WIDGET (self)),
+                    "gtk-enable-animations", &animate,
+                    NULL);
+
 
       animation_target = adw_callback_animation_target_new (animate_row_scroll_cb, self, NULL);
 
       self->row_offset_animation = adw_timed_animation_new (GTK_WIDGET (self),
                                                             self->row_offset,
                                                             n_rows,
-                                                            150, // ms
+                                                            animate ? 150 : 100, // ms
                                                             g_steal_pointer (&animation_target));
       adw_timed_animation_set_easing (ADW_TIMED_ANIMATION (self->row_offset_animation),
                                       ADW_EASE_OUT_QUAD);
+      adw_animation_set_follow_enable_animations_setting (self->row_offset_animation, FALSE);
 
       g_signal_connect (self->row_offset_animation,
                         "done",
@@ -1012,6 +1018,7 @@ on_scroll_controller_decelerate_cb (GtkEventControllerScroll *scroll_controller,
   self->last_velocity = velocity_y;
   adw_timed_animation_set_easing (ADW_TIMED_ANIMATION (self->kinetic_scroll_animation),
                                   ADW_EASE_OUT_EXPO);
+  adw_animation_set_follow_enable_animations_setting (self->kinetic_scroll_animation, FALSE);
 
   g_signal_connect (self->kinetic_scroll_animation,
                     "done",
