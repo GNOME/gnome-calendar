@@ -1,3 +1,11 @@
+Major changes in 45.rc:
+* Fix a plethora of threading issues with the backend
+* Fix a crash in the Shell search provider code
+* Make new Month view handle dragging events to days in other months
+* Fix crash with events without end date
+* Improve behaviour of new Month view with reduced animations
+* Updated translations
+
 Major changes in 45.beta:
 * Redesign the Month view to scroll infinitely to the future
   and past. It also displays events from other months, and

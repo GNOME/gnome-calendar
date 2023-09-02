@@ -49,6 +49,9 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2023-09-02" version="45~rc" type="development" />
+    <release date="2023-08-18" version="45~beta" type="development" />
+
     <release date="2023-03-16" version="44.0" type="stable">
       <description>
         <ul>
