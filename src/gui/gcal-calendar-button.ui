@@ -38,7 +38,7 @@
         <attribute name="action">app.sync</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">Manage Calendars…</attribute>
+        <attribute name="label" translatable="yes">_Manage Calendars…</attribute>
         <attribute name="action">win.show-calendars</attribute>
       </item>
     </section>
