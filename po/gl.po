@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: unnamed project\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-08-09 19:19+0000\n"
-"PO-Revision-Date: 2023-08-29 23:48+0200\n"
+"POT-Creation-Date: 2023-08-29 21:49+0000\n"
+"PO-Revision-Date: 2023-09-03 21:06+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -120,11 +120,11 @@ msgstr ""
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Zoom level of the week grid"
-msgstr "Nivel de ampliación da grella semanal"
+msgstr "Nivel de ampliación da grade semanal"
 
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid "The current zoom level of the week grid"
-msgstr "O nivel de ampliación actual da grella semanal"
+msgstr "O nivel de ampliación actual da grade semanal"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -165,7 +165,7 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "Calendario <b>%s</b> eliminado"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:375
-#: src/gui/gcal-window.c:741
+#: src/gui/gcal-window.c:743
 msgid "_Undo"
 msgstr "_Desfacer"
 
@@ -1091,19 +1091,19 @@ msgstr "Localización automática"
 msgid "Search locations"
 msgstr "Buscar localizacións"
 
-#: src/gui/gcal-window.c:337
+#: src/gui/gcal-window.c:333
 msgid "Week"
 msgstr "Semana"
 
-#: src/gui/gcal-window.c:339
+#: src/gui/gcal-window.c:335
 msgid "Month"
 msgstr "Mes"
 
-#: src/gui/gcal-window.c:739
+#: src/gui/gcal-window.c:741
 msgid "Another event deleted"
 msgstr "Outro evento eliminado"
 
-#: src/gui/gcal-window.c:739
+#: src/gui/gcal-window.c:741
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
@@ -1291,22 +1291,22 @@ msgstr "Non hai eventos"
 msgid "New Event…"
 msgstr "Novo evento…"
 
-#: src/gui/views/gcal-week-grid.c:576
+#: src/gui/views/gcal-week-grid.c:578
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:579
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:472
+#: src/gui/views/gcal-week-header.c:474
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Outro evento"
 msgstr[1] "Outros %d eventos"
 
-#: src/gui/views/gcal-week-header.c:1001
+#: src/gui/views/gcal-week-header.c:1006
 #, c-format
 msgid "week %d"
 msgstr "semana %d"
