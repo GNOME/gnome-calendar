@@ -14,3 +14,29 @@ event.timed {
 searchbutton > popover listview > row:selected {
   background-color: alpha(@accent_bg_color, 0.2);
 }
+
+/*
+ * Month cell
+ */
+
+/* Today */
+monthcell.today { background-color: alpha(@accent_bg_color, 0.18); }
+monthcell.today:hover { background-color: alpha(@accent_bg_color, 0.28); }
+
+monthcell:selected.today { background-color: alpha(@accent_bg_color, 0.37); }
+monthcell:selected.today:hover { background-color: alpha(@accent_bg_color, 0.44); }
+
+/* Selected */
+monthcell:selected,
+monthcell.out-of-month:selected,
+monthcell:not(.workday):selected {
+    border-color: alpha(@accent_bg_color, 0.25);
+    background-color: alpha(@accent_bg_color, 0.17);
+}
+
+monthcell:selected:hover,
+monthcell.out-of-month:selected:hover,
+monthcell:not(.workday):selected:hover {
+    background-color: alpha(@accent_bg_color, 0.2);
+    transition: background-color 200ms;
+}

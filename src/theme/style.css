@@ -303,56 +303,86 @@ weekgrid.dnd, .week-header.dnd {
  */
 
 monthcell {
-    border: solid 1px alpha(@borders, 0.3);
+    border: solid 1px alpha(@borders, 0.5);
     border-width: 1px 0 0 1px;
-    background: transparent;
+    background-color: transparent;
     transition: background-color 200ms;
 }
 
-monthcell:selected { background-color: alpha(@accent_bg_color, 0.1); }
-monthcell:selected label.day-label { font-weight: bold; }
-
-monthcell:nth-child(7n + 1) { border-left-width: 0; }
-
-monthcell.today { background-color: alpha(@accent_bg_color, 0.25); }
-monthcell:selected.today { background-color: alpha(@accent_bg_color, 0.33); }
-
-monthcell.out-of-month:not(.today) {
-    background-color: alpha(@sidebar_bg_color, 0.5);
-}
-
-monthcell:selected.out-of-month:not(.today) {
-    background-color: mix(alpha(@sidebar_bg_color, 0.5),
-                          alpha(@accent_bg_color, 0.1),
-                          0.5);
-}
-
-monthcell:not(.workday) {
-    background-color: alpha(@theme_bg_color, 0.33);
-}
-
-monthcell.today:not(.workday) {
-    background-color: alpha(@accent_bg_color, 0.15);
-}
-
-monthcell.out-of-month label {
-    color: alpha(@theme_fg_color, 0.66);
-}
-
-monthcell:hover,
-monthcell.out-of-month:hover {
+monthcell:hover {
     background-color: @theme_bg_color;
     transition: background-color 200ms;
 }
 
-monthcell:selected:hover,
-monthcell:selected.out-of-month:hover {
-    background-color: mix(alpha(@theme_bg_color, 0.5),
-                          alpha(@accent_bg_color, 0.1),
-                          0.5);
+
+/* Today */
+monthcell.today { background-color: alpha(@accent_bg_color, 0.15); }
+monthcell.today:hover { background-color: alpha(@accent_bg_color, 0.25); }
+
+monthcell:selected.today { background-color: alpha(@accent_bg_color, 0.33); }
+monthcell:selected.today:hover { background-color: alpha(@accent_bg_color, 0.4); }
+
+monthcell.today label.day-label {
+    font-weight: bold;
+    background-color: alpha(@accent_bg_color, 0.8);
+    color: @accent_fg_color;
+    border-radius: 99px;
+    padding: 0 6px;
+}
+
+/* Out of Month */
+monthcell.out-of-month {
+    border-color: alpha(@borders, 0.3);
+    background-color: alpha(@theme_fg_color, 0.03);
+}
+
+monthcell.out-of-month:not(.today) {
+    background-color: alpha(@theme_fg_color, 0.01);
+}
+
+monthcell.out-of-month:hover,
+monthcell.out-of-month:not(.today):hover {
+    background-color: alpha(@theme_fg_color, 0.05);
     transition: background-color 200ms;
 }
 
+monthcell.out-of-month label { color: alpha(@theme_fg_color, 0.4); }
+
+/* Weekend */
+monthcell:nth-child(7n + 1) { border-left-width: 0; }
+
+monthcell:not(.workday) {
+    background-color: alpha(@theme_fg_color, 0.01);
+}
+monthcell:not(.workday):hover {
+    background-color: alpha(@theme_fg_color, 0.03);
+}
+monthcell.today:not(.workday) {
+    background-color: alpha(@accent_bg_color, 0.15);
+}
+
+/* Selected */
+monthcell:selected,
+monthcell.out-of-month:selected,
+monthcell:not(.workday):selected {
+    border-color: alpha(@accent_bg_color, 0.2);
+    background-color: alpha(@accent_bg_color, 0.1);
+}
+
+monthcell:selected:hover,
+monthcell.out-of-month:selected:hover,
+monthcell:not(.workday):selected:hover {
+    background-color: alpha(@accent_bg_color, 0.17);
+    transition: background-color 200ms;
+}
+
+monthcell:selected label.day-label,
+monthcell.out-of-month:selected label.day-label,
+monthcell:not(.workday):selected label.day-label {
+    font-weight: bold;
+}
+
+/* Button */
 monthcell button {
     font-weight: normal;
     padding: 0 4px;
