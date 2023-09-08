@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-03-04 13:46+0000\n"
-"PO-Revision-Date: 2023-03-04 23:49+0900\n"
+"POT-Creation-Date: 2023-08-04 23:11+0000\n"
+"PO-Revision-Date: 2023-09-08 16:32+0900\n"
 "Last-Translator: Seong-ho Cho <shcho@gnome.org>\n"
 "Language-Team: GNOME Korea <gnome-kr@googlegroups.com>\n"
 "Language: ko\n"
@@ -21,12 +21,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
 msgid "Calendar"
 msgstr "달력"
 
@@ -92,31 +92,31 @@ msgid "Window size (width and height)."
 msgstr "창 크기(너비 및 높이)."
 
 #: data/org.gnome.calendar.gschema.xml.in:16
-msgid "Window position"
-msgstr "창 위치"
-
-#: data/org.gnome.calendar.gschema.xml.in:17
-msgid "Window position (x and y)."
-msgstr "창 위치(가로 및 세로)."
-
-#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "활성 보기 형식"
 
-#: data/org.gnome.calendar.gschema.xml.in:22
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "활성 창 보기의 형식입니다. 기본 값은 월별 보기 입니다"
 
-#: data/org.gnome.calendar.gschema.xml.in:26
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
 msgstr "날씨 서비스 설정"
 
-#: data/org.gnome.calendar.gschema.xml.in:27
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
 "날씨 정보를 표시 여부에 따라 자동 위치 정보를 location-name과 함께 사용합니다"
+
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "주간 격자 확대 수준"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "현재 주간 격자 확대 수준"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -132,7 +132,7 @@ msgstr "%1$s — %2$s"
 #: src/core/gcal-event.c:1914
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
-msgstr "%1$s, %2$s – %3$s %4$s"
+msgstr "%1$s, %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
@@ -145,108 +145,103 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "달력 설정"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:354
-msgid "Manage Calendars"
-msgstr "달력을 관리합니다"
+#: src/gui/calendar-management/gcal-calendars-page.c:343
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:141
+msgid "Calendars"
+msgstr "달력"
 
-#. Update notification label
-#: src/gui/calendar-management/gcal-calendars-page.c:384
+#. Create the new toast
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "<b>%s</b> 달력을 제거했습니다"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:24
-msgid "Undo"
-msgstr "실행 취소"
+#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/gcal-window.c:741
+msgid "_Undo"
+msgstr "실행 취소(_U)"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:78
+#: src/gui/calendar-management/gcal-calendars-page.ui:55
 msgid "Add Calendar…"
 msgstr "달력 추가…"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:19
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
 msgid "Account"
 msgstr "계정"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:46
-msgid "Settings"
-msgstr "설정"
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:30
+msgid "Open in Settings"
+msgstr "설정에서 열기"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:57
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:53
 #: src/gui/event-editor/gcal-summary-section.ui:23
-#: src/gui/gcal-event-popover.ui:111
+#: src/gui/gcal-event-popover.ui:113
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "위치"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:84
-msgid "Calendar name"
-msgstr "달력 이름"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
-msgid "Color"
-msgstr "색상"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:134
-msgid "Display calendar"
-msgstr "달력 표시"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:146
-msgid "Add new events to this calendar by default"
-msgstr "새 행사를 이 달력에 기본으로 추가"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:158
-msgid "Remove Calendar"
-msgstr "달력 제거"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:49
-msgid "Select a file"
-msgstr "파일 선택"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:94
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:188
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:290
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-msgid "Cancel"
-msgstr "취소"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:96
-msgid "Open"
-msgstr "열기"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:517
-msgid "New Calendar"
-msgstr "새 달력"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:695
-msgid "Calendar files"
-msgstr "달력 파일"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:16
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:22
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:24
 msgid "Calendar Name"
 msgstr "달력 이름"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:55
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:32
+msgid "Color"
+msgstr "색상"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+msgid "_Display Calendar"
+msgstr "달력 표시(_D)"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
+msgid "Default _Calendar"
+msgstr "기본 달력(_C)"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
+msgid "Add new events to this calendar by default."
+msgstr "새 행사를 이 달력에 기본으로 추가합니다."
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+msgid "_Remove Calendar"
+msgstr "달력 제거(_R)"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:51
+msgid "Select a file"
+msgstr "파일 선택"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:190
+#, c-format
+msgid "Add Calendar"
+msgid_plural "Add %1$u Calendars"
+msgstr[0] "달력 %1$u개 추가"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:516
+msgid "New Calendar"
+msgstr "새 달력"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
 msgid "Import a Calendar"
 msgstr "달력 가져오기"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:77
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
 msgstr ""
 "대신, 가져올 온라인 달력 웹 주소를 입력하거나 지원 달력 파일을 여십시오."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:100
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
 msgid "Open a File"
 msgstr "파일 열기"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:124
-msgid "Calendars"
-msgstr "달력"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:108
+msgid "Calendar files"
+msgstr "달력 파일"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:148
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:165
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -254,26 +249,27 @@ msgstr ""
 "추가할 달력의 주소를 입력하십시오. 달력이 온라인 계정에 들어있다면, <a "
 "href=\"GOA\">온라인 계정 설정</a>에서 추가할 수 있습니다."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:175
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:213
 msgid "Credentials"
 msgstr "인증 정보"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
-msgid "Connect"
-msgstr "연결"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
 msgid "User"
 msgstr "사용자"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
 msgid "Password"
 msgstr "암호"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:294
-#: src/gui/gcal-quick-add-popover.ui:98
-msgid "Add"
-msgstr "추가"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:28
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
+msgid "_Cancel"
+msgstr "취소(_C)"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "_Connect"
+msgstr "연결(_C)"
 
 #: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
@@ -365,32 +361,35 @@ msgstr "알림 소리를 바꿉니다"
 msgid "Remove the alarm"
 msgstr "알림 제거"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Save"
 msgstr "저장"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:86
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Done"
 msgstr "완료"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
 msgid "Click to select the calendar"
 msgstr "달력을 선택하려면 누르십시오"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:115
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
+msgid "_Done"
+msgstr "완료(_D)"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
 msgid "Schedule"
 msgstr "일정"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
 msgid "Reminders"
 msgstr "알림"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:151
 msgid "Notes"
 msgstr "참고"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:171
 msgid "Delete Event"
 msgstr "행사 삭제"
 
@@ -491,51 +490,51 @@ msgstr "끝"
 msgid "Repeat"
 msgstr "반복"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:128
+#: src/gui/event-editor/gcal-schedule-section.ui:125
 msgid "No Repeat"
 msgstr "반복 안함"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:129
+#: src/gui/event-editor/gcal-schedule-section.ui:126
 msgid "Daily"
 msgstr "매일"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:130
+#: src/gui/event-editor/gcal-schedule-section.ui:127
 msgid "Monday – Friday"
 msgstr "월요일 ~ 금요일"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:131
+#: src/gui/event-editor/gcal-schedule-section.ui:128
 msgid "Weekly"
 msgstr "주간"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:132
+#: src/gui/event-editor/gcal-schedule-section.ui:129
 msgid "Monthly"
 msgstr "월간"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:133
+#: src/gui/event-editor/gcal-schedule-section.ui:130
 msgid "Yearly"
 msgstr "연간"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:146
+#: src/gui/event-editor/gcal-schedule-section.ui:141
 msgid "End Repeat"
 msgstr "반복 끝"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:154
+#: src/gui/event-editor/gcal-schedule-section.ui:146
 msgid "Forever"
 msgstr "제한 없음"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:155
+#: src/gui/event-editor/gcal-schedule-section.ui:147
 msgid "No. of occurrences"
 msgstr "반복 횟수"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:156
+#: src/gui/event-editor/gcal-schedule-section.ui:148
 msgid "Until Date"
 msgstr "종료 일자"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:169
+#: src/gui/event-editor/gcal-schedule-section.ui:160
 msgid "Number of Occurrences"
 msgstr "반복 횟수"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:188
+#: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "반복 종료일"
 
@@ -596,28 +595,23 @@ msgstr "그놈 프로젝트"
 msgid "translator-credits"
 msgstr "조성호 <shcho@gnome.org>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:283
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
 msgid "Weather"
 msgstr "날씨"
 
 #: src/gui/gcal-calendar-button.ui:6
-msgid "Manage your calendars"
+msgid "Manage Calendars"
 msgstr "달력을 관리합니다"
 
-#: src/gui/gcal-calendar-button.ui:23
+#: src/gui/gcal-calendar-button.ui:8
 msgid "_Calendars"
 msgstr "달력(_C)"
 
-#: src/gui/gcal-calendar-button.ui:42
-msgctxt "tooltip"
-msgid "Synchronizing remote calendars…"
-msgstr "원격 달력 동기화 중…"
-
-#: src/gui/gcal-calendar-button.ui:72
+#: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
 msgstr "달력 동기화(_S)"
 
-#: src/gui/gcal-calendar-button.ui:76
+#: src/gui/gcal-calendar-button.ui:41
 msgid "Manage Calendars…"
 msgstr "달력 관리…"
 
@@ -731,7 +725,7 @@ msgstr "%3$d년 %1$s %2$d일"
 #: src/gui/gcal-event-popover.c:261
 #, c-format
 msgid "Today, %1$s — %2$s"
-msgstr "오늘, %1$s – %2$s"
+msgstr "오늘, %1$s — %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
@@ -773,11 +767,11 @@ msgstr "%1$s %2$d일, %3$s – %4$s"
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%3$d년 %1$s %2$d일, %4$s – %5$s"
 
-#: src/gui/gcal-event-popover.ui:71
+#: src/gui/gcal-event-popover.ui:73
 msgid "No event information"
 msgstr "행사 정보 없음"
 
-#: src/gui/gcal-event-popover.ui:169
+#: src/gui/gcal-event-popover.ui:171
 msgid "Edit…"
 msgstr "편집…"
 
@@ -787,35 +781,35 @@ msgstr "편집…"
 msgid "At %s"
 msgstr "장소: %s"
 
-#: src/gui/gcal-meeting-row.c:65
+#: src/gui/gcal-meeting-row.c:67
 msgid "Google Meet"
 msgstr "구글 미트"
 
 # 자유 공개 소스 화상 회의 서비스.  https://jitsi.org
-#: src/gui/gcal-meeting-row.c:66
+#: src/gui/gcal-meeting-row.c:68
 msgid "Jitsi"
 msgstr "짓시"
 
 # 화상 회의 서비스.  https://whereby.com
-#: src/gui/gcal-meeting-row.c:67
+#: src/gui/gcal-meeting-row.c:69
 msgid "Whereby"
 msgstr "웨어바이"
 
 # 화상 회의 서비스.  https://zoom.com
-#: src/gui/gcal-meeting-row.c:68
+#: src/gui/gcal-meeting-row.c:70
 msgid "Zoom"
 msgstr "줌"
 
-#: src/gui/gcal-meeting-row.c:69
+#: src/gui/gcal-meeting-row.c:71
 msgid "Microsoft Teams"
 msgstr "마이크로소프트 팀즈"
 
-#: src/gui/gcal-meeting-row.c:79
+#: src/gui/gcal-meeting-row.c:81
 msgid "Unknown Service"
 msgstr "알 수 없는 서비스"
 
 #. Translators: "Join" as in "Join meeting"
-#: src/gui/gcal-meeting-row.ui:12
+#: src/gui/gcal-meeting-row.ui:13
 msgid "Join"
 msgstr "참석"
 
@@ -1042,15 +1036,28 @@ msgstr "12월 %d일의 새 행사"
 msgid "Edit Details…"
 msgstr "세부내용 편집…"
 
-#: src/gui/gcal-toolbar-end.ui:9
-msgctxt "tooltip"
-msgid "Search for events"
+#: src/gui/gcal-quick-add-popover.ui:98
+msgid "Add"
+msgstr "추가"
+
+#: src/gui/gcal-search-button.ui:53
+msgid "Search events"
 msgstr "행사 검색"
 
-#: src/gui/gcal-toolbar-end.ui:21
+#: src/gui/gcal-sync-indicator.ui:21
 msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "새 행사 추가"
+msgid "Synchronizing Remote Calendars…"
+msgstr "원격 달력 동기화 중…"
+
+#: src/gui/gcal-toolbar-end.ui:9
+msgctxt "tooltip"
+msgid "Search"
+msgstr "검색"
+
+#: src/gui/gcal-toolbar-end.ui:16
+msgctxt "tooltip"
+msgid "Add Event"
+msgstr "행사 추가"
 
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
@@ -1060,43 +1067,55 @@ msgstr "날씨 정보 표시"
 msgid "Automatic Location"
 msgstr "자동 위치 정보"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-weather-settings.ui:46
+msgid "Search locations"
+msgstr "위치 검색"
+
+#: src/gui/gcal-window.c:337
+msgid "Week"
+msgstr "주"
+
+#: src/gui/gcal-window.c:339
+msgid "Month"
+msgstr "월"
+
+#: src/gui/gcal-window.c:739
 msgid "Another event deleted"
 msgstr "삭제한 다른 행사"
 
-#: src/gui/gcal-window.c:713
+#: src/gui/gcal-window.c:739
 msgid "Event deleted"
 msgstr "삭제한 행사"
 
-#: src/gui/gcal-window.c:715
-msgid "_Undo"
-msgstr "실행 취소(_U)"
-
-#: src/gui/gcal-window.ui:117
+#: src/gui/gcal-window.ui:137
 msgid "Main Menu"
 msgstr "주 메뉴"
 
-#: src/gui/gcal-window.ui:156 src/gui/gcal-window.ui:189
+#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
 msgid "_Today"
 msgstr "오늘(_T)"
 
-#: src/gui/gcal-window.ui:223
+#: src/gui/gcal-window.ui:249
 msgid "_Week"
 msgstr "주(_W)"
 
-#: src/gui/gcal-window.ui:238
+#: src/gui/gcal-window.ui:264
 msgid "_Month"
 msgstr "월(_M)"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:318
+msgid "_Date & Time Settings…"
+msgstr "날짜/시간 설정(_D)…"
+
+#: src/gui/gcal-window.ui:322
 msgid "_Online Accounts…"
 msgstr "온라인 계정(_O)…"
 
-#: src/gui/gcal-window.ui:291
+#: src/gui/gcal-window.ui:334
 msgid "_Keyboard Shortcuts"
 msgstr "키보드 바로 가기 키(_K)"
 
-#: src/gui/gcal-window.ui:295
+#: src/gui/gcal-window.ui:338
 msgid "_About Calendar"
 msgstr "달력 정보(_A)"
 
@@ -1112,65 +1131,75 @@ msgstr "새 행사"
 
 #: src/gui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
+msgid "Manage calendars"
+msgstr "달력 관리"
+
+#: src/gui/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Synchronize calendars"
+msgstr "달력 동기화"
+
+#: src/gui/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
 msgid "Close window"
 msgstr "창 닫기"
 
-#: src/gui/gtk/help-overlay.ui:26
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "검색"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "도움말 표시"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "바로 가기"
 
-#: src/gui/gtk/help-overlay.ui:46
+#: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "탐색"
 
-#: src/gui/gtk/help-overlay.ui:49
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "뒤로 이동"
 
-#: src/gui/gtk/help-overlay.ui:55
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "앞으로 이동"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "오늘 표시"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "다음 보기"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "이전 보기"
 
-#: src/gui/gtk/help-overlay.ui:81
+#: src/gui/gtk/help-overlay.ui:93
 msgctxt "shortcut window"
 msgid "View"
 msgstr "보기"
 
-#: src/gui/gtk/help-overlay.ui:84
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "주별 보기"
 
-#: src/gui/gtk/help-overlay.ui:90
+#: src/gui/gtk/help-overlay.ui:102
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "월 단위 보기"
@@ -1185,15 +1214,11 @@ msgstr[0] "행사 %d개 가져오기"
 msgid "Import Files…"
 msgstr "파일 가져오기…"
 
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1320
-msgid "_Cancel"
-msgstr "취소(_C)"
-
 #: src/gui/importer/gcal-import-dialog.ui:29
 msgid "_Import"
 msgstr "가져오기(_I)"
 
-#: src/gui/importer/gcal-import-dialog.ui:50
+#: src/gui/importer/gcal-import-dialog.ui:49
 msgid "C_alendar"
 msgstr "달력(_A)"
 
@@ -1237,7 +1262,7 @@ msgstr "설명"
 msgid "On-going"
 msgstr "진행중"
 
-#: src/gui/views/gcal-agenda-view.ui:19
+#: src/gui/views/gcal-agenda-view.ui:22
 msgid "No events"
 msgstr "행사 없음"
 
@@ -1259,28 +1284,64 @@ msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "다른 행사 %d개"
 
-#: src/gui/views/gcal-week-header.c:1000
+#: src/gui/views/gcal-week-header.c:1001
 #, c-format
 msgid "week %d"
 msgstr "%d주"
 
-#: src/utils/gcal-utils.c:1317
+#: src/utils/gcal-utils.c:1297
+msgid "Modify Multiple Events?"
+msgstr "여러 행사를 수정하시겠습니까?"
+
+#: src/utils/gcal-utils.c:1298
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr "수정하려는 행사가 반복됩니다. 다음 항목을 반영해야 합니다:"
 
-#: src/utils/gcal-utils.c:1322
+#: src/utils/gcal-utils.c:1302
 msgid "_Only This Event"
 msgstr "이 행사에만(_O)"
 
-#: src/utils/gcal-utils.c:1329
-msgid "_Subsequent events"
+#: src/utils/gcal-utils.c:1308
+msgid "_Subsequent Events"
 msgstr "다음 행사(_S)"
 
-#: src/utils/gcal-utils.c:1332
-msgid "_All events"
+#: src/utils/gcal-utils.c:1311
+msgid "_All Events"
 msgstr "모든 행사(_A)"
+
+#~ msgid "Window position"
+#~ msgstr "창 위치"
+
+#~ msgid "Window position (x and y)."
+#~ msgstr "창 위치(가로 및 세로)."
+
+#~ msgid "Undo"
+#~ msgstr "실행 취소"
+
+#~ msgid "Settings"
+#~ msgstr "설정"
+
+#~ msgid "Calendar name"
+#~ msgstr "달력 이름"
+
+#~ msgid "Cancel"
+#~ msgstr "취소"
+
+#~ msgid "Open"
+#~ msgstr "열기"
+
+#~ msgid "Manage your calendars"
+#~ msgstr "달력을 관리합니다"
+
+#~ msgctxt "tooltip"
+#~ msgid "Search for events"
+#~ msgstr "행사 검색"
+
+#~ msgctxt "tooltip"
+#~ msgid "Add a new event"
+#~ msgstr "새 행사 추가"
 
 #~ msgid "Year view"
 #~ msgstr "연 단위 보기"
@@ -1306,9 +1367,6 @@ msgstr "모든 행사(_A)"
 
 #~ msgid "Add Event…"
 #~ msgstr "행사 추가…"
-
-#~ msgid "Search for events"
-#~ msgstr "행사 검색"
 
 #~ msgid "Calendar management"
 #~ msgstr "달력 관리자"
@@ -1346,9 +1404,6 @@ msgstr "모든 행사(_A)"
 
 #~ msgid "org.gnome.Calendar"
 #~ msgstr "org.gnome.Calendar"
-
-#~ msgid "Open online account settings"
-#~ msgstr "온라인 계정 설정을 엽니다"
 
 #~ msgid "Click to set up"
 #~ msgstr "설정하려면 누르십시오"
@@ -1391,9 +1446,6 @@ msgstr "모든 행사(_A)"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "행사 추가(_N)…"
-
-#~ msgid "Add Eve_nt"
-#~ msgstr "행사 추가(_N)"
 
 #~ msgid "— Calendar management"
 #~ msgstr "— 달력 관리"
