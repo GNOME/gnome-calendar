@@ -1650,7 +1650,7 @@ gcal_month_view_init (GcalMonthView *self)
       g_ptr_array_add (self->week_rows, row);
     }
 
-  gtk_widget_insert_after (self->header, GTK_WIDGET (self), NULL);
+  gtk_widget_insert_before (self->header, GTK_WIDGET (self), NULL);
 
   /* Overflow popover */
   self->overflow.popover = gcal_month_popover_new ();
