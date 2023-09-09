@@ -1,18 +1,32 @@
-# GNOME Calendar
+<div align="center">
+  <img src="data/icons/hicolor/scalable/apps/org.gnome.Calendar.svg" width="128" height="128">
 
-GNOME Calendar is a simple and beautiful calendar application for GNOME. We give
-a lot of attention to details, and as such, design is an essential and ongoing
-effort.
+  # GNOME Calendar
+
+  Manage your schedule
+
+  <img width="922" src="https://static.gnome.org/appdata/gnome-43/calendar/calendar-week.png">
+</div>
+
+## Installation
 
 [![Flatpak](https://flathub.org/api/badge?svg&locale=en)](https://flathub.org/apps/details/org.gnome.Calendar)
 
-## Contributors Guide  
+## Links
 
-Check out our [CONTRIBUTING.md](CONTRIBUTING.md) and [HACKING.md](HACKING.md) for more details.
+- Homepage: [apps.gnome.org/Calendar]
+- Report an issue: [gitlab.gnome.org/GNOME/gnome-calendar/issues]
+- Donate: [donate.gnome.org]
+- Translate: [l10n.gnome.org/module/gnome-calendar]
+- Contact: [matrix.to/#/#gnome-calendar:gnome.org]
 
-## Useful links
+## Contributing
 
-- Homepage: <https://apps.gnome.org/Calendar/>
-- Report issues: <https://gitlab.gnome.org/GNOME/gnome-calendar/issues/>
-- Donate: <https://www.gnome.org/donate/>
-- Translate: <https://l10n.gnome.org/module/gnome-calendar/>
+For information on how to contribute, please check [CONTRIBUTING.md](CONTRIBUTING.md) and [HACKING.md](HACKING.md).
+
+
+[apps.gnome.org/Calendar]: https://apps.gnome.org/Calendar
+[gitlab.gnome.org/GNOME/gnome-calendar/issues]: https://gitlab.gnome.org/GNOME/gnome-calendar/issues/
+[donate.gnome.org]: https://donate.gnome.org/
+[l10n.gnome.org/module/gnome-calendar]: https://l10n.gnome.org/module/gnome-calendar/
+[matrix.to/#/#gnome-calendar:gnome.org]: https://matrix.to/#/#gnome-calendar:gnome.org/
