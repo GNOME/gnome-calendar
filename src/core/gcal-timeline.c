@@ -1072,9 +1072,6 @@ gcal_timeline_remove_subscriber (GcalTimeline           *self,
   g_signal_handlers_disconnect_by_func (subscriber, on_subscriber_range_changed_cb, self);
   g_hash_table_remove (self->subscribers, subscriber);
 
-  if (g_hash_table_size (self->subscribers) == 0)
-    g_queue_clear_full (self->event_queue, (GDestroyNotify) queue_data_free);
-
   gcal_range_tree_remove_data (self->subscriber_ranges, subscriber);
   update_range (self);
 
