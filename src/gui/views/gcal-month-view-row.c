@@ -142,7 +142,16 @@ calculate_event_cells (GcalMonthViewRow *self,
 
       range_start = gcal_range_get_start (self->range);
       end_date = gcal_event_get_date_end (event);
-      end_date = all_day ? g_date_time_ref (end_date) : g_date_time_to_local (end_date);
+
+      if (all_day)
+        {
+          end_date = g_date_time_ref (end_date);
+        }
+      else
+        {
+          g_autoptr (GDateTime) local_end_date = g_date_time_to_local (end_date);
+          end_date = g_date_time_add_seconds (local_end_date, -1);
+        }
 
       last_cell = gcal_date_time_compare_date (end_date, range_start);
 
