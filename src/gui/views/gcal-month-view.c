@@ -1047,6 +1047,12 @@ on_month_row_show_overflow_cb (GcalMonthViewRow *row,
   gcal_month_popover_set_date (popover, gcal_month_cell_get_date (cell));
   gcal_month_popover_popup (popover);
 
+  /* FIXME: here we forcefully disable selection, but I wonder if there's a better
+   * way to do it.
+   */
+  gtk_event_controller_set_propagation_phase (self->motion_controller, GTK_PHASE_NONE);
+  gcal_view_clear_marks (GCAL_VIEW (self));
+
   GCAL_EXIT;
 }
 
