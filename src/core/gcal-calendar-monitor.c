@@ -622,11 +622,11 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
           if (old_event)
             {
               g_hash_table_remove (events_to_remove, gcal_event_get_uid (event));
-              g_ptr_array_add (events_to_update, g_steal_pointer (&event));
+              g_ptr_array_add (events_to_update, g_object_ref (event));
             }
           else
             {
-              g_ptr_array_add (events_to_add, g_steal_pointer (&event));
+              g_ptr_array_add (events_to_add, g_object_ref (event));
             }
         }
 
