@@ -784,13 +784,13 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
 
   widget_at_position = gtk_widget_pick (GTK_WIDGET (self), x, y, GTK_PICK_DEFAULT);
 
-  if (!widget_at_position || !gtk_widget_get_ancestor (widget_at_position, GCAL_TYPE_MONTH_VIEW_ROW))
+  if (!self->selection.start ||
+      !widget_at_position ||
+      !gtk_widget_get_ancestor (widget_at_position, GCAL_TYPE_MONTH_VIEW_ROW))
     {
       gcal_view_clear_marks (GCAL_VIEW (self));
       GCAL_RETURN ();
     }
-
-  g_assert (self->selection.start != NULL);
 
   selection_start = self->selection.start;
   selection_end = self->selection.end ?: selection_start;
