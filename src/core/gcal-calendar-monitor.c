@@ -1172,8 +1172,8 @@ remove_events_from_timeline_in_idle_cb (gpointer user_data)
 
   for (guint i = 0; i < event_ids->len; i++)
     {
-      g_autoptr (GcalEvent) event = NULL;
       const gchar *event_id;
+      GcalEvent *event;
 
       event_id = g_ptr_array_index (event_ids, i);
       event = g_hash_table_lookup (self->shared.events, event_id);
