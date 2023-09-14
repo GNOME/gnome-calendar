@@ -58,6 +58,7 @@ struct _GcalEventWidget
   GtkWidget          *summary_label;
   GtkWidget          *vertical_box;
   GtkEventController *drag_source;
+  GtkWidget          *preview_popover;
 
   /* internal data */
   gboolean            clock_format_24h : 1;
@@ -634,6 +635,7 @@ gcal_event_widget_dispose (GObject *object)
 {
   GcalEventWidget *self = GCAL_EVENT_WIDGET (object);
 
+  g_clear_pointer (&self->preview_popover, gtk_widget_unparent);
   g_clear_pointer (&self->main_widget, gtk_widget_unparent);
 
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->dispose (object);
@@ -960,20 +962,21 @@ gcal_event_widget_show_preview (GcalEventWidget          *self,
                                 gpointer                  user_data)
 {
   PreviewData *data;
-  GtkWidget *event_popover;
 
   GCAL_ENTRY;
+
+  g_clear_pointer (&self->preview_popover, gtk_widget_unparent);
 
   data = g_new0 (PreviewData, 1);
   data->event_widget = self;
   data->callback = callback;
   data->user_data = user_data;
 
-  event_popover = gcal_event_popover_new (self->context, self->event);
-  gtk_widget_set_parent (event_popover, GTK_WIDGET (self));
-  g_signal_connect (event_popover, "closed", G_CALLBACK (on_event_popover_closed_cb), data);
-  g_signal_connect (event_popover, "edit", G_CALLBACK (on_event_popover_edit_cb), data);
-  gtk_popover_popup (GTK_POPOVER (event_popover));
+  self->preview_popover = gcal_event_popover_new (self->context, self->event);
+  gtk_widget_set_parent (self->preview_popover, GTK_WIDGET (self));
+  g_signal_connect (self->preview_popover, "closed", G_CALLBACK (on_event_popover_closed_cb), data);
+  g_signal_connect (self->preview_popover, "edit", G_CALLBACK (on_event_popover_edit_cb), data);
+  gtk_popover_popup (GTK_POPOVER (self->preview_popover));
 
   GCAL_EXIT;
 }
