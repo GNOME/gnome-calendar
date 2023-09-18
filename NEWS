@@ -1,3 +1,7 @@
+Major changes in 45.0:
+* Various small fixes
+* Updated translations
+
 Major changes in 45.rc:
 * Fix a plethora of threading issues with the backend
 * Fix a crash in the Shell search provider code

@@ -49,6 +49,18 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2023-09-18" version="45.0" type="stable">
+      <description>
+        <ul>
+          <li>New month view with inifinite scrolling support</li>
+          <li>Lots of performance and stability fixes</li>
+          <li>Improved visuals for the sidebar</li>
+          <li>Use modern widgets in various places</li>
+          <li>New and updated translations</li>
+        </ul>
+      </description>
+    </release>
+
     <release date="2023-09-02" version="45~rc" type="development" />
     <release date="2023-08-18" version="45~beta" type="development" />
 
