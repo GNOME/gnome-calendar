@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-07-15 23:05+0000\n"
-"PO-Revision-Date: 2023-07-20 23:20+0200\n"
-"Last-Translator: Fabio T. <f.t.public@gmail.com>\n"
+"POT-Creation-Date: 2023-08-04 23:11+0000\n"
+"PO-Revision-Date: 2023-09-18 14:09+0200\n"
+"Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <f.t.public@gmail.com>\n"
 "Language: fur\n"
 "MIME-Version: 1.0\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Editor: HaiPO 1.4 beta\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:106
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
 msgid "Calendar"
 msgstr "Calendari"
 
@@ -110,6 +110,14 @@ msgstr ""
 "Indiche se a vegnin mostrâts i rapuarts dal timp, a vegnin dopradis lis "
 "posizions automatichis e un non di localitât"
 
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "Nivel di zoom de gridele setemanâl"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "Il nivel di zoom atuâl de gridele setemanâl"
+
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
 #: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
@@ -137,22 +145,23 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "Impostazions calendari"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:348
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Calendaris"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Calendari <b>%s</b> gjavât"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:378
-msgid "Undo"
-msgstr "Anule"
+#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/gcal-window.c:741
+msgid "_Undo"
+msgstr "_Disfe"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:44
+#: src/gui/calendar-management/gcal-calendars-page.ui:55
 msgid "Add Calendar…"
 msgstr "Zonte calendari…"
 
@@ -201,8 +210,8 @@ msgstr "_Gjave calendari"
 msgid "Select a file"
 msgstr "Selezione un file"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:190
 #, c-format
 msgid "Add Calendar"
@@ -210,7 +219,7 @@ msgid_plural "Add %1$u Calendars"
 msgstr[0] "Zonte calendari"
 msgstr[1] "Zonte %1$u calendaris"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:533
+#: src/gui/calendar-management/gcal-new-calendar-page.c:516
 msgid "New Calendar"
 msgstr "Gnûf calendari"
 
@@ -246,22 +255,23 @@ msgstr ""
 msgid "Credentials"
 msgstr "Credenziâls"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:228
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:16
-msgid "Cancel"
-msgstr "Anule"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:236
-msgid "Connect"
-msgstr "Conet"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:264
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
 msgid "User"
 msgstr "Utent"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:277
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
 msgid "Password"
 msgstr "Password"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:28
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
+msgid "_Cancel"
+msgstr "_Anule"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "_Connect"
+msgstr "_Conet"
 
 #: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
@@ -366,32 +376,35 @@ msgstr "Cambie il sun dal alarme"
 msgid "Remove the alarm"
 msgstr "Gjave l'alarme"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Save"
 msgstr "Salve"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:87
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Done"
 msgstr "Fat"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:30
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
 msgid "Click to select the calendar"
 msgstr "Fâs clic par selezionâ il calendari"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
+msgid "_Done"
+msgstr "_Fat"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
 msgid "Schedule"
 msgstr "Planificazion"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:126
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
 msgid "Reminders"
 msgstr "Promemoriis"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:138
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:151
 msgid "Notes"
 msgstr "Notis"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:171
 msgid "Delete Event"
 msgstr "Elimine Event"
 
@@ -597,7 +610,7 @@ msgstr "Il Progjet GNOME"
 msgid "translator-credits"
 msgstr "Fabio Tomat <f.t.public@gmail.com>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:314
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
 msgid "Weather"
 msgstr "Timp"
 
@@ -609,11 +622,11 @@ msgstr "Gjestìs calendaris"
 msgid "_Calendars"
 msgstr "_Calendaris"
 
-#: src/gui/gcal-calendar-button.ui:26
+#: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
 msgstr "_Sincronize calendaris"
 
-#: src/gui/gcal-calendar-button.ui:30
+#: src/gui/gcal-calendar-button.ui:41
 msgid "Manage Calendars…"
 msgstr "Gjestìs i calendaris…"
 
@@ -1086,39 +1099,35 @@ msgstr "Un altri event eliminât"
 msgid "Event deleted"
 msgstr "Event eliminât"
 
-#: src/gui/gcal-window.c:741
-msgid "_Undo"
-msgstr "_Disfe"
-
-#: src/gui/gcal-window.ui:125
+#: src/gui/gcal-window.ui:137
 msgid "Main Menu"
 msgstr "Menù principâl"
 
-#: src/gui/gcal-window.ui:162 src/gui/gcal-window.ui:201
+#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
 msgid "_Today"
 msgstr "_Vuê"
 
-#: src/gui/gcal-window.ui:237
+#: src/gui/gcal-window.ui:249
 msgid "_Week"
 msgstr "_Setemane"
 
-#: src/gui/gcal-window.ui:252
+#: src/gui/gcal-window.ui:264
 msgid "_Month"
 msgstr "_Mês"
 
-#: src/gui/gcal-window.ui:306
+#: src/gui/gcal-window.ui:318
 msgid "_Date & Time Settings…"
 msgstr "Impostazions date e ore…"
 
-#: src/gui/gcal-window.ui:310
+#: src/gui/gcal-window.ui:322
 msgid "_Online Accounts…"
 msgstr "Account _online…"
 
-#: src/gui/gcal-window.ui:322
+#: src/gui/gcal-window.ui:334
 msgid "_Keyboard Shortcuts"
 msgstr "_Scurtis tastiere"
 
-#: src/gui/gcal-window.ui:326
+#: src/gui/gcal-window.ui:338
 msgid "_About Calendar"
 msgstr "_Informazions su Calendari"
 
@@ -1134,65 +1143,75 @@ msgstr "Gnûf event"
 
 #: src/gui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
+msgid "Manage calendars"
+msgstr "Gjestìs calendaris"
+
+#: src/gui/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Synchronize calendars"
+msgstr "_Sincronize calendaris"
+
+#: src/gui/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Siere barcon"
 
-#: src/gui/gtk/help-overlay.ui:26
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Cîr"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Mostre jutori"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Scurtis"
 
-#: src/gui/gtk/help-overlay.ui:46
+#: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Navigazion"
 
-#: src/gui/gtk/help-overlay.ui:49
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "Torne indaûr"
 
-#: src/gui/gtk/help-overlay.ui:55
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "Va Indevant"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "Mostre vuê"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "Prossime viodude"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "Viodude precedent"
 
-#: src/gui/gtk/help-overlay.ui:81
+#: src/gui/gtk/help-overlay.ui:93
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Viodude"
 
-#: src/gui/gtk/help-overlay.ui:84
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Viodude setemanâl"
 
-#: src/gui/gtk/help-overlay.ui:90
+#: src/gui/gtk/help-overlay.ui:102
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Viodude mensîl"
@@ -1207,10 +1226,6 @@ msgstr[1] "Impuarte %d events"
 #: src/gui/importer/gcal-import-dialog.ui:4
 msgid "Import Files…"
 msgstr "Impuarte files…"
-
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
-msgid "_Cancel"
-msgstr "_Anule"
 
 #: src/gui/importer/gcal-import-dialog.ui:29
 msgid "_Import"
@@ -1311,6 +1326,12 @@ msgstr "_Events seguitîfs"
 #: src/utils/gcal-utils.c:1311
 msgid "_All Events"
 msgstr "_Ducj i events"
+
+#~ msgid "Undo"
+#~ msgstr "Anule"
+
+#~ msgid "Cancel"
+#~ msgstr "Anule"
 
 #~ msgid "Settings"
 #~ msgstr "Impostazions"
