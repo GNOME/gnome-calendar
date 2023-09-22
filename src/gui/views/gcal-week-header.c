@@ -987,7 +987,7 @@ update_title (GcalWeekHeader *self)
     }
   else
     {
-      month_label = g_strdup_printf("%s - %s ",
+      month_label = g_strdup_printf("%s–%s ",
                                     gcal_get_month_name (g_date_time_get_month (week_start) -1),
                                     gcal_get_month_name (g_date_time_get_month (week_end) - 1));
     }
@@ -998,7 +998,7 @@ update_title (GcalWeekHeader *self)
     }
   else
     {
-      year_label = g_strdup_printf ("%d - %d",
+      year_label = g_strdup_printf ("%d–%d",
                                     g_date_time_get_year (week_start),
                                     g_date_time_get_year (week_end));
     }
