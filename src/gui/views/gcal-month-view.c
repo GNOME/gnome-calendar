@@ -206,7 +206,7 @@ update_header_labels (GcalMonthView *self)
     }
   else
     {
-      month_string = g_strdup_printf("%s - %s ",
+      month_string = g_strdup_printf("%s–%s",
                                      gcal_get_month_name (g_date_time_get_month (first_visible_date) -1),
                                      gcal_get_month_name (g_date_time_get_month (last_visible_date) - 1));
     }
@@ -217,7 +217,7 @@ update_header_labels (GcalMonthView *self)
     }
   else
     {
-      year_string = g_strdup_printf ("%d - %d",
+      year_string = g_strdup_printf ("%d–%d",
                                     g_date_time_get_year (first_visible_date),
                                     g_date_time_get_year (last_visible_date));
     }
