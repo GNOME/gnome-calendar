@@ -35,7 +35,7 @@ struct _GcalDateSelector
   GtkWidget   *date_chooser;
   GtkWidget   *date_selector_popover;
 
-  GSettings   *settings;
+  GDBusProxy  *settings_portal;
 };
 
 G_DEFINE_TYPE (GcalDateSelector, gcal_date_selector, GTK_TYPE_ENTRY);
@@ -48,6 +48,46 @@ enum
 };
 
 static GParamSpec* properties[N_PROPS] = { NULL, };
+
+
+static void
+set_show_weekdate_from_variant (GcalDateSelector *self,
+                                GVariant         *variant)
+{
+  g_assert (g_variant_type_equal (g_variant_get_type (variant), "b"));
+
+  gcal_date_chooser_set_show_week_numbers (GCAL_DATE_CHOOSER (self->date_chooser),
+                                           g_variant_get_boolean (variant));
+}
+
+static gboolean
+read_show_weekdate (GcalDateSelector *self)
+{
+  g_autoptr (GVariant) other_child = NULL;
+  g_autoptr (GVariant) child = NULL;
+  g_autoptr (GVariant) ret = NULL;
+  g_autoptr (GError) error = NULL;
+
+  ret = g_dbus_proxy_call_sync (self->settings_portal,
+                                "Read",
+                                g_variant_new ("(ss)", "org.gnome.desktop.calendar", "show-weekdate"),
+                                G_DBUS_CALL_FLAGS_NONE,
+                                G_MAXINT,
+                                NULL,
+                                &error);
+
+  if (error)
+    {
+      return FALSE;
+    }
+
+  g_variant_get (ret, "(v)", &child);
+  g_variant_get (child, "v", &other_child);
+
+  set_show_weekdate_from_variant (self, other_child);
+
+  return TRUE;
+}
 
 static void
 update_text (GcalDateSelector *self)
@@ -95,6 +135,29 @@ parse_date (GcalDateSelector *self)
   gcal_date_selector_set_date (self, new_date);
 
   g_clear_pointer (&new_date, g_date_time_unref);
+}
+
+static void
+on_portal_proxy_signal_cb (GDBusProxy       *proxy,
+                           const gchar      *sender_name,
+                           const gchar      *signal_name,
+                           GVariant         *parameters,
+                           GcalDateSelector *self)
+{
+  g_autoptr (GVariant) value = NULL;
+  const char *namespace;
+  const char *name;
+
+  if (g_strcmp0 (signal_name, "SettingChanged") != 0)
+    return;
+
+  g_variant_get (parameters, "(&s&sv)", &namespace, &name, &value);
+
+  if (g_strcmp0 (namespace, "org.gnome.desktop.calendar") == 0 &&
+      g_strcmp0 (name, "show-weekdate") == 0)
+    {
+      set_show_weekdate_from_variant (self, value);
+    }
 }
 
 static void
@@ -161,7 +224,7 @@ gcal_date_selector_dispose (GObject *object)
   GcalDateSelector *self = GCAL_DATE_SELECTOR (object);
 
   g_clear_pointer (&self->date_selector_popover, gtk_widget_unparent);
-  g_clear_object (&self->settings);
+  g_clear_object (&self->settings_portal);
 
   G_OBJECT_CLASS (gcal_date_selector_parent_class)->dispose (object);
 }
@@ -254,15 +317,29 @@ gcal_date_selector_class_init (GcalDateSelectorClass *klass)
 static void
 gcal_date_selector_init (GcalDateSelector *self)
 {
+  g_autoptr (GError) error = NULL;
+
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  self->settings = g_settings_new ("org.gnome.desktop.calendar");
+  self->settings_portal = g_dbus_proxy_new_for_bus_sync (G_BUS_TYPE_SESSION,
+                                                         G_DBUS_PROXY_FLAGS_NONE,
+                                                         NULL,
+                                                         "org.freedesktop.portal.Desktop",
+                                                         "/org/freedesktop/portal/desktop",
+                                                         "org.freedesktop.portal.Settings",
+                                                         NULL,
+                                                         &error);
 
-  g_settings_bind (self->settings,
-                   "show-weekdate",
-                   self->date_chooser,
-                   "show-week-numbers",
-                   G_SETTINGS_BIND_DEFAULT);
+  if (error)
+    g_error ("Failed to load portals: %s. Aborting...", error->message);
+
+  if (read_show_weekdate (self))
+    {
+      g_signal_connect (self->settings_portal,
+                        "g-signal",
+                        G_CALLBACK (on_portal_proxy_signal_cb),
+                        self);
+    }
 }
 
 /* Public API */
