@@ -61,7 +61,6 @@ struct _GcalEventWidget
   GtkWidget          *preview_popover;
 
   /* internal data */
-  gboolean            clock_format_24h : 1;
   gboolean            read_only : 1;
   gchar              *css_class;
 
@@ -269,8 +268,9 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
 
       if (multiday)
         {
-          if (self->clock_format_24h)
+          switch (gcal_context_get_time_format (self->context))
             {
+            case GCAL_TIME_FORMAT_24H:
               if (is_ltr)
                 {
                   start = g_date_time_format (tooltip_start, "%x %R");
@@ -281,9 +281,9 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
                   start = g_date_time_format (tooltip_start, "%R %x");
                   end = g_date_time_format (tooltip_end, "%R %x");
                 }
-            }
-          else
-            {
+              break;
+
+            case GCAL_TIME_FORMAT_12H:
               if (is_ltr)
                 {
                   start = g_date_time_format (tooltip_start, "%x %I:%M %P");
@@ -294,12 +294,14 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
                   start = g_date_time_format (tooltip_start, "%P %M:%I %x");
                   end = g_date_time_format (tooltip_end, "%P %M:%I %x");
                 }
+              break;
             }
         }
       else
         {
-          if (self->clock_format_24h)
+          switch (gcal_context_get_time_format (self->context))
             {
+            case GCAL_TIME_FORMAT_24H:
               if (is_ltr)
                 {
                   start = g_date_time_format (tooltip_start, "%x, %R");
@@ -310,9 +312,9 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
                   start = g_date_time_format (tooltip_start, "%R ,%x");
                   end = g_date_time_format (tooltip_end, "%R");
                 }
-            }
-          else
-            {
+              break;
+
+            case GCAL_TIME_FORMAT_12H:
               if (is_ltr)
                 {
                   start = g_date_time_format (tooltip_start, "%x, %I:%M %P");
@@ -323,6 +325,7 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
                   start = g_date_time_format (tooltip_start, "%P %M:%I ,%x");
                   end = g_date_time_format (tooltip_end, "%P %M:%I");
                 }
+              break;
             }
         }
     }
@@ -398,7 +401,7 @@ gcal_event_widget_update_timestamp (GcalEventWidget *self)
 
       if (gcal_event_get_all_day (self->event) || gcal_event_is_multiday (self->event))
         timestamp_str = g_date_time_format (time, "%a %B %e");
-      else if (self->clock_format_24h)
+      else if (gcal_context_get_time_format (self->context) == GCAL_TIME_FORMAT_24H)
         timestamp_str = g_date_time_format (time, "%R");
       else
         timestamp_str = g_date_time_format (time, "%I:%M %P");
@@ -785,20 +788,15 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 static void
 gcal_event_widget_init (GcalEventWidget *self)
 {
-  GtkWidget *widget;
-
-  widget = GTK_WIDGET (self);
-  self->clock_format_24h = is_clock_format_24h ();
-
   g_type_ensure (GCAL_TYPE_OVERFLOW_BIN);
 
-  gtk_widget_init_template (widget);
+  gtk_widget_init_template (GTK_WIDGET (self));
 
   gtk_widget_set_cursor_from_name (GTK_WIDGET (self), "pointer");
 
   /* Starts with horizontal */
   self->orientation = GTK_ORIENTATION_HORIZONTAL;
-  gtk_widget_add_css_class (widget, "horizontal");
+  gtk_widget_add_css_class (GTK_WIDGET (self), "horizontal");
 }
 
 GtkWidget*
