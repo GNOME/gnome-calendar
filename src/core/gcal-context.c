@@ -27,7 +27,7 @@ struct _GcalContext
 {
   GObject             parent;
 
-  GSettings          *desktop_settings;
+  GDBusProxy         *settings_portal;
 
   GcalClock          *clock;
   GcalManager        *manager;
@@ -62,17 +62,23 @@ static GParamSpec *properties [N_PROPS];
  */
 
 static void
-load_time_format (GcalContext *self)
+set_time_format_from_variant (GcalContext *self,
+                              GVariant    *variant)
 {
-  g_autofree gchar *clock_format = NULL;
   g_autofree gchar *enum_format = NULL;
+  GcalTimeFormat  time_format;
 
-  clock_format = g_settings_get_string (self->desktop_settings, "clock-format");
+  g_assert (g_variant_type_equal (g_variant_get_type (variant), "s"));
 
-  if (g_strcmp0 (clock_format, "12h") == 0)
-    self->time_format = GCAL_TIME_FORMAT_12H;
+  if (g_strcmp0 (g_variant_get_string (variant, NULL), "12h") == 0)
+    time_format = GCAL_TIME_FORMAT_12H;
   else
-    self->time_format = GCAL_TIME_FORMAT_24H;
+    time_format = GCAL_TIME_FORMAT_24H;
+
+  if (self->time_format == time_format)
+    return;
+
+  self->time_format = time_format;
 
   enum_format = g_enum_to_string (GCAL_TYPE_TIME_FORMAT, self->time_format);
   g_debug ("Setting time format to %s", enum_format);
@@ -80,10 +86,62 @@ load_time_format (GcalContext *self)
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_TIME_FORMAT]);
 }
 
+static gboolean
+read_time_format (GcalContext *self)
+{
+  g_autoptr (GVariant) other_child = NULL;
+  g_autoptr (GVariant) child = NULL;
+  g_autoptr (GVariant) ret = NULL;
+  g_autoptr (GError) error = NULL;
+
+  ret = g_dbus_proxy_call_sync (self->settings_portal,
+                                "Read",
+                                g_variant_new ("(ss)", "org.gnome.desktop.interface", "clock-format"),
+                                G_DBUS_CALL_FLAGS_NONE,
+                                G_MAXINT,
+                                NULL,
+                                &error);
+
+  if (error)
+    {
+      return FALSE;
+    }
+
+  g_variant_get (ret, "(v)", &child);
+  g_variant_get (child, "v", &other_child);
+
+  set_time_format_from_variant (self, other_child);
+
+  return TRUE;
+}
+
 
 /*
  * Callbacks
  */
+
+static void
+on_portal_proxy_signal_cb (GDBusProxy  *proxy,
+                           const gchar *sender_name,
+                           const gchar *signal_name,
+                           GVariant    *parameters,
+                           GcalContext *self)
+{
+  g_autoptr (GVariant) value = NULL;
+  const char *namespace;
+  const char *name;
+
+  if (g_strcmp0 (signal_name, "SettingChanged") != 0)
+    return;
+
+  g_variant_get (parameters, "(&s&sv)", &namespace, &name, &value);
+
+  if (g_strcmp0 (namespace, "org.gnome.desktop.interface") == 0 &&
+      g_strcmp0 (name, "clock-format") == 0)
+    {
+      set_time_format_from_variant (self, value);
+    }
+}
 
 static void
 on_timezone_changed_cb (GcalTimeZoneMonitor *timezone_monitor,
@@ -117,7 +175,7 @@ gcal_context_finalize (GObject *object)
   gcal_weather_service_stop (self->weather_service);
 
   g_clear_object (&self->clock);
-  g_clear_object (&self->desktop_settings);
+  g_clear_object (&self->settings_portal);
   g_clear_object (&self->manager);
   g_clear_object (&self->timezone_monitor);
   g_clear_object (&self->weather_service);
@@ -247,6 +305,8 @@ gcal_context_class_init (GcalContextClass *klass)
 static void
 gcal_context_init (GcalContext *self)
 {
+  g_autoptr (GError) error = NULL;
+
   self->clock = gcal_clock_new ();
   self->settings = g_settings_new ("org.gnome.calendar");
   self->weather_service = gcal_weather_service_new ();
@@ -259,13 +319,25 @@ gcal_context_init (GcalContext *self)
                            0);
 
   /* Time format */
-  self->desktop_settings = g_settings_new ("org.gnome.desktop.interface");
-  g_signal_connect_object (self->desktop_settings,
-                           "changed::clock-format",
-                           G_CALLBACK (load_time_format),
-                           self,
-                           G_CONNECT_SWAPPED);
-  load_time_format (self);
+  self->settings_portal = g_dbus_proxy_new_for_bus_sync (G_BUS_TYPE_SESSION,
+                                                         G_DBUS_PROXY_FLAGS_NONE,
+                                                         NULL,
+                                                         "org.freedesktop.portal.Desktop",
+                                                         "/org/freedesktop/portal/desktop",
+                                                         "org.freedesktop.portal.Settings",
+                                                         NULL,
+                                                         &error);
+
+  if (error)
+    g_error ("Failed to load portals: %s. Aborting...", error->message);
+
+  if (read_time_format (self))
+    {
+      g_signal_connect (self->settings_portal,
+                        "g-signal",
+                        G_CALLBACK (on_portal_proxy_signal_cb),
+                        self);
+    }
 }
 
 /**
