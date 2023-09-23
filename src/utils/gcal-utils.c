@@ -560,29 +560,6 @@ icaltime_compare_with_current (const ICalTime *date1,
 }
 
 /**
- * is_clock_format_24h:
- *
- * Retrieves whether the current clock format is
- * 12h or 24h based.
- *
- * Returns: %TRUE if the clock format is 24h, %FALSE
- * otherwise.
- */
-gboolean
-is_clock_format_24h (void)
-{
-  static GSettings *settings = NULL;
-  g_autofree gchar *clock_format = NULL;
-
-  if (!settings)
-    settings = g_settings_new ("org.gnome.desktop.interface");
-
-  clock_format = g_settings_get_string (settings, "clock-format");
-
-  return g_strcmp0 (clock_format, "24h") == 0;
-}
-
-/**
  * e_strftime_fix_am_pm:
  *
  * Function to do a last minute fixup of the AM/PM stuff if the locale

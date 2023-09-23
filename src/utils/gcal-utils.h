@@ -83,8 +83,6 @@ gint                 icaltime_compare_with_current               (const ICalTime
                                                                   const ICalTime *date2,
                                                                   time_t         *current_time_t);
 
-gboolean             is_clock_format_24h                         (void);
-
 /* code brought from evolution */
 gsize                e_strftime_fix_am_pm                        (gchar              *str,
                                                                   gsize               max,
