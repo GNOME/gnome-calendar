@@ -992,6 +992,7 @@ remove_events_outside_range (GcalCalendarMonitor *self,
   GcalEvent *event;
 
   g_assert (GCAL_IS_MAIN_THREAD ());
+  g_assert (range != NULL);
 
   GCAL_TRACE_MSG ("Removing events outside range from monitor");
 
@@ -1412,7 +1413,11 @@ gcal_calendar_monitor_set_range (GcalCalendarMonitor *self,
   g_clear_pointer (&writer_locker, g_rw_lock_writer_locker_free);
 
   maybe_spawn_view_thread (self);
-  remove_events_outside_range (self, range);
+
+  if (range)
+    remove_events_outside_range (self, range);
+  else
+    remove_all_events (self);
 
   g_cancellable_cancel (self->cancellable);
 
