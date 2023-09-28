@@ -63,7 +63,7 @@ struct _GcalTimeline
 {
   GObject             parent_instance;
 
-  gulong              update_range_idle_id;
+  guint               update_range_idle_id;
   GcalRange          *range;
 
   GcalRangeTree      *events;
@@ -806,11 +806,7 @@ gcal_timeline_finalize (GObject *object)
   g_cancellable_cancel (self->cancellable);
   g_clear_object (&self->cancellable);
 
-  if (self->update_range_idle_id > 0)
-    {
-      g_source_remove (self->update_range_idle_id);
-      self->update_range_idle_id = 0;
-    }
+  g_clear_handle_id (&self->update_range_idle_id, g_source_remove);
 
   g_clear_pointer (&self->events, gcal_range_tree_unref);
   g_clear_pointer (&self->calendars, g_hash_table_destroy);
