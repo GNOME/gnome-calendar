@@ -330,7 +330,7 @@ move_bottom_row_to_top (GcalMonthView *self)
 
   new_range = gcal_range_new_take (g_date_time_add_weeks (first_row_range_start, -1),
                                    g_date_time_ref (first_row_range_start),
-                                   GCAL_RANGE_DATE_ONLY);
+                                   GCAL_RANGE_DEFAULT);
 
 #ifdef GCAL_ENABLE_TRACE
     {
@@ -364,7 +364,7 @@ move_top_row_to_bottom (GcalMonthView *self)
 
   new_range = gcal_range_new_take (g_date_time_ref (last_row_range_end),
                                    g_date_time_add_weeks (last_row_range_end, 1),
-                                   GCAL_RANGE_DATE_ONLY);
+                                   GCAL_RANGE_DEFAULT);
 
 #ifdef GCAL_ENABLE_TRACE
     {
@@ -455,8 +455,8 @@ update_week_ranges (GcalMonthView *self,
 
           date = g_date_time_add_weeks (self->date, i - n_weeks_before);
           week_start = gcal_date_time_get_start_of_week (date);
-          week_end = gcal_date_time_get_end_of_week (date);
-          range = gcal_range_new (week_start, week_end, GCAL_RANGE_DATE_ONLY);
+          week_end = g_date_time_add_weeks (week_start, 1);
+          range = gcal_range_new (week_start, week_end, GCAL_RANGE_DEFAULT);
 
           row = g_ptr_array_index (self->week_rows, i);
           gcal_month_view_row_set_range (row, range);
