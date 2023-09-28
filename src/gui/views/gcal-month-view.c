@@ -414,12 +414,13 @@ update_week_ranges (GcalMonthView *self,
    */
   n_weeks_before = N_ROWS_PER_PAGE * (N_PAGES - 1) / 2;
 
-  current_range = gcal_timeline_subscriber_get_range (GCAL_TIMELINE_SUBSCRIBER (self));
   current_date = g_steal_pointer (&self->date);
+  if (current_date)
+    current_range = gcal_timeline_subscriber_get_range (GCAL_TIMELINE_SUBSCRIBER (self));
 
   gcal_set_date_time (&self->date, new_date);
 
-  if (gcal_range_contains_datetime (current_range, new_date))
+  if (current_range && gcal_range_contains_datetime (current_range, new_date))
     {
       g_autoptr (GcalRange) row_range = NULL;
       GcalMonthViewRow *row;
