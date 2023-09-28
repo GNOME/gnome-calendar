@@ -1520,6 +1520,7 @@ gcal_month_view_dispose (GObject *object)
   g_clear_object (&self->kinetic_scroll_animation);
   g_clear_object (&self->row_offset_animation);
 
+  g_clear_pointer (&self->overflow.popover, gtk_widget_unparent);
   g_clear_pointer (&self->header, gtk_widget_unparent);
   g_clear_pointer (&self->week_rows, g_ptr_array_unref);
 
