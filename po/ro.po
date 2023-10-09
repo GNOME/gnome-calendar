@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-07-25 07:40+0000\n"
-"PO-Revision-Date: 2023-07-29 14:52+0300\n"
+"POT-Creation-Date: 2023-08-17 16:13+0000\n"
+"PO-Revision-Date: 2023-10-09 17:35+0300\n"
 "Last-Translator: Florentina Mușat <florentina [dot] musat [dot] 28 [at] "
 "gmail [dot] com>\n"
 "Language-Team: Gnome Romanian Translation Team\n"
@@ -18,13 +18,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4\n"
 "X-Project-Style: gnome\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:112
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
 msgid "Calendar"
 msgstr "Calendar"
 
@@ -113,6 +113,14 @@ msgstr ""
 "Dacă sunt arătate rapoartele de vreme, sunt utilizate locațiile automate și "
 "un nume de locație"
 
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "Nivelul de focalizare a grilei săptămânale"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "Nivelul curent de focalizare a grilei săptămânale"
+
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
 #: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
@@ -140,19 +148,19 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "Configurări calendar"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:348
+#: src/gui/calendar-management/gcal-calendars-page.c:345
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Calendare"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/calendar-management/gcal-calendars-page.c:370
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Calendarul <b>%s</b> a fost eliminat"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:378
-#: src/gui/gcal-window.c:741
+#: src/gui/calendar-management/gcal-calendars-page.c:375
+#: src/gui/gcal-window.c:743
 msgid "_Undo"
 msgstr "An_ulează"
 
@@ -251,21 +259,21 @@ msgstr ""
 msgid "Credentials"
 msgstr "Acreditări"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:220
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
 msgid "User"
 msgstr "Utilizator"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
 msgid "Password"
 msgstr "Parolă"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:236
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:28
 #: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
 msgid "_Cancel"
 msgstr "_Anulează"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
 msgid "_Connect"
 msgstr "_Conectare"
 
@@ -385,11 +393,11 @@ msgstr "Comută sunetul alarmei"
 msgid "Remove the alarm"
 msgstr "Elimină alarma"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Save"
 msgstr "Salvează"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:196
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Done"
 msgstr "Terminat"
 
@@ -622,7 +630,7 @@ msgstr ""
 "Adrian Gabor <raziel [underscore] theripper [at] yahoo [dot] com\n"
 "Florentina Mușat <florentina.musat.28 [at] gmail [dot] com>, 2019"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:320
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:332
 msgid "Weather"
 msgstr "Vreme"
 
@@ -1095,51 +1103,51 @@ msgstr "Locație automată"
 msgid "Search locations"
 msgstr "Caută locațiile"
 
-#: src/gui/gcal-window.c:337
+#: src/gui/gcal-window.c:333
 msgid "Week"
 msgstr "Săptămână"
 
-#: src/gui/gcal-window.c:339
+#: src/gui/gcal-window.c:335
 msgid "Month"
 msgstr "Lună"
 
-#: src/gui/gcal-window.c:739
+#: src/gui/gcal-window.c:741
 msgid "Another event deleted"
 msgstr "Un alt eveniment șters"
 
-#: src/gui/gcal-window.c:739
+#: src/gui/gcal-window.c:741
 msgid "Event deleted"
 msgstr "Eveniment șters"
 
-#: src/gui/gcal-window.ui:131
+#: src/gui/gcal-window.ui:143
 msgid "Main Menu"
 msgstr "Meniu principal"
 
-#: src/gui/gcal-window.ui:168 src/gui/gcal-window.ui:207
+#: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
 msgid "_Today"
 msgstr "As_tăzi"
 
-#: src/gui/gcal-window.ui:243
+#: src/gui/gcal-window.ui:255
 msgid "_Week"
 msgstr "_Săptămână"
 
-#: src/gui/gcal-window.ui:258
+#: src/gui/gcal-window.ui:270
 msgid "_Month"
 msgstr "_Lună"
 
-#: src/gui/gcal-window.ui:312
+#: src/gui/gcal-window.ui:324
 msgid "_Date & Time Settings…"
 msgstr "Configurare _dată și oră…"
 
-#: src/gui/gcal-window.ui:316
+#: src/gui/gcal-window.ui:328
 msgid "_Online Accounts…"
 msgstr "_Conturi online…"
 
-#: src/gui/gcal-window.ui:328
+#: src/gui/gcal-window.ui:340
 msgid "_Keyboard Shortcuts"
 msgstr "S_curtături de tastatură"
 
-#: src/gui/gcal-window.ui:332
+#: src/gui/gcal-window.ui:344
 msgid "_About Calendar"
 msgstr "_Despre Calendar"
 
@@ -1160,65 +1168,70 @@ msgstr "Administrează calendarele"
 
 #: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
+msgid "Synchronize calendars"
+msgstr "Sincronizează calendarele"
+
+#: src/gui/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Închide fereastra"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Caută"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Arată ajutorul"
 
-#: src/gui/gtk/help-overlay.ui:44
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Scurtături"
 
-#: src/gui/gtk/help-overlay.ui:52
+#: src/gui/gtk/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Navigare"
 
-#: src/gui/gtk/help-overlay.ui:55
+#: src/gui/gtk/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "Navighează înapoi"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "Navighează înainte"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "Arată astăzi"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "Următoarea vizualizare"
 
-#: src/gui/gtk/help-overlay.ui:79
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "Precedenta vizualizare"
 
-#: src/gui/gtk/help-overlay.ui:87
+#: src/gui/gtk/help-overlay.ui:93
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Vizualizare"
 
-#: src/gui/gtk/help-overlay.ui:90
+#: src/gui/gtk/help-overlay.ui:96
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Vizualizare săptămânală"
 
-#: src/gui/gtk/help-overlay.ui:96
+#: src/gui/gtk/help-overlay.ui:102
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Vizualizare lunară"
@@ -1291,15 +1304,15 @@ msgstr "Nu există evenimente"
 msgid "New Event…"
 msgstr "Eveniment nou…"
 
-#: src/gui/views/gcal-week-grid.c:576
+#: src/gui/views/gcal-week-grid.c:578
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:579
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:472
+#: src/gui/views/gcal-week-header.c:474
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1307,7 +1320,7 @@ msgstr[0] "Alt eveniment"
 msgstr[1] "Alte %d evenimente"
 msgstr[2] "Alte %d de evenimente"
 
-#: src/gui/views/gcal-week-header.c:1001
+#: src/gui/views/gcal-week-header.c:1006
 #, c-format
 msgid "week %d"
 msgstr "săptămâna %d"
