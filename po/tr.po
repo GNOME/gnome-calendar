@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-08-04 23:11+0000\n"
-"PO-Revision-Date: 2023-08-06 17:11+0300\n"
+"POT-Creation-Date: 2023-08-08 10:59+0000\n"
+"PO-Revision-Date: 2023-10-13 15:50+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Türkçe <takim@gnome.org.tr>\n"
 "Language: tr\n"
@@ -23,13 +23,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.4\n"
 "X-POOTLE-MTIME: 1433367259.000000\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
 msgid "Calendar"
 msgstr "Takvim"
 
@@ -149,18 +149,18 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "Takvim Ayarları"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:343
+#: src/gui/calendar-management/gcal-calendars-page.c:345
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Takvimler"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:368
+#: src/gui/calendar-management/gcal-calendars-page.c:370
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "<b>%s</b> takvimi silindi"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/calendar-management/gcal-calendars-page.c:375
 #: src/gui/gcal-window.c:741
 msgid "_Undo"
 msgstr "_Geri Al"
@@ -270,7 +270,7 @@ msgstr "Parola"
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:28
 #: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
 msgid "_Cancel"
-msgstr "İ_ptal Et"
+msgstr "İ_ptal"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:238
 msgid "_Connect"
@@ -602,7 +602,7 @@ msgstr ""
 "Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Muhammet Kara <muhammetk@gmail.com>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:332
 msgid "Weather"
 msgstr "Hava Durumu"
 
@@ -1091,35 +1091,35 @@ msgstr "Başka bir olay silindi"
 msgid "Event deleted"
 msgstr "Olay silindi"
 
-#: src/gui/gcal-window.ui:137
+#: src/gui/gcal-window.ui:143
 msgid "Main Menu"
 msgstr "Ana Menü"
 
-#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
+#: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
 msgid "_Today"
 msgstr "_Bugün"
 
-#: src/gui/gcal-window.ui:249
+#: src/gui/gcal-window.ui:255
 msgid "_Week"
 msgstr "_Hafta"
 
-#: src/gui/gcal-window.ui:264
+#: src/gui/gcal-window.ui:270
 msgid "_Month"
 msgstr "_Ay"
 
-#: src/gui/gcal-window.ui:318
+#: src/gui/gcal-window.ui:324
 msgid "_Date & Time Settings…"
 msgstr "_Tarih ve Saat Ayarları…"
 
-#: src/gui/gcal-window.ui:322
+#: src/gui/gcal-window.ui:328
 msgid "_Online Accounts…"
 msgstr "Çevrim İçi _Hesaplar…"
 
-#: src/gui/gcal-window.ui:334
+#: src/gui/gcal-window.ui:340
 msgid "_Keyboard Shortcuts"
 msgstr "_Klavye Kısayolları"
 
-#: src/gui/gcal-window.ui:338
+#: src/gui/gcal-window.ui:344
 msgid "_About Calendar"
 msgstr "Takvim _Hakkında"
 
