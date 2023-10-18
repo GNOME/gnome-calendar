@@ -709,11 +709,6 @@ static void
 gcal_event_popover_init (GcalEventPopover *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
-
-  if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
-    gtk_popover_set_position (GTK_POPOVER (self), GTK_POS_LEFT);
-  else
-    gtk_popover_set_position (GTK_POPOVER (self), GTK_POS_RIGHT);
 }
 
 GtkWidget*
