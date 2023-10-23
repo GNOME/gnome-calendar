@@ -50,6 +50,7 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2023-10-23" version="45.1" type="stable" />
     <release date="2023-09-18" version="45.0" type="stable">
       <description>
         <ul>

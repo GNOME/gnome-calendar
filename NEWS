@@ -1,3 +1,11 @@
+Major changes in 45.1:
+* Use en dash for various strings
+* Read the 12/24h time format setting from the portal
+* Show event popover above events
+* Fix a crash when loading some specific event in specific ranges and timezones
+* Fix various warnings
+* Updated translations
+
 Major changes in 45.0:
 * Various small fixes
 * Updated translations
