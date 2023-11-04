@@ -52,6 +52,8 @@ struct _GcalMultiChoice
   GcalMultiChoiceFormatCallback   format_cb;
   gpointer                        format_data;
   GDestroyNotify                  format_destroy;
+  GcalMultiChoiceValueCallback    prev_cb;
+  GcalMultiChoiceValueCallback    next_cb;
 };
 
 enum
@@ -187,7 +189,9 @@ go_up (GcalMultiChoice *self)
   gboolean wrapped = FALSE;
   gint value;
 
-  value = self->value + 1;
+  value = self->next_cb ? self->next_cb (self->value) : self->value + 1;
+  g_assert_cmpint (value, > ,self->value);
+
   if (value > self->max_value)
     {
       if (!self->wrap)
@@ -209,7 +213,9 @@ go_down (GcalMultiChoice *self)
   gint value;
   gboolean wrapped = FALSE;
 
-  value = self->value - 1;
+  value = self->prev_cb ? self->prev_cb (self->value) : self->value - 1;
+  g_assert_cmpint (value, < , self->value);
+
   if (value < self->min_value)
     {
       if (!self->wrap)
@@ -849,6 +855,15 @@ gcal_multi_choice_set_format_callback (GcalMultiChoice               *self,
  *
  * Sets the popover for @self.
  */
+void
+gcal_multi_choice_set_value_callbacks (GcalMultiChoice              *self,
+                                       GcalMultiChoiceValueCallback  prev_cb,
+                                       GcalMultiChoiceValueCallback  next_cb)
+{
+  self->prev_cb = prev_cb;
+  self->next_cb = next_cb;
+}
+
 void
 gcal_multi_choice_set_popover (GcalMultiChoice *self,
                                GtkWidget       *popover)

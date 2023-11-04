@@ -56,6 +56,12 @@ void                 gcal_multi_choice_set_format_callback       (GcalMultiChoic
                                                                   gpointer             user_data,
                                                                   GDestroyNotify       notify);
 
+typedef gint         (*GcalMultiChoiceValueCallback)             (gint                 value);
+
+void                 gcal_multi_choice_set_value_callbacks       (GcalMultiChoice     *self,
+                                                                  GcalMultiChoiceValueCallback  prev_cb,
+                                                                  GcalMultiChoiceValueCallback  next_cb);
+
 G_END_DECLS
 
 #endif /* GCAL_MULTI_CHOICE_H */
