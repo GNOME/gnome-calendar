@@ -41,8 +41,10 @@ template $GcalDateChooser: Adw.Bin {
     $GcalMultiChoice combined_choice {
       visible: bind $get_combined_choice_visible(template.show-heading, template.split-month-year) as <bool>;
       halign: fill;
-      min-value: 12;
-      max-value: 119999;
+      // From January 1st, 1 (32 * (1 * 12 + 0) + 0):
+      min-value: 384;
+      // …to December 31st, 9999 (32 * (9999×12+11) + 30):
+      max-value: 3839998;
       popover: popover;
       animate: false;
       value: 0;

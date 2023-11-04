@@ -131,6 +131,70 @@ get_split_choice_visible (gpointer user_data,
   return show_heading && split_month_year;
 }
 
+static void
+decode_combined_choice_value (gint  value,
+                              gint *year,
+                              gint *month,
+                              gint *day)
+{
+  gint y, m, d, ym;
+
+  d = value % 32 + 1;
+  ym = value / 32;
+  y = ym / 12;
+  m = ym % 12 + 1;
+
+  g_assert (g_date_valid_dmy (d, m, y));
+
+  if (year)
+    *year = y;
+  if (month)
+    *month = m;
+  if (day)
+    *day = d;
+}
+
+static gint
+encode_combined_choice_value (gint year,
+                              gint month,
+                              gint day)
+{
+  g_assert (g_date_valid_dmy (day, month, year));
+  return (year * 12 + month - 1) * 32 + day - 1;
+}
+
+static gint
+compute_prev_combined_choice_value (gint value)
+{
+  gint year, month;
+
+  decode_combined_choice_value (value, &year, &month, NULL);
+
+  if (--month < 1)
+    {
+      month = 12;
+      year--;
+    }
+
+  return encode_combined_choice_value (year, month, 1);
+}
+
+static gint
+compute_next_combined_choice_value (gint value)
+{
+  gint year, month;
+
+  decode_combined_choice_value (value, &year, &month, NULL);
+
+  if (++month > 12)
+    {
+      month = 1;
+      year++;
+    }
+
+  return encode_combined_choice_value (year, month, 1);
+}
+
 static gboolean
 leap (guint year)
 {
@@ -342,13 +406,12 @@ format_month_year (GcalMultiChoice *choice,
   g_autoptr (GDateTime) now = g_date_time_new_now (g_date_time_get_timezone (self->date));
   gint year, month;
 
-  year = value / 12;
-  month = value % 12;
+  decode_combined_choice_value (value, &year, &month, NULL);
 
   if (g_date_time_get_year (now) == year)
-    return g_strdup (gcal_get_month_name (month));
+    return g_strdup (gcal_get_month_name (month - 1));
   else
-    return g_strdup_printf ("%s %d", gcal_get_month_name (month), year);
+    return g_strdup_printf ("%s %d", gcal_get_month_name (month - 1), year);
 }
 
 static void
@@ -515,11 +578,14 @@ gcal_date_chooser_set_date (GcalView  *view,
 
   gcal_set_date_time (&self->date, date);
 
+  if (y1 != y2 || m1 != m2 || d1 != d2)
+    gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->combined_choice),
+                                 encode_combined_choice_value (y2, m2, d2));
+
   if (y1 != y2 || m1 != m2)
     {
       gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->year_choice), y2);
       gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->month_choice), m2 - 1);
-      gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->combined_choice), y2 * 12 + m2 - 1);
       calendar_compute_days (self);
       gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (self));
     }
@@ -753,15 +819,10 @@ calendar_get_property (GObject    *obj,
 static void
 multi_choice_changed (GcalDateChooser *self,
                       gint             year,
-                      gint             month)
+                      gint             month,
+                      gint             day)
 {
   g_autoptr (GDateTime) date = NULL;
-  gint day;
-
-  day = g_date_time_get_day_of_month (self->date);
-
-  /* Make sure the day is valid at that month */
-  day = MIN (day, month_length[leap (year)][month]);
 
   date = g_date_time_new_local (year, month, day, 0, 0, 0);
   gcal_date_chooser_set_date (GCAL_VIEW (self), date);
@@ -770,23 +831,28 @@ multi_choice_changed (GcalDateChooser *self,
 static void
 combined_multi_choice_changed (GcalDateChooser *self)
 {
-  gint year, month;
+  gint year, month, day, value;
 
-  year = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->combined_choice)) / 12;
-  month = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->combined_choice)) % 12 + 1;
+  value = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->combined_choice));
+  decode_combined_choice_value (value, &year, &month, &day);
 
-  multi_choice_changed (self, year, month);
+  multi_choice_changed (self, year, month, day);
 }
 
 static void
 split_multi_choice_changed (GcalDateChooser *self)
 {
-  gint year, month;
+  gint year, month, day;
 
   year = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->year_choice));
   month = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->month_choice)) + 1;
 
-  multi_choice_changed (self, year, month);
+  day = g_date_time_get_day_of_month (self->date);
+
+  /* Make sure the day is valid at that month */
+  day = MIN (day, month_length[leap (year)][month]);
+
+  multi_choice_changed (self, year, month, day);
 }
 
 static gboolean
@@ -1017,7 +1083,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
   GtkDropTarget *drop_target;
   GtkWidget *label;
   gint row, col;
-  gint year, month;
+  gint year, month, day;
   GtkLayoutManager *layout_manager;
 
   self->show_heading = TRUE;
@@ -1145,11 +1211,16 @@ gcal_date_chooser_init (GcalDateChooser *self)
   calendar_init_weekday_display (self);
 
   calendar_compute_days (self);
-  g_date_time_get_ymd (self->date, &year, &month, NULL);
+  g_date_time_get_ymd (self->date, &year, &month, &day);
   gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->year_choice), year);
   gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->month_choice), month - 1);
-  gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->combined_choice), year * 12 + month - 1);
+  gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->combined_choice),
+                               encode_combined_choice_value (year, month, day));
   calendar_update_selected_day_display (self);
+
+  gcal_multi_choice_set_value_callbacks (GCAL_MULTI_CHOICE (self->combined_choice),
+                                         compute_prev_combined_choice_value,
+                                         compute_next_combined_choice_value);
 
   drop_target = gtk_drop_target_new (G_TYPE_STRING, GDK_ACTION_COPY);
   gtk_drop_target_set_preload (drop_target, TRUE);
