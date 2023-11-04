@@ -1227,9 +1227,14 @@ static GDateTime*
 gcal_month_view_get_next_date (GcalView *view)
 {
   GcalMonthView *self = GCAL_MONTH_VIEW (view);
+  g_autoptr (GDateTime) date = NULL;
+  gint year, month;
 
-  g_assert (self->date != NULL);
-  return g_date_time_add_months (self->date, 1);
+  g_assert_nonnull (self->date);
+  date = g_date_time_add_months (self->date, 1);
+  g_date_time_get_ymd (date, &year, &month, NULL);
+
+  return g_date_time_new_local (year, month, 1, 0, 0, 0);
 }
 
 
@@ -1237,9 +1242,14 @@ static GDateTime*
 gcal_month_view_get_previous_date (GcalView *view)
 {
   GcalMonthView *self = GCAL_MONTH_VIEW (view);
+  g_autoptr (GDateTime) date = NULL;
+  gint year, month;
 
-  g_assert (self->date != NULL);
-  return g_date_time_add_months (self->date, -1);
+  g_assert_nonnull (self->date);
+  date = g_date_time_add_months (self->date, -1);
+  g_date_time_get_ymd (date, &year, &month, NULL);
+
+  return g_date_time_new_local (year, month, 1, 0, 0, 0);
 }
 
 static void
