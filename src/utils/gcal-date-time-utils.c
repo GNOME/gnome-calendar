@@ -258,3 +258,31 @@ gcal_timezone_to_icaltimezone (GTimeZone *tz)
   return ical_tz;
 }
 
+/**
+ * gcal_date_time_add_floating_minutes:
+ * @initial: Initial #GDateTime to add minutes
+ * @minutes: The number of minutes to add
+ *
+ * Calculate the datetime initial + minutes without caring about dayligh saving
+ * changes, so if it's 02:30 + 30 minutes, the result will be 03:00, always,
+ * independently of the daylight saving logic.
+ *
+ * Returns: (transfer full): A new #GDateTime with initial + minutes
+ */
+GDateTime*
+gcal_date_time_add_floating_minutes (GDateTime *initial,
+                                     gint       minutes)
+{
+  g_autoptr (GDateTime) result = NULL;
+  GTimeSpan initial_offset = 0;
+  GTimeSpan result_offset = 0;
+  GTimeSpan offset = 0;
+
+  result = g_date_time_add_minutes (initial, minutes);
+  initial_offset = g_date_time_get_utc_offset (initial);
+  result_offset = g_date_time_get_utc_offset (result);
+  offset = initial_offset - result_offset;
+  // offset is in microseconds, convert to seconds
+  offset = offset / 1000000;
+  return g_date_time_add_seconds (result, offset);
+}

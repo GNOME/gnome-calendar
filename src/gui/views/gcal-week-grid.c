@@ -294,8 +294,8 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
 
   if (ltr)
     {
-      start = g_date_time_add_minutes (week_start, start_cell * 30);
-      end = g_date_time_add_minutes (week_start, (end_cell + 1) * 30);
+      start = gcal_date_time_add_floating_minutes (week_start, start_cell * 30);
+      end = gcal_date_time_add_floating_minutes (week_start, (end_cell + 1) * 30);
     }
   else
     {
@@ -306,8 +306,8 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
       rtl_start_cell = start_cell + (rtl_column - column) * 48;
       rtl_end_cell = (rtl_column * MINUTES_PER_DAY + minute) / 30;
 
-      start = g_date_time_add_minutes (week_start, rtl_start_cell * 30);
-      end = g_date_time_add_minutes (week_start, (rtl_end_cell + 1) * 30);
+      start = gcal_date_time_add_floating_minutes (week_start, rtl_start_cell * 30);
+      end = gcal_date_time_add_floating_minutes (week_start, (rtl_end_cell + 1) * 30);
     }
 
   local_x = round ((column + 0.5) * (alloc.width / 7.0));

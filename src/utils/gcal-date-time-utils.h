@@ -53,4 +53,8 @@ GDateTime*           gcal_date_time_from_icaltime                (const ICalTime
 
 ICalTimezone*        gcal_timezone_to_icaltimezone               (GTimeZone          *tz);
 
+
+GDateTime*           gcal_date_time_add_floating_minutes         (GDateTime          *initial,
+                                                                  gint                minutes);
+
 G_END_DECLS
