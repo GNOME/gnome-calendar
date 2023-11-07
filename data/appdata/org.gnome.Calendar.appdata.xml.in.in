@@ -5,17 +5,26 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <name>Calendar</name>
-  <summary>Calendar for GNOME</summary>
+  <summary>Manage your schedule</summary>
 
   <description>
     <p>
-      GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME
-      desktop. By reusing the components which the GNOME desktop is built on, Calendar nicely integrates
-      with the GNOME ecosystem.
+      GNOME Calendar is an elegant tool to help you plan and stay on top of your schedule for
+      upcoming days and weeks, whether your months are filled with meetings and appointments,
+      public events, travel logistics, or other commitments in your life.
     </p>
     <p>
-      We aim to find the perfect balance between nicely crafted features and user-centred usability. No
-      excess, nothing missing. You’ll feel comfortable using Calendar, like you’ve been using it for ages!
+      Easily create and manage unlimited calendars and events with GNOME Calendar's infinite
+      scrolling month view, week timetable, and scheduling list view.
+    </p>
+    <p>
+      Integrating the latest GNOME technologies and design best practices, GNOME Calendar builds on
+      top of the mature Evolution data server to manage large quantities of events and to provide
+      integration with other applications. You can add calendars from various online calendaring
+      services (like NextCloud, Google Calendar, and CalDAV / WebDAV servers), enabling you to
+      synchronize your events across multiple devices and platforms. GNOME Calendar also supports
+      local and offline calendaring, so you can use it anywhere and anytime while travelling
+      (or after civilization's collapse.)
     </p>
   </description>
 
