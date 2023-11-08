@@ -30,6 +30,19 @@
                    "DTEND:20180715T035959Z\n"   \
                    "END:VEVENT\n"
 
+#define STUB_EVENT_DTEND "BEGIN:VEVENT\n"                \
+                         "SUMMARY:Stub all day\n"        \
+                         "UID:example@uid\n"             \
+                         "DTSTART;VALUE=DATE:20231108\n" \
+                         "DTEND;VALUE=DATE:20231109\n"   \
+                         "END:VEVENT\n"
+
+#define STUB_EVENT_NODTEND "BEGIN:VEVENT\n"                \
+                           "SUMMARY:Stub all day\n"        \
+                           "UID:example@uid\n"             \
+                           "DTSTART;VALUE=DATE:20231108\n" \
+                           "END:VEVENT\n"
+
 #define EVENT_STRING_FOR_DATE(dtstart,dtend)    \
                    "BEGIN:VEVENT\n"             \
                    "SUMMARY:Stub event\n"       \
@@ -126,6 +139,37 @@ event_summary (void)
   event = create_event_for_string (STUB_EVENT, NULL);
 
   g_assert_cmpstr (gcal_event_get_summary (event), ==, "Stub event");
+}
+
+/*********************************************************************************************************************/
+
+static void
+event_no_dtend (void)
+{
+  g_autoptr (GcalEvent) event_dtend = NULL;
+  g_autoptr (GcalEvent) event_nodtend = NULL;
+  GDateTime *end_dtend = NULL;
+  GDateTime *end_nodtend = NULL;
+
+  g_test_bug ("327");
+
+  event_dtend = create_event_for_string (STUB_EVENT_DTEND, NULL);
+  event_nodtend = create_event_for_string (STUB_EVENT_NODTEND, NULL);
+  end_dtend = gcal_event_get_date_end (event_dtend);
+  end_nodtend = gcal_event_get_date_end (event_nodtend);
+
+  // assert event with DTEND is working correctly
+  g_assert_true (gcal_event_get_all_day (event_dtend));
+  g_assert_true (end_dtend != NULL);
+
+  // assert event without DTEND is working correctly, has a date_end assigned
+  // for all day
+  g_assert_true (gcal_event_get_all_day (event_nodtend));
+  g_assert_true (end_nodtend != NULL);
+
+  // The event without dtend should be all day and should have the same
+  // date_end than the event that explicitly specified it.
+  g_assert_true (g_date_time_equal (end_dtend, end_nodtend));
 }
 
 /*********************************************************************************************************************/
@@ -256,6 +300,7 @@ main (gint   argc,
   g_test_add_func ("/event/clone", event_clone);
   g_test_add_func ("/event/uid", event_uid);
   g_test_add_func ("/event/summary", event_summary);
+  g_test_add_func ("/event/nodtend", event_no_dtend);
   g_test_add_func ("/event/date/start", event_date_start);
   g_test_add_func ("/event/date/end", event_date_end);
   g_test_add_func ("/event/date/singleday", event_date_singleday);

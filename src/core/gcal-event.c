@@ -368,6 +368,7 @@ setup_component (GcalEvent  *self,
   if (!end || !e_cal_component_datetime_get_value (end))
     {
       self->all_day = TRUE;
+      self->dt_end = g_date_time_add_days (self->dt_start, 1);
     }
   else
     {
