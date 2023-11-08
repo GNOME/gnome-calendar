@@ -216,16 +216,11 @@ static ECalComponentDateTime*
 build_component_from_datetime (GcalEvent *self,
                                GDateTime *dt)
 {
-  GcalApplication *application;
-  GcalContext *context;
-  ICalTime *itt;
-  gchar *tzid;
+  ICalTime *itt = NULL;
+  gchar *tzid = NULL;
 
   if (!dt)
     return NULL;
-
-  application = GCAL_APPLICATION (g_application_get_default ());
-  context = gcal_application_get_context (application);
 
   itt = gcal_date_time_to_icaltime (dt);
 
@@ -236,10 +231,10 @@ build_component_from_datetime (GcalEvent *self,
     }
   else
     {
+      g_autoptr (GTimeZone) zone = NULL;
       ICalTimezone *tz;
-      GTimeZone *zone;
 
-      zone = gcal_context_get_timezone (context);
+      zone = gcal_util_get_app_timezone_or_local ();
       tz = gcal_timezone_to_icaltimezone (zone);
       i_cal_time_set_timezone (itt, tz);
       tzid = g_strdup (i_cal_timezone_get_tzid (tz));

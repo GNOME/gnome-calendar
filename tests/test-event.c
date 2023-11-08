@@ -48,15 +48,15 @@
                    "SUMMARY:Stub event\n"       \
                    "UID:example@uid\n"          \
                    "DTSTAMP:19970114T170000Z\n" \
-                   "DTSTART:"dtstart"\n"        \
-                   "DTEND:"dtend"\n"            \
+                   "DTSTART"dtstart"\n"        \
+                   "DTEND"dtend"\n"            \
                    "END:VEVENT\n"
 
 #define EVENT_STRING_FOR_DATE_START(dtstart)    \
-                   EVENT_STRING_FOR_DATE(dtstart, "20180715T035959Z")
+                   EVENT_STRING_FOR_DATE(dtstart, ":20180715T035959Z")
 
 #define EVENT_STRING_FOR_DATE_END(dtend)        \
-                   EVENT_STRING_FOR_DATE("19970101T170000Z", dtend)
+                   EVENT_STRING_FOR_DATE(":19970101T170000Z", dtend)
 
 
 
@@ -183,9 +183,9 @@ event_date_start (void)
       GDateTime   *datetime;
     }
   start_dates[] = {
-    { EVENT_STRING_FOR_DATE_START ("20160229T000000Z"), g_date_time_new_utc (2016, 2, 29, 00, 00, 00.) },
-    { EVENT_STRING_FOR_DATE_START ("20180228T170000Z"), g_date_time_new_utc (2018, 2, 28, 17, 00, 00.) },
-    { EVENT_STRING_FOR_DATE_START ("20180714T170000Z"), g_date_time_new_utc (2018, 7, 14, 17, 00, 00.) },
+    { EVENT_STRING_FOR_DATE_START (":20160229T000000Z"), g_date_time_new_utc (2016, 2, 29, 00, 00, 00.) },
+    { EVENT_STRING_FOR_DATE_START (":20180228T170000Z"), g_date_time_new_utc (2018, 2, 28, 17, 00, 00.) },
+    { EVENT_STRING_FOR_DATE_START (":20180714T170000Z"), g_date_time_new_utc (2018, 7, 14, 17, 00, 00.) },
   };
 
   guint i;
@@ -215,9 +215,9 @@ event_date_end (void)
       GDateTime   *datetime;
     }
   end_dates[] = {
-    { EVENT_STRING_FOR_DATE_END ("20160229T000000Z"), g_date_time_new_utc (2016, 2, 29, 00, 00, 00.) },
-    { EVENT_STRING_FOR_DATE_END ("20180228T170000Z"), g_date_time_new_utc (2018, 2, 28, 17, 00, 00.) },
-    { EVENT_STRING_FOR_DATE_END ("20180714T170000Z"), g_date_time_new_utc (2018, 7, 14, 17, 00, 00.) },
+    { EVENT_STRING_FOR_DATE_END (":20160229T000000Z"), g_date_time_new_utc (2016, 2, 29, 00, 00, 00.) },
+    { EVENT_STRING_FOR_DATE_END (":20180228T170000Z"), g_date_time_new_utc (2018, 2, 28, 17, 00, 00.) },
+    { EVENT_STRING_FOR_DATE_END (":20180714T170000Z"), g_date_time_new_utc (2018, 7, 14, 17, 00, 00.) },
   };
 
   guint i;
@@ -242,9 +242,9 @@ static void
 event_date_singleday (void)
 {
   const gchar * const events[] = {
-    EVENT_STRING_FOR_DATE ("20160229T000000Z", "20160229T030000Z"),
-    EVENT_STRING_FOR_DATE ("20160229T000000Z", "20160301T000000Z"),
-    EVENT_STRING_FOR_DATE ("20160229T000000Z", "20160229T235959Z"),
+    EVENT_STRING_FOR_DATE (":20160229T000000Z", ":20160229T030000Z"),
+    EVENT_STRING_FOR_DATE (":20160229T000000Z", ":20160301T000000Z"),
+    EVENT_STRING_FOR_DATE (":20160229T000000Z", ":20160229T235959Z"),
   };
 
   guint i;
@@ -267,8 +267,8 @@ static void
 event_date_multiday (void)
 {
   const gchar * const events[] = {
-    EVENT_STRING_FOR_DATE ("20160229T000000Z", "20160302T000001Z"),
-    EVENT_STRING_FOR_DATE ("20160229T020000Z", "20160310T004500Z"),
+    EVENT_STRING_FOR_DATE (":20160229T000000Z", ":20160302T000001Z"),
+    EVENT_STRING_FOR_DATE (":20160229T020000Z", ":20160310T004500Z"),
   };
 
   guint i;
@@ -282,6 +282,55 @@ event_date_multiday (void)
 
       g_assert_no_error (error);
       g_assert_true (gcal_event_is_multiday (event));
+    }
+}
+
+/*********************************************************************************************************************/
+
+static void
+event_date_edit_tzid (void)
+{
+  struct {
+    const gchar *string;
+    const gchar *tz;
+  } events[] = {
+    {
+      EVENT_STRING_FOR_DATE (";TZID=Europe/Madrid:20170818T130000", ";TZID=Europe/Madrid:20170818T140000"),
+      "Europe/Madrid"
+    },
+    {
+      // https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/170
+      EVENT_STRING_FOR_DATE (";TZID=Europe/London:20170818T130000", ";TZID=Europe/London:20170818T140000"),
+      "Europe/London"
+    },
+    {
+      EVENT_STRING_FOR_DATE (";TZID=America/Costa_Rica:20170818T130000", ";TZID=America/Costa_Rica:20170818T140000"),
+      "America/Costa_Rica"
+    },
+  };
+
+  g_test_bug ("170");
+
+  for (size_t i = 0; i < G_N_ELEMENTS (events); i++)
+    {
+      g_autoptr (GDateTime) datetime = NULL;
+      g_autoptr (GTimeZone) timezone = NULL;
+      g_autoptr (GcalEvent) event = NULL;
+      g_autoptr (GError) error = NULL;
+
+      ECalComponentDateTime *dt_end = NULL;
+
+      event = create_event_for_string (events[i].string, &error);
+      g_assert_no_error (error);
+
+      // modify the event and check the tz in the result
+      timezone = g_time_zone_new_identifier (events[i].tz);
+      datetime = g_date_time_new (timezone, 2017, 8, 18, 15, 00, 00.);
+      gcal_event_set_date_end (event, datetime);
+
+      dt_end = e_cal_component_get_dtend (gcal_event_get_component (event));
+      g_assert_cmpstr (e_cal_component_datetime_get_tzid (dt_end), ==, "UTC");
+      e_cal_component_datetime_free (dt_end);
     }
 }
 
@@ -305,6 +354,7 @@ main (gint   argc,
   g_test_add_func ("/event/date/end", event_date_end);
   g_test_add_func ("/event/date/singleday", event_date_singleday);
   g_test_add_func ("/event/date/multiday", event_date_multiday);
+  g_test_add_func ("/event/date/edit-tzid", event_date_edit_tzid);
 
   return g_test_run ();
 }

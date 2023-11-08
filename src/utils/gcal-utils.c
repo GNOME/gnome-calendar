@@ -401,17 +401,13 @@ build_component_from_details (const gchar *summary,
                               GDateTime   *initial_date,
                               GDateTime   *final_date)
 {
-  GcalApplication *application;
-  GcalContext *context;
-  ECalComponent *event;
-  ECalComponentDateTime *dt;
-  ECalComponentText *summ;
-  ICalTimezone *tz;
-  ICalTime *itt;
-  gboolean all_day;
+  ECalComponent *event = NULL;
+  ECalComponentDateTime *dt = NULL;
+  ECalComponentText *summ = NULL;
+  ICalTimezone *tz = NULL;
+  ICalTime *itt = NULL;
+  gboolean all_day = FALSE;
 
-  application = GCAL_APPLICATION (g_application_get_default ());
-  context = gcal_application_get_context (application);
   event = e_cal_component_new ();
   e_cal_component_set_new_vtype (event, E_CAL_COMPONENT_EVENT);
 
@@ -431,9 +427,8 @@ build_component_from_details (const gchar *summary,
     }
   else
     {
-      GTimeZone *zone;
-
-      zone = gcal_context_get_timezone (context);
+      g_autoptr (GTimeZone) zone = NULL;
+      zone = gcal_util_get_app_timezone_or_local ();
       tz = gcal_timezone_to_icaltimezone (zone);
     }
 
@@ -515,16 +510,12 @@ icaltime_compare_with_current (const ICalTime *date1,
                                const ICalTime *date2,
                                time_t         *current_time_t)
 {
-  GcalApplication *application;
-  GcalContext *context;
-  GTimeZone *zone;
+  g_autoptr (GTimeZone) zone = NULL;
   ICalTimezone *zone1, *zone2;
   gint result = 0;
   time_t start1, start2, diff1, diff2;
 
-  application = GCAL_APPLICATION (g_application_get_default ());
-  context = gcal_application_get_context (application);
-  zone = gcal_context_get_timezone (context);
+  zone = gcal_util_get_app_timezone_or_local ();
 
   zone1 = i_cal_time_get_timezone (date1);
   if (!zone1)
@@ -1327,4 +1318,28 @@ gcal_util_translate_time_string (const gchar *str)
     freelocale (loc);
 
   return res;
+}
+
+/**
+ * gcal_util_get_app_timezone_or_local:
+ *
+ * Returns a new reference to the application context timezone. If
+ * g_application_get_default() returns null, because there's no default
+ * application, it'll return a new local timezone created with
+ * g_timezone_new_local().
+ *
+ * Returns: (transfer full): a #GTimeZone
+ */
+GTimeZone *
+gcal_util_get_app_timezone_or_local ()
+{
+  GcalApplication *application = NULL;
+  GcalContext *context = NULL;
+
+  application = GCAL_APPLICATION (g_application_get_default ());
+  if (!application)
+    return g_time_zone_new_local ();
+
+  context = gcal_application_get_context (application);
+  return g_time_zone_ref (gcal_context_get_timezone (context));
 }

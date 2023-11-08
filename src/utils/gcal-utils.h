@@ -136,4 +136,6 @@ void                 gcal_utils_ask_recurrence_modification_type (GtkWidget     
 
 const gchar *        gcal_util_translate_time_string             (const gchar          *str);
 
+GTimeZone *          gcal_util_get_app_timezone_or_local         ();
+
 #endif /* __GCAL_UTILS_H__ */
