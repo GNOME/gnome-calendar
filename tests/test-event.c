@@ -288,6 +288,53 @@ event_date_multiday (void)
 /*********************************************************************************************************************/
 
 static void
+event_date_create_tzid (void)
+{
+  const gchar *event_str = EVENT_STRING_FOR_DATE (";TZID=Europe/London:20170818T010000", ";TZID=Europe/London:20170818T020000");
+
+  g_autoptr (GcalEvent) event = NULL;
+  g_autoptr (GError) error = NULL;
+  g_autoptr (GDateTime) datetime = NULL;
+  g_autoptr (GTimeZone) tz = NULL;
+  g_autofree gchar *ical_string = NULL;
+
+  ECalComponent *comp = NULL;
+  ICalComponent *ical_comp = NULL;
+  ECalComponentDateTime *dt_end = NULL;
+
+  g_test_bug ("172");
+
+  event = create_event_for_string (event_str, &error);
+  g_assert_no_error (error);
+
+  comp = gcal_event_get_component (event);
+  dt_end = e_cal_component_get_dtend (comp);
+  g_assert_cmpstr (e_cal_component_datetime_get_tzid (dt_end), ==, "Europe/London");
+  e_cal_component_datetime_free (dt_end);
+
+  ical_comp = e_cal_component_get_icalcomponent (comp);
+
+  ical_string = i_cal_component_as_ical_string (ical_comp);
+  g_assert_true (strstr (ical_string, "DTSTART;TZID=Europe/London:20170818T010000\r\n") != NULL);
+  g_assert_true (strstr (ical_string, "DTEND;TZID=Europe/London:20170818T020000\r\n") != NULL);
+
+  // Edit the event to check that the modification is stored correctly
+  g_setenv ("TZ", "Europe/London", TRUE);
+
+  tz = g_time_zone_new_identifier ("Europe/London");
+  datetime = g_date_time_new (tz, 2017, 8, 18, 3, 00, 00.);
+  gcal_event_set_date_end (event, datetime);
+
+  ical_string = i_cal_component_as_ical_string (ical_comp);
+  g_assert_true (strstr (ical_string, "DTSTART;TZID=Europe/London:20170818T010000\r\n") != NULL);
+  g_assert_true (strstr (ical_string, "DTEND;TZID=/freeassociation.sourceforge.net/Europe/London:\r\n 20170818T030000\r\n") != NULL);
+
+  g_setenv ("TZ", "UTC", TRUE);
+}
+
+/*********************************************************************************************************************/
+
+static void
 event_date_edit_tzid (void)
 {
   struct {
@@ -355,6 +402,7 @@ main (gint   argc,
   g_test_add_func ("/event/date/singleday", event_date_singleday);
   g_test_add_func ("/event/date/multiday", event_date_multiday);
   g_test_add_func ("/event/date/edit-tzid", event_date_edit_tzid);
+  g_test_add_func ("/event/date/create-tzid", event_date_create_tzid);
 
   return g_test_run ();
 }
