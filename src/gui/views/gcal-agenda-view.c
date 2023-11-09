@@ -329,9 +329,14 @@ update_header (GtkListBoxRow *row,
   GcalAgendaView *self = GCAL_AGENDA_VIEW (user_data);
   GDateTime *start = get_start_date_for_row (self, row);
   GDateTime *end = get_end_date_for_row (self, row);
+  GtkWidget *widget = gtk_list_box_row_get_child (row);
+  GcalEvent *event = NULL;
   g_autofree gchar *label = NULL;
   GtkWidget *header;
   g_autoptr (GDateTime) today = NULL;
+
+  if (GCAL_IS_EVENT_WIDGET (widget))
+    event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
 
   today = g_date_time_new_now_local ();
 
@@ -351,6 +356,15 @@ update_header (GtkListBoxRow *row,
 
       if (gcal_date_time_compare_date (start, before_start) == 0 &&
           gcal_date_time_compare_date (end, before_end) == 0)
+        {
+          gtk_list_box_row_set_header (row, NULL);
+          return;
+        }
+
+      /* All day events don't need to check for end date */
+      if (event &&
+          gcal_event_get_all_day (event) &&
+          gcal_date_time_compare_date (start, before_start) == 0)
         {
           gtk_list_box_row_set_header (row, NULL);
           return;
