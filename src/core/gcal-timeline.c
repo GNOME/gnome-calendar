@@ -411,6 +411,9 @@ calculate_changed_events (GcalTimeline            *self,
   for (i = 0; events_to_remove && i < events_to_remove->len; i++)
     {
       GcalEvent *event = g_ptr_array_index (events_to_remove, i);
+      /* Do not re-remove multiday events that are part of new range */
+      if (gcal_event_is_multiday (event) && gcal_event_overlaps (event, new_range))
+        continue;
 
       GCAL_TRACE_MSG ("Removing event from subscriber %s due to time range change (event: '%s' (%s))",
                       G_OBJECT_TYPE_NAME (subscriber),
@@ -423,6 +426,9 @@ calculate_changed_events (GcalTimeline            *self,
   for (i = 0; events_to_add && i < events_to_add->len; i++)
     {
       GcalEvent *event = g_ptr_array_index (events_to_add, i);
+      /* Do not re-add multiday events that were part of old range */
+      if (gcal_event_is_multiday (event) && gcal_event_overlaps (event, old_range))
+        continue;
 
       GCAL_TRACE_MSG ("Queueing event addition for subscriber %s (event: '%s' (%s))",
                       G_OBJECT_TYPE_NAME (subscriber),

@@ -1929,3 +1929,21 @@ gcal_event_format_date (GcalEvent *self)
 
   return g_steal_pointer (&formatted_string);
 }
+
+/**
+ * gcal_event_overlaps:
+ * @self: a #GcalEvent
+ * @range: a #GcalRange
+ *
+ * Returns: True if the event range overlaps the @range
+ */
+gboolean
+gcal_event_overlaps (GcalEvent *self,
+                     GcalRange *range)
+{
+  GcalRangeOverlap overlap;
+
+  g_return_val_if_fail (GCAL_IS_EVENT (self), FALSE);
+  overlap = gcal_range_calculate_overlap (gcal_event_get_range (self), range, NULL);
+  return overlap != GCAL_RANGE_NO_OVERLAP;
+}
