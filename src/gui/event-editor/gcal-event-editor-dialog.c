@@ -476,7 +476,10 @@ on_done_button_clicked_cb (GtkButton             *button,
   was_recurrent = gcal_event_has_recurrence (self->event);
 
   for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
-    gcal_event_editor_section_apply (self->sections[i]);
+    {
+      if (gcal_event_editor_section_changed (self->sections[i]))
+        gcal_event_editor_section_apply (self->sections[i]);
+    }
 
   if (calendar_changed)
     {
