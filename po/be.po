@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-08-04 23:11+0000\n"
-"PO-Revision-Date: 2023-08-07 23:40+0300\n"
+"POT-Creation-Date: 2023-11-13 11:35+0000\n"
+"PO-Revision-Date: 2023-11-13 15:42+0300\n"
 "Last-Translator: Yuras Shumovich <shumovichy@gmail.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -17,44 +17,57 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
 #: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
 msgid "Calendar"
 msgstr "Каляндар"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
-msgid "Calendar for GNOME"
-msgstr "Каляндар для GNOME"
+msgid "Manage your schedule"
+msgstr "Кіраванне раскладам"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
 msgid ""
-"GNOME Calendar is a simple and beautiful calendar application designed to "
-"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
+"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
+"schedule for upcoming days and weeks, whether your months are filled with "
+"meetings and appointments, public events, travel logistics, or other "
+"commitments in your life."
 msgstr ""
-"Каляндар GNOME - гэта простая і прыгожая праграма, распрацаваная для "
-"працоўнага асяроддзя GNOME. Праграма распрацаваная з дапамогай кампанентаў, "
-"якія выкарыстоўваліся падчас стварэння працоўнага стала GNOME, таму каляндар "
-"выдатна інтэгруецца ў экасістэму GNOME."
+"Каляндар GNOME - гэта выдатны інструмент, які дапамагае планаваць і сачыць "
+"за выкананнем свайго раскладу на бліжэйшыя дні і тыдні, незалежна ад таго, "
+"чым запоўнены вашы месяцы - сустрэчамі і нарадамі, грамадскімі "
+"мерапрыемствамі, паездкамі ці іншымі планамі."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
-"We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, nothing missing. You’ll feel comfortable using "
-"Calendar, like you’ve been using it for ages!"
+"Easily create and manage unlimited calendars and events with GNOME "
+"Calendar's infinite scrolling month view, week timetable, and scheduling "
+"list view."
 msgstr ""
-"Нашай мэтай было знайсці ідэальны баланс паміж прыгожым выглядам і зручнасцю "
-"выкарыстання. Нічога лішняга, ніякіх недахопаў. Вам будзе камфортна, нібыта "
-"вы карысталіся ім заўсёды!"
+"Лёгка стварайце і кіруйце неабмежаванай колькасцю календароў і падзей у "
+"Календары GNOME з бясконцай прагорткай і праглядам па месяцах, тыднях, а "
+"таксама па спісе запланаваных падзей."
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:20
+msgid ""
+"Integrating the latest GNOME technologies and design best practices, GNOME "
+"Calendar builds on top of the mature Evolution data server to manage large "
+"quantities of events and to provide integration with other applications. You "
+"can add calendars from various online calendaring services (like NextCloud, "
+"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
+"your events across multiple devices and platforms. GNOME Calendar also "
+"supports local and offline calendaring, so you can use it anywhere and "
+"anytime while travelling (or after civilization's collapse.)"
+msgstr ""
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:33
 msgid "Week view"
 msgstr "Прагляд тыдня"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:37
 msgid "Month view"
 msgstr "Прагляд месяца"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:41
 msgid "Event editor"
 msgstr "Рэдактар падзей"
 
@@ -112,7 +125,7 @@ msgstr "Бягучы ўзровень маштабавання сеткі кал
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
+#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:395
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -121,14 +134,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1914
+#: src/core/gcal-event.c:1910
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1930 src/gui/gcal-quick-add-popover.c:461
+#: src/core/gcal-event.c:1926 src/gui/gcal-quick-add-popover.c:461
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -137,19 +150,19 @@ msgstr "%1$s, %2$s – %3$s"
 msgid "Calendar Settings"
 msgstr "Налады календара"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:343
+#: src/gui/calendar-management/gcal-calendars-page.c:345
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Календары"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:368
+#: src/gui/calendar-management/gcal-calendars-page.c:370
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Каляндар <b>%s</b> выдалены"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:373
-#: src/gui/gcal-window.c:741
+#: src/gui/calendar-management/gcal-calendars-page.c:375
+#: src/gui/gcal-window.c:743
 msgid "_Undo"
 msgstr "_Адрабіць"
 
@@ -167,34 +180,34 @@ msgstr "Адкрыць у «Наладах»"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:53
 #: src/gui/event-editor/gcal-summary-section.ui:23
-#: src/gui/gcal-event-popover.ui:113
+#: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "Месцазнаходжанне"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:24
 msgid "Calendar Name"
 msgstr "Назва календара"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:71
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:32
 msgid "Color"
 msgstr "Колер"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:92
 msgid "_Display Calendar"
 msgstr "_Паказаць каляндар"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:99
 msgid "Default _Calendar"
 msgstr "Прадвызначаны _каляндар"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
 msgid "Add new events to this calendar by default."
 msgstr "Прадвызначана дадаваць новыя падзеі ў гэты каляндар."
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:108
 msgid "_Remove Calendar"
 msgstr "_Выдаліць каляндар"
 
@@ -258,7 +271,7 @@ msgstr "Пароль"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:237
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:28
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1269
 msgid "_Cancel"
 msgstr "_Скасаваць"
 
@@ -618,7 +631,7 @@ msgstr ""
 "Uladzimir Manulenka <vlma@tut.by>\n"
 "Юрась Шумовіч <shumovichy@gmail.com>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
+#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:332
 msgid "Weather"
 msgstr "Надвор'е"
 
@@ -635,8 +648,8 @@ msgid "_Synchronize Calendars"
 msgstr "_Сінхранізацыя календароў"
 
 #: src/gui/gcal-calendar-button.ui:41
-msgid "Manage Calendars…"
-msgstr "Кіраванне календарамі…"
+msgid "_Manage Calendars…"
+msgstr "_Кіраванне календарамі…"
 
 #: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:255
 msgid "January"
@@ -790,16 +803,16 @@ msgstr "%2$d %1$s, %3$s – %4$s"
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%2$d %1$s %3$d, %4$s – %5$s"
 
-#: src/gui/gcal-event-popover.ui:73
+#: src/gui/gcal-event-popover.ui:75
 msgid "No event information"
 msgstr "Няма інфармацыі пра падзею"
 
-#: src/gui/gcal-event-popover.ui:171
+#: src/gui/gcal-event-popover.ui:175
 msgid "Edit…"
 msgstr "Рэдагаваць…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:351
+#: src/gui/gcal-event-widget.c:355
 #, c-format
 msgid "At %s"
 msgstr "У %s"
@@ -1091,51 +1104,51 @@ msgstr "Аўтаматычна вызначаць месцазнаходжанн
 msgid "Search locations"
 msgstr "Пошук месцазнаходжання"
 
-#: src/gui/gcal-window.c:337
+#: src/gui/gcal-window.c:333
 msgid "Week"
 msgstr "Тыдзень"
 
-#: src/gui/gcal-window.c:339
+#: src/gui/gcal-window.c:335
 msgid "Month"
 msgstr "Месяц"
 
-#: src/gui/gcal-window.c:739
+#: src/gui/gcal-window.c:741
 msgid "Another event deleted"
 msgstr "Выдалена яшчэ адна падзея"
 
-#: src/gui/gcal-window.c:739
+#: src/gui/gcal-window.c:741
 msgid "Event deleted"
 msgstr "Падзея выдалена"
 
-#: src/gui/gcal-window.ui:137
+#: src/gui/gcal-window.ui:143
 msgid "Main Menu"
 msgstr "Галоўнае меню"
 
-#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
+#: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
 msgid "_Today"
 msgstr "_Сёння"
 
-#: src/gui/gcal-window.ui:249
+#: src/gui/gcal-window.ui:255
 msgid "_Week"
 msgstr "_Тыдзень"
 
-#: src/gui/gcal-window.ui:264
+#: src/gui/gcal-window.ui:270
 msgid "_Month"
 msgstr "_Месяц"
 
-#: src/gui/gcal-window.ui:318
+#: src/gui/gcal-window.ui:324
 msgid "_Date & Time Settings…"
 msgstr "Налады _даты і часу…"
 
-#: src/gui/gcal-window.ui:322
+#: src/gui/gcal-window.ui:328
 msgid "_Online Accounts…"
 msgstr "_Уліковыя запісы ў сетцы…"
 
-#: src/gui/gcal-window.ui:334
+#: src/gui/gcal-window.ui:340
 msgid "_Keyboard Shortcuts"
 msgstr "Спалучэнні _клавіш"
 
-#: src/gui/gcal-window.ui:338
+#: src/gui/gcal-window.ui:344
 msgid "_About Calendar"
 msgstr "Пр_а каляндар"
 
@@ -1146,80 +1159,90 @@ msgstr "Агульныя"
 
 #: src/gui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
+msgid "Open main menu"
+msgstr "Адкрыць галоўнае меню"
+
+#: src/gui/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Open Calendars menu"
+msgstr "Адкрыць меню календара"
+
+#: src/gui/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
 msgid "New event"
 msgstr "Новая падзея"
 
-#: src/gui/gtk/help-overlay.ui:20
+#: src/gui/gtk/help-overlay.ui:32
 msgctxt "shortcut window"
 msgid "Manage calendars"
 msgstr "Кіраванне календарамі"
 
-#: src/gui/gtk/help-overlay.ui:26
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Synchronize calendars"
 msgstr "Сінхранізацыя календароў"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Закрыць акно"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Пошук"
 
-#: src/gui/gtk/help-overlay.ui:44
+#: src/gui/gtk/help-overlay.ui:56
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Даведка"
 
-#: src/gui/gtk/help-overlay.ui:50
+#: src/gui/gtk/help-overlay.ui:62
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Спалучэнні клавіш"
 
-#: src/gui/gtk/help-overlay.ui:58
+#: src/gui/gtk/help-overlay.ui:70
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Навігацыя"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "Вярнуцца"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "Наперад"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "Паказаць сённяшні дзень"
 
-#: src/gui/gtk/help-overlay.ui:79
+#: src/gui/gtk/help-overlay.ui:91
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "Наступны выгляд"
 
-#: src/gui/gtk/help-overlay.ui:85
+#: src/gui/gtk/help-overlay.ui:97
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "Папярэдні выгляд"
 
-#: src/gui/gtk/help-overlay.ui:93
+#: src/gui/gtk/help-overlay.ui:105
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Выгляд"
 
-#: src/gui/gtk/help-overlay.ui:96
+#: src/gui/gtk/help-overlay.ui:108
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Прагляд тыдня"
 
-#: src/gui/gtk/help-overlay.ui:102
+#: src/gui/gtk/help-overlay.ui:114
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Прагляд месяца"
@@ -1292,15 +1315,15 @@ msgstr "Няма падзей"
 msgid "New Event…"
 msgstr "Новая падзея…"
 
-#: src/gui/views/gcal-week-grid.c:576
+#: src/gui/views/gcal-week-grid.c:578
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:579
+#: src/gui/views/gcal-week-grid.c:581
 msgid "00:00"
 msgstr "00:00"
 
-#: src/gui/views/gcal-week-header.c:472
+#: src/gui/views/gcal-week-header.c:474
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1308,33 +1331,56 @@ msgstr[0] "%d іншая падзея"
 msgstr[1] "%d іншыя падзеі"
 msgstr[2] "%d іншых падзей"
 
-#: src/gui/views/gcal-week-header.c:1001
+#: src/gui/views/gcal-week-header.c:1006
 #, c-format
 msgid "week %d"
 msgstr "%d тыдзень"
 
-#: src/utils/gcal-utils.c:1297
+#: src/utils/gcal-utils.c:1265
 msgid "Modify Multiple Events?"
 msgstr "Змяніць некалькі падзей?"
 
-#: src/utils/gcal-utils.c:1298
+#: src/utils/gcal-utils.c:1266
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr ""
 "Вы спрабуеце змяніць перыядычную падзею. Выбраныя вамі змены трэба ўжыць да:"
 
-#: src/utils/gcal-utils.c:1302
+#: src/utils/gcal-utils.c:1270
 msgid "_Only This Event"
 msgstr "Толькі _гэтая падзея"
 
-#: src/utils/gcal-utils.c:1308
+#: src/utils/gcal-utils.c:1276
 msgid "_Subsequent Events"
 msgstr "_Наступныя падзеі"
 
-#: src/utils/gcal-utils.c:1311
+#: src/utils/gcal-utils.c:1279
 msgid "_All Events"
 msgstr "_Усе падзеі"
+
+#~ msgid "Calendar for GNOME"
+#~ msgstr "Каляндар для GNOME"
+
+#~ msgid ""
+#~ "GNOME Calendar is a simple and beautiful calendar application designed to "
+#~ "perfectly fit the GNOME desktop. By reusing the components which the "
+#~ "GNOME desktop is built on, Calendar nicely integrates with the GNOME "
+#~ "ecosystem."
+#~ msgstr ""
+#~ "Каляндар GNOME - гэта простая і прыгожая праграма, распрацаваная для "
+#~ "працоўнага асяроддзя GNOME. Праграма распрацаваная з дапамогай "
+#~ "кампанентаў, якія выкарыстоўваліся падчас стварэння працоўнага стала "
+#~ "GNOME, таму каляндар выдатна інтэгруецца ў экасістэму GNOME."
+
+#~ msgid ""
+#~ "We aim to find the perfect balance between nicely crafted features and "
+#~ "user-centred usability. No excess, nothing missing. You’ll feel "
+#~ "comfortable using Calendar, like you’ve been using it for ages!"
+#~ msgstr ""
+#~ "Нашай мэтай было знайсці ідэальны баланс паміж прыгожым выглядам і "
+#~ "зручнасцю выкарыстання. Нічога лішняга, ніякіх недахопаў. Вам будзе "
+#~ "камфортна, нібыта вы карысталіся ім заўсёды!"
 
 #~ msgid "Window position"
 #~ msgstr "Пазіцыя акна"
@@ -1356,9 +1402,6 @@ msgstr "_Усе падзеі"
 
 #~ msgid "Open"
 #~ msgstr "Адкрыць"
-
-#~ msgid "Manage your calendars"
-#~ msgstr "Кіраванне календаром"
 
 #~ msgctxt "tooltip"
 #~ msgid "Add a new event"
