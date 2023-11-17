@@ -28,8 +28,10 @@
 #include "gcal-timeline-subscriber.h"
 #include "gcal-view.h"
 
-#include <stdlib.h>
+#include <glib/gi18n.h>
 #include <langinfo.h>
+#include <locale.h>
+#include <stdlib.h>
 
 #define ROWS 6
 #define COLS 7
@@ -243,38 +245,82 @@ calendar_compute_days (GcalDateChooser *self)
 }
 
 /* 0 == sunday */
-static gchar *
+static const char *
 calendar_get_weekday_name (gint i)
 {
-  GDateTime *date;
-  gchar *formatted_date;
-  gchar *upcased_date;
-  gchar *text;
+  const char *locale = g_getenv ("LC_TIME");
+  const char *res;
+  locale_t old_loc;
+  locale_t loc = (locale_t) 0;
 
-  date = g_date_time_new_local (2015, 1, 4 + i, 1, 1, 1);
-  formatted_date = g_date_time_format (date, "%a");
-  g_date_time_unref (date);
+  if (locale)
+    loc = newlocale (LC_MESSAGES_MASK, locale, (locale_t) 0);
 
-  upcased_date = g_utf8_strup (formatted_date, -1);
-  g_free (formatted_date);
+  old_loc = uselocale (loc);
 
-  text = g_utf8_substring (upcased_date, 0, 1);
-  g_free (upcased_date);
+  switch (i)
+    {
+    case 0:
+      /* Translators: Calendar grid abbreviation for Sunday.
+       *
+       * NOTE: These grid abbreviations are always shown together
+       * and in order, e.g. "S M T W T F S".
+       *
+       * Please make sure these abbreviations match GNOME Shell's
+       * abbreviations for your language.
+       */
+      res = C_("grid sunday", "S");
+      break;
 
-  return text;
+    case 1:
+      /* Translators: Calendar grid abbreviation for Monday */
+      res = C_("grid monday", "M");
+      break;
+
+    case 2:
+      /* Translators: Calendar grid abbreviation for Tuesday */
+      res = C_("grid tuesday", "T");
+      break;
+
+    case 3:
+      /* Translators: Calendar grid abbreviation for Wednesday */
+      res = C_("grid wednesday", "W");
+      break;
+
+    case 4:
+      /* Translators: Calendar grid abbreviation for Thursday */
+      res = C_("grid thursday", "T");
+      break;
+
+    case 5:
+      /* Translators: Calendar grid abbreviation for Friday */
+      res = C_("grid friday", "F");
+      break;
+
+    case 6:
+      /* Translators: Calendar grid abbreviation for Saturday */
+      res = C_("grid saturday", "S");
+      break;
+
+    default:
+      g_assert_not_reached ();
+    }
+
+  uselocale (old_loc);
+
+  if (loc != (locale_t) 0)
+    freelocale (loc);
+
+  return res;
 }
 
 static void
 calendar_init_weekday_display (GcalDateChooser *self)
 {
-  gint i;
-  gchar *text;
-
-  for (i = 0; i < COLS; i++)
+  for (gint i = 0; i < COLS; i++)
     {
-      text = calendar_get_weekday_name ((i + self->week_start) % COLS);
+      const char *text = calendar_get_weekday_name ((i + self->week_start) % COLS);
       gtk_label_set_label (GTK_LABEL (self->cols[i]), text);
-      g_free (text);
     }
 }
 
