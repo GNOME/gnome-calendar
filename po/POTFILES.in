@@ -14,6 +14,7 @@ src/gui/calendar-management/gcal-new-calendar-page.c
 src/gui/calendar-management/gcal-new-calendar-page.ui
 src/gui/event-editor/gcal-alarm-row.c
 src/gui/event-editor/gcal-alarm-row.ui
+src/gui/event-editor/gcal-date-chooser.c
 src/gui/event-editor/gcal-event-editor-dialog.c
 src/gui/event-editor/gcal-event-editor-dialog.ui
 src/gui/event-editor/gcal-reminders-section.ui
