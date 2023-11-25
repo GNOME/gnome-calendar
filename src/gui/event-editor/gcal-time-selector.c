@@ -33,7 +33,7 @@ struct _GcalTimeSelector
   GtkWidget *time_box;
   GtkWidget *hour_spin;
   GtkWidget *minute_spin;
-  GtkWidget *period_combo;
+  GtkWidget *period_dropdown;
 
   GDateTime *time;
 
@@ -69,14 +69,14 @@ update_time (GcalTimeSelector *selector)
     {
       hour = hour % 12;
 
-      if (gtk_combo_box_get_active (GTK_COMBO_BOX (selector->period_combo)) == PM)
+      if (gtk_drop_down_get_selected (GTK_DROP_DOWN (selector->period_dropdown)) == PM)
         {
-          g_signal_handlers_block_by_func (selector->period_combo, update_time, selector);
+          g_signal_handlers_block_by_func (selector->period_dropdown, update_time, selector);
 
-          gtk_combo_box_set_active (GTK_COMBO_BOX (selector->period_combo), hour >= 12);
+          gtk_drop_down_set_selected (GTK_DROP_DOWN (selector->period_dropdown), hour >= 12);
           hour += 12;
 
-          g_signal_handlers_unblock_by_func (selector->period_combo, update_time, selector);
+          g_signal_handlers_unblock_by_func (selector->period_dropdown, update_time, selector);
         }
     }
 
@@ -156,7 +156,7 @@ gcal_time_selector_set_time_format (GcalTimeSelector *selector,
   g_return_if_fail (GCAL_IS_TIME_SELECTOR (selector));
 
   selector->time_format = time_format;
-  gtk_widget_set_visible (selector->period_combo, time_format == GCAL_TIME_FORMAT_12H);
+  gtk_widget_set_visible (selector->period_dropdown, time_format == GCAL_TIME_FORMAT_12H);
 
   if (time_format == GCAL_TIME_FORMAT_24H)
     {
@@ -216,7 +216,7 @@ gcal_time_selector_class_init (GcalTimeSelectorClass *klass)
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, hour_spin);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, minute_adjustment);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, minute_spin);
-  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, period_combo);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, period_dropdown);
 
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), on_output);
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), update_time);
@@ -267,13 +267,13 @@ gcal_time_selector_set_time (GcalTimeSelector *selector,
 
       if (selector->time_format == GCAL_TIME_FORMAT_12H)
         {
-          g_signal_handlers_block_by_func (selector->period_combo, update_time, selector);
+          g_signal_handlers_block_by_func (selector->period_dropdown, update_time, selector);
 
-          gtk_combo_box_set_active (GTK_COMBO_BOX (selector->period_combo), hour >= 12);
+          gtk_drop_down_set_selected (GTK_DROP_DOWN (selector->period_dropdown), hour >= 12);
           hour =  hour % 12;
           hour = (hour == 0)? 12 : hour;
 
-          g_signal_handlers_unblock_by_func (selector->period_combo, update_time, selector);
+          g_signal_handlers_unblock_by_func (selector->period_dropdown, update_time, selector);
         }
 
       gtk_adjustment_set_value (selector->hour_adjustment, hour);

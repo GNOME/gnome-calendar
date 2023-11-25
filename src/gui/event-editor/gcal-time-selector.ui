@@ -37,15 +37,18 @@
 
     <!-- AM/PM -->
     <child>
-      <object class="GtkComboBoxText" id="period_combo">
+      <object class="GtkDropDown" id="period_dropdown">
         <property name="visible">False</property>
         <property name="valign">center</property>
-        <property name="active">0</property>
-        <signal name="changed" handler="update_time" object="GcalTimeSelector" swapped="yes"/>
-        <items>
-          <item translatable="yes">AM</item>
-          <item translatable="yes">PM</item>
-        </items>
+        <signal name="notify::selected" handler="update_time" object="GcalTimeSelector" swapped="yes"/>
+        <property name="model">
+          <object class="GtkStringList">
+            <items>
+              <item translatable="yes">AM</item>
+              <item translatable="yes">PM</item>
+            </items>
+          </object>
+        </property>
       </object>
     </child>
   </template>
