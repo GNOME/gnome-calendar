@@ -29,7 +29,7 @@
   </description>
 
   <screenshots>
-    <screenshot>
+    <screenshot type="default">
       <caption>Week view</caption>
       <image>https://static.gnome.org/appdata/gnome-43/calendar/calendar-week.png</image>
     </screenshot>
@@ -405,6 +405,7 @@
 
   <update_contact>gbsneto@gnome.org</update_contact>
   <translation type="gettext">gnome-calendar</translation>
+  <launchable type="desktop-id">@appid@.desktop</launchable>
 
   <requires>
     <control>pointing</control>
