@@ -145,6 +145,60 @@ build_about_copyright (GcalApplication *self)
                          g_date_time_get_year (dt));
 }
 
+static char *
+build_system_information (void)
+{
+  GString *str = g_string_new (NULL);
+
+  g_string_append_printf (str, "GNOME Calendar (%s)\n\n", VERSION);
+
+  if (g_file_test ("/.flatpak-info", G_FILE_TEST_EXISTS))
+    g_string_append (str, "Flatpak: yes\n");
+  g_string_append_printf (str,
+                          "GLib: %d.%d.%d (%d.%d.%d)\n",
+                          glib_major_version,
+                          glib_minor_version,
+                          glib_micro_version,
+                          GLIB_MAJOR_VERSION,
+                          GLIB_MINOR_VERSION,
+                          GLIB_MICRO_VERSION);
+  g_string_append_printf (str,
+                          "GTK: %d.%d.%d (%d.%d.%d)\n",
+                          gtk_get_major_version (),
+                          gtk_get_minor_version (),
+                          gtk_get_micro_version (),
+                          GTK_MAJOR_VERSION,
+                          GTK_MINOR_VERSION,
+                          GTK_MICRO_VERSION);
+  g_string_append_printf (str,
+                          "Libadwaita: %d.%d.%d (%d.%d.%d)\n",
+                          adw_get_major_version (),
+                          adw_get_minor_version (),
+                          adw_get_micro_version (),
+                          ADW_MAJOR_VERSION,
+                          ADW_MINOR_VERSION,
+                          ADW_MICRO_VERSION);
+  g_string_append_printf (str,
+                          "Soup: %d.%d.%d (%d.%d.%d)\n",
+                          soup_get_major_version (),
+                          soup_get_minor_version (),
+                          soup_get_micro_version (),
+                          SOUP_MAJOR_VERSION,
+                          SOUP_MINOR_VERSION,
+                          SOUP_MICRO_VERSION);
+  g_string_append_printf (str,
+                          "EDS: %d.%d.%d (%d.%d.%d)\n",
+                          eds_major_version,
+                          eds_minor_version,
+                          eds_micro_version,
+                          EDS_MAJOR_VERSION,
+                          EDS_MINOR_VERSION,
+                          EDS_MICRO_VERSION);
+  g_string_append_printf (str, "GdkDisplay: %s", G_OBJECT_TYPE_NAME (gdk_display_get_default ()));
+
+  return g_string_free (str, FALSE);
+}
+
 static void
 gcal_application_show_about (GSimpleAction *simple,
                              GVariant      *parameter,
@@ -154,6 +208,7 @@ gcal_application_show_about (GSimpleAction *simple,
   GcalApplication *self;
   GtkWidget *about;
   g_autofree gchar *copyright = NULL;
+  g_autofree gchar *troubleshooting = NULL;
 
   const gchar *developers[] = {
     "Erick Pérez Castellanos <erickpc@gnome.org>",
@@ -172,6 +227,7 @@ gcal_application_show_about (GSimpleAction *simple,
   self = GCAL_APPLICATION (user_data);
 
   copyright = build_about_copyright (self);
+  troubleshooting = build_system_information ();
 
   about = g_object_new (ADW_TYPE_ABOUT_WINDOW,
                         "transient-for", GTK_WINDOW (self->window),
@@ -187,6 +243,8 @@ gcal_application_show_about (GSimpleAction *simple,
                         "developers", developers,
                         "designers", designers,
                         "translator-credits", _("translator-credits"),
+                        "debug-info", troubleshooting,
+                        "debug-info-filename", "Calendar.txt",
                         NULL);
 
   weather_service = gcal_context_get_weather_service (self->context);
