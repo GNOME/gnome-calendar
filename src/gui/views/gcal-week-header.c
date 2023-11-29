@@ -1325,7 +1325,8 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   GcalWeekHeader *self;
   GtkStateFlags state;
   GdkRGBA color;
-  GtkAllocation alloc;
+  int alloc_width;
+  int alloc_height;
   GDateTime *week_start, *week_end;
   gboolean ltr;
   gdouble cell_width;
@@ -1346,17 +1347,18 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   start_x = ltr ? gtk_widget_get_width (self->expand_button_box) : 0;
   start_y = gtk_widget_get_height (self->header_labels_box);
 
-  gtk_widget_get_allocation (widget, &alloc);
+  alloc_width = gtk_widget_get_width (widget);
+  alloc_height = gtk_widget_get_height (widget);
 
   if (!ltr)
-    alloc.width -= gtk_widget_get_width (self->expand_button_box);
+    alloc_width -= gtk_widget_get_width (self->expand_button_box);
 
   week_start = gcal_date_time_get_start_of_week (self->active_date);
   week_end = g_date_time_add_days (week_start, 6);
   current_cell = g_date_time_get_day_of_week (self->active_date) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
 
-  cell_width = (alloc.width - start_x) / 7.0;
+  cell_width = (alloc_width - start_x) / 7.0;
 
   /* Drag and Drop highlight */
   if (self->dnd_cell != -1)
@@ -1369,7 +1371,7 @@ gcal_week_header_snapshot (GtkWidget   *widget,
                                       start_x + self->dnd_cell * cell_width,
                                       start_y,
                                       cell_width,
-                                      alloc.height - start_y);
+                                      alloc_height - start_y);
 
       gtk_style_context_restore (context);
     }
@@ -1395,26 +1397,26 @@ gcal_week_header_snapshot (GtkWidget   *widget,
       gtk_style_context_set_state (context, state | GTK_STATE_FLAG_SELECTED);
 
       selection_width = (end - start + 1) * cell_width;
-      selection_x = ltr ? (start * cell_width) : (alloc.width - (start * cell_width + selection_width));
+      selection_x = ltr ? (start * cell_width) : (alloc_width - (start * cell_width + selection_width));
 
       gtk_snapshot_render_background (snapshot,
                                       context,
                                       ALIGNED (start_x + selection_x) + 0.33,
                                       start_y - 6,
                                       ALIGNED (selection_width + 1),
-                                      alloc.height - start_y + 6);
+                                      alloc_height - start_y + 6);
 
       gtk_snapshot_render_frame (snapshot,
                                  context,
                                  ALIGNED (start_x + selection_x) + 0.33,
                                  start_y - 6,
                                  ALIGNED (selection_width + 1),
-                                 alloc.height - start_y + 6);
+                                 alloc_height - start_y + 6);
 
       gtk_style_context_restore (context);
     }
 
-  x = ALIGNED (ltr ? start_x : alloc.width - start_x);
+  x = ALIGNED (ltr ? start_x : alloc_width - start_x);
   y = start_y;
   width = gtk_widget_get_width (widget) - start_x;
   height = gtk_widget_get_height (widget) - start_y;
