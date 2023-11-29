@@ -34,7 +34,6 @@ struct _GcalCalendarsPage
 
   GtkListBoxRow      *add_calendar_row;
   GtkListBox         *listbox;
-  GtkSizeGroup       *sizegroup;
   AdwToastOverlay    *toast_overlay;
 
   AdwToast           *toast;
@@ -117,8 +116,6 @@ make_calendar_row (GcalCalendarsPage *self,
 
   /* parent source name label */
   adw_action_row_set_subtitle (ADW_ACTION_ROW (row), parent_name);
-
-  gtk_size_group_add_widget (self->sizegroup, row);
 
   return row;
 }
@@ -214,12 +211,6 @@ listbox_sort_func (GtkListBoxRow *row1,
 
   self = GCAL_CALENDARS_PAGE (user_data);
 
-  /* Keep "Add Calendar" row always at the bottom */
-  if (row1 == self->add_calendar_row)
-    return 1;
-  else if (row2 == self->add_calendar_row)
-    return -1;
-
   manager = gcal_context_get_manager (self->context);
 
   source1 = g_object_get_data (G_OBJECT (row1), "source");
@@ -256,16 +247,18 @@ on_listbox_row_activated_cb (GtkListBox        *listbox,
 {
   GcalCalendarManagementPage *page = GCAL_CALENDAR_MANAGEMENT_PAGE (self);
 
-  if (row == self->add_calendar_row)
-    {
-      gcal_calendar_management_page_switch_page (page, "new-calendar", NULL);
-    }
-  else
-    {
-      GcalCalendar *calendar = g_object_get_data (G_OBJECT (row), "calendar");
+  GcalCalendar *calendar = g_object_get_data (G_OBJECT (row), "calendar");
 
-      gcal_calendar_management_page_switch_page (page, "edit-calendar", calendar);
-    }
+  gcal_calendar_management_page_switch_page (page, "edit-calendar", calendar);
+}
+
+static void
+on_new_calendar_button_clicked_cb (GtkButton         *button,
+                                   GcalCalendarsPage *self)
+{
+  GcalCalendarManagementPage *page = GCAL_CALENDAR_MANAGEMENT_PAGE (self);
+
+  gcal_calendar_management_page_switch_page (page, "new-calendar", NULL);
 }
 
 static void
@@ -477,10 +470,10 @@ gcal_calendars_page_class_init (GcalCalendarsPageClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, add_calendar_row);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, sizegroup);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, toast_overlay);
 
   gtk_widget_class_bind_template_callback (widget_class, on_listbox_row_activated_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_new_calendar_button_clicked_cb);
 }
 
 static void
