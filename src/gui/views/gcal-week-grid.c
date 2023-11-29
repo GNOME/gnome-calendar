@@ -192,15 +192,13 @@ on_click_gesture_pressed_cb (GtkGestureClick *click_gesture,
                              gdouble          y,
                              GcalWeekGrid    *self)
 {
-  GtkAllocation alloc;
   gdouble minute_height;
   gint column_width;
   gint column;
   gint minute;
 
-  gtk_widget_get_allocation (GTK_WIDGET (self), &alloc);
-  minute_height = (gdouble) alloc.height / MINUTES_PER_DAY;
-  column_width = floor (alloc.width / 7);
+  minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / MINUTES_PER_DAY;
+  column_width = floor (gtk_widget_get_width (GTK_WIDGET (self)) / 7);
   column = (gint) x / column_width;
   minute = y / minute_height;
   minute = minute - (minute % 30);
@@ -226,13 +224,11 @@ on_motion_controller_motion_cb (GtkEventControllerMotion *motion_controller,
                                 gdouble                   y,
                                 GcalWeekGrid             *self)
 {
-  GtkAllocation alloc;
   gdouble minute_height;
   gint column;
   gint minute;
 
-  gtk_widget_get_allocation (GTK_WIDGET (self), &alloc);
-  minute_height = (gdouble) alloc.height / MINUTES_PER_DAY;
+  minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / MINUTES_PER_DAY;
   column = self->selection_start * 30 / MINUTES_PER_DAY;
   minute = y / minute_height;
   minute = minute - (minute % 30);
@@ -253,7 +249,6 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
   g_autoptr (GcalRange) range = NULL;
   g_autoptr (GDateTime) start = NULL;
   g_autoptr (GDateTime) end = NULL;
-  GtkAllocation alloc;
   GtkWidget *weekview;
   gboolean ltr;
   gdouble minute_height;
@@ -268,8 +263,7 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
 
   ltr = gtk_widget_get_direction (GTK_WIDGET (self)) != GTK_TEXT_DIR_RTL;
 
-  gtk_widget_get_allocation (GTK_WIDGET (self), &alloc);
-  minute_height = (gdouble) alloc.height / MINUTES_PER_DAY;
+  minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / MINUTES_PER_DAY;
   column = self->selection_start * 30 / MINUTES_PER_DAY;
   minute = y / minute_height;
   minute = minute - (minute % 30);
@@ -310,7 +304,7 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
       end = gcal_date_time_add_floating_minutes (week_start, (rtl_end_cell + 1) * 30);
     }
 
-  local_x = round ((column + 0.5) * (alloc.width / 7.0));
+  local_x = round ((column + 0.5) * (gtk_widget_get_width (GTK_WIDGET (self)) / 7.0));
   local_y = (minute + 15) * minute_height;
 
   gtk_widget_translate_coordinates (GTK_WIDGET (self),
@@ -331,14 +325,11 @@ get_dnd_cell (GcalWeekGrid *self,
               gdouble       x,
               gdouble       y)
 {
-  GtkAllocation alloc;
   gdouble column_width, cell_height;
   gint column, row;
 
-  gtk_widget_get_allocation (GTK_WIDGET (self), &alloc);
-
-  column_width = alloc.width / 7.0;
-  cell_height = alloc.height / 48.0;
+  column_width = gtk_widget_get_width (GTK_WIDGET (self)) / 7.0;
+  cell_height = gtk_widget_get_height (GTK_WIDGET (self)) / 48.0;
   column = floor (x / column_width);
   row = y / cell_height;
 
