@@ -153,9 +153,9 @@ build_system_information (void)
   g_string_append_printf (str, "GNOME Calendar (%s)\n\n", VERSION);
 
   if (g_file_test ("/.flatpak-info", G_FILE_TEST_EXISTS))
-    g_string_append (str, "Flatpak: yes\n");
+    g_string_append (str, "* Flatpak: yes\n");
   g_string_append_printf (str,
-                          "GLib: %d.%d.%d (%d.%d.%d)\n",
+                          "* GLib: %d.%d.%d (%d.%d.%d)\n",
                           glib_major_version,
                           glib_minor_version,
                           glib_micro_version,
@@ -163,7 +163,7 @@ build_system_information (void)
                           GLIB_MINOR_VERSION,
                           GLIB_MICRO_VERSION);
   g_string_append_printf (str,
-                          "GTK: %d.%d.%d (%d.%d.%d)\n",
+                          "* GTK: %d.%d.%d (%d.%d.%d)\n",
                           gtk_get_major_version (),
                           gtk_get_minor_version (),
                           gtk_get_micro_version (),
@@ -171,7 +171,7 @@ build_system_information (void)
                           GTK_MINOR_VERSION,
                           GTK_MICRO_VERSION);
   g_string_append_printf (str,
-                          "Libadwaita: %d.%d.%d (%d.%d.%d)\n",
+                          "* Libadwaita: %d.%d.%d (%d.%d.%d)\n",
                           adw_get_major_version (),
                           adw_get_minor_version (),
                           adw_get_micro_version (),
@@ -179,7 +179,7 @@ build_system_information (void)
                           ADW_MINOR_VERSION,
                           ADW_MICRO_VERSION);
   g_string_append_printf (str,
-                          "Soup: %d.%d.%d (%d.%d.%d)\n",
+                          "* Soup: %d.%d.%d (%d.%d.%d)\n",
                           soup_get_major_version (),
                           soup_get_minor_version (),
                           soup_get_micro_version (),
@@ -187,14 +187,14 @@ build_system_information (void)
                           SOUP_MINOR_VERSION,
                           SOUP_MICRO_VERSION);
   g_string_append_printf (str,
-                          "EDS: %d.%d.%d (%d.%d.%d)\n",
+                          "* EDS: %d.%d.%d (%d.%d.%d)\n",
                           eds_major_version,
                           eds_minor_version,
                           eds_micro_version,
                           EDS_MAJOR_VERSION,
                           EDS_MINOR_VERSION,
                           EDS_MICRO_VERSION);
-  g_string_append_printf (str, "GdkDisplay: %s", G_OBJECT_TYPE_NAME (gdk_display_get_default ()));
+  g_string_append_printf (str, "* GdkDisplay: %s", G_OBJECT_TYPE_NAME (gdk_display_get_default ()));
 
   return g_string_free (str, FALSE);
 }
