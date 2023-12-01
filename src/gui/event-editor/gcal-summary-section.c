@@ -24,6 +24,7 @@
 #include "gcal-debug.h"
 #include "gcal-event-editor-section.h"
 #include "gcal-summary-section.h"
+#include "gcal-utils.h"
 
 #include <glib/gi18n.h>
 
@@ -61,7 +62,6 @@ gcal_reminders_section_set_event (GcalEventEditorSection *section,
                                   GcalEventEditorFlags    flags)
 {
   GcalSummarySection *self;
-  const gchar *summary;
 
   GCAL_ENTRY;
 
@@ -72,18 +72,23 @@ gcal_reminders_section_set_event (GcalEventEditorSection *section,
   if (!event)
     GCAL_RETURN ();
 
-  summary = gcal_event_get_summary (event);
-
-  if (g_strcmp0 (summary, "") == 0)
-    gtk_editable_set_text (GTK_EDITABLE (self->summary_entry), _("Unnamed event"));
-  else
-    gtk_editable_set_text (GTK_EDITABLE (self->summary_entry), summary);
-
+  gtk_editable_set_text (GTK_EDITABLE (self->summary_entry), gcal_event_get_summary (event));
   gtk_editable_set_text (GTK_EDITABLE (self->location_entry), gcal_event_get_location (event));
 
   adw_entry_row_grab_focus_without_selecting (self->summary_entry);
 
+  gtk_widget_remove_css_class (GTK_WIDGET (self->summary_entry), "error");
+
   GCAL_EXIT;
+}
+
+static void
+on_summary_entry_text_changed_cb (AdwEntryRow *entry_row)
+{
+  if (gcal_is_valid_event_name (gtk_editable_get_text (GTK_EDITABLE (entry_row))))
+    gtk_widget_remove_css_class (GTK_WIDGET (entry_row), "error");
+  else
+    gtk_widget_add_css_class (GTK_WIDGET (entry_row), "error");
 }
 
 static void
@@ -197,6 +202,8 @@ gcal_summary_section_class_init (GcalSummarySectionClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalSummarySection, location_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalSummarySection, summary_entry);
+
+  gtk_widget_class_bind_template_callback (widget_class, on_summary_entry_text_changed_cb);
 }
 
 static void

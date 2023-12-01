@@ -14,6 +14,7 @@
         <child>
           <object class="AdwEntryRow" id="summary_entry">
             <property name="title" translatable="yes">Title</property>
+            <signal name="changed" handler="on_summary_entry_text_changed_cb" object="GcalSummarySection" swapped="no" />
           </object>
         </child>
 

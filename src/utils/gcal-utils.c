@@ -1343,3 +1343,18 @@ gcal_util_get_app_timezone_or_local ()
   context = gcal_application_get_context (application);
   return g_time_zone_ref (gcal_context_get_timezone (context));
 }
+
+/**
+ * gcal_is_valid_event_name:
+ * @event_name: the name of the event to check
+ *
+ * Check if the event name is valid
+ *
+ * Returns: %TRUE if the name is valid, %FALSE otherwise.
+ */
+gboolean
+gcal_is_valid_event_name (const gchar *event_name)
+{
+  g_autofree gchar *aux = g_strstrip (g_strdup (event_name));
+  return g_utf8_strlen (aux, -1) > 0;
+}

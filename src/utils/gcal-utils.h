@@ -138,4 +138,6 @@ const gchar *        gcal_util_translate_time_string             (const gchar   
 
 GTimeZone *          gcal_util_get_app_timezone_or_local         ();
 
+gboolean             gcal_is_valid_event_name                    (const gchar          *event_name);
+
 #endif /* __GCAL_UTILS_H__ */

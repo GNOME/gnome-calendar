@@ -773,6 +773,10 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   g_object_add_weak_pointer (G_OBJECT (self->event_title_binding),
                              (gpointer*) &self->event_title_binding);
 
+  /* change title when event name is empty */
+  if (!gcal_is_valid_event_name (gtk_label_get_label (GTK_LABEL (self->title_label))))
+    gtk_label_set_label (GTK_LABEL (self->title_label), _("New Event"));
+
   gtk_label_set_label (GTK_LABEL (self->subtitle_label), gcal_calendar_get_name (calendar));
   self->selected_calendar = calendar;
 

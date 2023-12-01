@@ -687,10 +687,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
     }
 
   /* Gather the summary */
-  if (gtk_entry_get_text_length (GTK_ENTRY (self->summary_entry)) > 0)
-    summary = gtk_editable_get_text (GTK_EDITABLE (self->summary_entry));
-  else
-    summary = _("Unnamed event");
+  summary = gtk_editable_get_text (GTK_EDITABLE (self->summary_entry));
 
   /* Create an ECalComponent from the data above */
   component = build_component_from_details (summary, date_start, date_end);
@@ -717,14 +714,23 @@ summary_entry_text_changed (GtkEntry            *entry,
                             GParamSpec          *pspec,
                             GcalQuickAddPopover *self)
 {
-  gtk_widget_set_sensitive (self->add_button, gtk_entry_get_text_length (entry) > 0);
+  gboolean is_valid_event_name;
+
+  is_valid_event_name = gcal_is_valid_event_name (gtk_editable_get_text (GTK_EDITABLE (entry)));
+
+  if (is_valid_event_name)
+    gtk_widget_remove_css_class (GTK_WIDGET (entry), "error");
+  else
+    gtk_widget_add_css_class (GTK_WIDGET (entry), "error");
+
+  gtk_widget_set_sensitive (self->add_button, is_valid_event_name);
 }
 
 static void
 summary_entry_activated (GtkEntry            *entry,
                          GcalQuickAddPopover *self)
 {
-  if (gtk_entry_get_text_length (entry) > 0)
+  if (gcal_is_valid_event_name (gtk_editable_get_text (GTK_EDITABLE (entry))))
     edit_or_create_event (self, self->add_button);
 }
 
@@ -827,6 +833,9 @@ gcal_quick_add_popover_closed (GtkPopover *popover)
 
   /* Select the default row again */
   update_default_calendar_row (self);
+
+  /* Remove "error" class */
+  gtk_widget_remove_css_class (self->summary_entry, "error");
 
   g_clear_pointer (&self->range, gcal_range_unref);
 }
