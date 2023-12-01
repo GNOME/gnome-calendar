@@ -6,6 +6,7 @@
     <child type="prefix">
       <object class="GtkImage" id="icon">
         <property name="pixel-size">24</property>
+        <property name="accessible-role">presentation</property>
         <style>
           <class name="calendar-color-image"/>
         </style>
@@ -15,6 +16,7 @@
     <child type="suffix">
       <object class="GtkSwitch" id="switch">
         <property name="valign">center</property>
+        <property name="tooltip-text">Display Calendar</property>
       </object>
     </child>
 
@@ -23,6 +25,9 @@
         <property name="halign">end</property>
         <property name="valign">center</property>
         <property name="icon-name">go-next-symbolic</property>
+        <accessibility>
+          <property name="label" translatable="yes">Edit calendar</property>
+        </accessibility>
       </object>
     </child>
   </object>

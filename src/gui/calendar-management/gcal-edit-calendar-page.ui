@@ -20,7 +20,7 @@
                 <child>
                   <object class="AdwActionRow" id="account_row">
                     <property name="title" translatable="yes">Account</property>
-                    <property name="activatable-widget">settings_button</property>
+                    <property name="subtitle-selectable">True</property>
                     <style>
                       <class name="property"/>
                     </style>
@@ -38,6 +38,7 @@
                         <child>
                           <object class="GtkImage">
                             <property name="icon-name">settings-symbolic</property>
+                            <property name="accessible-role">presentation</property>
                           </object>
                         </child>
 
