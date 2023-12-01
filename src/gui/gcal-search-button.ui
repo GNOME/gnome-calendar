@@ -26,6 +26,7 @@
               <object class="GtkButton" id="button">
                 <property name="halign">start</property>
                 <property name="icon-name">edit-find-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Search Events</property>
                 <signal name="clicked" handler="on_button_clicked_cb" object="GcalSearchButton" swapped="no" />
 
                 <child>
@@ -58,6 +59,9 @@
                 <signal name="previous-match" handler="on_entry_previous_match_cb" object="GcalSearchButton" swapped="no" />
                 <signal name="search-changed" handler="on_entry_search_changed_cb" object="GcalSearchButton" swapped="no" />
                 <signal name="stop-search" handler="on_entry_stop_search_cb" object="GcalSearchButton" swapped="no" />
+                <accessibility>
+                  <relation name="labelled-by">entry</relation>
+                </accessibility>
 
                 <child>
                   <object class="GtkShortcutController">
@@ -137,6 +141,9 @@
                 <lookup name="item">GtkListItem</lookup>
               </lookup>
             </binding>
+            <accessibility>
+              <relation name="labelled-by">title</relation>
+            </accessibility>
             <style>
               <class name="title"/>
             </style>
