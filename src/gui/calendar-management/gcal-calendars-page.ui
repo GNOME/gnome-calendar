@@ -56,12 +56,25 @@
                 <property name="margin-bottom">12</property>
                 <child>
                   <object class="GtkButton" id="add_calendar_row">
-                    <property name="label" translatable="yes">Add Calendar…</property>
+                    <property name="label" translatable="yes">_Add Calendar…</property>
+                    <property name="use-underline">true</property>
                     <signal name="clicked" handler="on_new_calendar_button_clicked_cb" object="GcalCalendarsPage" swapped="no" />
                     <style>
                       <class name="pill"/>
                       <class name="suggested-action"/>
                     </style>
+
+                    <child>
+                      <object class="GtkShortcutController">
+                        <property name="scope">managed</property>
+                        <child>
+                          <object class="GtkShortcut">
+                            <property name="trigger">&lt;Ctrl&gt;n</property>
+                            <property name="action">activate</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
