@@ -5,6 +5,7 @@ data/org.gnome.Calendar.desktop.in.in
 data/org.gnome.calendar.gschema.xml.in
 src/main.c
 src/core/gcal-event.c
+src/gui/calendar-management/calendar-row.ui
 src/gui/calendar-management/gcal-calendar-management-dialog.ui
 src/gui/calendar-management/gcal-calendars-page.c
 src/gui/calendar-management/gcal-calendars-page.ui
