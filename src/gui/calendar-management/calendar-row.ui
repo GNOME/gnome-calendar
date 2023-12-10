@@ -13,6 +13,16 @@
       </object>
     </child>
 
+    <!-- Lock icon for read-only calendars -->
+    <child type="suffix">
+      <object class="GtkImage" id="read_only_icon">
+        <property name="tooltip-text" translatable="yes">Read-only Calendar</property>
+        <property name="icon-name">changes-prevent-symbolic</property>
+        <property name="pixel-size">20</property>
+        <property name="valign">center</property>
+      </object>
+    </child>
+
     <child type="suffix">
       <object class="GtkSwitch" id="switch">
         <property name="valign">center</property>

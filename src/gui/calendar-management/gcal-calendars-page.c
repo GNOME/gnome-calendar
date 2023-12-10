@@ -22,6 +22,7 @@
 
 #include <glib/gi18n.h>
 
+#include "gcal-calendar.h"
 #include "gcal-context.h"
 #include "gcal-calendar-management-page.h"
 #include "gcal-calendars-page.h"
@@ -70,6 +71,7 @@ make_calendar_row (GcalCalendarsPage *self,
   g_autoptr (GdkPaintable) color_paintable = NULL;
   g_autofree gchar *parent_name = NULL;
   g_autoptr (GtkBuilder) builder = NULL;
+  GtkWidget *read_only_icon;
   const GdkRGBA *color;
   GcalManager *manager;
   GtkWidget *icon;
@@ -87,6 +89,10 @@ make_calendar_row (GcalCalendarsPage *self,
    * it isn't destroyed with the GtkBuilder.
    */
   row = g_object_ref (GTK_WIDGET (gtk_builder_get_object (builder, "row")));
+
+  /* read-only icon */
+  read_only_icon = GTK_WIDGET (gtk_builder_get_object (builder, "read_only_icon"));
+  gtk_widget_set_visible (read_only_icon, gcal_calendar_is_read_only (calendar));
 
   /* source color icon */
   color = gcal_calendar_get_color (calendar);
