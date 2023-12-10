@@ -2,6 +2,7 @@
 <interface>
   <template class="GcalCalendarManagementDialog" parent="AdwWindow">
     <property name="title" translatable="yes">Calendar Settings</property>
+    <property name="width-request">360</property>
     <property name="default-width">500</property>
     <property name="default-height">600</property>
     <property name="modal">True</property>
