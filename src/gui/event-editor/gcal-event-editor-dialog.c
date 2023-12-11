@@ -647,7 +647,7 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   properties[PROP_WRITABLE] = g_param_spec_boolean ("writable",
                                                     "Whether the current event can be edited",
                                                     "Whether the current event can be edited or not",
-                                                    TRUE,
+                                                    FALSE,
                                                     G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
@@ -683,8 +683,6 @@ gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
     { "select-calendar", on_calendar_selected_action_cb, "s" },
   };
   gint i = 0;
-
-  self->writable = TRUE;
 
   /* Actions */
   self->action_group = g_simple_action_group_new ();
