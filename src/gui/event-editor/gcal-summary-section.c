@@ -31,8 +31,8 @@ struct _GcalSummarySection
 {
   AdwBin              parent;
 
-  GtkEditable        *summary_entry;
-  GtkEditable        *location_entry;
+  AdwEntryRow        *summary_entry;
+  AdwEntryRow        *location_entry;
 
   GcalContext        *context;
   GcalEvent          *event;
@@ -75,11 +75,11 @@ gcal_reminders_section_set_event (GcalEventEditorSection *section,
   summary = gcal_event_get_summary (event);
 
   if (g_strcmp0 (summary, "") == 0)
-    gtk_editable_set_text (self->summary_entry, _("Unnamed event"));
+    gtk_editable_set_text (GTK_EDITABLE (self->summary_entry), _("Unnamed event"));
   else
-    gtk_editable_set_text (self->summary_entry, summary);
+    gtk_editable_set_text (GTK_EDITABLE (self->summary_entry), summary);
 
-  gtk_editable_set_text (self->location_entry, gcal_event_get_location (event));
+  gtk_editable_set_text (GTK_EDITABLE (self->location_entry), gcal_event_get_location (event));
 
   GCAL_EXIT;
 }
@@ -93,8 +93,8 @@ gcal_reminders_section_apply (GcalEventEditorSection *section)
 
   self = GCAL_SUMMARY_SECTION (section);
 
-  gcal_event_set_summary (self->event, gtk_editable_get_text (self->summary_entry));
-  gcal_event_set_location (self->event, gtk_editable_get_text (self->location_entry));
+  gcal_event_set_summary (self->event, gtk_editable_get_text (GTK_EDITABLE (self->summary_entry)));
+  gcal_event_set_location (self->event, gtk_editable_get_text (GTK_EDITABLE (self->location_entry)));
 
   GCAL_EXIT;
 }
@@ -112,8 +112,8 @@ gcal_reminders_section_changed (GcalEventEditorSection *section)
   event_summary = gcal_event_get_summary (self->event);
   event_location = gcal_event_get_location (self->event);
 
-  GCAL_RETURN (g_strcmp0 (event_summary, gtk_editable_get_text (self->summary_entry)) != 0 ||
-               g_strcmp0 (event_location, gtk_editable_get_text (self->location_entry)) != 0);
+  GCAL_RETURN (g_strcmp0 (event_summary, gtk_editable_get_text (GTK_EDITABLE (self->summary_entry))) != 0 ||
+               g_strcmp0 (event_location, gtk_editable_get_text (GTK_EDITABLE (self->location_entry))) != 0);
 }
 
 static void
