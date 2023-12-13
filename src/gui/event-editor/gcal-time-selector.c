@@ -71,14 +71,7 @@ update_time (GcalTimeSelector *selector)
       hour = hour % 12;
 
       if (gtk_drop_down_get_selected (GTK_DROP_DOWN (selector->period_dropdown)) == PM)
-        {
-          g_signal_handlers_block_by_func (selector->period_dropdown, update_time, selector);
-
-          gtk_drop_down_set_selected (GTK_DROP_DOWN (selector->period_dropdown), hour >= 12);
-          hour += 12;
-
-          g_signal_handlers_unblock_by_func (selector->period_dropdown, update_time, selector);
-        }
+        hour += 12;
     }
 
   now = g_date_time_new_now_local ();
