@@ -19,6 +19,7 @@
 
 #define G_LOG_DOMAIN "GcalTimeSelector"
 
+#include "gcal-date-time-utils.h"
 #include "gcal-time-selector.h"
 
 #include <glib/gi18n.h>
@@ -250,13 +251,16 @@ gcal_time_selector_set_time (GcalTimeSelector *selector,
     {
       gint hour, minute;
 
-      g_clear_pointer (&selector->time, g_date_time_unref);
-      selector->time = g_date_time_new_local (g_date_time_get_year (time),
-                                              g_date_time_get_month (time),
-                                              g_date_time_get_day_of_month (time),
-                                              g_date_time_get_hour (time),
-                                              g_date_time_get_minute (time),
-                                              0);
+      if (selector->time &&
+          time &&
+          g_date_time_get_hour (selector->time) == g_date_time_get_hour (time) &&
+          g_date_time_get_minute (selector->time) == g_date_time_get_minute (time) &&
+          g_date_time_get_second (selector->time) == g_date_time_get_second (time))
+        {
+          return;
+        }
+
+      gcal_set_date_time (&selector->time, time);
 
       /* Update the spinners */
       g_signal_handlers_block_by_func (selector->hour_adjustment, update_time, selector);
