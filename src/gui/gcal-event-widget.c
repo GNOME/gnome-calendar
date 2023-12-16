@@ -55,7 +55,7 @@ struct _GcalEventWidget
   GtkWidget          *main_widget;
   GtkWidget          *timestamp_label;
   GtkWidget          *squeezer;
-  GtkWidget          *summary_label;
+  GtkWidget          *summary_inscription;
   GtkWidget          *vertical_box;
   GtkEventController *drag_source;
   GtkWidget          *preview_popover;
@@ -455,8 +455,8 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
   /* Summary label */
   g_object_bind_property (event,
                           "summary",
-                          self->summary_label,
-                          "label",
+                          self->summary_inscription,
+                          "text",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   gcal_event_widget_update_style (self);
@@ -771,7 +771,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, main_widget);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, timestamp_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, squeezer);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_inscription);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, vertical_box);
 
   gtk_widget_class_bind_template_callback (widget_class, get_vertical_enabled);

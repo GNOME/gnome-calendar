@@ -72,12 +72,12 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
-                        <property name="label" bind-source="summary_label" bind-property="label" bind-flags="default" />
-                        <property name="wrap">True</property>
-                        <property name="wrap-mode">word-char</property>
+                      <object class="GtkInscription">
+                        <property name="text" bind-source="summary_inscription" bind-property="text" bind-flags="default" />
                         <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
                         <property name="xalign">0.0</property>
+                        <property name="min-lines">1</property>
                       </object>
                     </child>
                   </object>
@@ -88,10 +88,11 @@
                   <object class="GtkBox" id="horizontal_box">
                     <property name="spacing">4</property>
                     <child>
-                      <object class="GtkLabel"  id="summary_label">
+                      <object class="GtkInscription"  id="summary_inscription">
                         <property name="hexpand">True</property>
                         <property name="xalign">0.0</property>
-                        <property name="ellipsize">end</property>
+                        <property name="min-lines">1</property>
+                        <property name="text-overflow">ellipsize-end</property>
                       </object>
                     </child>
                     <child>
