@@ -98,6 +98,26 @@ update_style_flags (GcalMonthCell *self)
 }
 
 static void
+add_month_separators (GcalMonthCell *self)
+{
+  gint day_of_month;
+
+  gtk_widget_remove_css_class (GTK_WIDGET (self), "separator-top");
+  gtk_widget_remove_css_class (GTK_WIDGET (self), "separator-side");
+
+  day_of_month = g_date_time_get_day_of_month (self->date);
+  if (day_of_month > 1 && day_of_month <= 7)
+    {
+      gtk_widget_add_css_class (GTK_WIDGET (self), "separator-top");
+    }
+  else if (day_of_month == 1)
+    {
+      gtk_widget_add_css_class (GTK_WIDGET (self), "separator-side");
+      gtk_widget_add_css_class (GTK_WIDGET (self), "separator-top");
+    }
+}
+
+static void
 move_event (GcalMonthCell         *self,
             GcalEvent             *event,
             GcalRecurrenceModType  mod_type)
@@ -433,6 +453,7 @@ gcal_month_cell_set_date (GcalMonthCell *self,
 
   gtk_label_set_text (self->day_label, text);
   update_style_flags (self);
+  add_month_separators (self);
 
   /* Month name */
   day_of_month = g_date_time_get_day_of_month (date);

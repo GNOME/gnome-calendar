@@ -1,22 +1,12 @@
-.sources-button > button:hover,
-.sources-button > button:active,
-.sources-button > button:checked {
-    box-shadow: inset 1px 0 @borders, inset -1px 0 @borders;
-}
-datechooser .weeknum{
-    color: @theme_fg_color;
-    background-color: alpha(@theme_fg_color, 0.05);
-    border: 1px solid alpha(currentColor, 0.5);
-}
-
+/* Separators */
 monthcell.separator-top,
 monthcell.separator-top:selected {
-    border-top: 1px solid black;
+    border-top: 1px solid white;
 }
 
 monthcell.separator-side:dir(ltr),
 monthcell.separator-side:selected:dir(ltr) {
-    border-left: 1px solid black;
+    border-left: 1px solid white;
 }
 
 monthcell:nth-child(7n + 1):dir(ltr),
@@ -26,7 +16,7 @@ monthcell:nth-child(7n + 1):selected:dir(ltr) {
 
 monthcell.separator-side:dir(rtl),
 monthcell.separator-side:selected:dir(rtl) {
-    border-right: 1px solid black;
+    border-right: 1px solid white;
 }
 
 monthcell:nth-child(7n + 1):dir(rtl),
