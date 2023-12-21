@@ -11,3 +11,14 @@ appdata = i18n.merge_file(
   install: true,
   install_dir: calendar_datadir / 'metainfo'
 )
+
+# Validate Appdata
+appstreamcli = find_program('appstreamcli', required: false)
+if appstreamcli.found()
+  test(
+    'Validate appstream file',
+    appstreamcli,
+    args: ['validate', '--no-net', '--explain', appdata.full_path()],
+    depends: appdata,
+  )
+endif

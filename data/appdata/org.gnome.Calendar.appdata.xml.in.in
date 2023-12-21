@@ -57,6 +57,10 @@
   <url type="translate">https://l10n.gnome.org/module/gnome-calendar/</url>
   <url type="contribute">https://wiki.gnome.org/Contribute</url>
   <project_group>GNOME</project_group>
+  <developer_name>The GNOME Project</developer_name>
+  <developer id="gnome.org">
+    <name>The GNOME Project</name>
+  </developer>
 
   <releases>
     <release date="2023-10-23" version="45.1" type="stable" />
@@ -407,18 +411,14 @@
   <translation type="gettext">gnome-calendar</translation>
   <launchable type="desktop-id">@appid@.desktop</launchable>
 
-  <requires>
-    <control>pointing</control>
-    <control>keyboard</control>
-    <control>touch</control>
-    <display_length compare="ge">small</display_length>
-  </requires>
-
   <recommends>
-    <control>pointing</control>
     <control>keyboard</control>
-    <display_length compare="ge">medium</display_length>
+    <control>pointing</control>
+    <control>touch</control>
   </recommends>
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
 
   <content_rating type="oars-1.1">
     <content_attribute id="violence-cartoon">none</content_attribute>

@@ -12,4 +12,4 @@ effort.
 - Homepage: <https://wiki.gnome.org/Apps/Calendar>
 - Report issues: <https://gitlab.gnome.org/GNOME/gnome-calendar/issues/>
 - Donate: <https://www.gnome.org/donate/>
-- Translate: <https://wiki.gnome.org/TranslationProject>
+- Translate: <https://l10n.gnome.org/module/gnome-calendar/>
