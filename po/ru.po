@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-11-18 16:18+0000\n"
-"PO-Revision-Date: 2023-11-19 00:24+0300\n"
+"POT-Creation-Date: 2023-12-14 02:49+0000\n"
+"PO-Revision-Date: 2023-12-16 13:46+0300\n"
 "Last-Translator: Artur So <arturios2005@mail.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -25,7 +25,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-application.c:234 src/gui/gcal-quick-add-popover.ui:135
 #: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
 msgid "Calendar"
 msgstr "Календарь"
@@ -165,29 +165,41 @@ msgstr "%1$s %2$s — %3$s %4$s"
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s — %3$s"
 
+#: src/gui/calendar-management/calendar-row.ui:19
+msgid "Read-only Calendar"
+msgstr "Календарь только для чтения"
+
+#: src/gui/calendar-management/calendar-row.ui:29
+msgid "Display Calendar"
+msgstr "Показать календарь"
+
+#: src/gui/calendar-management/calendar-row.ui:39
+msgid "Edit calendar"
+msgstr "Редактировать календарь"
+
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
 msgstr "Настройки календаря"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:345
+#: src/gui/calendar-management/gcal-calendars-page.c:344
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Календари"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:370
+#: src/gui/calendar-management/gcal-calendars-page.c:369
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Календарь <b>%s</b> удалён"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:375
+#: src/gui/calendar-management/gcal-calendars-page.c:374
 #: src/gui/gcal-window.c:743
 msgid "_Undo"
 msgstr "_Вернуть"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:55
-msgid "Add Calendar…"
-msgstr "Добавить календарь…"
+#: src/gui/calendar-management/gcal-calendars-page.ui:66
+msgid "_Add Calendar…"
+msgstr "_Добавить календарь…"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
 msgid "Account"
@@ -197,36 +209,36 @@ msgstr "Учётная запись"
 msgid "Open in Settings"
 msgstr "Открыть в Настройках"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:53
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
 #: src/gui/event-editor/gcal-summary-section.ui:23
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "Местоположение"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:24
 msgid "Calendar Name"
 msgstr "Имя календаря"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:71
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:32
 msgid "Color"
 msgstr "Цвет"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:92
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
 msgid "_Display Calendar"
 msgstr "_Показать календарь"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:99
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
 msgid "Default _Calendar"
 msgstr "_Календарь по умолчанию"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
 msgid "Add new events to this calendar by default."
 msgstr "Добавлять новые события в этот календарь по умолчанию."
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:108
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
 msgid "_Remove Calendar"
 msgstr "_Удалить календарь"
 
@@ -406,11 +418,11 @@ msgstr[2] "%1$u минут до"
 msgid "Event start time"
 msgstr "Время начала события"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:11
+#: src/gui/event-editor/gcal-alarm-row.ui:8
 msgid "Toggles the sound of the alarm"
 msgstr "Переключает режим звука будильника"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:21
+#: src/gui/event-editor/gcal-alarm-row.ui:19
 msgid "Remove the alarm"
 msgstr "Удалить будильник"
 
@@ -654,12 +666,12 @@ msgstr "Заголовок"
 msgid ":"
 msgstr ":"
 
-#: src/gui/event-editor/gcal-time-selector.ui:46
+#: src/gui/event-editor/gcal-time-selector.ui:47
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "AM"
 
-#: src/gui/event-editor/gcal-time-selector.ui:47
+#: src/gui/event-editor/gcal-time-selector.ui:48
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "PM"
@@ -689,11 +701,11 @@ msgstr "Открыть календарь на прошедшем событии
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Авторское право © 2012–%d Авторы приложения «Календарь»"
 
-#: src/gui/gcal-application.c:180
+#: src/gui/gcal-application.c:236
 msgid "The GNOME Project"
 msgstr "The GNOME Project"
 
-#: src/gui/gcal-application.c:189
+#: src/gui/gcal-application.c:245
 msgid "translator-credits"
 msgstr ""
 "Юрий Мясоедов <ymyasoedov@yandex.ru>, 2012-2017.\n"
@@ -701,7 +713,7 @@ msgstr ""
 "Роман Верменко <dargodet@gmail.com>, 2017\n"
 "Aleksandr Melman <alexmelman88@gmail.com>, 2022-2023"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:332
+#: src/gui/gcal-application.c:252 src/gui/gcal-window.ui:332
 msgid "Weather"
 msgstr "Погода"
 
@@ -1143,7 +1155,11 @@ msgstr "Редактировать подробности…"
 msgid "Add"
 msgstr "Добавить"
 
-#: src/gui/gcal-search-button.ui:53
+#: src/gui/gcal-search-button.ui:29
+msgid "Search Events"
+msgstr "Поиск событий"
+
+#: src/gui/gcal-search-button.ui:54
 msgid "Search events"
 msgstr "Поиск событий"
 
@@ -1385,11 +1401,11 @@ msgstr "Нет событий"
 msgid "New Event…"
 msgstr "Создать событие…"
 
-#: src/gui/views/gcal-week-grid.c:578
+#: src/gui/views/gcal-week-grid.c:569
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/gui/views/gcal-week-grid.c:581
+#: src/gui/views/gcal-week-grid.c:572
 msgid "00:00"
 msgstr "00:00"
 
