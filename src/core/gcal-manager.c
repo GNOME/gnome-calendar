@@ -173,7 +173,7 @@ on_client_refreshed (GObject      *source_object,
     {
       ESource *source = e_client_get_source (E_CLIENT (source_object));
       /* FIXME: add notification to UI */
-      g_debug ("Client of source: %s refreshed succesfully", e_source_get_uid (source));
+      g_debug ("Client of source: %s refreshed successfully", e_source_get_uid (source));
     }
   else
     {
