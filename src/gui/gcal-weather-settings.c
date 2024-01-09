@@ -202,6 +202,7 @@ manage_weather_service (GcalWeatherSettings *self)
         }
 
       gcal_weather_service_set_location (weather_service, location);
+      gcal_weather_service_hold (weather_service);
       gcal_weather_service_activate (weather_service);
     }
   else

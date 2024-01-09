@@ -58,6 +58,10 @@ void                 gcal_weather_service_start                     (GcalWeather
 
 void                 gcal_weather_service_stop                      (GcalWeatherService *self);
 
+void                 gcal_weather_service_hold                      (GcalWeatherService *self);
+
+void                 gcal_weather_service_release                   (GcalWeatherService *self);
+
 G_END_DECLS
 
 #endif /* GCAL_WEATHER_SERVICE_H */

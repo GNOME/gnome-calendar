@@ -49,6 +49,7 @@ typedef struct
 /* GcalWeatherService:
  *
  * @time_zone:               The current time zone
+ * @use_counter:             Number of active users of the service.
  * @check_interval_new:      Amount of seconds to wait before fetching weather infos.
  * @check_interval_renew:    Amount of seconds to wait before re-fetching weather information.
  * @duration_timer           Timer used to request weather report updates.
@@ -67,6 +68,7 @@ typedef struct
  * @max_days:                Number of days we want weather information for.
  * @weather_service_active:  True if weather service is requested to be active, regardless of being in use.
  * @weather_service_running: True if weather service is active.
+ * @weather_is_stale:        True if update was request without the service running.
  *
  * This service listens to location and weather changes and reports them.
  *
@@ -82,6 +84,8 @@ struct _GcalWeatherService
   GObjectClass        parent;
 
   GTimeZone          *timezone;            /* owned, nullable */
+
+  guint               use_counter;
 
   /* timer: */
   guint               check_interval_new;
@@ -106,6 +110,7 @@ struct _GcalWeatherService
   guint               max_days;
   gboolean            weather_service_active;
   gboolean            weather_service_running;
+  gboolean            weather_is_stale;
 };
 
 static void          on_gweather_update_cb                       (GWeatherInfo       *info,
@@ -691,7 +696,7 @@ update_gclue_location (GcalWeatherService  *self,
 static void
 start_or_stop_weather_service (GcalWeatherService *self)
 {
-  if (self->weather_service_active)
+  if (self->use_counter > 0 && self->weather_service_active)
     gcal_weather_service_start (self);
   else
     gcal_weather_service_stop (self);
@@ -1180,6 +1185,16 @@ gcal_weather_service_update (GcalWeatherService *self)
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
+  if (!self->weather_service_running)
+    {
+      self->weather_is_stale = TRUE;
+      return;
+    }
+  else
+    {
+      self->weather_is_stale = FALSE;
+    }
+
   if (self->gweather_info)
     {
       gweather_info_update (self->gweather_info);
@@ -1266,6 +1281,11 @@ gcal_weather_service_start (GcalWeatherService *self)
       /*_update_location starts timer if necessary */
       update_location (self, self->location);
     }
+
+  if (self->weather_is_stale)
+    {
+      gcal_weather_service_update (self);
+    }
 }
 
 /**
@@ -1313,4 +1333,39 @@ gcal_weather_service_stop (GcalWeatherService *self)
     }
 
   GCAL_EXIT;
+}
+
+/**
+ * gcal_weather_service_hold:
+ * @self: The #GcalWeatherService instance.
+ *
+ * Mark the service as in use by increasing its use counter.
+ **/
+void
+gcal_weather_service_hold (GcalWeatherService *self)
+{
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
+
+  self->use_counter++;
+
+  start_or_stop_weather_service (self);
+}
+
+/**
+ * gcal_weather_service_release:
+ * @self: The #GcalWeatherService instance.
+ *
+ * Mark the use the of service to be over by decreasing its use counter.
+ * A call to this function is expected to be paired with a previous
+ * call to gcal_weather_service_hold.
+ **/
+void
+gcal_weather_service_release (GcalWeatherService *self)
+{
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
+  g_return_if_fail (self->use_counter > 0);
+
+  self->use_counter--;
+
+  start_or_stop_weather_service (self);
 }
