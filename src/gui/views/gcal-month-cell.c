@@ -293,6 +293,9 @@ gcal_month_cell_finalize (GObject *object)
 {
   GcalMonthCell *self = (GcalMonthCell *)object;
 
+  GcalWeatherService *weather_service = gcal_context_get_weather_service (self->context);
+  gcal_weather_service_release (weather_service);
+
   gcal_clear_date_time (&self->date);
   g_clear_object (&self->context);
 
@@ -496,6 +499,9 @@ gcal_month_cell_set_context (GcalMonthCell *self,
                            G_CALLBACK (on_weather_service_weather_changed_cb),
                            self,
                            0);
+
+  GcalWeatherService *weather_service = gcal_context_get_weather_service (self->context);
+  gcal_weather_service_hold (weather_service);
 
   update_weather (self);
 
