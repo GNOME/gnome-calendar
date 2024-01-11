@@ -36,8 +36,7 @@ struct _GcalQuickAddPopover
   GtkWidget          *title_label;
 
   /* Internal data */
-  GDateTime          *date_start;
-  GDateTime          *date_end;
+  GcalRange          *range;
 
   GtkWidget          *selected_row;
 
@@ -48,8 +47,7 @@ G_DEFINE_TYPE (GcalQuickAddPopover, gcal_quick_add_popover, GTK_TYPE_POPOVER)
 
 enum {
   PROP_0,
-  PROP_DATE_START,
-  PROP_DATE_END,
+  PROP_RANGE,
   PROP_CONTEXT,
   N_PROPS
 };
@@ -418,25 +416,30 @@ update_header (GcalQuickAddPopover *self)
 {
   gboolean multiday_or_timed;
   gchar *title_date;
+  GDateTime *date_start, *date_end;
 
-  if (!self->date_start)
+
+  if (!self->range)
     return;
 
-  multiday_or_timed = self->date_end &&
-                      (g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_DAY > 1 ||
-                       g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_MINUTE > 1);
+  date_start = gcal_range_get_start (self->range);
+  date_end = gcal_range_get_end (self->range);
+
+  multiday_or_timed = date_end &&
+                      (g_date_time_difference (date_end, date_start) / G_TIME_SPAN_DAY > 1 ||
+                       g_date_time_difference (date_end, date_start) / G_TIME_SPAN_MINUTE > 1);
 
   if (multiday_or_timed)
     {
       gboolean all_day;
 
-      all_day = gcal_date_time_is_date (self->date_start) && (self->date_end ? gcal_date_time_is_date (self->date_end) : TRUE);
+      all_day = gcal_date_time_is_date (date_start) && (date_end ? gcal_date_time_is_date (date_end) : TRUE);
 
       if (all_day &&
-          (g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_DAY > 1 &&
-           g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_MINUTE > 1))
+          (g_date_time_difference (date_end, date_start) / G_TIME_SPAN_DAY > 1 &&
+           g_date_time_difference (date_end, date_start) / G_TIME_SPAN_MINUTE > 1))
         {
-          title_date = get_date_string_for_multiday (self->date_start, g_date_time_add_days (self->date_end, -1));
+          title_date = get_date_string_for_multiday (date_start, g_date_time_add_days (date_end, -1));
         }
       else
         {
@@ -453,21 +456,30 @@ update_header (GcalQuickAddPopover *self)
           else
               hour_format = "%I:%M %P";
 
-          start_hour = g_date_time_format (self->date_start, hour_format);
-          end_hour = g_date_time_format (self->date_end, hour_format);
+          start_hour = g_date_time_format (date_start, hour_format);
+          end_hour = g_date_time_format (date_end, hour_format);
 
-          event_date_name = get_date_string_for_day (self->date_start);
-          /* Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour */
-          title_date = g_strdup_printf (_("%1$s, %2$s – %3$s"),
-                                        event_date_name,
-                                        start_hour,
-                                        end_hour);
+          event_date_name = get_date_string_for_day (date_start);
+
+          if (all_day)
+            {
+              title_date = g_strdup (event_date_name);
+            }
+          else
+            {
+              /* Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour */
+              title_date = g_strdup_printf (_("%1$s, %2$s – %3$s"),
+                                            event_date_name,
+                                            start_hour,
+                                            end_hour);
+            }
+
         }
     }
   else
     {
       g_autofree gchar *event_date_name = NULL;
-      event_date_name = get_date_string_for_day (self->date_start);
+      event_date_name = get_date_string_for_day (date_start);
       title_date = g_strdup_printf ("%s", event_date_name);
     }
 
@@ -628,6 +640,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
   GcalCalendar *calendar;
   GcalManager *manager;
   GDateTime *date_start, *date_end;
+  GDateTime *self_date_start, *self_date_end;
   GTimeZone *tz;
   GcalEvent *event;
   const gchar *summary;
@@ -636,32 +649,35 @@ edit_or_create_event (GcalQuickAddPopover *self,
   if (!self->selected_row)
     return;
 
+  self_date_start = gcal_range_get_start (self->range);
+  self_date_end = gcal_range_get_end (self->range);
+
   manager = gcal_context_get_manager (self->context);
   calendar = g_object_get_data (G_OBJECT (self->selected_row), "calendar");
 
-  single_day = gcal_date_time_compare_date (self->date_end, self->date_start) == 0;
-  all_day = gcal_date_time_compare_date (self->date_end, self->date_start) > 1 ||
-            g_date_time_compare (self->date_end, self->date_start) == 0;
+  single_day = gcal_date_time_compare_date (self_date_end, self_date_start) == 0;
+  all_day = gcal_date_time_compare_date (self_date_end, self_date_start) > 1 ||
+            g_date_time_compare (self_date_end, self_date_start) == 0;
   tz = all_day ? g_time_zone_new_utc () : g_time_zone_new_local ();
 
   /* Gather start date */
   date_start = g_date_time_new (tz,
-                                g_date_time_get_year (self->date_start),
-                                g_date_time_get_month (self->date_start),
-                                g_date_time_get_day_of_month (self->date_start),
-                                g_date_time_get_hour (self->date_start),
-                                g_date_time_get_minute (self->date_start),
+                                g_date_time_get_year (self_date_start),
+                                g_date_time_get_month (self_date_start),
+                                g_date_time_get_day_of_month (self_date_start),
+                                g_date_time_get_hour (self_date_start),
+                                g_date_time_get_minute (self_date_start),
                                 0);
 
   /* Gather date end */
-  if (self->date_end)
+  if (self_date_end)
     {
       date_end = g_date_time_new (tz,
-                                  g_date_time_get_year (self->date_end),
-                                  g_date_time_get_month (self->date_end),
-                                  g_date_time_get_day_of_month (self->date_end) + (single_day && all_day ? 1 : 0),
-                                  g_date_time_get_hour (self->date_end),
-                                  g_date_time_get_minute (self->date_end),
+                                  g_date_time_get_year (self_date_end),
+                                  g_date_time_get_month (self_date_end),
+                                  g_date_time_get_day_of_month (self_date_end) + (single_day && all_day ? 1 : 0),
+                                  g_date_time_get_hour (self_date_end),
+                                  g_date_time_get_minute (self_date_end),
                                   0);
     }
   else
@@ -736,12 +752,8 @@ gcal_quick_add_popover_get_property (GObject    *object,
 
   switch (prop_id)
     {
-    case PROP_DATE_END:
-      g_value_set_boxed (value, self->date_end);
-      break;
-
-    case PROP_DATE_START:
-      g_value_set_boxed (value, self->date_start);
+    case PROP_RANGE:
+      g_value_set_object (value, self->range);
       break;
 
     case PROP_CONTEXT:
@@ -763,12 +775,8 @@ gcal_quick_add_popover_set_property (GObject      *object,
 
   switch (prop_id)
     {
-    case PROP_DATE_END:
-      gcal_quick_add_popover_set_date_end (self, g_value_get_boxed (value));
-      break;
-
-    case PROP_DATE_START:
-      gcal_quick_add_popover_set_date_start (self, g_value_get_boxed (value));
+    case PROP_RANGE:
+      gcal_quick_add_popover_set_range (self, g_value_get_boxed (value));
       break;
 
     case PROP_CONTEXT:
@@ -819,8 +827,7 @@ gcal_quick_add_popover_closed (GtkPopover *popover)
   /* Select the default row again */
   update_default_calendar_row (self);
 
-  g_clear_pointer (&self->date_start, g_date_time_unref);
-  g_clear_pointer (&self->date_end, g_date_time_unref);
+  g_clear_pointer (&self->range, gcal_range_unref);
 }
 
 static void
@@ -852,28 +859,15 @@ gcal_quick_add_popover_class_init (GcalQuickAddPopoverClass *klass)
                                       GCAL_TYPE_EVENT);
 
   /**
-   * GcalQuickAddPopover::date-end:
+   * GcalQuickAddPopover::range:
    *
-   * The end date of the new event.
+   * The range of the new event.
    */
   g_object_class_install_property (object_class,
-                                   PROP_DATE_END,
-                                   g_param_spec_boxed ("date-end",
-                                                       "End date of the event",
-                                                       "The end date of the new event",
-                                                       G_TYPE_DATE_TIME,
-                                                       G_PARAM_READWRITE));
-
-  /**
-   * GcalQuickAddPopover::date-start:
-   *
-   * The start date of the new event.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_DATE_START,
-                                   g_param_spec_boxed ("date-start",
-                                                       "Start date of the event",
-                                                       "The start date of the new event",
+                                   PROP_RANGE,
+                                   g_param_spec_boxed ("range",
+                                                       "Range of the new event",
+                                                       "The range of the new event",
                                                        G_TYPE_DATE_TIME,
                                                        G_PARAM_READWRITE));
 
@@ -923,85 +917,43 @@ gcal_quick_add_popover_new (void)
 }
 
 /**
- * gcal_quick_add_popover_get_date_start:
+ * gcal_quick_add_popover_get_range:
  * @self: a #GcalQuickAddPopover
  *
- * Retrieves the start date of @self.
+ * Retrieves the range of @self.
  *
- * Returns: (transfer none): a #GDateTime
+ * Returns: (transfer none): a #GcalRange
  */
-GDateTime*
-gcal_quick_add_popover_get_date_start (GcalQuickAddPopover *self)
+GcalRange*
+gcal_quick_add_popover_get_range (GcalQuickAddPopover *self)
 {
   g_return_val_if_fail (GCAL_IS_QUICK_ADD_POPOVER (self), NULL);
 
-  return self->date_start;
+  return self->range;
 }
 
 /**
- * gcal_quick_add_popover_set_date_start:
+ * gcal_quick_add_popover_set_range:
  * @self: a #GcalQuickAddPopover
- * @dt: a #GDateTime
+ * @range: a #GcalRange
  *
- * Sets the start date of the to-be-created event.
+ * Sets the range of the to-be-created event.
  */
 void
-gcal_quick_add_popover_set_date_start (GcalQuickAddPopover *self,
-                                       GDateTime           *dt)
+gcal_quick_add_popover_set_range (GcalQuickAddPopover *self,
+                                  GcalRange           *range)
 {
   g_return_if_fail (GCAL_IS_QUICK_ADD_POPOVER (self));
 
-  if (self->date_start != dt &&
-      (!self->date_start || !dt ||
-       (self->date_start && dt && !g_date_time_equal (self->date_start, dt))))
+  if (self->range != range &&
+      (!self->range || !range ||
+       (self->range && range && gcal_range_compare (self->range, range) != 0)))
     {
-      g_clear_pointer (&self->date_start, g_date_time_unref);
-      self->date_start = g_date_time_ref (dt);
+      g_clear_pointer (&self->range, gcal_range_unref);
+      self->range = gcal_range_ref (range);
 
       update_header (self);
 
-      g_object_notify (G_OBJECT (self), "date-start");
-    }
-}
-
-/**
- * gcal_quick_add_popover_get_date_end:
- * @self: a #GcalQuickAddPopover
- *
- * Retrieves the end date of @self.
- *
- * Returns: (transfer none): a #GDateTime
- */
-GDateTime*
-gcal_quick_add_popover_get_date_end (GcalQuickAddPopover *self)
-{
-  g_return_val_if_fail (GCAL_IS_QUICK_ADD_POPOVER (self), NULL);
-
-  return self->date_end;
-}
-
-/**
- * gcal_quick_add_popover_set_date_end:
- * @self: a #GcalQuickAddPopover
- * @dt: a #GDateTime
- *
- * Sets the end date of the to-be-created event.
- */
-void
-gcal_quick_add_popover_set_date_end (GcalQuickAddPopover *self,
-                                     GDateTime           *dt)
-{
-  g_return_if_fail (GCAL_IS_QUICK_ADD_POPOVER (self));
-
-  if (self->date_end != dt &&
-      (!self->date_end || !dt ||
-       (self->date_end && dt && !g_date_time_equal (self->date_end, dt))))
-    {
-      g_clear_pointer (&self->date_end, g_date_time_unref);
-      self->date_end = g_date_time_ref (dt);
-
-      update_header (self);
-
-      g_object_notify (G_OBJECT (self), "date-end");
+      g_object_notify (G_OBJECT (self), "range");
     }
 }
