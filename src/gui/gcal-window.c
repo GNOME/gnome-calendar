@@ -82,8 +82,7 @@ typedef struct
 {
   gint                x;
   gint                y;
-  GDateTime          *start_date;
-  GDateTime          *end_date;
+  GcalRange          *range;
 } NewEventData;
 
 typedef struct
@@ -575,24 +574,20 @@ show_new_event_widget (GcalView   *view,
 
   if (window->event_creation_data != NULL)
     {
-      g_clear_pointer (&window->event_creation_data->start_date, g_date_time_unref);
-      g_clear_pointer (&window->event_creation_data->end_date, g_date_time_unref);
+      g_clear_pointer (&window->event_creation_data->range, gcal_range_unref);
       g_clear_pointer (&window->event_creation_data, g_free);
     }
 
   window->event_creation_data = g_new0 (NewEventData, 1);
   window->event_creation_data->x = x;
   window->event_creation_data->y = y;
-  window->event_creation_data->start_date = gcal_range_get_start (range);
-  window->event_creation_data->end_date = gcal_range_get_end (range);
+  window->event_creation_data->range = gcal_range_ref (range);
 
   g_debug ("Quick add popover position (%f, %f)", x, y);
 
   /* Setup the quick add popover's dates */
-  gcal_quick_add_popover_set_date_start (GCAL_QUICK_ADD_POPOVER (window->quick_add_popover),
-                                         window->event_creation_data->start_date);
-  gcal_quick_add_popover_set_date_end (GCAL_QUICK_ADD_POPOVER (window->quick_add_popover),
-                                       window->event_creation_data->end_date);
+  gcal_quick_add_popover_set_range (GCAL_QUICK_ADD_POPOVER (window->quick_add_popover),
+                                    window->event_creation_data->range);
 
   /* Position and place the quick add popover */
   if (!gtk_widget_compute_point (window->views[window->active_view],
@@ -805,8 +800,7 @@ gcal_window_finalize (GObject *object)
 
   if (window->event_creation_data)
     {
-      g_clear_pointer (&window->event_creation_data->start_date, g_date_time_unref);
-      g_clear_pointer (&window->event_creation_data->end_date, g_date_time_unref);
+      g_clear_pointer (&window->event_creation_data->range, gcal_range_unref);
       g_clear_pointer (&window->event_creation_data, g_free);
     }
 
