@@ -414,32 +414,32 @@ get_date_string_for_day (GDateTime *day)
 static void
 update_header (GcalQuickAddPopover *self)
 {
+  g_autoptr (GDateTime) range_start = NULL;
+  g_autoptr (GDateTime) range_end = NULL;
   gboolean multiday_or_timed;
   gchar *title_date;
-  GDateTime *date_start, *date_end;
 
 
   if (!self->range)
     return;
 
-  date_start = gcal_range_get_start (self->range);
-  date_end = gcal_range_get_end (self->range);
+  range_start = gcal_range_get_start (self->range);
+  range_end = gcal_range_get_end (self->range);
 
-  multiday_or_timed = date_end &&
-                      (g_date_time_difference (date_end, date_start) / G_TIME_SPAN_DAY > 1 ||
-                       g_date_time_difference (date_end, date_start) / G_TIME_SPAN_MINUTE > 1);
+  multiday_or_timed = gcal_range_get_range_type (self->range) == GCAL_RANGE_DEFAULT ||
+                      gcal_date_time_compare_date (range_start, range_end) != 0;
 
   if (multiday_or_timed)
     {
       gboolean all_day;
 
-      all_day = gcal_date_time_is_date (date_start) && (date_end ? gcal_date_time_is_date (date_end) : TRUE);
+      all_day = gcal_range_get_range_type (self->range) == GCAL_RANGE_DATE_ONLY;
 
       if (all_day &&
-          (g_date_time_difference (date_end, date_start) / G_TIME_SPAN_DAY > 1 &&
-           g_date_time_difference (date_end, date_start) / G_TIME_SPAN_MINUTE > 1))
+          (g_date_time_difference (range_end, range_start) / G_TIME_SPAN_DAY > 1 &&
+           g_date_time_difference (range_end, range_start) / G_TIME_SPAN_MINUTE > 1))
         {
-          title_date = get_date_string_for_multiday (date_start, g_date_time_add_days (date_end, -1));
+          title_date = get_date_string_for_multiday (range_start, g_date_time_add_days (range_end, -1));
         }
       else
         {
@@ -456,10 +456,10 @@ update_header (GcalQuickAddPopover *self)
           else
               hour_format = "%I:%M %P";
 
-          start_hour = g_date_time_format (date_start, hour_format);
-          end_hour = g_date_time_format (date_end, hour_format);
+          start_hour = g_date_time_format (range_start, hour_format);
+          end_hour = g_date_time_format (range_end, hour_format);
 
-          event_date_name = get_date_string_for_day (date_start);
+          event_date_name = get_date_string_for_day (range_start);
 
           if (all_day)
             {
@@ -479,7 +479,7 @@ update_header (GcalQuickAddPopover *self)
   else
     {
       g_autofree gchar *event_date_name = NULL;
-      event_date_name = get_date_string_for_day (date_start);
+      event_date_name = get_date_string_for_day (range_start);
       title_date = g_strdup_printf ("%s", event_date_name);
     }
 
@@ -636,11 +636,12 @@ static void
 edit_or_create_event (GcalQuickAddPopover *self,
                       GtkWidget           *button)
 {
+  g_autoptr (GDateTime) range_start = NULL;
+  g_autoptr (GDateTime) range_end = NULL;
   ECalComponent *component;
   GcalCalendar *calendar;
   GcalManager *manager;
   GDateTime *date_start, *date_end;
-  GDateTime *self_date_start, *self_date_end;
   GTimeZone *tz;
   GcalEvent *event;
   const gchar *summary;
@@ -649,35 +650,35 @@ edit_or_create_event (GcalQuickAddPopover *self,
   if (!self->selected_row)
     return;
 
-  self_date_start = gcal_range_get_start (self->range);
-  self_date_end = gcal_range_get_end (self->range);
+  range_start = gcal_range_get_start (self->range);
+  range_end = gcal_range_get_end (self->range);
 
   manager = gcal_context_get_manager (self->context);
   calendar = g_object_get_data (G_OBJECT (self->selected_row), "calendar");
 
-  single_day = gcal_date_time_compare_date (self_date_end, self_date_start) == 0;
-  all_day = gcal_date_time_compare_date (self_date_end, self_date_start) > 1 ||
-            g_date_time_compare (self_date_end, self_date_start) == 0;
+  single_day = gcal_date_time_compare_date (range_end, range_start) == 0;
+  all_day = gcal_date_time_compare_date (range_end, range_start) > 1 ||
+            g_date_time_compare (range_end, range_start) == 0;
   tz = all_day ? g_time_zone_new_utc () : g_time_zone_new_local ();
 
   /* Gather start date */
   date_start = g_date_time_new (tz,
-                                g_date_time_get_year (self_date_start),
-                                g_date_time_get_month (self_date_start),
-                                g_date_time_get_day_of_month (self_date_start),
-                                g_date_time_get_hour (self_date_start),
-                                g_date_time_get_minute (self_date_start),
+                                g_date_time_get_year (range_start),
+                                g_date_time_get_month (range_start),
+                                g_date_time_get_day_of_month (range_start),
+                                g_date_time_get_hour (range_start),
+                                g_date_time_get_minute (range_start),
                                 0);
 
   /* Gather date end */
-  if (self_date_end)
+  if (range_end)
     {
       date_end = g_date_time_new (tz,
-                                  g_date_time_get_year (self_date_end),
-                                  g_date_time_get_month (self_date_end),
-                                  g_date_time_get_day_of_month (self_date_end) + (single_day && all_day ? 1 : 0),
-                                  g_date_time_get_hour (self_date_end),
-                                  g_date_time_get_minute (self_date_end),
+                                  g_date_time_get_year (range_end),
+                                  g_date_time_get_month (range_end),
+                                  g_date_time_get_day_of_month (range_end) + (single_day && all_day ? 1 : 0),
+                                  g_date_time_get_hour (range_end),
+                                  g_date_time_get_minute (range_end),
                                   0);
     }
   else
