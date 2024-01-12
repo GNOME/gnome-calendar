@@ -807,7 +807,7 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
   selection_start = g_date_time_ref (selection_start);
   selection_end = g_date_time_add_days (selection_end, 1);
 
-  selection_range = gcal_range_new (selection_start, selection_end, GCAL_RANGE_DEFAULT);
+  selection_range = gcal_range_new (selection_start, selection_end, GCAL_RANGE_DATE_ONLY);
   gcal_view_create_event (GCAL_VIEW (self), selection_range, x, y);
 
   GCAL_EXIT;
