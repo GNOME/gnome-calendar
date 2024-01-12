@@ -203,6 +203,23 @@ gcal_range_get_end (GcalRange *self)
 }
 
 /**
+ * gcal_range_get_range_type:
+ * @self: a #GcalRange
+ *
+ * Retrieves the range type of @self.
+ *
+ * Returns: the range type of @self
+ */
+GcalRangeType
+gcal_range_get_range_type (GcalRange *self)
+{
+  g_return_val_if_fail (self, GCAL_RANGE_DEFAULT);
+  g_return_val_if_fail (!g_atomic_ref_count_compare (&self->ref_count, 0), GCAL_RANGE_DEFAULT);
+
+  return self->range_type;
+}
+
+/**
  * gcal_range_calculate_overlap:
  * @a: a #GcalRange
  * @b: a #GcalRange
