@@ -1203,7 +1203,7 @@ gcal_weather_service_stop (GcalWeatherService *self)
                                   (GAsyncReadyCallback) on_gclue_client_stopped_cb,
                                   self->location_service);
         }
-      self->location_service = NULL;
+      g_clear_object (&self->location_service);
     }
 
   GCAL_EXIT;
