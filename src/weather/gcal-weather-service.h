@@ -50,6 +50,10 @@ const gchar*         gcal_weather_service_get_attribution           (GcalWeather
 
 void                 gcal_weather_service_update                    (GcalWeatherService *self);
 
+void                 gcal_weather_service_activate                  (GcalWeatherService *self);
+
+void                 gcal_weather_service_deactivate                (GcalWeatherService *self);
+
 void                 gcal_weather_service_start                     (GcalWeatherService *self);
 
 void                 gcal_weather_service_stop                      (GcalWeatherService *self);

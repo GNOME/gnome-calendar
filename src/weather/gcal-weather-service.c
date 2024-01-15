@@ -65,6 +65,7 @@ typedef struct
  * @valid_timespan:          Amount of seconds weather information are considered valid.
  * @gweather_info:           The weather info to query.
  * @max_days:                Number of days we want weather information for.
+ * @weather_service_active:  True if weather service is requested to be active, regardless of being in use.
  * @weather_service_running: True if weather service is active.
  *
  * This service listens to location and weather changes and reports them.
@@ -103,6 +104,7 @@ struct _GcalWeatherService
   gint64              valid_timespan;
   GWeatherInfo       *gweather_info;        /* owned, nullable */
   guint               max_days;
+  gboolean            weather_service_active;
   gboolean            weather_service_running;
 };
 
@@ -686,6 +688,15 @@ update_gclue_location (GcalWeatherService  *self,
   update_location (self, wlocation);
 }
 
+static void
+start_or_stop_weather_service (GcalWeatherService *self)
+{
+  if (self->weather_service_active)
+    gcal_weather_service_start (self);
+  else
+    gcal_weather_service_stop (self);
+}
+
 
 /*
  * Callbacks
@@ -1177,6 +1188,40 @@ gcal_weather_service_update (GcalWeatherService *self)
       if (gcal_timer_is_running (self->duration_timer))
         gcal_timer_reset (self->duration_timer);
     }
+}
+
+
+/**
+ * gcal_weather_service_activate:
+ * @self: The #GcalWeatherService instance.
+ *
+ * Activates weather service if needed.
+ * Use ::weather-changed to catch responses.
+ */
+void
+gcal_weather_service_activate (GcalWeatherService *self)
+{
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
+
+  self->weather_service_active = TRUE;
+
+  start_or_stop_weather_service (self);
+}
+
+/**
+ * gcal_weather_service_deactivate:
+ * @self: The #GcalWeatherService instance.
+ *
+ * Stops the service.
+ */
+void
+gcal_weather_service_deactivate (GcalWeatherService *self)
+{
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
+
+  self->weather_service_active = FALSE;
+
+  start_or_stop_weather_service (self);
 }
 
 /**

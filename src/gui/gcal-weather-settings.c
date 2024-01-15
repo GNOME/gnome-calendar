@@ -202,11 +202,11 @@ manage_weather_service (GcalWeatherSettings *self)
         }
 
       gcal_weather_service_set_location (weather_service, location);
-      gcal_weather_service_start (weather_service);
+      gcal_weather_service_activate (weather_service);
     }
   else
     {
-      gcal_weather_service_stop (weather_service);
+      gcal_weather_service_deactivate (weather_service);
     }
 
   GCAL_EXIT;
