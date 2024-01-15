@@ -36,6 +36,11 @@ GTimeZone*           gcal_weather_service_get_time_zone             (GcalWeather
 void                 gcal_weather_service_set_time_zone             (GcalWeatherService *self,
                                                                      GTimeZone          *value);
 
+GWeatherLocation*   gcal_weather_service_get_location               (GcalWeatherService *self);
+
+void                 gcal_weather_service_set_location              (GcalWeatherService *self,
+                                                                     GWeatherLocation   *value);
+
 GcalWeatherInfo*     gcal_weather_service_get_weather_info_for_date (GcalWeatherService *self,
                                                                      GDate              *date);
 
@@ -45,8 +50,7 @@ const gchar*         gcal_weather_service_get_attribution           (GcalWeather
 
 void                 gcal_weather_service_update                    (GcalWeatherService *self);
 
-void                 gcal_weather_service_run                       (GcalWeatherService *self,
-                                                                     GWeatherLocation   *location);
+void                 gcal_weather_service_start                     (GcalWeatherService *self);
 
 void                 gcal_weather_service_stop                      (GcalWeatherService *self);
 

@@ -54,6 +54,7 @@ typedef struct
  * @duration_timer           Timer used to request weather report updates.
  * @midnight_timer           Timer used to update weather reports at midnight.
  * @network_changed_sid      "network-changed" signal ID.
+ * @location:                Used for from where to display the weather. Current location if NULL.
  * @location_service:        Used to monitor location changes.
  *                           Initialized by gcal_weather_service_run(),
  *                           freed by gcal_weather_service_stop().
@@ -91,6 +92,7 @@ struct _GcalWeatherService
   gulong              network_changed_sid;
 
   /* locations: */
+  GWeatherLocation   *location;             /* owned, nullable */
   GClueSimple        *location_service;     /* owned, nullable */
   GCancellable       *location_cancellable; /* owned, non-null */
   gboolean            location_service_running;
@@ -113,6 +115,7 @@ enum
 {
   PROP_0,
   PROP_TIME_ZONE,
+  PROP_LOCATION,
   PROP_NUM,
 };
 
@@ -887,6 +890,10 @@ gcal_weather_service_get_property (GObject    *object,
       g_value_set_pointer (value, gcal_weather_service_get_time_zone (self));
       break;
 
+    case PROP_LOCATION:
+      g_value_set_pointer (value, gcal_weather_service_get_location (self));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -905,6 +912,10 @@ gcal_weather_service_set_property (GObject      *object,
     {
     case PROP_TIME_ZONE:
       gcal_weather_service_set_time_zone (self, g_value_get_pointer (value));
+      break;
+
+    case PROP_LOCATION:
+      gcal_weather_service_set_location (self, g_value_get_pointer (value));
       break;
 
     default:
@@ -934,6 +945,19 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
                                                          "time-zone",
                                                          "time-zone",
                                                          G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
+
+  /**
+   * GcalWeatherService:location:
+   *
+   * The location to use, automatic if NULL.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_LOCATION,
+                                   g_param_spec_object ("location",
+                                                        "location",
+                                                        "location",
+                                                        GWEATHER_TYPE_LOCATION,
+                                                        G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 
   /**
    * GcalWeatherService::weather-changed:
@@ -989,6 +1013,43 @@ GcalWeatherService*
 gcal_weather_service_new (void)
 {
   return g_object_new (GCAL_TYPE_WEATHER_SERVICE, NULL);
+}
+
+/**
+ * gcal_weather_service_get_location:
+ * @self: The #GcalWeatherService instance.
+ *
+ * Getter for #GcalWeatherService:location.
+ */
+GWeatherLocation*
+gcal_weather_service_get_location (GcalWeatherService *self)
+{
+  g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), NULL);
+
+  return self->location;
+}
+
+/**
+ * gcal_weather_service_set_location:
+ * @self: The #GcalWeatherService instance.
+ * @value: new location, nullable.
+ *
+ * Setter for #GcalWeatherInfos:location.
+ */
+void
+gcal_weather_service_set_location (GcalWeatherService *self,
+                                   GWeatherLocation   *value)
+{
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
+
+  if (self->location == value)
+    return;
+
+  self->location = value;
+
+  gcal_weather_service_start (self);
+
+  g_object_notify (G_OBJECT (self), "location");
 }
 
 /**
@@ -1119,16 +1180,14 @@ gcal_weather_service_update (GcalWeatherService *self)
 }
 
 /**
- * gcal_weather_service_run:
+ * gcal_weather_service_start:
  * @self: The #GcalWeatherService instance.
- * @location: (nullable): A fixed location or %NULL to use Gclue.
  *
  * Starts to monitor location and weather changes.
  * Use ::weather-changed to catch responses.
  */
 void
-gcal_weather_service_run (GcalWeatherService *self,
-                          GWeatherLocation   *location)
+gcal_weather_service_start (GcalWeatherService *self)
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
@@ -1139,7 +1198,7 @@ gcal_weather_service_run (GcalWeatherService *self,
 
   self->weather_service_running = TRUE;
 
-  if (!location)
+  if (!self->location)
     {
       /* Start location and weather service: */
       self->location_service_running = TRUE;
@@ -1157,8 +1216,10 @@ gcal_weather_service_run (GcalWeatherService *self,
     {
       self->location_service_running = FALSE;
 
+      /* TODO: stop running location service */
+
       /*_update_location starts timer if necessary */
-      update_location (self, location);
+      update_location (self, self->location);
     }
 }
 

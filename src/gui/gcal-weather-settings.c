@@ -201,7 +201,8 @@ manage_weather_service (GcalWeatherSettings *self)
             g_warning ("Unknown location '%s' selected", gtk_editable_get_text (self->weather_location_entry));
         }
 
-      gcal_weather_service_run (weather_service, location);
+      gcal_weather_service_set_location (weather_service, location);
+      gcal_weather_service_start (weather_service);
     }
   else
     {
