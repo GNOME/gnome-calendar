@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the gnome-calendar package.
 # Amir Farsi <amir_farsi@ymail.com>, 2013.
 # Arash Mousavi <mousavi.arash@gmail.com>, 2013-2017.
-# Danial Behzadi <dani.behzi@ubuntu.com>, 2018-2023.
+# Danial Behzadi <dani.behzi@ubuntu.com>, 2018-2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-12-14 02:49+0000\n"
-"PO-Revision-Date: 2024-01-13 04:42+0330\n"
+"POT-Creation-Date: 2024-01-13 01:13+0000\n"
+"PO-Revision-Date: 2024-01-18 02:28+0330\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "Language: fa\n"
@@ -38,12 +38,17 @@ msgid ""
 "meetings and appointments, public events, travel logistics, or other "
 "commitments in your life."
 msgstr ""
+"تقویم گنوم ابزاری شیک برای کمک به برنامه‌ریزی و مدیریت زمانبندیتان در روزها و "
+"هفته‌های پیش روست که پر از دیدارها، قرارها، رویدادهای عمومی، برنامه‌های سفر یا "
+"دیگر مشغله‌های زندگیست."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
 "Easily create and manage unlimited calendars and events with GNOME Calendar's "
 "infinite scrolling month view, week timetable, and scheduling list view."
 msgstr ""
+"ایجاد و مدیریت آسان بی‌شمار تقویم و رویداد با نمای سیاهه‌ای زمان‌بندی، جدول زمانی "
+"هفتگی و نمای ماهانهٔ پایان‌ناپذیر."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:20
 msgid ""
@@ -56,6 +61,13 @@ msgid ""
 "local and offline calendaring, so you can use it anywhere and anytime while "
 "travelling (or after civilization's collapse.)"
 msgstr ""
+"یکپارچه با جدیدترین فناوری‌ها و اصول طرّاحی گنوم،‌تقویم گنوم برای مدیریت شمار زیاد "
+"رویدادها و یکپارچگی با دیگر برنامه‌ها، روی کارساز دادهٔ آزمون پس‌دادهٔ اولوشون "
+"ساخته شده. می‌توانید تقویم‌هایی را از خدمت‌های تقویم برخط مختلف (چون نکست‌کلود، "
+"تقویم گوگل و کارسازهای CalDAV یا WebDAV) افزوده تا قادرتان سازد رویدادهایتان را "
+"میان افزاره‌ها و بن‌سازه‌های مختلف هم‌گام کنید. همچینن تقویم گنوم از تقویم‌های برخط "
+"و محلّی پشتیبانی کرده تا بتوانید در هر جایی و هر زمانی، هنگام سفر (یا فروپاشی "
+"تمدّن) از آن استفاده کنید."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:33
 msgid "Week view"
@@ -68,6 +80,11 @@ msgstr "نمای ماهانه"
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:41
 msgid "Event editor"
 msgstr "ویرایشگر رویداد"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:60
+#: src/gui/gcal-application.c:236
+msgid "The GNOME Project"
+msgstr "پروژهٔ گنوم"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -650,10 +667,6 @@ msgstr "گشودن تقویم با نمایش تاریخ رد شده"
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "رونوشت © ۲۰۱۲-%Id نگارندگان تقویم"
-
-#: src/gui/gcal-application.c:236
-msgid "The GNOME Project"
-msgstr "پروژهٔ گنوم"
 
 #: src/gui/gcal-application.c:245
 msgid "translator-credits"
