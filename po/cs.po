@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-08-04 23:11+0000\n"
-"PO-Revision-Date: 2023-08-15 21:26+0200\n"
+"POT-Creation-Date: 2023-12-14 02:49+0000\n"
+"PO-Revision-Date: 2024-01-22 17:12+0100\n"
 "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -18,49 +18,70 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:118
+#: src/gui/gcal-application.c:234 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
 msgid "Calendar"
 msgstr "Kalendář"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
-msgid "Calendar for GNOME"
-msgstr "Kalendář pro GNOME"
+msgid "Manage your schedule"
+msgstr "Spravovat svůj rozvrh"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
 msgid ""
-"GNOME Calendar is a simple and beautiful calendar application designed to "
-"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
+"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
+"schedule for upcoming days and weeks, whether your months are filled with "
+"meetings and appointments, public events, travel logistics, or other "
+"commitments in your life."
 msgstr ""
-"Kalendář GNOME je jednoduchá a hezká kalendářová aplikace navržená tak, aby "
-"skvěle zapadla do pracovního prostředí GNOME. Díky využití komponent, na "
-"kterých je pracovní prostředí GNOME vybudováno, Kalendář krásně pasuje do "
-"celého ekosystému."
+"Kalendář GNOME je elegantní nástroj, který vám pomůže naplánovat a udržet si "
+"plán na nadcházející dny a týdny, ať už jsou vaše měsíce plné schůzek a "
+"termínů, veřejných událostí, cestovní logistiky nebo jiných závazků ve vašem "
+"životě."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
-"We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, nothing missing. You’ll feel comfortable using "
-"Calendar, like you’ve been using it for ages!"
+"Easily create and manage unlimited calendars and events with GNOME "
+"Calendar's infinite scrolling month view, week timetable, and scheduling "
+"list view."
 msgstr ""
-"Cílem vývojářů bylo najít rovnováhu mezi propracovanými funkcemi a "
-"použitelností pro uživatele. Nic nepřebývá, nic neschází. Používání "
-"Kalendáře vám sedne, jako byste jej používali už věky."
+"Snadno vytvářejte a spravujte neomezené množství kalendářů a událostí pomocí "
+"nekonečného rolovacího zobrazení měsíce, týdenního rozvrhu a seznamu rozvrhů "
+"Kalendáře GNOME."
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:20
+msgid ""
+"Integrating the latest GNOME technologies and design best practices, GNOME "
+"Calendar builds on top of the mature Evolution data server to manage large "
+"quantities of events and to provide integration with other applications. You "
+"can add calendars from various online calendaring services (like NextCloud, "
+"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
+"your events across multiple devices and platforms. GNOME Calendar also "
+"supports local and offline calendaring, so you can use it anywhere and "
+"anytime while travelling (or after civilization's collapse.)"
+msgstr ""
+"Kalendář GNOME integruje nejnovější technologie GNOME a osvědčené postupy "
+"návrhu a staví na vyspělém datovém serveru Evolution, aby mohl spravovat "
+"velké množství událostí a poskytovat integraci s dalšími aplikacemi. Můžete "
+"přidat kalendáře z různých online kalendářových služeb (jako NextCloud, "
+"Google Calendar a servery CalDAV / WebDAV), což vám umožní synchronizovat "
+"vaše události mezi více zařízeními a platformami. Kalendář GNOME také "
+"podporuje místní a offline kalendář, takže jej můžete používat kdekoli a "
+"kdykoli na cestách (nebo po kolapsu civilizace.)"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:33
 msgid "Week view"
 msgstr "Týdenní zobrazení"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:37
 msgid "Month view"
 msgstr "Měsíční zobrazení"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:41
 msgid "Event editor"
 msgstr "Úprava události"
 
@@ -121,7 +142,7 @@ msgstr "Aktuální úroveň přiblížení mřížky týdne"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
+#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:395
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -130,41 +151,53 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1914
+#: src/core/gcal-event.c:1910
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1930 src/gui/gcal-quick-add-popover.c:461
+#: src/core/gcal-event.c:1926 src/gui/gcal-quick-add-popover.c:461
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
+
+#: src/gui/calendar-management/calendar-row.ui:19
+msgid "Read-only Calendar"
+msgstr "Kalendář pouze pro čtení"
+
+#: src/gui/calendar-management/calendar-row.ui:29
+msgid "Display Calendar"
+msgstr "Zobrazit kalendář"
+
+#: src/gui/calendar-management/calendar-row.ui:39
+msgid "Edit calendar"
+msgstr "Upravit kalendář"
 
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
 msgstr "Nastavení kalendáře"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:343
+#: src/gui/calendar-management/gcal-calendars-page.c:344
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Kalendáře"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:368
+#: src/gui/calendar-management/gcal-calendars-page.c:369
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalendář <b>%s</b> byl odstraněn"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:373
-#: src/gui/gcal-window.c:741
+#: src/gui/calendar-management/gcal-calendars-page.c:374
+#: src/gui/gcal-window.c:743
 msgid "_Undo"
 msgstr "_Zpět"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:55
-msgid "Add Calendar…"
-msgstr "Přidat kalendář…"
+#: src/gui/calendar-management/gcal-calendars-page.ui:66
+msgid "_Add Calendar…"
+msgstr "Přid_at kalendář…"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
 msgid "Account"
@@ -174,9 +207,9 @@ msgstr "Účet"
 msgid "Open in Settings"
 msgstr "Otevřít v Nastavení"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:53
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
 #: src/gui/event-editor/gcal-summary-section.ui:23
-#: src/gui/gcal-event-popover.ui:113
+#: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "Umístění"
@@ -267,7 +300,7 @@ msgstr "Heslo"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:237
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:28
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1269
 msgid "_Cancel"
 msgstr "_Zrušit"
 
@@ -383,13 +416,62 @@ msgstr[2] "před %1$u minutami"
 msgid "Event start time"
 msgstr "Čas začátku události"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:11
+#: src/gui/event-editor/gcal-alarm-row.ui:8
 msgid "Toggles the sound of the alarm"
 msgstr "Zapnout/vypnout zvuk budíku"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:21
+#: src/gui/event-editor/gcal-alarm-row.ui:19
 msgid "Remove the alarm"
 msgstr "Odebrat budík"
+
+#. Translators: Calendar grid abbreviation for Sunday.
+#. *
+#. * NOTE: These grid abbreviations are always shown together
+#. * and in order, e.g. "S M T W T F S".
+#. *
+#. * Please make sure these abbreviations match GNOME Shell's
+#. * abbreviations for your language.
+#.
+#: src/gui/event-editor/gcal-date-chooser.c:272
+msgctxt "grid sunday"
+msgid "S"
+msgstr "Ne"
+
+#. Translators: Calendar grid abbreviation for Monday
+#: src/gui/event-editor/gcal-date-chooser.c:277
+msgctxt "grid monday"
+msgid "M"
+msgstr "Po"
+
+#. Translators: Calendar grid abbreviation for Tuesday
+#: src/gui/event-editor/gcal-date-chooser.c:282
+msgctxt "grid tuesday"
+msgid "T"
+msgstr "Út"
+
+#. Translators: Calendar grid abbreviation for Wednesday
+#: src/gui/event-editor/gcal-date-chooser.c:287
+msgctxt "grid wednesday"
+msgid "W"
+msgstr "St"
+
+#. Translators: Calendar grid abbreviation for Thursday
+#: src/gui/event-editor/gcal-date-chooser.c:292
+msgctxt "grid thursday"
+msgid "T"
+msgstr "Čt"
+
+#. Translators: Calendar grid abbreviation for Friday
+#: src/gui/event-editor/gcal-date-chooser.c:297
+msgctxt "grid friday"
+msgid "F"
+msgstr "Pá"
+
+#. Translators: Calendar grid abbreviation for Saturday
+#: src/gui/event-editor/gcal-date-chooser.c:302
+msgctxt "grid saturday"
+msgid "S"
+msgstr "So"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:187
 msgid "Save"
@@ -582,12 +664,12 @@ msgstr "Název"
 msgid ":"
 msgstr "∶"
 
-#: src/gui/event-editor/gcal-time-selector.ui:46
+#: src/gui/event-editor/gcal-time-selector.ui:47
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "dop."
 
-#: src/gui/event-editor/gcal-time-selector.ui:47
+#: src/gui/event-editor/gcal-time-selector.ui:48
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "odp."
@@ -617,17 +699,17 @@ msgstr "Otevřít kalendář na zadané události"
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012 – %d autoři Kalendáře"
 
-#: src/gui/gcal-application.c:180
+#: src/gui/gcal-application.c:236
 msgid "The GNOME Project"
 msgstr "Projekt GNOME"
 
-#: src/gui/gcal-application.c:189
+#: src/gui/gcal-application.c:245
 msgid "translator-credits"
 msgstr ""
 "Adam Matoušek <adamatousek@gmail.com>\n"
 "Marek Černocký <marek@manet.cz>"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:326
+#: src/gui/gcal-application.c:252 src/gui/gcal-window.ui:332
 msgid "Weather"
 msgstr "Počasí"
 
@@ -644,8 +726,8 @@ msgid "_Synchronize Calendars"
 msgstr "_Synchronizovat kalendáře"
 
 #: src/gui/gcal-calendar-button.ui:41
-msgid "Manage Calendars…"
-msgstr "Spravovat kalendáře…"
+msgid "_Manage Calendars…"
+msgstr "_Spravovat kalendáře…"
 
 #: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:255
 msgid "January"
@@ -799,16 +881,16 @@ msgstr "%2$d. %1$s, %3$s – %4$s"
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%2$d. %1$s %3$d, %4$s – %5$s"
 
-#: src/gui/gcal-event-popover.ui:73
+#: src/gui/gcal-event-popover.ui:75
 msgid "No event information"
 msgstr "Bez informací o události"
 
-#: src/gui/gcal-event-popover.ui:171
+#: src/gui/gcal-event-popover.ui:175
 msgid "Edit…"
 msgstr "Upravit…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:351
+#: src/gui/gcal-event-widget.c:355
 #, c-format
 msgid "At %s"
 msgstr "v místě %s"
@@ -1069,7 +1151,11 @@ msgstr "Upravit údaje…"
 msgid "Add"
 msgstr "Přidat"
 
-#: src/gui/gcal-search-button.ui:53
+#: src/gui/gcal-search-button.ui:29
+msgid "Search Events"
+msgstr "Hledat události"
+
+#: src/gui/gcal-search-button.ui:54
 msgid "Search events"
 msgstr "Hledat události"
 
@@ -1100,51 +1186,51 @@ msgstr "Místo automaticky"
 msgid "Search locations"
 msgstr "Hledat umístění"
 
-#: src/gui/gcal-window.c:337
+#: src/gui/gcal-window.c:333
 msgid "Week"
 msgstr "Týden"
 
-#: src/gui/gcal-window.c:339
+#: src/gui/gcal-window.c:335
 msgid "Month"
 msgstr "Měsíc"
 
-#: src/gui/gcal-window.c:739
+#: src/gui/gcal-window.c:741
 msgid "Another event deleted"
 msgstr "Smazána ještě jedna událost"
 
-#: src/gui/gcal-window.c:739
+#: src/gui/gcal-window.c:741
 msgid "Event deleted"
 msgstr "Událost smazána"
 
-#: src/gui/gcal-window.ui:137
+#: src/gui/gcal-window.ui:143
 msgid "Main Menu"
 msgstr "Hlavní nabídka"
 
-#: src/gui/gcal-window.ui:174 src/gui/gcal-window.ui:213
+#: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
 msgid "_Today"
 msgstr "_Dnes"
 
-#: src/gui/gcal-window.ui:249
+#: src/gui/gcal-window.ui:255
 msgid "_Week"
 msgstr "_Týden"
 
-#: src/gui/gcal-window.ui:264
+#: src/gui/gcal-window.ui:270
 msgid "_Month"
 msgstr "_Měsíc"
 
-#: src/gui/gcal-window.ui:318
+#: src/gui/gcal-window.ui:324
 msgid "_Date & Time Settings…"
 msgstr "Nastavení _data a času…"
 
-#: src/gui/gcal-window.ui:322
+#: src/gui/gcal-window.ui:328
 msgid "_Online Accounts…"
 msgstr "Účty _on-line…"
 
-#: src/gui/gcal-window.ui:334
+#: src/gui/gcal-window.ui:340
 msgid "_Keyboard Shortcuts"
 msgstr "_Klávesové zkratky"
 
-#: src/gui/gcal-window.ui:338
+#: src/gui/gcal-window.ui:344
 msgid "_About Calendar"
 msgstr "O _aplikaci Kalendář"
 
@@ -1155,80 +1241,90 @@ msgstr "Obecné"
 
 #: src/gui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
+msgid "Open main menu"
+msgstr "Otevřít hlavní nabídku"
+
+#: src/gui/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Open Calendars menu"
+msgstr "Otevřít nabídku kalendáře"
+
+#: src/gui/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
 msgid "New event"
 msgstr "Nová událost"
 
-#: src/gui/gtk/help-overlay.ui:20
+#: src/gui/gtk/help-overlay.ui:32
 msgctxt "shortcut window"
 msgid "Manage calendars"
 msgstr "Správa kalendářů"
 
-#: src/gui/gtk/help-overlay.ui:26
+#: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Synchronize calendars"
 msgstr "Synchronizovat kalendáře"
 
-#: src/gui/gtk/help-overlay.ui:32
+#: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Zavřít okno"
 
-#: src/gui/gtk/help-overlay.ui:38
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Hledat"
 
-#: src/gui/gtk/help-overlay.ui:44
+#: src/gui/gtk/help-overlay.ui:56
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Zobrazit nápovědu"
 
-#: src/gui/gtk/help-overlay.ui:50
+#: src/gui/gtk/help-overlay.ui:62
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Klávesové zkratky"
 
-#: src/gui/gtk/help-overlay.ui:58
+#: src/gui/gtk/help-overlay.ui:70
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Ovládání"
 
-#: src/gui/gtk/help-overlay.ui:61
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "Přejít zpět"
 
-#: src/gui/gtk/help-overlay.ui:67
+#: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "Přejít vpřed"
 
-#: src/gui/gtk/help-overlay.ui:73
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "Zobrazit dnešní den"
 
-#: src/gui/gtk/help-overlay.ui:79
+#: src/gui/gtk/help-overlay.ui:91
 msgctxt "shortcut window"
 msgid "Next view"
 msgstr "Následující zobrazení"
 
-#: src/gui/gtk/help-overlay.ui:85
+#: src/gui/gtk/help-overlay.ui:97
 msgctxt "shortcut window"
 msgid "Previous view"
 msgstr "Předchozí zobrazení"
 
-#: src/gui/gtk/help-overlay.ui:93
+#: src/gui/gtk/help-overlay.ui:105
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Zobrazení"
 
-#: src/gui/gtk/help-overlay.ui:96
+#: src/gui/gtk/help-overlay.ui:108
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Týdenní zobrazení"
 
-#: src/gui/gtk/help-overlay.ui:102
+#: src/gui/gtk/help-overlay.ui:114
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Měsíční zobrazení"
@@ -1301,15 +1397,15 @@ msgstr "Žádné události"
 msgid "New Event…"
 msgstr "Nová událost…"
 
-#: src/gui/views/gcal-week-grid.c:576
+#: src/gui/views/gcal-week-grid.c:569
 msgid "00 AM"
 msgstr "00 dop."
 
-#: src/gui/views/gcal-week-grid.c:579
+#: src/gui/views/gcal-week-grid.c:572
 msgid "00:00"
 msgstr "00∶00"
 
-#: src/gui/views/gcal-week-header.c:472
+#: src/gui/views/gcal-week-header.c:474
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1317,16 +1413,16 @@ msgstr[0] "Další událost"
 msgstr[1] "Další %d události"
 msgstr[2] "Další %d událostí"
 
-#: src/gui/views/gcal-week-header.c:1001
+#: src/gui/views/gcal-week-header.c:1006
 #, c-format
 msgid "week %d"
 msgstr "%d. týden"
 
-#: src/utils/gcal-utils.c:1297
+#: src/utils/gcal-utils.c:1265
 msgid "Modify Multiple Events?"
 msgstr "Upravit více událostí?"
 
-#: src/utils/gcal-utils.c:1298
+#: src/utils/gcal-utils.c:1266
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1334,17 +1430,40 @@ msgstr ""
 "Událost, kterou se snažíte změnit, se opakuje. Mají se změny, které jste "
 "zvolili, použít:"
 
-#: src/utils/gcal-utils.c:1302
+#: src/utils/gcal-utils.c:1270
 msgid "_Only This Event"
 msgstr "Jen na tut_o událost"
 
-#: src/utils/gcal-utils.c:1308
+#: src/utils/gcal-utils.c:1276
 msgid "_Subsequent Events"
 msgstr "I na navazující událo_sti"
 
-#: src/utils/gcal-utils.c:1311
+#: src/utils/gcal-utils.c:1279
 msgid "_All Events"
 msgstr "_Všechny události"
+
+#~ msgid "Calendar for GNOME"
+#~ msgstr "Kalendář pro GNOME"
+
+#~ msgid ""
+#~ "GNOME Calendar is a simple and beautiful calendar application designed to "
+#~ "perfectly fit the GNOME desktop. By reusing the components which the "
+#~ "GNOME desktop is built on, Calendar nicely integrates with the GNOME "
+#~ "ecosystem."
+#~ msgstr ""
+#~ "Kalendář GNOME je jednoduchá a hezká kalendářová aplikace navržená tak, "
+#~ "aby skvěle zapadla do pracovního prostředí GNOME. Díky využití komponent, "
+#~ "na kterých je pracovní prostředí GNOME vybudováno, Kalendář krásně pasuje "
+#~ "do celého ekosystému."
+
+#~ msgid ""
+#~ "We aim to find the perfect balance between nicely crafted features and "
+#~ "user-centred usability. No excess, nothing missing. You’ll feel "
+#~ "comfortable using Calendar, like you’ve been using it for ages!"
+#~ msgstr ""
+#~ "Cílem vývojářů bylo najít rovnováhu mezi propracovanými funkcemi a "
+#~ "použitelností pro uživatele. Nic nepřebývá, nic neschází. Používání "
+#~ "Kalendáře vám sedne, jako byste jej používali už věky."
 
 #~ msgid "Window position"
 #~ msgstr "Umístění okna"
@@ -1366,6 +1485,3 @@ msgstr "_Všechny události"
 
 #~ msgid "Open"
 #~ msgstr "Otevřít"
-
-#~ msgid "Manage your calendars"
-#~ msgstr "Spravovat své kalendáře"
