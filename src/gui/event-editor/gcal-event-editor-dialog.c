@@ -542,35 +542,6 @@ gcal_event_editor_dialog_finalize (GObject *object)
 }
 
 static void
-gcal_event_editor_dialog_constructed (GObject *object)
-{
-  const GActionEntry action_entries[] =
-  {
-    { "select-calendar", on_calendar_selected_action_cb, "s" },
-  };
-
-  GcalEventEditorDialog *self;
-
-  self = GCAL_EVENT_EDITOR_DIALOG (object);
-
-  /* chaining up */
-  G_OBJECT_CLASS (gcal_event_editor_dialog_parent_class)->constructed (object);
-
-  adw_dialog_set_title (ADW_DIALOG (object), "");
-
-  /* Actions */
-  self->action_group = g_simple_action_group_new ();
-  g_action_map_add_action_entries (G_ACTION_MAP (self->action_group),
-                                   action_entries,
-                                   G_N_ELEMENTS (action_entries),
-                                   self);
-
-  gtk_widget_insert_action_group (GTK_WIDGET (self),
-                                  "event-editor-dialog",
-                                  G_ACTION_GROUP (self->action_group));
-}
-
-static void
 gcal_event_editor_dialog_get_property (GObject    *object,
                                        guint       prop_id,
                                        GValue     *value,
@@ -634,7 +605,6 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   g_type_ensure (GCAL_TYPE_SUMMARY_SECTION);
 
   object_class->finalize = gcal_event_editor_dialog_finalize;
-  object_class->constructed = gcal_event_editor_dialog_constructed;
   object_class->get_property = gcal_event_editor_dialog_get_property;
   object_class->set_property = gcal_event_editor_dialog_set_property;
 
@@ -709,9 +679,24 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
 static void
 gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
 {
+  const GActionEntry action_entries[] = {
+    { "select-calendar", on_calendar_selected_action_cb, "s" },
+  };
   gint i = 0;
 
   self->writable = TRUE;
+
+  /* Actions */
+  self->action_group = g_simple_action_group_new ();
+  g_action_map_add_action_entries (G_ACTION_MAP (self->action_group),
+                                   action_entries,
+                                   G_N_ELEMENTS (action_entries),
+                                   self);
+
+  gtk_widget_insert_action_group (GTK_WIDGET (self),
+                                  "event-editor-dialog",
+                                  G_ACTION_GROUP (self->action_group));
+
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
