@@ -308,10 +308,9 @@
     <signal name="edit-event" handler="edit_event" object="GcalWindow" swapped="no"/>
     <signal name="closed" handler="close_new_event_widget" object="GcalWindow" swapped="no"/>
   </object>
-  <object class="GcalCalendarManagementDialog" id="calendar_management_dialog">
-    <property name="visible">False</property>
-    <property name="transient_for">GcalWindow</property>
-  </object>
+
+  <object class="GcalCalendarManagementDialog" id="calendar_management_dialog" />
+
   <object class="GcalEventEditorDialog" id="event_editor">
     <property name="visible">False</property>
     <property name="transient_for">GcalWindow</property>

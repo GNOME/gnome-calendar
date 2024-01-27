@@ -343,9 +343,9 @@ on_show_calendars_action_activated (GSimpleAction *action,
                                     GVariant      *param,
                                     gpointer       user_data)
 {
-  GcalWindow *window = GCAL_WINDOW (user_data);
+  GcalWindow *self = GCAL_WINDOW (user_data);
 
-  gtk_widget_set_visible (window->calendar_management_dialog, TRUE);
+  adw_dialog_present (ADW_DIALOG (self->calendar_management_dialog), GTK_WIDGET (self));
 }
 
 static void

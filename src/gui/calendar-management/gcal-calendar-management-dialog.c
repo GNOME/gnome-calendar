@@ -53,7 +53,7 @@ typedef enum
 
 struct _GcalCalendarManagementDialog
 {
-  AdwWindow           parent;
+  AdwDialog           parent;
 
   AdwNavigationView  *navigation_view;
 
@@ -73,7 +73,7 @@ static void          on_page_switched_cb                         (GcalCalendarMa
                                                                   GcalCalendar                 *calendar,
                                                                   GcalCalendarManagementDialog *self);
 
-G_DEFINE_TYPE (GcalCalendarManagementDialog, gcal_calendar_management_dialog, ADW_TYPE_WINDOW)
+G_DEFINE_TYPE (GcalCalendarManagementDialog, gcal_calendar_management_dialog, ADW_TYPE_DIALOG)
 
 enum
 {

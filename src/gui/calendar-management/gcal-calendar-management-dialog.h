@@ -34,6 +34,6 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (GcalCalendarManagementDialog,
                       gcal_calendar_management_dialog,
                       GCAL, CALENDAR_MANAGEMENT_DIALOG,
-                      AdwWindow)
+                      AdwDialog)
 
 G_END_DECLS
