@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="GcalEventEditorDialog" parent="AdwWindow">
-    <property name="modal">True</property>
-    <property name="default-width">700</property>
-    <property name="default-height">1000</property>
-    <property name="destroy-with-parent">True</property>
-    <property name="hide-on-close">True</property>
-    <child>
-      <object class="GtkShortcutController">
-        <child>
-          <object class="GtkShortcut">
-            <property name="trigger">Escape</property>
-            <property name="action">action(window.close)</property>
-          </object>
-        </child>
-      </object>
-    </child>
+  <template class="GcalEventEditorDialog" parent="AdwDialog">
+    <property name="content-width">700</property>
+    <property name="content-height">1000</property>
 
     <child>
       <object class="AdwToolbarView">

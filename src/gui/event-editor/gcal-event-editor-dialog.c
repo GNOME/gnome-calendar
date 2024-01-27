@@ -48,7 +48,7 @@
 
 struct _GcalEventEditorDialog
 {
-  AdwWindow               parent;
+  AdwDialog               parent;
 
   GtkWidget              *cancel_button;
   GtkWidget              *delete_button;
@@ -85,7 +85,7 @@ struct _GcalEventEditorDialog
   gboolean          writable;
 };
 
-G_DEFINE_TYPE (GcalEventEditorDialog, gcal_event_editor_dialog, ADW_TYPE_WINDOW)
+G_DEFINE_TYPE (GcalEventEditorDialog, gcal_event_editor_dialog, ADW_TYPE_DIALOG)
 
 enum
 {
@@ -542,7 +542,7 @@ gcal_event_editor_dialog_finalize (GObject *object)
 }
 
 static void
-gcal_event_editor_dialog_constructed (GObject* object)
+gcal_event_editor_dialog_constructed (GObject *object)
 {
   const GActionEntry action_entries[] =
   {
@@ -556,7 +556,7 @@ gcal_event_editor_dialog_constructed (GObject* object)
   /* chaining up */
   G_OBJECT_CLASS (gcal_event_editor_dialog_parent_class)->constructed (object);
 
-  gtk_window_set_title (GTK_WINDOW (object), "");
+  adw_dialog_set_title (ADW_DIALOG (object), "");
 
   /* Actions */
   self->action_group = g_simple_action_group_new ();

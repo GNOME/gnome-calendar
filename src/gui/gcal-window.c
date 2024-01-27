@@ -646,7 +646,7 @@ create_event_detailed_cb (GcalView   *view,
   event = gcal_event_new (default_calendar, comp, NULL);
 
   gcal_event_editor_dialog_set_event (self->event_editor, event, TRUE);
-  gtk_widget_set_visible (GTK_WIDGET (self->event_editor), TRUE);
+  adw_dialog_present (ADW_DIALOG (self->event_editor), GTK_WIDGET (self));
 
   g_clear_object (&comp);
 }
@@ -664,7 +664,7 @@ event_preview_cb (GcalEventWidget        *event_widget,
     case GCAL_EVENT_PREVIEW_ACTION_EDIT:
       event = gcal_event_widget_get_event (event_widget);
       gcal_event_editor_dialog_set_event (self->event_editor, event, FALSE);
-      gtk_window_present (GTK_WINDOW (self->event_editor));
+      adw_dialog_present (ADW_DIALOG (self->event_editor), GTK_WIDGET (self));
       break;
 
     case GCAL_EVENT_PREVIEW_ACTION_NONE:

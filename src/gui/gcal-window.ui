@@ -312,8 +312,6 @@
   <object class="GcalCalendarManagementDialog" id="calendar_management_dialog" />
 
   <object class="GcalEventEditorDialog" id="event_editor">
-    <property name="visible">False</property>
-    <property name="transient_for">GcalWindow</property>
     <signal name="remove-event" handler="on_event_editor_dialog_remove_event_cb" object="GcalWindow" swapped="no"/>
   </object>
   
