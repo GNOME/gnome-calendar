@@ -195,7 +195,7 @@ static void
 clear_and_hide_dialog (GcalEventEditorDialog *self)
 {
   gcal_event_editor_dialog_set_event (self, NULL, FALSE);
-  gtk_widget_set_visible (GTK_WIDGET (self), FALSE);
+  adw_dialog_close (ADW_DIALOG (self));
 }
 
 static void
