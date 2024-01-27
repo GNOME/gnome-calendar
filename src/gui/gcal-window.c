@@ -417,7 +417,7 @@ on_window_new_event_cb (GSimpleAction *action,
   event = gcal_event_new (default_calendar, comp, NULL);
 
   gcal_event_editor_dialog_set_event (self->event_editor, event, TRUE);
-  gtk_widget_set_visible (GTK_WIDGET (self->event_editor), TRUE);
+  adw_dialog_present (ADW_DIALOG (self->event_editor), GTK_WIDGET (self));
 }
 
 static void
@@ -620,10 +620,10 @@ close_new_event_widget (GtkButton *button,
 static void
 edit_event (GcalQuickAddPopover *popover,
             GcalEvent           *event,
-            GcalWindow          *window)
+            GcalWindow          *self)
 {
-  gcal_event_editor_dialog_set_event (window->event_editor, event, TRUE);
-  gtk_widget_set_visible (GTK_WIDGET (window->event_editor), TRUE);
+  gcal_event_editor_dialog_set_event (self->event_editor, event, TRUE);
+  adw_dialog_present (ADW_DIALOG (self->event_editor), GTK_WIDGET (self));
 }
 
 static void
