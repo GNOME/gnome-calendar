@@ -1,3 +1,5 @@
+@define-color month_border_color mix(@borders, @light_5, 0.14);
+
 /*
  * Event widget
  */
@@ -39,30 +41,4 @@ monthcell.out-of-month:selected:hover,
 monthcell:not(.workday):selected:hover {
     background-color: alpha(@accent_bg_color, 0.2);
     transition: background-color 200ms;
-}
-
-/* Separators */
-monthcell.separator-top,
-monthcell.separator-top:selected {
-    border-top: 1px solid #6b6b6b;
-}
-
-monthcell.separator-side:dir(ltr),
-monthcell.separator-side:selected:dir(ltr) {
-    border-left: 1px solid #6b6b6b;
-}
-
-monthcell:nth-child(7n + 1):dir(ltr),
-monthcell:nth-child(7n + 1):selected:dir(ltr) {
-    border-left-width: 0;
-}
-
-monthcell.separator-side:dir(rtl),
-monthcell.separator-side:selected:dir(rtl) {
-    border-right: 1px solid #6b6b6b;
-}
-
-monthcell:nth-child(7n + 1):dir(rtl),
-monthcell:nth-child(7n + 1):selected:dir(rtl) {
-    border-right-width: 0;
 }

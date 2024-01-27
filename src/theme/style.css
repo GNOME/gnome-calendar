@@ -1,3 +1,5 @@
+@define-color month_border_color mix(@borders, @dark_5, 0.09);
+
 /* Header labels */
 label.primary-label {
     font-size: 16pt;
@@ -397,12 +399,12 @@ monthcell button {
 /* Separators */
 monthcell.separator-top,
 monthcell.separator-top:selected {
-    border-top: 1px solid #a4a4a4;
+    border-top: 1px solid @month_border_color;
 }
 
 monthcell.separator-side:dir(ltr),
 monthcell.separator-side:selected:dir(ltr) {
-    border-left: 1px solid #a4a4a4;
+    border-left: 1px solid @month_border_color;
 }
 
 monthcell:nth-child(7n + 1):dir(ltr),
@@ -412,7 +414,7 @@ monthcell:nth-child(7n + 1):selected:dir(ltr) {
 
 monthcell.separator-side:dir(rtl),
 monthcell.separator-side:selected:dir(rtl) {
-    border-right: 1px solid #a4a4a4;
+    border-right: 1px solid @month_border_color;
 }
 
 monthcell:nth-child(7n + 1):dir(rtl),
