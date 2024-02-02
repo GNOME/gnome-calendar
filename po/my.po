@@ -1,0 +1,1394 @@
+# Burmese translation for gnome-calendar.
+# Copyright (C) 2024 gnome-calendar's COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-calendar package.
+# zayar lwin <zyl.pol.mm@zohomail.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-calendar main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
+"POT-Creation-Date: 2024-01-31 06:59+0000\n"
+"PO-Revision-Date: 2024-02-02 21:08+0630\n"
+"Last-Translator: Zayar Lwin <zyl.pol.mm@zohomail.com>\n"
+"Language-Team: Burmese <my@li.org>\n"
+"Language: my\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
+#: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
+#: src/gui/gcal-application.c:234 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
+msgid "Calendar"
+msgstr "ပြက္ခဒိန်"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
+msgid "Manage your schedule"
+msgstr "သင့်၏အချိန်ဇယားကို စီစဉ်နိုင်သည်"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
+msgid ""
+"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
+"schedule for upcoming days and weeks, whether your months are filled with "
+"meetings and appointments, public events, travel logistics, or other "
+"commitments in your life."
+msgstr "GNOMEပြက္ခဒိန်ကိရိယာသည် သင်၏အစီအစဉ်များနှင့်အချိန်ဇယားကို အလွယ်တကူစီမံနိုင်ရန် အထောက်အကူပေးနိုင်သည်။"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
+msgid ""
+"Easily create and manage unlimited calendars and events with GNOME "
+"Calendar's infinite scrolling month view, week timetable, and scheduling "
+"list view."
+msgstr ""
+"လစဉ်မြင်ကွင်း၊ အပါတ်စဉ်မြင်ကွင်းများကို အဆုံးမရှိပွတ်ဆွဲခြင်းလုပ်၍ရသော GNOMEပြက္ခဒိန်ကိရိယာတွင် "
+"အကန့်အသတ်မဲ့ပြက္ခဒိန်နှင့်အစီအစဉ်များ အလွယ်တကူဖန်တီး၍စီမံနိုင်သည်။"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:20
+msgid ""
+"Integrating the latest GNOME technologies and design best practices, GNOME "
+"Calendar builds on top of the mature Evolution data server to manage large "
+"quantities of events and to provide integration with other applications. You "
+"can add calendars from various online calendaring services (like NextCloud, "
+"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
+"your events across multiple devices and platforms. GNOME Calendar also "
+"supports local and offline calendaring, so you can use it anywhere and "
+"anytime while travelling (or after civilization's collapse.)"
+msgstr ""
+"အစီအစဉ်များကို အရေအတွက်များများ စီမံနိုင်ရန်နှင့် အခြားအပ္ပလီကေးရှင်းများနှင့် ချိတ်ဆက်အလုပ်လုပ်နိုင်ရန် "
+"ယုံကြည်စိတ်ချရပြီဖြစ်သော Evolution data serverကို အခြေခံ၍ GNOMEပြက္ခဒိန်ကိရိယာကို "
+"နောက်ဆုံးပေါ်GNOMEနည်းပညာများသုံးထားပြီး အကောင်းမွန်ဆုံးလုပ်ထုံးလုပ်နည်းများနှင့်အညီ ဆောက်လုပ်ထားသည်။ "
+"NextCloud, Google Calendar နှင့် CalDAV/WebDav ကဲ့သို့ အွန်လိုင်းပြက္ခဒိန်ဝန်ဆောင်မှုများမှ "
+"ပြက္ခဒိန်များတင်သွင်းနိုင်ခြင်းကြောင့် သင်၏ စက်အမျိုးအမျိုးတွင်ရှိ ပြက္ခဒိန်ကို တစ်ပြိုင်နက်ညှိနိုင်သည်။"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:33
+msgid "Week view"
+msgstr "အပါတ်စဉ်မြင်ကွင်း"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:37
+msgid "Month view"
+msgstr "လစဉ်မြင်ကွင်း"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:41
+msgid "Event editor"
+msgstr "အစီအစဉ်အယ်ဒီတာ"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:60
+#: src/gui/gcal-application.c:236
+msgid "The GNOME Project"
+msgstr "GNOME ပရောဂျက်"
+
+#: data/org.gnome.Calendar.desktop.in.in:4
+msgid "Access and manage your calendars"
+msgstr "သင့်ပြက္ခဒိန်များကို ဝင်ရောက် စီမံပါ"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.Calendar.desktop.in.in:13
+msgid "Calendar;Event;Reminder;"
+msgstr "ပြက္ခဒိန်;အစီအစဉ်;သတိပေးချက်;"
+
+#: data/org.gnome.calendar.gschema.xml.in:6
+msgid "Window maximized"
+msgstr "Window ချဲ့ထွင်ခြင်း"
+
+#: data/org.gnome.calendar.gschema.xml.in:7
+msgid "Window maximized state"
+msgstr "ပြကွက် အကျယ်ဆုံး အနေအထား"
+
+#: data/org.gnome.calendar.gschema.xml.in:11
+msgid "Window size"
+msgstr "ပြကွက် အရွယ်အစား"
+
+#: data/org.gnome.calendar.gschema.xml.in:12
+msgid "Window size (width and height)."
+msgstr "ပြကွက် အရွယ်အစား(အကျယ်နှင့်အမြင့်)."
+
+#: data/org.gnome.calendar.gschema.xml.in:16
+msgid "Type of the active view"
+msgstr "လက်ရှိမြင်ကွင်း အမျိုးအစား"
+
+#: data/org.gnome.calendar.gschema.xml.in:17
+msgid "Type of the active window view, default value is: monthly view"
+msgstr "လက်ရှိမြင်ကွင်း၏အမျိုးအစား, ပုံမှန်မှာ - လစဥ်ကြည့်ခြင်း"
+
+#: data/org.gnome.calendar.gschema.xml.in:21
+msgid "Weather Service Configuration"
+msgstr "မိုးလေဝသဖော်ပြသည့် အစီအစဥ်"
+
+#: data/org.gnome.calendar.gschema.xml.in:22
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr "မိုးလေဝသသီတင်းများအား ပြရန်, ဒေသများအား အလိုအလျောက်ရွေးထားပြီးဒေသအမည်တစ်ခု"
+
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "ရက်သတ္တပါတ်ဇယားကွက်ကို ချဲ့ပါ"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "ရက်သတ္တပါတ်ဇယားကွက်၏ လက်ရှိချဲ့ထားမှုအဆင့်"
+
+#. Translators: %1$s is the start date and %2$s is the end date.
+#. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
+#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:395
+#, c-format
+msgid "%1$s — %2$s"
+msgstr "%1$s — %2$s"
+
+#.
+#. * Translators: %1$s is the start date, %2$s is the start time,
+#. * %3$s is the end date, and %4$s is the end time.
+#.
+#: src/core/gcal-event.c:1910
+#, c-format
+msgid "%1$s %2$s — %3$s %4$s"
+msgstr "%1$s %2$s — %3$s %4$s"
+
+#. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
+#: src/core/gcal-event.c:1926 src/gui/gcal-quick-add-popover.c:471
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s, %2$s – %3$s"
+
+#: src/gui/calendar-management/calendar-row.ui:19
+msgid "Read-only Calendar"
+msgstr "ဖတ်၍သာရ ပြက္ခဒိန်"
+
+#: src/gui/calendar-management/calendar-row.ui:29
+msgid "Display Calendar"
+msgstr "ပြက္ခဒိန် ပြမည်"
+
+#: src/gui/calendar-management/calendar-row.ui:39
+msgid "Edit calendar"
+msgstr "ပြက္ခဒိန် တည်းဖြတ်မည်"
+
+#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
+msgid "Calendar Settings"
+msgstr "ပြက္ခဒိန်သတ်မှတ်ချက်များ"
+
+#: src/gui/calendar-management/gcal-calendars-page.c:344
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:141
+msgid "Calendars"
+msgstr "ပြက္ခဒိန်"
+
+#. Create the new toast
+#: src/gui/calendar-management/gcal-calendars-page.c:369
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "ပြက္ခဒိန် <b>%s</b>အား ဖယ်ရှားပြီး"
+
+#: src/gui/calendar-management/gcal-calendars-page.c:374
+#: src/gui/gcal-window.c:738
+msgid "_Undo"
+msgstr "_Uချေ"
+
+#: src/gui/calendar-management/gcal-calendars-page.ui:66
+msgid "_Add Calendar…"
+msgstr "ပြက္ခဒိန် _Aထည့်မည်…"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
+msgid "Account"
+msgstr "အကောင့်"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:30
+msgid "Open in Settings"
+msgstr "သတ်မှတ်ချက်များတွင် ဖွင့်ပါ"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
+#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/gcal-event-popover.ui:115
+#: src/gui/importer/gcal-import-file-row.c:151
+msgid "Location"
+msgstr "တည်နေရာ"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:24
+msgid "Calendar Name"
+msgstr "ပြက္ခဒိန်အမည်"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:32
+msgid "Color"
+msgstr "အရောင်"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+msgid "_Display Calendar"
+msgstr "_D ပြထားသော ပြက္ခဒိန်"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
+msgid "Default _Calendar"
+msgstr "မူလ _C ပြက္ခဒိန်"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
+msgid "Add new events to this calendar by default."
+msgstr "အစီအစဉ်အသစ်များကို မူရင်းအတိုင်း ဤပြက္ခဒိန်တွင် ထည့်ပါ။"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+msgid "_Remove Calendar"
+msgstr "_R ပြက္ခဒိန်ကို ဖယ်ရှားပါ"
+
+#: src/gui/calendar-management/gcal-file-chooser-button.c:51
+msgid "Select a file"
+msgstr "ဖိုင်တစ်ခု ရွေးပါ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:190
+#, c-format
+msgid "Add Calendar"
+msgid_plural "Add %1$u Calendars"
+msgstr[0] "ပြက္ခဒိန် %1$uခု ထည့်မည်"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:516
+msgid "New Calendar"
+msgstr "ပြက္ခဒိန်အသစ်"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Import a Calendar"
+msgstr "ပြက္ခဒိန်တစ်ခုထည့်သွင်းပါ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:77
+msgid ""
+"Alternatively, enter the web address of an online calendar you want to "
+"import, or open a supported calendar file."
+msgstr "သင်တင်လိုသည့်အွန်လိုင်းပြက္ခဒိန်၏ဝက်ဘ်လိပ်စာကိုထည့်ပါ၊ သို့မဟုတ် ပြက္ခဒိန်ဖိုင်တစ်ခုကို ဖွင့်ပါ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
+msgid "Open a File"
+msgstr "ဖိုင်ဖွင့်"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:108
+msgid "Calendar files"
+msgstr "ပြက္ခဒိန်ဖိုင်များ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:165
+msgid ""
+"If the calendar belongs to one of your online accounts, you can add it "
+"through the <a href=\"GOA\">online account settings</a>."
+msgstr ""
+"ပြက္ခဒိန်သည်သင်၏အွန်လိုင်းအကောင့်များထဲမှတစ်ခုဖြစ်ပါက <a href=\"GOA\"> အွန်လိုင်းအကောင့်ဆက်တင်များ </"
+"a> မှတဆင့်သင်ထည့်နိုင်သည်။"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:213
+msgid "Credentials"
+msgstr "အထောက်အထားများ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
+msgid "User"
+msgstr "သုံးစွဲသူ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
+msgid "Password"
+msgstr "စကားဝှက်"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1269
+msgid "_Cancel"
+msgstr "_ပယ်ဖျက်"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+msgid "_Connect"
+msgstr "_ချိတ်ဆက်"
+
+#: src/gui/event-editor/gcal-alarm-row.c:84
+#, c-format
+msgid "%1$u day, %2$u hour, and %3$u minute before"
+msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u နေ့၊ %2$u နာရီနှင့် %3$u မိနစ်မတိုင်မီ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:88
+#, c-format
+msgid "%1$u day, %2$u hours, and %3$u minute before"
+msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u နေ့၊ %2$u နာရီနှင့်%3$u မိနစ်မတိုင်မီ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:94
+#, c-format
+msgid "%1$u days, %2$u hour, and %3$u minute before"
+msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$uရက်၊ %2$u နာရီနှင့်%3$u မိနစ်မတိုင်မီ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:98
+#, c-format
+msgid "%1$u days, %2$u hours, and %3$u minute before"
+msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$uရက်၊ %2$u နာရီနှင့်%3$u မိနစ်မတိုင်မီ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:113
+#, c-format
+msgid "%1$u day and %2$u hour before"
+msgid_plural "%1$u day and %2$u hours before"
+msgstr[0] "%1$uနေ့နှင့် %2$u နာရီမတိုင်မီ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:117
+#, c-format
+msgid "%1$u days and %2$u hour before"
+msgid_plural "%1$u days and %2$u hours before"
+msgstr[0] "%1$u ရက်နှင့် %2$uနာရီအရင်က"
+
+#: src/gui/event-editor/gcal-alarm-row.c:133
+#, c-format
+msgid "%1$u day and %2$u minute before"
+msgid_plural "%1$u day and %2$u minutes before"
+msgstr[0] "%1$u ရက်နှင့် %2$u မိနစ်အရင်က"
+
+#: src/gui/event-editor/gcal-alarm-row.c:137
+#, c-format
+msgid "%1$u days and %2$u minute before"
+msgid_plural "%1$u days and %2$u minutes before"
+msgstr[0] "%1$u ရက်နှင့် %2$uမိနစ်အရင်က"
+
+#: src/gui/event-editor/gcal-alarm-row.c:147
+#, c-format
+msgid "%1$u day before"
+msgid_plural "%1$u days before"
+msgstr[0] "%1$u နေ့အရင်က"
+
+#: src/gui/event-editor/gcal-alarm-row.c:165
+#, c-format
+msgid "%1$u hour and %2$u minute before"
+msgid_plural "%1$u hour and %2$u minutes before"
+msgstr[0] "%1$u နာရီနှင့် %2$uမိနစ်အရင်က"
+
+#: src/gui/event-editor/gcal-alarm-row.c:169
+#, c-format
+msgid "%1$u hours and %2$u minute before"
+msgid_plural "%1$u hours and %2$u minutes before"
+msgstr[0] "%1$uနာရီနှင့် %2$u မိနစ်မတိုင်မီ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:179
+#, c-format
+msgid "%1$u hour before"
+msgid_plural "%1$u hours before"
+msgstr[0] "%1$u နာရီမတိုင်မီ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:191
+#, c-format
+msgid "%1$u minute before"
+msgid_plural "%1$u minutes before"
+msgstr[0] "%1$u မိနစ်မတိုင်မီ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:198
+msgid "Event start time"
+msgstr "အဖြစ်အပျက်စတင်ချိန်"
+
+#: src/gui/event-editor/gcal-alarm-row.ui:8
+msgid "Toggles the sound of the alarm"
+msgstr "သတိပေးသည့် အသံကို ပြောင်းရန်"
+
+#: src/gui/event-editor/gcal-alarm-row.ui:19
+msgid "Remove the alarm"
+msgstr "သတိပေးခြင်းကို ဖျယ်ရှားရန်"
+
+#. Translators: Calendar grid abbreviation for Sunday.
+#. *
+#. * NOTE: These grid abbreviations are always shown together
+#. * and in order, e.g. "S M T W T F S".
+#. *
+#. * Please make sure these abbreviations match GNOME Shell's
+#. * abbreviations for your language.
+#.
+#: src/gui/event-editor/gcal-date-chooser.c:272
+msgctxt "grid sunday"
+msgid "S"
+msgstr "တနင်္ဂနွေ"
+
+#. Translators: Calendar grid abbreviation for Monday
+#: src/gui/event-editor/gcal-date-chooser.c:277
+msgctxt "grid monday"
+msgid "M"
+msgstr "တနင်္လာ"
+
+#. Translators: Calendar grid abbreviation for Tuesday
+#: src/gui/event-editor/gcal-date-chooser.c:282
+msgctxt "grid tuesday"
+msgid "T"
+msgstr "အင်္ဂါ"
+
+#. Translators: Calendar grid abbreviation for Wednesday
+#: src/gui/event-editor/gcal-date-chooser.c:287
+msgctxt "grid wednesday"
+msgid "W"
+msgstr "ဗုဒ္ဓဟူး"
+
+#. Translators: Calendar grid abbreviation for Thursday
+#: src/gui/event-editor/gcal-date-chooser.c:292
+msgctxt "grid thursday"
+msgid "T"
+msgstr "ကြာသပတေး"
+
+#. Translators: Calendar grid abbreviation for Friday
+#: src/gui/event-editor/gcal-date-chooser.c:297
+msgctxt "grid friday"
+msgid "F"
+msgstr "သောကြာ"
+
+#. Translators: Calendar grid abbreviation for Saturday
+#: src/gui/event-editor/gcal-date-chooser.c:302
+msgctxt "grid saturday"
+msgid "S"
+msgstr "စနေ"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+msgid "Save"
+msgstr "သိမ်းမည်"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+msgid "Done"
+msgstr "လုပ်ပြီး"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
+msgid "Click to select the calendar"
+msgstr "ပြက္ခဒိန်ကို ရွေးရန် နှိပ်ပါ"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:87
+msgid "_Done"
+msgstr "_D ပြီးပြီ"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+msgid "Schedule"
+msgstr "အချိန်ဇယား"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:126
+msgid "Reminders"
+msgstr "သတိပေးခြင်းများ"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:138
+msgid "Notes"
+msgstr "မှတ်စုများ"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+msgid "Delete Event"
+msgstr "အစီအစဉ်ကို ဖျက်ရန်"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:26
+msgid "Add a Reminder…"
+msgstr "သတိပေးချက်တစ်ခုထည့်ပါ…"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:52
+msgid "5 minutes"
+msgstr "၅ မိနစ်"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:58
+msgid "10 minutes"
+msgstr "၁၀ မိနစ်"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:64
+msgid "15 minutes"
+msgstr "၁၅ မိနစ်"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:70
+msgid "30 minutes"
+msgstr "မိနစ်၃၀"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:76
+msgid "1 hour"
+msgstr "၁ နာရီ"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:82
+msgid "1 day"
+msgstr "၁ ရက်"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:88
+msgid "2 days"
+msgstr "၂ ရက်"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:94
+msgid "3 days"
+msgstr "၃ ရက်"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:100
+msgid "1 week"
+msgstr "၁ ပါတ်"
+
+#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
+#: src/gui/event-editor/gcal-schedule-section.c:238
+#, c-format
+msgid "Last %A"
+msgstr "နောက်ဆုံး%A"
+
+#: src/gui/event-editor/gcal-schedule-section.c:242
+#: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/views/gcal-agenda-view.c:186
+msgid "Yesterday"
+msgstr "မနေ့က"
+
+#: src/gui/event-editor/gcal-schedule-section.c:246
+#: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
+#: src/gui/views/gcal-agenda-view.c:182
+msgid "Today"
+msgstr "ယနေ့"
+
+#: src/gui/event-editor/gcal-schedule-section.c:250
+#: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:184
+msgid "Tomorrow"
+msgstr "မနက်ဖြန်"
+
+#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
+#: src/gui/event-editor/gcal-schedule-section.c:255
+#, c-format
+msgid "This %A"
+msgstr "ဤ %A"
+
+#.
+#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
+#. * formatted time (e.g. 03:14 PM, or 21:29)
+#.
+#: src/gui/event-editor/gcal-schedule-section.c:285
+#, c-format
+msgid "%1$s, %2$s"
+msgstr "%1$s, %2$s"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:17
+msgid "All Day"
+msgstr "တစ်နေ့လုံး"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:34
+#: src/gui/importer/gcal-import-file-row.c:152
+msgid "Starts"
+msgstr "စချိန်"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:77
+#: src/gui/importer/gcal-import-file-row.c:153
+msgid "Ends"
+msgstr "ပြီးဆုံးချိန်"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:120
+msgid "Repeat"
+msgstr "ထပ်လုပ်ရန်"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:125
+msgid "No Repeat"
+msgstr "ထပ်မလုပ်ရန်"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:126
+msgid "Daily"
+msgstr "နေ့စဥ်"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:127
+msgid "Monday – Friday"
+msgstr "တနင်္လာ - သောကြာ"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:128
+msgid "Weekly"
+msgstr "အပါတ်စဥ်"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:129
+msgid "Monthly"
+msgstr "လစဥ်"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:130
+msgid "Yearly"
+msgstr "နှစ်စဥ်"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:141
+msgid "End Repeat"
+msgstr "Repeat အဆုံးသတ်ပါ"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:146
+msgid "Forever"
+msgstr "အမြဲတမ်း"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:147
+msgid "No. of occurrences"
+msgstr "အစီအစဉ် အရေအတွက်"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:148
+msgid "Until Date"
+msgstr "နေ့ထိ"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:160
+msgid "Number of Occurrences"
+msgstr "ဖြစ်ပျက်မှုအရေအတွက်"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:179
+msgid "End Repeat Date"
+msgstr "ဖြစ်ပျက်မှုအရေအတွက်အဆုံးသတ်ပါ"
+
+#: src/gui/event-editor/gcal-summary-section.c:78
+#: src/gui/gcal-quick-add-popover.c:693
+msgid "Unnamed event"
+msgstr "အမည်မပေးထားသော အစီအစဉ်"
+
+#: src/gui/event-editor/gcal-summary-section.ui:16
+#: src/gui/importer/gcal-import-file-row.c:150
+msgid "Title"
+msgstr "ခေါင်းစဉ်"
+
+#: src/gui/event-editor/gcal-time-selector.ui:22
+msgid ":"
+msgstr "-"
+
+#: src/gui/event-editor/gcal-time-selector.ui:47
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "AM"
+msgstr "နံနက်"
+
+#: src/gui/event-editor/gcal-time-selector.ui:48
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "PM"
+msgstr "ညနေ"
+
+#: src/gui/gcal-application.c:58
+msgid "Quit GNOME Calendar"
+msgstr "GNOME ပြက္ခဒိန်မှ ထွက်ရန်"
+
+#: src/gui/gcal-application.c:63
+msgid "Display version number"
+msgstr "ဗားရှင်းနံပါတ် ပြ"
+
+#: src/gui/gcal-application.c:68
+msgid "Enable debug messages"
+msgstr "ပြစ်ချက်ရှိ မှတ်တမ်းများ သိမ်းရန်"
+
+#: src/gui/gcal-application.c:73
+msgid "Open calendar on the passed date"
+msgstr "ကျော်လွန်ပြီးရက်၌ ပြက္ခဒိန်ကို ဖွင့်ပါ"
+
+#: src/gui/gcal-application.c:78
+msgid "Open calendar showing the passed event"
+msgstr "ကျော်လွန်ပြီးအစီအစဉ်ကို ပြ၍ ပြက္ခဒိန်ကို ဖွင့်ပါ"
+
+#: src/gui/gcal-application.c:144
+#, c-format
+msgid "Copyright © 2012–%d The Calendar authors"
+msgstr "မူပိုင်ခွင့် ၂၀၁၂-%d ပြက္ခဒိန်ရေးသူများ"
+
+#: src/gui/gcal-application.c:245
+msgid "translator-credits"
+msgstr "ဘာသာပြန်ဆိုသူများ"
+
+#: src/gui/gcal-application.c:252 src/gui/gcal-window.ui:329
+msgid "Weather"
+msgstr "ရာသီဥတု"
+
+#: src/gui/gcal-calendar-button.ui:6
+msgid "Manage Calendars"
+msgstr "ပြက္ခဒိန်များကိုစီမံပါ"
+
+#: src/gui/gcal-calendar-button.ui:8
+msgid "_Calendars"
+msgstr "ပြက္ခဒိန်"
+
+#: src/gui/gcal-calendar-button.ui:37
+msgid "_Synchronize Calendars"
+msgstr "_Sပြက္ခဒိန်များကိုစည်းညှိပါ"
+
+#: src/gui/gcal-calendar-button.ui:41
+msgid "_Manage Calendars…"
+msgstr "ပြက္ခဒိန်များ _Mစီမံမည်…"
+
+#: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:253
+msgid "January"
+msgstr "ဇန်နဝါရီ"
+
+#: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:254
+msgid "February"
+msgstr "ဖေဖော်ဝါရီ"
+
+#: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:255
+msgid "March"
+msgstr "မတ်"
+
+#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:256
+msgid "April"
+msgstr "ဧပြီ"
+
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:257
+msgid "May"
+msgstr "မေ"
+
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:258
+msgid "June"
+msgstr "ဇွန်"
+
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:259
+msgid "July"
+msgstr "ဇူလိုင်"
+
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:260
+msgid "August"
+msgstr "ဩဂုတ်"
+
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:261
+msgid "September"
+msgstr "စက်တင်ဘာ"
+
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:262
+msgid "October"
+msgstr "အောက်တိုဘာ"
+
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:263
+msgid "November"
+msgstr "နိုဝင်ဘာ"
+
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:264
+msgid "December"
+msgstr "ဒီဇင်ဘာ"
+
+#: src/gui/gcal-event-popover.c:158
+#, c-format
+msgid "Today %s"
+msgstr "ယနေ့ %s"
+
+#: src/gui/gcal-event-popover.c:162
+#, c-format
+msgid "Tomorrow %s"
+msgstr "နံဖြန် %s"
+
+#: src/gui/gcal-event-popover.c:166
+#, c-format
+msgid "Yesterday %s"
+msgstr "မနေ့ %s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, and %3$ is the hour. This format string results in dates
+#. * like "November 21, 22:00".
+#.
+#: src/gui/gcal-event-popover.c:175
+#, c-format
+msgid "%1$s %2$d, %3$s"
+msgstr "%1$s %2$d၊ %3$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$d is the year, and %4$s is the hour. This format string
+#. * results in dates like "November 21, 2020, 22:00".
+#.
+#: src/gui/gcal-event-popover.c:187
+#, c-format
+msgid "%1$s %2$d, %3$d, %4$s"
+msgstr "%1$s %2$d၊ %3$d၊ %4$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), and %2$d is
+#. * the day of month. This format string results in dates like
+#. * "November 21".
+#.
+#: src/gui/gcal-event-popover.c:216 src/gui/gcal-event-popover.c:330
+#, c-format
+msgid "%1$s %2$d"
+msgstr "%1$s %2$d"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, and %3$d is the year. This format string results in dates
+#. * like "November 21, 2020".
+#.
+#: src/gui/gcal-event-popover.c:227 src/gui/gcal-event-popover.c:341
+#, c-format
+msgid "%1$s %2$d, %3$d"
+msgstr "%1$s %2$d၊ %3$d"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Today, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:261
+#, c-format
+msgid "Today, %1$s — %2$s"
+msgstr "ယနေ့၊ %1$s — %2$s"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Tomorrow, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:269
+#, c-format
+msgid "Tomorrow, %1$s – %2$s"
+msgstr "နံဖြန်၊ %1$s – %2$s"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Tomorrow, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:277
+#, c-format
+msgid "Yesterday, %1$s – %2$s"
+msgstr "မနေ့၊ %1$s – %2$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$s is the start hour, and %4$s is the end hour. This
+#. * format string results in dates like "November 21, 19:00 — 22:00".
+#.
+#: src/gui/gcal-event-popover.c:286
+#, c-format
+msgid "%1$s %2$d, %3$s – %4$s"
+msgstr "%1$s %2$d၊ %3$s – %4$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$d is the year, %4$s is the start hour, and %5$s is the
+#. * end hour. This format string results in dates like:
+#. *
+#. * "November 21, 2021, 19:00 — 22:00".
+#.
+#: src/gui/gcal-event-popover.c:301
+#, c-format
+msgid "%1$s %2$d, %3$d, %4$s – %5$s"
+msgstr "%1$s %2$d၊ %3$d၊ %4$s – %5$s"
+
+#: src/gui/gcal-event-popover.ui:75
+msgid "No event information"
+msgstr "ဖြစ်စဉ်အချက်အလက်မရှိပါ"
+
+#: src/gui/gcal-event-popover.ui:175
+msgid "Edit…"
+msgstr "တည်းဖြတ်..."
+
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:355
+#, c-format
+msgid "At %s"
+msgstr "%s ၌"
+
+#: src/gui/gcal-meeting-row.c:67
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#: src/gui/gcal-meeting-row.c:68
+msgid "Jitsi"
+msgstr "Jitsi"
+
+#: src/gui/gcal-meeting-row.c:69
+msgid "Whereby"
+msgstr "ယင်းမှာ"
+
+#: src/gui/gcal-meeting-row.c:70
+msgid "Zoom"
+msgstr "ချုံ့/ချဲ့"
+
+#: src/gui/gcal-meeting-row.c:71
+msgid "Microsoft Teams"
+msgstr "မိုက်ခရိုဆော့ဖ်အဖွဲ့များ"
+
+#: src/gui/gcal-meeting-row.c:81
+msgid "Unknown Service"
+msgstr "မသိသောဝန်ဆောင်မှု"
+
+#. Translators: "Join" as in "Join meeting"
+#: src/gui/gcal-meeting-row.ui:13
+msgid "Join"
+msgstr "ပေါင်းစပ်"
+
+#: src/gui/gcal-quick-add-popover.c:116
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (ဤပြက္ခဒိန်သည် ကြည့်ရန် အတွက်သာ)"
+
+#: src/gui/gcal-quick-add-popover.c:231
+msgid "from next Monday"
+msgstr "နောက် တနင်္လာမှ"
+
+#: src/gui/gcal-quick-add-popover.c:232
+msgid "from next Tuesday"
+msgstr "နောက် အင်္ဂါမှ"
+
+#: src/gui/gcal-quick-add-popover.c:233
+msgid "from next Wednesday"
+msgstr "နောက် ဗုဒ္ဓဟူးမှ"
+
+#: src/gui/gcal-quick-add-popover.c:234
+msgid "from next Thursday"
+msgstr "နောက် ကြာသပတေးမှ"
+
+#: src/gui/gcal-quick-add-popover.c:235
+msgid "from next Friday"
+msgstr "နောက် သောကြာမှ"
+
+#: src/gui/gcal-quick-add-popover.c:236
+msgid "from next Saturday"
+msgstr "နောက် စနေမှ"
+
+#: src/gui/gcal-quick-add-popover.c:237
+msgid "from next Sunday"
+msgstr "နောက် တနင်္ဂနွေမှ"
+
+#: src/gui/gcal-quick-add-popover.c:242
+msgid "to next Monday"
+msgstr "နောက် တနင်္လာသို့"
+
+#: src/gui/gcal-quick-add-popover.c:243
+msgid "to next Tuesday"
+msgstr "နောက် အင်္ဂါသို့"
+
+#: src/gui/gcal-quick-add-popover.c:244
+msgid "to next Wednesday"
+msgstr "နောက် ဗုဒ္ဓဟူးသို့"
+
+#: src/gui/gcal-quick-add-popover.c:245
+msgid "to next Thursday"
+msgstr "နောက် ကြာသပတေးသို့"
+
+#: src/gui/gcal-quick-add-popover.c:246
+msgid "to next Friday"
+msgstr "နောက် သောကြာသို့"
+
+#: src/gui/gcal-quick-add-popover.c:247
+msgid "to next Saturday"
+msgstr "နောက် စနေသို့"
+
+#: src/gui/gcal-quick-add-popover.c:248
+msgid "to next Sunday"
+msgstr "နောက် တနင်္ဂနွေသို့"
+
+#: src/gui/gcal-quick-add-popover.c:273
+#, c-format
+msgid "from Today"
+msgstr "ယနေ့မှ"
+
+#: src/gui/gcal-quick-add-popover.c:277
+#, c-format
+msgid "from Tomorrow"
+msgstr "မနက်ဖြန်မှ"
+
+#: src/gui/gcal-quick-add-popover.c:281
+#, c-format
+msgid "from Yesterday"
+msgstr "မနေ့က"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gui/gcal-quick-add-popover.c:299
+#, c-format
+msgid "from %1$s %2$s"
+msgstr "%1$s %2$sမှ"
+
+#: src/gui/gcal-quick-add-popover.c:310
+#, c-format
+msgid "to Today"
+msgstr "ယနေ့သို့"
+
+#: src/gui/gcal-quick-add-popover.c:314
+#, c-format
+msgid "to Tomorrow"
+msgstr "မနက်ဖြန်သို့"
+
+#: src/gui/gcal-quick-add-popover.c:318
+#, c-format
+msgid "to Yesterday"
+msgstr "မနေ့က"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gui/gcal-quick-add-popover.c:336
+#, c-format
+msgid "to %1$s %2$s"
+msgstr "%1$s %2$s သို့"
+
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
+#: src/gui/gcal-quick-add-popover.c:343
+#, c-format
+msgid "New Event %1$s %2$s"
+msgstr "%1$s %2$s အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:360
+#, c-format
+msgid "New Event Today"
+msgstr "ယနေ့ အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:364
+#, c-format
+msgid "New Event Tomorrow"
+msgstr "မနက်ဖြန်၏ အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:368
+#, c-format
+msgid "New Event Yesterday"
+msgstr "မနေ့က အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:374
+msgid "New Event next Monday"
+msgstr "နောက်အပါတ် တနင်္လာရှိ အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:375
+msgid "New Event next Tuesday"
+msgstr "နောက်အပါတ် အင်္ဂါရှိ အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:376
+msgid "New Event next Wednesday"
+msgstr "နောက်အပါတ် ဗုဒ္ဓဟူးရှိ အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:377
+msgid "New Event next Thursday"
+msgstr "နောက်အပါတ် ကြာသပတေးရှိ အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:378
+msgid "New Event next Friday"
+msgstr "နောက်အပါတ် သောကြာရှိ အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:379
+msgid "New Event next Saturday"
+msgstr "နောက်အပါတ် စနေရှိ အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:380
+msgid "New Event next Sunday"
+msgstr "နောက်အပါတ် တနင်္ဂနွေရှိ အစီအစဉ်အသစ်"
+
+#. Translators: %d is the numeric day of month
+#: src/gui/gcal-quick-add-popover.c:392
+#, c-format
+msgid "New Event on January %d"
+msgstr "ဇန်နဝါရီလ %dရက်တွင် အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:393
+#, c-format
+msgid "New Event on February %d"
+msgstr "ဖေဖဝါရီလ %dရက်တွင် အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:394
+#, c-format
+msgid "New Event on March %d"
+msgstr "မတ်လ %dရက်တွင် အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:395
+#, c-format
+msgid "New Event on April %d"
+msgstr "ဧပြီလ %dရက်တွင် အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:396
+#, c-format
+msgid "New Event on May %d"
+msgstr "မေလ %dရက်တွင် အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:397
+#, c-format
+msgid "New Event on June %d"
+msgstr "ဇွန်လ %dရက်တွင် အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:398
+#, c-format
+msgid "New Event on July %d"
+msgstr "ဇူလိုင်လ %dရက်တွင် အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:399
+#, c-format
+msgid "New Event on August %d"
+msgstr "သြဂုတ်လ %dရက်တွင် အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:400
+#, c-format
+msgid "New Event on September %d"
+msgstr "စက်တင်ဘာလလ %dရက်တွင် အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:401
+#, c-format
+msgid "New Event on October %d"
+msgstr "အောက်တိုဘာလ %dရက်တွင် အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:402
+#, c-format
+msgid "New Event on November %d"
+msgstr "နိုဝင်ဘာလ %dရက်တွင် အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.c:403
+#, c-format
+msgid "New Event on December %d"
+msgstr "ဒီဇင်ဘာလ %dရက်တွင် အစီအစဉ်အသစ်"
+
+#: src/gui/gcal-quick-add-popover.ui:87
+msgid "Edit Details…"
+msgstr "အသေးစိတ် ပြင်ရန်..."
+
+#: src/gui/gcal-quick-add-popover.ui:98
+msgid "Add"
+msgstr "ထည့်မည်"
+
+#: src/gui/gcal-search-button.ui:29
+msgid "Search Events"
+msgstr "အစီအစဉ်များကို ရှာဖွေရန်"
+
+#: src/gui/gcal-search-button.ui:54
+msgid "Search events"
+msgstr "အစီအစဉ်များကို ရှာဖွေပါ"
+
+#: src/gui/gcal-sync-indicator.ui:21
+msgctxt "tooltip"
+msgid "Synchronizing Remote Calendars…"
+msgstr "အင်တာနက်တွင်ရှိပြက္ခဒိန်များနှင့် တစ်ပြိုင်နက်ညှိနေသည်…"
+
+#: src/gui/gcal-toolbar-end.ui:9
+msgctxt "tooltip"
+msgid "Search"
+msgstr "ရှာရန်"
+
+#: src/gui/gcal-toolbar-end.ui:16
+msgctxt "tooltip"
+msgid "Add Event"
+msgstr "အစီအစဉ်လုပ်ရန်"
+
+#: src/gui/gcal-weather-settings.ui:17
+msgid "Show Weather"
+msgstr "မိုးလေဝသ ဖော်ပြပါ"
+
+#: src/gui/gcal-weather-settings.ui:34
+msgid "Automatic Location"
+msgstr "အလိုအလျောက် နေရာဒေသ"
+
+#: src/gui/gcal-weather-settings.ui:46
+msgid "Search locations"
+msgstr "တည်နေရာများကို ရှာဖွေပါ"
+
+#: src/gui/gcal-window.c:332
+msgid "Week"
+msgstr "ပါတ်"
+
+#: src/gui/gcal-window.c:334
+msgid "Month"
+msgstr "လ"
+
+#: src/gui/gcal-window.c:736
+msgid "Another event deleted"
+msgstr "နောက်ထပ်အစီအစဉ်တစ်ခု ဖျက်ပြီးပြီ"
+
+#: src/gui/gcal-window.c:736
+msgid "Event deleted"
+msgstr "အစီအစဉ်ကို ဖျက်ပြီးပါပြီ"
+
+#: src/gui/gcal-window.ui:143
+msgid "Main Menu"
+msgstr "ပင်မမီနူး"
+
+#: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
+msgid "_Today"
+msgstr "_T ယနေ့"
+
+#: src/gui/gcal-window.ui:255
+msgid "_Week"
+msgstr "_W အပါတ်"
+
+#: src/gui/gcal-window.ui:270
+msgid "_Month"
+msgstr "_M လ"
+
+#: src/gui/gcal-window.ui:321
+msgid "_Date & Time Settings…"
+msgstr "_D ရက်စွဲနှင့် အချိန် သတ်မှတ်ချက်များ…"
+
+#: src/gui/gcal-window.ui:325
+msgid "_Online Accounts…"
+msgstr "_Oအွန်လိုင်းအကောင့်များ"
+
+#: src/gui/gcal-window.ui:337
+msgid "_Keyboard Shortcuts"
+msgstr "_Kကီးဘုတ်ဖြတ်လမ်းခလုတ်များ"
+
+#: src/gui/gcal-window.ui:341
+msgid "_About Calendar"
+msgstr "_Aပြက္ခဒိန်အကြောင်း"
+
+#: src/gui/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "အထွေအထွေဆိုင်ရာ"
+
+#: src/gui/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Open main menu"
+msgstr "ပင်မမီနူးဖွင့်ရန်"
+
+#: src/gui/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Open Calendars menu"
+msgstr "ပြက္ခဒိန်မီနူးဖွင့်ရန်"
+
+#: src/gui/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "အစီအစဉ်အသစ်"
+
+#: src/gui/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Manage calendars"
+msgstr "ပြက္ခဒိန်များကို စီမံရန်"
+
+#: src/gui/gtk/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Synchronize calendars"
+msgstr "ပြက္ခဒိန်များကို တစ်ပြိုင်နက်ညှိရန်"
+
+#: src/gui/gtk/help-overlay.ui:44
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "ဝင်းဒိုးပိတ်ရန်"
+
+#: src/gui/gtk/help-overlay.ui:50
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "ရှာရန်"
+
+#: src/gui/gtk/help-overlay.ui:56
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "အကူအညီပြရန်​"
+
+#: src/gui/gtk/help-overlay.ui:62
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "ဖြတ်လမ်းများ"
+
+#: src/gui/gtk/help-overlay.ui:70
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "သွားလားမှုဆိုင်ရာ"
+
+#: src/gui/gtk/help-overlay.ui:73
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "ပြန်လှည့်ရန်"
+
+#: src/gui/gtk/help-overlay.ui:79
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "ရှေ့သွားရန်"
+
+#: src/gui/gtk/help-overlay.ui:85
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "ယ​နေ့​ နေ့စွဲကိုပြရန်​"
+
+#: src/gui/gtk/help-overlay.ui:91
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "နောက်မြင်ကွင်း"
+
+#: src/gui/gtk/help-overlay.ui:97
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "ယခင်မြင်ကွင်း"
+
+#: src/gui/gtk/help-overlay.ui:105
+msgctxt "shortcut window"
+msgid "View"
+msgstr "မြင်ကွင်းဆိုင်ရာ"
+
+#: src/gui/gtk/help-overlay.ui:108
+msgctxt "shortcut window"
+msgid "Week view"
+msgstr "အပါတ်စဉ်မြင်ကွင်း"
+
+#: src/gui/gtk/help-overlay.ui:114
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "လစဉ်မြင်ကွင်း"
+
+#: src/gui/importer/gcal-import-dialog.c:396
+#, c-format
+msgid "Import %d event"
+msgid_plural "Import %d events"
+msgstr[0] "အစီအစဉ် %dခု တင်သွင်းမည်"
+
+#: src/gui/importer/gcal-import-dialog.ui:4
+msgid "Import Files…"
+msgstr "ဖိုင်များတင်သွင်းမည်…"
+
+#: src/gui/importer/gcal-import-dialog.ui:29
+msgid "_Import"
+msgstr "_Iတင်သွင်းမည်"
+
+#: src/gui/importer/gcal-import-dialog.ui:49
+msgid "C_alendar"
+msgstr "_aပြက္ခဒိန်"
+
+#: src/gui/importer/gcal-importer.c:33
+msgid "No error"
+msgstr "အမှားအယွင်းမရှိပါ"
+
+#: src/gui/importer/gcal-importer.c:36
+msgid "Bad argument to function"
+msgstr "မကောင်းသောပေးချက်ကို functionသို့ပေးခဲ့သည်"
+
+#: src/gui/importer/gcal-importer.c:40
+msgid "Failed to allocate a new object in memory"
+msgstr "မှတ်ဉာဏ်တွင် objectအသစ် နေရာချထားမှုမအောင်မြင်ခဲ့ပါ"
+
+#: src/gui/importer/gcal-importer.c:43
+msgid "File is malformed, invalid, or corrupted"
+msgstr "ဖိုင်သည် ပုံစံပျက်နေသည်၊ မှားယွင်းနေသည် သို့မဟုတ် ခြစားနေသည်"
+
+#: src/gui/importer/gcal-importer.c:46
+msgid "Failed to parse the calendar contents"
+msgstr "ပြက္ခဒိန်အကြောင်းအရာများ ရယူမှု မအောင်မြင်ခဲ့ပါ"
+
+#: src/gui/importer/gcal-importer.c:49
+msgid "Failed to read file"
+msgstr "ဖိုင်ဖတ်ခြင်း ရှုံးနိမ့်ခဲ့သည်"
+
+#: src/gui/importer/gcal-importer.c:56
+msgid "Internal error"
+msgstr "စနစ်အတွင်းရေးရာအမှား"
+
+#: src/gui/importer/gcal-importer.c:94
+msgid "File is not an iCalendar (.ics) file"
+msgstr "ဖိုင်သည် iCalendar (.ics) ဖိုင်အမျိုးအစားမဟုတ်ပါ"
+
+#: src/gui/importer/gcal-import-file-row.c:154
+msgid "Description"
+msgstr "ဖော်ပြချက်"
+
+#: src/gui/views/gcal-agenda-view.c:366
+msgid "On-going"
+msgstr "ဆက်လုပ်နေသည်"
+
+#: src/gui/views/gcal-agenda-view.ui:22
+msgid "No events"
+msgstr "အစီအစဉ်များ မရှိပါ"
+
+#: src/gui/views/gcal-month-popover.ui:59
+msgid "New Event…"
+msgstr "အစီအစဉ် အသစ်..."
+
+#: src/gui/views/gcal-week-grid.c:569
+msgid "00 AM"
+msgstr "၀၀ မနက်"
+
+#: src/gui/views/gcal-week-grid.c:572
+msgid "00:00"
+msgstr "၀၀:၀၀"
+
+#: src/gui/views/gcal-week-header.c:474
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "အခြားအစီအစဉ် %dခု"
+
+#: src/gui/views/gcal-week-header.c:1006
+#, c-format
+msgid "week %d"
+msgstr "အပါတ် %d"
+
+#: src/utils/gcal-utils.c:1265
+msgid "Modify Multiple Events?"
+msgstr "အစီအစဉ်များအား ပြင်ဆင်မလား။"
+
+#: src/utils/gcal-utils.c:1266
+msgid ""
+"The event you are trying to modify is recurring. The changes you have "
+"selected should be applied to:"
+msgstr ""
+"သင် ပြင်ရန် ကြိုးစားနေသည့် အစီအစဉ်သည် တစ်ကြိမ်ထက်ပိုဖြစ်နေသည်။သင် ရွေးချယ်ထားသည့် အပြောင်းအလဲများက "
+"သက်ရောက်နေသည်မှာ:"
+
+#: src/utils/gcal-utils.c:1270
+msgid "_Only This Event"
+msgstr "ဤအစီအစဉ်ကိုသာ"
+
+#: src/utils/gcal-utils.c:1276
+msgid "_Subsequent Events"
+msgstr "_S _ နောက်ဆက်တွဲ အစီအစဉ်များ"
+
+#: src/utils/gcal-utils.c:1279
+msgid "_All Events"
+msgstr "_A အစီအစဉ်များအားလုံး"
