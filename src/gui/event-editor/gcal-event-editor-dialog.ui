@@ -26,7 +26,7 @@
               <object class="GtkMenuButton" id="sources_button">
                 <property name="popover">sources_popover</property>
                 <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
-                <property name="tooltip-text" translatable="yes">Click to select the calendar</property>
+                <property name="tooltip-text" translatable="yes">Select Calendar</property>
                 <style>
                   <class name="flat"/>
                   <class name="sources-button"/>

@@ -5,7 +5,7 @@
       <object class="GtkToggleButton" id="volume_button">
         <property name="valign">center</property>
         <property name="icon-name">audio-volume-high-symbolic</property>
-        <property name="tooltip-text" translatable="yes">Toggles the sound of the alarm</property>
+        <property name="tooltip-text" translatable="yes">Toggle Alarm Sound</property>
         <signal name="notify::active" handler="on_sound_toggle_changed_cb" object="GcalAlarmRow" swapped="no" />
         <style>
           <class name="flat" />
@@ -16,7 +16,7 @@
       <object class="GtkButton" id="remove_button">
         <property name="valign">center</property>
         <property name="icon-name">edit-delete-symbolic</property>
-        <property name="tooltip-text" translatable="yes">Remove the alarm</property>
+        <property name="tooltip-text" translatable="yes">Remove Alarm</property>
         <signal name="clicked" handler="on_remove_button_clicked_cb" object="GcalAlarmRow" swapped="no" />
         <style>
           <class name="flat" />

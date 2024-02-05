@@ -11,37 +11,37 @@
             <property name="title" translatable="yes" context="shortcut window">General</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Open main menu</property>
+                <property name="title" translatable="yes" context="shortcut window">Open Main Menu</property>
                 <property name="accelerator">F10</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Open Calendars menu</property>
+                <property name="title" translatable="yes" context="shortcut window">Open Calendars Menu</property>
                 <property name="accelerator">F8</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">New event</property>
+                <property name="title" translatable="yes" context="shortcut window">New Event</property>
                 <property name="accelerator">&lt;Primary&gt;N</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Manage calendars</property>
+                <property name="title" translatable="yes" context="shortcut window">Manage Calendars</property>
                 <property name="accelerator">&lt;Ctrl&gt;&lt;Alt&gt;m</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Synchronize calendars</property>
+                <property name="title" translatable="yes" context="shortcut window">Synchronize Calendars</property>
                 <property name="accelerator">F5 &lt;Ctrl&gt;r</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Close window</property>
+                <property name="title" translatable="yes" context="shortcut window">Close Window</property>
                 <property name="accelerator">&lt;Primary&gt;Q</property>
               </object>
             </child>
@@ -53,7 +53,7 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Show help</property>
+                <property name="title" translatable="yes" context="shortcut window">Show Help</property>
                 <property name="accelerator">F1</property>
               </object>
             </child>
@@ -70,31 +70,31 @@
             <property name="title" translatable="yes" context="shortcut window">Navigation</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Go back</property>
+                <property name="title" translatable="yes" context="shortcut window">Go Back</property>
                 <property name="accelerator">&lt;Alt&gt;Left Page_Up</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Go forward</property>
+                <property name="title" translatable="yes" context="shortcut window">Go Forward</property>
                 <property name="accelerator">&lt;Alt&gt;Right Page_Down</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Show today</property>
+                <property name="title" translatable="yes" context="shortcut window">Show Today</property>
                 <property name="accelerator">&lt;Alt&gt;Down &lt;Primary&gt;T Home</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Next view</property>
+                <property name="title" translatable="yes" context="shortcut window">Next View</property>
                 <property name="accelerator">&lt;Primary&gt;Page_Down</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Previous view</property>
+                <property name="title" translatable="yes" context="shortcut window">Previous View</property>
                 <property name="accelerator">&lt;Primary&gt;Page_Up</property>
               </object>
             </child>
@@ -105,13 +105,13 @@
             <property name="title" translatable="yes" context="shortcut window">View</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Week view</property>
+                <property name="title" translatable="yes" context="shortcut window">Week View</property>
                 <property name="accelerator">&lt;Alt&gt;1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Month view</property>
+                <property name="title" translatable="yes" context="shortcut window">Month View</property>
                 <property name="accelerator">&lt;Alt&gt;2</property>
               </object>
             </child>

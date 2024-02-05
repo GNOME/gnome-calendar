@@ -144,7 +144,7 @@
               <object class="GtkStringList">
                 <items>
                   <item translatable="yes">Forever</item>
-                  <item translatable="yes">No. of occurrences</item>
+                  <item translatable="yes">Number of Occurrences</item>
                   <item translatable="yes">Until Date</item>
                 </items>
               </object>
