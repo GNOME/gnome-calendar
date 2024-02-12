@@ -27,14 +27,16 @@
 
 struct _GcalMeetingRow
 {
-  AdwActionRow        parent_instance;
+  GtkListBoxRow       parent_instance;
 
   GtkWidget          *join_button;
+  GtkLabel           *title;
+  GtkLabel           *subtitle;
 
   gchar              *url;
 };
 
-G_DEFINE_TYPE (GcalMeetingRow, gcal_meeting_row, ADW_TYPE_ACTION_ROW)
+G_DEFINE_TYPE (GcalMeetingRow, gcal_meeting_row, GTK_TYPE_LIST_BOX_ROW)
 
 enum
 {
@@ -65,12 +67,12 @@ setup_meeting (GcalMeetingRow *self)
   const gchar *service_name = gcal_get_service_name_from_url (self->url);
 
   if (service_name)
-    adw_preferences_row_set_title (ADW_PREFERENCES_ROW (self), service_name);
+    gtk_label_set_label (self->title, service_name);
   else
-    adw_preferences_row_set_title (ADW_PREFERENCES_ROW (self), _("Unknown Service"));
+    gtk_label_set_label (self->title, _("Unknown Service"));
 
-  markup_url = g_strdup_printf ("<a href=\"%s\">%s</a>", self->url, self->url);
-  adw_action_row_set_subtitle (ADW_ACTION_ROW (self), markup_url);
+  markup_url = g_strdup_printf ("<a title=\"%1$s\" href=\"%1$s\">%1$s</a>", self->url);
+  gtk_label_set_markup (self->subtitle, markup_url);
 }
 
 /*
@@ -181,6 +183,8 @@ gcal_meeting_row_class_init (GcalMeetingRowClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-meeting-row.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalMeetingRow, join_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalMeetingRow, title);
+  gtk_widget_class_bind_template_child (widget_class, GcalMeetingRow, subtitle);
 
   gtk_widget_class_bind_template_callback (widget_class, on_join_button_clicked_cb);
 

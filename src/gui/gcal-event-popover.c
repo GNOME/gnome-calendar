@@ -31,14 +31,17 @@ struct _GcalEventPopover
 {
   GtkPopover          parent;
 
+  GtkWidget          *action_button;
   GtkLabel           *date_time_label;
   GtkLabel           *description_label;
-  GtkWidget          *edit_button;
+  GtkScrolledWindow  *description_scrolled_window;
   GtkWidget          *location_box;
   GtkLabel           *location_label;
   GtkListBox         *meetings_listbox;
+  GtkBox             *meetings_box;
   GtkLabel           *placeholder_label;
   GtkLabel           *summary_label;
+  GtkImage           *read_only_icon;
 
   GcalContext        *context;
   GcalEvent          *event;
@@ -349,6 +352,30 @@ format_single_day (GcalEventPopover *self,
 }
 
 static void
+update_decorations (GcalEventPopover *self,
+                    GcalEvent        *event)
+{
+  GcalCalendar *calendar;
+  gboolean calendar_is_read_only;
+
+  calendar = gcal_event_get_calendar (event);
+  calendar_is_read_only = gcal_calendar_is_read_only (calendar);
+
+  gtk_widget_set_visible (GTK_WIDGET (self->read_only_icon), calendar_is_read_only);
+
+  if (calendar_is_read_only)
+    {
+      gtk_button_set_icon_name (GTK_BUTTON (self->action_button), "info-outline-symbolic");
+      gtk_widget_set_tooltip_text (self->action_button, _("View Additional Details"));
+    }
+  else
+    {
+      gtk_button_set_icon_name (GTK_BUTTON (self->action_button), "edit-symbolic");
+      gtk_widget_set_tooltip_text (self->action_button, _("Edit Additional Details"));
+    }
+}
+
+static void
 update_date_time_label (GcalEventPopover *self)
 {
   g_autoptr (GDateTime) start_dt = NULL;
@@ -407,11 +434,8 @@ update_date_time_label (GcalEventPopover *self)
 static void
 update_placeholder_label (GcalEventPopover *self)
 {
-  gboolean placeholder_visible = FALSE;
-
-  placeholder_visible |= !gtk_widget_get_visible (GTK_WIDGET (self->location_box)) &&
-                         !gtk_widget_get_visible (GTK_WIDGET (self->description_label));
-  gtk_widget_set_visible (GTK_WIDGET (self->placeholder_label), placeholder_visible);
+  gtk_widget_set_visible (GTK_WIDGET (self->placeholder_label),
+                          !gtk_widget_get_visible (GTK_WIDGET (self->description_scrolled_window)));
 }
 
 static void
@@ -424,7 +448,7 @@ add_meeting (GcalEventPopover *self,
   g_signal_connect (row, "join-meeting", G_CALLBACK (on_join_meeting_cb), self);
   gtk_list_box_append (self->meetings_listbox, row);
 
-  gtk_widget_set_visible (GTK_WIDGET (self->meetings_listbox), TRUE);
+  gtk_widget_set_visible (GTK_WIDGET (self->meetings_box), TRUE);
 }
 
 static void
@@ -455,7 +479,8 @@ setup_location_label (GcalEventPopover *self)
     }
 
   gtk_widget_set_visible (self->location_box,
-                          location && g_utf8_strlen (location, -1) > 0);
+                          location && g_utf8_strlen (location, -1) > 0 &&
+                          !gtk_widget_get_visible (GTK_WIDGET (self->meetings_box)));
   gtk_label_set_markup (self->location_label, location);
 }
 
@@ -479,7 +504,7 @@ setup_description_label (GcalEventPopover *self)
   g_string_replace (string, "&nbsp;", " ", 0);
 
   gtk_label_set_markup (self->description_label, string->str);
-  gtk_widget_set_visible (GTK_WIDGET (self->description_label), string->str && *string->str);
+  gtk_widget_set_visible (GTK_WIDGET (self->description_scrolled_window), string->str && *string->str);
 }
 
 static void
@@ -494,8 +519,9 @@ set_event_internal (GcalEventPopover *self,
   setup_location_label (self);
   update_placeholder_label (self);
   update_date_time_label (self);
+  update_decorations (self, event);
 
-  gtk_widget_grab_focus (self->edit_button);
+  gtk_widget_grab_focus (self->action_button);
 }
 
 
@@ -504,8 +530,8 @@ set_event_internal (GcalEventPopover *self,
  */
 
 static void
-on_edit_button_clicked_cb (GtkButton        *edit_button,
-                           GcalEventPopover *self)
+on_action_button_clicked_cb (GtkButton        *action_button,
+                             GcalEventPopover *self)
 {
   g_signal_emit (self, signals[EDIT], 0);
   gtk_popover_popdown (GTK_POPOVER (self));
@@ -575,7 +601,7 @@ gcal_event_popover_map (GtkWidget *widget)
   if (first_meeting_row)
     gtk_widget_grab_focus (GTK_WIDGET (first_meeting_row));
   else
-    gtk_widget_grab_focus (self->edit_button);
+    gtk_widget_grab_focus (self->action_button);
 }
 
 
@@ -695,14 +721,17 @@ gcal_event_popover_class_init (GcalEventPopoverClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, date_time_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, description_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, edit_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, description_scrolled_window);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, action_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, location_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, location_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, meetings_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, meetings_listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, placeholder_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, summary_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, read_only_icon);
 
-  gtk_widget_class_bind_template_callback (widget_class, on_edit_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_action_button_clicked_cb);
 }
 
 static void

@@ -6,5 +6,7 @@
     <file compressed="true">calendar-week-symbolic.svg</file>
     <file compressed="true">calendar-today-symbolic.svg</file>
     <file compressed="true">external-link-symbolic.svg</file>
+    <file compressed="true">edit-symbolic.svg</file>
+    <file compressed="true">info-outline-symbolic.svg</file>
   </gresource>
 </gresources>

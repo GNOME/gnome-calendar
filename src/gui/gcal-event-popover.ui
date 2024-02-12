@@ -1,142 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GcalEventPopover" parent="GtkPopover">
-    <property name="default-widget">edit_button</property>
+    <property name="default-widget">action_button</property>
     <property name="position">top</property>
+    <property name="width-request">250</property>
 
     <style>
       <class name="event-popover" />
     </style>
 
-    <child>
+    <property name="child">
       <object class="GtkBox">
         <property name="orientation">vertical</property>
 
         <child>
           <object class="GtkBox">
-            <property name="orientation">vertical</property>
-
-            <!-- Title -->
-            <child>
-              <object class="GtkLabel" id="summary_label">
-                <property name="margin-top">12</property>
-                <property name="margin-bottom">12</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
-                <property name="selectable">True</property>
-                <property name="wrap">true</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="width-chars">30</property>
-                <property name="max-width-chars">40</property>
-                <style>
-                  <class name="title-3" />
-                </style>
-              </object>
-            </child>
-
-            <!-- Date & Time -->
-            <child>
-              <object class="GtkLabel" id="date_time_label">
-                <property name="margin-bottom">12</property>
-                <property name="ellipsize">end</property>
-                <style>
-                  <class name="dim-label" />
-                </style>
-              </object>
-            </child>
+            <property name="spacing">18</property>
+            <property name="margin-top">18</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-start">18</property>
+            <property name="margin-end">18</property>
 
             <child>
-              <object class="GtkSeparator">
-              </object>
-            </child>
+              <object class="GtkBox">
+                <property name="hexpand">True</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">6</property>
 
-            <child>
-              <object class="GtkScrolledWindow">
-                <property name="hscrollbar-policy">never</property>
-                <property name="propagate-natural-width">True</property>
-                <property name="propagate-natural-height">True</property>
-                <property name="max-content-height">400</property>
-
+                <!-- Title -->
                 <child>
-                  <object class="GtkBox">
-                    <property name="spacing">12</property>
-                    <property name="margin-bottom">12</property>
-                    <property name="orientation">vertical</property>
+                  <object class="GtkLabel" id="summary_label">
+                    <property name="selectable">True</property>
+                    <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
+                    <property name="xalign">0.0</property>
+                    <property name="max-width-chars">22.5</property>
+                    <property name="lines">6</property>
+                    <property name="ellipsize">end</property>
+                    <style>
+                      <class name="title-4" />
+                    </style>
+                  </object>
+                </child>
 
-                    <!-- Placeholder -->
-                    <child>
-                      <object class="GtkLabel" id="placeholder_label">
-                        <property name="hexpand">True</property>
-                        <property name="vexpand">True</property>
-                        <property name="valign">center</property>
-                        <property name="margin-top">12</property>
-                        <property name="margin-bottom">12</property>
-                        <property name="margin-start">12</property>
-                        <property name="margin-end">12</property>
-                        <property name="label" translatable="yes">No event information</property>
-                        <attributes>
-                          <attribute name="style" value="italic" />
-                        </attributes>
-                        <style>
-                          <class name="dim-label" />
-                        </style>
-                      </object>
-                    </child>
+                <!-- Date & Time -->
+                <child>
+                  <object class="GtkLabel" id="date_time_label">
+                    <property name="xalign">0.0</property>
+                    <style>
+                      <class name="dim-label" />
+                    </style>
+                  </object>
+                </child>
 
-                    <!-- Description -->
-                    <child>
-                      <object class="GtkLabel" id="description_label">
-                        <property name="margin-top">12</property>
-                        <property name="margin-bottom">12</property>
-                        <property name="margin-start">12</property>
-                        <property name="margin-end">12</property>
-                        <property name="use-markup">True</property>
-                        <property name="selectable">True</property>
-                        <property name="max-width-chars">50</property>
-                        <property name="xalign">0.0</property>
-                        <property name="wrap">True</property>
-                        <property name="wrap-mode">word-char</property>
-                        <style>
-                          <class name="dim-label" />
-                        </style>
-                      </object>
-                    </child>
+              </object>
+            </child>
 
-                    <!-- Location -->
-                    <child>
-                      <object class="GtkBox" id="location_box">
-                        <property name="spacing">6</property>
-                        <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkBox">
+                <property name="spacing">6</property>
 
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="margin-start">12</property>
-                            <property name="margin-end">12</property>
-                            <property name="xalign">0.0</property>
-                            <property name="label" translatable="yes">Location</property>
-                            <style>
-                              <class name="heading" />
-                            </style>
-                          </object>
-                        </child>
+                <!-- Lock icon for read-only events -->
+                <child>
+                  <object class="GtkImage" id="read_only_icon">
+                    <property name="tooltip-markup" translatable="yes">&lt;b&gt;This event is part of a read-only calendar&lt;/b&gt;
+    You cannot delete or change this event.</property>
+                    <property name="icon-name">changes-prevent-symbolic</property>
+                    <property name="pixel-size">18</property>
+                    <property name="valign">start</property>
+                    <property name="halign">end</property>
+                    <property name="margin-top">8</property>
+                    <property name="margin-bottom">8</property>
+                    <style>
+                      <class name="dim-label" />
+                    </style>
+                  </object>
+                </child>
 
-                        <child>
-                          <object class="GtkSeparator">
-                          </object>
-                        </child>
-
-                        <child>
-                          <object class="GtkLabel" id="location_label">
-                            <property name="margin-start">12</property>
-                            <property name="margin-end">12</property>
-                            <property name="selectable">True</property>
-                            <property name="xalign">0.0</property>
-                          </object>
-                        </child>
-
-                      </object>
-                    </child>
-
+                <!-- Edit/View button -->
+                <child>
+                  <object class="GtkButton" id="action_button">
+                    <property name="can-focus">True</property>
+                    <property name="valign">start</property>
+                    <property name="halign">end</property>
+                    <style>
+                      <class name="circular" />
+                    </style>
+                    <signal name="clicked" handler="on_action_button_clicked_cb" object="GcalEventPopover" swapped="no" />
                   </object>
                 </child>
 
@@ -146,40 +96,121 @@
           </object>
         </child>
 
-
-        <!-- Meetings -->
         <child>
           <object class="GtkSeparator" />
         </child>
 
+        <!-- Placeholder -->
         <child>
-          <object class="GtkListBox" id="meetings_listbox">
-            <property name="visible">False</property>
+          <object class="GtkLabel" id="placeholder_label">
+            <property name="vexpand">True</property>
+            <property name="label" translatable="yes">No event notes</property>
             <property name="margin-top">12</property>
-            <property name="margin-start">12</property>
-            <property name="margin-end">12</property>
-            <property name="selection-mode">none</property>
+            <property name="margin-bottom">12</property>
+            <attributes>
+              <attribute name="style" value="italic" />
+            </attributes>
             <style>
-              <class name="calendar-list" />
+              <class name="dim-label" />
             </style>
           </object>
         </child>
 
-
-        <!-- Edit button -->
+        <!-- Description -->
         <child>
-          <object class="GtkButton" id="edit_button">
-            <property name="margin-top">12</property>
-            <property name="margin-bottom">12</property>
-            <property name="margin-start">12</property>
-            <property name="margin-end">12</property>
-            <property name="label" translatable="yes">Edit…</property>
-            <signal name="clicked" handler="on_edit_button_clicked_cb" object="GcalEventPopover" swapped="no" />
+          <object class="GtkScrolledWindow" id="description_scrolled_window">
+            <property name="hscrollbar-policy">never</property>
+            <property name="propagate-natural-height">True</property>
+            <property name="propagate-natural-width">True</property>
+            <property name="max-content-height">350</property>
+
+            <property name="child">
+              <object class="GtkLabel" id="description_label">
+                <property name="use-markup">True</property>
+                <property name="selectable">True</property>
+                <property name="halign">fill</property>
+                <property name="xalign">0.0</property>
+                <property name="wrap">True</property>
+                <property name="max-width-chars">35</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">18</property>
+                <property name="margin-start">18</property>
+                <property name="margin-end">18</property>
+              </object>
+            </property>
+
+          </object>
+        </child>
+
+        <!-- Location -->
+        <child>
+          <object class="GtkBox" id="location_box">
+            <property name="orientation">vertical</property>
+
+            <child>
+              <object class="GtkSeparator" />
+            </child>
+
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
+                <property name="margin-start">18</property>
+                <property name="margin-end">18</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Location</property>
+                    <style>
+                      <class name="heading" />
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkLabel" id="location_label">
+                    <property name="halign">start</property>
+                    <property name="selectable">True</property>
+                    <property name="ellipsize">end</property>
+                    <property name="max-width-chars">35</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <!-- Meetings -->
+        <child>
+          <object class="GtkBox" id="meetings_box">
+            <property name="orientation">vertical</property>
+            <property name="visible">False</property>
+
+            <child>
+              <object class="GtkSeparator" />
+            </child>
+
+            <child>
+              <object class="GtkListBox" id="meetings_listbox">
+                <property name="selection-mode">none</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
+                <property name="margin-start">18</property>
+                <property name="margin-end">18</property>
+                <style>
+                  <class name="calendar-list" />
+                </style>
+              </object>
+            </child>
+
           </object>
         </child>
 
       </object>
-    </child>
+    </property>
 
   </template>
 </interface>
