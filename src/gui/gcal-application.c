@@ -206,7 +206,7 @@ gcal_application_show_about (GSimpleAction *simple,
 {
   GcalWeatherService *weather_service;
   GcalApplication *self;
-  GtkWidget *about;
+  AdwDialog *about;
   g_autofree gchar *copyright = NULL;
   g_autofree gchar *troubleshooting = NULL;
 
@@ -229,8 +229,7 @@ gcal_application_show_about (GSimpleAction *simple,
   copyright = build_about_copyright (self);
   troubleshooting = build_system_information ();
 
-  about = g_object_new (ADW_TYPE_ABOUT_WINDOW,
-                        "transient-for", GTK_WINDOW (self->window),
+  about = g_object_new (ADW_TYPE_ABOUT_DIALOG,
                         "application-name", _("Calendar"),
                         "application-icon", APPLICATION_ID,
                         "developer-name", _("The GNOME Project"),
@@ -248,13 +247,13 @@ gcal_application_show_about (GSimpleAction *simple,
                         NULL);
 
   weather_service = gcal_context_get_weather_service (self->context);
-  adw_about_window_add_legal_section (ADW_ABOUT_WINDOW (about),
+  adw_about_dialog_add_legal_section (ADW_ABOUT_DIALOG (about),
                                       _("Weather"),
                                       NULL,
                                       GTK_LICENSE_CUSTOM,
                                       gcal_weather_service_get_attribution (weather_service));
 
-  gtk_window_present (GTK_WINDOW (about));
+  adw_dialog_present (about, GTK_WIDGET (self->window));
 }
 
 static void
