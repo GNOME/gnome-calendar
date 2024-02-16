@@ -33,7 +33,6 @@ struct _GcalCalendarsPage
 {
   AdwBin              parent;
 
-  GtkListBoxRow      *add_calendar_row;
   GtkListBox         *listbox;
   AdwToastOverlay    *toast_overlay;
 
@@ -474,7 +473,6 @@ gcal_calendars_page_class_init (GcalCalendarsPageClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-calendars-page.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, add_calendar_row);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, toast_overlay);
 
