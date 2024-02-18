@@ -971,6 +971,8 @@ gcal_event_widget_show_preview (GcalEventWidget          *self,
   data->user_data = user_data;
 
   self->preview_popover = gcal_event_popover_new (self->context, self->event);
+  g_object_add_weak_pointer (G_OBJECT (self->preview_popover), (gpointer *) &self->preview_popover);
+
   gtk_widget_set_parent (self->preview_popover, GTK_WIDGET (self));
   g_signal_connect (self->preview_popover, "closed", G_CALLBACK (on_event_popover_closed_cb), data);
   g_signal_connect (self->preview_popover, "edit", G_CALLBACK (on_event_popover_edit_cb), data);
