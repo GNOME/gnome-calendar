@@ -253,9 +253,12 @@ on_entry_search_changed_cb (GtkSearchEntry   *entry,
 
   if (!text || *text == '\0')
     {
+      g_debug ("Search query contents have been cleared");
       set_model (self, NULL);
       GCAL_RETURN ();
     }
+
+  g_debug ("Search query changed to \"%s\"", text);
 
   sexp_query = g_strdup_printf ("(contains? \"summary\" \"%s\")", text);
   search_engine = gcal_context_get_search_engine (self->context);
@@ -272,6 +275,7 @@ static void
 on_entry_stop_search_cb (GtkSearchEntry   *search_entry,
                          GcalSearchButton *self)
 {
+  g_debug ("Exiting search mode");
   quit_search_entry (self);
 }
 
