@@ -54,6 +54,7 @@
                 <property name="placeholder-text" translatable="yes">Search events</property>
                 <property name="max-width-chars">0</property>
                 <property name="width-chars">0</property>
+                <property name="search-delay">500</property>
                 <signal name="activate" handler="on_entry_activate_cb" object="GcalSearchButton" swapped="no" />
                 <signal name="next-match" handler="on_entry_next_match_cb" object="GcalSearchButton" swapped="no" />
                 <signal name="previous-match" handler="on_entry_previous_match_cb" object="GcalSearchButton" swapped="no" />
