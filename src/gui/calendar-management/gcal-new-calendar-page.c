@@ -147,10 +147,10 @@ update_add_button (GcalNewCalendarPage *self)
   gtk_widget_set_sensitive (self->add_button, valid);
 
   n_calendars = 0;
-  if (self->local_source)
-    n_calendars++;
   if (self->remote_sources)
     n_calendars += self->remote_sources->len;
+  else if (self->local_source)
+    n_calendars++;
 
   if (n_calendars > 0)
     {
@@ -391,10 +391,6 @@ on_add_button_clicked_cb (GtkWidget           *button,
 
   manager = gcal_context_get_manager (self->context);
 
-  /* Commit the new source */
-  if (self->local_source)
-    gcal_manager_save_source (manager, self->local_source);
-
   /* Commit each new remote source */
   if (self->remote_sources)
     {
@@ -404,6 +400,11 @@ on_add_button_clicked_cb (GtkWidget           *button,
         gcal_manager_save_source (manager, g_ptr_array_index (self->remote_sources, i));
 
       g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
+    }
+
+  else
+    {
+      gcal_manager_save_source (manager, self->local_source);
     }
 
   gcal_calendar_management_page_switch_page (GCAL_CALENDAR_MANAGEMENT_PAGE (self),
