@@ -20,6 +20,7 @@
             <!-- Local calendar -->
             <child>
               <object class="AdwPreferencesGroup">
+                <property name="title" translatable="yes">Create a Local Calendar</property>
 
                 <!-- Calendar name -->
                 <child>
