@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-14 14:55+0000\n"
-"PO-Revision-Date: 2024-02-22 07:54+0100\n"
+"POT-Creation-Date: 2024-02-22 06:54+0000\n"
+"PO-Revision-Date: 2024-02-23 20:33+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -174,18 +174,18 @@ msgstr "Modificar l'agenda"
 msgid "Calendar Settings"
 msgstr "Paramètres de l'agenda"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:344
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Agendas"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:369
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Agenda <b>%s</b> suprimit"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:374
+#: src/gui/calendar-management/gcal-calendars-page.c:373
 #: src/gui/gcal-window.c:738
 msgid "_Undo"
 msgstr "_Anullar"
@@ -246,7 +246,7 @@ msgstr "Seleccionar un fichièr"
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "Ajustar un agenda"
-msgstr[1] "Ajustar %1$u agendas…"
+msgstr[1] "Ajustar %1$u agendas"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:516
 msgid "New Calendar"
