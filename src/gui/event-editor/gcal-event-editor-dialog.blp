@@ -78,7 +78,6 @@ template $GcalEventEditorDialog: Adw.Dialog {
         Adw.PreferencesGroup delete_group {
           Adw.ButtonRow {
             activated => $on_delete_row_activated_cb(template) not-swapped;
-            sensitive: bind template.writable no-sync-create;
             title: _("Delete Event");
 
             styles [

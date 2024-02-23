@@ -702,8 +702,10 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
 
   set_writable (self, !gcal_calendar_is_read_only (calendar));
 
+  gtk_widget_set_visible (self->cancel_button, self->writable);
+
   self->event_is_new = new_event;
-  gtk_widget_set_visible (self->delete_group, !new_event);
+  gtk_widget_set_visible (self->delete_group, !new_event && self->writable);
 
   if (!self->writable)
     gtk_widget_grab_focus (self->done_button);
