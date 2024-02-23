@@ -19,6 +19,8 @@
             <child>
               <object class="GtkImage" id="lock">
                 <property name="visible" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|invert-boolean|sync-create" />
+                <property name="tooltip-markup" translatable="yes">&lt;b&gt;This event is part of a read-only calendar&lt;/b&gt;
+You cannot delete or change this event.</property>
                 <property name="icon_name">changes-prevent-symbolic</property>
               </object>
             </child>
