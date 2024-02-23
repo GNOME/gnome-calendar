@@ -25,7 +25,7 @@
             <child type="title">
               <object class="GtkMenuButton" id="sources_button">
                 <property name="popover">sources_popover</property>
-                <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
+                <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
                 <property name="tooltip-text" translatable="yes">Select Calendar</property>
                 <style>
                   <class name="flat"/>
@@ -102,7 +102,7 @@
               <object class="AdwPreferencesGroup">
                 <child>
                   <object class="GcalSummarySection" id="summary_section">
-                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
+                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
                   </object>
                 </child>
               </object>
@@ -114,7 +114,7 @@
                 <property name="title" translatable="yes">Schedule</property>
                 <child>
                   <object class="GcalScheduleSection" id="schedule_section">
-                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
+                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
                   </object>
                 </child>
               </object>
@@ -126,7 +126,7 @@
                 <property name="title" translatable="yes">Reminders</property>
                 <child>
                   <object class="GcalRemindersSection" id="reminders_section">
-                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
+                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
                   </object>
                 </child>
               </object>
@@ -138,7 +138,7 @@
                 <property name="title" translatable="yes">Notes</property>
                 <child>
                   <object class="GcalNotesSection" id="notes_section">
-                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
+                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
                     <property name="vexpand">True</property>
                   </object>
                 </child>
