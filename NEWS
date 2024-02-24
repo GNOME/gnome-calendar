@@ -1,3 +1,13 @@
+Major changes in 46.beta:
+* Improve AppData information
+* Use the Settings portal for the show-week-dates setting
+* Fix daylight saving time events in the Week view
+* Add accessible labels to a few UI elements
+* Use the new AdwDialog API for responsive dialogs
+* Tweak the visuals of the Month view
+* Properly make Calendar stop the weather service in Flatpak
+* Updated translations
+
 Major changes in 45.1:
 * Use en dash for various strings
 * Read the 12/24h time format setting from the portal
