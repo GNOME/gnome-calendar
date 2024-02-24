@@ -8,6 +8,13 @@
           <object class="AdwHeaderBar">
             <property name="show-end-title-buttons">False</property>
             <property name="show-start-title-buttons">False</property>
+              <property name="title-widget">
+                <object class="AdwWindowTitle">
+                  <binding name="title">
+                    <lookup type="GtkEditable" name="text">name_entry</lookup>
+                  </binding>
+                </object>
+              </property>
           </object>
         </child>
 
