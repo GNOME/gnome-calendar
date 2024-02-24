@@ -27,7 +27,6 @@
 #include "gcal-context.h"
 #include "gcal-calendar-management-page.h"
 #include "gcal-debug.h"
-#include "gcal-file-chooser-button.h"
 #include "gcal-new-calendar-page.h"
 #include "gcal-source-discoverer.h"
 #include "gcal-utils.h"
@@ -49,7 +48,6 @@ struct _GcalNewCalendarPage
   GtkWidget          *add_button;
   GtkEntry           *calendar_address_entry;
   EntryState          calendar_address_entry_state;
-  GcalFileChooserButton *calendar_file_chooser_button;
   AdwMessageDialog   *credentials_dialog;
   GtkEntry           *credentials_password_entry;
   GtkEntry           *credentials_user_entry;
@@ -293,49 +291,6 @@ discover_sources (GcalNewCalendarPage *self)
 /*
  * Callbacks
  */
-
-static void
-on_file_chooser_button_file_changed_cb (GcalFileChooserButton *chooser,
-                                        GParamSpec            *pspec,
-                                        GcalNewCalendarPage   *self)
-{
-  g_autofree gchar *display_name = NULL;
-  g_autoptr (ESource) source = NULL;
-  g_autoptr (GFile) file = NULL;
-  ESourceExtension *ext;
-
-  GCAL_ENTRY;
-
-  file = gcal_file_chooser_button_get_file (chooser);
-
-  if (!file)
-    GCAL_RETURN ();
-
-  /* Create the new source and add the needed extensions */
-  source = e_source_new (NULL, NULL, NULL);
-  e_source_set_parent (source, "local-stub");
-
-  ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
-  e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
-
-  ext = e_source_get_extension (source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
-  e_source_local_set_custom_file (E_SOURCE_LOCAL (ext), file);
-
-  /* update the source properties */
-  display_name = calendar_path_to_name_suggestion (file);
-  e_source_set_display_name (source, display_name);
-
-  /* TODO: report errors */
-  gcal_manager_save_source (gcal_context_get_manager (self->context), source);
-
-  gcal_calendar_management_page_switch_page (GCAL_CALENDAR_MANAGEMENT_PAGE (self),
-                                             "calendars",
-                                             NULL);
-
-  gcal_file_chooser_button_set_file (self->calendar_file_chooser_button, NULL);
-
-  GCAL_EXIT;
-}
 
 static gboolean
 pulse_web_entry (gpointer data)
@@ -667,13 +622,10 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
 
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
 
-  g_type_ensure (GCAL_TYPE_FILE_CHOOSER_BUTTON);
-
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-new-calendar-page.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, add_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_address_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_file_chooser_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_password_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_user_entry);
@@ -685,7 +637,6 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_add_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_calendar_address_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_credentials_dialog_response_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_file_chooser_button_file_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_name_row_text_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_color_button_rgba_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_url_entry_text_changed_cb);

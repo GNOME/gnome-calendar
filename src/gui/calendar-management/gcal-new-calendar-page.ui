@@ -103,30 +103,6 @@
                       </object>
                     </child>
 
-                    <!-- File Chooser button -->
-                    <child>
-                      <object class="GcalFileChooserButton" id="calendar_file_chooser_button">
-                        <property name="title" translatable="yes">Open a File</property>
-                        <property name="filter">
-                          <object class="GtkFileFilter">
-                            <property name="name" translatable="yes">Calendar files</property>
-                            <patterns>
-                              <pattern>*.ical</pattern>
-                              <pattern>*.icalendar</pattern>
-                              <pattern>*.ics</pattern>
-                              <pattern>*.ifb</pattern>
-                              <pattern>*.vcs</pattern>
-                            </patterns>
-                          </object>
-                        </property>
-                        <signal name="notify::file" handler="on_file_chooser_button_file_changed_cb" object="GcalNewCalendarPage" swapped="no" />
-                        <layout>
-                          <property name="column">1</property>
-                          <property name="row">1</property>
-                        </layout>
-                      </object>
-                    </child>
-
                     <child>
                       <object class="GtkRevealer" id="web_sources_revealer">
                         <property name="transition_type">slide-down</property>
