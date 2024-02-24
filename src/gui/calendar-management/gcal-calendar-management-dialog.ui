@@ -4,7 +4,6 @@
     <property name="title" translatable="yes">Calendar Settings</property>
     <property name="width-request">360</property>
     <property name="content-width">500</property>
-    <property name="content-height">600</property>
     <child>
       <object class="AdwNavigationView" id="navigation_view">
         <signal name="popped" handler="on_navigation_view_popped_cb" object="GcalCalendarManagementDialog" swapped="no" />
