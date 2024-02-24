@@ -93,6 +93,7 @@
                       <object class="GtkEntry" id="calendar_address_entry">
                         <property name="hexpand">True</property>
                         <property name="placeholder-text">https://example.com/calendar.ics</property>
+                        <property name="input-purpose">url</property>
                         <signal name="notify::text" handler="on_url_entry_text_changed_cb" object="GcalNewCalendarPage" swapped="no" />
                         <signal name="activate" handler="on_calendar_address_activated_cb" object="GcalNewCalendarPage" swapped="no" />
                         <layout>

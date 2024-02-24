@@ -225,14 +225,40 @@ toggle_url_entry_pulsing (GcalNewCalendarPage *self,
 
 static void
 update_url_entry_state (GcalNewCalendarPage *self,
-                        EntryState           state)
+                        EntryState           state,
+                        const gchar         *error_message)
 {
   self->calendar_address_entry_state = state;
 
   if (state == ENTRY_STATE_INVALID)
-    gtk_widget_add_css_class (GTK_WIDGET (self->calendar_address_entry), "error");
+    {
+      gtk_widget_add_css_class (GTK_WIDGET (self->calendar_address_entry), "error");
+      if (error_message)
+        {
+          g_autofree gchar *multiline_message = NULL;
+          g_auto(GStrv) split_message = NULL;
+
+          split_message = g_strsplit (error_message, ": ", -1);
+          multiline_message = g_strjoinv (":\n", split_message);
+
+          gtk_entry_set_icon_from_icon_name (self->calendar_address_entry,
+                                             GTK_ENTRY_ICON_SECONDARY,
+                                             "dialog-error");
+          gtk_entry_set_icon_tooltip_text (self->calendar_address_entry,
+                                           GTK_ENTRY_ICON_SECONDARY,
+                                           multiline_message);
+        }
+    }
   else
-    gtk_widget_remove_css_class (GTK_WIDGET (self->calendar_address_entry), "error");
+    {
+      gtk_widget_remove_css_class (GTK_WIDGET (self->calendar_address_entry), "error");
+      gtk_entry_set_icon_from_icon_name (self->calendar_address_entry,
+                                         GTK_ENTRY_ICON_SECONDARY,
+                                         NULL);
+      gtk_entry_set_icon_tooltip_text (self->calendar_address_entry,
+                                       GTK_ENTRY_ICON_SECONDARY,
+                                       NULL);
+    }
 
   update_add_button (self);
   toggle_url_entry_pulsing (self, state == ENTRY_STATE_VALIDATING);
@@ -259,7 +285,7 @@ discover_sources (GcalNewCalendarPage *self)
                                   self->cancellable,
                                   sources_discovered_cb,
                                   self);
-  update_url_entry_state (self, ENTRY_STATE_VALIDATING);
+  update_url_entry_state (self, ENTRY_STATE_VALIDATING, NULL);
 
   GCAL_EXIT;
 }
@@ -357,7 +383,7 @@ sources_discovered_cb (GObject      *source_object,
                                  G_IO_ERROR_CANCELLED))
         {
           g_warning ("Error finding sources: %s", error->message);
-          update_url_entry_state (self, ENTRY_STATE_INVALID);
+          update_url_entry_state (self, ENTRY_STATE_INVALID, error->message);
         }
       GCAL_RETURN ();
     }
@@ -365,7 +391,7 @@ sources_discovered_cb (GObject      *source_object,
   g_debug ("Found %u sources", sources->len);
 
   self->remote_sources = g_steal_pointer (&sources);
-  update_url_entry_state (self, ENTRY_STATE_VALID);
+  update_url_entry_state (self, ENTRY_STATE_VALID, NULL);
 
   GCAL_EXIT;
 }
@@ -378,7 +404,7 @@ validate_url_cb (gpointer data)
 
   GCAL_ENTRY;
 
-  update_url_entry_state (self, ENTRY_STATE_VALIDATING);
+  update_url_entry_state (self, ENTRY_STATE_VALIDATING, NULL);
   self->validate_url_resource_id = 0;
 
   guri = g_uri_parse (gtk_editable_get_text (GTK_EDITABLE (self->calendar_address_entry)), SOUP_HTTP_URI_FLAGS | G_URI_FLAGS_PARSE_RELAXED, NULL);
@@ -389,7 +415,7 @@ validate_url_cb (gpointer data)
     }
   else
     {
-      update_url_entry_state (self, ENTRY_STATE_INVALID);
+      update_url_entry_state (self, ENTRY_STATE_INVALID, _("The URL you have entered appears to be invalid."));
       g_debug ("Invalid URL passed");
     }
 
@@ -441,7 +467,8 @@ on_credentials_dialog_response_cb (AdwMessageDialog    *dialog,
   if (g_str_equal (response, "connect"))
     discover_sources (self);
   else if (g_str_equal (response, "cancel"))
-    update_url_entry_state (self, ENTRY_STATE_INVALID);
+    update_url_entry_state (self, ENTRY_STATE_INVALID,
+                            _("A valid user and password are required to connect to this calendar."));
 
   gtk_editable_set_text (GTK_EDITABLE (self->credentials_user_entry), "");
   gtk_editable_set_text (GTK_EDITABLE (self->credentials_password_entry), "");
@@ -495,7 +522,7 @@ on_url_entry_text_changed_cb (GtkEntry            *entry,
   else
     {
       gtk_entry_set_progress_fraction (self->calendar_address_entry, 0);
-      update_url_entry_state (self, ENTRY_STATE_EMPTY);
+      update_url_entry_state (self, ENTRY_STATE_EMPTY, NULL);
     }
 
   GCAL_EXIT;
