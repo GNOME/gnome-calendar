@@ -81,6 +81,8 @@ gcal_reminders_section_set_event (GcalEventEditorSection *section,
 
   gtk_editable_set_text (GTK_EDITABLE (self->location_entry), gcal_event_get_location (event));
 
+  adw_entry_row_grab_focus_without_selecting (self->summary_entry);
+
   GCAL_EXIT;
 }
 

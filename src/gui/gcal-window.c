@@ -416,8 +416,8 @@ on_window_new_event_cb (GSimpleAction *action,
   default_calendar = gcal_manager_get_default_calendar (manager);
   event = gcal_event_new (default_calendar, comp, NULL);
 
-  gcal_event_editor_dialog_set_event (self->event_editor, event, TRUE);
   adw_dialog_present (ADW_DIALOG (self->event_editor), GTK_WIDGET (self));
+  gcal_event_editor_dialog_set_event (self->event_editor, event, TRUE);
 }
 
 static void
@@ -622,8 +622,8 @@ edit_event (GcalQuickAddPopover *popover,
             GcalEvent           *event,
             GcalWindow          *self)
 {
-  gcal_event_editor_dialog_set_event (self->event_editor, event, TRUE);
   adw_dialog_present (ADW_DIALOG (self->event_editor), GTK_WIDGET (self));
+  gcal_event_editor_dialog_set_event (self->event_editor, event, TRUE);
 }
 
 static void
@@ -645,8 +645,8 @@ create_event_detailed_cb (GcalView   *view,
   default_calendar = gcal_manager_get_default_calendar (manager);
   event = gcal_event_new (default_calendar, comp, NULL);
 
-  gcal_event_editor_dialog_set_event (self->event_editor, event, TRUE);
   adw_dialog_present (ADW_DIALOG (self->event_editor), GTK_WIDGET (self));
+  gcal_event_editor_dialog_set_event (self->event_editor, event, TRUE);
 
   g_clear_object (&comp);
 }
@@ -663,8 +663,8 @@ event_preview_cb (GcalEventWidget        *event_widget,
     {
     case GCAL_EVENT_PREVIEW_ACTION_EDIT:
       event = gcal_event_widget_get_event (event_widget);
-      gcal_event_editor_dialog_set_event (self->event_editor, event, FALSE);
       adw_dialog_present (ADW_DIALOG (self->event_editor), GTK_WIDGET (self));
+      gcal_event_editor_dialog_set_event (self->event_editor, event, FALSE);
       break;
 
     case GCAL_EVENT_PREVIEW_ACTION_NONE:
