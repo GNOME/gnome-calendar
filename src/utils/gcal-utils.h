@@ -139,4 +139,6 @@ gboolean             gcal_is_valid_event_name                    (const gchar   
 
 const gchar*         gcal_get_service_name_from_url              (const gchar        *url);
 
+SoupSession *        gcal_create_soup_session                    (void);
+
 #endif /* __GCAL_UTILS_H__ */

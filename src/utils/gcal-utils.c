@@ -32,6 +32,7 @@
 
 #include <libecal/libecal.h>
 #include <libedataserver/libedataserver.h>
+#include <libsoup/soup.h>
 
 #include <glib/gi18n.h>
 
@@ -1328,4 +1329,30 @@ gcal_get_service_name_from_url (const gchar *url)
     }
 
   return NULL;
+}
+
+/**
+ * gcal_create_soup_session:
+ *
+* Creates a new #SoupSession with correct default settings.
+ *
+ * Returns: (transfer full): a new #SoupSession
+ */
+SoupSession *
+gcal_create_soup_session (void)
+{
+  g_autoptr (SoupSession) session = NULL;
+
+  session = soup_session_new ();
+
+  /* Set up a 10 seconds default timeout, as 60 is too long for fail-fast performance in general.
+   * Individual parts of the code can always override this if needed. */
+  soup_session_set_timeout (session, 10);
+
+  /* RFC2616 states HTTP requests "should" contain the User-Agent header. In practice though, in our situation
+   * User-Agent is mandatory, or restrictive "web application firewalls" can do unexpected things with our request.
+   * The trailing " - " lets libsoup append its name and version for us. */
+  soup_session_set_user_agent (session, "GNOME Calendar/" PACKAGE_VERSION " - ");
+
+  return g_steal_pointer (&session);
 }

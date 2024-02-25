@@ -281,7 +281,7 @@ discover_file_in_thread (DiscovererData  *data,
   uri_str = g_uri_to_string_partial (guri, G_URI_HIDE_PASSWORD);
   GCAL_TRACE_MSG ("Creating request for %s", uri_str);
 
-  session = soup_session_new_with_options ("timeout", 10, NULL);
+  session = gcal_create_soup_session ();
 
   message = soup_message_new_from_uri ("GET", guri);
   g_signal_connect (message, "authenticate", G_CALLBACK (on_soup_message_authenticate_cb), data);
