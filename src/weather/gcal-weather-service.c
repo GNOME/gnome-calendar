@@ -462,7 +462,7 @@ compute_weather_info_data (GSList    *samples,
   if (phenomenon_gwi && temp_gwi)
     {
       *icon_name = get_normalized_icon_name (phenomenon_gwi, is_today && !has_daytime && phenomenon_supports_night_icon);
-      *temperature = gweather_info_get_temp (temp_gwi);
+      *temperature = gweather_info_get_temp_summary (temp_gwi);
 
       return TRUE;
     }
