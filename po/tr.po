@@ -1,5 +1,5 @@
 # Turkish translation for gnome-calendar.
-# Copyright (C) 2015-2023 gnome-calendar's COPYRIGHT HOLDER
+# Copyright (C) 2015-2024 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 #
 # Taner Orak <tnrork@gmail.com>, 2015.
@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-16 23:49+0000\n"
-"PO-Revision-Date: 2024-02-18 08:00+0300\n"
+"POT-Creation-Date: 2024-02-19 16:24+0000\n"
+"PO-Revision-Date: 2024-02-25 08:00+0300\n"
 "Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Language-Team: Türkçe <takim@gnome.org.tr>\n"
 "Language: tr\n"
@@ -44,6 +44,9 @@ msgid ""
 "meetings and appointments, public events, travel logistics, or other "
 "commitments in your life."
 msgstr ""
+"GNOME Takvim; aylarınız toplantı, randevu, etkinlik, yolculuk hazırlığı "
+"ya da diğer görevlerle dolu olsun, gelecek gün ve haftaları planlamanıza "
+"ve planı izlemenize yardımcı olacak göz alıcı araçtır."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
@@ -51,6 +54,9 @@ msgid ""
 "Calendar's infinite scrolling month view, week timetable, and scheduling "
 "list view."
 msgstr ""
+"GNOME Takvim’in sonsuz kaydırmalı ay görünümü, haftalık zaman çizelgesi ve randevu "
+"listesi görünümü ile tüm takvim ve etkinliklerinizi kolayca oluşturup "
+"yönetin."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:20
 msgid ""
@@ -63,6 +69,15 @@ msgid ""
 "supports local and offline calendaring, so you can use it anywhere and "
 "anytime while travelling (or after civilization's collapse.)"
 msgstr ""
+"Güncel GNOME teknolojilerini ve kanıtlanmış tasarım uygulamalarını "
+"tümleştiren GNOME Takvim, büyük miktardaki etkinlikleri yönetmek ve diğer "
+"uygulamalarla tümleşimi sağlamak için Evolution veri sunucusu üzerine inşa "
+"edilmiştir. Türlü çevrim içi takvim hizmetlerinden (NextCloud, Google Takvim "
+"ve CalDAV / WebDAV sunucuları gibi) takvim ekleyebilir, etkinliklerinizi "
+"birden çok aygıt ve platform arasında eşzamanlayabilirsiniz. GNOME Takvim, "
+"yerel ve çevrim dışı takvim kullanımını da destekler, böylece yolculuk "
+"ederken (uygarlığın çöküşünden sonra bile) her yerde ve her zaman "
+"kullanabilirsiniz."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:33
 msgid "Week view"
@@ -1396,69 +1411,3 @@ msgstr "_Sonraki Olaylar"
 #: src/utils/gcal-utils.c:1279
 msgid "_All Events"
 msgstr "_Tüm Olaylar"
-
-#~ msgid "Toggles the sound of the alarm"
-#~ msgstr "Alarmın sesini açar/kapar"
-
-#~ msgid "Click to select the calendar"
-#~ msgstr "Takvim seçmek için tıkla"
-
-#~ msgid "1 hour"
-#~ msgstr "1 saat"
-
-#~ msgid "1 day"
-#~ msgstr "1 gün"
-
-#~ msgid "2 days"
-#~ msgstr "2 gün"
-
-#~ msgid "3 days"
-#~ msgstr "3 gün"
-
-#~ msgid "1 week"
-#~ msgstr "1 hafta"
-
-#~ msgid "No. of occurrences"
-#~ msgstr "Oluş sayısı"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Manage calendars"
-#~ msgstr "Takvimleri yönet"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Synchronize calendars"
-#~ msgstr "Takvimleri eşzamanla"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Go back"
-#~ msgstr "Geri git"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Week view"
-#~ msgstr "Hafta görünümü"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Month view"
-#~ msgstr "Ay görünümü"
-
-#~ msgid "Calendar for GNOME"
-#~ msgstr "GNOME için Takvim"
-
-#~ msgid ""
-#~ "GNOME Calendar is a simple and beautiful calendar application designed to "
-#~ "perfectly fit the GNOME desktop. By reusing the components which the "
-#~ "GNOME desktop is built on, Calendar nicely integrates with the GNOME "
-#~ "ecosystem."
-#~ msgstr ""
-#~ "GNOME Takvim, GNOME masaüstüne kusursuzca uymak üzere tasarlanmış basit "
-#~ "ve güzel takvim uygulamasıdır. GNOME masaüstünün kurulu olduğu "
-#~ "bileşenleri yeniden kullanan Takvim, GNOME ekosistemi ile uyum içindedir."
-
-#~ msgid ""
-#~ "We aim to find the perfect balance between nicely crafted features and "
-#~ "user-centred usability. No excess, nothing missing. You’ll feel "
-#~ "comfortable using Calendar, like you’ve been using it for ages!"
-#~ msgstr ""
-#~ "Hoş özellikler ve kullanıcı odaklı kullanılabilirlik arasında kusursuz "
-#~ "dengeyi sağlamayı amaçlıyoruz. Ne eksik, ne çok. Takvim’i kullanırken "
-#~ "güya onu yıllardır kullanıyormuş gibi rahat hissedeceksiniz!"
