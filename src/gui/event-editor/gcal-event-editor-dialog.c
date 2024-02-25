@@ -787,6 +787,9 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   self->event_is_new = new_event;
   gtk_widget_set_visible (self->delete_button, !new_event);
 
+  if (!self->writable)
+    gtk_widget_grab_focus (self->done_button);
+
 out:
   flags = GCAL_EVENT_EDITOR_FLAG_NONE;
 
