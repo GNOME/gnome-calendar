@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-19 16:24+0000\n"
-"PO-Revision-Date: 2024-02-25 08:00+0300\n"
-"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
+"POT-Creation-Date: 2024-02-25 13:58+0000\n"
+"PO-Revision-Date: 2024-02-25 17:58+0300\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Türkçe <takim@gnome.org.tr>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -44,9 +44,9 @@ msgid ""
 "meetings and appointments, public events, travel logistics, or other "
 "commitments in your life."
 msgstr ""
-"GNOME Takvim; aylarınız toplantı, randevu, etkinlik, yolculuk hazırlığı "
-"ya da diğer görevlerle dolu olsun, gelecek gün ve haftaları planlamanıza "
-"ve planı izlemenize yardımcı olacak göz alıcı araçtır."
+"GNOME Takvim; aylarınız toplantı, randevu, etkinlik, yolculuk hazırlığı ya "
+"da diğer görevlerle dolu olsun, gelecek gün ve haftaları planlamanıza ve "
+"planı izlemenize yardımcı olacak göz alıcı araçtır."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
@@ -54,9 +54,9 @@ msgid ""
 "Calendar's infinite scrolling month view, week timetable, and scheduling "
 "list view."
 msgstr ""
-"GNOME Takvim’in sonsuz kaydırmalı ay görünümü, haftalık zaman çizelgesi ve randevu "
-"listesi görünümü ile tüm takvim ve etkinliklerinizi kolayca oluşturup "
-"yönetin."
+"GNOME Takvim’in sonsuz kaydırmalı ay görünümü, haftalık zaman çizelgesi ve "
+"randevu listesi görünümü ile tüm takvim ve etkinliklerinizi kolayca "
+"oluşturup yönetin."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:20
 msgid ""
@@ -217,7 +217,7 @@ msgid "Open in Settings"
 msgstr "Ayarlarda Aç"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
-#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -462,6 +462,10 @@ msgstr "Kaydet"
 msgid "Done"
 msgstr "Tamam"
 
+#: src/gui/event-editor/gcal-event-editor-dialog.c:778
+msgid "New Event"
+msgstr "Yeni Olay"
+
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:29
 msgid "Select Calendar"
 msgstr "Takvim Seç"
@@ -627,11 +631,6 @@ msgstr "Belirli Tarihe Dek"
 #: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "Yineleme Bitiş Tarihi"
-
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:693
-msgid "Unnamed event"
-msgstr "Adsız olay"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
@@ -1411,3 +1410,6 @@ msgstr "_Sonraki Olaylar"
 #: src/utils/gcal-utils.c:1279
 msgid "_All Events"
 msgstr "_Tüm Olaylar"
+
+#~ msgid "Unnamed event"
+#~ msgstr "Adsız olay"
