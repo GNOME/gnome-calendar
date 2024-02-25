@@ -17,16 +17,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-24 04:54+0000\n"
-"PO-Revision-Date: 2024-02-24 13:19+0100\n"
-"Last-Translator: Vincent Chatelain <vinchatl_gnome@proton.me>\n"
+"POT-Creation-Date: 2024-02-25 13:58+0000\n"
+"PO-Revision-Date: 2024-02-25 15:44+0100\n"
+"Last-Translator: Irénée Thirion <irenee.thirion@e.email>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
-"X-Generator: Gtranslator 45.3\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -222,7 +222,7 @@ msgid "Open in Settings"
 msgstr "Ouvrir dans les Paramètres"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
-#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -481,6 +481,10 @@ msgstr "Enregistrer"
 msgid "Done"
 msgstr "Terminé"
 
+#: src/gui/event-editor/gcal-event-editor-dialog.c:778
+msgid "New Event"
+msgstr "Nouvel évènement"
+
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:29
 msgid "Select Calendar"
 msgstr "Choisir un agenda"
@@ -646,11 +650,6 @@ msgstr "Jusqu’au"
 #: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "Date de fin de répétition"
-
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:693
-msgid "Unnamed event"
-msgstr "Évènement anonyme"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
@@ -1436,6 +1435,9 @@ msgstr "Évènements _suivants"
 #: src/utils/gcal-utils.c:1279
 msgid "_All Events"
 msgstr "_Tous les évènements"
+
+#~ msgid "Unnamed event"
+#~ msgstr "Évènement anonyme"
 
 #~ msgid "Calendar for GNOME"
 #~ msgstr "Agenda de GNOME"
