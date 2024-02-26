@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-14 14:55+0000\n"
-"PO-Revision-Date: 2024-02-15 16:21+0330\n"
+"POT-Creation-Date: 2024-02-25 17:33+0000\n"
+"PO-Revision-Date: 2024-02-26 14:12+0330\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "Language: fa\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -178,18 +178,18 @@ msgstr "ویرایش تقویم"
 msgid "Calendar Settings"
 msgstr "تنظیمات تقویم"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:344
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "تقویم‌ها"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:369
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "تقویم <b>%s</b> حذف شد"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:374 src/gui/gcal-window.c:738
+#: src/gui/calendar-management/gcal-calendars-page.c:373 src/gui/gcal-window.c:738
 msgid "_Undo"
 msgstr "_برگردان"
 
@@ -206,7 +206,7 @@ msgid "Open in Settings"
 msgstr "گشودن در  تنظیمات"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
-#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115 src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "موقعیت"
@@ -450,6 +450,10 @@ msgstr "ذخیره"
 msgid "Done"
 msgstr "انجام شد"
 
+#: src/gui/event-editor/gcal-event-editor-dialog.c:778
+msgid "New Event"
+msgstr "رویداد جدید"
+
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:29
 msgid "Select Calendar"
 msgstr "گزینش تقویم"
@@ -615,11 +619,6 @@ msgstr "تاریخ پایان"
 #: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "تاریخ پایان تکرار"
-
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:693
-msgid "Unnamed event"
-msgstr "رویداد بی‌نام"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
@@ -1400,6 +1399,9 @@ msgstr "_رویدادهای بعدی"
 #: src/utils/gcal-utils.c:1279
 msgid "_All Events"
 msgstr "_همهٔ رویدادها"
+
+#~ msgid "Unnamed event"
+#~ msgstr "رویداد بی‌نام"
 
 #~ msgid "Toggles the sound of the alarm"
 #~ msgstr "تغییر وضعیت صدای هشدار"
