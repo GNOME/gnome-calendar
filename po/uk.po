@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-14 14:55+0000\n"
-"PO-Revision-Date: 2024-02-14 20:29+0200\n"
+"POT-Creation-Date: 2024-02-25 17:33+0000\n"
+"PO-Revision-Date: 2024-02-26 22:13+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -172,7 +172,6 @@ msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
 #: src/gui/calendar-management/calendar-row.ui:19
-#| msgid "Read-only Calendar"
 msgid "Read-Only Calendar"
 msgstr "Календар лише для читання"
 
@@ -188,18 +187,18 @@ msgstr "Редагувати календар"
 msgid "Calendar Settings"
 msgstr "Параметри календаря"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:344
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Календарі"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:369
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Календар <b>%s</b> вилучено"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:374
+#: src/gui/calendar-management/gcal-calendars-page.c:373
 #: src/gui/gcal-window.c:738
 msgid "_Undo"
 msgstr "_Скасувати"
@@ -217,7 +216,7 @@ msgid "Open in Settings"
 msgstr "Відкрити у «Параметрах»"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
-#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -242,7 +241,6 @@ msgid "Default _Calendar"
 msgstr "Типовий _календар"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
-#| msgid "Add new events to this calendar by default."
 msgid "Add new events to this calendar by default"
 msgstr "Типово додати нову подію до цього календаря"
 
@@ -446,7 +444,6 @@ msgid "Toggle Alarm Sound"
 msgstr "Перемкнути звук попередження"
 
 #: src/gui/event-editor/gcal-alarm-row.ui:19
-#| msgid "Remove the alarm"
 msgid "Remove Alarm"
 msgstr "Вилучити нагадування"
 
@@ -507,8 +504,13 @@ msgstr "Зберегти"
 msgid "Done"
 msgstr "Зроблено"
 
+#: src/gui/event-editor/gcal-event-editor-dialog.c:778
+#| msgctxt "shortcut window"
+#| msgid "New Event"
+msgid "New Event"
+msgstr "Нова подія"
+
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:29
-#| msgid "Default _Calendar"
 msgid "Select Calendar"
 msgstr "Виберіть календар"
 
@@ -537,22 +539,18 @@ msgid "Add a Reminder…"
 msgstr "Додати нагадування…"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:52
-#| msgid "5 minutes"
 msgid "5 Minutes"
 msgstr "5 хвилин"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:58
-#| msgid "10 minutes"
 msgid "10 Minutes"
 msgstr "10 хвилин"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:64
-#| msgid "15 minutes"
 msgid "15 Minutes"
 msgstr "15 хвилин"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:70
-#| msgid "30 minutes"
 msgid "30 Minutes"
 msgstr "30 хвилин"
 
@@ -561,22 +559,18 @@ msgid "1 Hour"
 msgstr "1 година"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:82
-#| msgid "All Day"
 msgid "1 Day"
 msgstr "1 день"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:88
-#| msgid "All Day"
 msgid "2 Days"
 msgstr "2 дні"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:94
-#| msgid "All Day"
 msgid "3 Days"
 msgstr "3 дні"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:100
-#| msgid "Week"
 msgid "1 Week"
 msgstr "1 тиждень"
 
@@ -681,11 +675,6 @@ msgstr "До дати"
 #: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "Дата завершення повтору"
-
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:693
-msgid "Unnamed event"
-msgstr "Безіменна подія"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
@@ -1188,8 +1177,6 @@ msgid "Search events"
 msgstr "Пошук подій"
 
 #: src/gui/gcal-sync-indicator.ui:21
-#| msgctxt "tooltip"
-#| msgid "Synchronizing Remote Calendars…"
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars"
 msgstr "Синхронізування віддалених календарів"
@@ -1270,41 +1257,31 @@ msgid "General"
 msgstr "Загальне"
 
 #: src/gui/gtk/help-overlay.ui:14
-#| msgctxt "shortcut window"
-#| msgid "Open main menu"
 msgctxt "shortcut window"
 msgid "Open Main Menu"
 msgstr "Відкрити головне меню"
 
 #: src/gui/gtk/help-overlay.ui:20
-#| msgctxt "shortcut window"
-#| msgid "Open Calendars menu"
 msgctxt "shortcut window"
 msgid "Open Calendars Menu"
 msgstr "Відкрити меню календарів"
 
 #: src/gui/gtk/help-overlay.ui:26
-#| msgctxt "shortcut window"
-#| msgid "New event"
 msgctxt "shortcut window"
 msgid "New Event"
 msgstr "Створити запис події"
 
 #: src/gui/gtk/help-overlay.ui:32
-#| msgid "Manage Calendars"
 msgctxt "shortcut window"
 msgid "Manage Calendars"
 msgstr "Керування календарями"
 
 #: src/gui/gtk/help-overlay.ui:38
-#| msgid "_Synchronize Calendars"
 msgctxt "shortcut window"
 msgid "Synchronize Calendars"
 msgstr "Синхронізувати календарі"
 
 #: src/gui/gtk/help-overlay.ui:44
-#| msgctxt "shortcut window"
-#| msgid "Close window"
 msgctxt "shortcut window"
 msgid "Close Window"
 msgstr "Закрити вікно"
@@ -1315,8 +1292,6 @@ msgid "Search"
 msgstr "Пошук"
 
 #: src/gui/gtk/help-overlay.ui:56
-#| msgctxt "shortcut window"
-#| msgid "Show help"
 msgctxt "shortcut window"
 msgid "Show Help"
 msgstr "Показати довідку"
@@ -1337,29 +1312,21 @@ msgid "Go Back"
 msgstr "Назад"
 
 #: src/gui/gtk/help-overlay.ui:79
-#| msgctxt "shortcut window"
-#| msgid "Go forward"
 msgctxt "shortcut window"
 msgid "Go Forward"
 msgstr "Уперед"
 
 #: src/gui/gtk/help-overlay.ui:85
-#| msgctxt "shortcut window"
-#| msgid "Show today"
 msgctxt "shortcut window"
 msgid "Show Today"
 msgstr "Показати сьогодні"
 
 #: src/gui/gtk/help-overlay.ui:91
-#| msgctxt "shortcut window"
-#| msgid "Next view"
 msgctxt "shortcut window"
 msgid "Next View"
 msgstr "Наступний перегляд"
 
 #: src/gui/gtk/help-overlay.ui:97
-#| msgctxt "shortcut window"
-#| msgid "Previous view"
 msgctxt "shortcut window"
 msgid "Previous View"
 msgstr "Попередній перегляд"
@@ -1370,13 +1337,11 @@ msgid "View"
 msgstr "Переглянути"
 
 #: src/gui/gtk/help-overlay.ui:108
-#| msgid "Week view"
 msgctxt "shortcut window"
 msgid "Week View"
 msgstr "Перегляд тижня"
 
 #: src/gui/gtk/help-overlay.ui:114
-#| msgid "Month view"
 msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Перегляд місяця"
@@ -1496,6 +1461,9 @@ msgstr "Для _наступних подій"
 #: src/utils/gcal-utils.c:1279
 msgid "_All Events"
 msgstr "Для _всіх подій"
+
+#~ msgid "Unnamed event"
+#~ msgstr "Безіменна подія"
 
 #~ msgid "Toggles the sound of the alarm"
 #~ msgstr "Перемикає звук нагадування"
