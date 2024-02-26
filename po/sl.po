@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-15 06:45+0000\n"
-"PO-Revision-Date: 2024-02-19 17:22+0100\n"
+"POT-Creation-Date: 2024-02-25 16:24+0000\n"
+"PO-Revision-Date: 2024-02-25 18:14+0100\n"
 "Last-Translator: Matej Urbančič <mateju@src.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -185,18 +185,18 @@ msgstr "Uredi koledar"
 msgid "Calendar Settings"
 msgstr "Nastavitve koledarja"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:344
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Koledarji"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:369
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Koledar <b>%s</b> je odstranjen."
 
-#: src/gui/calendar-management/gcal-calendars-page.c:374
+#: src/gui/calendar-management/gcal-calendars-page.c:373
 #: src/gui/gcal-window.c:738
 msgid "_Undo"
 msgstr "_Razveljavi"
@@ -214,7 +214,7 @@ msgid "Open in Settings"
 msgstr "Odpri nastavitve"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
-#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -511,6 +511,10 @@ msgstr "Shrani"
 msgid "Done"
 msgstr "Končano"
 
+#: src/gui/event-editor/gcal-event-editor-dialog.c:778
+msgid "Unnamed Event"
+msgstr "Neimenovan dogodek"
+
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:29
 msgid "Select Calendar"
 msgstr "Izbor koledarja"
@@ -676,11 +680,6 @@ msgstr "Ponavljaj do datuma"
 #: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "Datum konca ponavljanja"
-
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:693
-msgid "Unnamed event"
-msgstr "Neimenovan dogodek"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
