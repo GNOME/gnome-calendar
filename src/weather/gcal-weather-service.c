@@ -486,8 +486,8 @@ preprocess_gweather_reports (GcalWeatherService *self,
   GSList *iter = NULL;    /* unowned */
   GDate cur_gdate;
   glong first_tomorrow_dtime = -1;
-  glong today_unix;
-  glong unix_now;
+  gint64 today_unix;
+  gint64 unix_now;
   guint i;
 
   /*
