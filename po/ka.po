@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-14 14:55+0000\n"
-"PO-Revision-Date: 2024-02-15 07:44+0100\n"
+"POT-Creation-Date: 2024-02-25 17:33+0000\n"
+"PO-Revision-Date: 2024-02-27 04:25+0100\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -179,18 +179,18 @@ msgstr "კალენდარის ჩასწორება"
 msgid "Calendar Settings"
 msgstr "კალენდრის პარამეტრები"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:344
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "კალენდრები"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:369
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "კალენდარი წაიშალა: <b>%s</b>"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:374
+#: src/gui/calendar-management/gcal-calendars-page.c:373
 #: src/gui/gcal-window.c:738
 msgid "_Undo"
 msgstr "_დაბრუნება"
@@ -208,7 +208,7 @@ msgid "Open in Settings"
 msgstr "პარამეტრებში გახსნა"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
-#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -467,6 +467,10 @@ msgstr "შენახვა"
 msgid "Done"
 msgstr "დასრულებულია"
 
+#: src/gui/event-editor/gcal-event-editor-dialog.c:778
+msgid "New Event"
+msgstr "ახალი მოვლენა"
+
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:29
 msgid "Select Calendar"
 msgstr "აირჩიეთ კალენდარი"
@@ -632,11 +636,6 @@ msgstr "დრომდე"
 #: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "გამეორების დასრულების თარიღი"
-
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:693
-msgid "Unnamed event"
-msgstr "უსახელო მოვლენა"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
@@ -1416,6 +1415,9 @@ msgstr "_მომდევნო მოვლენები"
 #: src/utils/gcal-utils.c:1279
 msgid "_All Events"
 msgstr "_ყველა მოვლენა"
+
+#~ msgid "Unnamed event"
+#~ msgstr "უსახელო მოვლენა"
 
 #~ msgid "Toggles the sound of the alarm"
 #~ msgstr "განგაშის ხმის გადართვა"
