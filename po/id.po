@@ -2,15 +2,15 @@
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Andika Triwidada <andika@gmail.com>, 2013, 2016, 2019, 2021, 2024.
-# Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2023.
+# Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-14 14:55+0000\n"
-"PO-Revision-Date: 2024-02-21 19:38+0700\n"
-"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
+"POT-Creation-Date: 2024-02-25 17:33+0000\n"
+"PO-Revision-Date: 2024-02-27 21:04+0700\n"
+"Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnomed@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -182,18 +182,18 @@ msgstr "Sunting kalender"
 msgid "Calendar Settings"
 msgstr "Pengaturan Kalender"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:344
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Kalender"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:369
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalender <b>%s</b> dihapus"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:374
+#: src/gui/calendar-management/gcal-calendars-page.c:373
 #: src/gui/gcal-window.c:738
 msgid "_Undo"
 msgstr "_Tak Jadi"
@@ -211,7 +211,7 @@ msgid "Open in Settings"
 msgstr "Buka di Pengaturan"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
-#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -456,6 +456,10 @@ msgstr "Simpan"
 msgid "Done"
 msgstr "Selesai"
 
+#: src/gui/event-editor/gcal-event-editor-dialog.c:778
+msgid "New Event"
+msgstr "Acara Baru"
+
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:29
 msgid "Select Calendar"
 msgstr "Pilih Kalender"
@@ -622,11 +626,6 @@ msgstr "Hingga Tanggal"
 msgid "End Repeat Date"
 msgstr "Tanggal Akhir Pengulangan"
 
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:693
-msgid "Unnamed event"
-msgstr "Acara tanpa nama"
-
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
 msgid "Title"
@@ -675,7 +674,7 @@ msgstr "Hak Cipta © 2012–%d para penulis Kalender"
 msgid "translator-credits"
 msgstr ""
 "Andika Triwidada <andika@gmail.com>, 2013, 2016, 2019, 2021, 2024.\n"
-"Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2023."
+"Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2024."
 
 #: src/gui/gcal-application.c:251 src/gui/gcal-window.ui:329
 msgid "Weather"
@@ -1405,3 +1404,6 @@ msgstr "A_cara Berikutnya"
 #: src/utils/gcal-utils.c:1279
 msgid "_All Events"
 msgstr "Semu_a Acara"
+
+#~ msgid "Unnamed event"
+#~ msgstr "Acara tanpa nama"
