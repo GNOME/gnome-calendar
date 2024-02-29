@@ -58,7 +58,7 @@
   <url type="contribute">https://wiki.gnome.org/Contribute</url>
   <project_group>GNOME</project_group>
   <developer_name>The GNOME Project</developer_name>
-  <developer id="gnome.org">
+  <developer id="org.gnome">
     <name>The GNOME Project</name>
   </developer>
 
