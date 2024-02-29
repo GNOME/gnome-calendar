@@ -307,16 +307,18 @@ on_combo_row_signal_factory_bind_cb (GtkSignalListItemFactory *factory,
   grid = gtk_list_item_get_child (item);
 
   color_paintable = get_circle_paintable_from_color (gcal_calendar_get_color (calendar), 16);
-  get_source_parent_name_color (gcal_context_get_manager (self->context),
-                                gcal_calendar_get_source (calendar),
-                                &parent_name,
-                                NULL);
 
   icon = g_object_get_data (G_OBJECT (grid), "icon");
   gtk_image_set_from_paintable (GTK_IMAGE (icon), color_paintable);
 
   label = g_object_get_data (G_OBJECT (grid), "title");
   gtk_label_set_label (GTK_LABEL (label), gcal_calendar_get_name (calendar));
+
+  /* Get a colored version of the calendar source's name, to use as a subtitle */
+  get_source_parent_name_color (gcal_context_get_manager (self->context),
+                                gcal_calendar_get_source (calendar),
+                                &parent_name,
+                                NULL);
 
   label = g_object_get_data (G_OBJECT (grid), "subtitle");
   gtk_label_set_label (GTK_LABEL (label), parent_name);
