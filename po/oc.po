@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-22 06:54+0000\n"
-"PO-Revision-Date: 2024-02-23 20:33+0100\n"
+"POT-Creation-Date: 2024-02-25 17:33+0000\n"
+"PO-Revision-Date: 2024-02-29 18:02+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -63,6 +63,15 @@ msgid ""
 "supports local and offline calendaring, so you can use it anywhere and "
 "anytime while travelling (or after civilization's collapse.)"
 msgstr ""
+"En integrant las darrièras tecnologias GNOME e las practicas melhoras de "
+"concepcion, l'Agenda de GNOME s'apièja sul servidor de donadas Evolucion per "
+"gerir de grandas quantitats d'eveniments e assegurar l'integracion amb "
+"d'autras aplicacions. Podètz ajustar d'agendas provenenta de divèrses "
+"servicis d'agenda en linha (coma NextCloud, Google Calendar e los servidors "
+"CalDAV / WebDAV), per tal de sincronizar vòstres eveniments entre mantun "
+"aparelh e platafòrma. L'Agenda de GNOME pren egalament en carga l'agenda "
+"locala e fòra linha, çò que vos permet de l'utilizar pertot e a cada moment "
+"pendent vòstres desplaçaments (o après l'esfondrament de la civilizacion)."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:33
 msgid "Week view"
@@ -203,7 +212,7 @@ msgid "Open in Settings"
 msgstr "Dobrir los paramètres"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
-#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -462,6 +471,10 @@ msgstr "Enregistrar"
 msgid "Done"
 msgstr "Acabat"
 
+#: src/gui/event-editor/gcal-event-editor-dialog.c:778
+msgid "New Event"
+msgstr "Eveniment novèl"
+
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:29
 msgid "Select Calendar"
 msgstr "Seleccionar agenda"
@@ -627,11 +640,6 @@ msgstr "Fins al"
 #: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "Data de fin de repeticion"
-
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:693
-msgid "Unnamed event"
-msgstr "Eveniment anonim"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
@@ -1413,6 +1421,9 @@ msgstr "Eveniments _seguents"
 #: src/utils/gcal-utils.c:1279
 msgid "_All Events"
 msgstr "_Totes los eveniments"
+
+#~ msgid "Unnamed event"
+#~ msgstr "Eveniment anonim"
 
 #~ msgid "Toggles the sound of the alarm"
 #~ msgstr "Desactiva lo son de l'alarma"
