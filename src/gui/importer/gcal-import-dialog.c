@@ -264,16 +264,17 @@ on_combo_row_signal_factory_setup_cb (GtkSignalListItemFactory *factory,
                                       GcalImportDialog         *self)
 {
   GtkWidget *label;
-  GtkWidget *icon;
+  GtkWidget *color_icon;
+  GtkWidget *visibility_status_icon;
   GtkWidget *grid;
 
   grid = gtk_grid_new ();
   gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
 
-  icon = gtk_image_new ();
-  gtk_widget_add_css_class (icon, "calendar-color-image");
-  g_object_set_data (G_OBJECT (grid), "icon", icon);
-  gtk_grid_attach (GTK_GRID (grid), icon, 0, 0, 1, 2);
+  color_icon = gtk_image_new ();
+  gtk_widget_add_css_class (color_icon, "calendar-color-image");
+  g_object_set_data (G_OBJECT (grid), "color_icon", color_icon);
+  gtk_grid_attach (GTK_GRID (grid), color_icon, 0, 0, 1, 2);
 
   label = gtk_label_new (NULL);
   gtk_label_set_xalign (GTK_LABEL (label), 0.0);
@@ -287,6 +288,13 @@ on_combo_row_signal_factory_setup_cb (GtkSignalListItemFactory *factory,
   g_object_set_data (G_OBJECT (grid), "subtitle", label);
   gtk_grid_attach (GTK_GRID (grid), label, 1, 1, 1, 1);
 
+  visibility_status_icon = gtk_image_new ();
+
+  g_object_set_data (G_OBJECT (grid), "visibility_status_icon", visibility_status_icon);
+  gtk_widget_set_hexpand (visibility_status_icon, TRUE);
+  gtk_widget_set_halign (visibility_status_icon, GTK_ALIGN_END);
+  gtk_grid_attach (GTK_GRID (grid), visibility_status_icon, 2, 0, 1, 2);
+
   gtk_list_item_set_child (item, grid);
 }
 
@@ -299,17 +307,27 @@ on_combo_row_signal_factory_bind_cb (GtkSignalListItemFactory *factory,
   g_autofree gchar *parent_name = NULL;
   GcalCalendar *calendar;
   GtkWidget *label;
-  GtkWidget *icon;
+  GtkWidget *color_icon_widget;
   GtkWidget *grid;
 
   calendar = gtk_list_item_get_item (item);
 
   grid = gtk_list_item_get_child (item);
 
+  color_icon_widget = g_object_get_data (G_OBJECT (grid), "color_icon");
   color_paintable = get_circle_paintable_from_color (gcal_calendar_get_color (calendar), 16);
+  gtk_image_set_from_paintable (GTK_IMAGE (color_icon_widget), color_paintable);
 
-  icon = g_object_get_data (G_OBJECT (grid), "icon");
-  gtk_image_set_from_paintable (GTK_IMAGE (icon), color_paintable);
+  /* Show indicator icons for calendars that are not shown in the views */
+  if (!gcal_calendar_get_visible (calendar))
+    {
+      g_autoptr (GIcon) visibility_icon = NULL;
+      GtkWidget *visibility_status_icon_widget;
+
+      visibility_icon = g_themed_icon_new ("eye-not-looking-symbolic");
+      visibility_status_icon_widget = g_object_get_data (G_OBJECT (grid), "visibility_status_icon");
+      gtk_image_set_from_gicon (GTK_IMAGE (visibility_status_icon_widget), visibility_icon);
+    }
 
   label = g_object_get_data (G_OBJECT (grid), "title");
   gtk_label_set_label (GTK_LABEL (label), gcal_calendar_get_name (calendar));
