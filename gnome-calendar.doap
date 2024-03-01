@@ -7,7 +7,7 @@
   <name xml:lang="en">GNOME Calendar</name>
   <shortdesc xml:lang="en">Calendar application for GNOME</shortdesc>
   <description>GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME desktop. By reusing the components which the GNOME desktop is build on, Calendar nicely integrates with the GNOME ecosystem.</description>
-  <homepage rdf:resource="https://wiki.gnome.org/Apps/Calendar" />
+  <homepage rdf:resource="https://apps.gnome.org/Calendar/" />
   <download-page rdf:resource="http://download.gnome.org/sources/gnome-calendar/" />
   <bug-database rdf:resource="https://gitlab.gnome.org/GNOME/gnome-calendar/issues" />
   <category rdf:resource="http://api.gnome.org/doap-extensions#apps" />

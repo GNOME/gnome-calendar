@@ -50,12 +50,12 @@
     <kudo>SearchProvider</kudo>
   </kudos>
 
-  <url type="homepage">https://wiki.gnome.org/Apps/Calendar</url>
+  <url type="homepage">https://apps.gnome.org/Calendar/</url>
   <url type="bugtracker">https://gitlab.gnome.org/GNOME/gnome-calendar/issues</url>
   <url type="donation">https://www.gnome.org/donate/</url>
   <url type="vcs-browser">https://gitlab.gnome.org/GNOME/gnome-calendar</url>
   <url type="translate">https://l10n.gnome.org/module/gnome-calendar/</url>
-  <url type="contribute">https://wiki.gnome.org/Contribute</url>
+  <url type="contribute">https://welcome.gnome.org/app/Calendar/</url>
   <project_group>GNOME</project_group>
   <developer_name>The GNOME Project</developer_name>
   <developer id="org.gnome">

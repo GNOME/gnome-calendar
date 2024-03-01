@@ -70,7 +70,7 @@ set_defines = [
   ['PACKAGE_NAME', meson.project_name()],
   ['PACKAGE_STRING', '@0@ @1@'.format(meson.project_name(), calendar_version)],
   ['PACKAGE_TARNAME', meson.project_name()],
-  ['PACKAGE_URL', 'https://wiki.gnome.org/Apps/Calendar'],
+  ['PACKAGE_URL', 'https://apps.gnome.org/Calendar/'],
   ['PACKAGE_VERSION', calendar_version + rev],
   ['VERSION', calendar_version + rev],
   ['GETTEXT_PACKAGE', meson.project_name()],
