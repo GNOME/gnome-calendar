@@ -50,6 +50,7 @@ struct _GcalEventEditorDialog
 {
   AdwDialog               parent;
 
+  GtkListBox             *calendars_listbox;
   GtkWidget              *cancel_button;
   GtkWidget              *delete_button;
   GtkWidget              *done_button;
@@ -58,7 +59,6 @@ struct _GcalEventEditorDialog
   GcalEventEditorSection *reminders_section;
   GcalEventEditorSection *schedule_section;
   GtkWidget              *sources_button;
-  GtkPopoverMenu         *sources_popover;
   GtkWidget              *source_image;
   GtkWidget              *source_label;
   GtkWidget              *subtitle_label;
@@ -109,73 +109,6 @@ static GParamSpec* properties[N_PROPS] = { NULL, };
 /*
  * Auxiliary methods
  */
-
-static gint
-sources_menu_sort_func (gconstpointer a,
-                        gconstpointer b)
-{
-  GcalCalendar *calendar1, *calendar2;
-
-  calendar1 = GCAL_CALENDAR ((gpointer) a);
-  calendar2 = GCAL_CALENDAR ((gpointer) b);
-
-  return g_ascii_strcasecmp (gcal_calendar_get_name (calendar1),
-                             gcal_calendar_get_name (calendar2));
-}
-
-static void
-fill_sources_menu (GcalEventEditorDialog *self)
-{
-  g_autoptr (GList) list = NULL;
-  GcalManager *manager;
-  GList *aux;
-
-  if (self->context == NULL)
-    return;
-
-  manager = gcal_context_get_manager (self->context);
-  list = gcal_manager_get_calendars (manager);
-  self->sources_menu = g_menu_new ();
-
-  list = g_list_sort (list, sources_menu_sort_func);
-
-  for (aux = list; aux != NULL; aux = aux->next)
-    {
-      g_autoptr (GdkPaintable) paintable = NULL;
-      g_autoptr (GMenuItem) item = NULL;
-      g_autoptr (GdkPixbuf) pix = NULL;
-      g_autoptr (GVariant) target = NULL;
-      GcalCalendar *calendar;
-      const GdkRGBA *color;
-
-      calendar = GCAL_CALENDAR (aux->data);
-
-      /* retrieve color */
-      color = gcal_calendar_get_color (calendar);
-      paintable = get_circle_paintable_from_color (color, 16);
-      pix = paintable_to_pixbuf (paintable);
-
-      /* menu item */
-      item = g_menu_item_new (gcal_calendar_get_name (calendar), "select-calendar");
-      g_menu_item_set_icon (item, G_ICON (pix));
-
-      /* set insensitive for read-only calendars */
-      if (!gcal_calendar_is_read_only (calendar))
-        target = g_variant_new_string (gcal_calendar_get_id (calendar));
-
-      g_menu_item_set_action_and_target_value (item,
-                                               "event-editor-dialog.select-calendar",
-                                               g_steal_pointer (&target));
-
-      g_menu_append_item (self->sources_menu, item);
-    }
-
-  gtk_popover_menu_set_menu_model (self->sources_popover,
-                                   G_MENU_MODEL (self->sources_menu));
-
-  /* HACK: show the popover menu icons */
-  fix_popover_menu_icons (GTK_POPOVER (self->sources_popover));
-}
 
 static void
 set_writable (GcalEventEditorDialog *self,
@@ -254,6 +187,73 @@ apply_event_properties_to_template_event (GcalEvent *template_event,
   gcal_event_set_all_day (template_event, gcal_event_get_all_day (event));
   gcal_event_set_date_start (template_event, start_date);
   gcal_event_set_date_end (template_event, end_date);
+}
+
+static gboolean
+paintable_from_gdk_rgb (GBinding     *binding,
+                        const GValue *from_value,
+                        GValue       *to_value,
+                        gpointer      user_data)
+{
+  GdkRGBA *rgba = g_value_get_boxed (from_value);
+  g_value_take_object (to_value, get_circle_paintable_from_color (rgba, 16));
+  return TRUE;
+}
+
+static GtkWidget *
+create_row_func (gpointer data,
+                 gpointer user_data)
+{
+  GcalCalendar *calendar = (GcalCalendar *) data;
+  GtkWidget *label;
+  GtkWidget *icon;
+  GtkWidget *row;
+  GtkWidget *box;
+
+  g_assert (GCAL_IS_CALENDAR (calendar));
+
+  row = gtk_list_box_row_new ();
+
+  gtk_actionable_set_action_name (GTK_ACTIONABLE (row), "event-editor-dialog.select-calendar");
+  if (!gcal_calendar_is_read_only (calendar))
+    gtk_actionable_set_action_target (GTK_ACTIONABLE (row), "s", gcal_calendar_get_id (calendar));
+
+  box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), box);
+
+  icon = gtk_image_new ();
+  gtk_widget_add_css_class (icon, "calendar-color-image");
+  g_object_bind_property_full (data, "color",
+                               icon, "paintable",
+                               G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE,
+                               paintable_from_gdk_rgb,
+                               NULL,
+                               NULL,
+                               NULL);
+  gtk_box_append (GTK_BOX (box), icon);
+
+  label = gtk_label_new (NULL);
+  gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+  g_object_bind_property (data, "name", label, "label", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  gtk_box_append (GTK_BOX (box), label);
+
+  return row;
+}
+
+static void
+setup_context (GcalEventEditorDialog *self)
+{
+  GcalManager *manager;
+  GListModel *calendars;
+
+  GCAL_ENTRY;
+
+  manager = gcal_context_get_manager (self->context);
+  calendars = gcal_manager_get_calendars_model (manager);
+
+  gtk_list_box_bind_model (self->calendars_listbox, calendars, create_row_func, self, NULL);
+
+  GCAL_EXIT;
 }
 
 
@@ -581,6 +581,7 @@ gcal_event_editor_dialog_set_property (GObject      *object,
     case PROP_CONTEXT:
       g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
+      setup_context (self);
       g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
       break;
 
@@ -654,6 +655,7 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-event-editor-dialog.ui");
 
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, calendars_listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, delete_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, done_button);
@@ -662,7 +664,6 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, reminders_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, schedule_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, source_image);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, subtitle_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, summary_section);
@@ -757,8 +758,6 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   /* update sources list */
   if (self->sources_menu != NULL)
     g_menu_remove_all (self->sources_menu);
-
-  fill_sources_menu (self);
 
   /* dialog titlebar's title & subtitle */
   paintable = get_circle_paintable_from_color (gcal_event_get_color (cloned_event), 10);

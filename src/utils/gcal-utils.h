@@ -94,9 +94,6 @@ gsize                e_utf8_strftime_fix_am_pm                   (gchar         
                                                                   const gchar        *fmt,
                                                                   const struct tm    *tm);
 
-void                 fix_popover_menu_icons                      (GtkPopover         *popover);
-
-
 void                 get_source_parent_name_color                (GcalManager        *manager,
                                                                   ESource            *source,
                                                                   gchar             **name,

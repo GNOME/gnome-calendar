@@ -24,7 +24,26 @@
             </child>
             <child type="title">
               <object class="GtkMenuButton" id="sources_button">
-                <property name="popover">sources_popover</property>
+                <property name="popover">
+                  <object class="GtkPopover">
+                    <style>
+                      <class name="menu" />
+                    </style>
+                    <child>
+                      <object class="GtkScrolledWindow">
+                        <property name="propagate-natural-height">True</property>
+                        <property name="width-request">250</property>
+                        <property name="max-content-height">600</property>
+                        <property name="hscrollbar-policy">never</property>
+                        <child>
+                          <object class="GtkListBox" id="calendars_listbox">
+                            <property name="selection-mode">none</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
                 <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
                 <property name="tooltip-text" translatable="yes">Select Calendar</property>
                 <style>
@@ -171,8 +190,6 @@
       </object>
     </child>
   </template>
-  <object class="GtkPopoverMenu" id="sources_popover">
-  </object>
   <object class="GtkSizeGroup">
     <property name="mode">vertical</property>
     <widgets>
