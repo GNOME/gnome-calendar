@@ -4,15 +4,15 @@
 # Abigail Brady <morwen@evilmagic.org>
 # Bastien Nocera <hadess@hadess.net>, 2015.
 # Zander Brown <zbrown@gnome.org>, 2021.
-# Bruce Cowan <bruce@bcowan.me.uk>, 2017-2023.
+# Bruce Cowan <bruce@bcowan.me.uk>, 2017-2024.
 # Andi Chandler <andi@gowling.com>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 3.21.91\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-22 06:54+0000\n"
-"PO-Revision-Date: 2024-02-22 16:32+0000\n"
+"POT-Creation-Date: 2024-03-01 03:42+0000\n"
+"PO-Revision-Date: 2024-03-03 13:55+0000\n"
 "Last-Translator: Bruce Cowan <bruce@bcowan.me.uk>\n"
 "Language-Team: English - United Kingdom <en@li.org>\n"
 "Language: en_GB\n"
@@ -218,7 +218,7 @@ msgid "Open in Settings"
 msgstr "Open in Settings"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
-#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -309,7 +309,7 @@ msgstr "Password"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:237
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1269
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1200
 msgid "_Cancel"
 msgstr "_Cancel"
 
@@ -321,29 +321,29 @@ msgstr "_Connect"
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
-msgstr[0] "%1$u day, %2$u hour, and %3$u minute before"
-msgstr[1] "%1$u day, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u day, %2$u hour and %3$u minute before"
+msgstr[1] "%1$u day, %2$u hour and %3$u minutes before"
 
 #: src/gui/event-editor/gcal-alarm-row.c:88
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
-msgstr[0] "%1$u day, %2$u hours, and %3$u minute before"
-msgstr[1] "%1$u day, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u day, %2$u hours and %3$u minute before"
+msgstr[1] "%1$u day, %2$u hours and %3$u minutes before"
 
 #: src/gui/event-editor/gcal-alarm-row.c:94
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
-msgstr[0] "%1$u days, %2$u hour, and %3$u minute before"
-msgstr[1] "%1$u days, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u days, %2$u hour and %3$u minute before"
+msgstr[1] "%1$u days, %2$u hour and %3$u minutes before"
 
 #: src/gui/event-editor/gcal-alarm-row.c:98
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
-msgstr[0] "%1$u days, %2$u hours, and %3$u minute before"
-msgstr[1] "%1$u days, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u days, %2$u hours and %3$u minute before"
+msgstr[1] "%1$u days, %2$u hours and %3$u minutes before"
 
 #: src/gui/event-editor/gcal-alarm-row.c:113
 #, c-format
@@ -469,35 +469,39 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "S"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Save"
 msgstr "Save"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Done"
 msgstr "Done"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
+#: src/gui/event-editor/gcal-event-editor-dialog.c:777
+msgid "New Event"
+msgstr "New Event"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:48
 msgid "Select Calendar"
 msgstr "Select Calendar"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:87
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:106
 msgid "_Done"
 msgstr "_Done"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:133
 msgid "Schedule"
 msgstr "Schedule"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:126
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:145
 msgid "Reminders"
 msgstr "Reminders"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:138
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:157
 msgid "Notes"
 msgstr "Notes"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:177
 msgid "Delete Event"
 msgstr "Delete Event"
 
@@ -642,11 +646,6 @@ msgstr "Until Date"
 #: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "End Repeat Date"
-
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:693
-msgid "Unnamed event"
-msgstr "Unnamed event"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
@@ -1409,11 +1408,11 @@ msgstr[1] "Other %d events"
 msgid "week %d"
 msgstr "week %d"
 
-#: src/utils/gcal-utils.c:1265
+#: src/utils/gcal-utils.c:1196
 msgid "Modify Multiple Events?"
 msgstr "Modify Multiple Events?"
 
-#: src/utils/gcal-utils.c:1266
+#: src/utils/gcal-utils.c:1197
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1421,17 +1420,20 @@ msgstr ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 
-#: src/utils/gcal-utils.c:1270
+#: src/utils/gcal-utils.c:1201
 msgid "_Only This Event"
 msgstr "_Only This Event"
 
-#: src/utils/gcal-utils.c:1276
+#: src/utils/gcal-utils.c:1207
 msgid "_Subsequent Events"
 msgstr "_Subsequent Events"
 
-#: src/utils/gcal-utils.c:1279
+#: src/utils/gcal-utils.c:1210
 msgid "_All Events"
 msgstr "_All Events"
+
+#~ msgid "Unnamed event"
+#~ msgstr "Unnamed event"
 
 #~ msgid "Calendar for GNOME"
 #~ msgstr "Calendar for GNOME"
