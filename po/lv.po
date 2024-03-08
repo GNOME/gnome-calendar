@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-14 14:55+0000\n"
-"PO-Revision-Date: 2024-02-25 14:05+0200\n"
+"POT-Creation-Date: 2024-03-02 23:39+0000\n"
+"PO-Revision-Date: 2024-03-08 23:43+0200\n"
 "Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
 "Language: lv\n"
@@ -26,7 +26,6 @@ msgid "Calendar"
 msgstr "Kalendārs"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
-#| msgid "Manage your calendars"
 msgid "Manage your schedule"
 msgstr "Pārvaldiet savu grafiku"
 
@@ -37,10 +36,10 @@ msgid ""
 "meetings and appointments, public events, travel logistics, or other "
 "commitments in your life."
 msgstr ""
-"GNOME Kalendārs ir elegants rīks, kas jums palīdz plānot savu tuvāko dienu un"
-" nedēļu grafiku; tas palīdzēs jums izsekot savām sanāksmēm, vizītēm,"
-" sabiedriskajiem pasākumiem, ceļojumu loģistikai un citiem savas dzīves"
-" notikumiem."
+"GNOME Kalendārs ir elegants rīks, kas jums palīdz plānot savu tuvāko dienu "
+"un nedēļu grafiku; tas palīdzēs jums izsekot savām sanāksmēm, vizītēm, "
+"sabiedriskajiem pasākumiem, ceļojumu loģistikai un citiem savas dzīves "
+"notikumiem."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
@@ -48,9 +47,9 @@ msgid ""
 "Calendar's infinite scrolling month view, week timetable, and scheduling "
 "list view."
 msgstr ""
-"Viegli veidojiet un pārvaldiet neierobežotu skaitu kalendāru un notikumu ar"
-" GNOME Kalendāra bezgalīgās ritināšanas mēneša skatu, nedēļas grafiku un"
-" plānošanas saraksta skatu."
+"Viegli veidojiet un pārvaldiet neierobežotu skaitu kalendāru un notikumu ar "
+"GNOME Kalendāra bezgalīgās ritināšanas mēneša skatu, nedēļas grafiku un "
+"plānošanas saraksta skatu."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:20
 msgid ""
@@ -63,15 +62,15 @@ msgid ""
 "supports local and offline calendaring, so you can use it anywhere and "
 "anytime while travelling (or after civilization's collapse.)"
 msgstr ""
-"Integrējot jaunākās GNOME tehnoloģijas un dizaina labās prakses, GNOME"
-" Kalendārs ir būvēts uz Evolution datu servera pamata, kas spēj pārvaldīt"
-" lielus notikumu apjomus un dot integrāciju ar citām lietotnēm. Jūs varat"
-" pievienot kalendārus no dažādiem tiešsaistes kalendāriem (piemēram,"
-" NextCloud, Google Calendar un CalDAV / WebDAV serveriem), kas jums ļauj"
-" sinhronizēt savus notikumus starp dažādām ierīcēm un platformām. GNOME"
-" Kalendārs atbalsta arī lokālos un tiešsaistes kalendārus, lai jūs varētu tos"
-" izmantot jebkurā vietā un laikā, kamēr ceļojat (vai arī pēc civilizācijas"
-" sabrukšanas)."
+"Integrējot jaunākās GNOME tehnoloģijas un dizaina labās prakses, GNOME "
+"Kalendārs ir būvēts uz Evolution datu servera pamata, kas spēj pārvaldīt "
+"lielus notikumu apjomus un dot integrāciju ar citām lietotnēm. Jūs varat "
+"pievienot kalendārus no dažādiem tiešsaistes kalendāriem (piemēram, "
+"NextCloud, Google Calendar un CalDAV / WebDAV serveriem), kas jums ļauj "
+"sinhronizēt savus notikumus starp dažādām ierīcēm un platformām. GNOME "
+"Kalendārs atbalsta arī lokālos un tiešsaistes kalendārus, lai jūs varētu tos "
+"izmantot jebkurā vietā un laikā, kamēr ceļojat (vai arī pēc civilizācijas "
+"sabrukšanas)."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:33
 msgid "Week view"
@@ -167,17 +166,14 @@ msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
 #: src/gui/calendar-management/calendar-row.ui:19
-#| msgid "Default _Calendar"
 msgid "Read-Only Calendar"
 msgstr "Tikai-lasāms kalendārs"
 
 #: src/gui/calendar-management/calendar-row.ui:29
-#| msgid "_Display Calendar"
 msgid "Display Calendar"
 msgstr "Rādīt kalendāru"
 
 #: src/gui/calendar-management/calendar-row.ui:39
-#| msgid "Edit Calendar"
 msgid "Edit calendar"
 msgstr "Rediģēt kalendāru"
 
@@ -185,24 +181,23 @@ msgstr "Rediģēt kalendāru"
 msgid "Calendar Settings"
 msgstr "Kalendāra iestatījumi"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:344
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Kalendāri"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:369
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalendārs <b>%s</b> ir izņemts"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:374
+#: src/gui/calendar-management/gcal-calendars-page.c:373
 #: src/gui/gcal-window.c:738
 msgid "_Undo"
 msgstr "Atsa_ukt"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:66
-#| msgid "Add Calendar…"
 msgid "_Add Calendar…"
 msgstr "_Pievienot kalendāru…"
 
@@ -215,7 +210,7 @@ msgid "Open in Settings"
 msgstr "Atvērt iestatījumos"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
-#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -240,7 +235,6 @@ msgid "Default _Calendar"
 msgstr "Noklusējuma _kalendārs"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
-#| msgid "Add new events to this calendar by default."
 msgid "Add new events to this calendar by default"
 msgstr "Pievienot jaunus notikumus šim kalendārām pēc noklusējuma"
 
@@ -308,7 +302,7 @@ msgstr "Parole"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:237
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1269
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1200
 msgid "_Cancel"
 msgstr "At_celt"
 
@@ -429,7 +423,6 @@ msgid "Toggle Alarm Sound"
 msgstr "Pārslēgt skaņas signālu"
 
 #: src/gui/event-editor/gcal-alarm-row.ui:19
-#| msgid "Remove the alarm"
 msgid "Remove Alarm"
 msgstr "Izņemt signālu"
 
@@ -448,7 +441,6 @@ msgstr "Sv"
 
 #. Translators: Calendar grid abbreviation for Monday
 #: src/gui/event-editor/gcal-date-chooser.c:277
-#| msgid "AM"
 msgctxt "grid monday"
 msgid "M"
 msgstr "Pr"
@@ -483,36 +475,42 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "Se"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Save"
 msgstr "Saglabāt"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Done"
 msgstr "Pabeigts"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
-#| msgid "Default _Calendar"
+#: src/gui/event-editor/gcal-event-editor-dialog.c:777
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "New Event"
+msgid "New Event"
+msgstr "Jauns notikums"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:48
 msgid "Select Calendar"
 msgstr "Izvēlieties kalendāru"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:87
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:106
 msgid "_Done"
 msgstr "_Gatavs"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:133
 msgid "Schedule"
 msgstr "Grafiks"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:126
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:145
 msgid "Reminders"
 msgstr "Atgādinājumi"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:138
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:157
 msgid "Notes"
 msgstr "Piezīmes"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:177
 msgid "Delete Event"
 msgstr "Dzēst notikumu"
 
@@ -521,22 +519,18 @@ msgid "Add a Reminder…"
 msgstr "Pievienot atgādinājumu…"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:52
-#| msgid "5 minutes"
 msgid "5 Minutes"
 msgstr "5 minūtes"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:58
-#| msgid "10 minutes"
 msgid "10 Minutes"
 msgstr "10 minūtes"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:64
-#| msgid "15 minutes"
 msgid "15 Minutes"
 msgstr "15 minūtes"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:70
-#| msgid "30 minutes"
 msgid "30 Minutes"
 msgstr "30 minūtes"
 
@@ -545,22 +539,18 @@ msgid "1 Hour"
 msgstr "1 stunda"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:82
-#| msgid "All Day"
 msgid "1 Day"
 msgstr "1 diena"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:88
-#| msgid "All Day"
 msgid "2 Days"
 msgstr "2 dienas"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:94
-#| msgid "All Day"
 msgid "3 Days"
 msgstr "3 dienas"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:100
-#| msgid "Week"
 msgid "1 Week"
 msgstr "1 nedēļa"
 
@@ -666,11 +656,6 @@ msgstr "Līdz datumam"
 msgid "End Repeat Date"
 msgstr "Atkārtošanas beigu datums"
 
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:693
-msgid "Unnamed event"
-msgstr "Nenosaukts notikums"
-
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
 msgid "Title"
@@ -736,7 +721,6 @@ msgid "_Synchronize Calendars"
 msgstr "_Sinhronizēt kalendārus"
 
 #: src/gui/gcal-calendar-button.ui:41
-#| msgid "Manage Calendars…"
 msgid "_Manage Calendars…"
 msgstr "_Pārvaldīt kalendārus…"
 
@@ -1163,7 +1147,6 @@ msgid "Add"
 msgstr "Pievienot"
 
 #: src/gui/gcal-search-button.ui:29
-#| msgid "Search events"
 msgid "Search Events"
 msgstr "Meklēt notikumus"
 
@@ -1172,11 +1155,9 @@ msgid "Search events"
 msgstr "Meklēt notikumus"
 
 #: src/gui/gcal-sync-indicator.ui:21
-#| msgctxt "tooltip"
-#| msgid "Synchronizing Remote Calendars…"
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars"
-msgstr "Sinhronizē attālinātos kalendārus"
+msgstr "Sinhronizē attālos kalendārus"
 
 #: src/gui/gcal-toolbar-end.ui:9
 msgctxt "tooltip"
@@ -1254,39 +1235,31 @@ msgid "General"
 msgstr "Vispārīgi"
 
 #: src/gui/gtk/help-overlay.ui:14
-#| msgid "Main Menu"
 msgctxt "shortcut window"
 msgid "Open Main Menu"
 msgstr "Atvērt galveno izvēlni"
 
 #: src/gui/gtk/help-overlay.ui:20
-#| msgid "New Calendar"
 msgctxt "shortcut window"
 msgid "Open Calendars Menu"
 msgstr "Atvērt kalendāru izvēlni"
 
 #: src/gui/gtk/help-overlay.ui:26
-#| msgctxt "shortcut window"
-#| msgid "New event"
 msgctxt "shortcut window"
 msgid "New Event"
 msgstr "Jauns notikums"
 
 #: src/gui/gtk/help-overlay.ui:32
-#| msgid "Manage Calendars"
 msgctxt "shortcut window"
 msgid "Manage Calendars"
 msgstr "Pārvaldīt kalendārus"
 
 #: src/gui/gtk/help-overlay.ui:38
-#| msgid "_Synchronize Calendars"
 msgctxt "shortcut window"
 msgid "Synchronize Calendars"
 msgstr "Sinhronizēt kalendārus"
 
 #: src/gui/gtk/help-overlay.ui:44
-#| msgctxt "shortcut window"
-#| msgid "Close window"
 msgctxt "shortcut window"
 msgid "Close Window"
 msgstr "Aizvērt logu"
@@ -1297,8 +1270,6 @@ msgid "Search"
 msgstr "Meklēt"
 
 #: src/gui/gtk/help-overlay.ui:56
-#| msgctxt "shortcut window"
-#| msgid "Show help"
 msgctxt "shortcut window"
 msgid "Show Help"
 msgstr "Rādīt palīdzību"
@@ -1319,29 +1290,21 @@ msgid "Go Back"
 msgstr "Iet atpakaļ"
 
 #: src/gui/gtk/help-overlay.ui:79
-#| msgctxt "shortcut window"
-#| msgid "Go forward"
 msgctxt "shortcut window"
 msgid "Go Forward"
 msgstr "Iet uz priekšu"
 
 #: src/gui/gtk/help-overlay.ui:85
-#| msgctxt "shortcut window"
-#| msgid "Show today"
 msgctxt "shortcut window"
 msgid "Show Today"
 msgstr "Rādīt šodienu"
 
 #: src/gui/gtk/help-overlay.ui:91
-#| msgctxt "shortcut window"
-#| msgid "Next view"
 msgctxt "shortcut window"
 msgid "Next View"
 msgstr "Nākamais skats"
 
 #: src/gui/gtk/help-overlay.ui:97
-#| msgctxt "shortcut window"
-#| msgid "Previous view"
 msgctxt "shortcut window"
 msgid "Previous View"
 msgstr "Iepriekšējais skats"
@@ -1352,13 +1315,11 @@ msgid "View"
 msgstr "Skats"
 
 #: src/gui/gtk/help-overlay.ui:108
-#| msgid "Week view"
 msgctxt "shortcut window"
 msgid "Week View"
 msgstr "Nedēļas skats"
 
 #: src/gui/gtk/help-overlay.ui:114
-#| msgid "Month view"
 msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Mēneša skats"
@@ -1452,11 +1413,11 @@ msgstr[2] "Citi %d notikumi"
 msgid "week %d"
 msgstr "nedēļa %d"
 
-#: src/utils/gcal-utils.c:1265
+#: src/utils/gcal-utils.c:1196
 msgid "Modify Multiple Events?"
 msgstr "Mainīt vairākus notikumus?"
 
-#: src/utils/gcal-utils.c:1266
+#: src/utils/gcal-utils.c:1197
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1464,17 +1425,20 @@ msgstr ""
 "Notikums, kuru mēģināt rediģēt, atkārtojas. Veiktajām izmaiņām ir jāattiecas "
 "uz:"
 
-#: src/utils/gcal-utils.c:1270
+#: src/utils/gcal-utils.c:1201
 msgid "_Only This Event"
 msgstr "Tikai uz šo n_otikumu"
 
-#: src/utils/gcal-utils.c:1276
+#: src/utils/gcal-utils.c:1207
 msgid "_Subsequent Events"
 msgstr "_Turpmākajiem notikumiem"
 
-#: src/utils/gcal-utils.c:1279
+#: src/utils/gcal-utils.c:1210
 msgid "_All Events"
 msgstr "_Visiem notikumiem"
+
+#~ msgid "Unnamed event"
+#~ msgstr "Nenosaukts notikums"
 
 #~ msgid "Calendar for GNOME"
 #~ msgstr "Kalendārs GNOME videi"
