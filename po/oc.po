@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-25 17:33+0000\n"
-"PO-Revision-Date: 2024-02-29 18:02+0100\n"
+"POT-Creation-Date: 2024-03-02 23:39+0000\n"
+"PO-Revision-Date: 2024-03-09 21:19+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -134,7 +134,7 @@ msgid ""
 "location-name"
 msgstr ""
 "Indica se los bulletins meteorologics son mostrats la localizacion "
-"automatica es utilizada e un nom de lòc tanben"
+"automatica es utilizada e un nom de luòc tanben"
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Zoom level of the week grid"
@@ -216,7 +216,7 @@ msgstr "Dobrir los paramètres"
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
-msgstr "Emplaçament"
+msgstr "Luòc"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:24
@@ -303,7 +303,7 @@ msgstr "Senhal"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:237
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1269
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1200
 msgid "_Cancel"
 msgstr "_Anullar"
 
@@ -463,39 +463,39 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "DS"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Save"
 msgstr "Enregistrar"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Done"
 msgstr "Acabat"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:778
+#: src/gui/event-editor/gcal-event-editor-dialog.c:777
 msgid "New Event"
 msgstr "Eveniment novèl"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:48
 msgid "Select Calendar"
 msgstr "Seleccionar agenda"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:87
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:106
 msgid "_Done"
 msgstr "_Acabat"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:133
 msgid "Schedule"
 msgstr "Oraris"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:126
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:145
 msgid "Reminders"
 msgstr "Rapèls"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:138
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:157
 msgid "Notes"
 msgstr "Nòtas"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:177
 msgid "Delete Event"
 msgstr "Suprimir l'eveniment"
 
@@ -1162,7 +1162,7 @@ msgstr "Afichar la metèo"
 
 #: src/gui/gcal-weather-settings.ui:34
 msgid "Automatic Location"
-msgstr "Emplaçament automatic"
+msgstr "Luòc automatic"
 
 #: src/gui/gcal-weather-settings.ui:46
 msgid "Search locations"
@@ -1398,11 +1398,11 @@ msgstr[1] "%d autres eveniment"
 msgid "week %d"
 msgstr "setmana %d"
 
-#: src/utils/gcal-utils.c:1265
+#: src/utils/gcal-utils.c:1196
 msgid "Modify Multiple Events?"
 msgstr "Modificar mantun eveniment ?"
 
-#: src/utils/gcal-utils.c:1266
+#: src/utils/gcal-utils.c:1197
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1410,15 +1410,15 @@ msgstr ""
 "L’eveniment que volètz modificar es recurrent. Las modificacions "
 "seleccionadas devon èsser aplicadas a :"
 
-#: src/utils/gcal-utils.c:1270
+#: src/utils/gcal-utils.c:1201
 msgid "_Only This Event"
 msgstr "_Unicament aqueste eveniment"
 
-#: src/utils/gcal-utils.c:1276
+#: src/utils/gcal-utils.c:1207
 msgid "_Subsequent Events"
 msgstr "Eveniments _seguents"
 
-#: src/utils/gcal-utils.c:1279
+#: src/utils/gcal-utils.c:1210
 msgid "_All Events"
 msgstr "_Totes los eveniments"
 
