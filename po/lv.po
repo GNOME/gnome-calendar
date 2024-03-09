@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-03-02 23:39+0000\n"
-"PO-Revision-Date: 2024-03-08 23:43+0200\n"
+"POT-Creation-Date: 2024-03-08 21:44+0000\n"
+"PO-Revision-Date: 2024-03-09 14:35+0200\n"
 "Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
 "Language: lv\n"
@@ -484,7 +484,6 @@ msgid "Done"
 msgstr "Pabeigts"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:777
-#, fuzzy
 #| msgctxt "shortcut window"
 #| msgid "New Event"
 msgid "New Event"
