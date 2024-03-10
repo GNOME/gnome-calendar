@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: unnamed project\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-15 13:12+0000\n"
-"PO-Revision-Date: 2024-02-23 00:09+0100\n"
+"POT-Creation-Date: 2024-03-02 23:39+0000\n"
+"PO-Revision-Date: 2024-03-10 11:35+0100\n"
 "Last-Translator: Fran Dieguez <fran.dieguez@gnome.org>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -192,18 +192,18 @@ msgstr "Editar calendario"
 msgid "Calendar Settings"
 msgstr "Preferencias de Calendario"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:344
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "Calendarios"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:369
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Calendario <b>%s</b> eliminado"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:374
+#: src/gui/calendar-management/gcal-calendars-page.c:373
 #: src/gui/gcal-window.c:738
 msgid "_Undo"
 msgstr "_Desfacer"
@@ -221,7 +221,7 @@ msgid "Open in Settings"
 msgstr "Abrir en Preferencias"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
-#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
@@ -312,7 +312,7 @@ msgstr "Contrasinal"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:237
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1269
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1200
 msgid "_Cancel"
 msgstr "_Cancelar"
 
@@ -472,35 +472,39 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "S"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Save"
 msgstr "Gardar"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Done"
 msgstr "Feito"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
+#: src/gui/event-editor/gcal-event-editor-dialog.c:777
+msgid "New Event"
+msgstr "Novo evento"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:48
 msgid "Select Calendar"
 msgstr "Seleccionar calendario"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:87
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:106
 msgid "_Done"
 msgstr "_Feito"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:133
 msgid "Schedule"
 msgstr "Planificar"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:126
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:145
 msgid "Reminders"
 msgstr "Recordatorios"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:138
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:157
 msgid "Notes"
 msgstr "Notas"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:177
 msgid "Delete Event"
 msgstr "Eliminar evento"
 
@@ -645,11 +649,6 @@ msgstr "Até a data"
 #: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "Data de final de repetición"
-
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:693
-msgid "Unnamed event"
-msgstr "Evento sen nome"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
@@ -1406,11 +1405,11 @@ msgstr[1] "Outros %d eventos"
 msgid "week %d"
 msgstr "semana %d"
 
-#: src/utils/gcal-utils.c:1265
+#: src/utils/gcal-utils.c:1196
 msgid "Modify Multiple Events?"
 msgstr "Desexa modificar varios eventos?"
 
-#: src/utils/gcal-utils.c:1266
+#: src/utils/gcal-utils.c:1197
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1418,17 +1417,20 @@ msgstr ""
 "O evento que tenta modificar é recorrente. Os cambios que seleccione "
 "aplicaranse a:"
 
-#: src/utils/gcal-utils.c:1270
+#: src/utils/gcal-utils.c:1201
 msgid "_Only This Event"
 msgstr "Só _este evento"
 
-#: src/utils/gcal-utils.c:1276
+#: src/utils/gcal-utils.c:1207
 msgid "_Subsequent Events"
 msgstr "Eventos subsecuentes"
 
-#: src/utils/gcal-utils.c:1279
+#: src/utils/gcal-utils.c:1210
 msgid "_All Events"
 msgstr "Todos os eventos"
+
+#~ msgid "Unnamed event"
+#~ msgstr "Evento sen nome"
 
 #~ msgid "Toggles the sound of the alarm"
 #~ msgstr "Troca o son da alarma"
