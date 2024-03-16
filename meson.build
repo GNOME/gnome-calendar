@@ -13,7 +13,7 @@ project(
 
 calendar_version = meson.project_version()
 version_array = calendar_version.split('.')
-calendar_major_version = version_array[0].to_int()
+calendar_major_version = version_array[0]
 calendar_minor_version = version_array[1]
 
 
@@ -71,6 +71,7 @@ set_defines = [
   ['PACKAGE_STRING', '@0@ @1@'.format(meson.project_name(), calendar_version)],
   ['PACKAGE_TARNAME', meson.project_name()],
   ['PACKAGE_URL', 'https://apps.gnome.org/Calendar/'],
+  ['MAJOR_VERSION', calendar_major_version + '.' + '0'],
   ['PACKAGE_VERSION', calendar_version + rev],
   ['VERSION', calendar_version + rev],
   ['GETTEXT_PACKAGE', meson.project_name()],

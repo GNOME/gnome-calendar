@@ -56,6 +56,8 @@
   <url type="vcs-browser">https://gitlab.gnome.org/GNOME/gnome-calendar</url>
   <url type="translate">https://l10n.gnome.org/module/gnome-calendar/</url>
   <url type="contribute">https://welcome.gnome.org/app/Calendar/</url>
+  <url type="contact">https://matrix.to/#/#gnome-calendar:gnome.org</url>
+  <url type="help">https://discourse.gnome.org/tag/calendar</url>
   <project_group>GNOME</project_group>
   <developer_name>The GNOME Project</developer_name>
   <developer id="org.gnome">

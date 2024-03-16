@@ -1,5 +1,4 @@
 subdir('icons')
-subdir('appdata')
 
 enum_headers = files(src_dir / 'gcal-enums.h')
 

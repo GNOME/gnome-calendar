@@ -229,22 +229,14 @@ gcal_application_show_about (GSimpleAction *simple,
   copyright = build_about_copyright (self);
   troubleshooting = build_system_information ();
 
-  about = g_object_new (ADW_TYPE_ABOUT_DIALOG,
-                        "application-name", _("Calendar"),
-                        "application-icon", APPLICATION_ID,
-                        "developer-name", _("The GNOME Project"),
-                        "version", VERSION,
-                        "copyright", copyright,
-                        "website", "https://apps.gnome.org/Calendar/",
-                        "issue-url", "https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues",
-                        "support-url", "https://discourse.gnome.org/tag/calendar",
-                        "license-type", GTK_LICENSE_GPL_3_0,
-                        "developers", developers,
-                        "designers", designers,
-                        "translator-credits", _("translator-credits"),
-                        "debug-info", troubleshooting,
-                        "debug-info-filename", "Calendar.txt",
-                        NULL);
+  about = adw_about_dialog_new_from_appdata ("/org/gnome/calendar/appdata", MAJOR_VERSION);
+
+  adw_about_dialog_set_designers (ADW_ABOUT_DIALOG (about), designers);
+  adw_about_dialog_set_copyright (ADW_ABOUT_DIALOG (about), copyright);
+  adw_about_dialog_set_developers (ADW_ABOUT_DIALOG (about), developers);
+  adw_about_dialog_set_debug_info (ADW_ABOUT_DIALOG (about), troubleshooting);
+  adw_about_dialog_set_debug_info_filename (ADW_ABOUT_DIALOG (about), "Calendar.txt");
+  adw_about_dialog_set_translator_credits (ADW_ABOUT_DIALOG (about), _("translator-credits"));
 
   weather_service = gcal_context_get_weather_service (self->context);
   adw_about_dialog_add_legal_section (ADW_ABOUT_DIALOG (about),
