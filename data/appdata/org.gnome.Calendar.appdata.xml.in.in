@@ -63,6 +63,18 @@
   </developer>
 
   <releases>
+    <release date="2024-03-18" version="46.0" type="stable">
+      <description>
+        <ul>
+          <li>Properly stop the weather service when running in Flatpak</li>
+          <li>Various timezone-related fixes</li>
+          <li>Improved visuals for the Month view</li>
+          <li>Use modern Adwaita dialogs</li>
+          <li>New and updated translations</li>
+        </ul>
+      </description>
+    </release>
+
     <release date="2023-10-23" version="45.1" type="stable" />
     <release date="2023-09-18" version="45.0" type="stable">
       <description>
