@@ -158,9 +158,12 @@ setup_calendar (GcalEditCalendarPage *self,
       basename = g_file_get_basename (file);
       uri = g_file_get_uri (file);
 
-      text = g_strdup_printf ("<a href=\"%s\">%s</a>", uri, basename);
+      text = g_strdup_printf ("<a title=\"%1$s\" href=\"%2$s\">%1$s</a>", basename, uri);
       adw_action_row_set_subtitle (self->calendar_url_row, text);
-      gtk_widget_set_tooltip_text (GTK_WIDGET (self->calendar_url_row), basename);
+
+      gtk_accessible_update_property (GTK_ACCESSIBLE (self->calendar_url_row),
+                                      GTK_ACCESSIBLE_PROPERTY_LABEL, basename,
+                                      -1);
     }
 
   /* If it's remote, build the uri */
@@ -175,9 +178,12 @@ setup_calendar (GcalEditCalendarPage *self,
       guri = e_source_webdav_dup_uri (webdav);
       uri = g_uri_to_string_partial (guri, G_URI_HIDE_PASSWORD);
 
-      text = g_strdup_printf ("<a href=\"%s\">%s</a>", uri, uri);
+      text = g_strdup_printf ("<a title=\"%1$s\" href=\"%1$s\">%1$s</a>", uri);
       adw_action_row_set_subtitle (self->calendar_url_row, text);
-      gtk_widget_set_tooltip_text (GTK_WIDGET (self->calendar_url_row), uri);
+
+      gtk_accessible_update_property (GTK_ACCESSIBLE (self->calendar_url_row),
+                                      GTK_ACCESSIBLE_PROPERTY_LABEL, uri,
+                                      -1);
     }
 
   if (is_goa)
