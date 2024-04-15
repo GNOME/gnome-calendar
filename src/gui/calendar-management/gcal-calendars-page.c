@@ -258,8 +258,8 @@ on_listbox_row_activated_cb (GtkListBox        *listbox,
 }
 
 static void
-on_new_calendar_button_clicked_cb (GtkButton         *button,
-                                   GcalCalendarsPage *self)
+on_new_calendar_row_activated_cb (AdwButtonRow      *button,
+                                  GcalCalendarsPage *self)
 {
   GcalCalendarManagementPage *page = GCAL_CALENDAR_MANAGEMENT_PAGE (self);
 
@@ -463,7 +463,7 @@ gcal_calendars_page_class_init (GcalCalendarsPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, toast_overlay);
 
   gtk_widget_class_bind_template_callback (widget_class, on_listbox_row_activated_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_new_calendar_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_new_calendar_row_activated_cb);
 }
 
 static void
