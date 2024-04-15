@@ -52,7 +52,7 @@ struct _GcalEventEditorDialog
 
   GtkListBox             *calendars_listbox;
   GtkWidget              *cancel_button;
-  GtkWidget              *delete_button;
+  GtkWidget              *delete_group;
   GtkWidget              *done_button;
   GtkWidget              *lock;
   GcalEventEditorSection *notes_section;
@@ -332,8 +332,8 @@ on_ask_recurrence_response_delete_cb (GcalEvent             *event,
 }
 
 static void
-on_delete_button_clicked_cb (GtkButton             *button,
-                             GcalEventEditorDialog *self)
+on_delete_row_activated_cb (AdwButtonRow          *button,
+                            GcalEventEditorDialog *self)
 {
   GcalRecurrenceModType mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
 
@@ -657,7 +657,7 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, calendars_listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, cancel_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, delete_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, delete_group);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, done_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, lock);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, notes_section);
@@ -673,7 +673,7 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
 
   /* callbacks */
   gtk_widget_class_bind_template_callback (widget_class, on_cancel_button_clicked_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_delete_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_delete_row_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_done_button_clicked_cb);
 }
 
@@ -785,7 +785,7 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   set_writable (self, !gcal_calendar_is_read_only (calendar));
 
   self->event_is_new = new_event;
-  gtk_widget_set_visible (self->delete_button, !new_event);
+  gtk_widget_set_visible (self->delete_group, !new_event);
 
   if (!self->writable)
     gtk_widget_grab_focus (self->done_button);

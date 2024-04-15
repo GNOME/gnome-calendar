@@ -166,17 +166,12 @@
 
             <!-- Delete Button -->
             <child>
-              <object class="AdwPreferencesGroup">
+              <object class="AdwPreferencesGroup" id="delete_group">
                 <child>
-                  <object class="GtkButton" id="delete_button">
-                    <property name="halign">end</property>
-                    <signal name="clicked" handler="on_delete_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
+                  <object class="AdwButtonRow">
+                    <signal name="activated" handler="on_delete_row_activated_cb" object="GcalEventEditorDialog" swapped="no"/>
                     <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
-                    <child>
-                      <object class="GtkLabel" id="delete_label">
-                        <property name="label" translatable="yes">Delete Event</property>
-                      </object>
-                    </child>
+                    <property name="title" translatable="yes">Delete Event</property>
                     <style>
                       <class name="destructive-action"/>
                     </style>
