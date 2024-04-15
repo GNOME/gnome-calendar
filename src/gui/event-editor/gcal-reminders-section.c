@@ -130,6 +130,17 @@ create_alarm (guint minutes)
 }
 
 static void
+update_new_alarm_icon (GcalRemindersSection *self)
+{
+  GtkListBoxRow *first_row = gtk_list_box_get_row_at_index (self->alarms_listbox, 0);
+
+  if (first_row == GTK_LIST_BOX_ROW (self->new_alarm_row))
+    adw_button_row_set_start_icon_name (ADW_BUTTON_ROW (self->new_alarm_row), "add-reminder-symbolic");
+  else
+    adw_button_row_set_start_icon_name (ADW_BUTTON_ROW (self->new_alarm_row), "list-add-symbolic");
+}
+
+static void
 clear_alarms (GcalRemindersSection *self)
 {
   GtkWidget *child;
@@ -146,6 +157,8 @@ clear_alarms (GcalRemindersSection *self)
 
       child = next;
     }
+
+  update_new_alarm_icon (self);
 }
 
 static GtkWidget *
@@ -206,6 +219,8 @@ setup_alarms (GcalRemindersSection *self)
       row = create_alarm_row (self, alarm);
       gtk_list_box_append (self->alarms_listbox, row);
     }
+
+  update_new_alarm_icon (self);
 
   GCAL_EXIT;
 }
@@ -278,6 +293,8 @@ on_remove_alarm_cb (GcalAlarmRow         *alarm_row,
 
   gtk_list_box_remove (self->alarms_listbox, GTK_WIDGET (alarm_row));
 
+  update_new_alarm_icon (self);
+
   GCAL_EXIT;
 }
 
@@ -312,6 +329,8 @@ on_add_alarm_button_clicked_cb (GtkWidget            *button,
   g_ptr_array_add (self->alarms, alarm);
 
   gtk_widget_set_sensitive (button, FALSE);
+
+  update_new_alarm_icon (self);
 }
 
 static void
