@@ -36,7 +36,7 @@ struct _GcalEditCalendarPage
   AdwActionRow       *calendar_url_row;
   AdwSwitchRow       *default_row;
   AdwEntryRow        *name_entry;
-  GtkWidget          *remove_button;
+  GtkWidget          *remove_group;
 
   GcalCalendar       *calendar;
 
@@ -200,7 +200,7 @@ setup_calendar (GcalEditCalendarPage *self,
 
   adw_switch_row_set_active (self->default_row, source == default_source);
   gtk_widget_set_visible (GTK_WIDGET (self->default_row), !gcal_calendar_is_read_only (calendar));
-  gtk_widget_set_visible (self->remove_button, e_source_get_removable (source));
+  gtk_widget_set_visible (self->remove_group, e_source_get_removable (source));
 }
 
 static void
@@ -232,8 +232,8 @@ update_calendar (GcalEditCalendarPage *self)
  */
 
 static void
-on_remove_button_clicked_cb (GtkButton            *button,
-                             GcalEditCalendarPage *self)
+on_remove_button_row_activated_cb (GtkButton            *button,
+                                   GcalEditCalendarPage *self)
 {
   GcalCalendarManagementPage *page;
 
@@ -390,9 +390,9 @@ gcal_edit_calendar_page_class_init (GcalEditCalendarPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_visible_row);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, default_row);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, name_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, remove_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, remove_group);
 
-  gtk_widget_class_bind_template_callback (widget_class, on_remove_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_remove_button_row_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_settings_button_clicked_cb);
 }
 

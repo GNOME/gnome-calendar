@@ -113,18 +113,20 @@
                   </object>
                 </child>
 
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwPreferencesGroup" id="remove_group">
+
                 <!-- Remove button -->
                 <child>
-                  <object class="GtkButton" id="remove_button">
-                    <property name="label" translatable="yes">_Remove Calendar</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="margin-top">24</property>
+                  <object class="AdwButtonRow" id="remove_button_row">
+                    <property name="title" translatable="yes">_Remove Calendar</property>
                     <property name="use-underline">true</property>
-                    <signal name="clicked" handler="on_remove_button_clicked_cb" object="GcalEditCalendarPage" swapped="no" />
+                    <signal name="activated" handler="on_remove_button_row_activated_cb" object="GcalEditCalendarPage" swapped="no" />
                     <style>
                       <class name="destructive-action" />
-                      <class name="pill"/>
                     </style>
                   </object>
                 </child>
