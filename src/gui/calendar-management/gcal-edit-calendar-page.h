@@ -25,6 +25,6 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_EDIT_CALENDAR_PAGE (gcal_edit_calendar_page_get_type())
-G_DECLARE_FINAL_TYPE (GcalEditCalendarPage, gcal_edit_calendar_page, GCAL, EDIT_CALENDAR_PAGE, AdwBin)
+G_DECLARE_FINAL_TYPE (GcalEditCalendarPage, gcal_edit_calendar_page, GCAL, EDIT_CALENDAR_PAGE, AdwNavigationPage)
 
 G_END_DECLS

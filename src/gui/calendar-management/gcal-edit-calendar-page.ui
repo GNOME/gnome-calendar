@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="GcalEditCalendarPage" parent="AdwBin">
-    <child>
+  <template class="GcalEditCalendarPage" parent="AdwNavigationPage">
+    <property name="title" translatable="yes">Edit Calendar</property>
+    <property name="tag">edit-calendar</property>
+
+    <property name="child">
       <object class="AdwToolbarView">
 
         <child type="top">
@@ -133,7 +136,7 @@
         </property>
 
       </object>
-    </child>
+    </property>
 
   </template>
 

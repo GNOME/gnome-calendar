@@ -28,7 +28,7 @@
 
 struct _GcalEditCalendarPage
 {
-  AdwBin              parent;
+  AdwNavigationPage   parent;
 
   AdwActionRow       *account_row;
   GtkColorDialogButton *calendar_color_button;
@@ -45,7 +45,7 @@ struct _GcalEditCalendarPage
 
 static void          gcal_calendar_management_page_iface_init    (GcalCalendarManagementPageInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GcalEditCalendarPage, gcal_edit_calendar_page, ADW_TYPE_BIN,
+G_DEFINE_TYPE_WITH_CODE (GcalEditCalendarPage, gcal_edit_calendar_page, ADW_TYPE_NAVIGATION_PAGE,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_CALENDAR_MANAGEMENT_PAGE,
                                                 gcal_calendar_management_page_iface_init))
 

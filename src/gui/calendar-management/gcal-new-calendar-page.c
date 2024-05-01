@@ -44,7 +44,7 @@ typedef enum
 
 struct _GcalNewCalendarPage
 {
-  AdwBin              parent;
+  AdwNavigationPage   parent;
 
   GtkWidget          *add_button;
   GtkEntry           *calendar_address_entry;
@@ -77,7 +77,7 @@ static void          sources_discovered_cb                       (GObject       
 
 static void          gcal_calendar_management_page_iface_init    (GcalCalendarManagementPageInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GcalNewCalendarPage, gcal_new_calendar_page, ADW_TYPE_BIN,
+G_DEFINE_TYPE_WITH_CODE (GcalNewCalendarPage, gcal_new_calendar_page, ADW_TYPE_NAVIGATION_PAGE,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_CALENDAR_MANAGEMENT_PAGE,
                                                 gcal_calendar_management_page_iface_init))
 

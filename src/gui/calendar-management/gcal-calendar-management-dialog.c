@@ -94,16 +94,14 @@ set_page (GcalCalendarManagementDialog *self,
           const gchar                  *page_name,
           GcalCalendar                 *calendar)
 {
-  GcalCalendarManagementPage *next_page;
   AdwNavigationPage *page;
 
   GCAL_TRACE_MSG ("Switching to page '%s'", page_name);
 
   page = adw_navigation_view_find_page (self->navigation_view, page_name);
-  g_assert (page != NULL);
-  next_page = GCAL_CALENDAR_MANAGEMENT_PAGE (adw_navigation_page_get_child (page));
+  g_assert (GCAL_IS_CALENDAR_MANAGEMENT_PAGE (page));
 
-  gcal_calendar_management_page_activate (next_page, calendar);
+  gcal_calendar_management_page_activate (GCAL_CALENDAR_MANAGEMENT_PAGE (page), calendar);
 
   adw_navigation_view_pop (self->navigation_view);
 
@@ -129,16 +127,12 @@ setup_context (GcalCalendarManagementDialog *self)
   for (i = 0; i < N_PAGES; i++)
     {
       GcalCalendarManagementPage *page;
-      AdwNavigationPage *navigation_page;
 
       page = g_object_new (pages[i].gtype,
                            "context", self->context,
                            NULL);
 
-      navigation_page = adw_navigation_page_new (GTK_WIDGET (page),
-                                                 gcal_calendar_management_page_get_title (page));
-      adw_navigation_page_set_tag (navigation_page, gcal_calendar_management_page_get_name (page));
-      adw_navigation_view_add (self->navigation_view, navigation_page);
+      adw_navigation_view_add (self->navigation_view, ADW_NAVIGATION_PAGE (page));
 
       g_signal_connect_object (page,
                                "switch-page",
@@ -164,12 +158,9 @@ on_navigation_view_popped_cb (AdwNavigationView            *navigation_view,
                               AdwNavigationPage            *popped_page,
                               GcalCalendarManagementDialog *self)
 {
-  GcalCalendarManagementPage *page;
+  g_assert (GCAL_IS_CALENDAR_MANAGEMENT_PAGE (popped_page));
 
-  page = GCAL_CALENDAR_MANAGEMENT_PAGE (adw_navigation_page_get_child (popped_page));
-  g_assert (page != NULL);
-
-  gcal_calendar_management_page_deactivate (page);
+  gcal_calendar_management_page_deactivate (GCAL_CALENDAR_MANAGEMENT_PAGE (popped_page));
 }
 
 static void

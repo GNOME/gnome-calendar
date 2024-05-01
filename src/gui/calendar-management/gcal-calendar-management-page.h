@@ -28,7 +28,7 @@ G_BEGIN_DECLS
 
 #define GCAL_TYPE_CALENDAR_MANAGEMENT_PAGE (gcal_calendar_management_page_get_type ())
 
-G_DECLARE_INTERFACE (GcalCalendarManagementPage, gcal_calendar_management_page, GCAL, CALENDAR_MANAGEMENT_PAGE, GtkWidget)
+G_DECLARE_INTERFACE (GcalCalendarManagementPage, gcal_calendar_management_page, GCAL, CALENDAR_MANAGEMENT_PAGE, AdwNavigationPage)
 
 struct _GcalCalendarManagementPageInterface
 {

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="GcalNewCalendarPage" parent="AdwBin">
-    <child>
+  <template class="GcalNewCalendarPage" parent="AdwNavigationPage">
+    <property name="title" translatable="yes">New Calendar</property>
+    <property name="tag">new-calendar</property>
+
+    <property name="child">
       <object class="AdwToolbarView">
 
         <child type="top">
@@ -204,7 +207,7 @@
         </property>
 
       </object>
-    </child>
+    </property>
 
   </template>
 

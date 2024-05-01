@@ -31,7 +31,7 @@
 
 struct _GcalCalendarsPage
 {
-  AdwBin              parent;
+  AdwNavigationPage   parent;
 
   GtkListBox         *listbox;
   AdwToastOverlay    *toast_overlay;
@@ -47,7 +47,7 @@ static void          on_calendar_color_changed_cb                (GcalCalendar  
                                                                   GParamSpec         *pspec,
                                                                   GtkImage           *icon);
 
-G_DEFINE_TYPE_WITH_CODE (GcalCalendarsPage, gcal_calendars_page, ADW_TYPE_BIN,
+G_DEFINE_TYPE_WITH_CODE (GcalCalendarsPage, gcal_calendars_page, ADW_TYPE_NAVIGATION_PAGE,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_CALENDAR_MANAGEMENT_PAGE,
                                                 gcal_calendar_management_page_iface_init))
 

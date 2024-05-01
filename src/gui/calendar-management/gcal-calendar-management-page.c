@@ -24,7 +24,7 @@
 #include "gcal-calendar-management-page.h"
 #include "gcal-context.h"
 
-G_DEFINE_INTERFACE (GcalCalendarManagementPage, gcal_calendar_management_page, G_TYPE_OBJECT)
+G_DEFINE_INTERFACE (GcalCalendarManagementPage, gcal_calendar_management_page, ADW_TYPE_NAVIGATION_PAGE)
 
 enum
 {
