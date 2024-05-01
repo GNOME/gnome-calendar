@@ -277,20 +277,6 @@ on_settings_button_clicked_cb (GtkWidget            *button,
  * GcalCalendarManagementPage iface
  */
 
-static const gchar*
-gcal_edit_calendar_page_get_name (GcalCalendarManagementPage *page)
-{
-  return "edit-calendar";
-}
-
-static const gchar*
-gcal_edit_calendar_page_get_title (GcalCalendarManagementPage *page)
-{
-  GcalEditCalendarPage *self = GCAL_EDIT_CALENDAR_PAGE (page);
-
-  return self->calendar ? gcal_calendar_get_name (self->calendar) : "";
-}
-
 static void
 gcal_edit_calendar_page_activate (GcalCalendarManagementPage *page,
                                   GcalCalendar               *calendar)
@@ -325,8 +311,6 @@ gcal_edit_calendar_page_deactivate (GcalCalendarManagementPage *page)
 static void
 gcal_calendar_management_page_iface_init (GcalCalendarManagementPageInterface *iface)
 {
-  iface->get_name = gcal_edit_calendar_page_get_name;
-  iface->get_title = gcal_edit_calendar_page_get_title;
   iface->activate = gcal_edit_calendar_page_activate;
   iface->deactivate = gcal_edit_calendar_page_deactivate;
 }

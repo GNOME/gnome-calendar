@@ -331,18 +331,6 @@ on_toast_dismissed_cb (AdwToast          *toast,
  * GcalCalendarManagementPage iface
  */
 
-static const gchar*
-gcal_calendars_page_get_name (GcalCalendarManagementPage *page)
-{
-  return "calendars";
-}
-
-static const gchar*
-gcal_calendars_page_get_title (GcalCalendarManagementPage *page)
-{
-  return _("Calendars");
-}
-
 static void
 gcal_calendars_page_activate (GcalCalendarManagementPage *page,
                               GcalCalendar               *calendar)
@@ -386,8 +374,6 @@ gcal_calendars_page_activate (GcalCalendarManagementPage *page,
 static void
 gcal_calendar_management_page_iface_init (GcalCalendarManagementPageInterface *iface)
 {
-  iface->get_name = gcal_calendars_page_get_name;
-  iface->get_title = gcal_calendars_page_get_title;
   iface->activate = gcal_calendars_page_activate;
 }
 

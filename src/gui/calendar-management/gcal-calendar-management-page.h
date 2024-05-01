@@ -34,10 +34,6 @@ struct _GcalCalendarManagementPageInterface
 {
   GTypeInterface parent;
 
-  const gchar*       (*get_name)                                 (GcalCalendarManagementPage *self);
-
-  const gchar*       (*get_title)                                (GcalCalendarManagementPage *self);
-
   void               (*activate)                                 (GcalCalendarManagementPage *self,
                                                                   GcalCalendar               *calendar);
 
@@ -47,10 +43,6 @@ struct _GcalCalendarManagementPageInterface
                                                                   const gchar                *page_name,
                                                                   GcalCalendar               *calendar);
 };
-
-const gchar*         gcal_calendar_management_page_get_name      (GcalCalendarManagementPage *self);
-
-const gchar*         gcal_calendar_management_page_get_title     (GcalCalendarManagementPage *self);
 
 void                 gcal_calendar_management_page_activate      (GcalCalendarManagementPage *self,
                                                                   GcalCalendar               *calendar);

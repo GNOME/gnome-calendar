@@ -55,24 +55,6 @@ gcal_calendar_management_page_default_init (GcalCalendarManagementPageInterface 
                                        GCAL_TYPE_CALENDAR);
 }
 
-const gchar*
-gcal_calendar_management_page_get_name (GcalCalendarManagementPage *self)
-{
-  g_return_val_if_fail (GCAL_IS_CALENDAR_MANAGEMENT_PAGE (self), NULL);
-  g_return_val_if_fail (GCAL_CALENDAR_MANAGEMENT_PAGE_GET_IFACE (self)->get_name, NULL);
-
-  return GCAL_CALENDAR_MANAGEMENT_PAGE_GET_IFACE (self)->get_name (self);
-}
-
-const gchar*
-gcal_calendar_management_page_get_title (GcalCalendarManagementPage *self)
-{
-  g_return_val_if_fail (GCAL_IS_CALENDAR_MANAGEMENT_PAGE (self), NULL);
-  g_return_val_if_fail (GCAL_CALENDAR_MANAGEMENT_PAGE_GET_IFACE (self)->get_title, NULL);
-
-  return GCAL_CALENDAR_MANAGEMENT_PAGE_GET_IFACE (self)->get_title (self);
-}
-
 void
 gcal_calendar_management_page_activate (GcalCalendarManagementPage *self,
                                         GcalCalendar               *calendar)

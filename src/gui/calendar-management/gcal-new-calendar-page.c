@@ -504,18 +504,6 @@ on_web_description_label_link_activated_cb (GtkLabel            *label,
  * GcalCalendarManagementPage iface
  */
 
-static const gchar*
-gcal_new_calendar_page_get_name (GcalCalendarManagementPage *page)
-{
-  return "new-calendar";
-}
-
-static const gchar*
-gcal_new_calendar_page_get_title (GcalCalendarManagementPage *page)
-{
-  return _("New Calendar");
-}
-
 static void
 gcal_new_calendar_page_deactivate (GcalCalendarManagementPage *page)
 {
@@ -540,8 +528,6 @@ gcal_new_calendar_page_deactivate (GcalCalendarManagementPage *page)
 static void
 gcal_calendar_management_page_iface_init (GcalCalendarManagementPageInterface *iface)
 {
-  iface->get_name = gcal_new_calendar_page_get_name;
-  iface->get_title = gcal_new_calendar_page_get_title;
   iface->deactivate = gcal_new_calendar_page_deactivate;
 }
 
