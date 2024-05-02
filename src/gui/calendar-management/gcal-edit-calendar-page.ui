@@ -49,7 +49,7 @@
 
                         <child>
                           <object class="GtkImage">
-                            <property name="icon-name">settings-symbolic</property>
+                            <property name="icon-name">external-link-symbolic</property>
                             <property name="accessible-role">presentation</property>
                           </object>
                         </child>
