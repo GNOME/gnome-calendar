@@ -9,6 +9,7 @@ src/gui/calendar-management/calendar-row.ui
 src/gui/calendar-management/gcal-calendar-management-dialog.ui
 src/gui/calendar-management/gcal-calendars-page.c
 src/gui/calendar-management/gcal-calendars-page.ui
+src/gui/calendar-management/gcal-edit-calendar-page.c
 src/gui/calendar-management/gcal-edit-calendar-page.ui
 src/gui/calendar-management/gcal-file-chooser-button.c
 src/gui/calendar-management/gcal-new-calendar-page.c

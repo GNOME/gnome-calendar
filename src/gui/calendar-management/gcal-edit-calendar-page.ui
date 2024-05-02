@@ -23,6 +23,8 @@
 
         <property name="content">
           <object class="AdwPreferencesPage">
+
+            <!-- Location (URL, file path) -->
             <child>
               <object class="AdwPreferencesGroup">
 
@@ -58,7 +60,6 @@
                   </object>
                 </child>
 
-                <!-- Location (URL, file path) -->
                 <child>
                   <object class="AdwActionRow" id="calendar_url_row">
                     <property name="title" translatable="yes">Location</property>
@@ -68,6 +69,12 @@
                     </style>
                   </object>
                 </child>
+
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwPreferencesGroup">
 
                 <!-- Calendar name -->
                 <child>

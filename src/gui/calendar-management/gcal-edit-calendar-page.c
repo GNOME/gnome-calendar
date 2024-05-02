@@ -26,6 +26,8 @@
 #include "gcal-edit-calendar-page.h"
 #include "gcal-utils.h"
 
+#include <glib/gi18n.h>
+
 struct _GcalEditCalendarPage
 {
   AdwNavigationPage   parent;
@@ -141,8 +143,14 @@ setup_calendar (GcalEditCalendarPage *self,
 
   get_source_parent_name_color (manager, source, &parent_name, NULL);
 
+  GCAL_TRACE_MSG ("Calendar '%s' is GOA: %d; is file: %d; is remote: %d",
+                  gcal_calendar_get_name (calendar),
+                  is_goa,
+                  is_file,
+                  is_remote);
+
   gtk_widget_set_visible (GTK_WIDGET (self->account_row), is_goa);
-  gtk_widget_set_visible (GTK_WIDGET (self->calendar_url_row), !is_goa && (is_file || is_remote));
+  gtk_widget_set_visible (GTK_WIDGET (self->calendar_url_row), !is_goa);
 
   /* If it's a file, set the file path */
   if (is_file)
@@ -177,8 +185,9 @@ setup_calendar (GcalEditCalendarPage *self,
       webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
       guri = e_source_webdav_dup_uri (webdav);
       uri = g_uri_to_string_partial (guri, G_URI_HIDE_PASSWORD);
-
       text = g_strdup_printf ("<a title=\"%1$s\" href=\"%1$s\">%1$s</a>", uri);
+
+      adw_preferences_row_set_title (ADW_PREFERENCES_ROW (self->calendar_url_row), _("Calendar URL"));
       adw_action_row_set_subtitle (self->calendar_url_row, text);
 
       gtk_accessible_update_property (GTK_ACCESSIBLE (self->calendar_url_row),
@@ -192,6 +201,12 @@ setup_calendar (GcalEditCalendarPage *self,
 
       get_source_parent_name_color (manager, source, &name, NULL);
       adw_action_row_set_subtitle (self->account_row, name);
+    }
+
+  if (!is_goa && !is_remote && !is_file)
+    {
+      adw_preferences_row_set_title (ADW_PREFERENCES_ROW (self->calendar_url_row), _("Location"));
+      adw_action_row_set_subtitle (self->calendar_url_row, _("On This Computer"));
     }
 
   gtk_color_dialog_button_set_rgba (self->calendar_color_button, gcal_calendar_get_color (calendar));
