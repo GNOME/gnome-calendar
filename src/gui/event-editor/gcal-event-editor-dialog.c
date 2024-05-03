@@ -55,7 +55,6 @@ struct _GcalEventEditorDialog
   GtkWidget              *cancel_button;
   GtkWidget              *delete_group;
   GtkWidget              *done_button;
-  GtkWidget              *lock;
   GcalEventEditorSection *notes_section;
   GcalEventEditorSection *reminders_section;
   GcalEventEditorSection *schedule_section;
@@ -626,7 +625,6 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, delete_group);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, done_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, lock);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, notes_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, reminders_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, schedule_section);

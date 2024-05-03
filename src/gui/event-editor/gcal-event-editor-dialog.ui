@@ -16,14 +16,6 @@
                 <signal name="clicked" handler="on_cancel_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
               </object>
             </child>
-            <child>
-              <object class="GtkImage" id="lock">
-                <property name="visible" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|invert-boolean|sync-create" />
-                <property name="tooltip-markup" translatable="yes">&lt;b&gt;This event is part of a read-only calendar&lt;/b&gt;
-You cannot delete or change this event.</property>
-                <property name="icon_name">changes-prevent-symbolic</property>
-              </object>
-            </child>
             <child type="title">
               <object class="GtkMenuButton" id="sources_button">
                 <property name="popover">
@@ -115,74 +107,86 @@ You cannot delete or change this event.</property>
           </object>
         </child>
         <property name="content">
-          <object class="AdwPreferencesPage">
-            <property name="vexpand">True</property>
-
-            <!-- Summary -->
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
             <child>
-              <object class="AdwPreferencesGroup">
-                <child>
-                  <object class="GcalSummarySection" id="summary_section">
-                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
-                  </object>
-                </child>
+              <object class="AdwBanner">
+                <property name="title" translatable="yes">This event is in a read-only calendar. It cannot be edited or deleted.</property>
+                <property name="revealed" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|invert-boolean|sync-create" />
               </object>
             </child>
-
-            <!-- Schedule -->
             <child>
-              <object class="AdwPreferencesGroup">
-                <property name="title" translatable="yes">Schedule</property>
+              <object class="AdwPreferencesPage">
+                <property name="vexpand">True</property>
+
+                <!-- Summary -->
                 <child>
-                  <object class="GcalScheduleSection" id="schedule_section">
-                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
+                  <object class="AdwPreferencesGroup">
+                    <child>
+                      <object class="GcalSummarySection" id="summary_section">
+                        <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
+                      </object>
+                    </child>
                   </object>
                 </child>
-              </object>
-            </child>
 
-            <!-- Reminders -->
-            <child>
-              <object class="AdwPreferencesGroup">
-                <property name="title" translatable="yes">Reminders</property>
+                <!-- Schedule -->
                 <child>
-                  <object class="GcalRemindersSection" id="reminders_section">
-                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Schedule</property>
+                    <child>
+                      <object class="GcalScheduleSection" id="schedule_section">
+                        <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
+                      </object>
+                    </child>
                   </object>
                 </child>
-              </object>
-            </child>
 
-            <!-- Notes -->
-            <child>
-              <object class="AdwPreferencesGroup">
-                <property name="title" translatable="yes">Notes</property>
+                <!-- Reminders -->
                 <child>
-                  <object class="GcalNotesSection" id="notes_section">
-                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
-                    <property name="vexpand">True</property>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Reminders</property>
+                    <child>
+                      <object class="GcalRemindersSection" id="reminders_section">
+                        <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
+                      </object>
+                    </child>
                   </object>
                 </child>
-              </object>
-            </child>
 
-            <!-- Delete Button -->
-            <child>
-              <object class="AdwPreferencesGroup" id="delete_group">
+                <!-- Notes -->
                 <child>
-                  <object class="AdwButtonRow">
-                    <signal name="activated" handler="on_delete_row_activated_cb" object="GcalEventEditorDialog" swapped="no"/>
-                    <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
-                    <property name="title" translatable="yes">Delete Event</property>
-                    <style>
-                      <class name="destructive-action"/>
-                    </style>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Notes</property>
+                    <child>
+                      <object class="GcalNotesSection" id="notes_section">
+                        <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
+                        <property name="vexpand">True</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
+
+                <!-- Delete Button -->
+                <child>
+                  <object class="AdwPreferencesGroup" id="delete_group">
+                    <child>
+                      <object class="AdwButtonRow">
+                        <signal name="activated" handler="on_delete_row_activated_cb" object="GcalEventEditorDialog" swapped="no"/>
+                        <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default" />
+                        <property name="title" translatable="yes">Delete Event</property>
+                        <style>
+                          <class name="destructive-action"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
               </object>
             </child>
-
           </object>
+
         </property>
       </object>
     </child>
