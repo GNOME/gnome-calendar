@@ -1,8 +1,8 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
-data/appdata/org.gnome.Calendar.appdata.xml.in.in
 data/org.gnome.Calendar.desktop.in.in
 data/org.gnome.calendar.gschema.xml.in
+src/appdata/org.gnome.Calendar.metainfo.xml.in.in
 src/main.c
 src/core/gcal-event.c
 src/gui/calendar-management/calendar-row.ui
