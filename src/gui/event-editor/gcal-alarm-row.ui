@@ -7,6 +7,7 @@
         <property name="icon-name">audio-volume-high-symbolic</property>
         <property name="tooltip-text" translatable="yes">Toggle Alarm Sound</property>
         <signal name="notify::active" handler="on_sound_toggle_changed_cb" object="GcalAlarmRow" swapped="no" />
+        <property name="active">yes</property>
         <style>
           <class name="flat" />
         </style>

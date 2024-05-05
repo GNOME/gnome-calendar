@@ -124,7 +124,7 @@ create_alarm (guint minutes)
 
   alarm = e_cal_component_alarm_new ();
   e_cal_component_alarm_take_trigger (alarm, trigger);
-  e_cal_component_alarm_set_action (alarm, E_CAL_COMPONENT_ALARM_DISPLAY);
+  e_cal_component_alarm_set_action (alarm, E_CAL_COMPONENT_ALARM_AUDIO);
 
   return alarm;
 }
