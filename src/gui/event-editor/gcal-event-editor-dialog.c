@@ -137,6 +137,7 @@ apply_event_properties_to_template_event (GcalEvent *template_event,
 {
   g_autoptr (GDateTime) start_date = NULL;
   g_autoptr (GDateTime) end_date = NULL;
+  g_autoptr (GList) alarms =  gcal_event_get_alarms (event);
   GDateTime *template_start_date;
   GDateTime *event_start_date;
   GDateTime *template_end_date;
@@ -187,6 +188,15 @@ apply_event_properties_to_template_event (GcalEvent *template_event,
   gcal_event_set_all_day (template_event, gcal_event_get_all_day (event));
   gcal_event_set_date_start (template_event, start_date);
   gcal_event_set_date_end (template_event, end_date);
+
+  gcal_event_remove_all_alarms (template_event);
+  for (GList *l = alarms; l != NULL; l = l->next)
+    {
+      ECalComponentAlarm *alarm = l->data;
+
+      if (alarm)
+        gcal_event_add_alarm (template_event, alarm);
+    }
 }
 
 static gboolean

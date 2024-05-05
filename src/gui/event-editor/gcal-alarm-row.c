@@ -46,6 +46,7 @@ enum
 
 enum
 {
+  UPDATE_ALARM,
   REMOVE_ALARM,
   N_SIGNALS,
 };
@@ -250,6 +251,7 @@ on_sound_toggle_changed_cb (GtkToggleButton *button,
   gtk_button_set_icon_name (GTK_BUTTON (self->volume_button),
                             has_sound ? "audio-volume-high-symbolic" : "audio-volume-muted-symbolic");
 
+  g_signal_emit (self, signals[UPDATE_ALARM], 0);
 }
 
 
@@ -325,6 +327,14 @@ gcal_alarm_row_class_init (GcalAlarmRowClass *klass)
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   signals[REMOVE_ALARM] = g_signal_new ("remove-alarm",
+                                        GCAL_TYPE_ALARM_ROW,
+                                        G_SIGNAL_RUN_LAST,
+                                        0,
+                                        NULL, NULL,
+                                        g_cclosure_marshal_VOID__VOID,
+                                        G_TYPE_NONE,
+                                        0);
+  signals[UPDATE_ALARM] = g_signal_new ("update-alarm",
                                         GCAL_TYPE_ALARM_ROW,
                                         G_SIGNAL_RUN_LAST,
                                         0,

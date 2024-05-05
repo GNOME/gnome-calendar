@@ -57,6 +57,8 @@ static void          gcal_event_editor_section_iface_init        (GcalEventEdito
 static void          on_remove_alarm_cb                          (GcalAlarmRow         *alarm_row,
                                                                   GcalRemindersSection *self);
 
+static void          on_update_alarm_cb                          (GcalAlarmRow         *alarm_row,
+                                                                  GcalRemindersSection *self);
 
 G_DEFINE_TYPE_WITH_CODE (GcalRemindersSection, gcal_reminders_section, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_iface_init))
@@ -169,6 +171,7 @@ create_alarm_row (GcalRemindersSection *self,
 
   row = gcal_alarm_row_new (alarm);
   g_signal_connect_object (row, "remove-alarm", G_CALLBACK (on_remove_alarm_cb), self, 0);
+  g_signal_connect_object (row, "update-alarm", G_CALLBACK (on_update_alarm_cb), self, 0);
 
   return row;
 }
@@ -255,6 +258,38 @@ sort_alarms_func (GtkListBoxRow *a,
   minutes_b = get_alarm_trigger_minutes (self->event, alarm_b);
 
   return minutes_a - minutes_b;
+}
+
+static void
+on_update_alarm_cb (GcalAlarmRow         *alarm_row,
+                    GcalRemindersSection *self)
+{
+  ECalComponentAlarm *alarm;
+  gint trigger_minutes;
+  gsize i;
+
+  GCAL_ENTRY;
+
+  alarm = gcal_alarm_row_get_alarm (alarm_row);
+  trigger_minutes = get_alarm_trigger_minutes (self->event, alarm);
+
+  /* Remove from the array */
+  for (i = 0; i < self->alarms->len; i++)
+    {
+      ECalComponentAlarm *a = g_ptr_array_index (self->alarms, i);
+
+      if (trigger_minutes == get_alarm_trigger_minutes (self->event, a))
+        {
+          GCAL_TRACE_MSG ("Updated alarm for %d minutes", trigger_minutes);
+
+          g_ptr_array_remove_index (self->alarms, i);
+          g_ptr_array_insert (self->alarms, i, e_cal_component_alarm_copy (alarm));
+
+          break;
+        }
+    }
+
+  GCAL_EXIT;
 }
 
 static void
@@ -392,7 +427,7 @@ gcal_reminders_section_changed (GcalEventEditorSection *section)
 
   alarms = gcal_event_get_alarms (self->event);
   if (g_list_length (alarms) != self->alarms->len)
-    GCAL_RETURN (FALSE);
+    GCAL_RETURN (TRUE);
 
   for (GList *l = alarms; l != NULL; l = l->next)
     {
@@ -409,6 +444,10 @@ gcal_reminders_section_changed (GcalEventEditorSection *section)
           if (get_alarm_trigger_minutes (self->event, alarm) == get_alarm_trigger_minutes (self->event, aux))
             {
               other_alarm = aux;
+
+              if (e_cal_component_alarm_get_action (alarm) != e_cal_component_alarm_get_action (aux))
+                GCAL_RETURN (TRUE);
+
               break;
             }
         }
