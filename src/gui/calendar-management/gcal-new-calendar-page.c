@@ -162,7 +162,7 @@ update_add_button (GcalNewCalendarPage *self)
     }
   else
     {
-      add_button_label = g_strdup (_("Add Calendar"));
+      add_button_label = g_strdup (C_("button", "Add Calendar"));
     }
 
   gtk_button_set_label (GTK_BUTTON (self->add_button), add_button_label);

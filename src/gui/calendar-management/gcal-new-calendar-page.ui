@@ -190,7 +190,7 @@
                 <child>
                   <object class="GtkButton" id="add_button">
                     <property name="halign">center</property>
-                    <property name="label" translatable="yes">Add Calendar</property>
+                    <property name="label" translatable="yes" context="button">Add Calendar</property>
                     <property name="sensitive">False</property>
                     <signal name="clicked" handler="on_add_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
                     <style>
