@@ -2,35 +2,33 @@
 # Copyright (C) 2022 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Hemish <hemish04082005@gmail.com>, 2022-2023.
+# Scrambled777 <weblate.scrambled777@simplelogin.com>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-11-29 21:55+0000\n"
-"PO-Revision-Date: 2023-07-10 12:44+0530\n"
-"Last-Translator: Hemish <hemish04082005@gmail.com>\n"
-"Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net https://indlinux."
-"org/hindi>\n"
+"POT-Creation-Date: 2024-05-03 21:29+0000\n"
+"PO-Revision-Date: 2024-05-08 10:58+0530\n"
+"Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
+"Language-Team: Hindi\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n==0 || n==1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Gtranslator 46.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:234 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-application.c:233 src/gui/gcal-quick-add-popover.ui:135
 #: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
 msgid "Calendar"
 msgstr "पंचांग"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
-#, fuzzy
-#| msgid "Manage your calendars"
 msgid "Manage your schedule"
-msgstr "अपने पंचांगों का प्रबंधन करें"
+msgstr "अपनी अनुसूची प्रबंधित करें"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
 msgid ""
@@ -39,6 +37,9 @@ msgid ""
 "meetings and appointments, public events, travel logistics, or other "
 "commitments in your life."
 msgstr ""
+"गनोम कैलेंडर आपको आगामी दिनों और हफ्तों के लिए योजना बनाने और अपने अनुसूची के शीर्ष पर बने "
+"रहने में मदद करने के लिए एक शानदार उपकरण है, चाहे आपके महीने बैठकों और नियुक्तियों, "
+"सार्वजनिक कार्यक्रमों, यात्रा रसद, या आपके जीवन में अन्य प्रतिबद्धताओं से भरे हों।"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
@@ -46,6 +47,8 @@ msgid ""
 "Calendar's infinite scrolling month view, week timetable, and scheduling "
 "list view."
 msgstr ""
+"गनोम कैलेंडर के अनंत स्क्रॉलिंग माह दृश्य, सप्ताह समय सारिणी और अनुसूची दृश्य के साथ असीमित "
+"पंचांग और कार्यक्रम आसानी से बनाएं और प्रबंधित करें।"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:20
 msgid ""
@@ -58,6 +61,13 @@ msgid ""
 "supports local and offline calendaring, so you can use it anywhere and "
 "anytime while travelling (or after civilization's collapse.)"
 msgstr ""
+"नवीनतम गनोम प्रौद्योगिकियों को एकीकृत करते हुए और सर्वोत्तम प्रथाओं को डिज़ाइन करते हुए, "
+"गनोम कैलेंडर बड़ी मात्रा में कार्यक्रमों को प्रबंधित करने और अन्य अनुप्रयोगों के साथ एकीकरण "
+"प्रदान करने के लिए परिपक्व इवोल्यूशन डेटा सर्वर के शीर्ष पर बनाता है। आप विभिन्न ऑनलाइन "
+"पंचांग सेवाओं (जैसे NextCloud, Google Calendar और CalDAV / WebDAV सर्वर) से पंचांग जोड़ "
+"सकते हैं, जिससे आप अपने कार्यक्रम को कई डिवाइस और प्लेटफ़ॉर्म पर समन्वयित कर सकते हैं। गनोम "
+"कैलेंडर स्थानीय और ऑफ़लाइन पंचांग का भी समर्थन करता है, इसलिए आप इसे यात्रा के दौरान (या "
+"सभ्यता के पतन के बाद) कहीं भी और कभी भी उपयोग कर सकते हैं।"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:33
 msgid "Week view"
@@ -70,6 +80,11 @@ msgstr "मासिक दृश्य"
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:41
 msgid "Event editor"
 msgstr "कार्यक्रम संशोधक"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:60
+#: src/gui/gcal-application.c:235
+msgid "The GNOME Project"
+msgstr "दी गनोम प्रॉजेक्ट"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -118,11 +133,11 @@ msgstr ""
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Zoom level of the week grid"
-msgstr ""
+msgstr "सप्ताह ग्रिड का ज़ूम स्तर"
 
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid "The current zoom level of the week grid"
-msgstr ""
+msgstr "सप्ताह ग्रिड का मौजूदा ज़ूम स्तर"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -142,34 +157,46 @@ msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1926 src/gui/gcal-quick-add-popover.c:461
+#: src/core/gcal-event.c:1926 src/gui/gcal-quick-add-popover.c:471
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
+
+#: src/gui/calendar-management/calendar-row.ui:19
+msgid "Read-Only Calendar"
+msgstr "केवल पढ़ने योग्य पंचांग"
+
+#: src/gui/calendar-management/calendar-row.ui:29
+msgid "Display Calendar"
+msgstr "पंचांग दिखाएं"
+
+#: src/gui/calendar-management/calendar-row.ui:39
+msgid "Edit calendar"
+msgstr "पंचांग संपादित करें"
 
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
 msgstr "पंचांग सेटिंग्स"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:338
+#: src/gui/calendar-management/gcal-calendars-page.c:343
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:141
 msgid "Calendars"
 msgstr "पंचांग"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:363
+#: src/gui/calendar-management/gcal-calendars-page.c:368
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "पंचांग <b>%s</b> हटा दिया गया"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:368
-#: src/gui/gcal-window.c:743
+#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/gcal-window.c:738
 msgid "_Undo"
 msgstr "पहले जैसा (_U)"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:59
-msgid "Add Calendar…"
-msgstr "पंचांग जोङें…"
+#: src/gui/calendar-management/gcal-calendars-page.ui:55
+msgid "_Add Calendar…"
+msgstr "पंचांग जोङें… (_A)"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
 msgid "Account"
@@ -179,38 +206,38 @@ msgstr "खाता"
 msgid "Open in Settings"
 msgstr "सेटिंग्स में खोलें"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:53
-#: src/gui/event-editor/gcal-summary-section.ui:23
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
+#: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "स्थान"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:24
 msgid "Calendar Name"
 msgstr "पंचांग का नाम"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:71
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:32
 msgid "Color"
 msgstr "रंग"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:92
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
 msgid "_Display Calendar"
-msgstr "पंचांग दिखाएँ (_D)"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:99
-msgid "Default _Calendar"
-msgstr "डिफ़ाल्ट पंचांग"
+msgstr "पंचांग दिखाएं (_D)"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
-msgid "Add new events to this calendar by default."
-msgstr "इस पंचांग में नए कार्यक्रम अपने आप जोङें।"
+msgid "Default _Calendar"
+msgstr "डिफ़ाल्ट पंचांग (_C)"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:108
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
+msgid "Add new events to this calendar by default"
+msgstr "इस पंचांग में नए कार्यक्रम अपने आप जोङें"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
 msgid "_Remove Calendar"
-msgstr "पंचांग हटाएँ (_R)"
+msgstr "पंचांग हटाएं (_R)"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:51
 msgid "Select a file"
@@ -270,16 +297,14 @@ msgid "Password"
 msgstr "पासवर्ड"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:237
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:28
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1269
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1200
 msgid "_Cancel"
 msgstr "रद्द (_C)"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:238
-#, fuzzy
-#| msgid "Connect"
 msgid "_Connect"
-msgstr "जोङें"
+msgstr "जुड़ें (_C)"
 
 #: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
@@ -376,13 +401,13 @@ msgstr[1] "%1$u मिनट पहले"
 msgid "Event start time"
 msgstr "कार्यक्रम प्रारंभ समय"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:11
-msgid "Toggles the sound of the alarm"
-msgstr "अलार्म की आवाज़ को टॉगल करता है"
+#: src/gui/event-editor/gcal-alarm-row.ui:8
+msgid "Toggle Alarm Sound"
+msgstr "अलार्म ध्वनि टॉगल करें"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:21
-msgid "Remove the alarm"
-msgstr "अलार्म हटाएँ"
+#: src/gui/event-editor/gcal-alarm-row.ui:19
+msgid "Remove Alarm"
+msgstr "अलार्म हटाएं"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -395,118 +420,118 @@ msgstr "अलार्म हटाएँ"
 #: src/gui/event-editor/gcal-date-chooser.c:272
 msgctxt "grid sunday"
 msgid "S"
-msgstr ""
+msgstr "र"
 
 #. Translators: Calendar grid abbreviation for Monday
 #: src/gui/event-editor/gcal-date-chooser.c:277
-#, fuzzy
-#| msgid "AM"
 msgctxt "grid monday"
 msgid "M"
-msgstr "AM"
+msgstr "सो"
 
 #. Translators: Calendar grid abbreviation for Tuesday
 #: src/gui/event-editor/gcal-date-chooser.c:282
 msgctxt "grid tuesday"
 msgid "T"
-msgstr ""
+msgstr "मं"
 
 #. Translators: Calendar grid abbreviation for Wednesday
 #: src/gui/event-editor/gcal-date-chooser.c:287
 msgctxt "grid wednesday"
 msgid "W"
-msgstr ""
+msgstr "बु"
 
 #. Translators: Calendar grid abbreviation for Thursday
 #: src/gui/event-editor/gcal-date-chooser.c:292
 msgctxt "grid thursday"
 msgid "T"
-msgstr ""
+msgstr "गु"
 
 #. Translators: Calendar grid abbreviation for Friday
 #: src/gui/event-editor/gcal-date-chooser.c:297
 msgctxt "grid friday"
 msgid "F"
-msgstr ""
+msgstr "शु"
 
 #. Translators: Calendar grid abbreviation for Saturday
 #: src/gui/event-editor/gcal-date-chooser.c:302
 msgctxt "grid saturday"
 msgid "S"
-msgstr ""
+msgstr "श"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Save"
 msgstr "सहेजें"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Done"
 msgstr "सम्पन्न"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
-msgid "Click to select the calendar"
-msgstr "पंचांग का चयन करने के लिए क्लिक करें"
+#: src/gui/event-editor/gcal-event-editor-dialog.c:777
+msgid "New Event"
+msgstr "नया कार्यक्रम"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
-#, fuzzy
-#| msgid "Done"
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:48
+msgid "Select Calendar"
+msgstr "पंचांग चुनें"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:106
 msgid "_Done"
-msgstr "सम्पन्न"
+msgstr "सम्पन्न (_D)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:133
 msgid "Schedule"
 msgstr "अनुसूची"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:145
 msgid "Reminders"
 msgstr "रिमाइंडर (अनुस्मरक)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:151
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:157
 msgid "Notes"
-msgstr "टिप्पणियाँ"
+msgstr "टिप्पणियां"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:171
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:177
 msgid "Delete Event"
-msgstr "कार्यक्रम हटाएँ"
+msgstr "कार्यक्रम हटाएं"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:26
 msgid "Add a Reminder…"
-msgstr "कार्यक्रम जोङें…"
+msgstr "अनुस्मारक जोड़ें…"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:52
-msgid "5 minutes"
+msgid "5 Minutes"
 msgstr "5 मिनट"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:58
-msgid "10 minutes"
+msgid "10 Minutes"
 msgstr "10 मिनट"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:64
-msgid "15 minutes"
+msgid "15 Minutes"
 msgstr "15 मिनट"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:70
-msgid "30 minutes"
+msgid "30 Minutes"
 msgstr "30 मिनट"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:76
-msgid "1 hour"
+msgid "1 Hour"
 msgstr "1 घंटा"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:82
-msgid "1 day"
+msgid "1 Day"
 msgstr "1 दिन"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:88
-msgid "2 days"
+msgid "2 Days"
 msgstr "2 दिन"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:94
-msgid "3 days"
+msgid "3 Days"
 msgstr "3 दिन"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:100
-msgid "1 week"
+msgid "1 Week"
 msgstr "1 सप्ताह"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
@@ -519,7 +544,7 @@ msgstr "पिछ्ले %A"
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
 #: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
-msgstr "कल (पिछला दिन)"
+msgstr "बिता कल"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
@@ -531,7 +556,7 @@ msgstr "आज"
 #: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
 #: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
-msgstr "कल (अगला दिन)"
+msgstr "कल"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
 #: src/gui/event-editor/gcal-schedule-section.c:255
@@ -564,15 +589,15 @@ msgstr "अंत होगा"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:120
 msgid "Repeat"
-msgstr "दोहराएँ प्रत्येक"
+msgstr "दोहराएं प्रत्येक"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:125
 msgid "No Repeat"
-msgstr "नहीं दोहराएँ"
+msgstr "नहीं दोहराएं"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:126
 msgid "Daily"
-msgstr "दैनिक/रोज़ाना"
+msgstr "दैनिक"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:127
 msgid "Monday – Friday"
@@ -588,7 +613,7 @@ msgstr "मासिक"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:130
 msgid "Yearly"
-msgstr "वार्षिक/सालाना"
+msgstr "वार्षिक"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:141
 msgid "End Repeat"
@@ -599,25 +624,17 @@ msgid "Forever"
 msgstr "हमेशा"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:147
-msgid "No. of occurrences"
+#: src/gui/event-editor/gcal-schedule-section.ui:160
+msgid "Number of Occurrences"
 msgstr "घटनाओं की संख्या"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:148
 msgid "Until Date"
 msgstr "इस तिथि तक"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:160
-msgid "Number of Occurrences"
-msgstr "घटनाओं की संख्या"
-
 #: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
 msgstr "दोहराई खत्म होने की तिथि"
-
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:676
-msgid "Unnamed event"
-msgstr "बेनाम कार्यक्रम"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
@@ -644,7 +661,7 @@ msgstr "गनोम पंचांग को बंद करें"
 
 #: src/gui/gcal-application.c:63
 msgid "Display version number"
-msgstr "संस्करण संख्या दिखाएँ"
+msgstr "संस्करण संख्या दिखाएं"
 
 #: src/gui/gcal-application.c:68
 msgid "Enable debug messages"
@@ -663,15 +680,13 @@ msgstr "दिए गए कार्यक्रम को दिखाते �
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "कॉपीराइट © 2012–%d पंचांग के लेखक"
 
-#: src/gui/gcal-application.c:236
-msgid "The GNOME Project"
-msgstr "दी गनोम प्रॉजेक्ट"
-
-#: src/gui/gcal-application.c:245
+#: src/gui/gcal-application.c:244
 msgid "translator-credits"
-msgstr "हेमिश (Hemish) <hemish04082005@gmail.com>"
+msgstr ""
+"हेमिश (Hemish) <hemish04082005@gmail.com>\n"
+"Scrambled777 <weblate.scrambled777@simplelogin.com>"
 
-#: src/gui/gcal-application.c:252 src/gui/gcal-window.ui:332
+#: src/gui/gcal-application.c:251 src/gui/gcal-window.ui:329
 msgid "Weather"
 msgstr "मौसम"
 
@@ -685,59 +700,57 @@ msgstr "पंचांग (_C)"
 
 #: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
-msgstr "पंचांगों को सिंक्रनाइज़ करें"
+msgstr "पंचांगों समन्वयित करें (_S)"
 
 #: src/gui/gcal-calendar-button.ui:41
-#, fuzzy
-#| msgid "Manage Calendars…"
 msgid "_Manage Calendars…"
-msgstr "पंचांगों का प्रबंधन करें…"
+msgstr "पंचांग प्रबंधित करें… (_M)"
 
-#: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:255
+#: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
 msgstr "जनवरी"
 
-#: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:256
+#: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:254
 msgid "February"
 msgstr "फ़रवरी"
 
-#: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:257
+#: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:255
 msgid "March"
 msgstr "मार्च"
 
-#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:258
+#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:256
 msgid "April"
 msgstr "अप्रैल"
 
-#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:259
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:257
 msgid "May"
 msgstr "मई"
 
-#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:260
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:258
 msgid "June"
 msgstr "जून"
 
-#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:261
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:259
 msgid "July"
 msgstr "जुलाई"
 
-#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:262
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:260
 msgid "August"
 msgstr "अगस्त"
 
-#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:263
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:261
 msgid "September"
 msgstr "सितंबर"
 
-#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:264
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:262
 msgid "October"
-msgstr "अक्तूबर"
+msgstr "अक्टूबर"
 
-#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:265
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:263
 msgid "November"
 msgstr "नवंबर"
 
-#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:266
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:264
 msgid "December"
 msgstr "दिसंबर"
 
@@ -888,78 +901,78 @@ msgstr "अज्ञात सेवा"
 msgid "Join"
 msgstr "शामिल हों"
 
-#: src/gui/gcal-quick-add-popover.c:118
+#: src/gui/gcal-quick-add-popover.c:116
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (यह पंचांग केवल पढने के लिए है)"
 
-#: src/gui/gcal-quick-add-popover.c:233
+#: src/gui/gcal-quick-add-popover.c:231
 msgid "from next Monday"
 msgstr "इस सोमवार से"
 
-#: src/gui/gcal-quick-add-popover.c:234
+#: src/gui/gcal-quick-add-popover.c:232
 msgid "from next Tuesday"
 msgstr "इस मंगलवार से"
 
-#: src/gui/gcal-quick-add-popover.c:235
+#: src/gui/gcal-quick-add-popover.c:233
 msgid "from next Wednesday"
 msgstr "इस बुधवार से"
 
-#: src/gui/gcal-quick-add-popover.c:236
+#: src/gui/gcal-quick-add-popover.c:234
 msgid "from next Thursday"
 msgstr "इस गुरुवार से"
 
-#: src/gui/gcal-quick-add-popover.c:237
+#: src/gui/gcal-quick-add-popover.c:235
 msgid "from next Friday"
 msgstr "इस शुक्रवार से"
 
-#: src/gui/gcal-quick-add-popover.c:238
+#: src/gui/gcal-quick-add-popover.c:236
 msgid "from next Saturday"
 msgstr "इस शनिवार से"
 
-#: src/gui/gcal-quick-add-popover.c:239
+#: src/gui/gcal-quick-add-popover.c:237
 msgid "from next Sunday"
 msgstr "इस रविवार से"
 
-#: src/gui/gcal-quick-add-popover.c:244
+#: src/gui/gcal-quick-add-popover.c:242
 msgid "to next Monday"
 msgstr "अगले सोमवार तक"
 
-#: src/gui/gcal-quick-add-popover.c:245
+#: src/gui/gcal-quick-add-popover.c:243
 msgid "to next Tuesday"
 msgstr "अगले मंगलवार तक"
 
-#: src/gui/gcal-quick-add-popover.c:246
+#: src/gui/gcal-quick-add-popover.c:244
 msgid "to next Wednesday"
 msgstr "अगले बुधवार तक"
 
-#: src/gui/gcal-quick-add-popover.c:247
+#: src/gui/gcal-quick-add-popover.c:245
 msgid "to next Thursday"
 msgstr "अगले गुरुवार तक"
 
-#: src/gui/gcal-quick-add-popover.c:248
+#: src/gui/gcal-quick-add-popover.c:246
 msgid "to next Friday"
 msgstr "अगले शुक्रवार तक"
 
-#: src/gui/gcal-quick-add-popover.c:249
+#: src/gui/gcal-quick-add-popover.c:247
 msgid "to next Saturday"
 msgstr "अगले शनिवार तक"
 
-#: src/gui/gcal-quick-add-popover.c:250
+#: src/gui/gcal-quick-add-popover.c:248
 msgid "to next Sunday"
 msgstr "अगले रविवार तक"
 
-#: src/gui/gcal-quick-add-popover.c:275
+#: src/gui/gcal-quick-add-popover.c:273
 #, c-format
 msgid "from Today"
 msgstr "आज से"
 
-#: src/gui/gcal-quick-add-popover.c:279
+#: src/gui/gcal-quick-add-popover.c:277
 #, c-format
 msgid "from Tomorrow"
 msgstr "आने वाले कल से"
 
-#: src/gui/gcal-quick-add-popover.c:283
+#: src/gui/gcal-quick-add-popover.c:281
 #, c-format
 msgid "from Yesterday"
 msgstr "बीते कल से"
@@ -968,22 +981,22 @@ msgstr "बीते कल से"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:301
+#: src/gui/gcal-quick-add-popover.c:299
 #, c-format
 msgid "from %1$s %2$s"
 msgstr "%2$s %1$s से"
 
-#: src/gui/gcal-quick-add-popover.c:312
+#: src/gui/gcal-quick-add-popover.c:310
 #, c-format
 msgid "to Today"
 msgstr "आज तक"
 
-#: src/gui/gcal-quick-add-popover.c:316
+#: src/gui/gcal-quick-add-popover.c:314
 #, c-format
 msgid "to Tomorrow"
 msgstr "आने वाले कल तक"
 
-#: src/gui/gcal-quick-add-popover.c:320
+#: src/gui/gcal-quick-add-popover.c:318
 #, c-format
 msgid "to Yesterday"
 msgstr "बीते कल तक"
@@ -992,118 +1005,118 @@ msgstr "बीते कल तक"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:338
+#: src/gui/gcal-quick-add-popover.c:336
 #, c-format
 msgid "to %1$s %2$s"
 msgstr "%2$s %1$s तक"
 
 # It would render as '%s से %s तक नया कार्यक्रम', thats why 'नया कार्यक्रम' has been put at end, in English it is 'New event from %s to %s', that's why in English 'New Event' is in front
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
-#: src/gui/gcal-quick-add-popover.c:345
+#: src/gui/gcal-quick-add-popover.c:343
 #, c-format
 msgid "New Event %1$s %2$s"
 msgstr "%1$s %2$s नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:362
+#: src/gui/gcal-quick-add-popover.c:360
 #, c-format
 msgid "New Event Today"
 msgstr "आज नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:366
+#: src/gui/gcal-quick-add-popover.c:364
 #, c-format
 msgid "New Event Tomorrow"
 msgstr "आने वाले कल पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:370
+#: src/gui/gcal-quick-add-popover.c:368
 #, c-format
 msgid "New Event Yesterday"
 msgstr "बीते कल पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:376
+#: src/gui/gcal-quick-add-popover.c:374
 msgid "New Event next Monday"
 msgstr "अगले सोमवार नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:377
+#: src/gui/gcal-quick-add-popover.c:375
 msgid "New Event next Tuesday"
 msgstr "अगले मंगलवार नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:378
+#: src/gui/gcal-quick-add-popover.c:376
 msgid "New Event next Wednesday"
 msgstr "अगले बुधवार नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:379
+#: src/gui/gcal-quick-add-popover.c:377
 msgid "New Event next Thursday"
 msgstr "अगले गुरुवार नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:380
+#: src/gui/gcal-quick-add-popover.c:378
 msgid "New Event next Friday"
 msgstr "अगले शुक्रवार नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:381
+#: src/gui/gcal-quick-add-popover.c:379
 msgid "New Event next Saturday"
 msgstr "अगले शनिवार नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:382
+#: src/gui/gcal-quick-add-popover.c:380
 msgid "New Event next Sunday"
 msgstr "अगले रविवार नया कार्यक्रम"
 
 #. Translators: %d is the numeric day of month
-#: src/gui/gcal-quick-add-popover.c:394
+#: src/gui/gcal-quick-add-popover.c:392
 #, c-format
 msgid "New Event on January %d"
 msgstr "%d जनवरी पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:395
+#: src/gui/gcal-quick-add-popover.c:393
 #, c-format
 msgid "New Event on February %d"
 msgstr "%d फ़रवरी पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:396
+#: src/gui/gcal-quick-add-popover.c:394
 #, c-format
 msgid "New Event on March %d"
 msgstr "%d मार्च पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:397
+#: src/gui/gcal-quick-add-popover.c:395
 #, c-format
 msgid "New Event on April %d"
 msgstr "%d अप्रैल पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:398
+#: src/gui/gcal-quick-add-popover.c:396
 #, c-format
 msgid "New Event on May %d"
 msgstr "%d मई पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:399
+#: src/gui/gcal-quick-add-popover.c:397
 #, c-format
 msgid "New Event on June %d"
 msgstr "%d जून पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:400
+#: src/gui/gcal-quick-add-popover.c:398
 #, c-format
 msgid "New Event on July %d"
 msgstr "%d जुलाई पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:401
+#: src/gui/gcal-quick-add-popover.c:399
 #, c-format
 msgid "New Event on August %d"
 msgstr "%d अगस्त पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:402
+#: src/gui/gcal-quick-add-popover.c:400
 #, c-format
 msgid "New Event on September %d"
 msgstr "%d सितंबर पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:403
+#: src/gui/gcal-quick-add-popover.c:401
 #, c-format
 msgid "New Event on October %d"
-msgstr "%d अक्तूबर पर नया कार्यक्रम"
+msgstr "%d अक्टूबर पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:404
+#: src/gui/gcal-quick-add-popover.c:402
 #, c-format
 msgid "New Event on November %d"
 msgstr "%d नवंबर पर नया कार्यक्रम"
 
-#: src/gui/gcal-quick-add-popover.c:405
+#: src/gui/gcal-quick-add-popover.c:403
 #, c-format
 msgid "New Event on December %d"
 msgstr "%d दिसंबर पर नया कार्यक्रम"
@@ -1116,14 +1129,18 @@ msgstr "जानकारी संशोधित करें…"
 msgid "Add"
 msgstr "जोड़ें"
 
-#: src/gui/gcal-search-button.ui:53
+#: src/gui/gcal-search-button.ui:29
+msgid "Search Events"
+msgstr "कार्यक्रम खोजें"
+
+#: src/gui/gcal-search-button.ui:54
 msgid "Search events"
 msgstr "कार्यक्रम खोजें"
 
 #: src/gui/gcal-sync-indicator.ui:21
 msgctxt "tooltip"
-msgid "Synchronizing Remote Calendars…"
-msgstr "दूरस्थ पंचांगों को सिंक्रनाइज़ किया जा रहा है…"
+msgid "Synchronizing Remote Calendars"
+msgstr "दूरस्थ पंचांगों का समन्वयन किया जा रहा है"
 
 #: src/gui/gcal-toolbar-end.ui:9
 msgctxt "tooltip"
@@ -1137,7 +1154,7 @@ msgstr "कार्यक्रम जोङें"
 
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
-msgstr "मौसम दिखाएँ"
+msgstr "मौसम दिखाएं"
 
 #: src/gui/gcal-weather-settings.ui:34
 msgid "Automatic Location"
@@ -1147,19 +1164,19 @@ msgstr "स्वचालित स्थान सेवा"
 msgid "Search locations"
 msgstr "जगह खोजें"
 
-#: src/gui/gcal-window.c:333
+#: src/gui/gcal-window.c:332
 msgid "Week"
 msgstr "सप्ताह"
 
-#: src/gui/gcal-window.c:335
+#: src/gui/gcal-window.c:334
 msgid "Month"
 msgstr "महीना"
 
-#: src/gui/gcal-window.c:741
+#: src/gui/gcal-window.c:736
 msgid "Another event deleted"
 msgstr "एक और कार्यक्रम हटा दिया गया"
 
-#: src/gui/gcal-window.c:741
+#: src/gui/gcal-window.c:736
 msgid "Event deleted"
 msgstr "कार्यक्रम हटा दिया गया"
 
@@ -1179,23 +1196,21 @@ msgstr "सप्ताह (_W)"
 msgid "_Month"
 msgstr "महीना (_M)"
 
-#: src/gui/gcal-window.ui:324
-#, fuzzy
-#| msgid "Open in Settings"
+#: src/gui/gcal-window.ui:321
 msgid "_Date & Time Settings…"
-msgstr "सेटिंग्स में खोलें"
+msgstr "दिनांक और समय सेटिंग… (_D)"
 
-#: src/gui/gcal-window.ui:328
+#: src/gui/gcal-window.ui:325
 msgid "_Online Accounts…"
 msgstr "ऑनलॉइन खाते… (_O)"
 
-#: src/gui/gcal-window.ui:340
+#: src/gui/gcal-window.ui:337
 msgid "_Keyboard Shortcuts"
 msgstr "कुंजीपट शॉर्टकट (_K)"
 
-#: src/gui/gcal-window.ui:344
+#: src/gui/gcal-window.ui:341
 msgid "_About Calendar"
-msgstr "'पंचांग' का परिचय"
+msgstr "'पंचांग' का परिचय (_A)"
 
 #: src/gui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -1203,41 +1218,33 @@ msgid "General"
 msgstr "साधारण"
 
 #: src/gui/gtk/help-overlay.ui:14
-#, fuzzy
-#| msgid "Open in Settings"
 msgctxt "shortcut window"
-msgid "Open main menu"
-msgstr "सेटिंग्स में खोलें"
+msgid "Open Main Menu"
+msgstr "मुख्य मेनू खोलें"
 
 #: src/gui/gtk/help-overlay.ui:20
-#, fuzzy
-#| msgid "Calendar Name"
 msgctxt "shortcut window"
-msgid "Open Calendars menu"
-msgstr "पंचांग का नाम"
+msgid "Open Calendars Menu"
+msgstr "पंचांग मेनू खोलें"
 
 #: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
-msgid "New event"
+msgid "New Event"
 msgstr "नया कार्यक्रम"
 
 #: src/gui/gtk/help-overlay.ui:32
-#, fuzzy
-#| msgid "Manage Calendars"
 msgctxt "shortcut window"
-msgid "Manage calendars"
+msgid "Manage Calendars"
 msgstr "पंचांगों का प्रबंधन करें"
 
 #: src/gui/gtk/help-overlay.ui:38
-#, fuzzy
-#| msgid "_Synchronize Calendars"
 msgctxt "shortcut window"
-msgid "Synchronize calendars"
-msgstr "पंचांगों को सिंक्रनाइज़ करें"
+msgid "Synchronize Calendars"
+msgstr "पंचांगों को समन्वयित करें"
 
 #: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
-msgid "Close window"
+msgid "Close Window"
 msgstr "विंडो बंद करें"
 
 #: src/gui/gtk/help-overlay.ui:50
@@ -1247,8 +1254,8 @@ msgstr "खोजें"
 
 #: src/gui/gtk/help-overlay.ui:56
 msgctxt "shortcut window"
-msgid "Show help"
-msgstr "मदद दिखाएँ"
+msgid "Show Help"
+msgstr "मदद दिखाएं"
 
 #: src/gui/gtk/help-overlay.ui:62
 msgctxt "shortcut window"
@@ -1262,27 +1269,27 @@ msgstr "विचरण"
 
 #: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
-msgid "Go back"
-msgstr "पीछे जाएँ"
+msgid "Go Back"
+msgstr "पीछे जाएं"
 
 #: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
-msgid "Go forward"
-msgstr "आगे जाएँ"
+msgid "Go Forward"
+msgstr "आगे जाएं"
 
 #: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
-msgid "Show today"
-msgstr "आज का दिन दिखाएँ"
+msgid "Show Today"
+msgstr "आज का दिन दिखाएं"
 
 #: src/gui/gtk/help-overlay.ui:91
 msgctxt "shortcut window"
-msgid "Next view"
+msgid "Next View"
 msgstr "अगला दृश्य"
 
 #: src/gui/gtk/help-overlay.ui:97
 msgctxt "shortcut window"
-msgid "Previous view"
+msgid "Previous View"
 msgstr "पिछला दृश्य"
 
 #: src/gui/gtk/help-overlay.ui:105
@@ -1292,12 +1299,12 @@ msgstr "दृश्य"
 
 #: src/gui/gtk/help-overlay.ui:108
 msgctxt "shortcut window"
-msgid "Week view"
+msgid "Week View"
 msgstr "साप्ताहिक दृश्य"
 
 #: src/gui/gtk/help-overlay.ui:114
 msgctxt "shortcut window"
-msgid "Month view"
+msgid "Month View"
 msgstr "मासिक दृश्य"
 
 #: src/gui/importer/gcal-import-dialog.c:396
@@ -1388,11 +1395,11 @@ msgstr[1] "अन्य %d कार्यक्रम"
 msgid "week %d"
 msgstr "सप्ताह %d"
 
-#: src/utils/gcal-utils.c:1265
+#: src/utils/gcal-utils.c:1196
 msgid "Modify Multiple Events?"
 msgstr "एक से अधिक कार्यक्रम संशोधित करें?"
 
-#: src/utils/gcal-utils.c:1266
+#: src/utils/gcal-utils.c:1197
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1400,17 +1407,84 @@ msgstr ""
 "आप जिस कार्यक्रम को संशोधित करने का प्रयास कर रहे हैं वह पुनरावर्तक है। आपके द्वारा चुने गए "
 "परिवर्तन निम्न पर लागू होंगे:"
 
-#: src/utils/gcal-utils.c:1270
+#: src/utils/gcal-utils.c:1201
 msgid "_Only This Event"
 msgstr "केवल यही कार्यक्रम (_O)"
 
-#: src/utils/gcal-utils.c:1276
+#: src/utils/gcal-utils.c:1207
 msgid "_Subsequent Events"
 msgstr "आगे के कार्यक्रम (_S)"
 
-#: src/utils/gcal-utils.c:1279
+#: src/utils/gcal-utils.c:1210
 msgid "_All Events"
 msgstr "सभी कार्यक्रम (_A)"
+
+#, fuzzy
+#~| msgid "Add Calendar"
+#~| msgid_plural "Add %1$u Calendars"
+#~ msgid "_Add Calendar"
+#~ msgstr "%1$u पंचांग जोङें"
+
+#, fuzzy
+#~| msgid "Calendar"
+#~ msgid "Calendar URL"
+#~ msgstr "पंचांग"
+
+#, fuzzy
+#~| msgid "Edit calendar"
+#~ msgid "Edit Calendar"
+#~ msgstr "पंचांग संपादित करें"
+
+#~ msgid "Toggles the sound of the alarm"
+#~ msgstr "अलार्म की आवाज़ को टॉगल करता है"
+
+#~ msgid "Click to select the calendar"
+#~ msgstr "पंचांग का चयन करने के लिए क्लिक करें"
+
+#~ msgid "1 hour"
+#~ msgstr "1 घंटा"
+
+#~ msgid "1 day"
+#~ msgstr "1 दिन"
+
+#~ msgid "2 days"
+#~ msgstr "2 दिन"
+
+#~ msgid "3 days"
+#~ msgstr "3 दिन"
+
+#~ msgid "1 week"
+#~ msgstr "1 सप्ताह"
+
+#~ msgid "No. of occurrences"
+#~ msgstr "घटनाओं की संख्या"
+
+#~ msgid "Unnamed event"
+#~ msgstr "बेनाम कार्यक्रम"
+
+#, fuzzy
+#~| msgid "Manage Calendars"
+#~ msgctxt "shortcut window"
+#~ msgid "Manage calendars"
+#~ msgstr "पंचांगों का प्रबंधन करें"
+
+#, fuzzy
+#~| msgid "_Synchronize Calendars"
+#~ msgctxt "shortcut window"
+#~ msgid "Synchronize calendars"
+#~ msgstr "पंचांगों को सिंक्रनाइज़ करें"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Go back"
+#~ msgstr "पीछे जाएँ"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Week view"
+#~ msgstr "साप्ताहिक दृश्य"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Month view"
+#~ msgstr "मासिक दृश्य"
 
 #~ msgid "Calendar for GNOME"
 #~ msgstr "गनोम के लिए पंचांग"
