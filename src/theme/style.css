@@ -186,9 +186,11 @@ datechooser navigator button {
 /* week numbers, with a style resembling GNOME Shell's */
 datechooser .weeknum{
     font-size: smaller;
+    font-weight: bold;
     margin: 6px;
-    border-radius: 3px;
-    background-color: alpha(@theme_fg_color, 0.1);
+    padding: 4px;
+    border-radius: 5px;
+    background-color: alpha(@insensitive_fg_color, 0.2);
     color: @insensitive_fg_color;
 }
 
@@ -196,15 +198,17 @@ datechooser .weeknum{
 datechooser .weekday {
   color: @insensitive_fg_color;
   font-size: smaller;
+  font-weight: bold;
 }
 
 /* days */
 datechooser button.day {
   font-size: 10pt;
   font-weight: normal;
-  margin: 3px;
-  min-height: 28px;
-  min-width: 28px;
+  min-height: 26px;
+  min-width: 26px;
+  margin: 2px;
+  padding: 3px;
   transition: none;
 }
 
@@ -223,6 +227,10 @@ datechooser button.day:selected {
 
 datechooser button.day:selected dot {
   background-color: @accent_fg_color;
+}
+
+datechooser button.day.non-workday {
+  color: @insensitive_fg_color;
 }
 
 datechooser button.day.today {
@@ -244,12 +252,12 @@ datechooser button.day.today:selected dot {
 
 datechooser button.day.other-month:not(:hover),
 datechooser button.day.other-month:backdrop {
-  color: alpha(currentColor, 0.1);
+  color: alpha(currentColor, 0.5);
 }
 
 datechooser button.day.other-month:not(:hover) dot,
 datechooser button.day.other-month:backdrop dot {
-  background-color: alpha(currentColor, 0.1);
+  background-color: alpha(currentColor, 0.5);
 }
 
 datechooser button.day.other-month:hover:not(:backdrop) {
@@ -339,7 +347,6 @@ monthcell:selected.today { background-color: @month_selected_today_color; }
 monthcell:selected.today:hover { background-color: @month_selected_today_hover_color; }
 
 monthcell.today label.day-label {
-    font-weight: bold;
     background-color: alpha(@accent_bg_color, 0.8);
     color: @accent_fg_color;
     border-radius: 99px;
