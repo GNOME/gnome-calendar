@@ -68,10 +68,6 @@
                         <property name="use-underline">true</property>
                         <property name="end-icon-name">go-next-symbolic</property>
                         <signal name="activated" handler="on_new_calendar_row_activated_cb" object="GcalCalendarsPage" swapped="no" />
-                        <style>
-                          <class name="suggested-action"/>
-                        </style>
-
                         <child>
                           <object class="GtkShortcutController">
                             <property name="scope">managed</property>
