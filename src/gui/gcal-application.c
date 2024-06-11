@@ -150,7 +150,7 @@ build_system_information (void)
 {
   GString *str = g_string_new (NULL);
 
-  g_string_append_printf (str, "GNOME Calendar (%s)\n\n", VERSION);
+  g_string_append_printf (str, "GNOME Calendar (`%s`)\n\n", VERSION);
 
   if (g_file_test ("/.flatpak-info", G_FILE_TEST_EXISTS))
     g_string_append (str, "* Flatpak: yes\n");
