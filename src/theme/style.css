@@ -1,3 +1,5 @@
+@import 'events.css';
+
 @define-color month_separator_color mix(@borders, @dark_5, 0.09);
 @define-color month_today_color alpha(@accent_bg_color, 0.15);
 @define-color month_today_hover_color alpha(@accent_bg_color, 0.25);
@@ -68,56 +70,6 @@ popover.events button {
     border-top-right-radius: 0;
     border-style: solid none none;
     box-shadow: none;
-}
-
-
-/*
- * Event widget
- */
-
-event {
-    margin: 1px;
-    font-size: 0.9rem;
-}
-
-event widget.content {
-    margin: 4px;
-}
-
-event.timed,
-event:not(.slanted):not(.slanted-start):not(.slanted-end) {
-    border-radius: 2.5px;
-}
-
-event.timed widget.edge {
-    border-radius: 2.5px;
-    min-width: 5px;
-}
-
-event.slanted,
-event.slanted-start,
-event.slanted-end:dir(rtl) {
-    padding-left: 16px;
-    border-radius: 0 2.5px 2.5px 0;
-}
-
-event.slanted,
-event.slanted-end,
-event.slanted-start:dir(rtl) {
-    padding-right: 16px;
-    border-radius: 2.5px 0 0 2.5px;
-}
-
-event:not(.timed).color-dark {
-    /* Keep in symc with the dark style's event.timed colors */
-    color: @light_1;
-    outline-color: rgba(0, 0, 0, 0.3);
-}
-
-event.timed,
-event:not(.timed).color-light {
-    color: alpha(@dark_5, 0.8);
-    outline-color: rgba(255, 255, 255, 0.5);
 }
 
 

@@ -19,7 +19,6 @@
 
 #define G_LOG_DOMAIN "GcalWindow"
 
-#include "css-code.h"
 #include "gcal-agenda-view.h"
 #include "gcal-calendar-management-dialog.h"
 #include "gcal-calendar-button.h"
@@ -287,7 +286,7 @@ recalculate_calendar_colors_css (GcalWindow *self)
       color_str = gdk_rgba_to_string (color);
       color_id = g_quark_from_string (color_str);
 
-      new_css_snippets[i] = g_strdup_printf (CSS_TEMPLATE, color_id, color_str);
+      new_css_snippets[i] = g_strdup_printf (".color-%u { --event-bg-color: %s; }", color_id, color_str);
     }
 
   new_css_data = g_strjoinv ("\n", new_css_snippets);
