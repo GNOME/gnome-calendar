@@ -233,6 +233,10 @@ datechooser button.day.non-workday {
   color: @insensitive_fg_color;
 }
 
+datechooser button.day.non-workday:selected {
+  color: @accent_fg_color;
+}
+
 datechooser button.day.today {
   color: @accent_color;
 }
