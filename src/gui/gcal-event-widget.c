@@ -31,9 +31,10 @@
 #include "gcal-overflow-bin.h"
 #include "gcal-utils.h"
 
-#define DESC_MAX_CHAR 200
-#define INTENSITY(c)  ((c->red) * 0.30 + (c->green) * 0.59 + (c->blue) * 0.11)
-#define ICON_SIZE     16
+#define LOCATION_MAX_LEN 50
+#define DESC_MAX_CHAR    200
+#define INTENSITY(c)     ((c->red) * 0.30 + (c->green) * 0.59 + (c->blue) * 0.11)
+#define ICON_SIZE        16
 
 typedef struct
 {
@@ -231,6 +232,7 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
 {
   g_autoptr (GDateTime) tooltip_start, tooltip_end;
   g_autofree gchar *start, *end, *escaped_summary;
+  g_autofree gchar *location = NULL;
   GString *tooltip_mesg;
   gboolean allday, multiday, is_ltr;
   guint description_len;
@@ -343,16 +345,48 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
     }
 
   /* Append event location */
-  if (g_utf8_strlen (gcal_event_get_location (event), -1) > 0)
+  location = g_strdup (gcal_event_get_location (event));
+  if (location)
+    g_strstrip (location);
+
+  if (location && location[0] != '\0')
     {
-      g_autofree gchar *escaped_location;
+      g_autofree gchar *escaped_location = NULL;
+      g_autoptr (GUri) guri = NULL;
+      g_autoptr (GString) string = NULL;
+      g_autoptr (GError) error = NULL;
 
-      escaped_location = g_markup_escape_text (gcal_event_get_location (event), -1);
+      string = g_string_new (NULL);
+      guri = g_uri_parse (location, SOUP_HTTP_URI_FLAGS | G_URI_FLAGS_PARSE_RELAXED, &error);
 
-      g_string_append (tooltip_mesg, "\n\n");
+      if (error == NULL)
+        {
+          const gchar *service_name = gcal_get_service_name_from_url (location);
+
+          if (service_name)
+            {
+              g_string_append (string, service_name);
+            }
+          else
+            {
+              g_string_append (string, location);
+
+              if (g_utf8_strlen (location, -1) > LOCATION_MAX_LEN)
+                {
+                  g_string_truncate (string, string->len - 1);
+                  g_string_append (string, "…");
+                }
+            }
+        }
+      else
+        {
+          g_string_append (string, location);
+        }
+
+      escaped_location = g_markup_escape_text (string->str, -1);
 
       /* Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue") */
-      g_string_append_printf (tooltip_mesg, _("At %s"), escaped_location);
+      g_string_append_printf (tooltip_mesg, _("\n\nAt %s"), escaped_location);
     }
 
   description_len = g_utf8_strlen (gcal_event_get_description (event), -1);
