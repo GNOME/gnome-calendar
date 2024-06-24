@@ -137,4 +137,6 @@ GTimeZone *          gcal_util_get_app_timezone_or_local         ();
 
 gboolean             gcal_is_valid_event_name                    (const gchar          *event_name);
 
+const gchar*         gcal_get_service_name_from_url              (const gchar        *url);
+
 #endif /* __GCAL_UTILS_H__ */

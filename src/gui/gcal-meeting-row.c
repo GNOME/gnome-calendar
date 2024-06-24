@@ -57,41 +57,21 @@ static GParamSpec *properties[N_PROPS] = { NULL, };
  * Auxiliary methods
  */
 
-const gchar*
-get_service_name_from_url (const gchar *url)
-{
-  struct {
-    const gchar *needle;
-    const gchar *service_name;
-  } service_name_vtable[] = {
-    { "meet.google.com", N_("Google Meet") },
-    { "meet.jit.si", N_("Jitsi") },
-    { "whereby.com", N_("Whereby") },
-    { "zoom.us", N_("Zoom") },
-    { "teams.microsoft.com", N_("Microsoft Teams") },
-  };
-  gsize i;
-
-  for (i = 0; i < G_N_ELEMENTS (service_name_vtable); i++)
-    {
-      if (strstr (url, service_name_vtable[i].needle))
-        return gettext (service_name_vtable[i].service_name);
-    }
-
-  return _("Unknown Service");
-}
-
 static void
 setup_meeting (GcalMeetingRow *self)
 {
   g_autofree gchar *markup_url = NULL;
 
-  adw_preferences_row_set_title (ADW_PREFERENCES_ROW (self), get_service_name_from_url (self->url));
+  const gchar *service_name = gcal_get_service_name_from_url (self->url);
+
+  if (service_name)
+    adw_preferences_row_set_title (ADW_PREFERENCES_ROW (self), service_name);
+  else
+    adw_preferences_row_set_title (ADW_PREFERENCES_ROW (self), _("Unknown Service"));
 
   markup_url = g_strdup_printf ("<a href=\"%s\">%s</a>", self->url, self->url);
   adw_action_row_set_subtitle (ADW_ACTION_ROW (self), markup_url);
 }
-
 
 /*
  * Callbacks

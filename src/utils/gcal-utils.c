@@ -1289,3 +1289,36 @@ gcal_is_valid_event_name (const gchar *event_name)
   g_autofree gchar *aux = g_strstrip (g_strdup (event_name));
   return g_utf8_strlen (aux, -1) > 0;
 }
+
+/**
+ * gcal_get_service_name_from_url:
+ * @url: the meeting url to get service name from
+ *
+ * Given a meeting service URL, get the service provider name,
+ * or return NULL in the case the service is not listed.
+ *
+ * Returns: the service name or NULL
+ */
+const gchar *
+gcal_get_service_name_from_url (const gchar *url)
+{
+  struct {
+    const gchar *needle;
+    const gchar *service_name;
+  } service_name_vtable[] = {
+    { "meet.google.com", N_("Google Meet") },
+    { "meet.jit.si", N_("Jitsi") },
+    { "whereby.com", N_("Whereby") },
+    { "zoom.us", N_("Zoom") },
+    { "teams.microsoft.com", N_("Microsoft Teams") },
+  };
+  gsize i;
+
+  for (i = 0; i < G_N_ELEMENTS (service_name_vtable); i++)
+    {
+      if (strstr (url, service_name_vtable[i].needle))
+        return gettext (service_name_vtable[i].service_name);
+    }
+
+  return NULL;
+}
