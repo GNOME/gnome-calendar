@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-05-06 09:40+0000\n"
-"PO-Revision-Date: 2024-05-07 09:51+0200\n"
+"POT-Creation-Date: 2024-07-02 15:45+0000\n"
+"PO-Revision-Date: 2024-07-02 23:08+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -191,7 +191,7 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "Koledar <b>%s</b> je odstranjen."
 
 #: src/gui/calendar-management/gcal-calendars-page.c:361
-#: src/gui/gcal-window.c:738
+#: src/gui/gcal-window.c:737
 msgid "_Undo"
 msgstr "_Razveljavi"
 
@@ -263,8 +263,6 @@ msgid "Select a file"
 msgstr "Izbor datoteke"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:158
-#: src/gui/calendar-management/gcal-new-calendar-page.c:165
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
@@ -272,6 +270,12 @@ msgstr[0] "Dodaj %1$u koledarjev"
 msgstr[1] "Dodaj %1$u koledar"
 msgstr[2] "Dodaj %1$u koledarja"
 msgstr[3] "Dodaj %1$u koledarje"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "Dodaj koledar"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
@@ -1226,19 +1230,19 @@ msgstr "Samodejno določi mesto"
 msgid "Search locations"
 msgstr "Preišči mesta"
 
-#: src/gui/gcal-window.c:332
+#: src/gui/gcal-window.c:331
 msgid "Week"
 msgstr "Teden"
 
-#: src/gui/gcal-window.c:334
+#: src/gui/gcal-window.c:333
 msgid "Month"
 msgstr "Mesec"
 
-#: src/gui/gcal-window.c:736
+#: src/gui/gcal-window.c:735
 msgid "Another event deleted"
 msgstr "Izbrisan je drug dogodek"
 
-#: src/gui/gcal-window.c:736
+#: src/gui/gcal-window.c:735
 msgid "Event deleted"
 msgstr "Dogodek je izbrisan"
 
