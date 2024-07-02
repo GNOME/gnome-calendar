@@ -24,9 +24,6 @@
         "--talk-name=org.gnome.OnlineAccounts",
         "--talk-name=org.gnome.SettingsDaemon.Color"
     ],
-    "x-run-args" : [
-        "--debug"
-    ],
     "cleanup" : [
         "/include",
         "/lib/pkgconfig",
