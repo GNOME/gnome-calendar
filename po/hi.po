@@ -8,108 +8,48 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-03-02 23:39+0000\n"
-"PO-Revision-Date: 2024-04-14 20:33+0530\n"
+"POT-Creation-Date: 2024-06-07 14:50+0000\n"
+"PO-Revision-Date: 2024-07-01 13:49+0530\n"
 "Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
-"Language-Team: Hindi\n"
+"Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Gtranslator 46.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 46.1\n"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
-#: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:233 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
+#: data/org.gnome.Calendar.desktop.in.in:3
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:7 src/main.c:35
+#: src/gui/gcal-quick-add-popover.ui:135 src/gui/gcal-window.ui:4
+#: src/gui/gcal-window.ui:124
 msgid "Calendar"
-msgstr "पंचांग"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
-msgid "Manage your schedule"
-msgstr "अपनी अनुसूची प्रबंधित करें"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
-msgid ""
-"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
-"schedule for upcoming days and weeks, whether your months are filled with "
-"meetings and appointments, public events, travel logistics, or other "
-"commitments in your life."
-msgstr ""
-"गनोम कैलेंडर आपको आगामी दिनों और हफ्तों के लिए योजना बनाने और अपने अनुसूची के शीर्ष पर बने "
-"रहने में मदद करने के लिए एक शानदार उपकरण है, चाहे आपके महीने बैठकों और नियुक्तियों, "
-"सार्वजनिक कार्यक्रमों, यात्रा रसद, या आपके जीवन में अन्य प्रतिबद्धताओं से भरे हों।"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
-msgid ""
-"Easily create and manage unlimited calendars and events with GNOME "
-"Calendar's infinite scrolling month view, week timetable, and scheduling "
-"list view."
-msgstr ""
-"गनोम कैलेंडर के अनंत स्क्रॉलिंग माह दृश्य, सप्ताह समय सारिणी और अनुसूची दृश्य के साथ असीमित "
-"पंचांग और कार्यक्रम आसानी से बनाएं और प्रबंधित करें।"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:20
-msgid ""
-"Integrating the latest GNOME technologies and design best practices, GNOME "
-"Calendar builds on top of the mature Evolution data server to manage large "
-"quantities of events and to provide integration with other applications. You "
-"can add calendars from various online calendaring services (like NextCloud, "
-"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
-"your events across multiple devices and platforms. GNOME Calendar also "
-"supports local and offline calendaring, so you can use it anywhere and "
-"anytime while travelling (or after civilization's collapse.)"
-msgstr ""
-"नवीनतम गनोम प्रौद्योगिकियों को एकीकृत करते हुए और सर्वोत्तम प्रथाओं को डिज़ाइन करते हुए, "
-"गनोम कैलेंडर बड़ी मात्रा में कार्यक्रमों को प्रबंधित करने और अन्य अनुप्रयोगों के साथ एकीकरण "
-"प्रदान करने के लिए परिपक्व इवोल्यूशन डेटा सर्वर के शीर्ष पर बनाता है। आप विभिन्न ऑनलाइन "
-"पंचांग सेवाओं (जैसे NextCloud, Google Calendar और CalDAV / WebDAV सर्वर) से पंचांग जोड़ "
-"सकते हैं, जिससे आप अपने कार्यक्रम को कई डिवाइस और प्लेटफ़ॉर्म पर समन्वयित कर सकते हैं। गनोम "
-"कैलेंडर स्थानीय और ऑफ़लाइन पंचांग का भी समर्थन करता है, इसलिए आप इसे यात्रा के दौरान (या "
-"सभ्यता के पतन के बाद) कहीं भी और कभी भी उपयोग कर सकते हैं।"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:33
-msgid "Week view"
-msgstr "साप्ताहिक दृश्य"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:37
-msgid "Month view"
-msgstr "मासिक दृश्य"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:41
-msgid "Event editor"
-msgstr "कार्यक्रम संशोधक"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:60
-#: src/gui/gcal-application.c:235
-msgid "The GNOME Project"
-msgstr "दी गनोम प्रॉजेक्ट"
+msgstr "कैलेंडर"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
-msgstr "अपने पंचांगों का उपयोग और प्रबंधन करें"
+msgstr "अपने कैलेंडर तक पहुंचें और प्रबंधित करें"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in.in:13
 msgid "Calendar;Event;Reminder;"
-msgstr "Calendar;Event;Reminder;पंचांग;कार्यक्रम;केलेंडर;कलेंडर;इवेंट;रिमाइंडर;अनुस्मरक;"
+msgstr "कैलेंडर;कार्यक्रम;अनुस्मारक;"
 
 #: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
-msgstr "विंडो मैक्सिमॉइज़ की हुई"
+msgstr "खिड़की अधिकतमीकृत"
 
 #: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
-msgstr "विंडो मैक्सिमॉइज़ स्थिति"
+msgstr "खिड़की अधिकतमीकृत अवस्था"
 
 #: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
-msgstr "विंडो का आकार"
+msgstr "खिड़की का आकार"
 
 #: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
-msgstr "विंडो का आकार (चौड़ाई और ऊँचाई)"
+msgstr "खिड़की का आकर (चौड़ाई और ऊंचाई)।"
 
 #: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Type of the active view"
@@ -117,11 +57,11 @@ msgstr "सक्रिय दृश्य का प्रकार"
 
 #: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
-msgstr "सक्रिय दृश्य का प्रकार, मासिक दृश्य डिफ़ॉल्ट है"
+msgstr "सक्रिय दृश्य का प्रकार, मासिक दृश्य तयशुदा है"
 
 #: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
-msgstr "मौसम सेवा का कॉन्फ़िग्रेशन"
+msgstr "मौसम सेवा का विन्यास"
 
 #: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
@@ -138,6 +78,65 @@ msgstr "सप्ताह ग्रिड का ज़ूम स्तर"
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid "The current zoom level of the week grid"
 msgstr "सप्ताह ग्रिड का मौजूदा ज़ूम स्तर"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:8
+msgid "Manage your schedule"
+msgstr "अपनी अनुसूची प्रबंधित करें"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:11
+msgid ""
+"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
+"schedule for upcoming days and weeks, whether your months are filled with "
+"meetings and appointments, public events, travel logistics, or other "
+"commitments in your life."
+msgstr ""
+"गनोम कैलेंडर आपको आगामी दिनों और हफ्तों के लिए योजना बनाने और अपने अनुसूची के शीर्ष पर बने "
+"रहने में मदद करने के लिए एक शानदार उपकरण है, चाहे आपके महीने बैठकों और नियुक्तियों, "
+"सार्वजनिक कार्यक्रमों, यात्रा रसद, या आपके जीवन में अन्य प्रतिबद्धताओं से भरे हों।"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:16
+msgid ""
+"Easily create and manage unlimited calendars and events with GNOME "
+"Calendar's infinite scrolling month view, week timetable, and scheduling "
+"list view."
+msgstr ""
+"गनोम कैलेंडर के अनंत स्क्रॉलिंग माह दृश्य, सप्ताह समय सारिणी और अनुसूची दृश्य के साथ असीमित "
+"कैलेंडर और कार्यक्रम आसानी से बनाएं और प्रबंधित करें।"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:20
+msgid ""
+"Integrating the latest GNOME technologies and design best practices, GNOME "
+"Calendar builds on top of the mature Evolution data server to manage large "
+"quantities of events and to provide integration with other applications. You "
+"can add calendars from various online calendaring services (like NextCloud, "
+"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
+"your events across multiple devices and platforms. GNOME Calendar also "
+"supports local and offline calendaring, so you can use it anywhere and "
+"anytime while travelling (or after civilization's collapse.)"
+msgstr ""
+"नवीनतम गनोम प्रौद्योगिकियों को एकीकृत करते हुए और सर्वोत्तम प्रथाओं को डिज़ाइन करते हुए, "
+"गनोम कैलेंडर बड़ी मात्रा में कार्यक्रमों को प्रबंधित करने और अन्य अनुप्रयोगों के साथ एकीकरण "
+"प्रदान करने के लिए परिपक्व इवोल्यूशन डेटा सर्वर के शीर्ष पर बनाता है। आप विभिन्न ऑनलाइन "
+"कैलेंडर सेवाओं (जैसे NextCloud, Google Calendar और CalDAV / WebDAV सर्वर) से कैलेंडर जोड़ "
+"सकते हैं, जिससे आप अपने कार्यक्रम को कई डिवाइस और प्लेटफ़ॉर्म पर समन्वयित कर सकते हैं। गनोम "
+"कैलेंडर स्थानीय और ऑफ़लाइन कैलेंडर का भी समर्थन करता है, इसलिए आप इसे यात्रा के दौरान (या "
+"सभ्यता के पतन के बाद) कहीं भी और कभी भी उपयोग कर सकते हैं।"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:33
+msgid "Week view"
+msgstr "साप्ताहिक दृश्य"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:37
+msgid "Month view"
+msgstr "मासिक दृश्य"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "Event editor"
+msgstr "कार्यक्रम संशोधक"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
+msgid "The GNOME Project"
+msgstr "गनोम परियोजना"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -164,145 +163,158 @@ msgstr "%1$s, %2$s – %3$s"
 
 #: src/gui/calendar-management/calendar-row.ui:19
 msgid "Read-Only Calendar"
-msgstr "केवल पढ़ने योग्य पंचांग"
+msgstr "केवल-पढ़ने योग्य कैलेंडर"
 
 #: src/gui/calendar-management/calendar-row.ui:29
 msgid "Display Calendar"
-msgstr "पंचांग दिखाएँ"
+msgstr "कैलेंडर दिखाएं"
 
 #: src/gui/calendar-management/calendar-row.ui:39
 msgid "Edit calendar"
-msgstr "पंचांग संपादित करें"
+msgstr "कैलेंडर संपादित करें"
 
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
-msgstr "पंचांग सेटिंग्स"
-
-#: src/gui/calendar-management/gcal-calendars-page.c:343
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:141
-msgid "Calendars"
-msgstr "पंचांग"
+msgstr "कैलेंडर सेटिंग"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:368
+#: src/gui/calendar-management/gcal-calendars-page.c:356
 #, c-format
 msgid "Calendar <b>%s</b> removed"
-msgstr "पंचांग <b>%s</b> हटा दिया गया"
+msgstr "कैलेंडर <b>%s</b> हटाया गया"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:373
+#: src/gui/calendar-management/gcal-calendars-page.c:361
 #: src/gui/gcal-window.c:738
 msgid "_Undo"
-msgstr "पहले जैसा (_U)"
+msgstr "पूर्ववत करें (_U)"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:66
-msgid "_Add Calendar…"
-msgstr "पंचांग जोङें… (_A)"
+#: src/gui/calendar-management/gcal-calendars-page.ui:4
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:144
+msgid "Calendars"
+msgstr "कैलेंडर"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
-msgid "Account"
-msgstr "खाता"
+#: src/gui/calendar-management/gcal-calendars-page.ui:67
+msgid "_Add Calendar"
+msgstr "कैलेंडर जोड़ें (_A)"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:30
-msgid "Open in Settings"
-msgstr "सेटिंग्स में खोलें"
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:190
+msgid "Calendar URL"
+msgstr "कैलेंडर URL"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:208
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
 #: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:115
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "स्थान"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:24
-msgid "Calendar Name"
-msgstr "पंचांग का नाम"
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:209
+msgid "On This Computer"
+msgstr "इस कंप्यूटर पर"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:32
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:4
+msgid "Edit Calendar"
+msgstr "कैलेंडर संपादित करें"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:34
+msgid "Account"
+msgstr "खाता"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:42
+msgid "Open in Settings"
+msgstr "सेटिंग में खोलें"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+msgid "Calendar Name"
+msgstr "कैलेंडर नाम"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
 msgid "Color"
 msgstr "रंग"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:110
 msgid "_Display Calendar"
-msgstr "पंचांग दिखाएँ (_D)"
+msgstr "कैलेंडर दिखाएं (_D)"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:117
 msgid "Default _Calendar"
-msgstr "डिफ़ाल्ट पंचांग (_C)"
+msgstr "डिफाल्ट कैलेंडर (_C)"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:118
 msgid "Add new events to this calendar by default"
-msgstr "इस पंचांग में नए कार्यक्रम अपने आप जोङें"
+msgstr "इस कैलेंडर में तयशुदा रूप से नए कार्यक्रम जोड़ें"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:132
 msgid "_Remove Calendar"
-msgstr "पंचांग हटाएँ (_R)"
+msgstr "कैलेंडर हटाएं (_R)"
 
 #: src/gui/calendar-management/gcal-file-chooser-button.c:51
 msgid "Select a file"
-msgstr "फ़ाइल चुनें"
+msgstr "फाइल चुनें"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #: src/gui/calendar-management/gcal-new-calendar-page.c:165
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:190
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
-msgstr[0] "%1$u पंचांग जोङें"
-msgstr[1] "%1$u पंचांग जोङें"
+msgstr[0] "कैलेंडर जोड़ें"
+msgstr[1] "%1$u कैलेंडर जोड़ें"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:516
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
-msgstr "नया पंचांग"
+msgstr "नया कैलेंडर"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
 msgid "Import a Calendar"
-msgstr "पंचांग निर्यात करें"
+msgstr "कैलेंडर आयात करें"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:77
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
 msgstr ""
-"वैकल्पिक रूप से, एक ऑनलाइन पंचांग का वेब पता भरें जिसे आप आयात करना चाहते हैं, या एक "
-"समर्थित पंचांग फ़ाइल को खोलें।"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
-msgid "Open a File"
-msgstr "फ़ाइल खोलें"
+"वैकल्पिक रूप से, उस ऑनलाइन कैलेंडर का वेब पता दर्ज करें जिसे आप आयात करना चाहते हैं, या कोई "
+"समर्थित कैलेंडर फाइल खोलें।"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:108
-msgid "Calendar files"
-msgstr "पंचांग फ़ाइलें"
+msgid "Open a File"
+msgstr "फाइल खोलें"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
+msgid "Calendar files"
+msgstr "कैलेंडर फाइलें"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:168
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"यदि कोई पंचांग आपके किसी ऑनलाइन खाते से संबंधित है, तो आप उसे <a href=\"GOA\">ऑनलॉइन "
-"खाते सेटिंग्स</a> की मदद से जोङ सकते हैं।"
+"यदि कोई कैलेंडर आपके किसी ऑनलाइन खाते से संबंधित है, तो आप उसे <a href=\"GOA\">ऑनलॉइन "
+"खाते सेटिंग्स</a> की मदद से जोड़ सकते हैं।"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:213
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:216
 msgid "Credentials"
-msgstr "पहचान"
+msgstr "प्रमाणपत्र"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:224
 msgid "User"
-msgstr "उपयोगकर्ता"
+msgstr "उपयोक्ता"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:229
 msgid "Password"
 msgstr "पासवर्ड"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:240
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1200
 msgid "_Cancel"
-msgstr "रद्द (_C)"
+msgstr "रद्द करें (_C)"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
 msgid "_Connect"
 msgstr "जुड़ें (_C)"
 
@@ -407,7 +419,7 @@ msgstr "अलार्म ध्वनि टॉगल करें"
 
 #: src/gui/event-editor/gcal-alarm-row.ui:19
 msgid "Remove Alarm"
-msgstr "अलार्म हटाएँ"
+msgstr "अलार्म हटाएं"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -464,73 +476,81 @@ msgstr "सहेजें"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Done"
-msgstr "सम्पन्न"
+msgstr "संपन्न"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:777
 msgid "New Event"
 msgstr "नया कार्यक्रम"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:48
-msgid "Select Calendar"
-msgstr "पंचांग चुनें"
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:22
+msgid ""
+"<b>This event is part of a read-only calendar</b>\n"
+"You cannot delete or change this event."
+msgstr ""
+"<b>यह कार्यक्रम केवल-पढ़ने योग्य कैलेंडर का हिस्सा है</b>\n"
+"आप इस कार्यक्रम को मिटा या बदल नहीं सकते।"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:106
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:50
+msgid "Select Calendar"
+msgstr "कैलेंडर चुनें"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:108
 msgid "_Done"
 msgstr "सम्पन्न (_D)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:133
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:135
 msgid "Schedule"
 msgstr "अनुसूची"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:145
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:147
 msgid "Reminders"
-msgstr "रिमाइंडर (अनुस्मरक)"
+msgstr "अनुस्मारक"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:157
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Notes"
-msgstr "टिप्पणियाँ"
+msgstr "टिप्पणियां"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:177
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:176
 msgid "Delete Event"
-msgstr "कार्यक्रम हटाएँ"
+msgstr "कार्यक्रम मिटाएं"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:26
-msgid "Add a Reminder…"
-msgstr "कार्यक्रम जोङें…"
+#: src/gui/event-editor/gcal-reminders-section.ui:17
+msgid "Add Reminder"
+msgstr "अनुस्मारक जोड़ें"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:52
+#: src/gui/event-editor/gcal-reminders-section.ui:41
 msgid "5 Minutes"
 msgstr "5 मिनट"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:58
+#: src/gui/event-editor/gcal-reminders-section.ui:47
 msgid "10 Minutes"
 msgstr "10 मिनट"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:64
+#: src/gui/event-editor/gcal-reminders-section.ui:53
 msgid "15 Minutes"
 msgstr "15 मिनट"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:70
+#: src/gui/event-editor/gcal-reminders-section.ui:59
 msgid "30 Minutes"
 msgstr "30 मिनट"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:76
+#: src/gui/event-editor/gcal-reminders-section.ui:65
 msgid "1 Hour"
 msgstr "1 घंटा"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:82
+#: src/gui/event-editor/gcal-reminders-section.ui:71
 msgid "1 Day"
 msgstr "1 दिन"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:88
+#: src/gui/event-editor/gcal-reminders-section.ui:77
 msgid "2 Days"
 msgstr "2 दिन"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:94
+#: src/gui/event-editor/gcal-reminders-section.ui:83
 msgid "3 Days"
 msgstr "3 दिन"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:100
+#: src/gui/event-editor/gcal-reminders-section.ui:89
 msgid "1 Week"
 msgstr "1 सप्ताह"
 
@@ -580,20 +600,20 @@ msgstr "पूरा दिन"
 #: src/gui/event-editor/gcal-schedule-section.ui:34
 #: src/gui/importer/gcal-import-file-row.c:152
 msgid "Starts"
-msgstr "प्रारंभ होगा"
+msgstr "प्रारंभ"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:77
 #: src/gui/importer/gcal-import-file-row.c:153
 msgid "Ends"
-msgstr "अंत होगा"
+msgstr "अंत"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:120
 msgid "Repeat"
-msgstr "दोहराएँ प्रत्येक"
+msgstr "दोहराएं"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:125
 msgid "No Repeat"
-msgstr "नहीं दोहराएँ"
+msgstr "दोहराव नहीं"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:126
 msgid "Daily"
@@ -617,7 +637,7 @@ msgstr "वार्षिक"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:141
 msgid "End Repeat"
-msgstr "दोहराई खत्म"
+msgstr "दोहराव खत्म"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:146
 msgid "Forever"
@@ -626,7 +646,7 @@ msgstr "हमेशा"
 #: src/gui/event-editor/gcal-schedule-section.ui:147
 #: src/gui/event-editor/gcal-schedule-section.ui:160
 msgid "Number of Occurrences"
-msgstr "घटनाओं की संख्या"
+msgstr "पुनरावृत्तिओं की संख्या"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:148
 msgid "Until Date"
@@ -634,7 +654,7 @@ msgstr "इस तिथि तक"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
-msgstr "दोहराई खत्म होने की तिथि"
+msgstr "दोहराव समाप्ति तिथि"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
@@ -657,54 +677,54 @@ msgstr "PM"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
-msgstr "गनोम पंचांग को बंद करें"
+msgstr "गनोम कैलेंडर को बंद करें"
 
 #: src/gui/gcal-application.c:63
 msgid "Display version number"
-msgstr "संस्करण संख्या दिखाएँ"
+msgstr "संस्करण संख्या दिखाएं"
 
 #: src/gui/gcal-application.c:68
 msgid "Enable debug messages"
-msgstr "डिबगिंग संदेश सक्रिय करें"
+msgstr "डिबग संदेशों को सक्षम करें"
 
 #: src/gui/gcal-application.c:73
 msgid "Open calendar on the passed date"
-msgstr "दी गई तिथि पर पंचांग को खोलें"
+msgstr "गुजरी तारीख पर कैलेंडर खोलें"
 
 #: src/gui/gcal-application.c:78
 msgid "Open calendar showing the passed event"
-msgstr "दिए गए कार्यक्रम को दिखाते हुए पंचांग खोलें"
+msgstr "पारित कार्यक्रम को दिखाने वाला कैलेंडर खोलें"
 
 #: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
-msgstr "कॉपीराइट © 2012–%d पंचांग के लेखक"
+msgstr "कॉपीराइट © 2012–%d कैलेंडर के लेखक"
 
-#: src/gui/gcal-application.c:244
+#: src/gui/gcal-application.c:239
 msgid "translator-credits"
 msgstr ""
 "हेमिश (Hemish) <hemish04082005@gmail.com>\n"
 "Scrambled777 <weblate.scrambled777@simplelogin.com>"
 
-#: src/gui/gcal-application.c:251 src/gui/gcal-window.ui:329
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:329
 msgid "Weather"
 msgstr "मौसम"
 
 #: src/gui/gcal-calendar-button.ui:6
 msgid "Manage Calendars"
-msgstr "पंचांगों का प्रबंधन करें"
+msgstr "कैलेंडर प्रबंधित करें"
 
 #: src/gui/gcal-calendar-button.ui:8
 msgid "_Calendars"
-msgstr "पंचांग (_C)"
+msgstr "कैलेंडर (_C)"
 
 #: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
-msgstr "पंचांगों समन्वयित करें (_S)"
+msgstr "कैलेंडर समन्वयित करें (_S)"
 
 #: src/gui/gcal-calendar-button.ui:41
 msgid "_Manage Calendars…"
-msgstr "पंचांग प्रबंधित करें… (_M)"
+msgstr "कैलेंडर प्रबंधित करें (_M)…"
 
 #: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
@@ -712,7 +732,7 @@ msgstr "जनवरी"
 
 #: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:254
 msgid "February"
-msgstr "फ़रवरी"
+msgstr "फरवरी"
 
 #: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:255
 msgid "March"
@@ -762,7 +782,7 @@ msgstr "आज %s"
 #: src/gui/gcal-event-popover.c:162
 #, c-format
 msgid "Tomorrow %s"
-msgstr "आने वाले कल %s"
+msgstr "कल %s"
 
 #: src/gui/gcal-event-popover.c:166
 #, c-format
@@ -825,7 +845,7 @@ msgstr "आज, %1$s — %2$s"
 #: src/gui/gcal-event-popover.c:269
 #, c-format
 msgid "Tomorrow, %1$s – %2$s"
-msgstr "आने वाले कल, %1$s – %2$s"
+msgstr "कल, %1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
@@ -864,7 +884,7 @@ msgstr "कोई कार्यक्रम जानकारी नहीं
 
 #: src/gui/gcal-event-popover.ui:175
 msgid "Edit…"
-msgstr "बदलें…"
+msgstr "संपादित करें…"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
 #: src/gui/gcal-event-widget.c:355
@@ -878,7 +898,7 @@ msgstr "गूगल मीट"
 
 #: src/gui/gcal-meeting-row.c:68
 msgid "Jitsi"
-msgstr "जितसी"
+msgstr "जित्सी"
 
 #: src/gui/gcal-meeting-row.c:69
 msgid "Whereby"
@@ -886,11 +906,11 @@ msgstr "व्हेयरबाए"
 
 #: src/gui/gcal-meeting-row.c:70
 msgid "Zoom"
-msgstr "ज़ूम"
+msgstr "जूम"
 
 #: src/gui/gcal-meeting-row.c:71
 msgid "Microsoft Teams"
-msgstr "माइक्रोसॉफ्ट टीम्ज़"
+msgstr "माइक्रोसॉफ्ट टीम्स"
 
 #: src/gui/gcal-meeting-row.c:81
 msgid "Unknown Service"
@@ -904,7 +924,7 @@ msgstr "शामिल हों"
 #: src/gui/gcal-quick-add-popover.c:116
 #, c-format
 msgid "%s (this calendar is read-only)"
-msgstr "%s (यह पंचांग केवल पढने के लिए है)"
+msgstr "%s (यह कैलेंडर केवल-पठन योग्य है)"
 
 #: src/gui/gcal-quick-add-popover.c:231
 msgid "from next Monday"
@@ -970,7 +990,7 @@ msgstr "आज से"
 #: src/gui/gcal-quick-add-popover.c:277
 #, c-format
 msgid "from Tomorrow"
-msgstr "आने वाले कल से"
+msgstr "कल से"
 
 #: src/gui/gcal-quick-add-popover.c:281
 #, c-format
@@ -994,7 +1014,7 @@ msgstr "आज तक"
 #: src/gui/gcal-quick-add-popover.c:314
 #, c-format
 msgid "to Tomorrow"
-msgstr "आने वाले कल तक"
+msgstr "कल तक"
 
 #: src/gui/gcal-quick-add-popover.c:318
 #, c-format
@@ -1020,45 +1040,45 @@ msgstr "%1$s %2$s नया कार्यक्रम"
 #: src/gui/gcal-quick-add-popover.c:360
 #, c-format
 msgid "New Event Today"
-msgstr "आज नया कार्यक्रम"
+msgstr "आज का नया कार्यक्रम"
 
 #: src/gui/gcal-quick-add-popover.c:364
 #, c-format
 msgid "New Event Tomorrow"
-msgstr "आने वाले कल पर नया कार्यक्रम"
+msgstr "कल का नया कार्यक्रम"
 
 #: src/gui/gcal-quick-add-popover.c:368
 #, c-format
 msgid "New Event Yesterday"
-msgstr "बीते कल पर नया कार्यक्रम"
+msgstr "बीते कल का नया कार्यक्रम"
 
 #: src/gui/gcal-quick-add-popover.c:374
 msgid "New Event next Monday"
-msgstr "अगले सोमवार नया कार्यक्रम"
+msgstr "अगले सोमवार को नया कार्यक्रम"
 
 #: src/gui/gcal-quick-add-popover.c:375
 msgid "New Event next Tuesday"
-msgstr "अगले मंगलवार नया कार्यक्रम"
+msgstr "अगले मंगलवार को नया कार्यक्रम"
 
 #: src/gui/gcal-quick-add-popover.c:376
 msgid "New Event next Wednesday"
-msgstr "अगले बुधवार नया कार्यक्रम"
+msgstr "अगले बुधवार को नया कार्यक्रम"
 
 #: src/gui/gcal-quick-add-popover.c:377
 msgid "New Event next Thursday"
-msgstr "अगले गुरुवार नया कार्यक्रम"
+msgstr "अगले गुरुवार को नया कार्यक्रम"
 
 #: src/gui/gcal-quick-add-popover.c:378
 msgid "New Event next Friday"
-msgstr "अगले शुक्रवार नया कार्यक्रम"
+msgstr "अगले शुक्रवार को नया कार्यक्रम"
 
 #: src/gui/gcal-quick-add-popover.c:379
 msgid "New Event next Saturday"
-msgstr "अगले शनिवार नया कार्यक्रम"
+msgstr "अगले शनिवार को नया कार्यक्रम"
 
 #: src/gui/gcal-quick-add-popover.c:380
 msgid "New Event next Sunday"
-msgstr "अगले रविवार नया कार्यक्रम"
+msgstr "अगले रविवार को नया कार्यक्रम"
 
 #. Translators: %d is the numeric day of month
 #: src/gui/gcal-quick-add-popover.c:392
@@ -1069,7 +1089,7 @@ msgstr "%d जनवरी पर नया कार्यक्रम"
 #: src/gui/gcal-quick-add-popover.c:393
 #, c-format
 msgid "New Event on February %d"
-msgstr "%d फ़रवरी पर नया कार्यक्रम"
+msgstr "%d फरवरी पर नया कार्यक्रम"
 
 #: src/gui/gcal-quick-add-popover.c:394
 #, c-format
@@ -1140,7 +1160,7 @@ msgstr "कार्यक्रम खोजें"
 #: src/gui/gcal-sync-indicator.ui:21
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars"
-msgstr "दूरस्थ पंचांगों का समन्वयन किया जा रहा है"
+msgstr "दूरस्थ कैलेंडर का समन्वयन किया जा रहा है"
 
 #: src/gui/gcal-toolbar-end.ui:9
 msgctxt "tooltip"
@@ -1150,15 +1170,15 @@ msgstr "खोजें"
 #: src/gui/gcal-toolbar-end.ui:16
 msgctxt "tooltip"
 msgid "Add Event"
-msgstr "कार्यक्रम जोङें"
+msgstr "कार्यक्रम जोड़ें"
 
 #: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
-msgstr "मौसम दिखाएँ"
+msgstr "मौसम दिखाएं"
 
 #: src/gui/gcal-weather-settings.ui:34
 msgid "Automatic Location"
-msgstr "स्वचालित स्थान सेवा"
+msgstr "स्वचालित स्थान"
 
 #: src/gui/gcal-weather-settings.ui:46
 msgid "Search locations"
@@ -1174,15 +1194,15 @@ msgstr "महीना"
 
 #: src/gui/gcal-window.c:736
 msgid "Another event deleted"
-msgstr "एक और कार्यक्रम हटा दिया गया"
+msgstr "एक अन्य कार्यक्रम मिटा दिया गया"
 
 #: src/gui/gcal-window.c:736
 msgid "Event deleted"
-msgstr "कार्यक्रम हटा दिया गया"
+msgstr "कार्यक्रम मिटा दिया गया"
 
 #: src/gui/gcal-window.ui:143
 msgid "Main Menu"
-msgstr "मुख्य मेन्यू"
+msgstr "मुख्य मेनू"
 
 #: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
 msgid "_Today"
@@ -1198,24 +1218,24 @@ msgstr "महीना (_M)"
 
 #: src/gui/gcal-window.ui:321
 msgid "_Date & Time Settings…"
-msgstr "दिनांक और समय सेटिंग… (_D)"
+msgstr "दिनांक एवं समय सेटिंग (_D)…"
 
 #: src/gui/gcal-window.ui:325
 msgid "_Online Accounts…"
-msgstr "ऑनलॉइन खाते… (_O)"
+msgstr "ऑनलाइन खाते (_O)…"
 
 #: src/gui/gcal-window.ui:337
 msgid "_Keyboard Shortcuts"
-msgstr "कुंजीपट शॉर्टकट (_K)"
+msgstr "कीबोर्ड शॉर्टकट (_K)"
 
 #: src/gui/gcal-window.ui:341
 msgid "_About Calendar"
-msgstr "'पंचांग' का परिचय (_A)"
+msgstr "<i>कैलेंडर</i> के बारे में (_A)"
 
 #: src/gui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
-msgstr "साधारण"
+msgstr "सामान्य"
 
 #: src/gui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
@@ -1225,7 +1245,7 @@ msgstr "मुख्य मेनू खोलें"
 #: src/gui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
 msgid "Open Calendars Menu"
-msgstr "पंचांग मेनू खोलें"
+msgstr "कैलेंडर मेनू खोलें"
 
 #: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
@@ -1235,17 +1255,17 @@ msgstr "नया कार्यक्रम"
 #: src/gui/gtk/help-overlay.ui:32
 msgctxt "shortcut window"
 msgid "Manage Calendars"
-msgstr "पंचांगों का प्रबंधन करें"
+msgstr "कैलेंडर प्रबंधित करें"
 
 #: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Synchronize Calendars"
-msgstr "पंचांगों को समन्वयित करें"
+msgstr "कैलेंडर समन्वयित करें"
 
 #: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Close Window"
-msgstr "विंडो बंद करें"
+msgstr "खिड़की बंद करें"
 
 #: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
@@ -1255,7 +1275,7 @@ msgstr "खोजें"
 #: src/gui/gtk/help-overlay.ui:56
 msgctxt "shortcut window"
 msgid "Show Help"
-msgstr "मदद दिखाएँ"
+msgstr "सहायता दिखाएं"
 
 #: src/gui/gtk/help-overlay.ui:62
 msgctxt "shortcut window"
@@ -1265,22 +1285,22 @@ msgstr "शॉर्टकट"
 #: src/gui/gtk/help-overlay.ui:70
 msgctxt "shortcut window"
 msgid "Navigation"
-msgstr "विचरण"
+msgstr "पथ-प्रदर्शन"
 
 #: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Go Back"
-msgstr "पीछे जाएँ"
+msgstr "पीछे जाएं"
 
 #: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Go Forward"
-msgstr "आगे जाएँ"
+msgstr "आगे जाएं"
 
 #: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
 msgid "Show Today"
-msgstr "आज का दिन दिखाएँ"
+msgstr "आज दिखाएं"
 
 #: src/gui/gtk/help-overlay.ui:91
 msgctxt "shortcut window"
@@ -1316,7 +1336,7 @@ msgstr[1] "%d कार्यक्रम निर्यात करें"
 
 #: src/gui/importer/gcal-import-dialog.ui:4
 msgid "Import Files…"
-msgstr "फ़ाइलें निर्यात करें…"
+msgstr "फाइलें निर्यात करें…"
 
 #: src/gui/importer/gcal-import-dialog.ui:29
 msgid "_Import"
@@ -1324,7 +1344,7 @@ msgstr "आयात करें (_I)"
 
 #: src/gui/importer/gcal-import-dialog.ui:49
 msgid "C_alendar"
-msgstr "पंचांग (_a)"
+msgstr "कैलेंडर (_a)"
 
 #: src/gui/importer/gcal-importer.c:33
 msgid "No error"
@@ -1337,19 +1357,19 @@ msgstr "कार्य करने के लिए खराब तर्क"
 # 'memory' and 'object' are technical are technical words relating to runtime of application, so they are left untranslated, but are transliterated into devanagri
 #: src/gui/importer/gcal-importer.c:40
 msgid "Failed to allocate a new object in memory"
-msgstr "मेमोरी में एक नया ऑबजेक्ट आवंटित करने में विफल"
+msgstr "मेमोरी में नई वस्तु आवंटित करने में विफल"
 
 #: src/gui/importer/gcal-importer.c:43
 msgid "File is malformed, invalid, or corrupted"
-msgstr "फ़ाइल विकृत, अमान्य या दूषित है"
+msgstr "फाइल विकृत, अमान्य या दूषित है"
 
 #: src/gui/importer/gcal-importer.c:46
 msgid "Failed to parse the calendar contents"
-msgstr "कैलेंडर सामग्री को पार्स करने में विफल"
+msgstr "कैलेंडर सामग्री का विश्लेषण करने में विफल"
 
 #: src/gui/importer/gcal-importer.c:49
 msgid "Failed to read file"
-msgstr "फ़ाइल पढ़ने में विफल"
+msgstr "फाइल पढ़ने में विफल"
 
 #: src/gui/importer/gcal-importer.c:56
 msgid "Internal error"
@@ -1357,7 +1377,7 @@ msgstr "आंतरिक त्रुटि"
 
 #: src/gui/importer/gcal-importer.c:94
 msgid "File is not an iCalendar (.ics) file"
-msgstr "फ़ाइल एक iCalendar (.ics) फ़ाइल नहीं है"
+msgstr "फाइल एक iCalendar (.ics) फाइल नहीं है"
 
 #: src/gui/importer/gcal-import-file-row.c:154
 msgid "Description"
@@ -1365,7 +1385,7 @@ msgstr "विवरण"
 
 #: src/gui/views/gcal-agenda-view.c:366
 msgid "On-going"
-msgstr "सक्रिय"
+msgstr "चल रहा है"
 
 #: src/gui/views/gcal-agenda-view.ui:22
 msgid "No events"
@@ -1418,97 +1438,3 @@ msgstr "आगे के कार्यक्रम (_S)"
 #: src/utils/gcal-utils.c:1210
 msgid "_All Events"
 msgstr "सभी कार्यक्रम (_A)"
-
-#~ msgid "Toggles the sound of the alarm"
-#~ msgstr "अलार्म की आवाज़ को टॉगल करता है"
-
-#~ msgid "Click to select the calendar"
-#~ msgstr "पंचांग का चयन करने के लिए क्लिक करें"
-
-#~ msgid "1 hour"
-#~ msgstr "1 घंटा"
-
-#~ msgid "1 day"
-#~ msgstr "1 दिन"
-
-#~ msgid "2 days"
-#~ msgstr "2 दिन"
-
-#~ msgid "3 days"
-#~ msgstr "3 दिन"
-
-#~ msgid "1 week"
-#~ msgstr "1 सप्ताह"
-
-#~ msgid "No. of occurrences"
-#~ msgstr "घटनाओं की संख्या"
-
-#~ msgid "Unnamed event"
-#~ msgstr "बेनाम कार्यक्रम"
-
-#, fuzzy
-#~| msgid "Manage Calendars"
-#~ msgctxt "shortcut window"
-#~ msgid "Manage calendars"
-#~ msgstr "पंचांगों का प्रबंधन करें"
-
-#, fuzzy
-#~| msgid "_Synchronize Calendars"
-#~ msgctxt "shortcut window"
-#~ msgid "Synchronize calendars"
-#~ msgstr "पंचांगों को सिंक्रनाइज़ करें"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Go back"
-#~ msgstr "पीछे जाएँ"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Week view"
-#~ msgstr "साप्ताहिक दृश्य"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Month view"
-#~ msgstr "मासिक दृश्य"
-
-#~ msgid "Calendar for GNOME"
-#~ msgstr "गनोम के लिए पंचांग"
-
-#~ msgid ""
-#~ "GNOME Calendar is a simple and beautiful calendar application designed to "
-#~ "perfectly fit the GNOME desktop. By reusing the components which the "
-#~ "GNOME desktop is built on, Calendar nicely integrates with the GNOME "
-#~ "ecosystem."
-#~ msgstr ""
-#~ "गनोम पंचांग एक सरल और सुंदर पंचांग एप्लिकेशन है जिसे गनोम डेस्कटॉप में पूरी तरह फिट होने "
-#~ "के लिए डिज़ाइन किया गया है। उन घटकों का पुन: उपयोग करके जिन पर गनोम डेस्कटॉप "
-#~ "बनाया गया है, पंचांग अच्छी तरह से गनोम पारिसतंत्र के साथ एकीकृत हो जाता है।"
-
-#~ msgid ""
-#~ "We aim to find the perfect balance between nicely crafted features and "
-#~ "user-centred usability. No excess, nothing missing. You’ll feel "
-#~ "comfortable using Calendar, like you’ve been using it for ages!"
-#~ msgstr ""
-#~ "हमारा लक्ष्य अच्छी तरह से तैयार की गई सुविधाओं और उपयोगकर्ता-केंद्रित उपयोगिता के बीच "
-#~ "सही संतुलन खोजना है। कोई अधिकता नहीं, कोई कमी नहीं। आप कैलेंडर का उपयोग करने में सहज "
-#~ "महसूस करेंगे, जैसे आप इसे सदियों से उपयोग कर रहे हों!"
-
-#~ msgid "Undo"
-#~ msgstr "पहले जैसा"
-
-#~ msgid "Cancel"
-#~ msgstr "रद्द"
-
-#~ msgid "Window position"
-#~ msgstr "विंडो का स्थान"
-
-#~ msgid "Window position (x and y)."
-#~ msgstr "विंडो का स्थान (x और y)"
-
-#~ msgid "Settings"
-#~ msgstr "सेटिंग्स"
-
-#~ msgid "Calendar name"
-#~ msgstr "पंचांग का नाम"
-
-#~ msgid "Open"
-#~ msgstr "खोलें"
