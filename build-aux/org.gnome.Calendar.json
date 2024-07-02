@@ -182,6 +182,14 @@
                     "path" : "../"
                 }
             ],
+            "build-options" : {
+                "test-args" : [
+                    "--share=ipc",
+                    "--share=network",
+                    "--socket=fallback-x11",
+                    "--socket=wayland"
+                ]
+            },
             "config-opts" : [
                 "-Dtracing=true",
                 "-Dprofile=development"
