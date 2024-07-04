@@ -365,11 +365,13 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
 
           if (service_name)
             {
-              g_string_append (string, service_name);
+              /* Translators: %s is the meeting service name for the event (e.g. "Google Meet") */
+              g_string_append_printf (string, _("\n\nOn %s"), service_name);
             }
           else
             {
-              g_string_append (string, location);
+              /* Translators: %s is a URL informed as the location of the event */
+              g_string_append_printf (string, _("\n\nAt %s"), location);
 
               if (g_utf8_strlen (location, -1) > LOCATION_MAX_LEN)
                 {
@@ -380,13 +382,13 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
         }
       else
         {
-          g_string_append (string, location);
+          /* Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue") */
+          g_string_append_printf (string, _("\n\nAt %s"), location);
         }
 
       escaped_location = g_markup_escape_text (string->str, -1);
 
-      /* Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue") */
-      g_string_append_printf (tooltip_mesg, _("\n\nAt %s"), escaped_location);
+      g_string_append (tooltip_mesg, escaped_location);
     }
 
   description_len = g_utf8_strlen (gcal_event_get_description (event), -1);
