@@ -370,14 +370,16 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
             }
           else
             {
-              /* Translators: %s is a URL informed as the location of the event */
-              g_string_append_printf (string, _("\n\nAt %s"), location);
+              g_autoptr (GString) truncated_location = g_string_new (location);
 
-              if (g_utf8_strlen (location, -1) > LOCATION_MAX_LEN)
+              if (truncated_location->len > LOCATION_MAX_LEN)
                 {
-                  g_string_truncate (string, string->len - 1);
+                  g_string_truncate (string, LOCATION_MAX_LEN - 1);
                   g_string_append (string, "…");
                 }
+
+              /* Translators: %s is a URL informed as the location of the event */
+              g_string_append_printf (string, _("\n\nAt %s"), truncated_location->str);
             }
         }
       else
