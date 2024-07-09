@@ -1156,11 +1156,15 @@ typedef struct
 } AskRecurrenceData;
 
 static void
-on_message_dialog_response_cb (GtkDialog         *dialog,
-                               const gchar       *response,
-                               AskRecurrenceData *data)
+on_message_dialog_response_cb (GObject      *source_object,
+                               GAsyncResult *result,
+                               gpointer      user_data)
 {
   GcalRecurrenceModType mod_type;
+  AskRecurrenceData *data;
+  const char *response;
+
+  response = adw_alert_dialog_choose_finish (ADW_ALERT_DIALOG (source_object), result);
 
   if (g_strcmp0 (response, "this-only") == 0)
     mod_type = GCAL_RECURRENCE_MOD_THIS_ONLY;
@@ -1171,6 +1175,7 @@ on_message_dialog_response_cb (GtkDialog         *dialog,
   else
     mod_type = GCAL_RECURRENCE_MOD_NONE;
 
+  data = (AskRecurrenceData *) user_data;
   data->callback (data->event, mod_type, data->user_data);
   g_clear_object (&data->event);
   g_clear_pointer (&data, g_free);
@@ -1185,35 +1190,37 @@ gcal_utils_ask_recurrence_modification_type (GtkWidget                 *parent,
 {
   AskRecurrenceData *data;
   ECalClient *client;
-  GtkWidget *dialog;
+  AdwDialog *dialog;
 
   data = g_new0 (AskRecurrenceData, 1);
   data->event = g_object_ref (event);
   data->callback = callback;
   data->user_data = user_data;
 
-  dialog = adw_message_dialog_new (GTK_WINDOW (gtk_widget_get_native (parent)),
-                                   _("Modify Multiple Events?"),
-                                   _("The event you are trying to modify is recurring. The changes you have selected should be applied to:"));
+  dialog = adw_alert_dialog_new (_("Modify Multiple Events?"),
+                                 _("The event you are trying to modify is recurring. The changes you have selected should be applied to:"));
 
-  adw_message_dialog_add_responses (ADW_MESSAGE_DIALOG (dialog),
-                                    "close", _("_Cancel"),
-                                    "this-only", _("_Only This Event"),
-                                    NULL);
+  adw_alert_dialog_add_responses (ADW_ALERT_DIALOG (dialog),
+                                  "close", _("_Cancel"),
+                                  "this-only", _("_Only This Event"),
+                                  NULL);
 
   client = gcal_calendar_get_client (gcal_event_get_calendar (event));
 
   if (!e_client_check_capability (E_CLIENT (client), E_CAL_STATIC_CAPABILITY_NO_THISANDFUTURE))
-    adw_message_dialog_add_response (ADW_MESSAGE_DIALOG (dialog), "subsequent-events", _("_Subsequent Events"));
+    adw_alert_dialog_add_response (ADW_ALERT_DIALOG (dialog), "subsequent-events", _("_Subsequent Events"));
 
   if (show_mod_all)
-    adw_message_dialog_add_response (ADW_MESSAGE_DIALOG (dialog), "all-events",  _("_All Events"));
+    adw_alert_dialog_add_response (ADW_ALERT_DIALOG (dialog), "all-events",  _("_All Events"));
 
-  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gtk_widget_get_native (parent)));
+  adw_alert_dialog_set_default_response (ADW_ALERT_DIALOG (dialog), "cancel");
+  adw_alert_dialog_set_close_response (ADW_ALERT_DIALOG (dialog), "cancel");
 
-  g_signal_connect (dialog, "response", G_CALLBACK (on_message_dialog_response_cb), data);
-
-  gtk_window_present (GTK_WINDOW (dialog));
+  adw_alert_dialog_choose (ADW_ALERT_DIALOG (dialog),
+                           parent,
+                           NULL,
+                           on_message_dialog_response_cb,
+                           data);
 }
 
 /**
