@@ -32,12 +32,12 @@ libgcal_test_dep = declare_dependency(
 )
 
 tests = [
-  'server',
   'daylight-saving',
   'discoverer',
   'event',
   'range',
   'range-tree',
+  'server',
 ]
 
 foreach test : tests
