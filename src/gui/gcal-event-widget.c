@@ -374,8 +374,8 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
 
               if (truncated_location->len > LOCATION_MAX_LEN)
                 {
-                  g_string_truncate (string, LOCATION_MAX_LEN - 1);
-                  g_string_append (string, "…");
+                  g_string_truncate (truncated_location, LOCATION_MAX_LEN - 1);
+                  g_string_append (truncated_location, "…");
                 }
 
               /* Translators: %s is a URL informed as the location of the event */
