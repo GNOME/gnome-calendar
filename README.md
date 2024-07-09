@@ -4,7 +4,7 @@ GNOME Calendar is a simple and beautiful calendar application for GNOME. We give
 a lot of attention to details, and as such, design is an essential and ongoing
 effort.
 
-[![Flatpak](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Flathub-badge-en.svg/240px-Flathub-badge-en.svg.png)](https://flathub.org/apps/details/org.gnome.Calendar)
+[![Flatpak](https://flathub.org/api/badge?svg&locale=en)](https://flathub.org/apps/details/org.gnome.Calendar)
 
 
 ## Useful links
