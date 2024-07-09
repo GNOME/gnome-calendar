@@ -33,11 +33,11 @@ libgcal_test_dep = declare_dependency(
 
 tests = [
   'daylight-saving',
-  'discoverer',
+  #'discoverer', # https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/1251
   'event',
   'range',
   'range-tree',
-  'server',
+  #'server', # https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/1251
 ]
 
 foreach test : tests
