@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-07-02 15:45+0000\n"
-"PO-Revision-Date: 2024-07-02 23:08+0200\n"
+"POT-Creation-Date: 2024-07-09 19:56+0000\n"
+"PO-Revision-Date: 2024-07-10 03:31+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -211,7 +211,7 @@ msgstr "URL koledarja"
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:208
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
 #: src/gui/event-editor/gcal-summary-section.ui:24
-#: src/gui/gcal-event-popover.ui:115
+#: src/gui/gcal-event-popover.ui:116
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "Mesto dogodka"
@@ -332,7 +332,7 @@ msgid "_Connect"
 msgstr "_Vzpostavi povezavo"
 
 # This is wrong multiple plural!
-#: src/gui/event-editor/gcal-alarm-row.c:84
+#: src/gui/event-editor/gcal-alarm-row.c:85
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
@@ -342,7 +342,7 @@ msgstr[2] "%1$u dan, %2$u ura in %3$u minuti prej"
 msgstr[3] "%1$u dan, %2$u ura in %3$u minute prej"
 
 # This is wrong multiple plural!
-#: src/gui/event-editor/gcal-alarm-row.c:88
+#: src/gui/event-editor/gcal-alarm-row.c:89
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
@@ -352,7 +352,7 @@ msgstr[2] "%1$u dan, %2$u ur in %3$u minuti prej"
 msgstr[3] "%1$u dan, %2$u ur in %3$u minute prej"
 
 # This is wrong multiple plural!
-#: src/gui/event-editor/gcal-alarm-row.c:94
+#: src/gui/event-editor/gcal-alarm-row.c:95
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
@@ -362,7 +362,7 @@ msgstr[2] "%1$u dni, %2$u ura in %3$u minuti prej"
 msgstr[3] "%1$u dni, %2$u ura in %3$u minute prej"
 
 # This is wrong multiple plural!
-#: src/gui/event-editor/gcal-alarm-row.c:98
+#: src/gui/event-editor/gcal-alarm-row.c:99
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
@@ -372,7 +372,7 @@ msgstr[2] "%1$u dni, %2$u ur in %3$u minuti prej"
 msgstr[3] "%1$u dni, %2$u ur in %3$u minute prej"
 
 # This is wrong multiple plural!
-#: src/gui/event-editor/gcal-alarm-row.c:113
+#: src/gui/event-editor/gcal-alarm-row.c:114
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
@@ -382,7 +382,7 @@ msgstr[2] "%1$u dan in %2$u uri prej"
 msgstr[3] "%1$u dan in %2$u ure prej"
 
 # This is wrong multiple plural!
-#: src/gui/event-editor/gcal-alarm-row.c:117
+#: src/gui/event-editor/gcal-alarm-row.c:118
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
@@ -392,7 +392,7 @@ msgstr[2] "%1$u dni in %2$u uri prej"
 msgstr[3] "%1$u dni in %2$u ure prej"
 
 # This is wrong multiple plural!
-#: src/gui/event-editor/gcal-alarm-row.c:133
+#: src/gui/event-editor/gcal-alarm-row.c:134
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
@@ -402,7 +402,7 @@ msgstr[2] "%1$u dan in %2$u minuti prej"
 msgstr[3] "%1$u dan in %2$u minute prej"
 
 # This is wrong multiple plural!
-#: src/gui/event-editor/gcal-alarm-row.c:137
+#: src/gui/event-editor/gcal-alarm-row.c:138
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
@@ -411,7 +411,7 @@ msgstr[1] "%1$u dni in %2$u minuta prej"
 msgstr[2] "%1$u dni in %2$u minuti prej"
 msgstr[3] "%1$u dni in %2$u minute prej"
 
-#: src/gui/event-editor/gcal-alarm-row.c:147
+#: src/gui/event-editor/gcal-alarm-row.c:148
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
@@ -421,7 +421,7 @@ msgstr[2] "%1$u dneva prej"
 msgstr[3] "%1$u dni prej"
 
 # This is wrong multiple plural!
-#: src/gui/event-editor/gcal-alarm-row.c:165
+#: src/gui/event-editor/gcal-alarm-row.c:166
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
@@ -431,7 +431,7 @@ msgstr[2] "%1$u ura in %2$u minuti prej"
 msgstr[3] "%1$u ura in %2$u minute prej"
 
 # This is wrong multiple plural!
-#: src/gui/event-editor/gcal-alarm-row.c:169
+#: src/gui/event-editor/gcal-alarm-row.c:170
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
@@ -440,7 +440,7 @@ msgstr[1] "%1$u ur in %2$u minuta prej"
 msgstr[2] "%1$u ur in %2$u minuti prej"
 msgstr[3] "%1$u ur in %2$u minute prej"
 
-#: src/gui/event-editor/gcal-alarm-row.c:179
+#: src/gui/event-editor/gcal-alarm-row.c:180
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
@@ -449,7 +449,7 @@ msgstr[1] "%1$u uro prej"
 msgstr[2] "%1$u uri prej"
 msgstr[3] "%1$u ure prej"
 
-#: src/gui/event-editor/gcal-alarm-row.c:191
+#: src/gui/event-editor/gcal-alarm-row.c:192
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
@@ -458,7 +458,7 @@ msgstr[1] "%1$u minuto prej"
 msgstr[2] "%1$u minuti prej"
 msgstr[3] "%1$uminute prej"
 
-#: src/gui/event-editor/gcal-alarm-row.c:198
+#: src/gui/event-editor/gcal-alarm-row.c:199
 msgid "Event start time"
 msgstr "Začetni čas dogodka"
 
@@ -466,7 +466,7 @@ msgstr "Začetni čas dogodka"
 msgid "Toggle Alarm Sound"
 msgstr "Preklopi zvok alarma"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:19
+#: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "Odstrani alarm"
 
@@ -527,7 +527,7 @@ msgstr "Shrani"
 msgid "Done"
 msgstr "Končano"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:777
+#: src/gui/event-editor/gcal-event-editor-dialog.c:787
 msgid "New Event"
 msgstr "Nov dogodek"
 
@@ -568,38 +568,42 @@ msgid "Add Reminder"
 msgstr "Dodaj opomnik"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:41
+msgid "Event start"
+msgstr "Pričetek dogodka"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:47
 msgid "5 Minutes"
 msgstr "5 minut"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:47
+#: src/gui/event-editor/gcal-reminders-section.ui:53
 msgid "10 Minutes"
 msgstr "10 minut"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:53
+#: src/gui/event-editor/gcal-reminders-section.ui:59
 msgid "15 Minutes"
 msgstr "15 minut"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:59
+#: src/gui/event-editor/gcal-reminders-section.ui:65
 msgid "30 Minutes"
 msgstr "30 minut"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:65
+#: src/gui/event-editor/gcal-reminders-section.ui:71
 msgid "1 Hour"
 msgstr "1 ura"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:71
+#: src/gui/event-editor/gcal-reminders-section.ui:77
 msgid "1 Day"
 msgstr "1 dan"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:77
+#: src/gui/event-editor/gcal-reminders-section.ui:83
 msgid "2 Days"
 msgstr "2 dneva"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:83
+#: src/gui/event-editor/gcal-reminders-section.ui:89
 msgid "3 Days"
 msgstr "3 dnevi"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:89
+#: src/gui/event-editor/gcal-reminders-section.ui:95
 msgid "1 Week"
 msgstr "1 teden"
 
@@ -925,41 +929,40 @@ msgstr "%2$d. %1$s, %3$s–%4$s"
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%2$d %1$s %3$d, %4$s–%5$s"
 
-#: src/gui/gcal-event-popover.ui:75
+#: src/gui/gcal-event-popover.ui:76
 msgid "No event information"
 msgstr "Ni zabeleženih podrobnosti o dogodku"
 
-#: src/gui/gcal-event-popover.ui:175
+#: src/gui/gcal-event-popover.ui:176
 msgid "Edit…"
 msgstr "Uredi …"
 
-#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:355
+#. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
+#: src/gui/gcal-event-widget.c:369
 #, c-format
-msgid "At %s"
-msgstr "Mesto: %s"
+msgid ""
+"\n"
+"\n"
+"On %s"
+msgstr ""
+"\n"
+"\n"
+"Prek storitve %s"
 
-#: src/gui/gcal-meeting-row.c:67
-msgid "Google Meet"
-msgstr "Google Meet"
-
-#: src/gui/gcal-meeting-row.c:68
-msgid "Jitsi"
-msgstr "Jitsi"
-
-#: src/gui/gcal-meeting-row.c:69
-msgid "Whereby"
-msgstr "Whereby"
+#. Translators: %s is a URL informed as the location of the event
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:374 src/gui/gcal-event-widget.c:386
+#, c-format
+msgid ""
+"\n"
+"\n"
+"At %s"
+msgstr ""
+"\n"
+"\n"
+"Mesto: %s"
 
 #: src/gui/gcal-meeting-row.c:70
-msgid "Zoom"
-msgstr "Zoom"
-
-#: src/gui/gcal-meeting-row.c:71
-msgid "Microsoft Teams"
-msgstr "Microsoft Teams"
-
-#: src/gui/gcal-meeting-row.c:81
 msgid "Unknown Service"
 msgstr "Neznana storitev"
 
@@ -1487,3 +1490,23 @@ msgstr "_Poznejši dogodki"
 #: src/utils/gcal-utils.c:1210
 msgid "_All Events"
 msgstr "_Vsi dogodki"
+
+#: src/utils/gcal-utils.c:1309
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#: src/utils/gcal-utils.c:1310
+msgid "Jitsi"
+msgstr "Jitsi"
+
+#: src/utils/gcal-utils.c:1311
+msgid "Whereby"
+msgstr "Whereby"
+
+#: src/utils/gcal-utils.c:1312
+msgid "Zoom"
+msgstr "Zoom"
+
+#: src/utils/gcal-utils.c:1313
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
