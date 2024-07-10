@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-05-21 14:26+0000\n"
-"PO-Revision-Date: 2024-05-28 11:52+0300\n"
+"POT-Creation-Date: 2024-07-02 15:45+0000\n"
+"PO-Revision-Date: 2024-07-10 09:45+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: Hebrew\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
-"2 : 3)\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? 2 : "
+"3);\n"
 "X-Generator: Gtranslator 46.1\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:3
@@ -29,12 +29,12 @@ msgstr "לוח שנה"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
-msgstr "גישה וניהול לוח השנה שלך"
+msgstr "גישה וניהול לוחות שנה"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in.in:13
 msgid "Calendar;Event;Reminder;"
-msgstr "לוח שנה;יומן;אירוע;תזכיר;מזכיר;תזכורת;"
+msgstr "לוח שנה;יומן;אירוע;תזכיר;מזכיר;תזכורת;מזכר;"
 
 #: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
@@ -46,11 +46,11 @@ msgstr "Window maximized state"
 
 #: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
-msgstr "Window size"
+msgstr "גודל חלון"
 
 #: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
-msgstr "Window size (width and height)."
+msgstr "גודל חלון (גובה ורוחב)"
 
 #: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Type of the active view"
@@ -62,23 +62,21 @@ msgstr "Type of the active window view, default value is: monthly view"
 
 #: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
-msgstr "Weather Service Configuration"
+msgstr "הגדרת שירות מזג אוויר"
 
 #: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
-msgstr ""
-"Whether weather reports are shown, automatic locations are used and a "
-"location-name"
+msgstr "בין אם מוצגים דוחות מזג אוויר, נעשה שימוש במקומות אוטומטיים ובשם מקום"
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Zoom level of the week grid"
-msgstr "Zoom level of the week grid"
+msgstr "רמת תקריב של הטבלה השבועית"
 
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid "The current zoom level of the week grid"
-msgstr "The current zoom level of the week grid"
+msgstr "מרחק התצוגה הנוכחי מהטבלה השבועית"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:8
 msgid "Manage your schedule"
@@ -91,19 +89,18 @@ msgid ""
 "meetings and appointments, public events, travel logistics, or other "
 "commitments in your life."
 msgstr ""
-"לוח השנה של GNOME הוא כלי אלגנטי המסייע לך לתכנן ולהישאר במעקב אחרי לוח "
-"הזמנים שלך בימים ובשבועות הקרובים, בין אם החודשים שלך מלאים בפגישות "
-"ובישיבות, אירועים ציבוריים, נסיעות עבודה או התחייבויות אחרות בחיים שלך."
+"לוח השנה של GNOME הוא כלי מעוצב שיכול לסייע לך לתכנן ולעקוב אחרי לוח הזמנים "
+"שלך בימים ובשבועות הקרובים, בין אם החודשים שלך מלאים בפגישות ובישיבות, "
+"אירועים ציבוריים, נסיעות עבודה או התחייבויות אחרות בחיים שלך."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:16
 msgid ""
-"Easily create and manage unlimited calendars and events with GNOME "
-"Calendar's infinite scrolling month view, week timetable, and scheduling "
-"list view."
+"Easily create and manage unlimited calendars and events with GNOME Calendar's "
+"infinite scrolling month view, week timetable, and scheduling list view."
 msgstr ""
-"אפשר ליצור ולנהל בקלות כמות בלתי מוגבלת של לוחות שנה ואירועים עם הגלילה "
-"האינסופית של לוח השנה של GNOME בתצוגה החודשית, בלוח הזמנים השבועי וברשימת "
-"האירועים."
+"בזכות הגלילה האינסופית בלוח השנה של GNOME, ניתן ליצור ולנהל בקלות כמות בלתי "
+"מוגבלת של לוחות שנה ואירועים, תצוגות חודשיות, לוחות זמנים שבועיים ותצוגות "
+"רשימות אירועים."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:20
 msgid ""
@@ -116,13 +113,13 @@ msgid ""
 "supports local and offline calendaring, so you can use it anywhere and "
 "anytime while travelling (or after civilization's collapse.)"
 msgstr ""
-"עם שילוב הטכנולוגיה ושיטת העיצוב העדכנית של GNOME, לוח השנה של GNOME נבנה על "
-"גבי שרת הנתונים המבוסס של Evolution כדי לנהל כמויות גדולות של אירועים ולספק "
-"שילוב מול יישומים אחרים. אפשר להוסיף לוחות שנה ממגון שירותי ניהול לוח שנה "
-"(כמו NextCloud,‏ Google Calendar ושרתי CalDAV / WebDAV), וכך מתאפשר לך לסנכרן "
-"את האירועים שלך ממגוון מכשירים ופלטפורמות. לוח השנה של GNOME תומך גם בניהול "
-"לוחות שונות מקומיים ומנותקים, כדי לאפשר לך להשתמש בהם בכל מקום ובכל זמן גם "
-"בעת מסעות בדרכים (או לאחר קריסת האנושות לתוך עצמה.)"
+"שילוב הטכנולוגיות העדכניות ביותר של GNOME ושיטות עבודה מומלצות,  לוח שנה "
+"GNOME מתבסס על שרת הנתונים הבוגר של Evolution כדי לנהל כמויות גדולות של "
+"אירועים ולספק תכלול עם יישומים אחרים. ניתן להוסיף לוחות שנה משירותי לוח שנה "
+"מקוונים שונים (כמו NextCloud, לוח שנה גוגל Calendar ושרתי CalDAV / WebDAV), "
+"שמאפשרים לסנכרן אירועים בין מכשירים ומסדות מרובות. יומן GNOME תומך גם בלוח "
+"שנה מקומי ולא מקוון, כך שניתן להשתמש בו בכל מקום ובכל זמן בעת נסיעה (או לאחר "
+"קריסת הציוויליזציה.)"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:33
 msgid "Week view"
@@ -134,7 +131,7 @@ msgstr "תצוגה חודשית"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
 msgid "Event editor"
-msgstr "עריכת אירוע"
+msgstr "עורך אירועים"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
 msgid "The GNOME Project"
@@ -186,7 +183,7 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "לוח שנה <b>%s</b> נמחק"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:361
-#: src/gui/gcal-window.c:738
+#: src/gui/gcal-window.c:737
 msgid "_Undo"
 msgstr "_ביטול"
 
@@ -195,8 +192,8 @@ msgstr "_ביטול"
 msgid "Calendars"
 msgstr "לוחות שנה"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:67
 # msgid_plural "Add %1$u Calendars"
+#: src/gui/calendar-management/gcal-calendars-page.ui:67
 msgid "_Add Calendar"
 msgstr "הו_ספת לוח שנה"
 
@@ -207,8 +204,7 @@ msgstr "קישור ללוח שנה"
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:208
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
 #: src/gui/event-editor/gcal-summary-section.ui:24
-#: src/gui/gcal-event-popover.ui:115
-#: src/gui/importer/gcal-import-file-row.c:151
+#: src/gui/gcal-event-popover.ui:115 src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "מיקום"
 
@@ -259,8 +255,6 @@ msgid "Select a file"
 msgstr "בחירת קובץ"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:158
-#: src/gui/calendar-management/gcal-new-calendar-page.c:165
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
@@ -269,21 +263,27 @@ msgstr[1] "הוספת שני לוחות שנה"
 msgstr[2] "הוספת %1$u לוחות שנה"
 msgstr[3] "הוספת %1$u לוחות שנה"
 
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "הוספת לוח שנה"
+
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
 msgstr "לוח שנה חדש"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:63
 msgid "Import a Calendar"
-msgstr "יבוא לוח שנה"
+msgstr "ייבוא לוח שנה"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:80
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
 msgstr ""
-"לחלופין, ניתן להזין את כתובת האתר של לוח השנה המקוון שלך לייבוא, או לפתוח "
-"קובץ לוח־שנה נתמך."
+"לחלופין, ניתן למלא את כתובת אתר לוח השנה המקוון שלך לייבוא, או לפתוח קובץ לוח "
+"שנה נתמך."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:108
 msgid "Open a File"
@@ -307,7 +307,7 @@ msgstr "אישורים"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:224
 msgid "User"
-msgstr "משתמה"
+msgstr "משתמש"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:229
 msgid "Password"
@@ -442,7 +442,7 @@ msgstr[3] "‏‫%1$u דקות לפני"
 
 #: src/gui/event-editor/gcal-alarm-row.c:198
 msgid "Event start time"
-msgstr "זמן תחילת אירוע"
+msgstr "מועד תחילת אירוע"
 
 #: src/gui/event-editor/gcal-alarm-row.ui:8
 msgid "Toggle Alarm Sound"
@@ -450,7 +450,7 @@ msgstr "החלפת מצב צליל התראה"
 
 #: src/gui/event-editor/gcal-alarm-row.ui:19
 msgid "Remove Alarm"
-msgstr "הסרת ההתראה"
+msgstr "הסרת התראה"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -519,7 +519,7 @@ msgid ""
 "You cannot delete or change this event."
 msgstr ""
 "<b>אירוע זה הוא חלק מלוח שנה לקריאה בלבד</b>\n"
-"אין באפשרותך למחוק או לשנות אירוע זה."
+"לא ניתן למחוק או לשנות אירוע זה."
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:50
 msgid "Select Calendar"
@@ -557,7 +557,7 @@ msgstr "חמש דקות"
 msgid "10 Minutes"
 msgstr "עשר דקות"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:53
+#: src/gui/event-editor/gcal-reminders-section.ui:59
 msgid "15 Minutes"
 msgstr "15 דקות"
 
@@ -640,11 +640,11 @@ msgstr "סיום"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:120
 msgid "Repeat"
-msgstr "חזרתיות"
+msgstr "חזרה"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:125
 msgid "No Repeat"
-msgstr "ללא חזרתיות"
+msgstr "ללא חזרות"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:126
 msgid "Daily"
@@ -668,7 +668,7 @@ msgstr "שנתי"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:141
 msgid "End Repeat"
-msgstr "הפסקת החזרתיות"
+msgstr "הפסקת חזרות"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:146
 msgid "Forever"
@@ -685,7 +685,7 @@ msgstr "עד תאריך"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:179
 msgid "End Repeat Date"
-msgstr "תאריך סיום החזרתיות"
+msgstr "תאריך סיום חזרות"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
 #: src/gui/importer/gcal-import-file-row.c:150
@@ -708,11 +708,11 @@ msgstr "אחה״צ"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
-msgstr "יציאה מלוח השנה של GNOME"
+msgstr "יציאה מלוח שנה של GNOME"
 
 #: src/gui/gcal-application.c:63
 msgid "Display version number"
-msgstr "הצגת מספר הגרסה"
+msgstr "הצגת מספר גרסה"
 
 #: src/gui/gcal-application.c:68
 msgid "Enable debug messages"
@@ -720,16 +720,16 @@ msgstr "הפעלת הודעות ניפוי שגיאות"
 
 #: src/gui/gcal-application.c:73
 msgid "Open calendar on the passed date"
-msgstr "פתיחת לוח שנה בתאריך שהועבר"
+msgstr "פתיחת לוח שנה בתאריך שחלף"
 
 #: src/gui/gcal-application.c:78
 msgid "Open calendar showing the passed event"
-msgstr "פתיחת לוח השנה תוך הצגת האירוע שהועבר"
+msgstr "פתיחת לוח שנה והצגת אירוע שחלף"
 
 #: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
-msgstr "כל הזכויות שמורות © 2012‏-%d יוצרי לוח השנה"
+msgstr "כל הזכויות שמורות © 2012‏-%d ליוצרי לוח השנה"
 
 #: src/gui/gcal-application.c:239
 msgid "translator-credits"
@@ -751,7 +751,7 @@ msgstr "_לוחות שנה"
 
 #: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
-msgstr "_תזמון לוחות שנה"
+msgstr "_סנכרון לוחות שנה"
 
 #: src/gui/gcal-calendar-button.ui:41
 msgid "_Manage Calendars…"
@@ -937,7 +937,7 @@ msgstr "Whereby"
 
 #: src/gui/gcal-meeting-row.c:70
 msgid "Zoom"
-msgstr "Zoom"
+msgstr "תקריב"
 
 #: src/gui/gcal-meeting-row.c:71
 msgid "Microsoft Teams"
@@ -955,7 +955,7 @@ msgstr "הצטרפות"
 #: src/gui/gcal-quick-add-popover.c:116
 #, c-format
 msgid "%s (this calendar is read-only)"
-msgstr "‏%s (לוח שנה זה לקריאה בלבד)"
+msgstr "%s (לוח שנה זה הוא לקריאה בלבד)"
 
 #: src/gui/gcal-quick-add-popover.c:231
 msgid "from next Monday"
@@ -1216,19 +1216,19 @@ msgstr "מיקום אוטומטי"
 msgid "Search locations"
 msgstr "חיפוש מקומות"
 
-#: src/gui/gcal-window.c:332
+#: src/gui/gcal-window.c:331
 msgid "Week"
 msgstr "שבוע"
 
-#: src/gui/gcal-window.c:334
+#: src/gui/gcal-window.c:333
 msgid "Month"
 msgstr "חודש"
 
-#: src/gui/gcal-window.c:736
+#: src/gui/gcal-window.c:735
 msgid "Another event deleted"
 msgstr "אירוע נוסף נמחק"
 
-#: src/gui/gcal-window.c:736
+#: src/gui/gcal-window.c:735
 msgid "Event deleted"
 msgstr "מחיקת אירוע"
 
@@ -1272,12 +1272,12 @@ msgstr "כללי"
 #: src/gui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "Open Main Menu"
-msgstr "פתיחת התפריט הראשי"
+msgstr "פתיחת תפריט ראשי"
 
 #: src/gui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
 msgid "Open Calendars Menu"
-msgstr "פתיחת תפריט לוחות השנה"
+msgstr "פתיחת תפריט לוחות שנה"
 
 #: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
@@ -1337,12 +1337,12 @@ msgstr "הצגת היום"
 #: src/gui/gtk/help-overlay.ui:91
 msgctxt "shortcut window"
 msgid "Next View"
-msgstr "תצוגת הבאה"
+msgstr "התצוגה הבאה"
 
 #: src/gui/gtk/help-overlay.ui:97
 msgctxt "shortcut window"
 msgid "Previous View"
-msgstr "תצוגת הקודם"
+msgstr "התצוגה הקודמת"
 
 #: src/gui/gtk/help-overlay.ui:105
 msgctxt "shortcut window"
@@ -1363,10 +1363,10 @@ msgstr "תצוגה חודשית"
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
-msgstr[0] "אירוע אחד יובא"
-msgstr[1] "שני אירועים יובאו"
-msgstr[2] "‫%d אירועים יובאו"
-msgstr[3] "‫%d אירועים יובאו"
+msgstr[0] "יובא אירוע אחד"
+msgstr[1] "יובאו שני אירועים"
+msgstr[2] "יובאו %d אירועים"
+msgstr[3] "יובאו %d אירועים"
 
 #: src/gui/importer/gcal-import-dialog.ui:4
 msgid "Import Files…"
@@ -1398,7 +1398,7 @@ msgstr "הקובץ מסודר לא נכון, שגוי או פגום"
 
 #: src/gui/importer/gcal-importer.c:46
 msgid "Failed to parse the calendar contents"
-msgstr "פענוח תכני לוח השני נכשל"
+msgstr "פענוח תוכני לוח השנה נכשל"
 
 #: src/gui/importer/gcal-importer.c:49
 msgid "Failed to read file"
@@ -1452,13 +1452,13 @@ msgstr "שבוע %d"
 
 #: src/utils/gcal-utils.c:1196
 msgid "Modify Multiple Events?"
-msgstr "שינוים מספר רב של אירועים?"
+msgstr "לשנות מספר רב של אירועים?"
 
 #: src/utils/gcal-utils.c:1197
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
-msgstr "האירוע שברצונך לשנות הוא מחזורי. השינויים שלך יחולו על:"
+msgstr "האירוע הנבחר לשינוי הוא אירוע מחזורי. השינויים שערכת יחולו על:"
 
 #: src/utils/gcal-utils.c:1201
 msgid "_Only This Event"
@@ -1466,7 +1466,7 @@ msgstr "אירוע זה _בלבד"
 
 #: src/utils/gcal-utils.c:1207
 msgid "_Subsequent Events"
-msgstr "מאורעות _עוקבים"
+msgstr "אירועים _עוקבים"
 
 #: src/utils/gcal-utils.c:1210
 msgid "_All Events"
@@ -1527,9 +1527,8 @@ msgstr "_כל האירועים"
 
 #~ msgid ""
 #~ "GNOME Calendar is a simple and beautiful calendar application designed to "
-#~ "perfectly fit the GNOME desktop. By reusing the components which the "
-#~ "GNOME desktop is built on, Calendar nicely integrates with the GNOME "
-#~ "ecosystem."
+#~ "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+#~ "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 #~ msgstr ""
 #~ "לוח שנה מבית GNOME הוא יישום לוח שנה פשוט ויפה שעוצב להתאים באופן מושלם "
 #~ "לשולחן העבודה GNOME. באמצעות שימוש חוזר ברכיבים אשר עליהם בנוי שולחן "
