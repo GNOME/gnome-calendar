@@ -383,6 +383,61 @@ event_date_edit_tzid (void)
 
 /*********************************************************************************************************************/
 
+static void
+event_date_check_tz (void)
+{
+  struct
+    {
+      const gchar *string;
+      const gchar *tz;
+    }
+  timezones[] = {
+    {
+      STUB_EVENT_DTEND, "UTC"
+    },
+    {
+      EVENT_STRING_FOR_DATE (";TZID=America/New_York:20240709T170000", ";TZID=America/New_York:20240709T180000"),
+      "America/New_York"
+    },
+    {
+      EVENT_STRING_FOR_DATE (";TZID=Australia/Melbourne:20240709T170000", ";TZID=Australia/Melbourne:20240709T180000"),
+      "Australia/Melbourne"
+    },
+    {
+      EVENT_STRING_FOR_DATE (":20240709T170000", ":20240709T180000"), "Europe/London"
+    },
+    {
+      EVENT_STRING_FOR_DATE (":20240709T180000Z", ":20240709T190000Z"), "UTC"
+    },
+  };
+  
+  g_test_bug ("171");
+
+  for (gsize i = 0; i < G_N_ELEMENTS (timezones); i++)
+    {
+      g_autoptr (GcalEvent) event = NULL;
+      g_autoptr (GError) error = NULL;
+      GTimeZone *date_start = NULL;
+      GTimeZone *date_end = NULL;
+
+      /* Change environment variable to test local timezone, when it's the case. */
+      g_setenv ("TZ", "Europe/London", TRUE);
+
+      event = create_event_for_string (timezones[i].string, &error);
+
+      g_setenv ("TZ", "UTC", TRUE);
+      g_assert_no_error (error);
+
+      date_start = g_date_time_get_timezone (gcal_event_get_date_start (event));
+      date_end = g_date_time_get_timezone (gcal_event_get_date_end (event));
+
+      g_assert_cmpstr (g_time_zone_get_identifier (date_start), ==, timezones[i].tz);
+      g_assert_cmpstr (g_time_zone_get_identifier (date_end), ==, timezones[i].tz);
+    }
+}
+
+/*********************************************************************************************************************/
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -403,6 +458,7 @@ main (gint   argc,
   g_test_add_func ("/event/date/multiday", event_date_multiday);
   g_test_add_func ("/event/date/edit-tzid", event_date_edit_tzid);
   g_test_add_func ("/event/date/create-tzid", event_date_create_tzid);
+  g_test_add_func ("/event/date/check-tz", event_date_check_tz);
 
   return g_test_run ();
 }
