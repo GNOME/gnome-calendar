@@ -201,11 +201,11 @@ get_timezone_from_ical (GcalEvent             *self,
     }
 
   /*
-   * If tz is NULL, the timezone identifier is invalid. Fallback to UTC
+   * If tz is NULL, the timezone identifier is invalid. Fallback to the local timezone
    * in this case.
    */
   if (!tz)
-    tz = g_time_zone_new_utc ();
+    tz = g_time_zone_new_local ();
 
   GCAL_TRACE_MSG ("%s (%p)", g_time_zone_get_identifier (tz), tz);
 
