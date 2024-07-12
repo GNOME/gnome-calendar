@@ -164,6 +164,21 @@ get_row_is_multiday (GtkListBoxRow *row)
   return FALSE;
 }
 
+static gboolean
+get_row_is_all_day (GtkListBoxRow *row)
+{
+  GtkWidget *widget = gtk_list_box_row_get_child (row);
+
+  if (GCAL_IS_EVENT_WIDGET (widget))
+    {
+      GcalEvent *event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
+
+      return gcal_event_get_all_day (event);
+    }
+
+  return FALSE;
+}
+
 static gchar *
 new_date_header_string (GDateTime *date)
 {
@@ -302,23 +317,30 @@ sort_func (GtkListBoxRow *row1,
 {
   GcalAgendaView *self = GCAL_AGENDA_VIEW (user_data);
   gboolean multiday1, multiday2;
+  gboolean all_day1, all_day2;
   int result;
 
-  result = gcal_date_time_compare_date (get_start_date_for_row (self, row1),
-                                        get_start_date_for_row (self, row2));
+  result = g_date_time_compare (get_start_date_for_row (self, row1),
+                                get_start_date_for_row (self, row2));
 
+  /* Sort multi day events before multi single day events of the same day. */
   if (result != 0)
     return result;
 
   multiday1 = get_row_is_multiday (row1);
   multiday2 = get_row_is_multiday (row2);
 
-  /* Sort multi day events before multi single day events of the same day. */
   if (multiday1 != multiday2)
     return multiday1 ? -1 : 1;
 
-  return gcal_date_time_compare_date (get_end_date_for_row (self, row1),
-                                      get_end_date_for_row (self, row2));
+  all_day1 = get_row_is_all_day (row1);
+  all_day2 = get_row_is_all_day (row2);
+
+  if (all_day1 != all_day2)
+    return all_day1 ? -1 : 1;
+
+  return g_date_time_compare (get_end_date_for_row (self, row1),
+                              get_end_date_for_row (self, row2));
 }
 
 static void
@@ -334,6 +356,7 @@ update_header (GtkListBoxRow *row,
   g_autofree gchar *label = NULL;
   GtkWidget *header;
   g_autoptr (GDateTime) today = NULL;
+  g_autoptr (GDateTime) end_midnight = NULL;
 
   if (GCAL_IS_EVENT_WIDGET (widget))
     event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
@@ -344,6 +367,8 @@ update_header (GtkListBoxRow *row,
     {
       GDateTime *before_start = get_start_date_for_row (self, before);
       GDateTime *before_end = get_end_date_for_row (self, before);
+      gboolean before_all_day = get_row_is_all_day (before);
+      gboolean event_all_day = get_row_is_all_day (row);
 
       if (get_row_is_multiday (row) &&
           get_row_is_multiday (before) &&
@@ -354,8 +379,10 @@ update_header (GtkListBoxRow *row,
           return;
         }
 
+      end_midnight = event_all_day ? g_date_time_ref (end) : g_date_time_add_seconds (end, -1);
+
       if (gcal_date_time_compare_date (start, before_start) == 0 &&
-          gcal_date_time_compare_date (end, before_end) == 0)
+          gcal_date_time_compare_date (end_midnight, before_end) == 0)
         {
           gtk_list_box_row_set_header (row, NULL);
           return;
@@ -363,7 +390,8 @@ update_header (GtkListBoxRow *row,
 
       /* All day events don't need to check for end date */
       if (event &&
-          gcal_event_get_all_day (event) &&
+          (before_all_day || event_all_day) &&
+          !get_row_is_multiday (before) &&
           gcal_date_time_compare_date (start, before_start) == 0)
         {
           gtk_list_box_row_set_header (row, NULL);
@@ -445,6 +473,9 @@ gcal_agenda_view_set_date (GcalView  *view,
   update_no_events_row (self);
 
   gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
+
+  if (self->events_on_date == 0)
+    gtk_list_box_invalidate_sort (GTK_LIST_BOX (self->list_box));
 
   GCAL_EXIT;
 }
