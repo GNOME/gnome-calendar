@@ -562,17 +562,29 @@ calendar_monitor_update_events_cb (GcalCalendarMonitor *monitor,
 
   for (guint i = 0; i < events->len; i++)
     {
+      g_autoptr (GPtrArray) old_subscribers_at_range = NULL;
       g_autoptr (GPtrArray) subscribers_at_range = NULL;
       GcalRange *event_range;
+      GcalRange *old_event_range;
       GcalEvent *old_event;
       GcalEvent *event;
 
       event = g_ptr_array_index (events, i);
       old_event = g_ptr_array_index (old_events, i);
       event_range = gcal_event_get_range (event);
+      old_event_range = gcal_event_get_range (old_event);
 
       /* Add to all subscribers within the event range */
       subscribers_at_range = gcal_range_tree_get_data_at_range (self->subscriber_ranges, event_range);
+      old_subscribers_at_range = gcal_range_tree_get_data_at_range (self->subscriber_ranges, old_event_range);
+
+      for (guint j = 0; old_subscribers_at_range && j < old_subscribers_at_range->len; j++)
+        {
+          GcalTimelineSubscriber *old_subscriber = g_ptr_array_index (old_subscribers_at_range, j);
+
+          if (!g_ptr_array_find (subscribers_at_range, old_subscriber, NULL))
+            queue_event_data (self, REMOVE_EVENT, old_subscriber, old_event, NULL, FALSE);
+        }
 
       queue_event_data (self, UPDATE_EVENT, NULL, event, old_event, TRUE);
 
@@ -580,7 +592,10 @@ calendar_monitor_update_events_cb (GcalCalendarMonitor *monitor,
         {
           GcalTimelineSubscriber *subscriber = g_ptr_array_index (subscribers_at_range, j);
 
-          queue_event_data (self, UPDATE_EVENT, subscriber, event, old_event, FALSE);
+          if (g_ptr_array_find (old_subscribers_at_range, subscriber, NULL))
+            queue_event_data (self, UPDATE_EVENT, subscriber, event, old_event, FALSE);
+          else
+            queue_event_data (self, ADD_EVENT, subscriber, event, NULL, FALSE);
         }
 
     }
