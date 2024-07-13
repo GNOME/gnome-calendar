@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-06-07 14:50+0000\n"
-"PO-Revision-Date: 2024-07-01 13:49+0530\n"
+"POT-Creation-Date: 2024-07-02 18:22+0000\n"
+"PO-Revision-Date: 2024-07-05 22:09+0530\n"
 "Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
 "Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
 "Language: hi\n"
@@ -37,15 +37,15 @@ msgstr "कैलेंडर;कार्यक्रम;अनुस्मा�
 
 #: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
-msgstr "खिड़की अधिकतमीकृत"
+msgstr "विंडो अधिकतमीकृत"
 
 #: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
-msgstr "खिड़की अधिकतमीकृत अवस्था"
+msgstr "विंडो अधिकतमीकृत अवस्था"
 
 #: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
-msgstr "खिड़की का आकार"
+msgstr "विंडो का आकार"
 
 #: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
@@ -184,7 +184,7 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "कैलेंडर <b>%s</b> हटाया गया"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:361
-#: src/gui/gcal-window.c:738
+#: src/gui/gcal-window.c:737
 msgid "_Undo"
 msgstr "पूर्ववत करें (_U)"
 
@@ -241,7 +241,7 @@ msgstr "कैलेंडर दिखाएं (_D)"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:117
 msgid "Default _Calendar"
-msgstr "डिफाल्ट कैलेंडर (_C)"
+msgstr "तयशुदा कैलेंडर (_C)"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:118
 msgid "Add new events to this calendar by default"
@@ -256,13 +256,17 @@ msgid "Select a file"
 msgstr "फाइल चुनें"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:158
-#: src/gui/calendar-management/gcal-new-calendar-page.c:165
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "कैलेंडर जोड़ें"
 msgstr[1] "%1$u कैलेंडर जोड़ें"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "कैलेंडर जोड़ें"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
@@ -1184,19 +1188,19 @@ msgstr "स्वचालित स्थान"
 msgid "Search locations"
 msgstr "जगह खोजें"
 
-#: src/gui/gcal-window.c:332
+#: src/gui/gcal-window.c:331
 msgid "Week"
 msgstr "सप्ताह"
 
-#: src/gui/gcal-window.c:334
+#: src/gui/gcal-window.c:333
 msgid "Month"
 msgstr "महीना"
 
-#: src/gui/gcal-window.c:736
+#: src/gui/gcal-window.c:735
 msgid "Another event deleted"
 msgstr "एक अन्य कार्यक्रम मिटा दिया गया"
 
-#: src/gui/gcal-window.c:736
+#: src/gui/gcal-window.c:735
 msgid "Event deleted"
 msgstr "कार्यक्रम मिटा दिया गया"
 
@@ -1265,7 +1269,7 @@ msgstr "कैलेंडर समन्वयित करें"
 #: src/gui/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "Close Window"
-msgstr "खिड़की बंद करें"
+msgstr "विंडो बंद करें"
 
 #: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
