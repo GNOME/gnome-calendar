@@ -20,4 +20,20 @@
       <gnome:userid>gbsneto</gnome:userid>
     </foaf:Person>
   </maintainer>
+
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Jean-François Fortin Tam</foaf:name>
+      <foaf:mbox rdf:resource="mailto:nekohayo@gmail.com" />
+      <gnome:userid>jfft</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+
+  <developer>
+    <foaf:Person>
+      <foaf:name>Hari Rana</foaf:name>
+      <foaf:mbox rdf:resource="mailto:theevilskeleton@riseup.net" />
+      <gnome:userid>harirana</gnome:userid>
+    </foaf:Person>
+  </developer>
 </Project>
