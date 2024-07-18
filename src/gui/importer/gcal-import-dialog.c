@@ -410,6 +410,16 @@ on_import_row_file_loaded_cb (GcalImportFileRow *row,
  */
 
 static void
+gcal_import_dialog_constructed (GObject *object)
+{
+  GcalImportDialog *self = (GcalImportDialog *)object;
+
+  G_OBJECT_CLASS (gcal_import_dialog_parent_class)->constructed (object);
+
+  setup_calendars (self);
+}
+
+static void
 gcal_import_dialog_finalize (GObject *object)
 {
   GcalImportDialog *self = (GcalImportDialog *)object;
@@ -455,7 +465,6 @@ gcal_import_dialog_set_property (GObject      *object,
     case PROP_CONTEXT:
       g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
-      setup_calendars (self);
       break;
 
     default:
@@ -469,6 +478,7 @@ gcal_import_dialog_class_init (GcalImportDialogClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
+  object_class->constructed = gcal_import_dialog_constructed;
   object_class->finalize = gcal_import_dialog_finalize;
   object_class->get_property = gcal_import_dialog_get_property;
   object_class->set_property = gcal_import_dialog_set_property;
