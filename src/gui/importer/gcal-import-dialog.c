@@ -143,7 +143,7 @@ setup_files (GcalImportDialog  *self,
       AdwPreferencesGroup *group;
       GtkWidget *row;
 
-      row = gcal_import_file_row_new (files[i], self->title_sizegroup);
+      row = gcal_import_file_row_new (self->context, files[i], self->title_sizegroup);
       g_signal_connect (row, "file-loaded", G_CALLBACK (on_import_row_file_loaded_cb), self);
 
       group = ADW_PREFERENCES_GROUP (adw_preferences_group_new ());
