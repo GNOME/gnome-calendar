@@ -116,7 +116,9 @@ fill_grid_with_event_data (GcalImportFileRow *self,
   g_autofree gchar *description = NULL;
   g_autofree gchar *end_string = NULL;
   g_autoptr (GDateTime) start = NULL;
+  g_autoptr (GDateTime) start_local = NULL;
   g_autoptr (GDateTime) end = NULL;
+  g_autoptr (GDateTime) end_local = NULL;
   ICalTime *ical_start;
   ICalTime *ical_end;
   gint row = 0;
@@ -126,24 +128,45 @@ fill_grid_with_event_data (GcalImportFileRow *self,
   if (i_cal_time_is_date (ical_start))
     start_string = g_date_time_format (start, "%x");
   else
-    start_string = g_date_time_format (start, "%x %X");
+    {
+      start_local = g_date_time_to_local (start);
+
+      switch (gcal_context_get_time_format (self->context))
+        {
+        case GCAL_TIME_FORMAT_24H:
+          start_string = g_date_time_format (start_local, "%x %R");
+          break;
+
+        case GCAL_TIME_FORMAT_12H:
+          start_string = g_date_time_format (start_local, "%x %I:%M %P");
+          break;
+
+        default:
+          g_assert_not_reached ();
+        }
+    }
 
   ical_end = i_cal_component_get_dtend (ical_component);
-  if (ical_end)
-    {
-      end = gcal_date_time_from_icaltime (ical_end);
-      if (i_cal_time_is_date (ical_end))
-        end_string = g_date_time_format (end, "%x");
-      else
-        end_string = g_date_time_format (end, "%x %X");
-    }
+  end = gcal_date_time_from_icaltime (ical_end);
+  if (i_cal_time_is_date (ical_end))
+    end_string = g_date_time_format (end, "%x");
   else
     {
-      end = g_date_time_add_days (start, 1);
-      if (i_cal_time_is_date (ical_start))
-        end_string = g_date_time_format (end, "%x");
-      else
-        end_string = g_date_time_format (end, "%x %X");
+      end_local = g_date_time_to_local (end);
+
+      switch (gcal_context_get_time_format (self->context))
+        {
+        case GCAL_TIME_FORMAT_24H:
+          end_string = g_date_time_format (end_local, "%x %R");
+          break;
+
+        case GCAL_TIME_FORMAT_12H:
+          end_string = g_date_time_format (end_local, "%x %I:%M %P");
+          break;
+
+        default:
+          g_assert_not_reached ();
+        }
     }
 
   gcal_utils_extract_google_section (i_cal_component_get_description (ical_component),
