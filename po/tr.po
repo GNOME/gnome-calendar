@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-25 13:58+0000\n"
-"PO-Revision-Date: 2024-02-25 17:58+0300\n"
-"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
+"POT-Creation-Date: 2024-07-09 20:37+0000\n"
+"PO-Revision-Date: 2024-05-09 00:15+0300\n"
+"Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
 "Language-Team: Türkçe <takim@gnome.org.tr>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -26,84 +26,22 @@ msgstr ""
 "X-Generator: Poedit 3.4.2\n"
 "X-POOTLE-MTIME: 1433367259.000000\n"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
-#: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:233 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
+#: data/org.gnome.Calendar.desktop.in.in:3
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:7 src/main.c:35
+#: src/gui/gcal-quick-add-popover.ui:135 src/gui/gcal-window.ui:4
+#: src/gui/gcal-window.ui:124
 msgid "Calendar"
 msgstr "Takvim"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
-msgid "Manage your schedule"
-msgstr "Programınızı yönetin"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
-msgid ""
-"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
-"schedule for upcoming days and weeks, whether your months are filled with "
-"meetings and appointments, public events, travel logistics, or other "
-"commitments in your life."
-msgstr ""
-"GNOME Takvim; aylarınız toplantı, randevu, etkinlik, yolculuk hazırlığı ya "
-"da diğer görevlerle dolu olsun, gelecek gün ve haftaları planlamanıza ve "
-"planı izlemenize yardımcı olacak göz alıcı araçtır."
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
-msgid ""
-"Easily create and manage unlimited calendars and events with GNOME "
-"Calendar's infinite scrolling month view, week timetable, and scheduling "
-"list view."
-msgstr ""
-"GNOME Takvim’in sonsuz kaydırmalı ay görünümü, haftalık zaman çizelgesi ve "
-"randevu listesi görünümü ile tüm takvim ve etkinliklerinizi kolayca "
-"oluşturup yönetin."
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:20
-msgid ""
-"Integrating the latest GNOME technologies and design best practices, GNOME "
-"Calendar builds on top of the mature Evolution data server to manage large "
-"quantities of events and to provide integration with other applications. You "
-"can add calendars from various online calendaring services (like NextCloud, "
-"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
-"your events across multiple devices and platforms. GNOME Calendar also "
-"supports local and offline calendaring, so you can use it anywhere and "
-"anytime while travelling (or after civilization's collapse.)"
-msgstr ""
-"Güncel GNOME teknolojilerini ve kanıtlanmış tasarım uygulamalarını "
-"tümleştiren GNOME Takvim, büyük miktardaki etkinlikleri yönetmek ve diğer "
-"uygulamalarla tümleşimi sağlamak için Evolution veri sunucusu üzerine inşa "
-"edilmiştir. Türlü çevrim içi takvim hizmetlerinden (NextCloud, Google Takvim "
-"ve CalDAV / WebDAV sunucuları gibi) takvim ekleyebilir, etkinliklerinizi "
-"birden çok aygıt ve platform arasında eşzamanlayabilirsiniz. GNOME Takvim, "
-"yerel ve çevrim dışı takvim kullanımını da destekler, böylece yolculuk "
-"ederken (uygarlığın çöküşünden sonra bile) her yerde ve her zaman "
-"kullanabilirsiniz."
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:33
-msgid "Week view"
-msgstr "Hafta görünümü"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:37
-msgid "Month view"
-msgstr "Ay görünümü"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:41
-msgid "Event editor"
-msgstr "Olay düzenleyici"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:60
-#: src/gui/gcal-application.c:235
-msgid "The GNOME Project"
-msgstr "GNOME Projesi"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
 msgstr "Takvimlerinize erişin ve yönetin"
 
+# https://gitlab.gnome.org/GNOME/glib/-/issues/443 hatası sebebiyle uygulama adı dahil ingilizce hallerini de koruyalım.
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in.in:13
 msgid "Calendar;Event;Reminder;"
-msgstr "Takvim;Olay;Etkinlik;Anımsatıcı;Hatırlatıcı;Calendar;Event;Reminder;"
+msgstr "Calendar;Event;Reminder;Takvim;Olay;Etkinlik;Anımsatıcı;Hatırlatıcı;"
 
 #: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
@@ -149,6 +87,67 @@ msgstr "Hafta ızgarasının yakınlaştırma düzeyi"
 msgid "The current zoom level of the week grid"
 msgstr "Hafta ızgarasının geçerli yakınlaştırma düzeyi"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:8
+msgid "Manage your schedule"
+msgstr "Programınızı yönetin"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:11
+msgid ""
+"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
+"schedule for upcoming days and weeks, whether your months are filled with "
+"meetings and appointments, public events, travel logistics, or other "
+"commitments in your life."
+msgstr ""
+"GNOME Takvim; aylarınız toplantı, randevu, olay, yolculuk hazırlığı ya da "
+"diğer görevlerle dolu olsun, gelecek gün ve haftaları planlamanıza ve planı "
+"izlemenize yardımcı olacak göz alıcı araçtır."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:16
+msgid ""
+"Easily create and manage unlimited calendars and events with GNOME "
+"Calendar's infinite scrolling month view, week timetable, and scheduling "
+"list view."
+msgstr ""
+"GNOME Takvim’in sonsuz kaydırmalı ay görünümü, haftalık zaman çizelgesi ve "
+"randevu listesi görünümü ile tüm takvim ve olaylarınızı kolayca oluşturup "
+"yönetin."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:20
+msgid ""
+"Integrating the latest GNOME technologies and design best practices, GNOME "
+"Calendar builds on top of the mature Evolution data server to manage large "
+"quantities of events and to provide integration with other applications. You "
+"can add calendars from various online calendaring services (like NextCloud, "
+"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
+"your events across multiple devices and platforms. GNOME Calendar also "
+"supports local and offline calendaring, so you can use it anywhere and "
+"anytime while travelling (or after civilization's collapse.)"
+msgstr ""
+"Güncel GNOME teknolojilerini ve kanıtlanmış tasarım uygulamalarını "
+"tümleştiren GNOME Takvim, büyük miktardaki olayları yönetmek ve diğer "
+"uygulamalarla tümleşimi sağlamak için Evolution veri sunucusu üzerine inşa "
+"edilmiştir. Türlü çevrim içi takvim hizmetlerinden (NextCloud, Google Takvim "
+"ve CalDAV / WebDAV sunucuları gibi) takvim ekleyebilir, olaylarınızı birden "
+"çok aygıt ve platform arasında eşzamanlayabilirsiniz. GNOME Takvim, yerel ve "
+"çevrim dışı takvim kullanımını da destekler, böylece yolculuk ederken "
+"(uygarlığın çöküşünden sonra bile) her yerde ve her zaman kullanabilirsiniz."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:33
+msgid "Week view"
+msgstr "Hafta görünümü"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:37
+msgid "Month view"
+msgstr "Ay görünümü"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "Event editor"
+msgstr "Olay düzenleyici"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
+msgid "The GNOME Project"
+msgstr "GNOME Projesi"
+
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
 #: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:395
@@ -188,64 +187,77 @@ msgstr "Takvimi düzenle"
 msgid "Calendar Settings"
 msgstr "Takvim Ayarları"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:343
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:141
-msgid "Calendars"
-msgstr "Takvimler"
-
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:368
+#: src/gui/calendar-management/gcal-calendars-page.c:356
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "<b>%s</b> takvimi silindi"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:373
-#: src/gui/gcal-window.c:738
+#: src/gui/calendar-management/gcal-calendars-page.c:361
+#: src/gui/gcal-window.c:737
 msgid "_Undo"
 msgstr "_Geri Al"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:66
-msgid "_Add Calendar…"
-msgstr "Takvim _Ekle…"
+#: src/gui/calendar-management/gcal-calendars-page.ui:4
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:144
+msgid "Calendars"
+msgstr "Takvimler"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
-msgid "Account"
-msgstr "Hesap"
+#: src/gui/calendar-management/gcal-calendars-page.ui:67
+msgid "_Add Calendar"
+msgstr "Takvim _Ekle"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:30
-msgid "Open in Settings"
-msgstr "Ayarlarda Aç"
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:190
+msgid "Calendar URL"
+msgstr "Takvim URLʼsi"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:208
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
 #: src/gui/event-editor/gcal-summary-section.ui:24
-#: src/gui/gcal-event-popover.ui:115
+#: src/gui/gcal-event-popover.ui:116
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "Konum"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:24
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:209
+msgid "On This Computer"
+msgstr "Bu Bilgisayarda"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:4
+msgid "Edit Calendar"
+msgstr "Takvimi Düzenle"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:34
+msgid "Account"
+msgstr "Hesap"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:42
+msgid "Open in Settings"
+msgstr "Ayarlarda Aç"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
 msgid "Calendar Name"
 msgstr "Takvim Adı"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:32
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
 msgid "Color"
 msgstr "Renk"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:110
 msgid "_Display Calendar"
 msgstr "Takvimi _Görüntüle"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:117
 msgid "Default _Calendar"
 msgstr "Öntanımlı _Takvim"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:118
 msgid "Add new events to this calendar by default"
 msgstr "Yeni olayları öntanımlı olarak bu takvime ekle"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:132
 msgid "_Remove Calendar"
 msgstr "Takvimi _Kaldır"
 
@@ -254,38 +266,42 @@ msgid "Select a file"
 msgstr "Dosya seç"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:158
-#: src/gui/calendar-management/gcal-new-calendar-page.c:165
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:190
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "%1$u Takvim Ekle"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:516
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "Takvim Ekle"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
 msgstr "Yeni Takvim"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
 msgid "Import a Calendar"
 msgstr "Takvimi İçe Aktar"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:77
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
 msgstr ""
 "Diğer seçenek olarak, içe aktarmak istediğiniz çevrim içi takvimin internet "
-"adresini girin veya desteklenen takvim dosyasını açın."
+"adresini girin ya da desteklenen takvim dosyasını açın."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:108
 msgid "Open a File"
 msgstr "Dosya Aç"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:108
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendar files"
 msgstr "Takvim dosyaları"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:168
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -293,107 +309,107 @@ msgstr ""
 "Eğer takvim çevrim içi hesaplarınızdan birininse, <a href=\"GOA\">çevrim içi "
 "hesap ayarları</a>ndan ekleyebilirsiniz."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:213
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:216
 msgid "Credentials"
 msgstr "Kimlik Bilgileri"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:224
 msgid "User"
 msgstr "Kullanıcı"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:229
 msgid "Password"
 msgstr "Parola"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:240
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1269
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1204
 msgid "_Cancel"
 msgstr "İ_ptal"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
 msgid "_Connect"
 msgstr "_Bağlan"
 
-#: src/gui/event-editor/gcal-alarm-row.c:84
+#: src/gui/event-editor/gcal-alarm-row.c:85
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u gün, %2$u saat ve %3$u dakika önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:88
+#: src/gui/event-editor/gcal-alarm-row.c:89
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u gün, %2$u saat ve %3$u dakika önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:94
+#: src/gui/event-editor/gcal-alarm-row.c:95
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u gün, %2$u saat ve %3$u dakika önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:98
+#: src/gui/event-editor/gcal-alarm-row.c:99
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u gün, %2$u saat ve %3$u dakika önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:113
+#: src/gui/event-editor/gcal-alarm-row.c:114
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
 msgstr[0] "%1$u gün ve %2$u saat önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:117
+#: src/gui/event-editor/gcal-alarm-row.c:118
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
 msgstr[0] "%1$u gün ve %2$u saat önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:133
+#: src/gui/event-editor/gcal-alarm-row.c:134
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
 msgstr[0] "%1$u gün ve %2$u dakika önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:137
+#: src/gui/event-editor/gcal-alarm-row.c:138
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
 msgstr[0] "%1$u gün ve %2$u dakika önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:147
+#: src/gui/event-editor/gcal-alarm-row.c:148
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "%1$u gün önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:165
+#: src/gui/event-editor/gcal-alarm-row.c:166
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "%1$u saat ve %2$u dakika önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:169
+#: src/gui/event-editor/gcal-alarm-row.c:170
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "%1$u saat ve %2$u dakika önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:179
+#: src/gui/event-editor/gcal-alarm-row.c:180
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "%1$u saat önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:191
+#: src/gui/event-editor/gcal-alarm-row.c:192
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "%1$u dakika önce"
 
-#: src/gui/event-editor/gcal-alarm-row.c:198
+#: src/gui/event-editor/gcal-alarm-row.c:199
 msgid "Event start time"
 msgstr "Olay başlangıç zamanı"
 
@@ -401,7 +417,7 @@ msgstr "Olay başlangıç zamanı"
 msgid "Toggle Alarm Sound"
 msgstr "Alarm Sesini Aç/Kapat"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:19
+#: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "Alarmı Kaldır"
 
@@ -454,79 +470,91 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "Ct"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Save"
 msgstr "Kaydet"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Done"
 msgstr "Tamam"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:778
+#: src/gui/event-editor/gcal-event-editor-dialog.c:787
 msgid "New Event"
 msgstr "Yeni Olay"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:22
+msgid ""
+"<b>This event is part of a read-only calendar</b>\n"
+"You cannot delete or change this event."
+msgstr ""
+"<b>Bu olay salt okunur bir takvimin parçası</b>\n"
+"Bu olayı silemez ya da değiştiremezsiniz."
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:50
 msgid "Select Calendar"
 msgstr "Takvim Seç"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:87
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:108
 msgid "_Done"
 msgstr "_Tamam"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:135
 msgid "Schedule"
 msgstr "Zamanlama"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:126
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:147
 msgid "Reminders"
 msgstr "Anımsatıcılar"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:138
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Notes"
 msgstr "Notlar"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:176
 msgid "Delete Event"
 msgstr "Olayı Sil"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:26
-msgid "Add a Reminder…"
-msgstr "Anımsatıcı Ekle…"
+#: src/gui/event-editor/gcal-reminders-section.ui:17
+msgid "Add Reminder"
+msgstr "Anımsatıcı Ekle"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:52
+#: src/gui/event-editor/gcal-reminders-section.ui:41
+msgid "Event start"
+msgstr "Olay başlangıcı"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:47
 msgid "5 Minutes"
 msgstr "5 Dakika"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:58
+#: src/gui/event-editor/gcal-reminders-section.ui:53
 msgid "10 Minutes"
 msgstr "10 Dakika"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:64
+#: src/gui/event-editor/gcal-reminders-section.ui:59
 msgid "15 Minutes"
 msgstr "15 Dakika"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:70
+#: src/gui/event-editor/gcal-reminders-section.ui:65
 msgid "30 Minutes"
 msgstr "30 Dakika"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:76
+#: src/gui/event-editor/gcal-reminders-section.ui:71
 msgid "1 Hour"
 msgstr "1 Saat"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:82
+#: src/gui/event-editor/gcal-reminders-section.ui:77
 msgid "1 Day"
 msgstr "1 Gün"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:88
+#: src/gui/event-editor/gcal-reminders-section.ui:83
 msgid "2 Days"
 msgstr "2 Gün"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:94
+#: src/gui/event-editor/gcal-reminders-section.ui:89
 msgid "3 Days"
 msgstr "3 Gün"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:100
+#: src/gui/event-editor/gcal-reminders-section.ui:95
 msgid "1 Week"
 msgstr "1 Hafta"
 
@@ -676,13 +704,13 @@ msgstr "Takvimi, geçmiş olayı göstererek aç"
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Telif Hakkı © 2012–%d Takvim geliştiricileri"
 
-#: src/gui/gcal-application.c:244
+#: src/gui/gcal-application.c:239
 msgid "translator-credits"
 msgstr ""
 "Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Muhammet Kara <muhammetk@gmail.com>"
 
-#: src/gui/gcal-application.c:251 src/gui/gcal-window.ui:329
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:329
 msgid "Weather"
 msgstr "Hava Durumu"
 
@@ -854,41 +882,41 @@ msgstr "%2$d %1$s, %3$s – %4$s"
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%2$d %1$s, %3$d, %4$s – %5$s"
 
-#: src/gui/gcal-event-popover.ui:75
+#: src/gui/gcal-event-popover.ui:76
 msgid "No event information"
 msgstr "Olay bilgisi yok"
 
-#: src/gui/gcal-event-popover.ui:175
+#: src/gui/gcal-event-popover.ui:176
 msgid "Edit…"
 msgstr "Düzenle…"
 
-#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:355
+#. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
+#: src/gui/gcal-event-widget.c:369
 #, c-format
-msgid "At %s"
-msgstr "%sʼde"
+msgid ""
+"\n"
+"\n"
+"On %s"
+msgstr ""
+""
+"\n"
+"\n"
+"%s üstünde"
 
-#: src/gui/gcal-meeting-row.c:67
-msgid "Google Meet"
-msgstr "Google Meet"
-
-#: src/gui/gcal-meeting-row.c:68
-msgid "Jitsi"
-msgstr "Jitsi"
-
-#: src/gui/gcal-meeting-row.c:69
-msgid "Whereby"
-msgstr "Whereby"
+#. Translators: %s is a URL informed as the location of the event
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:382 src/gui/gcal-event-widget.c:388
+#, c-format
+msgid ""
+"\n"
+"\n"
+"At %s"
+msgstr ""
+"\n"
+"\n"
+"%sʼde"
 
 #: src/gui/gcal-meeting-row.c:70
-msgid "Zoom"
-msgstr "Zoom"
-
-#: src/gui/gcal-meeting-row.c:71
-msgid "Microsoft Teams"
-msgstr "Microsoft Teams"
-
-#: src/gui/gcal-meeting-row.c:81
 msgid "Unknown Service"
 msgstr "Bilinmeyen Hizmet"
 
@@ -1159,19 +1187,19 @@ msgstr "Konumu Kendiliğinden Sapta"
 msgid "Search locations"
 msgstr "Konum ara"
 
-#: src/gui/gcal-window.c:332
+#: src/gui/gcal-window.c:331
 msgid "Week"
 msgstr "Hafta"
 
-#: src/gui/gcal-window.c:334
+#: src/gui/gcal-window.c:333
 msgid "Month"
 msgstr "Ay"
 
-#: src/gui/gcal-window.c:736
+#: src/gui/gcal-window.c:735
 msgid "Another event deleted"
 msgstr "Başka bir olay silindi"
 
-#: src/gui/gcal-window.c:736
+#: src/gui/gcal-window.c:735
 msgid "Event deleted"
 msgstr "Olay silindi"
 
@@ -1334,7 +1362,7 @@ msgstr "Bellekte yeni nesne ayrılamadı"
 
 #: src/gui/importer/gcal-importer.c:43
 msgid "File is malformed, invalid, or corrupted"
-msgstr "Dosya kusurla, geçersiz veya bozuk"
+msgstr "Dosya kusurla, geçersiz ya da bozuk"
 
 #: src/gui/importer/gcal-importer.c:46
 msgid "Failed to parse the calendar contents"
@@ -1356,7 +1384,7 @@ msgstr "Dosya iCalendar (.ics) dosyası değil"
 msgid "Description"
 msgstr "Açıklama"
 
-#: src/gui/views/gcal-agenda-view.c:366
+#: src/gui/views/gcal-agenda-view.c:380
 msgid "On-going"
 msgstr "Süren"
 
@@ -1387,11 +1415,11 @@ msgstr[0] "Diğer %d olay"
 msgid "week %d"
 msgstr "%d. hafta"
 
-#: src/utils/gcal-utils.c:1265
+#: src/utils/gcal-utils.c:1200
 msgid "Modify Multiple Events?"
 msgstr "Birden Çok Olay Düzenlensin Mi?"
 
-#: src/utils/gcal-utils.c:1266
+#: src/utils/gcal-utils.c:1201
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1399,17 +1427,40 @@ msgstr ""
 "Değiştirmeye çalıştığınız olay yineleniyor. Şeçtiğiniz değişiklikler "
 "aşağıdakilere uygulanmalıdır:"
 
-#: src/utils/gcal-utils.c:1270
+#: src/utils/gcal-utils.c:1205
 msgid "_Only This Event"
 msgstr "Yalnızca Bu _Olay"
 
-#: src/utils/gcal-utils.c:1276
+#: src/utils/gcal-utils.c:1211
 msgid "_Subsequent Events"
 msgstr "_Sonraki Olaylar"
 
-#: src/utils/gcal-utils.c:1279
+#: src/utils/gcal-utils.c:1214
 msgid "_All Events"
 msgstr "_Tüm Olaylar"
+
+#: src/utils/gcal-utils.c:1316
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#: src/utils/gcal-utils.c:1317
+msgid "Jitsi"
+msgstr "Jitsi"
+
+#: src/utils/gcal-utils.c:1318
+msgid "Whereby"
+msgstr "Whereby"
+
+#: src/utils/gcal-utils.c:1319
+msgid "Zoom"
+msgstr "Zoom"
+
+#: src/utils/gcal-utils.c:1320
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#~ msgid "_Add Calendar…"
+#~ msgstr "Takvim _Ekle…"
 
 #~ msgid "Unnamed event"
 #~ msgstr "Adsız olay"
