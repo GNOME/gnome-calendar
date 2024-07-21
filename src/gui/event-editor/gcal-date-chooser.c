@@ -153,7 +153,7 @@ calendar_compute_days (GcalDateChooser *self)
 
   ndays_in_month = month_length[leap (year)][month];
 
-  date = g_date_time_new_local (year, month, 1, 1, 1, 1);
+  date = g_date_time_new_local (year, month, 1, 0, 0, 0);
   first_day = g_date_time_get_day_of_week (date);
   g_date_time_unref (date);
 
@@ -179,7 +179,7 @@ calendar_compute_days (GcalDateChooser *self)
   for (col = 0; col < first_day; col++)
     {
       d = GCAL_DATE_CHOOSER_DAY (self->days[0][col]);
-      date = g_date_time_new_local (other_year, other_month, day, 1, 1, 1);
+      date = g_date_time_new_local (other_year, other_month, day, 0, 0, 0);
       gcal_date_chooser_day_set_date (d, date);
       gcal_date_chooser_day_set_other_month (d, TRUE);
       g_date_time_unref (date);
@@ -193,7 +193,7 @@ calendar_compute_days (GcalDateChooser *self)
   for (day = 1; day <= ndays_in_month; day++)
     {
       d = GCAL_DATE_CHOOSER_DAY (self->days[row][col]);
-      date = g_date_time_new_local (year, month, day, 1, 1, 1);
+      date = g_date_time_new_local (year, month, day, 0, 0, 0);
       gcal_date_chooser_day_set_date (d, date);
       gcal_date_chooser_day_set_other_month (d, FALSE);
       g_date_time_unref (date);
@@ -222,7 +222,7 @@ calendar_compute_days (GcalDateChooser *self)
       for (; col < COLS; col++)
         {
           d = GCAL_DATE_CHOOSER_DAY (self->days[row][col]);
-          date = g_date_time_new_local (other_year, other_month, day, 1, 1, 1);
+          date = g_date_time_new_local (other_year, other_month, day, 0, 0, 0);
           gcal_date_chooser_day_set_date (d, date);
           gcal_date_chooser_day_set_other_month (d, TRUE);
           g_date_time_unref (date);
@@ -427,7 +427,7 @@ calendar_update_selected_day (GcalDateChooser *self)
 
   if (month_len < day)
     {
-      date = g_date_time_new_local (year, month, month_len, 1, 1, 1);
+      date = g_date_time_new_local (year, month, month_len, 0, 0, 0);
       gcal_date_chooser_set_date (GCAL_VIEW (self), date);
       g_date_time_unref (date);
     }
@@ -758,7 +758,7 @@ multi_choice_changed (GcalDateChooser *self,
   /* Make sure the day is valid at that month */
   day = MIN (day, month_length[leap (year)][month]);
 
-  date = g_date_time_new_local (year, month, day, 1, 1, 1);
+  date = g_date_time_new_local (year, month, day, 0, 0, 0);
   gcal_date_chooser_set_date (GCAL_VIEW (self), date);
 }
 
@@ -812,7 +812,7 @@ on_drop_target_drop_cb (GtkDropTarget   *target,
   if (!self->show_heading)
     g_date_time_get_ymd (self->date, &year, &month, NULL);
 
-  date = g_date_time_new_local (year, month, day, 1, 1, 1);
+  date = g_date_time_new_local (year, month, day, 0, 0, 0);
   gcal_date_chooser_set_date (GCAL_VIEW (self), date);
 
   return TRUE;
