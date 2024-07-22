@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-07-02 15:45+0000\n"
-"PO-Revision-Date: 2024-07-03 12:52+0300\n"
+"POT-Creation-Date: 2024-07-09 19:56+0000\n"
+"PO-Revision-Date: 2024-07-11 21:52+0300\n"
 "Last-Translator: Artur So <arturios2005@mail.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -212,7 +212,7 @@ msgstr "URL календаря"
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:208
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
 #: src/gui/event-editor/gcal-summary-section.ui:24
-#: src/gui/gcal-event-popover.ui:115
+#: src/gui/gcal-event-popover.ui:116
 #: src/gui/importer/gcal-import-file-row.c:151
 msgid "Location"
 msgstr "Местоположение"
@@ -331,7 +331,7 @@ msgstr "_Отмена"
 msgid "_Connect"
 msgstr "_Подключить"
 
-#: src/gui/event-editor/gcal-alarm-row.c:84
+#: src/gui/event-editor/gcal-alarm-row.c:85
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
@@ -339,7 +339,7 @@ msgstr[0] "%1$u день, %2$u час, и %3$u минута до"
 msgstr[1] "%1$u день, %2$u час, и %3$u минуты до"
 msgstr[2] "%1$u день, %2$u час, и %3$u минут до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:88
+#: src/gui/event-editor/gcal-alarm-row.c:89
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
@@ -347,7 +347,7 @@ msgstr[0] "%1$u день, %2$u часа, и %3$u минута до"
 msgstr[1] "%1$u день, %2$u часа, и %3$u минуты до"
 msgstr[2] "%1$u день, %2$u часа, и %3$u минут до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:94
+#: src/gui/event-editor/gcal-alarm-row.c:95
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
@@ -355,7 +355,7 @@ msgstr[0] "%1$u дня, %2$u час, и %3$u минута до"
 msgstr[1] "%1$u дня, %2$u час, и %3$u минуты до"
 msgstr[2] "%1$u дня, %2$u час, и %3$u минут до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:98
+#: src/gui/event-editor/gcal-alarm-row.c:99
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
@@ -363,7 +363,7 @@ msgstr[0] "%1$u дня, %2$u часа, и %3$u минута до"
 msgstr[1] "%1$u дня, %2$u часа, и %3$u минуты до"
 msgstr[2] "%1$u дня, %2$u часа, и %3$u минут до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:113
+#: src/gui/event-editor/gcal-alarm-row.c:114
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
@@ -371,7 +371,7 @@ msgstr[0] "%1$u день и %2$u час до"
 msgstr[1] "%1$u день и %2$u часа до"
 msgstr[2] "%1$u день и %2$u часов до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:117
+#: src/gui/event-editor/gcal-alarm-row.c:118
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
@@ -379,7 +379,7 @@ msgstr[0] "%1$u дня и %2$u час до"
 msgstr[1] "%1$u дня и %2$u часа до"
 msgstr[2] "%1$u дня и %2$u часов до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:133
+#: src/gui/event-editor/gcal-alarm-row.c:134
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
@@ -387,7 +387,7 @@ msgstr[0] "%1$u день и %2$u минута до"
 msgstr[1] "%1$u день и %2$u минуты до"
 msgstr[2] "%1$u день и %2$u минут до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:137
+#: src/gui/event-editor/gcal-alarm-row.c:138
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
@@ -395,7 +395,7 @@ msgstr[0] "%1$u дня и %2$u минута до"
 msgstr[1] "%1$u дня и %2$u минуты до"
 msgstr[2] "%1$u дня и %2$u минут до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:147
+#: src/gui/event-editor/gcal-alarm-row.c:148
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
@@ -403,7 +403,7 @@ msgstr[0] "%1$u день до"
 msgstr[1] "%1$u дня до"
 msgstr[2] "%1$u дней до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:165
+#: src/gui/event-editor/gcal-alarm-row.c:166
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
@@ -411,7 +411,7 @@ msgstr[0] "%1$u час и %2$u минута до"
 msgstr[1] "%1$u час и %2$u минуты до"
 msgstr[2] "%1$u час и %2$u минут до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:169
+#: src/gui/event-editor/gcal-alarm-row.c:170
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
@@ -419,7 +419,7 @@ msgstr[0] "%1$u часа и %2$u минута до"
 msgstr[1] "%1$u часа и %2$u минуты до"
 msgstr[2] "%1$u часа и %2$u минут до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:179
+#: src/gui/event-editor/gcal-alarm-row.c:180
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
@@ -427,7 +427,7 @@ msgstr[0] "%1$u час до"
 msgstr[1] "%1$u часа до"
 msgstr[2] "%1$u часов до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:191
+#: src/gui/event-editor/gcal-alarm-row.c:192
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
@@ -435,7 +435,7 @@ msgstr[0] "%1$u минута до"
 msgstr[1] "%1$u минуты до"
 msgstr[2] "%1$u минут до"
 
-#: src/gui/event-editor/gcal-alarm-row.c:198
+#: src/gui/event-editor/gcal-alarm-row.c:199
 msgid "Event start time"
 msgstr "Время начала события"
 
@@ -443,7 +443,7 @@ msgstr "Время начала события"
 msgid "Toggle Alarm Sound"
 msgstr "Переключить звук будильника"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:19
+#: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "Удалить будильник"
 
@@ -504,7 +504,7 @@ msgstr "Сохранить"
 msgid "Done"
 msgstr "Готово"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:777
+#: src/gui/event-editor/gcal-event-editor-dialog.c:787
 msgid "New Event"
 msgstr "Новое событие"
 
@@ -545,38 +545,42 @@ msgid "Add Reminder"
 msgstr "Добавить напоминание"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:41
+msgid "Event start"
+msgstr "Начало события"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:47
 msgid "5 Minutes"
 msgstr "5 минут"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:47
+#: src/gui/event-editor/gcal-reminders-section.ui:53
 msgid "10 Minutes"
 msgstr "10 минут"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:53
+#: src/gui/event-editor/gcal-reminders-section.ui:59
 msgid "15 Minutes"
 msgstr "15 минут"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:59
+#: src/gui/event-editor/gcal-reminders-section.ui:65
 msgid "30 Minutes"
 msgstr "30 минут"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:65
+#: src/gui/event-editor/gcal-reminders-section.ui:71
 msgid "1 Hour"
 msgstr "1 час"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:71
+#: src/gui/event-editor/gcal-reminders-section.ui:77
 msgid "1 Day"
 msgstr "1 день"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:77
+#: src/gui/event-editor/gcal-reminders-section.ui:83
 msgid "2 Days"
 msgstr "2 дня"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:83
+#: src/gui/event-editor/gcal-reminders-section.ui:89
 msgid "3 Days"
 msgstr "3 дня"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:89
+#: src/gui/event-editor/gcal-reminders-section.ui:95
 msgid "1 Week"
 msgstr "1 неделя"
 
@@ -906,41 +910,40 @@ msgstr "%1$s %2$d, %3$s – %4$s"
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%1$s %2$d, %3$d, %4$s – %5$s"
 
-#: src/gui/gcal-event-popover.ui:75
+#: src/gui/gcal-event-popover.ui:76
 msgid "No event information"
 msgstr "Нет информации о событии"
 
-#: src/gui/gcal-event-popover.ui:175
+#: src/gui/gcal-event-popover.ui:176
 msgid "Edit…"
 msgstr "Редактировать…"
 
-#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:355
+#. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
+#: src/gui/gcal-event-widget.c:369
 #, c-format
-msgid "At %s"
-msgstr "В %s"
+msgid ""
+"\n"
+"\n"
+"On %s"
+msgstr ""
+"\n"
+"\n"
+"На %s"
 
-#: src/gui/gcal-meeting-row.c:67
-msgid "Google Meet"
-msgstr "Google Meet"
-
-#: src/gui/gcal-meeting-row.c:68
-msgid "Jitsi"
-msgstr "Jitsi"
-
-#: src/gui/gcal-meeting-row.c:69
-msgid "Whereby"
-msgstr "Whereby"
+#. Translators: %s is a URL informed as the location of the event
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:374 src/gui/gcal-event-widget.c:386
+#, c-format
+msgid ""
+"\n"
+"\n"
+"At %s"
+msgstr ""
+"\n"
+"\n"
+"В %s"
 
 #: src/gui/gcal-meeting-row.c:70
-msgid "Zoom"
-msgstr "Zoom"
-
-#: src/gui/gcal-meeting-row.c:71
-msgid "Microsoft Teams"
-msgstr "Microsoft Teams"
-
-#: src/gui/gcal-meeting-row.c:81
 msgid "Unknown Service"
 msgstr "Неизвестный сервис"
 
@@ -1466,6 +1469,26 @@ msgstr "_Последующие события"
 #: src/utils/gcal-utils.c:1210
 msgid "_All Events"
 msgstr "_Все события"
+
+#: src/utils/gcal-utils.c:1309
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#: src/utils/gcal-utils.c:1310
+msgid "Jitsi"
+msgstr "Jitsi"
+
+#: src/utils/gcal-utils.c:1311
+msgid "Whereby"
+msgstr "Whereby"
+
+#: src/utils/gcal-utils.c:1312
+msgid "Zoom"
+msgstr "Zoom"
+
+#: src/utils/gcal-utils.c:1313
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
 
 #~ msgid "_Add Calendar…"
 #~ msgstr "_Добавить календарь…"
