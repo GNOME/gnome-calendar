@@ -233,12 +233,19 @@ maybe_add_subscribers_to_timeline (GcalWindow *self)
 
 static void
 update_active_date (GcalWindow *window,
-                    GDateTime  *new_date)
+                    GDateTime  *date)
 {
+  g_autoptr (GDateTime) new_date = NULL;
   g_autofree gchar *new_date_string = NULL;
   GcalWindowView i;
 
   GCAL_ENTRY;
+
+  new_date = g_date_time_new (g_date_time_get_timezone (date),
+                              g_date_time_get_year (date),
+                              g_date_time_get_month (date),
+                              g_date_time_get_day_of_month (date),
+                              0, 0, 0);
 
   new_date_string = g_date_time_format (new_date, "%x %X %z");
   g_debug ("Updating active date to %s", new_date_string);
