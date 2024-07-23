@@ -307,7 +307,7 @@ read_calendar_finished_cb (GObject      *source_object,
   add_events_to_listbox (self, event_components);
 
   self->ical_components = g_ptr_array_ref (event_components);
-  self->ical_timezones = g_ptr_array_ref (timezones);
+  self->ical_timezones = g_steal_pointer (&timezones);
 
   g_signal_emit (self, signals[FILE_LOADED], 0, event_components);
 }
