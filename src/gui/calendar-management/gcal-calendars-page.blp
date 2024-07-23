@@ -10,33 +10,18 @@ template $GcalCalendarsPage: Adw.NavigationPage {
       [top]
       Adw.HeaderBar {}
 
-      content: ScrolledWindow {
-        hexpand: true;
-        hscrollbar-policy: never;
-        max-content-height: 900;
-        propagate-natural-height: true;
+      content: Adw.PreferencesPage {
+        Adw.PreferencesGroup {
+          ListBox listbox {
+            selection-mode: none;
+            row-activated => $on_listbox_row_activated_cb(template) not-swapped;
 
-        child: Adw.Clamp {
-          child: Box {
-            orientation: vertical;
-            spacing: 24;
-            margin-top: 24;
-            margin-bottom: 24;
-            margin-start: 12;
-            margin-end: 12;
-            valign: start;
-
-            ListBox listbox {
-              selection-mode: none;
-              row-activated => $on_listbox_row_activated_cb(template) not-swapped;
-
-              styles [
-                "calendars-list",
-                "boxed-list",
-              ]
-            }
-          };
-        };
+            styles [
+              "calendars-list",
+              "boxed-list",
+            ]
+          }
+        }
       };
 
       [bottom]
