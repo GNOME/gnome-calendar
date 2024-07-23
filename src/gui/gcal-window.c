@@ -116,7 +116,7 @@ struct _GcalWindow
   GtkWidget          *views_switcher;
 
   GcalEventEditorDialog *event_editor;
-  GtkWindow             *import_dialog;
+  GtkWidget             *import_dialog;
 
   /* new event popover widgets */
   GtkWidget          *quick_add_popover;
@@ -830,6 +830,7 @@ gcal_window_dispose (GObject *object)
   gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->date_chooser));
 
   g_clear_pointer (&self->quick_add_popover, gtk_widget_unparent);
+  g_clear_pointer (&self->import_dialog, gtk_widget_unparent);
 
   if (self->delete_event_toast)
     adw_toast_dismiss (self->delete_event_toast);
@@ -1220,11 +1221,10 @@ gcal_window_import_files (GcalWindow  *self,
 {
   g_return_if_fail (GCAL_IS_WINDOW (self));
 
-  g_clear_pointer (&self->import_dialog, gtk_window_destroy);
+  g_clear_pointer (&self->import_dialog, gtk_widget_unparent);
 
-  self->import_dialog = GTK_WINDOW (gcal_import_dialog_new_for_files (self->context, files, n_files));
-  gtk_window_set_transient_for (self->import_dialog, GTK_WINDOW (self));
-  gtk_window_present (self->import_dialog);
+  self->import_dialog = gcal_import_dialog_new_for_files (self->context, files, n_files);
+  adw_dialog_present (ADW_DIALOG (self->import_dialog), GTK_WIDGET (self));
 
   g_object_add_weak_pointer (G_OBJECT (self->import_dialog), (gpointer *)&self->import_dialog);
 }

@@ -39,7 +39,7 @@ typedef struct
 
 struct _GcalImportDialog
 {
-  AdwWindow           parent;
+  AdwDialog           parent;
 
   GtkWidget          *cancel_button;
   AdwComboRow        *calendar_combo_row;
@@ -64,7 +64,7 @@ static void          on_import_row_file_loaded_cb                 (GcalImportFil
                                                                    GPtrArray         *events,
                                                                    GcalImportDialog  *self);
 
-G_DEFINE_TYPE (GcalImportDialog, gcal_import_dialog, ADW_TYPE_WINDOW)
+G_DEFINE_TYPE (GcalImportDialog, gcal_import_dialog, ADW_TYPE_DIALOG)
 
 enum
 {
@@ -185,7 +185,7 @@ on_events_created_cb (GObject      *source_object,
   if (error)
     g_warning ("Error creating events: %s", error->message);
 
-  gtk_window_destroy (GTK_WINDOW (self));
+  adw_dialog_close (ADW_DIALOG (self));
 
   GCAL_EXIT;
 }
@@ -200,13 +200,6 @@ on_calendar_combo_row_selected_item_changed_cb (AdwComboRow      *combo_row,
   self->selected_calendar = adw_combo_row_get_selected_item (combo_row);
 
   GCAL_EXIT;
-}
-
-static void
-on_cancel_button_clicked_cb (GtkButton        *button,
-                             GcalImportDialog *self)
-{
-  gtk_window_destroy (GTK_WINDOW (self));
 }
 
 static void
@@ -397,7 +390,7 @@ on_import_row_file_loaded_cb (GcalImportFileRow *row,
                                         "Import %d events",
                                         self->n_events),
                            self->n_events);
-  gtk_window_set_title (GTK_WINDOW (self), title);
+  adw_dialog_set_title (ADW_DIALOG (self), title);
 
   gtk_widget_set_visible (GTK_WIDGET (row), TRUE);
 
@@ -508,7 +501,6 @@ gcal_import_dialog_class_init (GcalImportDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, title_sizegroup);
 
   gtk_widget_class_bind_template_callback (widget_class, on_calendar_combo_row_selected_item_changed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_cancel_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_import_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_combo_row_signal_factory_bind_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_combo_row_signal_factory_setup_cb);
@@ -529,7 +521,6 @@ gcal_import_dialog_new_for_files (GcalContext  *context,
 
   self =  g_object_new (GCAL_TYPE_IMPORT_DIALOG,
                         "context", context,
-                        "use-header-bar", TRUE,
                         NULL);
 
   setup_files (self, files, n_files);

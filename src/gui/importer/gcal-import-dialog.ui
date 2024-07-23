@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="GcalImportDialog" parent="AdwWindow">
+  <template class="GcalImportDialog" parent="AdwDialog">
     <property name="title" translatable="yes">Import Files…</property>
-    <property name="width-request">360</property>
-    <property name="height-request">294</property>
-    <property name="default-width">550</property>
-    <property name="default-height">500</property>
-    <property name="modal">True</property>
-    <property name="destroy-with-parent">True</property>
-    <property name="content">
+    <property name="content-width">500</property>
+    <property name="content-height">500</property>
+    <child>
       <object class="AdwToolbarView">
         <child type="top">
           <object class="GtkHeaderBar" id="headerbar">
@@ -19,7 +15,7 @@
               <object class="GtkButton" id="cancel_button">
                 <property name="label" translatable="yes">_Cancel</property>
                 <property name="use-underline">True</property>
-                <signal name="clicked" handler="on_cancel_button_clicked_cb" object="GcalImportDialog" swapped="no" />
+                <property name="action-name">sheet.close</property>
               </object>
             </child>
 
@@ -77,7 +73,19 @@
           </object>
         </property>
       </object>
-    </property>
+    </child>
+
+    <!-- Shortcuts -->
+    <child>
+      <object class="GtkShortcutController">
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">Escape</property>
+            <property name="action">action(sheet.close)</property>
+          </object>
+        </child>
+      </object>
+    </child>
   </template>
 
   <object class="GtkSizeGroup" id="title_sizegroup">
