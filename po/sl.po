@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-07-22 22:29+0000\n"
-"PO-Revision-Date: 2024-07-23 12:13+0200\n"
+"POT-Creation-Date: 2024-07-24 15:12+0000\n"
+"PO-Revision-Date: 2024-07-24 19:33+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -185,12 +185,13 @@ msgid "Calendar Settings"
 msgstr "Nastavitve koledarja"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:356
+#. TRANSLATORS: %s is a calendar name.
+#: src/gui/calendar-management/gcal-calendars-page.c:358
 #, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "Koledar <b>%s</b> je odstranjen."
+msgid "Calendar “%s” removed"
+msgstr "Koledar »%s« je odstranjen."
 
-#: src/gui/calendar-management/gcal-calendars-page.c:361
+#: src/gui/calendar-management/gcal-calendars-page.c:363
 #: src/gui/gcal-window.c:737
 msgid "_Undo"
 msgstr "_Razveljavi"
