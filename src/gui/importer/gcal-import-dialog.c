@@ -41,13 +41,13 @@ struct _GcalImportDialog
 {
   AdwDialog           parent;
 
+  GtkBox             *calendars_box;
   GtkWidget          *cancel_button;
   AdwComboRow        *calendar_combo_row;
   AdwPreferencesGroup *files_group;
   AdwHeaderBar       *headerbar;
   GtkWidget          *import_button;
   GtkWidget          *placeholder_spinner;
-  AdwPreferencesPage *preferences_page;
   GtkSizeGroup       *title_sizegroup;
   AdwToastOverlay    *toast_overlay;
 
@@ -151,7 +151,7 @@ add_file (GcalImportDialog *self,
       adw_preferences_group_set_title (group, basename);
     }
 
-  adw_preferences_page_add (self->preferences_page, group);
+  gtk_box_append (self->calendars_box, GTK_WIDGET (group));
   self->rows = g_list_prepend (self->rows, row);
 
   gtk_widget_set_visible (self->placeholder_spinner, FALSE);
@@ -170,7 +170,7 @@ setup_files (GcalImportDialog  *self,
 
   self->n_files = n_files;
   for (i = 0; i < n_files; i++)
-    add_file(self, files[i], n_files > 1);
+    add_file (self, files[i], n_files > 1);
 
   GCAL_EXIT;
 }
@@ -529,7 +529,7 @@ gcal_import_dialog_class_init (GcalImportDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, headerbar);
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, import_button);
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, placeholder_spinner);
-  gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, preferences_page);
+  gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, calendars_box);
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, title_sizegroup);
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, toast_overlay);
 

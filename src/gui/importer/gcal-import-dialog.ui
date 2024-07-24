@@ -2,8 +2,8 @@
 <interface>
   <template class="GcalImportDialog" parent="AdwDialog">
     <property name="title" translatable="yes">Import Files…</property>
-    <property name="content-width">500</property>
-    <property name="content-height">500</property>
+    <property name="height-request">294</property>
+    <property name="follows-content-size">True</property>
     <child>
       <object class="AdwToastOverlay" id="toast_overlay">
         <child>
@@ -36,39 +36,59 @@
               </object>
             </child>
             <property name="content">
-              <object class="AdwPreferencesPage" id="preferences_page">
+              <object class="GtkScrolledWindow">
+                <property name="propagate-natural-height">True</property>
+                <property name="propagate-natural-width">True</property>
 
-                <!-- Calendar -->
                 <child>
-                  <object class="AdwPreferencesGroup">
+                  <object class="AdwClamp">
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">24</property>
+                    <property name="margin-start">12</property>
+                    <property name="margin-end">12</property>
+
                     <child>
-                      <object class="AdwComboRow" id="calendar_combo_row">
-                        <property name="activatable">True</property>
-                        <property name="title" translatable="yes">C_alendar</property>
-                        <property name="use-underline">True</property>
-                        <property name="factory">
-                          <object class="GtkSignalListItemFactory">
-                            <signal name="bind" handler="on_combo_row_signal_factory_bind_cb" object="GcalImportDialog" swapped="no" />
-                            <signal name="setup" handler="on_combo_row_signal_factory_setup_cb" object="GcalImportDialog" swapped="no" />
+                      <object class="GtkBox" id="calendars_box">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">18</property>
+
+                        <!-- Calendar -->
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <child>
+                              <object class="AdwComboRow" id="calendar_combo_row">
+                                <property name="activatable">True</property>
+                                <property name="title" translatable="yes">C_alendar</property>
+                                <property name="use-underline">True</property>
+                                <property name="factory">
+                                  <object class="GtkSignalListItemFactory">
+                                    <signal name="bind" handler="on_combo_row_signal_factory_bind_cb" object="GcalImportDialog" swapped="no" />
+                                    <signal name="setup" handler="on_combo_row_signal_factory_setup_cb" object="GcalImportDialog" swapped="no" />
+                                  </object>
+                                </property>
+                                <signal name="notify::selected-item" handler="on_calendar_combo_row_selected_item_changed_cb" object="GcalImportDialog" swapped="no" />
+                              </object>
+                            </child>
                           </object>
-                        </property>
-                        <signal name="notify::selected-item" handler="on_calendar_combo_row_selected_item_changed_cb" object="GcalImportDialog" swapped="no" />
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                        </child>
 
 
-                <!-- Files overview -->
-                <child>
-                  <object class="AdwPreferencesGroup" id="files_group">
-                    <child>
-                      <object class="GtkSpinner" id="placeholder_spinner">
-                        <property name="halign">center</property>
-                        <property name="valign">center</property>
-                        <property name="spinning">True</property>
+                        <!-- Files overview -->
+                        <child>
+                          <object class="AdwPreferencesGroup" id="files_group">
+                            <child>
+                              <object class="GtkSpinner" id="placeholder_spinner">
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="spinning">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
                       </object>
                     </child>
+
                   </object>
                 </child>
 
