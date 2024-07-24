@@ -353,7 +353,9 @@ gcal_calendars_page_activate (GcalCalendarManagementPage *page,
   remove_calendar (self, calendar);
 
   /* Create the new toast */
-  new_string = g_markup_printf_escaped (_("Calendar <b>%s</b> removed"),
+
+  /* TRANSLATORS: %s is a calendar name. */
+  new_string = g_markup_printf_escaped (_("Calendar “%s” removed"),
                                         gcal_calendar_get_name (calendar));
 
   toast = adw_toast_new (new_string);
