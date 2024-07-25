@@ -1,3 +1,11 @@
+Major changes in 47.alpha:
+* Use modern Adwaita widgets in various places
+* Improved event editor dialog
+* Improved visuals for mini-calendar in the sidebar
+* Fix various with event alarms
+* Many visual improvements to the event preview popover
+* Updated translations
+
 Major changes in 46.1:
 * Cleanup shortcut handling of some dialogs
 * Updated translations
