@@ -51,11 +51,15 @@ static GParamSpec *properties [N_PROPS];
  */
 
 static GtkWidget*
-make_calendar_row (GcalCalendar *calendar)
+create_row_func (gpointer data,
+                 gpointer user_data)
 {
   g_autoptr (GdkPaintable) paintable = NULL;
+  GcalCalendar *calendar;
   GtkWidget *label, *icon, *checkbox, *box, *row;
   const GdkRGBA *color;
+
+  calendar = GCAL_CALENDAR (data);
 
   row = g_object_new (GTK_TYPE_LIST_BOX_ROW,
                       "css-name", "modelbutton",
@@ -97,37 +101,6 @@ make_calendar_row (GcalCalendar *calendar)
   return row;
 }
 
-static void
-add_calendar (GcalCalendarButton *self,
-              GcalCalendar        *calendar)
-{
-  GtkWidget *row;
-
-  row = make_calendar_row (calendar);
-  gtk_list_box_append (GTK_LIST_BOX (self->calendar_listbox), row);
-}
-
-static void
-remove_calendar (GcalCalendarButton *self,
-                 GcalCalendar        *calendar)
-{
-  GtkWidget *child;
-
-  for (child = gtk_widget_get_first_child (self->calendar_listbox);
-       child;
-       child = gtk_widget_get_next_sibling (child))
-    {
-      GcalCalendar *row_calendar = g_object_get_data (G_OBJECT (child), "calendar");
-
-      if (row_calendar && row_calendar == calendar)
-        {
-          gtk_list_box_remove (GTK_LIST_BOX (self->calendar_listbox), child);
-          break;
-        }
-    }
-}
-
-
 /*
  * Callbacks
  */
@@ -149,31 +122,6 @@ listbox_sort_func (GtkListBoxRow *row1,
     return result;
 
   return g_ascii_strcasecmp (gcal_calendar_get_id (calendar1), gcal_calendar_get_id (calendar2));
-}
-
-static void
-on_manager_calendar_added_cb (GcalManager         *manager,
-                              GcalCalendar        *calendar,
-                              GcalCalendarButton *self)
-{
-  add_calendar (self, calendar);
-}
-
-static void
-on_manager_calendar_changed_cb (GcalManager         *manager,
-                                GcalCalendar        *calendar,
-                                GcalCalendarButton *self)
-{
-  remove_calendar (self, calendar);
-  add_calendar (self, calendar);
-}
-
-static void
-on_manager_calendar_removed_cb (GcalManager         *manager,
-                                GcalCalendar        *calendar,
-                                GcalCalendarButton *self)
-{
-  remove_calendar (self, calendar);
 }
 
 static void
@@ -232,30 +180,17 @@ gcal_calendar_button_set_property (GObject      *object,
     {
     case PROP_CONTEXT:
       {
-        g_autoptr (GList) calendars = NULL;
         GcalManager *manager;
-        GList *l;
 
         g_assert (self->context == NULL);
         self->context = g_value_dup_object (value);
 
         manager = gcal_context_get_manager (self->context);
-        calendars = gcal_manager_get_calendars (manager);
-
-        for (l = calendars; l; l = l->next)
-          add_calendar (self, l->data);
-
-        /*
-        g_object_bind_property (manager,
-                                "synchronizing",
-                                self->synchronize_button,
-                                "sensitive",
-                                G_BINDING_INVERT_BOOLEAN | G_BINDING_SYNC_CREATE);
-         */
-
-        g_signal_connect_object (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), object, 0);
-        g_signal_connect_object (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), object, 0);
-        g_signal_connect_object (manager, "calendar-changed", G_CALLBACK (on_manager_calendar_changed_cb), object, 0);
+        gtk_list_box_bind_model (GTK_LIST_BOX (self->calendar_listbox),
+                                 gcal_manager_get_calendars_model (manager),
+                                 create_row_func,
+                                 NULL,
+                                 NULL);
       }
       break;
 
