@@ -44,7 +44,7 @@ struct _GcalImportDialog
   GtkWidget          *cancel_button;
   AdwComboRow        *calendar_combo_row;
   AdwPreferencesGroup *files_group;
-  GtkHeaderBar       *headerbar;
+  AdwHeaderBar       *headerbar;
   GtkWidget          *import_button;
   GtkWidget          *placeholder_spinner;
   AdwPreferencesPage *preferences_page;

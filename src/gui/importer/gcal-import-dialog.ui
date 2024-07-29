@@ -7,8 +7,9 @@
     <child>
       <object class="AdwToolbarView">
         <child type="top">
-          <object class="GtkHeaderBar" id="headerbar">
-            <property name="show-title-buttons">False</property>
+          <object class="AdwHeaderBar" id="headerbar">
+            <property name="show-end-title-buttons">False</property>
+            <property name="show-start-title-buttons">False</property>
 
             <!-- Cancel button -->
             <child type="start">
@@ -93,3 +94,4 @@
   </object>
 
 </interface>
+
