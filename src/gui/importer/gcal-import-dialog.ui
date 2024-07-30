@@ -5,74 +5,77 @@
     <property name="content-width">500</property>
     <property name="content-height">500</property>
     <child>
-      <object class="AdwToolbarView">
-        <child type="top">
-          <object class="AdwHeaderBar" id="headerbar">
-            <property name="show-end-title-buttons">False</property>
-            <property name="show-start-title-buttons">False</property>
+      <object class="AdwToastOverlay" id="toast_overlay">
+        <child>
+          <object class="AdwToolbarView">
+            <child type="top">
+              <object class="AdwHeaderBar" id="headerbar">
+                <property name="show-end-title-buttons">False</property>
+                <property name="show-start-title-buttons">False</property>
 
-            <!-- Cancel button -->
-            <child type="start">
-              <object class="GtkButton" id="cancel_button">
-                <property name="label" translatable="yes">_Cancel</property>
-                <property name="use-underline">True</property>
-                <property name="action-name">sheet.close</property>
+                <!-- Cancel button -->
+                <child type="start">
+                  <object class="GtkButton" id="cancel_button">
+                    <property name="label" translatable="yes">_Cancel</property>
+                    <property name="use-underline">True</property>
+                    <property name="action-name">sheet.close</property>
+                  </object>
+                </child>
+
+                <!-- Import button -->
+                <child type="end">
+                  <object class="GtkButton" id="import_button">
+                    <property name="label" translatable="yes">_Import</property>
+                    <property name="use-underline">True</property>
+                    <signal name="clicked" handler="on_import_button_clicked_cb" object="GcalImportDialog" swapped="no" />
+                    <style>
+                      <class name="suggested-action" />
+                    </style>
+                  </object>
+                </child>
               </object>
             </child>
+            <property name="content">
+              <object class="AdwPreferencesPage" id="preferences_page">
 
-            <!-- Import button -->
-            <child type="end">
-              <object class="GtkButton" id="import_button">
-                <property name="label" translatable="yes">_Import</property>
-                <property name="use-underline">True</property>
-                <signal name="clicked" handler="on_import_button_clicked_cb" object="GcalImportDialog" swapped="no" />
-                <style>
-                  <class name="suggested-action" />
-                </style>
+                <!-- Calendar -->
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <child>
+                      <object class="AdwComboRow" id="calendar_combo_row">
+                        <property name="activatable">True</property>
+                        <property name="title" translatable="yes">C_alendar</property>
+                        <property name="use-underline">True</property>
+                        <property name="factory">
+                          <object class="GtkSignalListItemFactory">
+                            <signal name="bind" handler="on_combo_row_signal_factory_bind_cb" object="GcalImportDialog" swapped="no" />
+                            <signal name="setup" handler="on_combo_row_signal_factory_setup_cb" object="GcalImportDialog" swapped="no" />
+                          </object>
+                        </property>
+                        <signal name="notify::selected-item" handler="on_calendar_combo_row_selected_item_changed_cb" object="GcalImportDialog" swapped="no" />
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+
+                <!-- Files overview -->
+                <child>
+                  <object class="AdwPreferencesGroup" id="files_group">
+                    <child>
+                      <object class="GtkSpinner" id="placeholder_spinner">
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="spinning">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
               </object>
-            </child>
-
+            </property>
           </object>
         </child>
-        <property name="content">
-          <object class="AdwPreferencesPage" id="preferences_page">
-
-            <!-- Calendar -->
-            <child>
-              <object class="AdwPreferencesGroup">
-                <child>
-                  <object class="AdwComboRow" id="calendar_combo_row">
-                    <property name="activatable">True</property>
-                    <property name="title" translatable="yes">C_alendar</property>
-                    <property name="use-underline">True</property>
-                    <property name="factory">
-                      <object class="GtkSignalListItemFactory">
-                        <signal name="bind" handler="on_combo_row_signal_factory_bind_cb" object="GcalImportDialog" swapped="no" />
-                        <signal name="setup" handler="on_combo_row_signal_factory_setup_cb" object="GcalImportDialog" swapped="no" />
-                      </object>
-                    </property>
-                    <signal name="notify::selected-item" handler="on_calendar_combo_row_selected_item_changed_cb" object="GcalImportDialog" swapped="no" />
-                  </object>
-                </child>
-              </object>
-            </child>
-
-
-            <!-- Files overview -->
-            <child>
-              <object class="AdwPreferencesGroup" id="files_group">
-                <child>
-                  <object class="GtkSpinner" id="placeholder_spinner">
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="spinning">True</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-
-          </object>
-        </property>
       </object>
     </child>
 

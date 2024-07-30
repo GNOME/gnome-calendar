@@ -23,6 +23,7 @@
 #include <adwaita.h>
 
 #include "gcal-context.h"
+#include "gcal-import-file-row.h"
 
 G_BEGIN_DECLS
 
@@ -32,5 +33,11 @@ G_DECLARE_FINAL_TYPE (GcalImportDialog, gcal_import_dialog, GCAL, IMPORT_DIALOG,
 GtkWidget*           gcal_import_dialog_new_for_files            (GcalContext        *context,
                                                                   GFile             **files,
                                                                   gint                n_files);
+
+GtkWidget*           gcal_import_dialog_new_for_file_list        (GcalContext        *context,
+                                                                  GList              *file_list);
+
+void                 gcal_import_dialog_add_toast                (GcalImportDialog   *self,
+                                                                  AdwToast           *toast);
 
 G_END_DECLS

@@ -49,6 +49,7 @@ struct _GcalImportDialog
   GtkWidget          *placeholder_spinner;
   AdwPreferencesPage *preferences_page;
   GtkSizeGroup       *title_sizegroup;
+  AdwToastOverlay    *toast_overlay;
 
   GList              *rows;
   GcalCalendar       *selected_calendar;
@@ -128,6 +129,37 @@ setup_calendars (GcalImportDialog *self)
 }
 
 static void
+add_file (GcalImportDialog *self,
+          GFile            *file,
+          gboolean          multiple_files)
+{
+  AdwPreferencesGroup *group;
+  GtkWidget *row;
+  g_autofree gchar *basename = NULL;
+
+  GCAL_ENTRY;
+
+  row = gcal_import_file_row_new (self->context, file, self->title_sizegroup);
+  g_signal_connect (row, "file-loaded", G_CALLBACK (on_import_row_file_loaded_cb), self);
+
+  group = ADW_PREFERENCES_GROUP (adw_preferences_group_new ());
+  adw_preferences_group_add (group, row);
+
+  if (multiple_files)
+    {
+      basename = g_file_get_basename (file);
+      adw_preferences_group_set_title (group, basename);
+    }
+
+  adw_preferences_page_add (self->preferences_page, group);
+  self->rows = g_list_prepend (self->rows, row);
+
+  gtk_widget_set_visible (self->placeholder_spinner, FALSE);
+
+  GCAL_EXIT;
+}
+
+static void
 setup_files (GcalImportDialog  *self,
              GFile            **files,
              gint               n_files)
@@ -137,29 +169,29 @@ setup_files (GcalImportDialog  *self,
   GCAL_ENTRY;
 
   self->n_files = n_files;
-
   for (i = 0; i < n_files; i++)
+    add_file(self, files[i], n_files > 1);
+
+  GCAL_EXIT;
+}
+
+static void
+setup_files_list (GcalImportDialog *self,
+                  GList            *list)
+{
+  gint n_files = 0;
+  gboolean has_multiple = list->next != NULL;
+
+  GCAL_ENTRY;
+
+  has_multiple = list->next != NULL;
+  for (GList *iter = list; iter != NULL; iter = iter->next)
     {
-      AdwPreferencesGroup *group;
-      GtkWidget *row;
-
-      row = gcal_import_file_row_new (self->context, files[i], self->title_sizegroup);
-      g_signal_connect (row, "file-loaded", G_CALLBACK (on_import_row_file_loaded_cb), self);
-
-      group = ADW_PREFERENCES_GROUP (adw_preferences_group_new ());
-      adw_preferences_group_add (group, row);
-
-      if (n_files > 1)
-        {
-          g_autofree gchar *basename = g_file_get_basename (files[i]);
-          adw_preferences_group_set_title (group, basename);
-        }
-
-      adw_preferences_page_add (self->preferences_page, group);
-      self->rows = g_list_prepend (self->rows, row);
-
-      gtk_widget_set_visible (self->placeholder_spinner, FALSE);
+      n_files++;
+      add_file (self, G_FILE (iter->data), has_multiple);
     }
+
+  self->n_files = n_files;
 
   GCAL_EXIT;
 }
@@ -499,6 +531,7 @@ gcal_import_dialog_class_init (GcalImportDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, placeholder_spinner);
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, preferences_page);
   gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, title_sizegroup);
+  gtk_widget_class_bind_template_child (widget_class, GcalImportDialog, toast_overlay);
 
   gtk_widget_class_bind_template_callback (widget_class, on_calendar_combo_row_selected_item_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_import_button_clicked_cb);
@@ -526,4 +559,29 @@ gcal_import_dialog_new_for_files (GcalContext  *context,
   setup_files (self, files, n_files);
 
   return GTK_WIDGET (self);
+}
+
+GtkWidget*
+gcal_import_dialog_new_for_file_list (GcalContext *context,
+                                      GList       *file_list)
+{
+  GcalImportDialog *self;
+
+  self =  g_object_new (GCAL_TYPE_IMPORT_DIALOG,
+                        "context", context,
+                        NULL);
+
+  setup_files_list (self, file_list);
+
+  return GTK_WIDGET (self);
+}
+
+void
+gcal_import_dialog_add_toast (GcalImportDialog *self,
+                              AdwToast         *toast)
+{
+  g_return_if_fail (GCAL_IS_IMPORT_DIALOG (self));
+  g_return_if_fail (ADW_IS_TOAST (toast));
+
+  adw_toast_overlay_add_toast (self->toast_overlay, toast);
 }
