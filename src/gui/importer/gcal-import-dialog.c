@@ -98,13 +98,13 @@ import_data_free (gpointer data)
 static void
 update_default_calendar (GcalImportDialog *self)
 {
+  g_autoptr (GListModel) calendars = NULL;
   GcalCalendar *default_calendar;
   GcalManager *manager;
-  GListModel *calendars;
   guint position;
 
   manager = gcal_context_get_manager (self->context);
-  calendars = gcal_manager_get_calendars_model (manager);
+  calendars = gcal_create_writable_calendars_model (manager);
   default_calendar = gcal_manager_get_default_calendar (manager);
 
   if (default_calendar && g_list_store_find (G_LIST_STORE (calendars), default_calendar, &position))
@@ -114,15 +114,17 @@ update_default_calendar (GcalImportDialog *self)
 static void
 setup_calendars (GcalImportDialog *self)
 {
+  g_autoptr (GListModel) calendars = NULL;
   GcalManager *manager;
 
   g_assert (self->context != NULL);
 
   manager = gcal_context_get_manager (self->context);
+  calendars = gcal_create_writable_calendars_model (manager);
 
   // TODO: sort model
 
-  adw_combo_row_set_model (self->calendar_combo_row, gcal_manager_get_calendars_model (manager));
+  adw_combo_row_set_model (self->calendar_combo_row, calendars);
   update_default_calendar (self);
 
   g_signal_connect_object (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar), self, G_CONNECT_SWAPPED);
