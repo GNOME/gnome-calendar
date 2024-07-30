@@ -210,13 +210,13 @@ create_row_func (gpointer data,
 static void
 setup_context (GcalEventEditorDialog *self)
 {
+  g_autoptr (GListModel) calendars = NULL;
   GcalManager *manager;
-  GListModel *calendars;
 
   GCAL_ENTRY;
 
   manager = gcal_context_get_manager (self->context);
-  calendars = gcal_manager_get_calendars_model (manager);
+  calendars = gcal_create_writable_calendars_model (manager);
 
   gtk_list_box_bind_model (self->calendars_listbox, calendars, create_row_func, self, NULL);
 
