@@ -25,6 +25,7 @@
 #include "config.h"
 #include "gcal-date-chooser.h"
 #include "gcal-debug.h"
+#include "gcal-drop-overlay.h"
 #include "gcal-event-editor-dialog.h"
 #include "gcal-event-widget.h"
 #include "gcal-context.h"
@@ -89,6 +90,12 @@ typedef struct
   GcalWindow         *window;
   gchar              *uuid;
 } OpenEditDialogData;
+
+typedef struct
+{
+  GList              *ics_files;
+  GList              *invalid_files;
+} FileFilterResult;
 
 struct _GcalWindow
 {
@@ -158,6 +165,11 @@ struct _GcalWindow
 
   /* Window states */
   gboolean            in_key_press;
+
+  /* File drop */
+  GcalDropOverlay    *drop_overlay;
+  AdwStatusPage      *drop_status_page;
+  GtkDropTarget      *drop_target;
 };
 
 enum
@@ -338,6 +350,86 @@ content_title (GcalWindow     *self,
     return g_strdup (_("Week"));
   else
     return g_strdup (_("Month"));
+}
+
+static inline void
+free_file_filter_result (FileFilterResult *self)
+{
+  g_list_free_full (self->ics_files, g_object_unref);
+  g_list_free_full (self->invalid_files, g_object_unref);
+}
+
+static inline gboolean
+is_ics_file (GFile *file)
+{
+  g_autoptr (GFileInfo) file_info = NULL;
+  g_autoptr (GError) error = NULL;
+
+  file_info = g_file_query_info (file,
+                                 G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                 G_FILE_QUERY_INFO_NONE,
+                                 NULL,
+                                 &error);
+
+  if (error)
+    return FALSE;
+
+  return g_strcmp0 (g_file_info_get_content_type (file_info), "text/calendar") == 0;
+}
+
+static inline void
+free_file_slist_full (GSList *files)
+{
+  g_slist_free_full (files, g_object_unref);
+}
+
+static void
+filter_ics_files_thread (GTask        *task,
+                         gpointer      source_object,
+                         gpointer      task_data,
+                         GCancellable *cancellable)
+{
+  FileFilterResult *result;
+  GSList *files;
+
+  files = task_data;
+  result = g_new0 (FileFilterResult, 1);
+
+  for (GSList *iter = files; iter != NULL; iter = iter->next)
+    {
+      GFile *file = G_FILE (iter->data);
+
+      if (is_ics_file (file))
+        result->ics_files = g_list_prepend (result->ics_files, g_object_ref (file));
+      else
+        result->invalid_files = g_list_prepend (result->invalid_files, g_object_ref (file));
+    }
+
+  g_task_return_pointer (task, result, NULL);
+}
+
+static FileFilterResult*
+filter_ics_files_finish (GAsyncResult  *result,
+                         GError       **error)
+{
+  g_return_val_if_fail (g_task_is_valid (result, NULL), NULL);
+  return g_task_propagate_pointer (G_TASK (result), error);
+}
+
+static void
+filter_ics_files (GcalWindow          *self,
+                  GSList              *files,
+                  GAsyncReadyCallback  callback)
+{
+  g_autoslist (GFile) files_copy = NULL;
+  g_autoptr (GTask) task = NULL;
+
+  files_copy = g_slist_copy_deep (files, (GCopyFunc) g_object_ref, NULL);
+
+  task = g_task_new (NULL, NULL, callback, self);
+  g_task_set_task_data (task, g_steal_pointer (&files_copy), (GDestroyNotify) free_file_slist_full);
+  g_task_set_source_tag (task, filter_ics_files);
+  g_task_run_in_thread (task, filter_ics_files_thread);
 }
 
 /*
@@ -764,6 +856,99 @@ on_event_editor_dialog_remove_event_cb (GcalEventEditorDialog *edit_dialog,
 }
 
 static gboolean
+on_drop_target_accept_cb (GtkDropTarget *target,
+                          GdkDrop       *drop,
+                          gpointer       user_data)
+{
+  GdkDrag *drag;
+  GdkContentFormats *formats;
+
+  drag = gdk_drop_get_drag (drop);
+  formats = gdk_drop_get_formats (drop);
+
+  // If drag is NULL, it means we are not receiving the from an external application/window,
+  // but from internal sources, i.e, dragging events
+  gboolean is_external = drag == NULL;
+  return is_external && gdk_content_formats_contain_gtype (formats, GDK_TYPE_FILE_LIST);
+}
+
+static void
+on_ics_files_filtered_cb (GObject      *source_object,
+                          GAsyncResult *result,
+                          gpointer      data)
+{
+  g_autoptr (GError) error = NULL;
+  g_autofree gchar* toast_title = NULL;
+  AdwToast *error_toast = NULL;
+  GcalWindow *self;
+  FileFilterResult *filter_result;
+
+  GCAL_ENTRY;
+
+  self = GCAL_WINDOW (data);
+  filter_result = filter_ics_files_finish (result, &error);
+
+  if (error)
+    return;
+
+  // Creates an error toast if it's needed
+  if (filter_result->invalid_files)
+    {
+      if (filter_result->invalid_files->next)
+        {
+          toast_title = g_strdup(_("Could not import some files: Not ICS files"));
+        }
+      else
+        {
+          g_autofree gchar *basename = g_file_get_basename (filter_result->invalid_files->data);
+          toast_title = g_strdup_printf (_("Could not import “%s”: Not an ICS file"), basename);
+        }
+      error_toast = adw_toast_new (toast_title);
+    }
+
+  if (filter_result->ics_files)
+    {
+      g_clear_pointer (&self->import_dialog, gtk_widget_unparent);
+
+      self->import_dialog = gcal_import_dialog_new_for_file_list (self->context, filter_result->ics_files);
+      adw_dialog_present (ADW_DIALOG (self->import_dialog), GTK_WIDGET (self));
+
+      g_object_add_weak_pointer (G_OBJECT (self->import_dialog), (gpointer *)&self->import_dialog);
+
+      if (error_toast)
+        gcal_import_dialog_add_toast (GCAL_IMPORT_DIALOG (self->import_dialog), error_toast);
+    }
+  else
+    {
+      adw_toast_overlay_add_toast (self->overlay, error_toast);
+    }
+
+  g_clear_pointer (&filter_result, free_file_filter_result);
+  GCAL_EXIT;
+}
+
+static gboolean
+on_drop_target_drop_cb (GtkDropTarget *target,
+                        const GValue  *value,
+                        gdouble        x,
+                        gdouble        y,
+                        gpointer       user_data)
+{
+  g_autoptr (GSList) files = NULL;
+  GdkFileList *file_list;
+  GcalWindow *self;
+
+  GCAL_ENTRY;
+
+  self = GCAL_WINDOW (user_data);
+  file_list = g_value_get_boxed (value);
+  files = gdk_file_list_get_files (file_list);
+  filter_ics_files (self, files, on_ics_files_filtered_cb);
+
+  GCAL_RETURN (TRUE);
+}
+
+static gboolean
 schedule_open_edit_dialog_by_uuid (OpenEditDialogData *edit_dialog_data)
 {
   GcalWindow *window;
@@ -1023,6 +1208,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   g_type_ensure (GCAL_TYPE_TOOLBAR_END);
   g_type_ensure (GCAL_TYPE_WEATHER_SETTINGS);
   g_type_ensure (GCAL_TYPE_WEEK_VIEW);
+  g_type_ensure (GCAL_TYPE_DROP_OVERLAY);
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = gcal_window_finalize;
@@ -1085,6 +1271,8 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, weather_settings);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, week_view);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, drop_overlay);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, drop_target);
 
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
 
@@ -1099,6 +1287,10 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   /* Edit dialog related */
   gtk_widget_class_bind_template_callback (widget_class, on_event_editor_dialog_remove_event_cb);
+
+  /* Drop Target related */
+  gtk_widget_class_bind_template_callback (widget_class, on_drop_target_accept_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_drop_target_drop_cb);
 }
 
 static void
@@ -1135,6 +1327,12 @@ gcal_window_init (GcalWindow *self)
     gtk_widget_add_css_class (GTK_WIDGET (self), "devel");
 
   gtk_widget_set_parent (self->quick_add_popover, GTK_WIDGET (self));
+
+  GType drop_types[] = { GDK_TYPE_FILE_LIST };
+  gtk_drop_target_set_gtypes (self->drop_target, drop_types,
+                              G_N_ELEMENTS(drop_types));
+
+  gcal_drop_overlay_set_drop_target(self->drop_overlay, self->drop_target);
 }
 
 /**

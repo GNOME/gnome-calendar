@@ -483,3 +483,24 @@ menubutton stack > box {
 syncindicator {
   padding: 6px;
 }
+
+/*
+ * Styles for the drop overlay.
+ * From Amberol https://gitlab.gnome.org/World/amberol/-/blob/0dd6250ffd294b14532c428dcb76ae42086a5923/src/gtk/style.css
+ */
+
+/* Removes the default style */
+.drop-target:drop(active) {
+  box-shadow: none;
+}
+
+/* Custom style for the drop overlay area */
+.drop-overlay-area {
+  padding: 32px;
+  color: var(--accent-fg-color);
+  background-color: alpha(var(--accent-bg-color), 0.5);
+}
+
+.blurred {
+  filter: blur(6px);
+}
