@@ -141,4 +141,6 @@ const gchar*         gcal_get_service_name_from_url              (const gchar   
 
 SoupSession *        gcal_create_soup_session                    (void);
 
+GListModel *         gcal_create_writable_calendars_model        (GcalManager        *manager);
+
 #endif /* __GCAL_UTILS_H__ */

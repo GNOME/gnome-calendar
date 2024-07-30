@@ -1356,3 +1356,29 @@ gcal_create_soup_session (void)
 
   return g_steal_pointer (&session);
 }
+
+/**
+ * gcal_create_writable_calendars_model:
+ * @manager: a #GcalManager
+ *
+ * Retrieves a model with all available read-write #GcalCalendar.
+ * This is useful for binding to combo rows.
+ *
+ * Returns: (transfer full): a #GListModel with all available read-write #GcalCalendar
+ */
+GListModel*
+gcal_create_writable_calendars_model (GcalManager *manager)
+{
+  GtkBoolFilter *bool_filter;
+  GtkExpression *expression;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+
+  expression = gtk_property_expression_new (GCAL_TYPE_CALENDAR, NULL, "read-only");
+
+  bool_filter = gtk_bool_filter_new (expression);
+  gtk_bool_filter_set_invert (bool_filter, TRUE);
+
+  return G_LIST_MODEL (gtk_filter_list_model_new (G_LIST_MODEL (gcal_manager_get_calendars_model (manager)),
+                                                  GTK_FILTER (bool_filter)));
+}
