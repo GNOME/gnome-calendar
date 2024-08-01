@@ -20,6 +20,7 @@
 #define G_LOG_DOMAIN "GcalEventEditorDialog"
 
 #include "gcal-alarm-row.h"
+#include "gcal-calendar-row.h"
 #include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-event-editor-dialog.h"
@@ -199,55 +200,11 @@ apply_event_properties_to_template_event (GcalEvent *template_event,
     }
 }
 
-static gboolean
-paintable_from_gdk_rgb (GBinding     *binding,
-                        const GValue *from_value,
-                        GValue       *to_value,
-                        gpointer      user_data)
-{
-  GdkRGBA *rgba = g_value_get_boxed (from_value);
-  g_value_take_object (to_value, get_circle_paintable_from_color (rgba, 16));
-  return TRUE;
-}
-
 static GtkWidget *
 create_row_func (gpointer data,
                  gpointer user_data)
 {
-  GcalCalendar *calendar = (GcalCalendar *) data;
-  GtkWidget *label;
-  GtkWidget *icon;
-  GtkWidget *row;
-  GtkWidget *box;
-
-  g_assert (GCAL_IS_CALENDAR (calendar));
-
-  row = gtk_list_box_row_new ();
-
-  gtk_actionable_set_action_name (GTK_ACTIONABLE (row), "event-editor-dialog.select-calendar");
-  if (!gcal_calendar_is_read_only (calendar))
-    gtk_actionable_set_action_target (GTK_ACTIONABLE (row), "s", gcal_calendar_get_id (calendar));
-
-  box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-  gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), box);
-
-  icon = gtk_image_new ();
-  gtk_widget_add_css_class (icon, "calendar-color-image");
-  g_object_bind_property_full (data, "color",
-                               icon, "paintable",
-                               G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE,
-                               paintable_from_gdk_rgb,
-                               NULL,
-                               NULL,
-                               NULL);
-  gtk_box_append (GTK_BOX (box), icon);
-
-  label = gtk_label_new (NULL);
-  gtk_label_set_xalign (GTK_LABEL (label), 0.0);
-  g_object_bind_property (data, "name", label, "label", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  gtk_box_append (GTK_BOX (box), label);
-
-  return row;
+  return gcal_calendar_row_new ((GcalCalendar *) data);
 }
 
 static void
