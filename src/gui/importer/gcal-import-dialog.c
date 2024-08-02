@@ -321,12 +321,17 @@ on_combo_row_signal_factory_bind_cb (GtkSignalListItemFactory *factory,
   /* Show indicator icons for calendars that are not shown in the views */
   if (!gcal_calendar_get_visible (calendar))
     {
+      g_autofree gchar *accessible_description = NULL;
       g_autoptr (GIcon) visibility_icon = NULL;
       GtkWidget *visibility_status_icon_widget;
 
       visibility_icon = g_themed_icon_new ("eye-not-looking-symbolic");
       visibility_status_icon_widget = g_object_get_data (G_OBJECT (grid), "visibility_status_icon");
       gtk_image_set_from_gicon (GTK_IMAGE (visibility_status_icon_widget), visibility_icon);
+
+      accessible_description = g_strdup (_("This calendar is hidden"));
+      gtk_accessible_update_property (GTK_ACCESSIBLE (visibility_status_icon_widget),
+                                      GTK_ACCESSIBLE_PROPERTY_DESCRIPTION, accessible_description, -1);
     }
 
   label = g_object_get_data (G_OBJECT (grid), "title");
