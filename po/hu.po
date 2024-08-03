@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-05-21 14:26+0000\n"
-"PO-Revision-Date: 2024-06-28 15:23+0200\n"
+"POT-Creation-Date: 2024-07-24 15:12+0000\n"
+"PO-Revision-Date: 2024-08-03 16:10+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <openscope at fsf dot hu>\n"
 "Language: hu\n"
@@ -146,7 +146,7 @@ msgstr "A GNOME projekt"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:395
+#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:422
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s – %2$s"
@@ -184,13 +184,15 @@ msgid "Calendar Settings"
 msgstr "Naptárbeállítások"
 
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:356
+#. TRANSLATORS: %s is a calendar name.
+#: src/gui/calendar-management/gcal-calendars-page.c:358
 #, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "A(z) <b>%s</b> naptár eltávolítva"
+#| msgid "Calendar <b>%s</b> removed"
+msgid "Calendar “%s” removed"
+msgstr "A(z) „%s” naptár eltávolítva"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:361
-#: src/gui/gcal-window.c:738
+#: src/gui/calendar-management/gcal-calendars-page.c:363
+#: src/gui/gcal-window.c:737
 msgid "_Undo"
 msgstr "_Visszavonás"
 
@@ -200,21 +202,18 @@ msgid "Calendars"
 msgstr "Naptárak"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:67
-#| msgid "Add Calendar"
-#| msgid_plural "Add %1$u Calendars"
 msgid "_Add Calendar"
 msgstr "Naptár _hozzáadása"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:190
-#| msgid "Calendar"
 msgid "Calendar URL"
 msgstr "Naptár URL"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:208
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
 #: src/gui/event-editor/gcal-summary-section.ui:24
-#: src/gui/gcal-event-popover.ui:115
-#: src/gui/importer/gcal-import-file-row.c:151
+#: src/gui/gcal-event-popover.ui:165
+#: src/gui/importer/gcal-import-file-row.c:177
 msgid "Location"
 msgstr "Hely"
 
@@ -223,7 +222,6 @@ msgid "On This Computer"
 msgstr "Ezen a számítógépen"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:4
-#| msgid "Edit calendar"
 msgid "Edit Calendar"
 msgstr "Naptár szerkesztése"
 
@@ -266,13 +264,19 @@ msgid "Select a file"
 msgstr "Válasszon egy fájlt"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:158
-#: src/gui/calendar-management/gcal-new-calendar-page.c:165
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "Naptár hozzáadása"
 msgstr[1] "%1$u naptár hozzáadása"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
+#| msgid "Add Calendar"
+#| msgid_plural "Add %1$u Calendars"
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "Naptár hozzáadása"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
@@ -320,7 +324,7 @@ msgstr "Jelszó"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:240
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1200
+#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1204
 msgid "_Cancel"
 msgstr "_Mégse"
 
@@ -328,98 +332,98 @@ msgstr "_Mégse"
 msgid "_Connect"
 msgstr "_Kapcsolódás"
 
-#: src/gui/event-editor/gcal-alarm-row.c:84
+#: src/gui/event-editor/gcal-alarm-row.c:85
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u nappal, %2$u órával és %3$u perccel ezelőtt"
 msgstr[1] "%1$u nappal, %2$u órával és %3$u perccel ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:88
+#: src/gui/event-editor/gcal-alarm-row.c:89
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u nappal, %2$u órával és %3$u perccel ezelőtt"
 msgstr[1] "%1$u nappal, %2$u órával és %3$u perccel ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:94
+#: src/gui/event-editor/gcal-alarm-row.c:95
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u nappal, %2$u órával és %3$u perccel ezelőtt"
 msgstr[1] "%1$u nappal, %2$u órával és %3$u perccel ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:98
+#: src/gui/event-editor/gcal-alarm-row.c:99
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u nappal, %2$u órával és %3$u perccel ezelőtt"
 msgstr[1] "%1$u nappal, %2$u órával és %3$u perccel ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:113
+#: src/gui/event-editor/gcal-alarm-row.c:114
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
 msgstr[0] "%1$u nappal és %2$u órával ezelőtt"
 msgstr[1] "%1$u nappal és %2$u órával ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:117
+#: src/gui/event-editor/gcal-alarm-row.c:118
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
 msgstr[0] "%1$u nappal és %2$u órával ezelőtt"
 msgstr[1] "%1$u nappal és %2$u órával ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:133
+#: src/gui/event-editor/gcal-alarm-row.c:134
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
 msgstr[0] "%1$u nappal és %2$u perccel ezelőtt"
 msgstr[1] "%1$u nappal és %2$u perccel ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:137
+#: src/gui/event-editor/gcal-alarm-row.c:138
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
 msgstr[0] "%1$u nappal és %2$u perccel ezelőtt"
 msgstr[1] "%1$u nappal és %2$u perccel ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:147
+#: src/gui/event-editor/gcal-alarm-row.c:148
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "%1$u nappal ezelőtt"
 msgstr[1] "%1$u nappal ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:165
+#: src/gui/event-editor/gcal-alarm-row.c:166
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "%1$u órával és %2$u perccel ezelőtt"
 msgstr[1] "%1$u órával és %2$u perccel ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:169
+#: src/gui/event-editor/gcal-alarm-row.c:170
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "%1$u órával és %2$u perccel ezelőtt"
 msgstr[1] "%1$u órával és %2$u perccel ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:179
+#: src/gui/event-editor/gcal-alarm-row.c:180
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "%1$u órával ezelőtt"
 msgstr[1] "%1$u órával ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:191
+#: src/gui/event-editor/gcal-alarm-row.c:192
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "%1$u perccel ezelőtt"
 msgstr[1] "%1$u perccel ezelőtt"
 
-#: src/gui/event-editor/gcal-alarm-row.c:198
+#: src/gui/event-editor/gcal-alarm-row.c:199
 msgid "Event start time"
 msgstr "Esemény kezdete"
 
@@ -427,7 +431,7 @@ msgstr "Esemény kezdete"
 msgid "Toggle Alarm Sound"
 msgstr "Riasztásai hang be- és kikapcsolása"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:19
+#: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "Riasztás eltávolítása"
 
@@ -488,7 +492,7 @@ msgstr "Mentés"
 msgid "Done"
 msgstr "Kész"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:777
+#: src/gui/event-editor/gcal-event-editor-dialog.c:787
 msgid "New Event"
 msgstr "Új esemény"
 
@@ -525,43 +529,47 @@ msgid "Delete Event"
 msgstr "Esemény törlése"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:17
-#| msgid "Add a Reminder…"
 msgid "Add Reminder"
 msgstr "Emlékeztető hozzáadása"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:41
+#| msgid "Event start time"
+msgid "Event start"
+msgstr "Esemény kezdete"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:47
 msgid "5 Minutes"
 msgstr "5 perc"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:47
+#: src/gui/event-editor/gcal-reminders-section.ui:53
 msgid "10 Minutes"
 msgstr "10 perc"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:53
+#: src/gui/event-editor/gcal-reminders-section.ui:59
 msgid "15 Minutes"
 msgstr "15 perc"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:59
+#: src/gui/event-editor/gcal-reminders-section.ui:65
 msgid "30 Minutes"
 msgstr "30 perc"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:65
+#: src/gui/event-editor/gcal-reminders-section.ui:71
 msgid "1 Hour"
 msgstr "1 óra"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:71
+#: src/gui/event-editor/gcal-reminders-section.ui:77
 msgid "1 Day"
 msgstr "1 nap"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:77
+#: src/gui/event-editor/gcal-reminders-section.ui:83
 msgid "2 Days"
 msgstr "2 nap"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:83
+#: src/gui/event-editor/gcal-reminders-section.ui:89
 msgid "3 Days"
 msgstr "3 nap"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:89
+#: src/gui/event-editor/gcal-reminders-section.ui:95
 msgid "1 Week"
 msgstr "1 hét"
 
@@ -572,19 +580,19 @@ msgid "Last %A"
 msgstr "Előző %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
-#: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
 #: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Tegnap"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
-#: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
+#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
 #: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Ma"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
-#: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
 #: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Holnap"
@@ -609,12 +617,12 @@ msgid "All Day"
 msgstr "Egész nap"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:34
-#: src/gui/importer/gcal-import-file-row.c:152
+#: src/gui/importer/gcal-import-file-row.c:178
 msgid "Starts"
 msgstr "Kezdés"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:77
-#: src/gui/importer/gcal-import-file-row.c:153
+#: src/gui/importer/gcal-import-file-row.c:179
 msgid "Ends"
 msgstr "Befejezés"
 
@@ -668,7 +676,7 @@ msgid "End Repeat Date"
 msgstr "Ismétlés végének dátuma"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
-#: src/gui/importer/gcal-import-file-row.c:150
+#: src/gui/importer/gcal-import-file-row.c:176
 msgid "Title"
 msgstr "Cím"
 
@@ -737,65 +745,65 @@ msgstr "Naptárak _szinkronizálása"
 msgid "_Manage Calendars…"
 msgstr "Naptárak _kezelése…"
 
-#: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:253
+#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
 msgstr "január"
 
-#: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:254
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:254
 msgid "February"
 msgstr "február"
 
-#: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:255
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:255
 msgid "March"
 msgstr "március"
 
-#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:256
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:256
 msgid "April"
 msgstr "április"
 
-#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:257
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:257
 msgid "May"
 msgstr "május"
 
-#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:258
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:258
 msgid "June"
 msgstr "június"
 
-#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:259
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:259
 msgid "July"
 msgstr "július"
 
-#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:260
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:260
 msgid "August"
 msgstr "augusztus"
 
-#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:261
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:261
 msgid "September"
 msgstr "szeptember"
 
-#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:262
+#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:262
 msgid "October"
 msgstr "október"
 
-#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:263
+#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:263
 msgid "November"
 msgstr "november"
 
-#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:264
+#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:264
 msgid "December"
 msgstr "december"
 
-#: src/gui/gcal-event-popover.c:158
+#: src/gui/gcal-event-popover.c:161
 #, c-format
 msgid "Today %s"
 msgstr "Ma %s-kor"
 
-#: src/gui/gcal-event-popover.c:162
+#: src/gui/gcal-event-popover.c:165
 #, c-format
 msgid "Tomorrow %s"
 msgstr "Holnap %s-kor"
 
-#: src/gui/gcal-event-popover.c:166
+#: src/gui/gcal-event-popover.c:169
 #, c-format
 msgid "Yesterday %s"
 msgstr "Tegnap %s-kor"
@@ -805,7 +813,7 @@ msgstr "Tegnap %s-kor"
 #. * of month, and %3$ is the hour. This format string results in dates
 #. * like "November 21, 22:00".
 #.
-#: src/gui/gcal-event-popover.c:175
+#: src/gui/gcal-event-popover.c:178
 #, c-format
 msgid "%1$s %2$d, %3$s"
 msgstr "%1$s %2$d. – %3$s"
@@ -815,7 +823,7 @@ msgstr "%1$s %2$d. – %3$s"
 #. * of month, %3$d is the year, and %4$s is the hour. This format string
 #. * results in dates like "November 21, 2020, 22:00".
 #.
-#: src/gui/gcal-event-popover.c:187
+#: src/gui/gcal-event-popover.c:190
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%3$d. %1$s %2$d., %4$s"
@@ -825,7 +833,7 @@ msgstr "%3$d. %1$s %2$d., %4$s"
 #. * the day of month. This format string results in dates like
 #. * "November 21".
 #.
-#: src/gui/gcal-event-popover.c:216 src/gui/gcal-event-popover.c:330
+#: src/gui/gcal-event-popover.c:219 src/gui/gcal-event-popover.c:333
 #, c-format
 msgid "%1$s %2$d"
 msgstr "%1$s %2$d."
@@ -835,7 +843,7 @@ msgstr "%1$s %2$d."
 #. * of month, and %3$d is the year. This format string results in dates
 #. * like "November 21, 2020".
 #.
-#: src/gui/gcal-event-popover.c:227 src/gui/gcal-event-popover.c:341
+#: src/gui/gcal-event-popover.c:230 src/gui/gcal-event-popover.c:344
 #, c-format
 msgid "%1$s %2$d, %3$d"
 msgstr "%3$d. %1$s %2$d."
@@ -844,7 +852,7 @@ msgstr "%3$d. %1$s %2$d."
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Today, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:261
+#: src/gui/gcal-event-popover.c:264
 #, c-format
 msgid "Today, %1$s — %2$s"
 msgstr "Ma, %1$s–%2$s"
@@ -853,7 +861,7 @@ msgstr "Ma, %1$s–%2$s"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:269
+#: src/gui/gcal-event-popover.c:272
 #, c-format
 msgid "Tomorrow, %1$s – %2$s"
 msgstr "Holnap, %1$s–%2$s"
@@ -862,7 +870,7 @@ msgstr "Holnap, %1$s–%2$s"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:277
+#: src/gui/gcal-event-popover.c:280
 #, c-format
 msgid "Yesterday, %1$s – %2$s"
 msgstr "Tegnap, %1$s–%2$s"
@@ -872,7 +880,7 @@ msgstr "Tegnap, %1$s–%2$s"
 #. * of month, %3$s is the start hour, and %4$s is the end hour. This
 #. * format string results in dates like "November 21, 19:00 — 22:00".
 #.
-#: src/gui/gcal-event-popover.c:286
+#: src/gui/gcal-event-popover.c:289
 #, c-format
 msgid "%1$s %2$d, %3$s – %4$s"
 msgstr "%1$s %2$d., %3$s–%4$s"
@@ -884,53 +892,70 @@ msgstr "%1$s %2$d., %3$s–%4$s"
 #. *
 #. * "November 21, 2021, 19:00 — 22:00".
 #.
-#: src/gui/gcal-event-popover.c:301
+#: src/gui/gcal-event-popover.c:304
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%3$d. %1$s %2$d., %4$s–%5$s"
 
-#: src/gui/gcal-event-popover.ui:75
-msgid "No event information"
-msgstr "Nincs eseményinformáció"
+#: src/gui/gcal-event-popover.c:369
+msgid "View Additional Details"
+msgstr "További részletek megtekintése"
 
-#: src/gui/gcal-event-popover.ui:175
-msgid "Edit…"
-msgstr "Szerkesztés…"
+#: src/gui/gcal-event-popover.c:374
+#| msgid "Edit Details…"
+msgid "Edit Additional Details"
+msgstr "További részletek szerkesztése"
 
-#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:355
+#: src/gui/gcal-event-popover.ui:66
+#| msgid ""
+#| "<b>This event is part of a read-only calendar</b>\n"
+#| "You cannot delete or change this event."
+msgid ""
+"<b>This event is part of a read-only calendar</b>\n"
+"    You cannot delete or change this event."
+msgstr ""
+"<b>Ez az esemény egy csak olvasható naptár része</b>\n"
+"    Nem tudja törölni vagy megváltoztatni ezt az eseményt."
+
+#: src/gui/gcal-event-popover.ui:107
+#| msgid "No events"
+msgid "No event notes"
+msgstr "Nincsenek eseményjegyzetek"
+
+#. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
+#: src/gui/gcal-event-widget.c:369
 #, c-format
-msgid "At %s"
-msgstr "Ekkor: %s"
+msgid ""
+"\n"
+"\n"
+"On %s"
+msgstr ""
+"\n"
+"\n"
+"Ezen: %s"
 
-#: src/gui/gcal-meeting-row.c:67
-msgid "Google Meet"
-msgstr "Google Meet"
+#. Translators: %s is a URL informed as the location of the event
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:382 src/gui/gcal-event-widget.c:388
+#, c-format
+msgid ""
+"\n"
+"\n"
+"At %s"
+msgstr ""
+"\n"
+"\n"
+"Itt: %s"
 
-#: src/gui/gcal-meeting-row.c:68
-msgid "Jitsi"
-msgstr "Jitsi"
-
-#: src/gui/gcal-meeting-row.c:69
-msgid "Whereby"
-msgstr "Whereby"
-
-#: src/gui/gcal-meeting-row.c:70
-msgid "Zoom"
-msgstr "Zoom"
-
-#: src/gui/gcal-meeting-row.c:71
-msgid "Microsoft Teams"
-msgstr "Microsoft Teams"
-
-#: src/gui/gcal-meeting-row.c:81
+#: src/gui/gcal-meeting-row.c:72
 msgid "Unknown Service"
 msgstr "Ismeretlen szolgáltatás"
 
 #. Translators: "Join" as in "Join meeting"
-#: src/gui/gcal-meeting-row.ui:13
-msgid "Join"
-msgstr "Csatlakozás"
+#: src/gui/gcal-meeting-row.ui:41
+#| msgid "Join"
+msgid "_Join"
+msgstr "_Csatlakozás"
 
 #: src/gui/gcal-quick-add-popover.c:116
 #, c-format
@@ -1194,19 +1219,19 @@ msgstr "Automatikus helymeghatározás"
 msgid "Search locations"
 msgstr "Helyek keresése"
 
-#: src/gui/gcal-window.c:332
+#: src/gui/gcal-window.c:331
 msgid "Week"
 msgstr "Hét"
 
-#: src/gui/gcal-window.c:334
+#: src/gui/gcal-window.c:333
 msgid "Month"
 msgstr "Hónap"
 
-#: src/gui/gcal-window.c:736
+#: src/gui/gcal-window.c:735
 msgid "Another event deleted"
 msgstr "Egy másik esemény törölve"
 
-#: src/gui/gcal-window.c:736
+#: src/gui/gcal-window.c:735
 msgid "Event deleted"
 msgstr "Esemény törölve"
 
@@ -1388,11 +1413,11 @@ msgstr "Belső hiba"
 msgid "File is not an iCalendar (.ics) file"
 msgstr "A fájl nem iCalendar-fájl (.ics)"
 
-#: src/gui/importer/gcal-import-file-row.c:154
+#: src/gui/importer/gcal-import-file-row.c:180
 msgid "Description"
 msgstr "Leírás"
 
-#: src/gui/views/gcal-agenda-view.c:366
+#: src/gui/views/gcal-agenda-view.c:380
 msgid "On-going"
 msgstr "Folyamatban lévő"
 
@@ -1424,11 +1449,11 @@ msgstr[1] "Egyéb %d esemény"
 msgid "week %d"
 msgstr "%d. hét"
 
-#: src/utils/gcal-utils.c:1196
+#: src/utils/gcal-utils.c:1200
 msgid "Modify Multiple Events?"
 msgstr "Módosít több eseményt?"
 
-#: src/utils/gcal-utils.c:1197
+#: src/utils/gcal-utils.c:1201
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1436,14 +1461,34 @@ msgstr ""
 "A módosítani próbált esemény ismétlődő. A kijelölt változtatások ezekre "
 "vonatkozzanak:"
 
-#: src/utils/gcal-utils.c:1201
+#: src/utils/gcal-utils.c:1205
 msgid "_Only This Event"
 msgstr "Csak _ez az esemény"
 
-#: src/utils/gcal-utils.c:1207
+#: src/utils/gcal-utils.c:1211
 msgid "_Subsequent Events"
 msgstr "Az ezt _követő események"
 
-#: src/utils/gcal-utils.c:1210
+#: src/utils/gcal-utils.c:1214
 msgid "_All Events"
 msgstr "Öss_zes esemény"
+
+#: src/utils/gcal-utils.c:1316
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#: src/utils/gcal-utils.c:1317
+msgid "Jitsi"
+msgstr "Jitsi"
+
+#: src/utils/gcal-utils.c:1318
+msgid "Whereby"
+msgstr "Whereby"
+
+#: src/utils/gcal-utils.c:1319
+msgid "Zoom"
+msgstr "Zoom"
+
+#: src/utils/gcal-utils.c:1320
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
