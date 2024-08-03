@@ -28,7 +28,7 @@ struct _GcalSyncIndicator
 {
   AdwBin              parent_instance;
 
-  GtkSpinner         *refreshing_spinner;
+  AdwSpinner         *refreshing_spinner;
   GtkStack           *stack;
 
   guint               icon_changed_source_id;
@@ -96,7 +96,6 @@ icon_change_timeout_cb (gpointer data)
   g_debug ("Updating calendar icon to spinner");
 
   gtk_stack_set_visible_child_name (self->stack, synchronizing ? "spinner" : "empty");
-  gtk_spinner_set_spinning (self->refreshing_spinner, synchronizing);
 
   self->icon_changed_source_id = 0;
   return G_SOURCE_REMOVE;

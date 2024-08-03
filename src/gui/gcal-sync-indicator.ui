@@ -17,7 +17,7 @@
           <object class="GtkStackPage">
             <property name="name">spinner</property>
             <property name="child">
-              <object class="GtkSpinner" id="refreshing_spinner">
+              <object class="AdwSpinner" id="refreshing_spinner">
                 <property name="tooltip_text" translatable="yes" context="tooltip">Synchronizing Remote Calendars</property>
               </object>
             </property>
