@@ -473,16 +473,16 @@ gcal_month_cell_set_date (GcalMonthCell *self,
 
   gcal_clear_date_time (&self->date);
   self->date = g_date_time_ref (date);
+  day_of_month = g_date_time_get_day_of_month (date);
 
   /* Day label */
-  text = g_strdup_printf ("%d", g_date_time_get_day_of_month (date));
+  text = g_strdup_printf ("%d", day_of_month);
 
   gtk_label_set_text (self->day_label, text);
   update_style_flags (self);
   add_month_separators (self);
 
   /* Month name */
-  day_of_month = g_date_time_get_day_of_month (date);
   gtk_widget_set_visible (GTK_WIDGET (self->month_name_label), day_of_month == 1);
   if (day_of_month == 1)
     {
