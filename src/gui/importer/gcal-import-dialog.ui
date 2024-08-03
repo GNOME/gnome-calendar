@@ -77,10 +77,9 @@
                         <child>
                           <object class="AdwPreferencesGroup" id="files_group">
                             <child>
-                              <object class="GtkSpinner" id="placeholder_spinner">
+                              <object class="AdwSpinner" id="placeholder_spinner">
                                 <property name="halign">center</property>
                                 <property name="valign">center</property>
-                                <property name="spinning">True</property>
                               </object>
                             </child>
                           </object>
