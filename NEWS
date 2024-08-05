@@ -1,8 +1,13 @@
+Major changes in 47.beta:
+* Add the ability to import ICS files using drag n' drop
+* Various improvements to the file importer dialog
+* Small improvement to the spacing of the month view
+
 Major changes in 47.alpha:
 * Use modern Adwaita widgets in various places
 * Improved event editor dialog
 * Improved visuals for mini-calendar in the sidebar
-* Fix various with event alarms
+* Fix various issues with event alarms
 * Many visual improvements to the event preview popover
 * Updated translations
 
