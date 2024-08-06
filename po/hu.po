@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-07-24 15:12+0000\n"
-"PO-Revision-Date: 2024-08-03 16:10+0200\n"
+"POT-Creation-Date: 2024-08-05 15:39+0000\n"
+"PO-Revision-Date: 2024-08-06 17:05+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <openscope at fsf dot hu>\n"
 "Language: hu\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:7 src/main.c:35
 #: src/gui/gcal-quick-add-popover.ui:135 src/gui/gcal-window.ui:4
-#: src/gui/gcal-window.ui:124
+#: src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "Naptár"
 
@@ -187,12 +187,11 @@ msgstr "Naptárbeállítások"
 #. TRANSLATORS: %s is a calendar name.
 #: src/gui/calendar-management/gcal-calendars-page.c:358
 #, c-format
-#| msgid "Calendar <b>%s</b> removed"
 msgid "Calendar “%s” removed"
 msgstr "A(z) „%s” naptár eltávolítva"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:363
-#: src/gui/gcal-window.c:737
+#: src/gui/gcal-window.c:836
 msgid "_Undo"
 msgstr "_Visszavonás"
 
@@ -272,8 +271,6 @@ msgstr[1] "%1$u naptár hozzáadása"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:165
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:193
-#| msgid "Add Calendar"
-#| msgid_plural "Add %1$u Calendars"
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Naptár hozzáadása"
@@ -324,7 +321,7 @@ msgstr "Jelszó"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:240
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1204
+#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1204
 msgid "_Cancel"
 msgstr "_Mégse"
 
@@ -533,7 +530,6 @@ msgid "Add Reminder"
 msgstr "Emlékeztető hozzáadása"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:41
-#| msgid "Event start time"
 msgid "Event start"
 msgstr "Esemény kezdete"
 
@@ -725,7 +721,7 @@ msgstr ""
 "Úr Balázs <ur dot balazs at fsf dot hu>\n"
 "Meskó Balázs <mesko dot balazs at fsf dot hu>"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:329
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
 msgid "Weather"
 msgstr "Időjárás"
 
@@ -902,14 +898,10 @@ msgid "View Additional Details"
 msgstr "További részletek megtekintése"
 
 #: src/gui/gcal-event-popover.c:374
-#| msgid "Edit Details…"
 msgid "Edit Additional Details"
 msgstr "További részletek szerkesztése"
 
 #: src/gui/gcal-event-popover.ui:66
-#| msgid ""
-#| "<b>This event is part of a read-only calendar</b>\n"
-#| "You cannot delete or change this event."
 msgid ""
 "<b>This event is part of a read-only calendar</b>\n"
 "    You cannot delete or change this event."
@@ -918,7 +910,6 @@ msgstr ""
 "    Nem tudja törölni vagy megváltoztatni ezt az eseményt."
 
 #: src/gui/gcal-event-popover.ui:107
-#| msgid "No events"
 msgid "No event notes"
 msgstr "Nincsenek eseményjegyzetek"
 
@@ -953,7 +944,6 @@ msgstr "Ismeretlen szolgáltatás"
 
 #. Translators: "Join" as in "Join meeting"
 #: src/gui/gcal-meeting-row.ui:41
-#| msgid "Join"
 msgid "_Join"
 msgstr "_Csatlakozás"
 
@@ -1219,51 +1209,64 @@ msgstr "Automatikus helymeghatározás"
 msgid "Search locations"
 msgstr "Helyek keresése"
 
-#: src/gui/gcal-window.c:331
+#: src/gui/gcal-window.c:350
 msgid "Week"
 msgstr "Hét"
 
-#: src/gui/gcal-window.c:333
+#: src/gui/gcal-window.c:352
 msgid "Month"
 msgstr "Hónap"
 
-#: src/gui/gcal-window.c:735
+#: src/gui/gcal-window.c:834
 msgid "Another event deleted"
 msgstr "Egy másik esemény törölve"
 
-#: src/gui/gcal-window.c:735
+#: src/gui/gcal-window.c:834
 msgid "Event deleted"
 msgstr "Esemény törölve"
 
-#: src/gui/gcal-window.ui:143
+#: src/gui/gcal-window.c:899
+msgid "Could not import some files: Not ICS files"
+msgstr "Nem sikerült importálni néhány fájlt: nem ICS-fájlok"
+
+#: src/gui/gcal-window.c:904
+#, c-format
+msgid "Could not import “%s”: Not an ICS file"
+msgstr "Nem sikerült a(z) „%s” importálása: nem ICS-fájl"
+
+#: src/gui/gcal-window.ui:123
+msgid "Drop Event Files to Import"
+msgstr "Eseményfájlok ejtése az importáláshoz"
+
+#: src/gui/gcal-window.ui:166
 msgid "Main Menu"
 msgstr "Főmenü"
 
-#: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
 msgid "_Today"
 msgstr "_Ma"
 
-#: src/gui/gcal-window.ui:255
+#: src/gui/gcal-window.ui:279
 msgid "_Week"
 msgstr "_Hét"
 
-#: src/gui/gcal-window.ui:270
+#: src/gui/gcal-window.ui:294
 msgid "_Month"
 msgstr "Hó_nap"
 
-#: src/gui/gcal-window.ui:321
+#: src/gui/gcal-window.ui:347
 msgid "_Date & Time Settings…"
 msgstr "_Dátum és idő beállítások…"
 
-#: src/gui/gcal-window.ui:325
+#: src/gui/gcal-window.ui:351
 msgid "_Online Accounts…"
 msgstr "_Online fiókok…"
 
-#: src/gui/gcal-window.ui:337
+#: src/gui/gcal-window.ui:363
 msgid "_Keyboard Shortcuts"
 msgstr "_Gyorsbillentyűk"
 
-#: src/gui/gcal-window.ui:341
+#: src/gui/gcal-window.ui:367
 msgid "_About Calendar"
 msgstr "A Naptár _névjegye"
 
@@ -1362,7 +1365,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Hónap nézet"
 
-#: src/gui/importer/gcal-import-dialog.c:396
+#: src/gui/importer/gcal-import-dialog.c:421
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1373,11 +1376,11 @@ msgstr[1] "%d esemény importálása"
 msgid "Import Files…"
 msgstr "Fájlok importálása…"
 
-#: src/gui/importer/gcal-import-dialog.ui:29
+#: src/gui/importer/gcal-import-dialog.ui:28
 msgid "_Import"
 msgstr "_Importálás"
 
-#: src/gui/importer/gcal-import-dialog.ui:49
+#: src/gui/importer/gcal-import-dialog.ui:47
 msgid "C_alendar"
 msgstr "N_aptár"
 
