@@ -112,7 +112,7 @@ allocate_overflow_popover (GcalMonthView *self,
 {
   graphene_point_t origin, end;
   GtkAllocation popover_allocation;
-  GtkAllocation allocation;
+  GtkAllocation cell_allocation;
   gint popover_min_width;
   gint popover_nat_width;
   gint popover_height;
@@ -138,7 +138,7 @@ allocate_overflow_popover (GcalMonthView *self,
                                  &end))
     g_assert_not_reached ();
 
-  allocation = (GtkAllocation) {
+  cell_allocation = (GtkAllocation) {
     .x = origin.x,
     .y = origin.y,
     .width = end.x - origin.x,
@@ -159,12 +159,12 @@ allocate_overflow_popover (GcalMonthView *self,
                       &popover_height,
                       NULL, NULL);
 
-  popover_width = CLAMP (popover_nat_width, popover_min_width, allocation.width * 1.5);
-  popover_height = CLAMP (popover_height, allocation.height * 1.5, height);
+  popover_width = CLAMP (popover_nat_width, popover_min_width, cell_allocation.width * 1.5);
+  popover_height = CLAMP (popover_height, cell_allocation.height * 1.5, height);
 
   popover_allocation = (GtkAllocation) {
-    .x = MAX (0, allocation.x - (popover_width - allocation.width) / 2.0),
-    .y = MAX (header_height, allocation.y - (popover_height - allocation.height) / 2.0),
+    .x = MAX (0, cell_allocation.x - (popover_width - cell_allocation.width) / 2.0),
+    .y = MAX (header_height, cell_allocation.y - (popover_height - cell_allocation.height) / 2.0),
     .width = popover_width,
     .height = popover_height,
   };
