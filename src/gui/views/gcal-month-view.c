@@ -159,7 +159,9 @@ allocate_overflow_popover (GcalMonthView *self,
                       &popover_height,
                       NULL, NULL);
 
-  popover_width = CLAMP (popover_nat_width, popover_min_width, cell_allocation.width * 1.5);
+  popover_width = CLAMP (popover_nat_width,
+                         MAX (popover_min_width, cell_allocation.width * 1.25),
+                         cell_allocation.width * 1.5);
   popover_height = CLAMP (popover_height, cell_allocation.height * 1.5, height);
 
   popover_allocation = (GtkAllocation) {
