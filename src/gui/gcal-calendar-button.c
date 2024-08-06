@@ -105,25 +105,6 @@ create_row_func (gpointer data,
  * Callbacks
  */
 
-static gint
-listbox_sort_func (GtkListBoxRow *row1,
-                   GtkListBoxRow *row2,
-                   gpointer       user_data)
-{
-  GcalCalendar *calendar1, *calendar2;
-  gint result;
-
-  calendar1 = g_object_get_data (G_OBJECT (row1), "calendar");
-  calendar2 = g_object_get_data (G_OBJECT (row2), "calendar");
-
-  result = g_ascii_strcasecmp (gcal_calendar_get_name (calendar1), gcal_calendar_get_name (calendar2));
-
-  if (result != 0)
-    return result;
-
-  return g_ascii_strcasecmp (gcal_calendar_get_id (calendar1), gcal_calendar_get_id (calendar2));
-}
-
 static void
 on_listbox_row_activated_cb (GtkListBox          *listbox,
                              GtkListBoxRow       *row,
@@ -233,9 +214,4 @@ static void
 gcal_calendar_button_init (GcalCalendarButton *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
-
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendar_listbox),
-                              (GtkListBoxSortFunc) listbox_sort_func,
-                              self,
-                              NULL);
 }
