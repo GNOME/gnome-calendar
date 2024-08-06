@@ -118,6 +118,8 @@ allocate_overflow_popover (GcalMonthView *self,
   gint popover_height;
   gint popover_width;
   gint header_height;
+  gint popover_x2;
+  gint popover_y2;
 
   g_assert (self->overflow.relative_to != NULL);
 
@@ -167,11 +169,13 @@ allocate_overflow_popover (GcalMonthView *self,
     .height = popover_height,
   };
 
-  if (popover_allocation.x + popover_allocation.width > width)
-    popover_allocation.x -= (popover_allocation.x + popover_allocation.width - width);
+  popover_x2 = popover_allocation.x + popover_allocation.width;
+  if (popover_x2 > width)
+    popover_allocation.x -= (popover_x2 - width);
 
-  if (popover_allocation.y + popover_allocation.height > height)
-    popover_allocation.y -= (popover_allocation.y + popover_allocation.height - height);
+  popover_y2 = popover_allocation.y + popover_allocation.height;
+  if (popover_y2 > height)
+    popover_allocation.y -= (popover_y2 - height);
 
   gtk_widget_size_allocate (self->overflow.popover, &popover_allocation, baseline);
 }
