@@ -50,6 +50,17 @@ static GParamSpec *properties [N_PROPS];
  * Auxiliary methods
  */
 
+static gboolean
+paintable_from_gdk_rgb (GBinding     *binding,
+                        const GValue *from_value,
+                        GValue       *to_value,
+                        gpointer      user_data)
+{
+  GdkRGBA *rgba = g_value_get_boxed (from_value);
+  g_value_take_object (to_value, get_circle_paintable_from_color (rgba, 16));
+  return TRUE;
+}
+
 static GtkWidget*
 create_row_func (gpointer data,
                  gpointer user_data)
@@ -57,7 +68,6 @@ create_row_func (gpointer data,
   g_autoptr (GdkPaintable) paintable = NULL;
   GcalCalendar *calendar;
   GtkWidget *label, *icon, *checkbox, *box, *row;
-  const GdkRGBA *color;
 
   calendar = GCAL_CALENDAR (data);
 
@@ -71,11 +81,16 @@ create_row_func (gpointer data,
   gtk_widget_set_margin_end (box, 6);
 
   /* source color icon */
-  color = gcal_calendar_get_color (calendar);
-  paintable = get_circle_paintable_from_color (color, 16);
-  icon = gtk_image_new_from_paintable (paintable);
-
+  icon = gtk_image_new ();
   gtk_widget_add_css_class (icon, "calendar-color-image");
+  g_object_bind_property_full (calendar, "color",
+                               icon, "paintable",
+                               G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE,
+                               paintable_from_gdk_rgb,
+                               NULL,
+                               NULL,
+                               NULL);
+
 
   /* source name label */
   label = gtk_label_new (gcal_calendar_get_name (calendar));
