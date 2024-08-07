@@ -199,9 +199,9 @@ is_authentication_error (gint code)
 {
   switch (code)
     {
+    /* Only HTTP 401 and 407 errors are actual prompts for credentials. 403, 405, etc. are not. */
     case SOUP_STATUS_UNAUTHORIZED:
-    case SOUP_STATUS_FORBIDDEN:
-    case SOUP_STATUS_METHOD_NOT_ALLOWED:
+    case SOUP_STATUS_PROXY_UNAUTHORIZED:
       return TRUE;
     }
 
