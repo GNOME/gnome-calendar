@@ -75,6 +75,8 @@ static void          sources_discovered_cb                       (GObject       
                                                                   GAsyncResult      *result,
                                                                   gpointer           user_data);
 
+static void          cancel_validation_discover                               (GcalNewCalendarPage *self);
+
 static void          gcal_calendar_management_page_iface_init    (GcalCalendarManagementPageInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GcalNewCalendarPage, gcal_new_calendar_page, ADW_TYPE_NAVIGATION_PAGE,
@@ -342,7 +344,13 @@ sources_discovered_cb (GObject      *source_object,
           gtk_window_set_transient_for (GTK_WINDOW (self->credentials_dialog), GTK_WINDOW (root));
           gtk_window_present (GTK_WINDOW (self->credentials_dialog));
         }
-      else
+      /*
+       * If the operation was cancelled by the user, no error message
+       * or error style class will be applied
+       */
+      else if (!g_error_matches (error,
+                                 G_IO_ERROR,
+                                 G_IO_ERROR_CANCELLED))
         {
           g_warning ("Error finding sources: %s", error->message);
           update_url_entry_state (self, ENTRY_STATE_INVALID);
@@ -417,6 +425,7 @@ static void
 on_calendar_address_activated_cb (GtkEntry            *entry,
                                   GcalNewCalendarPage *self)
 {
+  cancel_validation_discover (self);
   validate_url_cb (self);
 }
 
@@ -435,6 +444,30 @@ on_credentials_dialog_response_cb (AdwMessageDialog    *dialog,
 }
 
 static void
+cancel_validation_discover (GcalNewCalendarPage *self)
+{
+  if (self->calendar_address_id != 0)
+    {
+      gtk_entry_set_progress_fraction (self->calendar_address_entry, 0);
+      g_clear_handle_id (&self->calendar_address_id, g_source_remove);
+    }
+
+  /* Cleanup previous remote sources */
+  g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
+
+  if (self->validate_url_resource_id != 0)
+    g_clear_handle_id (&self->validate_url_resource_id, g_source_remove);
+
+  /* Cancel a validation in case it is on-going */
+  if (self->calendar_address_entry_state == ENTRY_STATE_VALIDATING)
+    {
+      g_cancellable_cancel (self->cancellable);
+      g_clear_object (&self->cancellable);
+      self->cancellable = g_cancellable_new ();
+    }
+}
+
+static void
 on_url_entry_text_changed_cb (GtkEntry            *entry,
                               GParamSpec          *pspec,
                               GcalNewCalendarPage *self)
@@ -445,17 +478,7 @@ on_url_entry_text_changed_cb (GtkEntry            *entry,
 
   text = gtk_editable_get_text (GTK_EDITABLE (entry));
 
-  if (self->calendar_address_id != 0)
-    {
-      gtk_entry_set_progress_fraction (entry, 0);
-      g_clear_handle_id (&self->calendar_address_id, g_source_remove);
-    }
-
-  /* Cleanup previous remote sources */
-  g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
-
-  if (self->validate_url_resource_id != 0)
-    g_clear_handle_id (&self->validate_url_resource_id, g_source_remove);
+  cancel_validation_discover (self);
 
   if (text && g_utf8_strlen (text, -1) > 0)
     {
