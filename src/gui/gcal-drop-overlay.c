@@ -33,6 +33,8 @@ struct _GcalDropOverlay
   GtkOverlay         *overlay;
   GtkRevealer        *revealer;
   GtkDropTarget      *drop_target;
+
+  guint              hide_timeout_id;
 };
 
 static void on_current_drop_notify_cb (GcalDropOverlay *self);
@@ -49,6 +51,19 @@ enum
 
 static GParamSpec *properties[N_PROPS] = { NULL, };
 
+static gboolean
+hide_internal_overlay_cb (gpointer data)
+{
+  GcalDropOverlay *self = (GcalDropOverlay *) data;
+
+  g_assert (GCAL_IS_DROP_OVERLAY (self));
+
+  gtk_widget_set_visible (GTK_WIDGET (self->revealer), FALSE);
+  self->hide_timeout_id = 0;
+
+  return G_SOURCE_REMOVE;
+}
+
 static void
 on_current_drop_notify_cb (GcalDropOverlay *self)
 {
@@ -58,13 +73,21 @@ on_current_drop_notify_cb (GcalDropOverlay *self)
 
   current_drop = gtk_drop_target_get_current_drop (self->drop_target);
 
+  g_clear_handle_id (&self->hide_timeout_id, g_source_remove);
+
   if (current_drop != NULL)
     {
+      gtk_widget_set_visible (GTK_WIDGET (self->revealer), TRUE);
       gtk_revealer_set_reveal_child (self->revealer, TRUE);
       gtk_widget_add_css_class (gtk_overlay_get_child (self->overlay), "blurred");
     }
   else
     {
+      /* Hide the internal overlay only when the hide animations has been completed */
+      self->hide_timeout_id = g_timeout_add (gtk_revealer_get_transition_duration (self->revealer),
+                                             hide_internal_overlay_cb,
+                                             self);
+
       gtk_revealer_set_reveal_child (self->revealer, FALSE);
       gtk_widget_remove_css_class (gtk_overlay_get_child (self->overlay), "blurred");
     }
@@ -80,6 +103,7 @@ gcal_drop_overlay_dispose (GObject *object)
   GcalDropOverlay *self = GCAL_DROP_OVERLAY (object);
 
   g_clear_object (&self->drop_target);
+  g_clear_handle_id (&self->hide_timeout_id, g_source_remove);
 
   G_OBJECT_CLASS (gcal_drop_overlay_parent_class)->dispose (object);
 }
@@ -157,6 +181,7 @@ gcal_drop_overlay_init (GcalDropOverlay *self)
   self->revealer = GTK_REVEALER (gtk_revealer_new ());
 
   gtk_overlay_add_overlay (self->overlay, GTK_WIDGET (self->revealer));
+  gtk_widget_set_visible (GTK_WIDGET (self->revealer), FALSE);
   gtk_widget_set_can_target (GTK_WIDGET (self->revealer), FALSE);
   gtk_revealer_set_transition_type (self->revealer, GTK_REVEALER_TRANSITION_TYPE_CROSSFADE);
   gtk_revealer_set_reveal_child (self->revealer, FALSE);
