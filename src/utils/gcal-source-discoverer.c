@@ -371,6 +371,12 @@ discover_webdav_in_thread (DiscovererData  *data,
 
   if (local_error)
     {
+      g_debug ("Encountered an error in %s (from %s), code %d: '%s'\n",
+               G_STRFUNC,
+               g_quark_to_string (local_error->domain),
+               local_error->code,
+               local_error->message);
+
       if (local_error->domain == E_SOUP_SESSION_ERROR &&
           is_authentication_error (local_error->code))
         {
