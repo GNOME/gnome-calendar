@@ -366,6 +366,7 @@ validate_url_cb (gpointer data)
 
   GCAL_ENTRY;
 
+  update_url_entry_state (self, ENTRY_STATE_VALIDATING);
   self->validate_url_resource_id = 0;
 
   guri = g_uri_parse (gtk_editable_get_text (GTK_EDITABLE (self->calendar_address_entry)), SOUP_HTTP_URI_FLAGS | G_URI_FLAGS_PARSE_RELAXED, NULL);
@@ -438,7 +439,7 @@ on_url_entry_text_changed_cb (GtkEntry            *entry,
                               GParamSpec          *pspec,
                               GcalNewCalendarPage *self)
 {
-  const gchar* text;
+  const gchar *text;
 
   GCAL_ENTRY;
 
@@ -459,11 +460,10 @@ on_url_entry_text_changed_cb (GtkEntry            *entry,
   if (text && g_utf8_strlen (text, -1) > 0)
     {
       /*
-       * At first, don't bother the user with the login prompt. Only prompt it when
-       * it fails.
+       * Only validate the text after the timeout, as we don't want to bother them
+       * as soon as they type into the entry.
        */
-      self->validate_url_resource_id = g_timeout_add (500, validate_url_cb, self);
-      update_url_entry_state (self, ENTRY_STATE_VALIDATING);
+      self->validate_url_resource_id = g_timeout_add (750, validate_url_cb, self);
     }
   else
     {
