@@ -1,14 +1,23 @@
 Major changes in 47.beta:
 * Add the ability to import ICS files using drag n' drop
+* Fix the timelines backend, to eliminate divergence between views after moving events
+* Fix the agenda sidebar's events ordering
+* Fix the agenda sidebar's duplication of day separation headers in the events list
+* Fix the agenda sidebar's events randomly appearing or disappearing
+* Interpret floating time events (no timezone defined) using local time instead of UTC
+* Interpret timezones when previewing events in the .ics importer dialog
 * Various improvements to the file importer dialog
+* Many visual improvements to the event preview popover
+* Event reminders states are now remembered properly
+* Avoid creating an extra duplicate local calendar when adding calendars from URLs
+* Show service names instead of URLs in tooltips for recognized videoconferencing links
 * Small improvement to the spacing of the month view
 
 Major changes in 47.alpha:
+* Faster, flicker-free search
 * Use modern Adwaita widgets in various places
 * Improved event editor dialog
 * Improved visuals for mini-calendar in the sidebar
-* Fix various issues with event alarms
-* Many visual improvements to the event preview popover
 * Updated translations
 
 Major changes in 46.1:
