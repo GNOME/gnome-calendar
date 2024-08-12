@@ -36,6 +36,7 @@ struct _GcalMonthPopover
   GtkLabel           *day_label;
   GtkListBox         *listbox;
   GtkWidget          *main_box;
+  GtkButton          *new_event_button;
 
   GcalContext        *context;
 
@@ -393,6 +394,7 @@ gcal_month_popover_class_init (GcalMonthPopoverClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalMonthPopover, day_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthPopover, listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthPopover, main_box);
+  gtk_widget_class_bind_template_child (widget_class, GcalMonthPopover, new_event_button);
 
   gtk_widget_class_set_css_name (widget_class, "monthpopover");
 }
@@ -432,6 +434,8 @@ gcal_month_popover_popup (GcalMonthPopover *self)
   adw_animation_play (self->animation);
 
   update_event_list (self);
+
+  gtk_widget_grab_focus (GTK_WIDGET (self->new_event_button));
 
   GCAL_EXIT;
 }
