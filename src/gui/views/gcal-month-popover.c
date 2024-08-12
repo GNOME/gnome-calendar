@@ -42,6 +42,8 @@ struct _GcalMonthPopover
 
   GDateTime          *date;
   AdwAnimation       *animation;
+
+  GSimpleActionGroup *action_group;
 };
 
 static void          event_activated_cb                          (GcalEventWidget    *event_widget,
@@ -236,6 +238,18 @@ new_event_button_clicked_cb (GtkWidget        *button,
   GCAL_EXIT;
 }
 
+static void
+on_month_popover_popdown_activated_cb (GSimpleAction *action,
+                                       GVariant      *param,
+                                       gpointer       user_data)
+{
+  GcalMonthPopover *self = (GcalMonthPopover *) user_data;
+
+  g_assert (GCAL_IS_MONTH_POPOVER (self));
+
+  gcal_month_popover_popdown (self);
+}
+
 
 /*
  * GtkWidget overrides
@@ -354,6 +368,8 @@ gcal_month_popover_dispose (GObject *object)
 
   g_clear_pointer (&self->main_box, gtk_widget_unparent);
 
+  g_clear_object (&self->action_group);
+
   G_OBJECT_CLASS (gcal_month_popover_parent_class)->dispose (object);
 }
 
@@ -402,6 +418,20 @@ gcal_month_popover_class_init (GcalMonthPopoverClass *klass)
 static void
 gcal_month_popover_init (GcalMonthPopover *self)
 {
+  static const GActionEntry actions[] = {
+    {"popdown", on_month_popover_popdown_activated_cb },
+  };
+
+  self->action_group = g_simple_action_group_new ();
+  g_action_map_add_action_entries (G_ACTION_MAP (self->action_group),
+                                   actions,
+                                   G_N_ELEMENTS (actions),
+                                   self);
+
+  gtk_widget_insert_action_group (GTK_WIDGET (self),
+                                  "month-popover",
+                                  G_ACTION_GROUP (self->action_group));
+
   gtk_widget_init_template (GTK_WIDGET (self));
 
   gtk_list_box_set_sort_func (GTK_LIST_BOX (self->listbox), sort_func, NULL, NULL);
