@@ -211,12 +211,16 @@ static void
 toggle_url_entry_pulsing (GcalNewCalendarPage *self,
                           gboolean             pulsing)
 {
-  gtk_entry_set_progress_fraction (self->calendar_address_entry, 0);
-
   if (pulsing && self->calendar_address_id == 0)
-    self->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, pulse_web_entry, self);
+    {
+      gtk_entry_set_progress_fraction (self->calendar_address_entry, 0.1);
+      self->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, pulse_web_entry, self);
+    }
   else if (!pulsing && self->calendar_address_id != 0)
-    g_clear_handle_id (&self->calendar_address_id, g_source_remove);
+    {
+      gtk_entry_set_progress_fraction (self->calendar_address_entry, 0.0);
+      g_clear_handle_id (&self->calendar_address_id, g_source_remove);
+    }
 }
 
 static void
