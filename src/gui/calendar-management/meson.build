@@ -11,6 +11,5 @@ sources += files(
   'gcal-calendar-management-page.c',
   'gcal-calendars-page.c',
   'gcal-edit-calendar-page.c',
-  'gcal-file-chooser-button.c',
   'gcal-new-calendar-page.c',
 )
