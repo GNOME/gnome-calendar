@@ -146,9 +146,6 @@ struct _GcalWindow
 
   AdwToast           *delete_event_toast;
 
-  /* calendar management */
-  GtkWidget          *calendar_management_dialog;
-
   gint                open_edit_dialog_timeout_id;
 
   /* weather management */
@@ -442,8 +439,9 @@ on_show_calendars_action_activated (GSimpleAction *action,
                                     gpointer       user_data)
 {
   GcalWindow *self = GCAL_WINDOW (user_data);
+  GcalCalendarManagementDialog *dialog = gcal_calendar_management_dialog_new (self->context);
 
-  adw_dialog_present (ADW_DIALOG (self->calendar_management_dialog), GTK_WIDGET (self));
+  adw_dialog_present (ADW_DIALOG (dialog), GTK_WIDGET (self));
 }
 
 static void
@@ -1062,7 +1060,6 @@ gcal_window_constructed (GObject *object)
    */
   g_object_bind_property (self, "context", self->calendars_button, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->weather_settings, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "context", self->calendar_management_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->week_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->agenda_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
@@ -1197,7 +1194,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   GtkWidgetClass *widget_class;
 
   g_type_ensure (GCAL_TYPE_AGENDA_VIEW);
-  g_type_ensure (GCAL_TYPE_CALENDAR_MANAGEMENT_DIALOG);
   g_type_ensure (GCAL_TYPE_CALENDAR_BUTTON);
   g_type_ensure (GCAL_TYPE_DATE_CHOOSER);
   g_type_ensure (GCAL_TYPE_EVENT_EDITOR_DIALOG);
@@ -1261,7 +1257,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, action_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_management_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, sidebar_toolbar_end);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, split_view);

@@ -337,8 +337,6 @@
     <signal name="closed" handler="close_new_event_widget" object="GcalWindow" swapped="no"/>
   </object>
 
-  <object class="GcalCalendarManagementDialog" id="calendar_management_dialog" />
-
   <object class="GcalEventEditorDialog" id="event_editor">
     <signal name="remove-event" handler="on_event_editor_dialog_remove_event_cb" object="GcalWindow" swapped="no"/>
   </object>

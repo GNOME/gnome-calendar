@@ -253,7 +253,7 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
                                                   "Context",
                                                   "The context object of the application",
                                                   GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS | G_PARAM_CONSTRUCT_ONLY);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
@@ -268,4 +268,14 @@ static void
 gcal_calendar_management_dialog_init (GcalCalendarManagementDialog *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
+}
+
+/*
+ * Public API
+ */
+
+GcalCalendarManagementDialog*
+gcal_calendar_management_dialog_new (GcalContext *context)
+{
+  return g_object_new (GCAL_TYPE_CALENDAR_MANAGEMENT_DIALOG, "context", context, NULL);
 }
