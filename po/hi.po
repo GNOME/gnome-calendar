@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-07-24 16:03+0000\n"
-"PO-Revision-Date: 2024-07-27 13:43+0530\n"
+"POT-Creation-Date: 2024-08-05 15:39+0000\n"
+"PO-Revision-Date: 2024-08-09 12:49+0530\n"
 "Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
 "Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
 "Language: hi\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:7 src/main.c:35
 #: src/gui/gcal-quick-add-popover.ui:135 src/gui/gcal-window.ui:4
-#: src/gui/gcal-window.ui:124
+#: src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "कैलेंडर"
 
@@ -185,7 +185,7 @@ msgid "Calendar “%s” removed"
 msgstr "कैलेंडर “%s” हटाया गया"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:363
-#: src/gui/gcal-window.c:737
+#: src/gui/gcal-window.c:836
 msgid "_Undo"
 msgstr "पूर्ववत करें (_U)"
 
@@ -315,7 +315,7 @@ msgstr "पासवर्ड"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:240
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:16 src/utils/gcal-utils.c:1204
+#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1204
 msgid "_Cancel"
 msgstr "रद्द करें (_C)"
 
@@ -715,7 +715,7 @@ msgstr ""
 "हेमिश (Hemish) <hemish04082005@gmail.com>\n"
 "Scrambled777 <weblate.scrambled777@simplelogin.com>"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:329
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
 msgid "Weather"
 msgstr "मौसम"
 
@@ -1204,51 +1204,64 @@ msgstr "स्वचालित स्थान"
 msgid "Search locations"
 msgstr "जगह खोजें"
 
-#: src/gui/gcal-window.c:331
+#: src/gui/gcal-window.c:350
 msgid "Week"
 msgstr "सप्ताह"
 
-#: src/gui/gcal-window.c:333
+#: src/gui/gcal-window.c:352
 msgid "Month"
 msgstr "महीना"
 
-#: src/gui/gcal-window.c:735
+#: src/gui/gcal-window.c:834
 msgid "Another event deleted"
 msgstr "एक अन्य कार्यक्रम मिटा दिया गया"
 
-#: src/gui/gcal-window.c:735
+#: src/gui/gcal-window.c:834
 msgid "Event deleted"
 msgstr "कार्यक्रम मिटा दिया गया"
 
-#: src/gui/gcal-window.ui:143
+#: src/gui/gcal-window.c:899
+msgid "Could not import some files: Not ICS files"
+msgstr "कुछ फाइलें आयात नहीं की जा सकीं: ICS फाइलें नहीं"
+
+#: src/gui/gcal-window.c:904
+#, c-format
+msgid "Could not import “%s”: Not an ICS file"
+msgstr "“%s” आयात नहीं किया जा सका: यह ICS फाइल नहीं है"
+
+#: src/gui/gcal-window.ui:123
+msgid "Drop Event Files to Import"
+msgstr "आयात करने के लिए ईवेंट फाइलें ड्रॉप करें"
+
+#: src/gui/gcal-window.ui:166
 msgid "Main Menu"
 msgstr "मुख्य मेनू"
 
-#: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
 msgid "_Today"
 msgstr "आज (_T)"
 
-#: src/gui/gcal-window.ui:255
+#: src/gui/gcal-window.ui:279
 msgid "_Week"
 msgstr "सप्ताह (_W)"
 
-#: src/gui/gcal-window.ui:270
+#: src/gui/gcal-window.ui:294
 msgid "_Month"
 msgstr "महीना (_M)"
 
-#: src/gui/gcal-window.ui:321
+#: src/gui/gcal-window.ui:347
 msgid "_Date & Time Settings…"
 msgstr "दिनांक एवं समय सेटिंग (_D)…"
 
-#: src/gui/gcal-window.ui:325
+#: src/gui/gcal-window.ui:351
 msgid "_Online Accounts…"
 msgstr "ऑनलाइन खाते (_O)…"
 
-#: src/gui/gcal-window.ui:337
+#: src/gui/gcal-window.ui:363
 msgid "_Keyboard Shortcuts"
 msgstr "कीबोर्ड शॉर्टकट (_K)"
 
-#: src/gui/gcal-window.ui:341
+#: src/gui/gcal-window.ui:367
 msgid "_About Calendar"
 msgstr "कैलेंडर के बारे में (_A)"
 
@@ -1347,7 +1360,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "मासिक दृश्य"
 
-#: src/gui/importer/gcal-import-dialog.c:389
+#: src/gui/importer/gcal-import-dialog.c:421
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1358,11 +1371,11 @@ msgstr[1] "%d कार्यक्रम निर्यात करें"
 msgid "Import Files…"
 msgstr "फाइलें निर्यात करें…"
 
-#: src/gui/importer/gcal-import-dialog.ui:25
+#: src/gui/importer/gcal-import-dialog.ui:28
 msgid "_Import"
 msgstr "आयात करें (_I)"
 
-#: src/gui/importer/gcal-import-dialog.ui:45
+#: src/gui/importer/gcal-import-dialog.ui:47
 msgid "C_alendar"
 msgstr "कैलेंडर (_a)"
 
