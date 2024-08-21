@@ -362,7 +362,7 @@ move_event_to_cell (GcalWeekGrid          *self,
 
   changed_event = gcal_event_new_from_event (event);
   week_start = gcal_date_time_get_start_of_week (self->active_date);
-  dnd_date = g_date_time_add_minutes (week_start, cell * 30);
+  dnd_date = gcal_date_time_add_floating_minutes (week_start, cell * 30);
 
   /*
    * Calculate the diff between the dropped cell and the event's start date,
