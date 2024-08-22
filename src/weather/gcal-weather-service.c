@@ -512,7 +512,7 @@ preprocess_gweather_reports (GcalWeatherService *self,
     {
       GWeatherInfo *gwi; /* unowned */
       gboolean valid_date;
-      glong gwi_dtime;
+      time_t gwi_dtime;
       gsize bucket;
 
       gwi = GWEATHER_INFO (iter->data);
