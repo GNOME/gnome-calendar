@@ -39,6 +39,7 @@ struct _GcalQuickAddPopover
   GcalRange          *range;
 
   GtkWidget          *selected_row;
+  GListModel         *read_write_calendars_model;
 
   GcalContext        *context;
 };
@@ -65,15 +66,15 @@ static guint signals[NUM_SIGNALS] = { 0, };
  */
 
 static GtkWidget*
-create_calendar_row (GcalManager  *manager,
-                     GcalCalendar *calendar)
+create_row_func (gpointer data,
+                 gpointer user_data)
 {
+  GcalCalendar *calendar = data;
   g_autoptr (GdkPaintable) paintable = NULL;
   g_autofree gchar *parent_name = NULL;
   g_autofree gchar *tooltip = NULL;
   const GdkRGBA *color;
   GtkWidget *row, *box, *icon, *label, *selected_icon;
-  gboolean read_only;
 
   /* The main box */
   box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
@@ -104,19 +105,12 @@ create_calendar_row (GcalManager  *manager,
 
   /* The row itself */
   row = gtk_list_box_row_new ();
-
-  read_only = gcal_calendar_is_read_only (calendar);
-  gtk_widget_set_sensitive (row, !read_only);
-
   gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), box);
 
   /* Setup also a cool tooltip */
   parent_name = e_source_dup_display_name (gcal_calendar_get_parent_source (calendar));
 
-  if (read_only)
-    tooltip = g_strdup_printf (_("%s (this calendar is read-only)"), parent_name);
-  else
-    tooltip = g_strdup (parent_name);
+  tooltip = g_strdup (parent_name);
 
   gtk_widget_set_tooltip_text (row, tooltip);
 
@@ -133,24 +127,33 @@ create_calendar_row (GcalManager  *manager,
   return row;
 }
 
+static void
+setup_context (GcalQuickAddPopover *self)
+{
+  GcalManager *manager;
+
+  manager = gcal_context_get_manager (self->context);
+  self->read_write_calendars_model = gcal_create_writable_calendars_model (manager);
+
+  gtk_list_box_bind_model (GTK_LIST_BOX (self->calendars_listbox), self->read_write_calendars_model, create_row_func, self, NULL);
+}
+
 /*
  * Retrieves the corresponding row for the given
  * ESource from the listbox.
  */
-static GtkWidget*
+static GtkListBoxRow*
 get_row_for_calendar (GcalQuickAddPopover *self,
                       GcalCalendar        *calendar)
 {
-  GtkWidget *row;
+  guint n_items = g_list_model_get_n_items (self->read_write_calendars_model);
 
-  for (row = gtk_widget_get_first_child (self->calendars_listbox);
-       row;
-       row = gtk_widget_get_next_sibling (row))
+  for (guint i = 0; i < n_items; i++)
     {
-      GcalCalendar *row_calendar = g_object_get_data (G_OBJECT (row), "calendar");
+      g_autoptr (GcalCalendar) item = g_list_model_get_item (self->read_write_calendars_model, i);
 
-      if (row_calendar == calendar)
-        return row;
+      if (item == calendar)
+        return gtk_list_box_get_row_at_index (GTK_LIST_BOX (self->calendars_listbox), i);
     }
 
   return NULL;
@@ -487,131 +490,20 @@ update_default_calendar_row (GcalQuickAddPopover *self)
 {
   GcalCalendar *default_calendar;
   GcalManager *manager;
-  GtkWidget *row;
+  GtkListBoxRow *row;
 
   manager = gcal_context_get_manager (self->context);
   default_calendar = gcal_manager_get_default_calendar (manager);
 
   row = get_row_for_calendar (self, default_calendar);
   if (row != NULL)
-    select_row (self, GTK_LIST_BOX_ROW (row));
+    select_row (self, row);
 }
 
 
 /*
  * Callbacks
  */
-
-static void
-on_calendar_added (GcalManager         *manager,
-                   GcalCalendar        *calendar,
-                   GcalQuickAddPopover *self)
-{
-  GcalCalendar *default_calendar;
-  GtkWidget *row;
-
-  /* Since we can't add on read-only calendars, lets not show them at all */
-  if (gcal_calendar_is_read_only (calendar))
-    return;
-
-  default_calendar = gcal_manager_get_default_calendar (manager);
-  row = create_calendar_row (manager, calendar);
-
-  gtk_list_box_append (GTK_LIST_BOX (self->calendars_listbox), row);
-
-  /* Select the default source when first adding events */
-  if (calendar == default_calendar && !self->selected_row)
-    select_row (self, GTK_LIST_BOX_ROW (row));
-}
-
-static void
-on_calendar_changed (GcalManager         *manager,
-                     GcalCalendar        *calendar,
-                     GcalQuickAddPopover *self)
-{
-  g_autoptr (GdkPaintable) paintable = NULL;
-  const GdkRGBA *color;
-  GtkWidget *row, *color_icon, *name_label;
-  gboolean read_only;
-
-  read_only = gcal_calendar_is_read_only (calendar);
-  row = get_row_for_calendar (self, calendar);
-
-  /* If the calendar changed from/to read-only, we add or remove it here */
-  if (read_only)
-    {
-      if (row)
-        gtk_list_box_remove (GTK_LIST_BOX (self->calendars_listbox), row);
-
-      return;
-    }
-  else if (!row)
-    {
-      on_calendar_added (manager, calendar, self);
-
-      row = get_row_for_calendar (self, calendar);
-    }
-
-  color_icon = g_object_get_data (G_OBJECT (row), "color-icon");
-  name_label = g_object_get_data (G_OBJECT (row), "name-label");
-
-  /* If the source is writable now (or not), update sensitivity */
-  gtk_widget_set_sensitive (row, !read_only);
-
-  /* Setup the source color, in case it changed */
-  color = gcal_calendar_get_color (calendar);
-  paintable = get_circle_paintable_from_color (color, 16);
-  gtk_image_set_from_paintable (GTK_IMAGE (color_icon), paintable);
-
-  /* Also setup the row name, in case we just changed the source name */
-  gtk_label_set_text (GTK_LABEL (name_label), gcal_calendar_get_name (calendar));
-
-  gtk_list_box_invalidate_sort (GTK_LIST_BOX (self->calendars_listbox));
-
-  /*
-   * If the row is the selected one, make a fake selection so the
-   * icon & name of the source is updated at the events' page.
-   */
-  if (row == self->selected_row)
-    select_row (self, GTK_LIST_BOX_ROW (row));
-}
-
-static void
-on_calendar_removed (GcalManager         *manager,
-                     GcalCalendar        *calendar,
-                     GcalQuickAddPopover *self)
-{
-  GtkWidget *row;
-
-  row = get_row_for_calendar (self, calendar);
-
-  if (!row)
-    return;
-
-  gtk_list_box_remove (GTK_LIST_BOX (self->calendars_listbox), row);
-}
-
-/* Sort the calendars by their display name */
-static gint
-sort_func (GtkListBoxRow *row1,
-           GtkListBoxRow *row2,
-           gpointer       user_data)
-{
-  GcalCalendar *calendar1, *calendar2;
-  g_autofree gchar *name1 = NULL;
-  g_autofree gchar *name2 = NULL;
-  gint retval;
-
-  calendar1 = g_object_get_data (G_OBJECT (row1), "calendar");
-  calendar2 = g_object_get_data (G_OBJECT (row2), "calendar");
-
-  name1 = g_utf8_casefold (gcal_calendar_get_name (calendar1), -1);
-  name2 = g_utf8_casefold (gcal_calendar_get_name (calendar2), -1);
-
-  retval = g_strcmp0 (name1, name2);
-
-  return retval;
-}
 
 static void
 select_calendar_button_clicked (GcalQuickAddPopover *self)
@@ -781,24 +673,15 @@ gcal_quick_add_popover_set_property (GObject      *object,
 
     case PROP_CONTEXT:
         {
-          g_autoptr (GList) calendars = NULL;
           GcalManager *manager;
-          GList *l;
 
           g_assert (self->context == NULL);
           self->context = g_value_dup_object (value);
 
-          /* Add currently loaded sources */
           manager = gcal_context_get_manager (self->context);
-          calendars = gcal_manager_get_calendars (manager);
-
-          for (l = calendars; l; l = l->next)
-            on_calendar_added (manager, l->data, self);
+          setup_context (self);
 
           /* Connect to the manager signals and keep the list updates */
-          g_signal_connect_object (manager, "calendar-added", G_CALLBACK (on_calendar_added), self, 0);
-          g_signal_connect_object (manager, "calendar-changed", G_CALLBACK (on_calendar_changed), self, 0);
-          g_signal_connect_object (manager, "calendar-removed", G_CALLBACK (on_calendar_removed), self, 0);
           g_signal_connect_object (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self, G_CONNECT_SWAPPED);
 
           g_signal_connect_object (self->context,
@@ -909,8 +792,6 @@ static void
 gcal_quick_add_popover_init (GcalQuickAddPopover *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
-
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendars_listbox), sort_func, NULL, NULL);
 }
 
 GtkWidget*
