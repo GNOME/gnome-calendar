@@ -8,8 +8,8 @@
 msgid ""
 msgstr "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-02-25 17:33+0000\n"
-"PO-Revision-Date: 2024-03-01 19:41+0200\n"
+"POT-Creation-Date: 2024-08-19 01:14+0000\n"
+"PO-Revision-Date: 2024-08-25 19:41+0200\n"
 "Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <Librezale>\n"
 "Language: eu\n"
@@ -18,60 +18,12 @@ msgstr "Project-Id-Version: gnome-calendar master\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
-#: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:233 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
+#: data/org.gnome.Calendar.desktop.in.in:3
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:7 src/main.c:35
+#: src/gui/gcal-quick-add-popover.ui:135 src/gui/gcal-window.ui:4
+#: src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "Egutegia"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
-msgid "Manage your schedule"
-msgstr "Kudeatu zure programazioa"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
-msgid ""
-"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
-"schedule for upcoming days and weeks, whether your months are filled with "
-"meetings and appointments, public events, travel logistics, or other "
-"commitments in your life."
-msgstr "GNOMEren Egutegia datozen egun eta asteetan dituzun zereginak eta hitzorduak antolatzeko tresna dotorea da. Bilerak eta hitzorduak, gertaera publikoak, bidaien logistika edo beste edozein zeregin antolatzeko balioko dizu."
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
-msgid ""
-"Easily create and manage unlimited calendars and events with GNOME "
-"Calendar's infinite scrolling month view, week timetable, and scheduling "
-"list view."
-msgstr "Sortu eta kudeatu egutegiak eta gertaerak nahieran GNOMEren Egutegiak eskaintzen duen hilabeteen ikuspegi mugagabean, asteen araberako ordutegian zein programazioko zerrenda-ikuspegian."
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:20
-msgid ""
-"Integrating the latest GNOME technologies and design best practices, GNOME "
-"Calendar builds on top of the mature Evolution data server to manage large "
-"quantities of events and to provide integration with other applications. You "
-"can add calendars from various online calendaring services (like NextCloud, "
-"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
-"your events across multiple devices and platforms. GNOME Calendar also "
-"supports local and offline calendaring, so you can use it anywhere and "
-"anytime while travelling (or after civilization's collapse.)"
-msgstr "GNOMEren teknologia eta diseinu berrienak erabiliz, Egutegiak aplikazioa Evolution datu-zerbitzariaren gainean eraiki da gertaeren kopuru handia kudeatzeko eta beste aplikazio batzuekin erraz integratzeko. Lineako egutegi-zerbitzu askotako egutegiak gehitu daitezke (NextXloud, Google Calendar, CalDAV / WebDAV zerbitzariak...), horrela zure gertaerak gailu eta plataforma anitzetan sinkronizatuz. GNOMEren Egutegiak aplikazioak egutegi lokalak eta lineaz kanpokoak ere onartzen ditu, edozein tokitan eta edonola erabili ditzazun."
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:33
-msgid "Week view"
-msgstr "Asteko ikuspegia"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:37
-msgid "Month view"
-msgstr "Hileko ikuspegia"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:41
-msgid "Event editor"
-msgstr "Gertaeren editorea"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:60
-#: src/gui/gcal-application.c:235
-msgid "The GNOME Project"
-msgstr "GNOME proiektua"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -124,9 +76,56 @@ msgstr "Asteko saretaren zoom-maila"
 msgid "The current zoom level of the week grid"
 msgstr "Asteko saretaren uneko zoom-maila"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:8
+msgid "Manage your schedule"
+msgstr "Kudeatu zure programazioa"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:11
+msgid ""
+"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
+"schedule for upcoming days and weeks, whether your months are filled with "
+"meetings and appointments, public events, travel logistics, or other "
+"commitments in your life."
+msgstr "GNOMEren Egutegia datozen egun eta asteetan dituzun zereginak eta hitzorduak antolatzeko tresna dotorea da. Bilerak eta hitzorduak, gertaera publikoak, bidaien logistika edo beste edozein zeregin antolatzeko balioko dizu."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:16
+msgid ""
+"Easily create and manage unlimited calendars and events with GNOME "
+"Calendar's infinite scrolling month view, week timetable, and scheduling "
+"list view."
+msgstr "Sortu eta kudeatu egutegiak eta gertaerak nahieran GNOMEren Egutegiak eskaintzen duen hilabeteen ikuspegi mugagabean, asteen araberako ordutegian zein programazioko zerrenda-ikuspegian."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:20
+msgid ""
+"Integrating the latest GNOME technologies and design best practices, GNOME "
+"Calendar builds on top of the mature Evolution data server to manage large "
+"quantities of events and to provide integration with other applications. You "
+"can add calendars from various online calendaring services (like NextCloud, "
+"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
+"your events across multiple devices and platforms. GNOME Calendar also "
+"supports local and offline calendaring, so you can use it anywhere and "
+"anytime while travelling (or after civilization's collapse.)"
+msgstr "GNOMEren teknologia eta diseinu berrienak erabiliz, Egutegiak aplikazioa Evolution datu-zerbitzariaren gainean eraiki da gertaeren kopuru handia kudeatzeko eta beste aplikazio batzuekin erraz integratzeko. Lineako egutegi-zerbitzu askotako egutegiak gehitu daitezke (NextXloud, Google Calendar, CalDAV / WebDAV zerbitzariak...), horrela zure gertaerak gailu eta plataforma anitzetan sinkronizatuz. GNOMEren Egutegiak aplikazioak egutegi lokalak eta lineaz kanpokoak ere onartzen ditu, edozein tokitan eta edonola erabili ditzazun."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:33
+msgid "Week view"
+msgstr "Asteko ikuspegia"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:37
+msgid "Month view"
+msgstr "Hileko ikuspegia"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "Event editor"
+msgstr "Gertaeren editorea"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
+msgid "The GNOME Project"
+msgstr "GNOME proiektua"
+
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:395
+#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:422
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -163,64 +162,78 @@ msgstr "Editatu egutegia"
 msgid "Calendar Settings"
 msgstr "Egutegiaren ezarpenak"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:343
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:141
-msgid "Calendars"
-msgstr "Egutegiak"
-
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:368
+#. TRANSLATORS: %s is a calendar name.
+#: src/gui/calendar-management/gcal-calendars-page.c:358
 #, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "<b>%s</b> egutegia kenduta"
+msgid "Calendar “%s” removed"
+msgstr "“%s” egutegia kendu egin da"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:373
-#: src/gui/gcal-window.c:738
+#: src/gui/calendar-management/gcal-calendars-page.c:363
+#: src/gui/gcal-window.c:836
 msgid "_Undo"
 msgstr "_Desegin"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:66
-msgid "_Add Calendar…"
-msgstr "_Gehitu egutegia…"
+#: src/gui/calendar-management/gcal-calendars-page.ui:4
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+msgid "Calendars"
+msgstr "Egutegiak"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
-msgid "Account"
-msgstr "Kontua"
+#: src/gui/calendar-management/gcal-calendars-page.ui:67
+msgid "_Add Calendar"
+msgstr "_Gehitu egutegia"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:30
-msgid "Open in Settings"
-msgstr "Ireki hobespenetan"
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:190
+msgid "Calendar URL"
+msgstr "Egutegiaren URLa"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:54
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:208
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
 #: src/gui/event-editor/gcal-summary-section.ui:24
-#: src/gui/gcal-event-popover.ui:115
-#: src/gui/importer/gcal-import-file-row.c:151
+#: src/gui/gcal-event-popover.ui:165
+#: src/gui/importer/gcal-import-file-row.c:177
 msgid "Location"
 msgstr "Kokalekua"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:24
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:209
+msgid "On This Computer"
+msgstr "Ordenagailu honetan"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:4
+msgid "Edit Calendar"
+msgstr "Editatu egutegia"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:34
+msgid "Account"
+msgstr "Kontua"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:42
+msgid "Open in Settings"
+msgstr "Ireki hobespenetan"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
 msgid "Calendar Name"
 msgstr "Egutegiaren izena"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:32
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
 msgid "Color"
 msgstr "Kolorea"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:110
 msgid "_Display Calendar"
 msgstr "_Bistaratu egutegia"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:117
 msgid "Default _Calendar"
 msgstr "_Egutegi lehenetsia"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:118
 msgid "Add new events to this calendar by default"
 msgstr "Gehitu gertaera berriak egutegi honi lehenetsi gisa"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:132
 msgid "_Remove Calendar"
 msgstr "_Kendu egutegia"
 
@@ -228,157 +241,169 @@ msgstr "_Kendu egutegia"
 msgid "Select a file"
 msgstr "Hautatu fitxategia"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:158
-#: src/gui/calendar-management/gcal-new-calendar-page.c:165
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:190
+#: src/gui/calendar-management/gcal-new-calendar-page.c:160
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "Gehitu egutegia"
 msgstr[1] "Gehitu %1$u egutegi"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:516
+#: src/gui/calendar-management/gcal-new-calendar-page.c:167
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "Gehitu egutegia"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+msgid "The URL you have entered appears to be invalid."
+msgstr "Sartu duzun URLak baliogabea dirudi."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+msgid "A valid user and password are required to connect to this calendar."
+msgstr "Baliozko erabiltzaile eta pasahitza behar dira egutegi horrekin konektatzeko."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
 msgstr "Egutegi berria"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
 msgid "Import a Calendar"
 msgstr "Inportatu egutegi bat"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:77
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
 msgid ""
 "Alternatively, enter the web address of an online calendar you want to "
 "import, or open a supported calendar file."
 msgstr "Bestela, sartu inportatu nahi duzun lineako egutegi baten web helbidea, edo ireki onartuta dagoen egutegi-fitxategi bat."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
 msgid "Open a File"
 msgstr "Ireki fitxategia"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:108
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
 msgid "Calendar files"
 msgstr "Egutegiaren fitxategiak"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr "Egutegia zure lineako kontu batena bada, <a href=\"GOA\">lineako kontuaren ezarpenak</a> bidez gehi dezakezu."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:213
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
 msgid "Credentials"
 msgstr "Kredentzialak"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
 msgid "User"
 msgstr "Erabiltzailea"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
 msgid "Password"
 msgstr "Pasahitza"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1269
+#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "_Utzi"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
 msgid "_Connect"
 msgstr "_Konektatu"
 
-#: src/gui/event-editor/gcal-alarm-row.c:84
+#: src/gui/event-editor/gcal-alarm-row.c:85
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
 msgstr[0] "Egun %1$u, ordu %2$u eta minutu %3$u lehenago"
 msgstr[1] "Egun %1$u, ordu %2$u eta %3$u minutu lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:88
+#: src/gui/event-editor/gcal-alarm-row.c:89
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
 msgstr[0] "Egun %1$u, %2$u ordu eta minutu %3$u lehenago"
 msgstr[1] "Egun %1$u, %2$u ordu eta %3$u minutu lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:94
+#: src/gui/event-editor/gcal-alarm-row.c:95
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u egun, ordu %2$u eta minutu %3$u lehenago"
 msgstr[1] "%1$u egun, ordu %2$u eta %3$u minutu lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:98
+#: src/gui/event-editor/gcal-alarm-row.c:99
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u egun, %2$u ordu eta minutu %3$u lehenago"
 msgstr[1] "%1$u egun, %2$u ordu eta %3$u minutu lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:113
+#: src/gui/event-editor/gcal-alarm-row.c:114
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
 msgstr[0] "Egun %1$u eta ordu %2$u lehenago"
 msgstr[1] "Egun %1$u eta %2$u ordu lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:117
+#: src/gui/event-editor/gcal-alarm-row.c:118
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
 msgstr[0] "%1$u egun eta ordu %2$u lehenago"
 msgstr[1] "%1$u egun eta %2$u ordu lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:133
+#: src/gui/event-editor/gcal-alarm-row.c:134
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
 msgstr[0] "Egun %1$u eta minutu %2$u lehenago"
 msgstr[1] "Egun %1$u eta %2$u minutu lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:137
+#: src/gui/event-editor/gcal-alarm-row.c:138
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
 msgstr[0] "%1$u egun eta minutu %2$u lehenago"
 msgstr[1] "%1$u egun eta %2$u minutu lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:147
+#: src/gui/event-editor/gcal-alarm-row.c:148
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "Egun %1$u lehenago"
 msgstr[1] "%1$u egun lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:165
+#: src/gui/event-editor/gcal-alarm-row.c:166
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "Ordu %1$u eta minutu %2$u lehenago"
 msgstr[1] "Ordu %1$u eta %2$u minutu lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:169
+#: src/gui/event-editor/gcal-alarm-row.c:170
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "%1$u ordu eta minutu %2$u lehenago"
 msgstr[1] "%1$u ordu eta %2$u minutu lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:179
+#: src/gui/event-editor/gcal-alarm-row.c:180
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "Ordu %1$u lehenago"
 msgstr[1] "%1$u ordu lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:191
+#: src/gui/event-editor/gcal-alarm-row.c:192
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "Minutu %1$u lehenago"
 msgstr[1] "%1$u minutu lehenago"
 
-#: src/gui/event-editor/gcal-alarm-row.c:198
+#: src/gui/event-editor/gcal-alarm-row.c:199
 msgid "Event start time"
 msgstr "Gertaeraren hasierako ordua"
 
@@ -386,7 +411,7 @@ msgstr "Gertaeraren hasierako ordua"
 msgid "Toggle Alarm Sound"
 msgstr "Txandakatu alarmaren soinua"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:19
+#: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "Kendu alarma"
 
@@ -425,7 +450,7 @@ msgstr "A"
 #: src/gui/event-editor/gcal-date-chooser.c:292
 msgctxt "grid thursday"
 msgid "T"
-msgstr "O"
+msgstr "A"
 
 #. Translators: Calendar grid abbreviation for Friday
 #: src/gui/event-editor/gcal-date-chooser.c:297
@@ -437,81 +462,92 @@ msgstr "O"
 #: src/gui/event-editor/gcal-date-chooser.c:302
 msgctxt "grid saturday"
 msgid "S"
-msgstr "L"
+msgstr "I"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:121
 msgid "Save"
 msgstr "Gorde"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
+#: src/gui/event-editor/gcal-event-editor-dialog.c:121
 msgid "Done"
 msgstr "Eginda"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:778
+#: src/gui/event-editor/gcal-event-editor-dialog.c:744
 msgid "New Event"
 msgstr "Gertaera berria"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:29
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:22
+msgid ""
+"<b>This event is part of a read-only calendar</b>\n"
+"You cannot delete or change this event."
+msgstr "<b>Gertaera hau irakurtzeko soilik den egutegi batekoa da</b>\n"
+"Ezin duzu gertaera hori ezabatu edo aldatu."
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:50
 msgid "Select Calendar"
 msgstr "Hautatu egutegia"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:87
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:108
 msgid "_Done"
 msgstr "_Eginda"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:135
 msgid "Schedule"
 msgstr "Antolaketa"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:126
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:147
 msgid "Reminders"
 msgstr "Oroigarriak"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:138
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
 msgid "Notes"
 msgstr "Oharrak"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:158
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:176
 msgid "Delete Event"
 msgstr "Ezabatu gertaera"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:26
-msgid "Add a Reminder…"
-msgstr "Gehitu oroigarria…"
+#: src/gui/event-editor/gcal-reminders-section.ui:17
+msgid "Add Reminder"
+msgstr "Gehitu oroigarria"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:52
+#: src/gui/event-editor/gcal-reminders-section.ui:41
+msgid "Event start"
+msgstr "Getaeraren hasiera"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:47
 msgid "5 Minutes"
 msgstr "5 minutu"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:58
+#: src/gui/event-editor/gcal-reminders-section.ui:53
 msgid "10 Minutes"
 msgstr "10 minutu"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:64
+#: src/gui/event-editor/gcal-reminders-section.ui:59
 msgid "15 Minutes"
 msgstr "15 minutu"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:70
+#: src/gui/event-editor/gcal-reminders-section.ui:65
 msgid "30 Minutes"
 msgstr "30 minutu"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:76
+#: src/gui/event-editor/gcal-reminders-section.ui:71
 msgid "1 Hour"
 msgstr "Ordu 1"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:82
+#: src/gui/event-editor/gcal-reminders-section.ui:77
 msgid "1 Day"
 msgstr "Egun 1"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:88
+#: src/gui/event-editor/gcal-reminders-section.ui:83
 msgid "2 Days"
 msgstr "2 egun"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:94
+#: src/gui/event-editor/gcal-reminders-section.ui:89
 msgid "3 Days"
 msgstr "3 egun"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:100
+#: src/gui/event-editor/gcal-reminders-section.ui:95
 msgid "1 Week"
 msgstr "Aste 1"
 
@@ -522,19 +558,19 @@ msgid "Last %A"
 msgstr "Azken %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
-#: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
 #: src/gui/views/gcal-agenda-view.c:186
 msgid "Yesterday"
 msgstr "Atzo"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
-#: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
+#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
 #: src/gui/views/gcal-agenda-view.c:182
 msgid "Today"
 msgstr "Gaur"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
-#: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
 #: src/gui/views/gcal-agenda-view.c:184
 msgid "Tomorrow"
 msgstr "Bihar"
@@ -559,12 +595,12 @@ msgid "All Day"
 msgstr "Egun osoa"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:34
-#: src/gui/importer/gcal-import-file-row.c:152
+#: src/gui/importer/gcal-import-file-row.c:178
 msgid "Starts"
 msgstr "Hasten da"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:77
-#: src/gui/importer/gcal-import-file-row.c:153
+#: src/gui/importer/gcal-import-file-row.c:179
 msgid "Ends"
 msgstr "Amaitzen da"
 
@@ -618,7 +654,7 @@ msgid "End Repeat Date"
 msgstr "Errepikapen-amaieraren data"
 
 #: src/gui/event-editor/gcal-summary-section.ui:16
-#: src/gui/importer/gcal-import-file-row.c:150
+#: src/gui/importer/gcal-import-file-row.c:176
 msgid "Title"
 msgstr "Titulua"
 
@@ -661,11 +697,11 @@ msgstr "Ireki egutegia igarotako gertaera erakutsiz"
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d Egutegiaren egileak"
 
-#: src/gui/gcal-application.c:244
+#: src/gui/gcal-application.c:239
 msgid "translator-credits"
 msgstr "translator-credits"
 
-#: src/gui/gcal-application.c:251 src/gui/gcal-window.ui:329
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
 msgid "Weather"
 msgstr "Eguraldia"
 
@@ -685,65 +721,65 @@ msgstr "_Sinkronizatu egutegiak"
 msgid "_Manage Calendars…"
 msgstr "_Kudeatu egutegiak…"
 
-#: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:253
+#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
 msgstr "Urtarrila"
 
-#: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:254
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:254
 msgid "February"
 msgstr "Otsaila"
 
-#: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:255
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:255
 msgid "March"
 msgstr "Martxoa"
 
-#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:256
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:256
 msgid "April"
 msgstr "Apirila"
 
-#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:257
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:257
 msgid "May"
 msgstr "Maiatza"
 
-#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:258
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:258
 msgid "June"
 msgstr "Ekaina"
 
-#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:259
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:259
 msgid "July"
 msgstr "Uztaila"
 
-#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:260
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:260
 msgid "August"
 msgstr "Abuztua"
 
-#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:261
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:261
 msgid "September"
 msgstr "Iraila"
 
-#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:262
+#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:262
 msgid "October"
 msgstr "Urria"
 
-#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:263
+#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:263
 msgid "November"
 msgstr "Azaroa"
 
-#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:264
+#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:264
 msgid "December"
 msgstr "Abendua"
 
-#: src/gui/gcal-event-popover.c:158
+#: src/gui/gcal-event-popover.c:161
 #, c-format
 msgid "Today %s"
 msgstr "Gaur %s"
 
-#: src/gui/gcal-event-popover.c:162
+#: src/gui/gcal-event-popover.c:165
 #, c-format
 msgid "Tomorrow %s"
 msgstr "Bihar %s"
 
-#: src/gui/gcal-event-popover.c:166
+#: src/gui/gcal-event-popover.c:169
 #, c-format
 msgid "Yesterday %s"
 msgstr "Atzo %s"
@@ -753,7 +789,7 @@ msgstr "Atzo %s"
 #. * of month, and %3$ is the hour. This format string results in dates
 #. * like "November 21, 22:00".
 #.
-#: src/gui/gcal-event-popover.c:175
+#: src/gui/gcal-event-popover.c:178
 #, c-format
 msgid "%1$s %2$d, %3$s"
 msgstr "%1$s %2$d, %3$s"
@@ -763,7 +799,7 @@ msgstr "%1$s %2$d, %3$s"
 #. * of month, %3$d is the year, and %4$s is the hour. This format string
 #. * results in dates like "November 21, 2020, 22:00".
 #.
-#: src/gui/gcal-event-popover.c:187
+#: src/gui/gcal-event-popover.c:190
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%1$s %2$d, %3$d, %4$s"
@@ -773,7 +809,7 @@ msgstr "%1$s %2$d, %3$d, %4$s"
 #. * the day of month. This format string results in dates like
 #. * "November 21".
 #.
-#: src/gui/gcal-event-popover.c:216 src/gui/gcal-event-popover.c:330
+#: src/gui/gcal-event-popover.c:219 src/gui/gcal-event-popover.c:333
 #, c-format
 msgid "%1$s %2$d"
 msgstr "%1$s %2$d"
@@ -783,7 +819,7 @@ msgstr "%1$s %2$d"
 #. * of month, and %3$d is the year. This format string results in dates
 #. * like "November 21, 2020".
 #.
-#: src/gui/gcal-event-popover.c:227 src/gui/gcal-event-popover.c:341
+#: src/gui/gcal-event-popover.c:230 src/gui/gcal-event-popover.c:344
 #, c-format
 msgid "%1$s %2$d, %3$d"
 msgstr "%3$d %1$s %2$d"
@@ -792,7 +828,7 @@ msgstr "%3$d %1$s %2$d"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Today, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:261
+#: src/gui/gcal-event-popover.c:264
 #, c-format
 msgid "Today, %1$s — %2$s"
 msgstr "Gaur, %1$s — %2$s"
@@ -801,7 +837,7 @@ msgstr "Gaur, %1$s — %2$s"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:269
+#: src/gui/gcal-event-popover.c:272
 #, c-format
 msgid "Tomorrow, %1$s – %2$s"
 msgstr "Bihar, %1$s – %2$s"
@@ -810,7 +846,7 @@ msgstr "Bihar, %1$s – %2$s"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:277
+#: src/gui/gcal-event-popover.c:280
 #, c-format
 msgid "Yesterday, %1$s – %2$s"
 msgstr "Atzo, %1$s – %2$s"
@@ -820,7 +856,7 @@ msgstr "Atzo, %1$s – %2$s"
 #. * of month, %3$s is the start hour, and %4$s is the end hour. This
 #. * format string results in dates like "November 21, 19:00 — 22:00".
 #.
-#: src/gui/gcal-event-popover.c:286
+#: src/gui/gcal-event-popover.c:289
 #, c-format
 msgid "%1$s %2$d, %3$s – %4$s"
 msgstr "%1$s %2$d, %3$s – %4$s"
@@ -832,53 +868,61 @@ msgstr "%1$s %2$d, %3$s – %4$s"
 #. *
 #. * "November 21, 2021, 19:00 — 22:00".
 #.
-#: src/gui/gcal-event-popover.c:301
+#: src/gui/gcal-event-popover.c:304
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%3$d %1$s %2$d, %4$s – %5$s"
 
-#: src/gui/gcal-event-popover.ui:75
-msgid "No event information"
-msgstr "Ez dago gertaeraren informaziorik"
+#: src/gui/gcal-event-popover.c:369
+msgid "View Additional Details"
+msgstr "Ikusi xehetasun gehigarriak"
 
-#: src/gui/gcal-event-popover.ui:175
-msgid "Edit…"
-msgstr "Editatu…"
+#: src/gui/gcal-event-popover.c:374
+msgid "Edit Additional Details"
+msgstr "Editatu xehetasun gehigarriak"
 
-#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:355
+#: src/gui/gcal-event-popover.ui:66
+msgid ""
+"<b>This event is part of a read-only calendar</b>\n"
+"    You cannot delete or change this event."
+msgstr "<b>Gertaera hau irakurtzeko soilik den egutegi batekoa da</b>\n"
+"    Ezin duzu gertaera hori ezabatu edo aldatu."
+
+#: src/gui/gcal-event-popover.ui:107
+msgid "No event notes"
+msgstr "Ez dago gertaeraren oharrik"
+
+#. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
+#: src/gui/gcal-event-widget.c:369
 #, c-format
-msgid "At %s"
-msgstr "Lekua: %s"
+msgid ""
+"\n"
+"\n"
+"On %s"
+msgstr "\n"
+"\n"
+"%s zerbitzuan"
 
-#: src/gui/gcal-meeting-row.c:67
-msgid "Google Meet"
-msgstr "Google Meet"
+#. Translators: %s is a URL informed as the location of the event
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:382 src/gui/gcal-event-widget.c:388
+#, c-format
+msgid ""
+"\n"
+"\n"
+"At %s"
+msgstr "\n"
+"\n"
+"%s helbidean"
 
-#: src/gui/gcal-meeting-row.c:68
-msgid "Jitsi"
-msgstr "Jitsi"
-
-#: src/gui/gcal-meeting-row.c:69
-msgid "Whereby"
-msgstr "Whereby"
-
-#: src/gui/gcal-meeting-row.c:70
-msgid "Zoom"
-msgstr "Zoom"
-
-#: src/gui/gcal-meeting-row.c:71
-msgid "Microsoft Teams"
-msgstr "Microsoft Teams"
-
-#: src/gui/gcal-meeting-row.c:81
+#: src/gui/gcal-meeting-row.c:72
 msgid "Unknown Service"
 msgstr "Zerbitzu ezezaguna"
 
 #. Translators: "Join" as in "Join meeting"
-#: src/gui/gcal-meeting-row.ui:13
-msgid "Join"
-msgstr "Elkartu"
+#: src/gui/gcal-meeting-row.ui:41
+msgid "_Join"
+msgstr "_Elkartu"
 
 #: src/gui/gcal-quick-add-popover.c:116
 #, c-format
@@ -1142,51 +1186,64 @@ msgstr "Kokaleku automatikoa"
 msgid "Search locations"
 msgstr "Bilatu kokalekuak"
 
-#: src/gui/gcal-window.c:332
+#: src/gui/gcal-window.c:350
 msgid "Week"
 msgstr "Astea"
 
-#: src/gui/gcal-window.c:334
+#: src/gui/gcal-window.c:352
 msgid "Month"
 msgstr "Hila"
 
-#: src/gui/gcal-window.c:736
+#: src/gui/gcal-window.c:834
 msgid "Another event deleted"
 msgstr "Beste gertaera ezabatuta"
 
-#: src/gui/gcal-window.c:736
+#: src/gui/gcal-window.c:834
 msgid "Event deleted"
 msgstr "Gertaera ezabatuta"
 
-#: src/gui/gcal-window.ui:143
+#: src/gui/gcal-window.c:899
+msgid "Could not import some files: Not ICS files"
+msgstr "Ezin dira zenbait fitxategi inportatu: Ez dira ICS fitxategiak"
+
+#: src/gui/gcal-window.c:904
+#, c-format
+msgid "Could not import “%s”: Not an ICS file"
+msgstr "Ezin da “%s” inportatu: Ez da ICS fitxategia"
+
+#: src/gui/gcal-window.ui:123
+msgid "Drop Event Files to Import"
+msgstr "Jaregin gertaera-fitxategiak haiek inportatzeko"
+
+#: src/gui/gcal-window.ui:166
 msgid "Main Menu"
 msgstr "Menu nagusia"
 
-#: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
 msgid "_Today"
 msgstr "_Gaur"
 
-#: src/gui/gcal-window.ui:255
+#: src/gui/gcal-window.ui:279
 msgid "_Week"
 msgstr "_Astea"
 
-#: src/gui/gcal-window.ui:270
+#: src/gui/gcal-window.ui:294
 msgid "_Month"
 msgstr "_Hilabetea"
 
-#: src/gui/gcal-window.ui:321
+#: src/gui/gcal-window.ui:347
 msgid "_Date & Time Settings…"
 msgstr "_Data eta orduaren ezarpenak…"
 
-#: src/gui/gcal-window.ui:325
+#: src/gui/gcal-window.ui:351
 msgid "_Online Accounts…"
 msgstr "_Lineako kontuak…"
 
-#: src/gui/gcal-window.ui:337
+#: src/gui/gcal-window.ui:363
 msgid "_Keyboard Shortcuts"
 msgstr "Las_ter-teklak"
 
-#: src/gui/gcal-window.ui:341
+#: src/gui/gcal-window.ui:367
 msgid "_About Calendar"
 msgstr "Egutegia aplikazioari _buruz"
 
@@ -1285,7 +1342,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Hileko ikuspegia"
 
-#: src/gui/importer/gcal-import-dialog.c:396
+#: src/gui/importer/gcal-import-dialog.c:421
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1296,11 +1353,11 @@ msgstr[1] "Inportatu %d gertaera"
 msgid "Import Files…"
 msgstr "Inportau fitxategiak…"
 
-#: src/gui/importer/gcal-import-dialog.ui:29
+#: src/gui/importer/gcal-import-dialog.ui:28
 msgid "_Import"
 msgstr "_Inportatu"
 
-#: src/gui/importer/gcal-import-dialog.ui:49
+#: src/gui/importer/gcal-import-dialog.ui:61
 msgid "C_alendar"
 msgstr "_Egutegia"
 
@@ -1336,11 +1393,11 @@ msgstr "Barneko errorea"
 msgid "File is not an iCalendar (.ics) file"
 msgstr "Fitxategia ez da iCalendar (.ics) motakoa"
 
-#: src/gui/importer/gcal-import-file-row.c:154
+#: src/gui/importer/gcal-import-file-row.c:180
 msgid "Description"
-msgstr "Deskribapena"
+msgstr "Azalpena"
 
-#: src/gui/views/gcal-agenda-view.c:366
+#: src/gui/views/gcal-agenda-view.c:380
 msgid "On-going"
 msgstr "Abian"
 
@@ -1372,27 +1429,56 @@ msgstr[1] "Beste %d gertaera"
 msgid "week %d"
 msgstr "%d. astea"
 
-#: src/utils/gcal-utils.c:1265
+#: src/utils/gcal-utils.c:1201
 msgid "Modify Multiple Events?"
 msgstr "Aldatu gertaera anitz?"
 
-#: src/utils/gcal-utils.c:1266
+#: src/utils/gcal-utils.c:1202
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr "Aldatu nahi duzun gertaera errepikakorra da. Hautatu dituzun aldaketek honi eragingo die:"
 
-#: src/utils/gcal-utils.c:1270
+#: src/utils/gcal-utils.c:1206
 msgid "_Only This Event"
 msgstr "_Soilik gertaera hau"
 
-#: src/utils/gcal-utils.c:1276
+#: src/utils/gcal-utils.c:1212
 msgid "_Subsequent Events"
 msgstr "_Hurrengo gertaerak"
 
-#: src/utils/gcal-utils.c:1279
+#: src/utils/gcal-utils.c:1215
 msgid "_All Events"
 msgstr "_Gertaera guztiak"
+
+#: src/utils/gcal-utils.c:1317
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#: src/utils/gcal-utils.c:1318
+msgid "Jitsi"
+msgstr "Jitsi"
+
+#: src/utils/gcal-utils.c:1319
+msgid "Whereby"
+msgstr "Whereby"
+
+#: src/utils/gcal-utils.c:1320
+msgid "Zoom"
+msgstr "Zooma"
+
+#: src/utils/gcal-utils.c:1321
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#~ msgid "_Add Calendar…"
+#~ msgstr "_Gehitu egutegia…"
+
+#~ msgid "No event information"
+#~ msgstr "Ez dago gertaeraren informaziorik"
+
+#~ msgid "Edit…"
+#~ msgstr "Editatu…"
 
 #~ msgid "Unnamed event"
 #~ msgstr "Gertaera izengabea"
