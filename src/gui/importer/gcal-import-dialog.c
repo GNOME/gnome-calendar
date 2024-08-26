@@ -95,6 +95,28 @@ import_data_free (gpointer data)
   g_free (import_data);
 }
 
+static gboolean
+find_calendar (GListModel   *model,
+               GcalCalendar *calendar,
+               guint        *out_position)
+{
+  g_assert (out_position != NULL);
+  g_assert (G_IS_LIST_MODEL (model));
+  g_assert (GCAL_IS_CALENDAR (calendar));
+
+  for (guint i = 0; i < g_list_model_get_n_items (model); i++)
+    {
+      GcalCalendar *aux = g_list_model_get_item (model, i);
+      g_assert (GCAL_IS_CALENDAR (aux));
+      if (aux == calendar)
+        {
+          *out_position = i;
+          return TRUE;
+        }
+    }
+  return FALSE;
+}
+
 static void
 update_default_calendar (GcalImportDialog *self)
 {
@@ -107,7 +129,7 @@ update_default_calendar (GcalImportDialog *self)
   calendars = gcal_create_writable_calendars_model (manager);
   default_calendar = gcal_manager_get_default_calendar (manager);
 
-  if (default_calendar && g_list_store_find (G_LIST_STORE (calendars), default_calendar, &position))
+  if (default_calendar && find_calendar (calendars, default_calendar, &position))
     adw_combo_row_set_selected (self->calendar_combo_row, position);
 }
 
