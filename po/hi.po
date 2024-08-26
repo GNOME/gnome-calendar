@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-05 15:39+0000\n"
-"PO-Revision-Date: 2024-08-09 12:49+0530\n"
+"POT-Creation-Date: 2024-08-19 01:14+0000\n"
+"PO-Revision-Date: 2024-08-19 20:23+0530\n"
 "Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
 "Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
 "Language: hi\n"
@@ -190,7 +190,7 @@ msgid "_Undo"
 msgstr "पूर्ववत करें (_U)"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:144
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
 msgid "Calendars"
 msgstr "कैलेंडर"
 
@@ -256,18 +256,26 @@ msgstr "कैलेंडर हटाएं (_R)"
 msgid "Select a file"
 msgstr "फाइल चुनें"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:158
+#: src/gui/calendar-management/gcal-new-calendar-page.c:160
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "कैलेंडर जोड़ें"
 msgstr[1] "%1$u कैलेंडर जोड़ें"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:165
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
+#: src/gui/calendar-management/gcal-new-calendar-page.c:167
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "कैलेंडर जोड़ें"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+msgid "The URL you have entered appears to be invalid."
+msgstr "आपके द्वारा दर्ज किया गया यूआरएल अमान्य प्रतीत होता है।"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+msgid "A valid user and password are required to connect to this calendar."
+msgstr "इस कैलेंडर से जुड़ने के लिए एक मान्य उपयोक्ता और पासवर्ड की आवश्यकता है।"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
@@ -285,15 +293,15 @@ msgstr ""
 "वैकल्पिक रूप से, उस ऑनलाइन कैलेंडर का वेब पता दर्ज करें जिसे आप आयात करना चाहते हैं, या कोई "
 "समर्थित कैलेंडर फाइल खोलें।"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:108
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
 msgid "Open a File"
 msgstr "फाइल खोलें"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
 msgid "Calendar files"
 msgstr "कैलेंडर फाइलें"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:168
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -301,25 +309,25 @@ msgstr ""
 "यदि कोई कैलेंडर आपके किसी ऑनलाइन खाते से संबंधित है, तो आप उसे <a href=\"GOA\">ऑनलॉइन "
 "खाते सेटिंग्स</a> की मदद से जोड़ सकते हैं।"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:216
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
 msgid "Credentials"
 msgstr "प्रमाणपत्र"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:224
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
 msgid "User"
 msgstr "उपयोक्ता"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:229
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
 msgid "Password"
 msgstr "पासवर्ड"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:240
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1204
+#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "रद्द करें (_C)"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
 msgid "_Connect"
 msgstr "जुड़ें (_C)"
 
@@ -475,15 +483,15 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "श"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.c:121
 msgid "Save"
 msgstr "सहेजें"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.c:121
 msgid "Done"
 msgstr "संपन्न"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:787
+#: src/gui/event-editor/gcal-event-editor-dialog.c:744
 msgid "New Event"
 msgstr "नया कार्यक्रम"
 
@@ -1375,7 +1383,7 @@ msgstr "फाइलें निर्यात करें…"
 msgid "_Import"
 msgstr "आयात करें (_I)"
 
-#: src/gui/importer/gcal-import-dialog.ui:47
+#: src/gui/importer/gcal-import-dialog.ui:61
 msgid "C_alendar"
 msgstr "कैलेंडर (_a)"
 
@@ -1448,11 +1456,11 @@ msgstr[1] "अन्य %d कार्यक्रम"
 msgid "week %d"
 msgstr "सप्ताह %d"
 
-#: src/utils/gcal-utils.c:1200
+#: src/utils/gcal-utils.c:1201
 msgid "Modify Multiple Events?"
 msgstr "एक से अधिक कार्यक्रम संशोधित करें?"
 
-#: src/utils/gcal-utils.c:1201
+#: src/utils/gcal-utils.c:1202
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1460,34 +1468,34 @@ msgstr ""
 "आप जिस कार्यक्रम को संशोधित करने का प्रयास कर रहे हैं वह पुनरावर्तक है। आपके द्वारा चुने गए "
 "परिवर्तन निम्न पर लागू होंगे:"
 
-#: src/utils/gcal-utils.c:1205
+#: src/utils/gcal-utils.c:1206
 msgid "_Only This Event"
 msgstr "केवल यही कार्यक्रम (_O)"
 
-#: src/utils/gcal-utils.c:1211
+#: src/utils/gcal-utils.c:1212
 msgid "_Subsequent Events"
 msgstr "आगे के कार्यक्रम (_S)"
 
-#: src/utils/gcal-utils.c:1214
+#: src/utils/gcal-utils.c:1215
 msgid "_All Events"
 msgstr "सभी कार्यक्रम (_A)"
 
-#: src/utils/gcal-utils.c:1316
+#: src/utils/gcal-utils.c:1317
 msgid "Google Meet"
 msgstr "गूगल मीट"
 
-#: src/utils/gcal-utils.c:1317
+#: src/utils/gcal-utils.c:1318
 msgid "Jitsi"
 msgstr "जित्सी"
 
-#: src/utils/gcal-utils.c:1318
+#: src/utils/gcal-utils.c:1319
 msgid "Whereby"
 msgstr "व्हेयरबाए"
 
-#: src/utils/gcal-utils.c:1319
+#: src/utils/gcal-utils.c:1320
 msgid "Zoom"
 msgstr "जूम"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "माइक्रोसॉफ्ट टीम्स"
