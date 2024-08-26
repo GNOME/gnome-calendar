@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-07-24 15:12+0000\n"
-"PO-Revision-Date: 2024-07-26 22:15+0200\n"
+"POT-Creation-Date: 2024-08-19 01:14+0000\n"
+"PO-Revision-Date: 2024-08-26 13:51+0200\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:7 src/main.c:35
 #: src/gui/gcal-quick-add-popover.ui:135 src/gui/gcal-window.ui:4
-#: src/gui/gcal-window.ui:124
+#: src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "Agenda"
 
@@ -190,12 +190,12 @@ msgid "Calendar “%s” removed"
 msgstr "Agenda « %s » suprimit"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:363
-#: src/gui/gcal-window.c:737
+#: src/gui/gcal-window.c:836
 msgid "_Undo"
 msgstr "_Anullar"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:144
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
 msgid "Calendars"
 msgstr "Agendas"
 
@@ -261,18 +261,28 @@ msgstr "_Suprimir l'agenda"
 msgid "Select a file"
 msgstr "Seleccionar un fichièr"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:158
+#: src/gui/calendar-management/gcal-new-calendar-page.c:160
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "Ajustar un agenda"
 msgstr[1] "Ajustar %1$u agendas"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:165
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:193
+#: src/gui/calendar-management/gcal-new-calendar-page.c:167
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Ajustar un agenda"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+msgid "The URL you have entered appears to be invalid."
+msgstr "L’URL qu’avètz picada sembla pas valida."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+msgid "A valid user and password are required to connect to this calendar."
+msgstr ""
+"Un nom d’utilizaire e un senhal valids son necessaris per se connectar a "
+"aqueste agenda."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
@@ -290,15 +300,15 @@ msgstr ""
 "Podètz tanben picar l’adreça Web d’un agenda en linha que volètz importar o "
 "dobrir un fichièr d’agenda pres en carga."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:108
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
 msgid "Open a File"
 msgstr "Dobrir un fichièr"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
 msgid "Calendar files"
 msgstr "Fichièrs d'agendas"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:168
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -306,25 +316,25 @@ msgstr ""
 "Se lo calendièr aparten a un de vòstres comptes en linha, lo podètz apondre "
 "via los <a href=\"GOA\">paramètres de compte en linha</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:216
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
 msgid "Credentials"
 msgstr "Identificants"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:224
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
 msgid "User"
 msgstr "Utilizaire"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:229
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
 msgid "Password"
 msgstr "Senhal"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:240
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1204
+#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "_Anullar"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
 msgid "_Connect"
 msgstr "Se _connectar"
 
@@ -480,15 +490,15 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "DS"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.c:121
 msgid "Save"
 msgstr "Enregistrar"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.c:121
 msgid "Done"
 msgstr "Acabat"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:787
+#: src/gui/event-editor/gcal-event-editor-dialog.c:744
 msgid "New Event"
 msgstr "Eveniment novèl"
 
@@ -720,7 +730,7 @@ msgstr ""
 "Cédric Valmary <cvalmary@yahoo.fr>, 2016-2018\n"
 "Quentin PAGÈS"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:329
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
 msgid "Weather"
 msgstr "Metèo"
 
@@ -1208,51 +1218,64 @@ msgstr "Luòc automatic"
 msgid "Search locations"
 msgstr "Recercar los endreches"
 
-#: src/gui/gcal-window.c:331
+#: src/gui/gcal-window.c:350
 msgid "Week"
 msgstr "Setmana"
 
-#: src/gui/gcal-window.c:333
+#: src/gui/gcal-window.c:352
 msgid "Month"
 msgstr "Mes"
 
-#: src/gui/gcal-window.c:735
+#: src/gui/gcal-window.c:834
 msgid "Another event deleted"
 msgstr "Autre eveniment suprimit"
 
-#: src/gui/gcal-window.c:735
+#: src/gui/gcal-window.c:834
 msgid "Event deleted"
 msgstr "Eveniment suprimit"
 
-#: src/gui/gcal-window.ui:143
+#: src/gui/gcal-window.c:899
+msgid "Could not import some files: Not ICS files"
+msgstr "Impòrt impossible d’unes fichièrs : son pas de fichièrs ICS"
+
+#: src/gui/gcal-window.c:904
+#, c-format
+msgid "Could not import “%s”: Not an ICS file"
+msgstr "Impòrt impossible de « %s » : es pas un fichièr ICS"
+
+#: src/gui/gcal-window.ui:123
+msgid "Drop Event Files to Import"
+msgstr "Depausatz los fichièrs d’eveniments d’importar"
+
+#: src/gui/gcal-window.ui:166
 msgid "Main Menu"
 msgstr "Menú principal"
 
-#: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
 msgid "_Today"
 msgstr "_Uèi"
 
-#: src/gui/gcal-window.ui:255
+#: src/gui/gcal-window.ui:279
 msgid "_Week"
 msgstr "_Setmana"
 
-#: src/gui/gcal-window.ui:270
+#: src/gui/gcal-window.ui:294
 msgid "_Month"
 msgstr "_Mes"
 
-#: src/gui/gcal-window.ui:321
+#: src/gui/gcal-window.ui:347
 msgid "_Date & Time Settings…"
 msgstr "_Paramètres de data e d’ora…"
 
-#: src/gui/gcal-window.ui:325
+#: src/gui/gcal-window.ui:351
 msgid "_Online Accounts…"
 msgstr "_Compte en linha…"
 
-#: src/gui/gcal-window.ui:337
+#: src/gui/gcal-window.ui:363
 msgid "_Keyboard Shortcuts"
 msgstr "_Acorchis de clavièr"
 
-#: src/gui/gcal-window.ui:341
+#: src/gui/gcal-window.ui:367
 msgid "_About Calendar"
 msgstr "_A prepaus d’Agenda"
 
@@ -1351,7 +1374,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Vista mesadièra"
 
-#: src/gui/importer/gcal-import-dialog.c:396
+#: src/gui/importer/gcal-import-dialog.c:421
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1362,11 +1385,11 @@ msgstr[1] "Importar %d eveniments"
 msgid "Import Files…"
 msgstr "Importar de fichièrs…"
 
-#: src/gui/importer/gcal-import-dialog.ui:29
+#: src/gui/importer/gcal-import-dialog.ui:28
 msgid "_Import"
 msgstr "_Importar"
 
-#: src/gui/importer/gcal-import-dialog.ui:49
+#: src/gui/importer/gcal-import-dialog.ui:61
 msgid "C_alendar"
 msgstr "C_alendièr"
 
@@ -1438,11 +1461,11 @@ msgstr[1] "%d autres eveniment"
 msgid "week %d"
 msgstr "setmana %d"
 
-#: src/utils/gcal-utils.c:1200
+#: src/utils/gcal-utils.c:1201
 msgid "Modify Multiple Events?"
 msgstr "Modificar mantun eveniment ?"
 
-#: src/utils/gcal-utils.c:1201
+#: src/utils/gcal-utils.c:1202
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1450,35 +1473,35 @@ msgstr ""
 "L’eveniment que volètz modificar es recurrent. Las modificacions "
 "seleccionadas devon èsser aplicadas a :"
 
-#: src/utils/gcal-utils.c:1205
+#: src/utils/gcal-utils.c:1206
 msgid "_Only This Event"
 msgstr "_Unicament aqueste eveniment"
 
-#: src/utils/gcal-utils.c:1211
+#: src/utils/gcal-utils.c:1212
 msgid "_Subsequent Events"
 msgstr "Eveniments _seguents"
 
-#: src/utils/gcal-utils.c:1214
+#: src/utils/gcal-utils.c:1215
 msgid "_All Events"
 msgstr "_Totes los eveniments"
 
-#: src/utils/gcal-utils.c:1316
+#: src/utils/gcal-utils.c:1317
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1317
+#: src/utils/gcal-utils.c:1318
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1318
+#: src/utils/gcal-utils.c:1319
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1319
+#: src/utils/gcal-utils.c:1320
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
