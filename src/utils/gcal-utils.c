@@ -1371,6 +1371,7 @@ gcal_create_writable_calendars_model (GcalManager *manager)
 {
   GtkBoolFilter *bool_filter;
   GtkExpression *expression;
+  GListModel *calendars;
 
   g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
 
@@ -1379,6 +1380,7 @@ gcal_create_writable_calendars_model (GcalManager *manager)
   bool_filter = gtk_bool_filter_new (expression);
   gtk_bool_filter_set_invert (bool_filter, TRUE);
 
-  return G_LIST_MODEL (gtk_filter_list_model_new (G_LIST_MODEL (gcal_manager_get_calendars_model (manager)),
-                                                  GTK_FILTER (bool_filter)));
+  calendars = gcal_manager_get_calendars_model (manager);
+  return G_LIST_MODEL (gtk_filter_list_model_new (g_object_ref (calendars), GTK_FILTER (bool_filter)));
 }
+
