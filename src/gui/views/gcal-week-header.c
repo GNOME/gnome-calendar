@@ -1003,7 +1003,7 @@ update_title (GcalWeekHeader *self)
                                     g_date_time_get_year (week_end));
     }
 
-  week_label = g_strdup_printf (_("week %d"), g_date_time_get_week_of_year (week_mid));
+  week_label = g_strdup_printf (_("Week %d"), g_date_time_get_week_of_year (week_mid));
 
   gtk_label_set_label (GTK_LABEL (self->month_label), month_label);
   gtk_label_set_label (GTK_LABEL (self->week_label), week_label);
