@@ -1,3 +1,12 @@
+Major changes in 47.rc:
+* Set a user agent when requesting remote servers for calendar files
+* Port various spinners to AdwSpinner
+* Improvements to URL validation when adding new calendars
+* Only offer writable calendars when creating new events
+* Show indicator icons for invisible calendars in the importer dialog
+* Fix drag and drop issue with events in daylight saving time
+* Updated translations
+
 Major changes in 47.beta:
 * Add the ability to import ICS files using drag n' drop
 * Fix the timelines backend, to eliminate divergence between views after moving events
