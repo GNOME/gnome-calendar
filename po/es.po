@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2024-08-19 01:14+0000\n"
-"PO-Revision-Date: 2024-09-02 11:43+0200\n"
+"PO-Revision-Date: 2024-09-03 09:36+0200\n"
 "Last-Translator: Daniel Mustieles García <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -206,7 +206,7 @@ msgstr "_Añadir calendario"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:190
 msgid "Calendar URL"
-msgstr "URL del Calendario"
+msgstr "URL del calendario"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:208
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
@@ -277,11 +277,13 @@ msgstr "Añadir calendario"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:418
 msgid "The URL you have entered appears to be invalid."
-msgstr ""
+msgstr "El URL que ha introducido no es válido."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:471
 msgid "A valid user and password are required to connect to this calendar."
 msgstr ""
+"Se necesita un usuario y contraseña válidos para conectarse a este "
+"calendario."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
@@ -506,6 +508,8 @@ msgid ""
 "<b>This event is part of a read-only calendar</b>\n"
 "You cannot delete or change this event."
 msgstr ""
+"<b>Este evento es parte de un calendario de solo lectura</b>\n"
+"No puede eliminar ni cambiar este evento."
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:50
 msgid "Select Calendar"
@@ -533,11 +537,11 @@ msgstr "Eliminar evento"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:17
 msgid "Add Reminder"
-msgstr "Añadir un recordatorio"
+msgstr "Añadir recordatorio"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:41
 msgid "Event start"
-msgstr "Hora de inicio del evento"
+msgstr "Inicio del evento"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:47
 msgid "5 Minutes"
@@ -899,7 +903,7 @@ msgstr "%1$s %2$d, %3$d, %4$s – %5$s"
 
 #: src/gui/gcal-event-popover.c:369
 msgid "View Additional Details"
-msgstr "Ve detalles adicionales"
+msgstr "Ver detalles adicionales"
 
 #: src/gui/gcal-event-popover.c:374
 msgid "Edit Additional Details"
@@ -910,6 +914,8 @@ msgid ""
 "<b>This event is part of a read-only calendar</b>\n"
 "    You cannot delete or change this event."
 msgstr ""
+"<b>Este evento es parte de un calendario de solo lectura</b>\n"
+"No puede eliminar ni cambiar este evento."
 
 #: src/gui/gcal-event-popover.ui:107
 msgid "No event notes"
@@ -925,7 +931,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"El %s:"
+"En %s"
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
@@ -1229,16 +1235,16 @@ msgstr "Evento eliminado"
 
 #: src/gui/gcal-window.c:899
 msgid "Could not import some files: Not ICS files"
-msgstr ""
+msgstr "No se han podido importar algunos archivos: no son archivos ICS"
 
 #: src/gui/gcal-window.c:904
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
-msgstr ""
+msgstr "No se pudo importar «%s»: no es un archivo ICS"
 
 #: src/gui/gcal-window.ui:123
 msgid "Drop Event Files to Import"
-msgstr "Arrastrar archivos de eventos para importar"
+msgstr "Arrastrar eventos para importarlos"
 
 #: src/gui/gcal-window.ui:166
 msgid "Main Menu"
