@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-22 16:47+0000\n"
-"PO-Revision-Date: 2024-08-22 19:56+0300\n"
+"POT-Creation-Date: 2024-09-03 20:56+0000\n"
+"PO-Revision-Date: 2024-09-04 19:25+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -190,7 +190,6 @@ msgstr "Параметри календаря"
 #. TRANSLATORS: %s is a calendar name.
 #: src/gui/calendar-management/gcal-calendars-page.c:358
 #, c-format
-#| msgid "Calendar <b>%s</b> removed"
 msgid "Calendar “%s” removed"
 msgstr "Календар «%s» вилучено"
 
@@ -200,7 +199,7 @@ msgid "_Undo"
 msgstr "_Скасувати"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "Календарі"
 
@@ -209,7 +208,6 @@ msgid "_Add Calendar"
 msgstr "_Додати календар"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:190
-#| msgid "Calendar"
 msgid "Calendar URL"
 msgstr "Адреса календаря"
 
@@ -226,7 +224,6 @@ msgid "On This Computer"
 msgstr "На цьому комп'ютері"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:4
-#| msgid "Edit calendar"
 msgid "Edit Calendar"
 msgstr "Редагувати календар"
 
@@ -239,12 +236,12 @@ msgid "Open in Settings"
 msgstr "Відкрити у «Параметрах»"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "Назва календаря"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "Колір"
 
@@ -264,11 +261,7 @@ msgstr "Типово додати нову подію до цього кален
 msgid "_Remove Calendar"
 msgstr "Ви_лучити календар"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "Виберіть файл"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
@@ -277,49 +270,45 @@ msgstr[1] "Додати %1$u календарі"
 msgstr[2] "Додати %1$u календарів"
 msgstr[3] "Додати календар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
-#| msgid "Add Calendar"
-#| msgid_plural "Add %1$u Calendars"
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Додати календар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:373
 msgid "The URL you have entered appears to be invalid."
 msgstr "Здається, вами введено некоректну адресу."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:426
 msgid "A valid user and password are required to connect to this calendar."
 msgstr ""
-"Для з'єднання з цим календарем слід вказати коректні дані щодо користувача і"
-" пароля."
+"Для з'єднання з цим календарем слід вказати коректні дані щодо користувача і "
+"пароля."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
 msgstr "Календар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "Вилучити календар"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+#| msgid "New Local Calendar…"
+msgid "Create a Local Calendar"
+msgstr "Створити локальний календар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "З'єднатися з інтернет-календарем"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
 msgstr ""
-"Як варіант, можете ввести посилання на мережевий календар, який бажаєте "
-"імпортувати, або відкрити файл календаря."
+"Передбачено підтримку адрес HTTPS, CalDAV або Webcal. Інтернет-календарі,"
+" які може оновлювати лише надавач даних, буде додано як придатні лише до"
+" читання."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "Відкрити файл"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "Файл календаря"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -328,25 +317,25 @@ msgstr ""
 "мережевих облікових записів, можете додати його через <a "
 "href=\"GOA\">параметри мережевих облікових записів</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "Реєстраційні дані"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "Користувач"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "Пароль"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "_Скасувати"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "З'_єднатись"
 
@@ -479,6 +468,12 @@ msgstr "Перемкнути звук попередження"
 msgid "Remove Alarm"
 msgstr "Вилучити нагадування"
 
+#: src/gui/event-editor/gcal-calendar-row.c:70
+#: src/gui/importer/gcal-import-dialog.c:332
+#| msgid "%s (this calendar is read-only)"
+msgid "This calendar is hidden"
+msgstr "Цей календар приховано"
+
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
 #. * NOTE: These grid abbreviations are always shown together
@@ -545,8 +540,8 @@ msgid ""
 "<b>This event is part of a read-only calendar</b>\n"
 "You cannot delete or change this event."
 msgstr ""
-"<b>Цей запис події є частиною календаря, який призначено лише для читання</b"
-">\n"
+"<b>Цей запис події є частиною календаря, який призначено лише для читання</"
+"b>\n"
 "Ви не можете вилучити чи змінити цей запис події."
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:50
@@ -574,12 +569,10 @@ msgid "Delete Event"
 msgstr "Вилучити подію"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:17
-#| msgid "Add a Reminder…"
 msgid "Add Reminder"
 msgstr "Додати нагадування"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:41
-#| msgid "Event start time"
 msgid "Event start"
 msgstr "Початок події"
 
@@ -771,7 +764,7 @@ msgstr ""
 "Daniel Korostil <ted.korostiled@gmail.com>, 2015-2016.\n"
 "Mykola Tkach <Stuartlittle1970@gmail.com>, 2014-2016."
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "Погода"
 
@@ -948,7 +941,6 @@ msgid "View Additional Details"
 msgstr "Переглянути додаткові подробиці"
 
 #: src/gui/gcal-event-popover.c:374
-#| msgid "Edit Details…"
 msgid "Edit Additional Details"
 msgstr "Редагувати додаткові подробиці"
 
@@ -957,12 +949,11 @@ msgid ""
 "<b>This event is part of a read-only calendar</b>\n"
 "    You cannot delete or change this event."
 msgstr ""
-"<b>Цей запис події є частиною календаря, який призначено лише для читання</b"
-">\n"
+"<b>Цей запис події є частиною календаря, який призначено лише для читання</"
+"b>\n"
 "Ви не можете вилучити чи змінити цей запис події."
 
 #: src/gui/gcal-event-popover.ui:107
-#| msgid "No events"
 msgid "No event notes"
 msgstr "Немає нотаток подій"
 
@@ -982,7 +973,6 @@ msgstr ""
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
 #: src/gui/gcal-event-widget.c:382 src/gui/gcal-event-widget.c:388
 #, c-format
-#| msgid "At %s"
 msgid ""
 "\n"
 "\n"
@@ -998,7 +988,6 @@ msgstr "Невідома служба"
 
 #. Translators: "Join" as in "Join meeting"
 #: src/gui/gcal-meeting-row.ui:41
-#| msgid "Join"
 msgid "_Join"
 msgstr "При_єднатися"
 
@@ -1297,31 +1286,36 @@ msgstr "Скиньте файли подій для імпортування"
 msgid "Main Menu"
 msgstr "Головне меню"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "С_ьогодні"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+#| msgid "to Today"
+msgid "Go to Today"
+msgstr "Перейти до сьогоднішнього дня"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "_Тиждень"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "_Місяць"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "П_араметри дати і часу…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "Мережеві _облікові записи"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "_Клавіатурні скорочення"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "Про _Календар"
 
@@ -1420,7 +1414,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Перегляд місяця"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1555,6 +1549,25 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Select a file"
+#~ msgstr "Виберіть файл"
+
+#~ msgid "Import a Calendar"
+#~ msgstr "Вилучити календар"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "Як варіант, можете ввести посилання на мережевий календар, який бажаєте "
+#~ "імпортувати, або відкрити файл календаря."
+
+#~ msgid "Open a File"
+#~ msgstr "Відкрити файл"
+
+#~ msgid "Calendar files"
+#~ msgstr "Файл календаря"
 
 #~ msgid "_Add Calendar…"
 #~ msgstr "_Додати календар…"
@@ -1721,9 +1734,6 @@ msgstr "Microsoft Teams"
 
 #~ msgid "From Web…"
 #~ msgstr "З інтернету…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "Створити локальний календар…"
 
 #~ msgid "No results found"
 #~ msgstr "Не знайдено жодного результату"
