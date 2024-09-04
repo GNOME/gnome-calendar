@@ -12,16 +12,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-19 01:14+0000\n"
-"PO-Revision-Date: 2024-08-24 23:09+0900\n"
-"Last-Translator: Seong-ho Cho <shcho@gnome.org>\n"
+"POT-Creation-Date: 2024-09-03 20:56+0000\n"
+"PO-Revision-Date: 2024-09-04 21:27+0900\n"
+"Last-Translator: Seong-ho Cho <darkcircle.0426@gmail.com>\n"
 "Language-Team: GNOME Korea <gnome-kr@googlegroups.com>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.5\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:7 src/main.c:35
@@ -193,7 +193,7 @@ msgid "_Undo"
 msgstr "실행 취소(_U)"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "달력"
 
@@ -230,12 +230,12 @@ msgid "Open in Settings"
 msgstr "설정에서 열기"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "달력 이름"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "색상"
 
@@ -255,27 +255,23 @@ msgstr "새 행사를 이 달력에 기본으로 추가합니다"
 msgid "_Remove Calendar"
 msgstr "달력 제거(_R)"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "파일 선택"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "달력 %1$u개 추가"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "달력 추가"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:373
 msgid "The URL you have entered appears to be invalid."
 msgstr "입력한 URL 주소가 올바르지 않은 것 같습니다."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:426
 msgid "A valid user and password are required to connect to this calendar."
 msgstr "이 달력에 연결하려면 올바른 사용자 이름 및 암호가 필요합니다."
 
@@ -283,26 +279,23 @@ msgstr "이 달력에 연결하려면 올바른 사용자 이름 및 암호가 �
 msgid "New Calendar"
 msgstr "새 달력"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "달력 가져오기"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "새 로컬 달력 만들기"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "온라인 달력에 연결"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
 msgstr ""
-"대신, 가져올 온라인 달력 웹 주소를 입력하거나 지원 달력 파일을 여십시오."
+"HTTPS, CalDAV, Webcal URL을 지원합니다. 제공자만 업데이트할 수 있는 온라인 달"
+"력은 읽기 전용으로 추가합니다."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "파일 열기"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "달력 파일"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -310,25 +303,25 @@ msgstr ""
 "추가할 달력의 주소를 입력하십시오. 달력이 온라인 계정에 들어있다면, <a "
 "href=\"GOA\">온라인 계정 설정</a>에서 추가할 수 있습니다."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "인증 정보"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "사용자"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "암호"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "취소(_C)"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "연결(_C)"
 
@@ -421,6 +414,11 @@ msgstr "알림 소리 전환"
 #: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "알림 제거"
+
+#: src/gui/event-editor/gcal-calendar-row.c:70
+#: src/gui/importer/gcal-import-dialog.c:332
+msgid "This calendar is hidden"
+msgstr "이 달력은 숨김 상태입니다"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -709,7 +707,7 @@ msgstr "Copyright © 2012–%d The Calendar authors"
 msgid "translator-credits"
 msgstr "조성호 <shcho@gnome.org>"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "날씨"
 
@@ -1230,31 +1228,35 @@ msgstr "가져올 행사 파일을 여기에 끌어다 놓으십시오"
 msgid "Main Menu"
 msgstr "주 메뉴"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "오늘(_T)"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "오늘로 이동"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "주(_W)"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "월(_M)"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "날짜/시간 설정(_D)…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "온라인 계정(_O)…"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "키보드 바로 가기 키(_K)"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "달력 정보(_A)"
 
@@ -1353,7 +1355,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "월별 보기"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1482,6 +1484,24 @@ msgstr "줌"
 #: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "마이크로소프트 팀즈"
+
+#~ msgid "Select a file"
+#~ msgstr "파일 선택"
+
+#~ msgid "Import a Calendar"
+#~ msgstr "달력 가져오기"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "대신, 가져올 온라인 달력 웹 주소를 입력하거나 지원 달력 파일을 여십시오."
+
+#~ msgid "Open a File"
+#~ msgstr "파일 열기"
+
+#~ msgid "Calendar files"
+#~ msgstr "달력 파일"
 
 #~ msgid "_Add Calendar…"
 #~ msgstr "달력 추가(_A)…"
@@ -1629,9 +1649,6 @@ msgstr "마이크로소프트 팀즈"
 
 #~ msgid "From Web…"
 #~ msgstr "웹에서 가져오기…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "새 로컬 달력…"
 
 #~ msgid "No results found"
 #~ msgstr "결과가 없습니다"
