@@ -8,17 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-19 01:14+0000\n"
-"PO-Revision-Date: 2024-08-21 19:55+0300\n"
-"Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
+"POT-Creation-Date: 2024-09-03 20:56+0000\n"
+"PO-Revision-Date: 2024-09-05 15:28+0300\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <yoseforb@gmail.com>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
-"2 : 3)\n"
-"X-Generator: Gtranslator 46.1\n"
+"2 : 3);\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:7 src/main.c:35
@@ -190,7 +190,7 @@ msgid "_Undo"
 msgstr "_ביטול"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "לוחות שנה"
 
@@ -228,12 +228,12 @@ msgid "Open in Settings"
 msgstr "פתיחה בהגדרות"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "שם לוח שנה"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "צבע"
 
@@ -253,11 +253,7 @@ msgstr "הוספת אירועים חדשים ללוח השנה הזה כבריר
 msgid "_Remove Calendar"
 msgstr "_מחיקת לוח שנה"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "בחירת קובץ"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
@@ -266,17 +262,17 @@ msgstr[1] "הוספת שני לוחות שנה"
 msgstr[2] "הוספת %1$u לוחות שנה"
 msgstr[3] "הוספת %1$u לוחות שנה"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "הוספת לוח שנה"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:373
 msgid "The URL you have entered appears to be invalid."
 msgstr "נראה שהכתובת שהזנת אינה תקפה."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:426
 msgid "A valid user and password are required to connect to this calendar."
 msgstr "נדרשים שם משתמש וססמה תקפים על מנת להתחבר ללוח שנה זה."
 
@@ -284,27 +280,23 @@ msgstr "נדרשים שם משתמש וססמה תקפים על מנת להתח�
 msgid "New Calendar"
 msgstr "לוח שנה חדש"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "ייבוא לוח שנה"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "יצירת לוח שנה מקומי"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "התחברות ללוח שנה מקוון"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
 msgstr ""
-"לחלופין, ניתן למלא את כתובת אתר לוח השנה המקוון שלך לייבוא, או לפתוח קובץ "
-"לוח שנה נתמך."
+"יש תמיכה בכתובות HTTPS,‏ CalDAV או Webcal. לוחות שנה שאפשר לעדכן אותם רק דרך "
+"הספק יתווספו לקריאה בלבד."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "פתיחת קובץ"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "קובצי לוח שנה"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -312,25 +304,25 @@ msgstr ""
 "אם לוח השנה שייך לאחד מהחשבונות המקוונים שלך, ניתן להוסיף אותו דרך <a "
 "href=\"GOA\">הגדרות חשבונות מקוונים</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "אישורים"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "משתמש"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "ססמה"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "_ביטול"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "_התחברות"
 
@@ -462,6 +454,11 @@ msgstr "החלפת מצב צליל התראה"
 #: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "הסרת התראה"
+
+#: src/gui/event-editor/gcal-calendar-row.c:70
+#: src/gui/importer/gcal-import-dialog.c:332
+msgid "This calendar is hidden"
+msgstr "לוח שנה זה הוא מוסתר"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -752,7 +749,7 @@ msgstr ""
 "יוסף אור בוצ׳קו <yoseforb@gmail.com>\n"
 "מיזם תרגום GNOME לעברית https://l10n.gnome.org/teams/he/"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "מזג אוויר"
 
@@ -1275,31 +1272,35 @@ msgstr "יש לגרור לכאן קובצי אירוע לייבוא"
 msgid "Main Menu"
 msgstr "תפריט ראשי"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "_היום"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "קפיצה להיום"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "_שבוע"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "_חודש"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "הגדרות _תאריך ושעה…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "_חשבונות מקוונים…"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "_צירופי מקשים"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "על אודות _לוח שנה"
 
@@ -1398,7 +1399,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "תצוגה חודשית"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1530,6 +1531,25 @@ msgstr "תקריב"
 #: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Select a file"
+#~ msgstr "בחירת קובץ"
+
+#~ msgid "Import a Calendar"
+#~ msgstr "ייבוא לוח שנה"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "לחלופין, ניתן למלא את כתובת אתר לוח השנה המקוון שלך לייבוא, או לפתוח קובץ "
+#~ "לוח שנה נתמך."
+
+#~ msgid "Open a File"
+#~ msgstr "פתיחת קובץ"
+
+#~ msgid "Calendar files"
+#~ msgstr "קובצי לוח שנה"
 
 #~ msgid "No event information"
 #~ msgstr "אין פרטי אירוע"
@@ -1695,9 +1715,6 @@ msgstr "Microsoft Teams"
 
 #~ msgid "From Web…"
 #~ msgstr "מהאינטרנט…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "לוח שנה מקומי חדש…"
 
 #~ msgid "No results found"
 #~ msgstr "לא נמצאו תוצאות"
