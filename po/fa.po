@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-19 01:14+0000\n"
-"PO-Revision-Date: 2024-08-27 14:29+0330\n"
+"POT-Creation-Date: 2024-09-03 20:56+0000\n"
+"PO-Revision-Date: 2024-09-06 03:15+0330\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "Language: fa\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:7 src/main.c:35
@@ -189,7 +189,7 @@ msgid "_Undo"
 msgstr "_برگردان"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "تقویم‌ها"
 
@@ -225,12 +225,12 @@ msgid "Open in Settings"
 msgstr "گشودن در  تنظیمات"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "نام تقویم"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "رنگ"
 
@@ -250,27 +250,23 @@ msgstr "افزودن رویدادهای جدید به این تقویم به ص�
 msgid "_Remove Calendar"
 msgstr "_برداشتن تقویم"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "گزینش یک پرونده"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "افزودن %1$u تقویم"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "افزودن تقویم"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:373
 msgid "The URL you have entered appears to be invalid."
-msgstr "نشانی‌ای که وارد کرده‌اید نامعتبر به نظر می‌رسد"
+msgstr "نشانی‌ای که وارد کرده‌اید نامعتبر به نظر می‌رسد."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:426
 msgid "A valid user and password are required to connect to this calendar."
 msgstr "برای وصل شدن به این تقویم نیاز به نام کاربری و گذرواژه‌ای معتبر است."
 
@@ -278,27 +274,23 @@ msgstr "برای وصل شدن به این تقویم نیاز به نام کا�
 msgid "New Calendar"
 msgstr "تقویم جدید"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "درون‌ریزی یک تقویم"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "ایجاد تقویمی محلی"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "وصل شدن به تقویمی برخط"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to import, "
-"or open a supported calendar file."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only be "
+"updated by the provider will be added as read-only."
 msgstr ""
-"به عنوان جایگزین، نشانی وب تقویم برخطی را که می‌خواهید درون‌ریزی کنید وارد کرده "
-"یا یک پروندهٔ پشتیبانی‌شدهٔ تقویم را بگشایید."
+"نشانی‌های HTTPS، ‏CalDAV یا Webcal پشتیبانی می‌شوند. تقویم‌های برخطی که تنها "
+"می‌توانند به دست فراهم‌کننده‌شان به‌روز شوند فقط خواندنی خواهند بود."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "گشودن یک پرونده"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "پرونده‌های تقویم"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it through "
 "the <a href=\"GOA\">online account settings</a>."
@@ -306,25 +298,25 @@ msgstr ""
 "اگر تقویم مربوط به یکی از حساب‌های برخطتان است، می‌توانید آن را از طریق <a "
 "href=\"GOA\">تنظیمات حساب‌های برخط</a> بیفزایید."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "اعتبارنامه‌ها"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "کاربر"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "گذرواژه"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "_لغو"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "اتّ_صال"
 
@@ -417,6 +409,11 @@ msgstr "تغییر وضعیت صدای هشدار"
 #: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "برداشتن هشدار"
+
+#: src/gui/event-editor/gcal-calendar-row.c:70
+#: src/gui/importer/gcal-import-dialog.c:332
+msgid "This calendar is hidden"
+msgstr "این تقویم نهفته است"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -708,7 +705,7 @@ msgstr ""
 "دانیال بهزادی <dani.behzi@ubuntu.com>\n"
 "امیر فارسی <amir_farsi@ymail.com>"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "آب‌وهوا"
 
@@ -1229,31 +1226,35 @@ msgstr "انداختن پرونده‌های رویداد برای درون‌ر
 msgid "Main Menu"
 msgstr "فهرست اصلی"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "ا_مروز"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "رفتن به امروز"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "_هفته"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "م_اه"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "_تنظیمات تاریخ و زمان…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "حساب‌های _برخط…"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "_میان‌برهای صفحه‌کلید"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "_دربارهٔ تقویم"
 
@@ -1352,7 +1353,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "نمای ماهانه"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1480,6 +1481,25 @@ msgstr "زوم"
 #: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "تیمز مایکروسافت"
+
+#~ msgid "Select a file"
+#~ msgstr "گزینش یک پرونده"
+
+#~ msgid "Import a Calendar"
+#~ msgstr "درون‌ریزی یک تقویم"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "به عنوان جایگزین، نشانی وب تقویم برخطی را که می‌خواهید درون‌ریزی کنید وارد "
+#~ "کرده یا یک پروندهٔ پشتیبانی‌شدهٔ تقویم را بگشایید."
+
+#~ msgid "Open a File"
+#~ msgstr "گشودن یک پرونده"
+
+#~ msgid "Calendar files"
+#~ msgstr "پرونده‌های تقویم"
 
 #~ msgid "_Add Calendar…"
 #~ msgstr "_افزودن تقویم…"
@@ -1623,9 +1643,6 @@ msgstr "تیمز مایکروسافت"
 
 #~ msgid "From Web…"
 #~ msgstr "از وب…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "تقویم محلی جدید…"
 
 #~ msgid "No results found"
 #~ msgstr "هیچ نتیجه‌ای پیدا نشد"
