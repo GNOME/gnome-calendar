@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-19 01:14+0000\n"
-"PO-Revision-Date: 2024-08-22 00:31+0200\n"
+"POT-Creation-Date: 2024-09-03 20:56+0000\n"
+"PO-Revision-Date: 2024-09-06 15:44+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <openscope at fsf dot hu>\n"
 "Language: hu\n"
@@ -196,7 +196,7 @@ msgid "_Undo"
 msgstr "_Visszavonás"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "Naptárak"
 
@@ -233,12 +233,12 @@ msgid "Open in Settings"
 msgstr "Megnyitás a beállításokban"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "Naptár neve"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "Szín"
 
@@ -258,58 +258,52 @@ msgstr "Új események hozzáadása alapértelmezetten ehhez a naptárhoz"
 msgid "_Remove Calendar"
 msgstr "Naptár _eltávolítása"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "Válasszon egy fájlt"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "Naptár hozzáadása"
 msgstr[1] "%1$u naptár hozzáadása"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Naptár hozzáadása"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:373
 msgid "The URL you have entered appears to be invalid."
 msgstr "A megadott URL érvénytelennek tűnik."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:426
 msgid "A valid user and password are required to connect to this calendar."
 msgstr ""
-"Érvényes felhasználó és jelszó szükséges ehhez a naptárhoz való"
-" kapcsolódáshoz."
+"Érvényes felhasználó és jelszó szükséges ehhez a naptárhoz való "
+"kapcsolódáshoz."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
 msgstr "Új naptár"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "Naptár importálása"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+#| msgid "Import a Calendar"
+msgid "Create a Local Calendar"
+msgstr "Helyi naptár létrehozása"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "Kapcsolódás internetes naptárhoz"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
 msgstr ""
-"Alternatívaként adja meg egy internetes naptár webcímét, amelyet importálni "
-"szeretne, vagy nyisson meg egy támogatott naptárfájlt."
+"HTTPS, CalDAV vagy Webcal URL-ek támogatottak. Az olyan internetes naptárak,"
+" amelyeket csak a szolgáltató frissíthet, csak olvashatóként lesznek"
+" hozzáadva."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "Fájl megnyitása"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "Naptárfájlok"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -317,25 +311,25 @@ msgstr ""
 "Ha a naptár az online fiókjai egyikéhez tartozik, akkor az <a "
 "href=\"GOA\">online fiókbeállításokon</a> keresztül is hozzáadhatja."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "Hitelesítési adatok"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "Felhasználó"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "Jelszó"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "_Mégse"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "_Kapcsolódás"
 
@@ -441,6 +435,12 @@ msgstr "Riasztásai hang be- és kikapcsolása"
 #: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "Riasztás eltávolítása"
+
+#: src/gui/event-editor/gcal-calendar-row.c:70
+#: src/gui/importer/gcal-import-dialog.c:332
+#| msgid "%s (this calendar is read-only)"
+msgid "This calendar is hidden"
+msgstr "Ez a naptár rejtett"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -731,7 +731,7 @@ msgstr ""
 "Úr Balázs <ur dot balazs at fsf dot hu>\n"
 "Meskó Balázs <mesko dot balazs at fsf dot hu>"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "Időjárás"
 
@@ -1252,31 +1252,36 @@ msgstr "Eseményfájlok ejtése az importáláshoz"
 msgid "Main Menu"
 msgstr "Főmenü"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "_Ma"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+#| msgid "to Today"
+msgid "Go to Today"
+msgstr "Ugrás a mai napra"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "_Hét"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "Hó_nap"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "_Dátum és idő beállítások…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "_Online fiókok…"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "_Gyorsbillentyűk"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "A Naptár _névjegye"
 
@@ -1375,7 +1380,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Hónap nézet"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
