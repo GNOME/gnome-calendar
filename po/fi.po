@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-19 01:14+0000\n"
-"PO-Revision-Date: 2024-08-24 13:02+0300\n"
+"POT-Creation-Date: 2024-09-03 20:56+0000\n"
+"PO-Revision-Date: 2024-09-08 10:44+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -182,7 +182,6 @@ msgstr "Kalenterin asetukset"
 #. TRANSLATORS: %s is a calendar name.
 #: src/gui/calendar-management/gcal-calendars-page.c:358
 #, c-format
-#| msgid "Calendar <b>%s</b> removed"
 msgid "Calendar “%s” removed"
 msgstr "Kalenteri “%s” poistettu"
 
@@ -192,7 +191,7 @@ msgid "_Undo"
 msgstr "_Kumoa"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "Kalenterit"
 
@@ -229,12 +228,12 @@ msgid "Open in Settings"
 msgstr "Avaa asetuksissa"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "Kalenterin nimi"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "Väri"
 
@@ -254,28 +253,24 @@ msgstr "Lisää uudet tapahtumat oletuksena tähän kalenteriin"
 msgid "_Remove Calendar"
 msgstr "_Poista kalenteri"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "Valitse tiedosto"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "Lisää kalenteri"
 msgstr[1] "Lisää %1$u kalenteria"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Lisää kalenteri"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:373
 msgid "The URL you have entered appears to be invalid."
 msgstr "Kirjoittamasi verkko-osoite vaikuttaa virheelliseltä."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:426
 msgid "A valid user and password are required to connect to this calendar."
 msgstr "Tähän kalenteriin yhdistämiseksi vaaditaan käyttäjätunnus ja salasana."
 
@@ -283,27 +278,24 @@ msgstr "Tähän kalenteriin yhdistämiseksi vaaditaan käyttäjätunnus ja salas
 msgid "New Calendar"
 msgstr "Uusi kalenteri"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "Tuo kalenteri"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "Luo paikallinen kalenteri"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "Yhdistä verkkokalenteriin"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
 msgstr ""
-"Vaihtoehtoisesti kirjoita verkkokalenterin osoite tai avaa tuettu "
-"verkkokalenteritiedosto."
+"HTTPS-, CalDAV- ja Webcal-osoitteet ovat tuettuja. Verkkokalenterit, jotka "
+"on mahdollista päivittää vain palveluntarjoajan päässä, lisätään \"vain "
+"luku\"-tilassa."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "Avaa tiedosto"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "Kalenteritiedostot"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -311,25 +303,25 @@ msgstr ""
 "Jos kalenteri kuuluu johonkin verkkotileistäsi, voit lisätä kalenterin <a "
 "href=\"GOA\">verkkotilien asetuksissa</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "Kirjautumistiedot"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "Käyttäjä"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "Salasana"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "_Peru"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "_Yhdistä"
 
@@ -435,6 +427,11 @@ msgstr "Hälytysääni päälle/pois"
 #: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "Poista hälytys"
+
+#: src/gui/event-editor/gcal-calendar-row.c:70
+#: src/gui/importer/gcal-import-dialog.c:332
+msgid "This calendar is hidden"
+msgstr "Tämä kalenteri on piilotettu"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -723,7 +720,7 @@ msgstr "Tekijänoikeus © 2012–%d Kalenterisovelluksen tekijät"
 msgid "translator-credits"
 msgstr "Jiri Grönroos"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "Sää"
 
@@ -1244,31 +1241,35 @@ msgstr "Pudota tapahtumatiedostot tuodaksesi ne"
 msgid "Main Menu"
 msgstr "Päävalikko"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "_Tänään"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "Siirry tähän päivään"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "_Viikko"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "_Kuukausi"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "_Päivän ja ajan asetukset…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "_Verkkotilit…"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "_Pikanäppäimet"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "_Tietoja - Kalenteri"
 
@@ -1367,7 +1368,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Kuukausinäkymä"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1497,6 +1498,25 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Select a file"
+#~ msgstr "Valitse tiedosto"
+
+#~ msgid "Import a Calendar"
+#~ msgstr "Tuo kalenteri"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "Vaihtoehtoisesti kirjoita verkkokalenterin osoite tai avaa tuettu "
+#~ "verkkokalenteritiedosto."
+
+#~ msgid "Open a File"
+#~ msgstr "Avaa tiedosto"
+
+#~ msgid "Calendar files"
+#~ msgstr "Kalenteritiedostot"
 
 #~ msgid "_Add Calendar…"
 #~ msgstr "_Lisää kalenteri…"
@@ -1643,9 +1663,6 @@ msgstr "Microsoft Teams"
 
 #~ msgid "From Web…"
 #~ msgstr "Verkosta…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "Uusi paikallinen kalenteri…"
 
 #~ msgid "No results found"
 #~ msgstr "Tuloksia ei löytynyt"
