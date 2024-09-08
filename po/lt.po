@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-19 01:14+0000\n"
-"PO-Revision-Date: 2024-09-01 23:11+0300\n"
+"POT-Creation-Date: 2024-09-03 20:56+0000\n"
+"PO-Revision-Date: 2024-09-08 21:43+0300\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -196,7 +196,7 @@ msgid "_Undo"
 msgstr "_Atšaukti"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "Kalendoriai"
 
@@ -233,12 +233,12 @@ msgid "Open in Settings"
 msgstr "Atverti Nustatymuose"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "Kalendoriaus pavadinimas"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "Spalva"
 
@@ -258,11 +258,7 @@ msgstr "Numatytai pridėti naujus įvykius į šį kalendorių"
 msgid "_Remove Calendar"
 msgstr "_Pašalinti kalendorių"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "Pasirinkite failą"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
@@ -270,17 +266,17 @@ msgstr[0] "Pridėti %1$u kalendorių"
 msgstr[1] "Pridėti %1$u kalendorius"
 msgstr[2] "Pridėti %1$u kalendorių"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Pridėti kalendorių"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:373
 msgid "The URL you have entered appears to be invalid."
 msgstr "Jūsų įvestas URI neatrodo tinkamas."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:426
 msgid "A valid user and password are required to connect to this calendar."
 msgstr ""
 "Norint prisijungti prie šio kalendoriaus reikia naudotojo vardo ir "
@@ -290,27 +286,23 @@ msgstr ""
 msgid "New Calendar"
 msgstr "Naujas kalendorius"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "Importuoti kalendorių"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "Sukurti vietinį kalendorių"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "Prisijungti prie internetinio kalendoriaus"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
 msgstr ""
-"Taip pat galite įvesti importuojamo internetinio kalendoriaus internetinį "
-"adresą arba atverti palaikomą kalendoriaus failą."
+"Palaikomi HTTPS, CalDAV bei Webcal URL. Internetiniai kalendoriai, kuriuos "
+"gali atnaujinti tik tiekėjas, bus pridėti tik skaitymui."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "Atverti failą"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "Kalendoriaus failai"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -318,25 +310,25 @@ msgstr ""
 "Jei kalendorius priklauso vienai iš jūsų internetinių paskyrų, ją galite "
 "pridėti per <a href=\"GOA\">internetinių paskyrų nustatymus</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "Įgaliojimai"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "Naudotojas"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "Slaptažodis"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "_Atsisakyti"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "Prisi_jungti"
 
@@ -455,6 +447,11 @@ msgstr "Perjungti žadintuvo garsą"
 #: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "Pašalinti žadintuvą"
+
+#: src/gui/event-editor/gcal-calendar-row.c:70
+#: src/gui/importer/gcal-import-dialog.c:332
+msgid "This calendar is hidden"
+msgstr "Šis kalendorius yra slepiamas"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -746,7 +743,7 @@ msgstr ""
 "Jonas Skarulskis <jonas.ska@gmail.com>\n"
 "Aurimas Černius <aurisc4@gmail.com>"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "Oras"
 
@@ -1267,31 +1264,35 @@ msgstr "Numeskite įvykių failus importavimui"
 msgid "Main Menu"
 msgstr "Pagrindinis meniu"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "Šian_dien"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "Eiti į šiandieną"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "_Savaitė"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "_Mėnuo"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "_Datos ir laiko nuostatos…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "_Internetinės paskyros…"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "_Klaviatūros trumpiniai"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "_Apie kalendorių"
 
@@ -1390,7 +1391,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Mėnesio rodinys"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1522,6 +1523,25 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Select a file"
+#~ msgstr "Pasirinkite failą"
+
+#~ msgid "Import a Calendar"
+#~ msgstr "Importuoti kalendorių"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "Taip pat galite įvesti importuojamo internetinio kalendoriaus internetinį "
+#~ "adresą arba atverti palaikomą kalendoriaus failą."
+
+#~ msgid "Open a File"
+#~ msgstr "Atverti failą"
+
+#~ msgid "Calendar files"
+#~ msgstr "Kalendoriaus failai"
 
 #~ msgid "_Add Calendar…"
 #~ msgstr "Pri_dėti kalendorių…"
@@ -1670,9 +1690,6 @@ msgstr "Microsoft Teams"
 
 #~ msgid "From Web…"
 #~ msgstr "Iš interneto…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "Naujas vietinis kalendorius…"
 
 #~ msgid "No results found"
 #~ msgstr "Nieko nerasta"
