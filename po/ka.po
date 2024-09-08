@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-19 01:14+0000\n"
-"PO-Revision-Date: 2024-08-23 12:00+0200\n"
+"POT-Creation-Date: 2024-09-03 20:56+0000\n"
+"PO-Revision-Date: 2024-09-08 04:36+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -191,7 +191,7 @@ msgid "_Undo"
 msgstr "_დაბრუნება"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "კალენდრები"
 
@@ -228,12 +228,12 @@ msgid "Open in Settings"
 msgstr "პარამეტრებში გახსნა"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "კალენდრის სახელი"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "ფერი"
 
@@ -253,28 +253,24 @@ msgstr "ახალი მოვლენების ნაგულისხ�
 msgid "_Remove Calendar"
 msgstr "კალენდრის _წაშლა"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "აირჩიეთ ფაილი"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "კალენდრის დამატება"
 msgstr[1] "%1$u კალენდრის დამატება"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "კალენდრის დამატება"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:373
 msgid "The URL you have entered appears to be invalid."
 msgstr "როგორც ჩანს, URL, რომელიც შეიყვანთ, არასწორია."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:426
 msgid "A valid user and password are required to connect to this calendar."
 msgstr ""
 "ამ კალენდართან მიერთებისთვის სწორი მომხმარებლის სახელი და პაროლი აუცილებელია."
@@ -283,27 +279,24 @@ msgstr ""
 msgid "New Calendar"
 msgstr "ახალი კალენდარი"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "კალენდრის შემოტანა"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "ლოკალური კალენდრის შექმნა"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "მიუერთდით ონლაინ-კალენდარს"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
 msgstr ""
-"ასევე შეგიძლიათ შეიყვანოთ ვებ-მისამართი ონლაინ-კალენდარისა, რომლის შემოტანაც "
-"გნებავთ, ან გახსნათ კალენდარის მხარდაჭერილი ფორმატი."
+"მხარდაჭერილია HTTPS, CalDAV, ან Webcal-ის URL-ები. ინტერნეტ-კალენდრები, "
+"რომლებიც, მხოლოდ, პროვაიდერის მიერ შეიძლება განახლდეს, მხოლოდ-წასაკითხად "
+"დაემატება."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "ფაილის გახსნა"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "კალენდრის ფაილები"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -311,25 +304,25 @@ msgstr ""
 "თუ კალენდარი თქვენს ერთ-ერთ ონლაინ ანგარიშს ეკუთვნის, მისი დამატება <a "
 "href=\"GOA\">ონლაინ ანგარიშის პარამეტრებიდან</a> შეგიძლიათ."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "მომხმ/პაროლი"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "მომხმარებელი"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "პაროლი"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "გაუქმება"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "_შეერთება"
 
@@ -435,6 +428,11 @@ msgstr "ხმოვანი განგაშის გადართვა"
 #: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "განგაშის წაშლა"
+
+#: src/gui/event-editor/gcal-calendar-row.c:70
+#: src/gui/importer/gcal-import-dialog.c:332
+msgid "This calendar is hidden"
+msgstr "ეს კალენდარი დამალულია"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -723,7 +721,7 @@ msgstr "© 2012–%d კალენდარის ავტორები, �
 msgid "translator-credits"
 msgstr "თემური დოღონაძე"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "ამინდი"
 
@@ -1244,31 +1242,35 @@ msgstr "შემოსატანად, დაყარეთ მოვლე
 msgid "Main Menu"
 msgstr "მთავარი მენიუ"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "_დღეს"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "დღევანდელზე გადასვლა"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "_კვირა"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "_თვე"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "&თარიღისა და დროის მორგება…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "_ონლაინ ანგარიშები…"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "კლავიატურის მალსახმობები"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "_კალენდრის შესახებ"
 
@@ -1367,7 +1369,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "თვის ხედი"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1497,6 +1499,22 @@ msgstr "გადიდება"
 #: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Select a file"
+#~ msgstr "აირჩიეთ ფაილი"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "ასევე შეგიძლიათ შეიყვანოთ ვებ-მისამართი ონლაინ-კალენდარისა, რომლის "
+#~ "შემოტანაც გნებავთ, ან გახსნათ კალენდარის მხარდაჭერილი ფორმატი."
+
+#~ msgid "Open a File"
+#~ msgstr "ფაილის გახსნა"
+
+#~ msgid "Calendar files"
+#~ msgstr "კალენდრის ფაილები"
 
 #~ msgid "_Add Calendar…"
 #~ msgstr "კალენდრის დ_ამატება…"
