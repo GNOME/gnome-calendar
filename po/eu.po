@@ -8,8 +8,8 @@
 msgid ""
 msgstr "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-19 01:14+0000\n"
-"PO-Revision-Date: 2024-08-25 19:41+0200\n"
+"POT-Creation-Date: 2024-09-03 20:56+0000\n"
+"PO-Revision-Date: 2024-09-08 19:41+0200\n"
 "Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <Librezale>\n"
 "Language: eu\n"
@@ -175,7 +175,7 @@ msgid "_Undo"
 msgstr "_Desegin"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "Egutegiak"
 
@@ -212,12 +212,12 @@ msgid "Open in Settings"
 msgstr "Ireki hobespenetan"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "Egutegiaren izena"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "Kolorea"
 
@@ -237,28 +237,24 @@ msgstr "Gehitu gertaera berriak egutegi honi lehenetsi gisa"
 msgid "_Remove Calendar"
 msgstr "_Kendu egutegia"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "Hautatu fitxategia"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "Gehitu egutegia"
 msgstr[1] "Gehitu %1$u egutegi"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Gehitu egutegia"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:373
 msgid "The URL you have entered appears to be invalid."
 msgstr "Sartu duzun URLak baliogabea dirudi."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:426
 msgid "A valid user and password are required to connect to this calendar."
 msgstr "Baliozko erabiltzaile eta pasahitza behar dira egutegi horrekin konektatzeko."
 
@@ -266,49 +262,45 @@ msgstr "Baliozko erabiltzaile eta pasahitza behar dira egutegi horrekin konektat
 msgid "New Calendar"
 msgstr "Egutegi berria"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "Inportatu egutegi bat"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "Sortu egutegi lokala"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "Konektatu lineako egutegi batekin"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
-msgstr "Bestela, sartu inportatu nahi duzun lineako egutegi baten web helbidea, edo ireki onartuta dagoen egutegi-fitxategi bat."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
+msgstr "HTTPS, CalDAV eta Webcal URLak onartzen dira. Hornitzaileak soilik eguneratu ditzakeen lineako egutegiak irakurtzeko moduan soilik gehituko dira."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "Ireki fitxategia"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "Egutegiaren fitxategiak"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr "Egutegia zure lineako kontu batena bada, <a href=\"GOA\">lineako kontuaren ezarpenak</a> bidez gehi dezakezu."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "Kredentzialak"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "Erabiltzailea"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "Pasahitza"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "_Utzi"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "_Konektatu"
 
@@ -414,6 +406,11 @@ msgstr "Txandakatu alarmaren soinua"
 #: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "Kendu alarma"
+
+#: src/gui/event-editor/gcal-calendar-row.c:70
+#: src/gui/importer/gcal-import-dialog.c:332
+msgid "This calendar is hidden"
+msgstr "Egutegi hau ezkutuan dago"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -699,9 +696,9 @@ msgstr "Copyright © 2012–%d Egutegiaren egileak"
 
 #: src/gui/gcal-application.c:239
 msgid "translator-credits"
-msgstr "translator-credits"
+msgstr "Asier Sarasua Garmendia <asiersarasua@ni.eus>"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "Eguraldia"
 
@@ -1219,31 +1216,35 @@ msgstr "Jaregin gertaera-fitxategiak haiek inportatzeko"
 msgid "Main Menu"
 msgstr "Menu nagusia"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "_Gaur"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "Joan gaurko egunera"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "_Astea"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "_Hilabetea"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "_Data eta orduaren ezarpenak…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "_Lineako kontuak…"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "Las_ter-teklak"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "Egutegia aplikazioari _buruz"
 
@@ -1342,7 +1343,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Hileko ikuspegia"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1470,6 +1471,25 @@ msgstr "Zooma"
 #: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Select a file"
+#~ msgstr "Hautatu fitxategia"
+
+#~ msgid "Import a Calendar"
+#~ msgstr "Inportatu egutegi bat"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "Bestela, sartu inportatu nahi duzun lineako egutegi baten web helbidea, "
+#~ "edo ireki onartuta dagoen egutegi-fitxategi bat."
+
+#~ msgid "Open a File"
+#~ msgstr "Ireki fitxategia"
+
+#~ msgid "Calendar files"
+#~ msgstr "Egutegiaren fitxategiak"
 
 #~ msgid "_Add Calendar…"
 #~ msgstr "_Gehitu egutegia…"
@@ -1616,9 +1636,6 @@ msgstr "Microsoft Teams"
 
 #~ msgid "From Web…"
 #~ msgstr "Webetik…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "Lokaleko egutegi berria…"
 
 #~ msgid "No results found"
 #~ msgstr "Ez da emaitzarik aurkitu"
