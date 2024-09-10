@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-16 22:49+0000\n"
-"PO-Revision-Date: 2024-08-17 17:48+0300\n"
+"POT-Creation-Date: 2024-09-03 20:56+0000\n"
+"PO-Revision-Date: 2024-09-04 00:28+0300\n"
 "Last-Translator: Artur So <arturios2005@mail.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -198,7 +198,7 @@ msgid "_Undo"
 msgstr "_Вернуть"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "Календари"
 
@@ -235,12 +235,12 @@ msgid "Open in Settings"
 msgstr "Открыть в Настройках"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "Имя календаря"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "Цвет"
 
@@ -260,11 +260,7 @@ msgstr "Добавлять новые события в этот календа�
 msgid "_Remove Calendar"
 msgstr "_Удалить календарь"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "Выбрать файл"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
@@ -272,45 +268,43 @@ msgstr[0] "Добавить %1$u календарь"
 msgstr[1] "Добавить %1$u календаря"
 msgstr[2] "Добавить %1$u календарей"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Добавить календарь"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:373
 msgid "The URL you have entered appears to be invalid."
 msgstr "Введенный вами URL, по-видимому, недействителен."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:426
 msgid "A valid user and password are required to connect to this calendar."
-msgstr "Для подключения к этому календарю требуется действительный пользователь и пароль."
+msgstr ""
+"Для подключения к этому календарю требуется действительный пользователь и "
+"пароль."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
 msgstr "Создать календарь"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "Импортировать календарь"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "Создать локальный календарь"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "Подключить сетевой календарь"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
 msgstr ""
-"Либо введите веб-адрес онлайн-календаря, который хотите импортировать, или "
-"откройте поддерживаемый файл календаря."
+"Поддерживаются URL-адреса HTTPS, CalDAV или Webcal. Сетевые календари, которые "
+"могут обновляться только поставщиком, будут добавлены как доступные только для чтения."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "Открыть файл"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "Файлы календаря"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -318,25 +312,25 @@ msgstr ""
 "Если календарь относится к одной из сетевых учётных записей, его можно "
 "добавить через <a href=\"GOA\">настройки сетевых учётных записей</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "Учетные данные"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "Пользователь"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "Пароль"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "_Отмена"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "_Подключить"
 
@@ -455,6 +449,11 @@ msgstr "Переключить звук будильника"
 #: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "Удалить будильник"
+
+#: src/gui/event-editor/gcal-calendar-row.c:70
+#: src/gui/importer/gcal-import-dialog.c:332
+msgid "This calendar is hidden"
+msgstr "Этот календарь скрыт"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -747,7 +746,7 @@ msgstr ""
 "Роман Верменко <dargodet@gmail.com>, 2017\n"
 "Aleksandr Melman <alexmelman88@gmail.com>, 2022-2023"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "Погода"
 
@@ -1268,31 +1267,35 @@ msgstr "Скиньте файлы событий для импорта"
 msgid "Main Menu"
 msgstr "Главное меню"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "_Сегодня"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "Перейти к сегодняшнему дню"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "_Неделя"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "_Месяц"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "Настройки _даты и времени…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "_Сетевые учётные записи…"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "_Комбинации клавиш"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "_О приложении"
 
@@ -1391,7 +1394,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Просмотр месяца"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1523,6 +1526,22 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Select a file"
+#~ msgstr "Выбрать файл"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "Либо введите веб-адрес онлайн-календаря, который хотите импортировать, "
+#~ "или откройте поддерживаемый файл календаря."
+
+#~ msgid "Open a File"
+#~ msgstr "Открыть файл"
+
+#~ msgid "Calendar files"
+#~ msgstr "Файлы календаря"
 
 #~ msgid "No event information"
 #~ msgstr "Нет информации о событии"
