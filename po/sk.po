@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-16 22:49+0000\n"
-"PO-Revision-Date: 2024-08-17 12:13+0200\n"
-"Last-Translator: Jose Riha <jose1711@gmail.com>\n"
+"POT-Creation-Date: 2024-09-03 20:56+0000\n"
+"PO-Revision-Date: 2024-09-10 14:20+0200\n"
+"Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.5\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:7 src/main.c:35
@@ -82,7 +82,6 @@ msgid "The current zoom level of the week grid"
 msgstr "Aktuálna úroveň priblíženia mriežky týždňa"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:8
-#| msgid "Manage your calendars"
 msgid "Manage your schedule"
 msgstr "Spravujte svoje kalendáre"
 
@@ -93,10 +92,10 @@ msgid ""
 "meetings and appointments, public events, travel logistics, or other "
 "commitments in your life."
 msgstr ""
-"Kalendár GNOME je elegantný nástroj, ktorý vám pomôže s plánovaním a udržaním "
-"prehľadu o vašich aktivitách v nadchádzajúcich dňoch a týždňoch, či už sú vaše mesiace "
-"plné stretnutí, verejných udalostí, cestovnej logistiky alebo iných záväzkov "
-"vo vašom živote."
+"Kalendár GNOME je elegantný nástroj, ktorý vám pomôže s plánovaním a "
+"udržaním prehľadu o vašich aktivitách v nadchádzajúcich dňoch a týždňoch, či "
+"už sú vaše mesiace plné stretnutí, verejných udalostí, cestovnej logistiky "
+"alebo iných záväzkov vo vašom živote."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:16
 msgid ""
@@ -105,8 +104,8 @@ msgid ""
 "list view."
 msgstr ""
 "Jednoducho vytvárajte a spravujte neobmedzené množstvo kalendárov a udalosti "
-"pomocou nekonečného rolovacieho zobrazenia mesiaca, týždenného rozvrhu a zoznamu "
-"rozvrhov Kalendára GNOME."
+"pomocou nekonečného rolovacieho zobrazenia mesiaca, týždenného rozvrhu a "
+"zoznamu rozvrhov Kalendára GNOME."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:20
 msgid ""
@@ -120,12 +119,13 @@ msgid ""
 "anytime while travelling (or after civilization's collapse.)"
 msgstr ""
 "Kalendár GNOME integruje najnovšie technológie GNOME a osvedčené postupy "
-"návrhu. Je postavený na vyspelom dátovom serveri Evolution, vďaka čomu dokáže "
-"spracovávať veľké množstvo udalostí a poskytovať integráciu s ďalšími aplikáciami. "
-"Môžete pridávať kalendáre z rôznych kalendárových služieb (ako napríklad Nextcloud, "
-"Google Calendar a servery CalDAV/WebDAV), čo vám umožňuje synchronizovať vaše udalosti "
-"medzi viacerými zariadeniami a platformami. Kalendár GNOME tiež podporuje miestny a offline "
-"kalendár, takže ho môžete používať kdekoľvek a kedykoľvek na cestách (alebo po rozpade "
+"návrhu. Je postavený na vyspelom dátovom serveri Evolution, vďaka čomu "
+"dokáže spracovávať veľké množstvo udalostí a poskytovať integráciu s ďalšími "
+"aplikáciami. Môžete pridávať kalendáre z rôznych kalendárových služieb (ako "
+"napríklad Nextcloud, Google Calendar a servery CalDAV/WebDAV), čo vám "
+"umožňuje synchronizovať vaše udalosti medzi viacerými zariadeniami a "
+"platformami. Kalendár GNOME tiež podporuje miestny a offline kalendár, takže "
+"ho môžete používať kdekoľvek a kedykoľvek na cestách (alebo po rozpade "
 "civilizácie.)"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:33
@@ -168,17 +168,14 @@ msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
 #: src/gui/calendar-management/calendar-row.ui:19
-#| msgid "Remove Calendar"
 msgid "Read-Only Calendar"
 msgstr "Kalendár iba na čítanie"
 
 #: src/gui/calendar-management/calendar-row.ui:29
-#| msgid "Display calendar"
 msgid "Display Calendar"
 msgstr "Zobraziť kalendár"
 
 #: src/gui/calendar-management/calendar-row.ui:39
-#| msgid "Edit Calendar"
 msgid "Edit calendar"
 msgstr "Upraviť kalendár"
 
@@ -190,7 +187,6 @@ msgstr "Nastavenia kalendára"
 #. TRANSLATORS: %s is a calendar name.
 #: src/gui/calendar-management/gcal-calendars-page.c:358
 #, c-format
-#| msgid "Calendar <b>%s</b> removed"
 msgid "Calendar “%s” removed"
 msgstr "Kalendár „%s“ bol odstránený"
 
@@ -200,17 +196,15 @@ msgid "_Undo"
 msgstr "Vrátiť _späť"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "Kalendáre"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:67
-#| msgid "Add Calendar…"
 msgid "_Add Calendar"
 msgstr "_Pridať kalendár"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:190
-#| msgid "Calendar"
 msgid "Calendar URL"
 msgstr "URL adresa kalendára"
 
@@ -236,27 +230,24 @@ msgstr "Účet"
 
 # tooltip
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:42
-#| msgid "Open online account settings"
 msgid "Open in Settings"
 msgstr "Otvorí v Nastaveniach"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "Názov kalendára"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "Farba"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:110
-#| msgid "Display calendar"
 msgid "_Display Calendar"
 msgstr "_Zobraziť kalendár"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:117
-#| msgid "New Calendar"
 msgid "Default _Calendar"
 msgstr "_Predvolený kalendár"
 
@@ -265,63 +256,52 @@ msgid "Add new events to this calendar by default"
 msgstr "Pridávať nové udalosti predvolene do tohto kalendára"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:132
-#| msgid "Remove Calendar"
 msgid "_Remove Calendar"
 msgstr "O_dstrániť kalendár"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "Vybrať súbor"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #, c-format
-#| msgid "Add Calendar…"
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "Pridať %1$u kalendárov"
 msgstr[1] "Pridať %1$u kalendár"
 msgstr[2] "Pridať %1$u kalendáre"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
-#| msgid "Add Calendar…"
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Pridať kalendár"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:373
 msgid "The URL you have entered appears to be invalid."
 msgstr "URL adresa, ktorú ste zadali vyzerá byť neplatná."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:426
 msgid "A valid user and password are required to connect to this calendar."
-msgstr "Na pripojenie k tomuto kalendáru je potrebné zadať platné meno používateľa a heslo."
+msgstr ""
+"Na pripojenie k tomuto kalendáru je potrebné zadať platné meno používateľa a "
+"heslo."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
 msgstr "Nový kalendár"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "Importovanie kalendára"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "Vytvorenie miestneho kalendára"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "Pripojenie k online kalendáru"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
 msgstr ""
-"V inom prípade zadajte webovú adresu online kalendára, ktorý chcete "
-"importovať, alebo otvorte podporovaný súbor s kalendárom."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "Otvoriť súbor"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "Súbory kalendára"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -329,26 +309,25 @@ msgstr ""
 "Ak kalendár patrí do jedného z vašich účtov služieb, môžete ho pridať cez <a "
 "href=\"GOA\">nastavenia účtov služieb</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "Poverenia"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "Používateľ"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "Heslo"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "_Zrušiť"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
-#| msgid "Connect"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "Pr_ipojiť"
 
@@ -466,9 +445,13 @@ msgstr "Prepnúť zvuk upozornenia"
 
 # tooltip
 #: src/gui/event-editor/gcal-alarm-row.ui:20
-#| msgid "Remove the alarm"
 msgid "Remove Alarm"
 msgstr "Odstráni upozornenie"
+
+#: src/gui/event-editor/gcal-calendar-row.c:70
+#: src/gui/importer/gcal-import-dialog.c:332
+msgid "This calendar is hidden"
+msgstr "Tento kalendár je skrytý"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -485,7 +468,6 @@ msgstr "Ne"
 
 #. Translators: Calendar grid abbreviation for Monday
 #: src/gui/event-editor/gcal-date-chooser.c:277
-#| msgid "AM"
 msgctxt "grid monday"
 msgid "M"
 msgstr "Po"
@@ -529,8 +511,6 @@ msgid "Done"
 msgstr "Hotovo"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:744
-#| msgctxt "shortcut window"
-#| msgid "New event"
 msgid "New Event"
 msgstr "Nová udalosť"
 
@@ -543,12 +523,10 @@ msgstr ""
 "Túto udalosť nie je možne vymazať alebo zmeniť."
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:50
-#| msgid "New Calendar"
 msgid "Select Calendar"
 msgstr "Vyberte kalendár"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:108
-#| msgid "Done"
 msgid "_Done"
 msgstr "_Hotovo"
 
@@ -569,32 +547,26 @@ msgid "Delete Event"
 msgstr "Odstrániť udalosť"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:17
-#| msgid "Add a Reminder…"
 msgid "Add Reminder"
 msgstr "Pridať pripomienku"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:41
-#| msgid "Event start time"
 msgid "Event start"
 msgstr "Začiatok udalosti"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:47
-#| msgid "5 minutes"
 msgid "5 Minutes"
 msgstr "5 minút"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:53
-#| msgid "10 minutes"
 msgid "10 Minutes"
 msgstr "10 minút"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:59
-#| msgid "15 minutes"
 msgid "15 Minutes"
 msgstr "15 minút"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:65
-#| msgid "30 minutes"
 msgid "30 Minutes"
 msgstr "30 minút"
 
@@ -603,22 +575,18 @@ msgid "1 Hour"
 msgstr "1 hodina"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:77
-#| msgid "All Day"
 msgid "1 Day"
 msgstr "1 deň"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:83
-#| msgid "All Day"
 msgid "2 Days"
 msgstr "2 dni"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:89
-#| msgid "All Day"
 msgid "3 Days"
 msgstr "3 dni"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:95
-#| msgid "_Week"
 msgid "1 Week"
 msgstr "1 týždeň"
 
@@ -770,10 +738,11 @@ msgstr "Autorské práva © 2012–%d Autori aplikácie Kalendár"
 
 #: src/gui/gcal-application.c:239
 msgid "translator-credits"
-msgstr "Dušan Kazik <prescott66@gmail.com>\n"
+msgstr ""
+"Dušan Kazik <prescott66@gmail.com>\n"
 "Jose Riha <jose1711@gmail.com>"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "Počasie"
 
@@ -790,7 +759,6 @@ msgid "_Synchronize Calendars"
 msgstr "_Synchronizovať kalendáre"
 
 #: src/gui/gcal-calendar-button.ui:41
-#| msgid "Manage Calendars…"
 msgid "_Manage Calendars…"
 msgstr "_Spravovať kalendáre…"
 
@@ -951,7 +919,6 @@ msgid "View Additional Details"
 msgstr "Zobraziť dodatočné informácie"
 
 #: src/gui/gcal-event-popover.c:374
-#| msgid "Edit Details…"
 msgid "Edit Additional Details"
 msgstr "Upraviť dodatočné informácie"
 
@@ -964,7 +931,6 @@ msgstr ""
 "    Túto udalosť nie je možne vymazať alebo zmeniť."
 
 #: src/gui/gcal-event-popover.ui:107
-#| msgid "No events"
 msgid "No event notes"
 msgstr "Žiadne poznámky udalosti"
 
@@ -984,7 +950,6 @@ msgstr ""
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
 #: src/gui/gcal-event-widget.c:382 src/gui/gcal-event-widget.c:388
 #, c-format
-#| msgid "At %s"
 msgid ""
 "\n"
 "\n"
@@ -1000,7 +965,6 @@ msgstr "Neznáma služba"
 
 #. Translators: "Join" as in "Join meeting"
 #: src/gui/gcal-meeting-row.ui:41
-#| msgid "Join"
 msgid "_Join"
 msgstr "Pr_ipojiť sa"
 
@@ -1232,31 +1196,24 @@ msgid "Add"
 msgstr "Pridať"
 
 #: src/gui/gcal-search-button.ui:29
-#| msgid "Search for events"
 msgid "Search Events"
 msgstr "Hľadať udalosti"
 
 #: src/gui/gcal-search-button.ui:54
-#| msgid "Search for events"
 msgid "Search events"
 msgstr "Hľadať udalosti"
 
 #: src/gui/gcal-sync-indicator.ui:21
-#| msgctxt "tooltip"
-#| msgid "Synchronizing remote calendars…"
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars"
 msgstr "Synchronizujú sa vzdialené kalendáre"
 
 #: src/gui/gcal-toolbar-end.ui:9
-#| msgctxt "shortcut window"
-#| msgid "Search"
 msgctxt "tooltip"
 msgid "Search"
 msgstr "Hľadať"
 
 #: src/gui/gcal-toolbar-end.ui:16
-#| msgid "Add Eve_nt"
 msgctxt "tooltip"
 msgid "Add Event"
 msgstr "Pridať udalosť"
@@ -1270,17 +1227,14 @@ msgid "Automatic Location"
 msgstr "Automatická poloha"
 
 #: src/gui/gcal-weather-settings.ui:46
-#| msgid "Search for events"
 msgid "Search locations"
 msgstr "Hľadať umiestnenia"
 
 #: src/gui/gcal-window.c:350
-#| msgid "_Week"
 msgid "Week"
 msgstr "Týždeň"
 
 #: src/gui/gcal-window.c:352
-#| msgid "_Month"
 msgid "Month"
 msgstr "Mesiac"
 
@@ -1309,31 +1263,36 @@ msgstr "Presuňte sem súbory s udalosťami, ktoré sa majú importovať"
 msgid "Main Menu"
 msgstr "Hlavná ponuka"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "_Dnes"
 
-#: src/gui/gcal-window.ui:279
+# tooltipy
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "Prejde na dnešný deň"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "_Týždeň"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "_Mesiac"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "Nastavenia &dátumu a času…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "Úč_ty služieb…"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "_Klávesové skratky"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "_O aplikácii Kalendár"
 
@@ -1343,39 +1302,31 @@ msgid "General"
 msgstr "Všeobecné"
 
 #: src/gui/gtk/help-overlay.ui:14
-#| msgid "Main Menu"
 msgctxt "shortcut window"
 msgid "Open Main Menu"
 msgstr "Otvoriť hlavnú ponuku"
 
 #: src/gui/gtk/help-overlay.ui:20
-#| msgid "New Calendar"
 msgctxt "shortcut window"
 msgid "Open Calendars Menu"
 msgstr "Otvoriť ponuku kalendára"
 
 #: src/gui/gtk/help-overlay.ui:26
-#| msgctxt "shortcut window"
-#| msgid "New event"
 msgctxt "shortcut window"
 msgid "New Event"
 msgstr "Nová udalosť"
 
 #: src/gui/gtk/help-overlay.ui:32
-#| msgid "Manage Calendars"
 msgctxt "shortcut window"
 msgid "Manage Calendars"
 msgstr "Správa kalendárov"
 
 #: src/gui/gtk/help-overlay.ui:38
-#| msgid "_Synchronize Calendars"
 msgctxt "shortcut window"
 msgid "Synchronize Calendars"
 msgstr "Synchronizovať kalendáre"
 
 #: src/gui/gtk/help-overlay.ui:44
-#| msgctxt "shortcut window"
-#| msgid "Close window"
 msgctxt "shortcut window"
 msgid "Close Window"
 msgstr "Zatvoriť okno"
@@ -1386,8 +1337,6 @@ msgid "Search"
 msgstr "Hľadať"
 
 #: src/gui/gtk/help-overlay.ui:56
-#| msgctxt "shortcut window"
-#| msgid "Show help"
 msgctxt "shortcut window"
 msgid "Show Help"
 msgstr "Zobraziť pomocníka"
@@ -1408,29 +1357,21 @@ msgid "Go Back"
 msgstr "Prejsť späť"
 
 #: src/gui/gtk/help-overlay.ui:79
-#| msgctxt "shortcut window"
-#| msgid "Go forward"
 msgctxt "shortcut window"
 msgid "Go Forward"
 msgstr "Prejsť dopredu"
 
 #: src/gui/gtk/help-overlay.ui:85
-#| msgctxt "shortcut window"
-#| msgid "Show today"
 msgctxt "shortcut window"
 msgid "Show Today"
 msgstr "Zobraziť dnešok"
 
 #: src/gui/gtk/help-overlay.ui:91
-#| msgctxt "shortcut window"
-#| msgid "Next view"
 msgctxt "shortcut window"
 msgid "Next View"
 msgstr "Nasledujúce zobrazenie"
 
 #: src/gui/gtk/help-overlay.ui:97
-#| msgctxt "shortcut window"
-#| msgid "Previous view"
 msgctxt "shortcut window"
 msgid "Previous View"
 msgstr "Predchádzajúce zobrazenie"
@@ -1441,18 +1382,16 @@ msgid "View"
 msgstr "Zobrazenie"
 
 #: src/gui/gtk/help-overlay.ui:108
-#| msgid "Week view"
 msgctxt "shortcut window"
 msgid "Week View"
 msgstr "Prehľad týždňa"
 
 #: src/gui/gtk/help-overlay.ui:114
-#| msgid "Month view"
 msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Prehľad mesiaca"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1560,12 +1499,10 @@ msgid "_Only This Event"
 msgstr "_Iba táto udalosť"
 
 #: src/utils/gcal-utils.c:1212
-#| msgid "_Subsequent events"
 msgid "_Subsequent Events"
 msgstr "_Nasledujúce udalosti"
 
 #: src/utils/gcal-utils.c:1215
-#| msgid "_All events"
 msgid "_All Events"
 msgstr "Všetk_y udalosti"
 
@@ -1588,6 +1525,25 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Select a file"
+#~ msgstr "Vybrať súbor"
+
+#~ msgid "Import a Calendar"
+#~ msgstr "Importovanie kalendára"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "V inom prípade zadajte webovú adresu online kalendára, ktorý chcete "
+#~ "importovať, alebo otvorte podporovaný súbor s kalendárom."
+
+#~ msgid "Open a File"
+#~ msgstr "Otvoriť súbor"
+
+#~ msgid "Calendar files"
+#~ msgstr "Súbory kalendára"
 
 #~ msgid "Calendar for GNOME"
 #~ msgstr "Kalendár prostredia GNOME"
@@ -1728,9 +1684,6 @@ msgstr "Microsoft Teams"
 
 #~ msgid "From Web…"
 #~ msgstr "Z webu…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "Nový miestny kalendár…"
 
 #~ msgid "No results found"
 #~ msgstr "Nenašli sa žiadne výsledky"
