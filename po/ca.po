@@ -2,7 +2,7 @@
 # Copyright (C) 2012 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 #
-# Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2023
+# Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2024
 # Gil Forcada Codinachs <gil.gnome@gmail.com>, 2018.
 #
 # N.T.
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2024-09-07 15:48+0000\n"
-"PO-Revision-Date: 2024-09-11 12:10+0200\n"
+"PO-Revision-Date: 2024-09-14 12:10+0200\n"
 "Last-Translator: Jordi Mas i Hernàndez <jmas@softcatala.org>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -94,7 +94,7 @@ msgid ""
 "meetings and appointments, public events, travel logistics, or other "
 "commitments in your life."
 msgstr ""
-"El Calendari del GNOME és una eina elegant per ajudar-vos a planificar i "
+"El Calendari del GNOME és una eina elegant per a ajudar-vos a planificar i "
 "estar al dia dels propers dies i setmanes, encara que aneu plens de reunions "
 "i cites, esdeveniments públics, logística de viatges o altres compromisos "
 "vitals."
@@ -122,7 +122,7 @@ msgid ""
 msgstr ""
 "Integrant les últimes tecnologies del GNOME i les millors pràctiques de "
 "disseny, el Calendari del GNOME es basa en el madur servidor de dades de "
-"l'Evolution per gestionar grans quantitats d'esdeveniments i per "
+"l'Evolution per a gestionar grans quantitats d'esdeveniments i per a "
 "proporcionar integració amb altres aplicacions. Es poden afegir calendaris "
 "de diversos serveis de calendari en línia (com ara NextCloud, Google "
 "Calendar i servidors CalDAV /WebDAV), que permeten sincronitzar els "
@@ -454,43 +454,43 @@ msgstr "Aquest calendari està ocult"
 #: src/gui/event-editor/gcal-date-chooser.c:272
 msgctxt "grid sunday"
 msgid "S"
-msgstr "DU"
+msgstr "Dg"
 
 #. Translators: Calendar grid abbreviation for Monday
 #: src/gui/event-editor/gcal-date-chooser.c:277
 msgctxt "grid monday"
 msgid "M"
-msgstr "DL"
+msgstr "Dl"
 
 #. Translators: Calendar grid abbreviation for Tuesday
 #: src/gui/event-editor/gcal-date-chooser.c:282
 msgctxt "grid tuesday"
 msgid "T"
-msgstr "DM"
+msgstr "Dt"
 
 #. Translators: Calendar grid abbreviation for Wednesday
 #: src/gui/event-editor/gcal-date-chooser.c:287
 msgctxt "grid wednesday"
 msgid "W"
-msgstr "DC"
+msgstr "Dc"
 
 #. Translators: Calendar grid abbreviation for Thursday
 #: src/gui/event-editor/gcal-date-chooser.c:292
 msgctxt "grid thursday"
 msgid "T"
-msgstr "DJ"
+msgstr "Dj"
 
 #. Translators: Calendar grid abbreviation for Friday
 #: src/gui/event-editor/gcal-date-chooser.c:297
 msgctxt "grid friday"
 msgid "F"
-msgstr "DV"
+msgstr "Dv"
 
 #. Translators: Calendar grid abbreviation for Saturday
 #: src/gui/event-editor/gcal-date-chooser.c:302
 msgctxt "grid saturday"
 msgid "S"
-msgstr "DS"
+msgstr "Ds"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:121
 msgid "Save"
@@ -1348,7 +1348,7 @@ msgstr "Torna enrere"
 #: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Go Forward"
-msgstr "Vés endavant"
+msgstr "Ves endavant"
 
 #: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
