@@ -1,3 +1,6 @@
+Major changes in 47.0:
+* Updated translations
+
 Major changes in 47.rc:
 * Set a user agent when requesting remote servers for calendar files
 * Port various spinners to AdwSpinner

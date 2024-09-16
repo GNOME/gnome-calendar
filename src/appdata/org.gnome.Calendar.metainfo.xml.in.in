@@ -65,6 +65,27 @@
   </developer>
 
   <releases>
+    <release date="2024-09-16" version="47.0" type="stable">
+      <description>
+        <ul>
+          <li>Faster, flicker-free search</li>
+          <li>Use modern Adwaita widgets in various places</li>
+          <li>Improved visuals for the Month view</li>
+          <li>Improved visuals for mini-calendar in the sidebar</li>
+          <li>Improved event editor dialog</li>
+          <li>Various fixes to the sidebar agenda</li>
+          <li>Add the ability to import ICS files using drag n' drop</li>
+          <li>Event reminders states are now remembered properly</li>
+          <li>Visual improvements to the event preview popover</li>
+          <li>Interpret floating time events using local time instead of UTC</li>
+          <li>Fixes that eliminate divergence between views after moving events</li>
+          <li>Various improvements to the file importer dialog</li>
+          <li>Better URL validation when adding new calendars</li>
+          <li>New and updated translations</li>
+        </ul>
+      </description>
+    </release>
+
     <release date="2024-03-18" version="46.0" type="stable">
       <description>
         <ul>
