@@ -19,6 +19,7 @@
  */
 
 #include "gcal-importer.h"
+#include "gcal-debug.h"
 
 #include <glib/gi18n.h>
 
@@ -57,6 +58,22 @@ i_cal_error_enum_to_string (ICalErrorEnum ical_error)
     }
 }
 
+static const gchar*
+guess_file_encoding (const gchar *contents,
+                     gsize       length)
+{
+  if (length > 4 && contents[0] == '\xFF' && contents[1] == '\xFE' && contents[2] == '\x00' && contents[3] == '\x00') /* UTF-32LE case */
+    return "UTF-32LE";
+  else if (length > 4 && contents[0] == '\x00' && contents[1] == '\x00' && contents[2] == '\xFE' && contents[3] == '\xFF') /* UTF-32BE case */
+    return "UTF-32BE";
+  else if (length > 2 && contents[0] == '\xFF' && contents[1] == '\xFE') /* UTF-16LE case */
+    return "UTF-16LE";
+  else if (length > 2 && contents[0] == '\xFE' && contents[1] == '\xFF') /* UTF-16BE case */
+    return "UTF-16BE";
+
+  return "UTF-8";
+}
+
 static void
 read_file_in_thread (GTask        *task,
                      gpointer      source_object,
@@ -67,6 +84,7 @@ read_file_in_thread (GTask        *task,
   g_autoptr (GError) error = NULL;
   g_autofree gchar *contents = NULL;
   g_autofree gchar *path = NULL;
+  g_autofree gchar *encoding = NULL;
   ICalComponent *component;
   ICalErrorEnum ical_error;
   gsize length;
@@ -102,6 +120,33 @@ read_file_in_thread (GTask        *task,
     {
       g_task_return_error (task, g_steal_pointer (&error));
       return;
+    }
+
+  encoding = g_strdup (guess_file_encoding (contents, length));
+
+  if (g_strcmp0 (encoding, "UTF-8") != 0)
+    {
+      g_autofree gchar *content_converted = NULL;
+      gsize new_length;
+
+      GCAL_TRACE_MSG ("Converting file from %s to UTF-8", encoding);
+
+      content_converted = g_convert (contents, length, "UTF-8", encoding, NULL, &new_length, &error);
+
+      if (error)
+        {
+          g_task_return_error (task, g_steal_pointer (&error));
+          return;
+        }
+
+      g_clear_pointer (&contents, g_free);
+      contents = g_steal_pointer (&content_converted);
+      length = new_length;
+    }
+
+  if (!g_utf8_validate (contents, length, NULL)) /* validate UTF-8 */
+    {
+      GCAL_TRACE_MSG ("File encoding cannot be validated as UTF-8");
     }
 
   component = i_cal_parser_parse_string (contents);
