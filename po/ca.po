@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2024-02-25 17:33+0000\n"
-"PO-Revision-Date: 2024-03-27 22:32+0100\n"
+"PO-Revision-Date: 2024-09-27 22:32+0100\n"
 "Last-Translator: Jordi Mas i Hernàndez <jmas@softcatala.org>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -429,7 +429,7 @@ msgstr "Suprimeix l'alarma"
 #: src/gui/event-editor/gcal-date-chooser.c:272
 msgctxt "grid sunday"
 msgid "S"
-msgstr "DU"
+msgstr "DG"
 
 #. Translators: Calendar grid abbreviation for Monday
 #: src/gui/event-editor/gcal-date-chooser.c:277
@@ -441,7 +441,7 @@ msgstr "DL"
 #: src/gui/event-editor/gcal-date-chooser.c:282
 msgctxt "grid tuesday"
 msgid "T"
-msgstr "DM"
+msgstr "DT"
 
 #. Translators: Calendar grid abbreviation for Wednesday
 #: src/gui/event-editor/gcal-date-chooser.c:287
@@ -1283,7 +1283,7 @@ msgstr "Torna enrere"
 #: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Go Forward"
-msgstr "Vés endavant"
+msgstr "Ves endavant"
 
 #: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
