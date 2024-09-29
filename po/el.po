@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-19 01:14+0000\n"
-"PO-Revision-Date: 2024-09-03 00:17+0300\n"
+"POT-Creation-Date: 2024-09-16 13:41+0000\n"
+"PO-Revision-Date: 2024-09-29 19:53+0300\n"
 "Last-Translator: Efstathios Iosifidis <eiosifidis@gnome.org>\n"
 "Language-Team: Greek, Modern (1453-) <gnome-el-list@gnome.org>\n"
 "Language: el\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.5\n"
 "X-Project-Style: gnome\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:3
@@ -199,7 +199,7 @@ msgid "_Undo"
 msgstr "_Αναίρεση"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "Ημερολόγια"
 
@@ -236,12 +236,12 @@ msgid "Open in Settings"
 msgstr "Ανοίξτε στις Ρυθμίσεις"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "Όνομα ημερολογίου"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "Χρώμα"
 
@@ -261,28 +261,24 @@ msgstr "Προσθήκη νέων συμβάντων σε αυτό το ημερ
 msgid "_Remove Calendar"
 msgstr "_Αφαίρεση ημερολογίου"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "Επιλογή ενός αρχείου"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:158
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "Προσθήκη ημερολογίου"
 msgstr[1] "Προσθήκη %1$u ημερολογίων"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Προσθήκη ημερολογίου"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:373
 msgid "The URL you have entered appears to be invalid."
 msgstr "Η διεύθυνση URL που έχετε εισάγει φαίνεται να μην είναι έγκυρη."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:426
 msgid "A valid user and password are required to connect to this calendar."
 msgstr ""
 "Για τη σύνδεση με αυτό το ημερολόγιο απαιτείται έγκυρος χρήστης και "
@@ -292,27 +288,24 @@ msgstr ""
 msgid "New Calendar"
 msgstr "Νέο ημερολόγιο"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "Εισαγωγή ημερολογίου"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "Δημιουργία τοπικού ημερολογίου"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "Σύνδεση σε ένα online ημερολόγιο"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
 msgstr ""
-"Εναλλακτικά, εισαγάγετε τη διεύθυνση ιστού ενός διαδικτυακού ημερολογίου που "
-"θέλετε να εισαγάγετε ή ανοίξτε ένα υποστηριζόμενο αρχείο ημερολογίου."
+"Υποστηρίζονται διευθύνσεις URL HTTPS, CalDAV ή Webcal. Τα online ημερολόγια "
+"που μπορούν να ενημερωθούν μόνο από τον πάροχο θα προστεθούν ως ημερολόγια "
+"μόνο για ανάγνωση."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "Άνοιγμα αρχείου"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "Αρχεία ημερολογίου"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -321,25 +314,25 @@ msgstr ""
 "μπορείτε να το προσθέσετε μέσα από τις <a href=\"GOA\">ρυθμίσεις "
 "διαδικτυακού λογαριασμού</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "Διαπιστευτήρια"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "Χρήστης"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "Κωδικός πρόσβασης"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
 msgid "_Cancel"
 msgstr "_Aκύρωση"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "_Σύνδεση"
 
@@ -445,6 +438,11 @@ msgstr "Εναλλαγή ήχου ειδοποίησης"
 #: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "Αφαίρεση ειδοποίησης"
+
+#: src/gui/event-editor/gcal-calendar-row.c:70
+#: src/gui/importer/gcal-import-dialog.c:332
+msgid "This calendar is hidden"
+msgstr "Αυτό το ημερολόγιο είναι κρυφό"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -740,7 +738,7 @@ msgstr ""
 "Για περισσότερες πληροφορίες, επισκεφθείτε τη σελίδα\n"
 "http://gnome.gr/"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "Καιρός"
 
@@ -1261,31 +1259,35 @@ msgstr "Αφήστε αρχεία συμβάντων για εισαγωγή"
 msgid "Main Menu"
 msgstr "Κυρίως μενού"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "_Σήμερα"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "Μετάβαση στο σήμερα"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "_Εβδομάδα"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "_Μήνας"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "_Ρυθμίσεις ημερομηνίας και ώρας…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "_Διαδικτυακοί λογαριασμοί…"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "Συντομεύσεις _πληκτρολογίου"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "_Περί του Ημερολόγιο"
 
@@ -1384,7 +1386,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Προβολή μήνα"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1514,6 +1516,25 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Select a file"
+#~ msgstr "Επιλογή ενός αρχείου"
+
+#~ msgid "Import a Calendar"
+#~ msgstr "Εισαγωγή ημερολογίου"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "Εναλλακτικά, εισαγάγετε τη διεύθυνση ιστού ενός διαδικτυακού ημερολογίου "
+#~ "που θέλετε να εισαγάγετε ή ανοίξτε ένα υποστηριζόμενο αρχείο ημερολογίου."
+
+#~ msgid "Open a File"
+#~ msgstr "Άνοιγμα αρχείου"
+
+#~ msgid "Calendar files"
+#~ msgstr "Αρχεία ημερολογίου"
 
 #~ msgid "_Add Calendar…"
 #~ msgstr "_Προσθήκη ημερολογίου…"
@@ -1667,9 +1688,6 @@ msgstr "Microsoft Teams"
 
 #~ msgid "From Web…"
 #~ msgstr "Από τον Ιστό…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "Νέο τοπικό ημερολόγιο…"
 
 #~ msgid "No results found"
 #~ msgstr "Δεν βρέθηκαν αποτελέσματα"
