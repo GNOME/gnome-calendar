@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2014 Igor Gnatenko <ignatenko@src.gnome.org> -->
 <component type="desktop">
-  <id>@appid@.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
+
+  <id>@appid@</id>
+
+  <developer id="org.gnome">
+    <name>The GNOME Project</name>
+  </developer>
+
   <name>Calendar</name>
   <summary>Manage your schedule</summary>
 
@@ -43,12 +49,10 @@
     </screenshot>
   </screenshots>
 
-  <kudos>
-    <kudo>AppMenu</kudo>
-    <kudo>HiDpiIcon</kudo>
-    <kudo>ModernToolkit</kudo>
-    <kudo>SearchProvider</kudo>
-  </kudos>
+  <branding>
+    <color type="primary" scheme_preference="light">#dc8add</color>
+    <color type="primary" scheme_preference="dark">#613583</color>
+  </branding>
 
   <url type="homepage">https://apps.gnome.org/Calendar/</url>
   <url type="bugtracker">https://gitlab.gnome.org/GNOME/gnome-calendar/issues</url>
@@ -57,12 +61,28 @@
   <url type="translate">https://l10n.gnome.org/module/gnome-calendar/</url>
   <url type="contribute">https://welcome.gnome.org/app/Calendar/</url>
   <url type="contact">https://matrix.to/#/#gnome-calendar:gnome.org</url>
-  <url type="help">https://discourse.gnome.org/tag/calendar</url>
   <project_group>GNOME</project_group>
-  <developer_name>The GNOME Project</developer_name>
-  <developer id="org.gnome">
-    <name>The GNOME Project</name>
-  </developer>
+
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+
+  <recommends>
+    <internet>always</internet>
+  </recommends>
+
+  <supports>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <control>touch</control>
+  </supports>
+
+  <translation type="gettext">gnome-calendar</translation>
+  <launchable type="desktop-id">@appid@.desktop</launchable>
+
+  <content_rating type="oars-1.1" />
+
+  <update_contact>gbsneto@gnome.org</update_contact>
 
   <releases>
     <release date="2024-09-16" version="47.0" type="stable">
@@ -441,20 +461,5 @@
       </description>
     </release>
   </releases>
-
-  <update_contact>gbsneto@gnome.org</update_contact>
-  <translation type="gettext">gnome-calendar</translation>
-  <launchable type="desktop-id">@appid@.desktop</launchable>
-
-  <recommends>
-    <control>keyboard</control>
-    <control>pointing</control>
-    <control>touch</control>
-  </recommends>
-  <requires>
-    <display_length compare="ge">360</display_length>
-  </requires>
-
-  <content_rating type="oars-1.1" />
 </component>
 
