@@ -80,7 +80,6 @@ enum
 {
   PROP_0,
   PROP_CONTEXT,
-  PROP_DATE_END,
   PROP_EVENT,
   PROP_TIMESTAMP_POLICY,
   PROP_ORIENTATION,
@@ -665,10 +664,6 @@ gcal_event_widget_set_property (GObject      *object,
                                G_CONNECT_SWAPPED);
       break;
 
-    case PROP_DATE_END:
-      gcal_event_widget_set_date_end (self, g_value_get_boxed (value));
-      break;
-
     case PROP_EVENT:
       gcal_event_widget_set_event_internal (self, g_value_get_object (value));
       break;
@@ -702,10 +697,6 @@ gcal_event_widget_get_property (GObject      *object,
     {
     case PROP_CONTEXT:
       g_value_set_object (value, self->context);
-      break;
-
-    case PROP_DATE_END:
-      g_value_set_boxed (value, self->dt_end);
       break;
 
     case PROP_EVENT:
@@ -779,17 +770,6 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
                                                         "Context",
                                                         GCAL_TYPE_CONTEXT,
                                                         G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
-  /**
-   * GcalEventWidget::date-end:
-   *
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_DATE_END,
-                                   g_param_spec_boxed ("date-end",
-                                                       "End date",
-                                                       "The end date of the widget",
-                                                       G_TYPE_DATE_TIME,
-                                                       G_PARAM_READWRITE));
 
   /**
    * GcalEventWidget::event:
@@ -960,8 +940,6 @@ gcal_event_widget_set_date_end (GcalEventWidget *self,
       self->dt_end = g_date_time_ref (date_end);
 
       gcal_event_widget_update_style (self);
-
-      g_object_notify (G_OBJECT (self), "date-end");
     }
 }
 
