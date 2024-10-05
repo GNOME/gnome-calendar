@@ -807,10 +807,6 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   /**
    * GcalEventWidget::date-start:
    *
-   * The start date this widget represents. Notice that this may
-   * differ from the event's start date. For example, if the event
-   * spans more than one month and we're in Month View, the start
-   * date marks the first day this event widget is visible.
    */
   g_object_class_install_property (object_class,
                                    PROP_DATE_START,
@@ -1014,6 +1010,11 @@ gcal_event_widget_get_date_start (GcalEventWidget *self)
  * Sets the visible start date of this widget. This
  * may differ from the event's start date, but cannot
  * be before it.
+ *
+ * The start date for this widget may differ from the event's start
+ * date. For example, if the event spans more than one month and we're
+ * in Month View, the start date marks the first day this event widget
+ * is visible.
  */
 void
 gcal_event_widget_set_date_start (GcalEventWidget *self,
