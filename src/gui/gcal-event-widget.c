@@ -963,7 +963,7 @@ gcal_event_widget_get_date_start (GcalEventWidget *self)
 /**
  * gcal_event_widget_set_date_start:
  * @self: a #GcalEventWidget
- * @date_end: the start date of this widget
+ * @date_start: the start date of this widget
  *
  * Sets the visible start date of this widget. This
  * may differ from the event's start date, but cannot
