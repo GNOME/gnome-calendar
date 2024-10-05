@@ -782,10 +782,6 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   /**
    * GcalEventWidget::date-end:
    *
-   * The end date this widget represents. Notice that this may
-   * differ from the event's end date. For example, if the event
-   * spans more than one month and we're in Month View, the end
-   * date marks the last day this event widget is visible.
    */
   g_object_class_install_property (object_class,
                                    PROP_DATE_END,
@@ -940,6 +936,11 @@ gcal_event_widget_get_date_end (GcalEventWidget *self)
  * Sets the visible end date of this widget. This
  * may differ from the event's end date, but cannot
  * be after it.
+ *
+ * The end date for this widget may differ from the event's end
+ * date. For example, if the event spans more than one month and we're
+ * in Month View, the end date marks the last day this event widget is
+ * visible.
  */
 void
 gcal_event_widget_set_date_end (GcalEventWidget *self,
