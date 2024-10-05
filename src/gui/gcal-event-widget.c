@@ -81,7 +81,6 @@ enum
   PROP_0,
   PROP_CONTEXT,
   PROP_DATE_END,
-  PROP_DATE_START,
   PROP_EVENT,
   PROP_TIMESTAMP_POLICY,
   PROP_ORIENTATION,
@@ -670,10 +669,6 @@ gcal_event_widget_set_property (GObject      *object,
       gcal_event_widget_set_date_end (self, g_value_get_boxed (value));
       break;
 
-    case PROP_DATE_START:
-      gcal_event_widget_set_date_start (self, g_value_get_boxed (value));
-      break;
-
     case PROP_EVENT:
       gcal_event_widget_set_event_internal (self, g_value_get_object (value));
       break;
@@ -711,10 +706,6 @@ gcal_event_widget_get_property (GObject      *object,
 
     case PROP_DATE_END:
       g_value_set_boxed (value, self->dt_end);
-      break;
-
-    case PROP_DATE_START:
-      g_value_set_boxed (value, self->dt_start);
       break;
 
     case PROP_EVENT:
@@ -801,18 +792,6 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
                                    g_param_spec_boxed ("date-end",
                                                        "End date",
                                                        "The end date of the widget",
-                                                       G_TYPE_DATE_TIME,
-                                                       G_PARAM_READWRITE));
-
-  /**
-   * GcalEventWidget::date-start:
-   *
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_DATE_START,
-                                   g_param_spec_boxed ("date-start",
-                                                       "Start date",
-                                                       "The start date of the widget",
                                                        G_TYPE_DATE_TIME,
                                                        G_PARAM_READWRITE));
 
@@ -1034,8 +1013,6 @@ gcal_event_widget_set_date_start (GcalEventWidget *self,
       self->dt_start = g_date_time_ref (date_start);
 
       gcal_event_widget_update_style (self);
-
-      g_object_notify (G_OBJECT (self), "date-start");
     }
 }
 
