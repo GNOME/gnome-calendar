@@ -37,6 +37,8 @@ struct _GcalScheduleSection
 {
   GtkBox               parent;
 
+  GcalScheduleValues  *values;
+
   AdwToggleGroup      *schedule_type_toggle_group;
   AdwPreferencesGroup *start_date_group;
   GcalDateChooserRow  *start_date_row;
@@ -354,6 +356,8 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   g_set_object (&self->event, event);
   self->flags = flags;
 
+  self->values = gcal_schedule_values_from_event (event);
+
   if (!event)
     GCAL_RETURN ();
 
@@ -624,6 +628,7 @@ gcal_schedule_section_finalize (GObject *object)
 {
   GcalScheduleSection *self = (GcalScheduleSection *)object;
 
+  g_clear_pointer (&self->values, gcal_schedule_values_free);
   g_clear_object (&self->context);
   g_clear_object (&self->event);
 
