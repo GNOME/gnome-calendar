@@ -771,3 +771,47 @@ gcal_schedule_section_day_changed (GcalScheduleSection *self)
   GCAL_RETURN (gcal_date_time_compare_date (start_date, gcal_event_get_date_start (self->event)) < 0 ||
                gcal_date_time_compare_date (end_date, gcal_event_get_date_end (self->event)) > 0);
 }
+
+/**
+ * Extracts the values from @event that are needed to populate #GcalScheduleSection.
+ *
+ * Returns: a #GcalscheduleValues ready for use.  Free it with
+ * gcal_schedule_values_free().
+ */
+GcalScheduleValues *
+gcal_schedule_values_from_event (GcalEvent *event)
+{
+  GcalScheduleValues *values = g_new0 (GcalScheduleValues, 1);
+
+  if (event)
+    {
+      GcalRecurrence *recur = gcal_event_get_recurrence (event);
+
+      values->all_day = gcal_event_get_all_day (event);
+      values->date_start = g_date_time_ref (gcal_event_get_date_start (event));
+      values->date_end = g_date_time_ref (gcal_event_get_date_end (event));
+
+      if (recur)
+        {
+          values->recur = gcal_recurrence_ref (recur);
+        }
+    }
+
+  return values;
+}
+
+/**
+ * Frees the contents of @values.  Does not free the @values pointer itself;
+ * this structure is meant to be allocated on the stack.
+ */
+void
+gcal_schedule_values_free (GcalScheduleValues *values)
+{
+  values->all_day = FALSE;
+
+  g_clear_pointer (&values->date_start, g_date_time_unref);
+  g_clear_pointer (&values->date_end, g_date_time_unref);
+  g_clear_pointer (&values->recur, gcal_recurrence_unref);
+
+  g_free (values);
+}
