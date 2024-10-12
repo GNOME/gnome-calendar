@@ -59,8 +59,6 @@ GdkPaintable*        gcal_get_paintable_from_color               (const GdkRGBA 
 GdkPaintable*        get_circle_paintable_from_color             (const GdkRGBA      *color,
                                                                   gint                size);
 
-GdkPixbuf*           paintable_to_pixbuf                         (GdkPaintable       *paintable);
-
 void                 get_color_name_from_source                  (ESource            *source,
                                                                   GdkRGBA            *out_color);
 
