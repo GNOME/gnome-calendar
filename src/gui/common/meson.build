@@ -3,8 +3,8 @@ calendar_incs +=  include_directories('.')
 blueprints = custom_target(
   'blueprints',
   input: files(
-    'gcal-calendar-combo-row-item.blp',
     'gcal-calendar-combo-row.blp',
+    'gcal-calendar-row.blp',
     'gcal-date-chooser-day.blp',
     'gcal-date-chooser.blp',
   ),
@@ -26,7 +26,7 @@ built_sources += gnome.compile_resources(
 )
 
 sources += files(
-  'gcal-calendar-combo-row-item.c',
+  'gcal-calendar-row.c',
   'gcal-calendar-combo-row.c',
   'gcal-date-chooser.c',
   'gcal-date-chooser-day.c',

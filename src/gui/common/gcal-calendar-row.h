@@ -24,10 +24,10 @@
 #include "gcal-calendar.h"
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_CALENDAR_COMBO_ROW_ITEM (gcal_calendar_combo_row_item_get_type())
+#define GCAL_TYPE_CALENDAR_ROW (gcal_calendar_row_get_type())
 
-G_DECLARE_FINAL_TYPE (GcalCalendarComboRowItem, gcal_calendar_combo_row_item, GCAL, CALENDAR_COMBO_ROW_ITEM, AdwPreferencesRow)
+G_DECLARE_FINAL_TYPE (GcalCalendarRow, gcal_calendar_row, GCAL, CALENDAR_ROW, AdwPreferencesRow)
 
-GtkWidget*           gcal_calendar_combo_row_item_new            (GcalCalendar      *calendar);
+GtkWidget*           gcal_calendar_row_new            (GcalCalendar      *calendar);
 
 G_END_DECLS

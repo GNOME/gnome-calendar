@@ -19,7 +19,7 @@
 #define G_LOG_DOMAIN "GcalCalendarComboRow"
 
 #include "gcal-calendar-combo-row.h"
-#include "gcal-calendar-combo-row-item.h"
+#include "gcal-calendar-row.h"
 
 #include <locale.h>
 #include <langinfo.h>
@@ -95,7 +95,7 @@ calendar_item_bind_cb (GtkSignalListItemFactory *factory,
   box = g_object_get_data (G_OBJECT (item), "box");
   checkmark = g_object_get_data (G_OBJECT (item), "checkmark");
 
-  calendar_row = gcal_calendar_combo_row_item_new (data);
+  calendar_row = gcal_calendar_row_new (data);
 
   gtk_box_insert_child_after (GTK_BOX (box), calendar_row, NULL);
 

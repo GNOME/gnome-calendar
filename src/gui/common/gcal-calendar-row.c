@@ -1,4 +1,4 @@
-/* gcal-calendar-combo-row-item.c
+/* gcal-calendar-row.c
  *
  * Copyright 2024 Diego Iván M.E <diegoivan.mae@gmail.com>
  *
@@ -18,25 +18,25 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#define G_LOG_DOMAIN "GcalCalendarComboRowItem"
+#define G_LOG_DOMAIN "GcalCalendarRow"
 
 #include "config.h"
-#include "gcal-calendar-combo-row-item.h"
+#include "gcal-calendar-row.h"
 #include "gcal-debug.h"
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
 
-struct _GcalCalendarComboRowItem
+struct _GcalCalendarRow
 {
-  AdwActionRow        parent;
+  AdwPreferencesRow   parent;
 
   GtkImage           *color_image;
   GtkImage           *visibility_image;
   GcalCalendar       *calendar;
 };
 
-G_DEFINE_TYPE (GcalCalendarComboRowItem, gcal_calendar_combo_row_item, ADW_TYPE_PREFERENCES_ROW)
+G_DEFINE_TYPE (GcalCalendarRow, gcal_calendar_row, ADW_TYPE_PREFERENCES_ROW)
 
 enum
 {
@@ -59,7 +59,7 @@ paintable_from_gdk_rgb (GBinding     *binding,
 }
 
 static void
-updated_visibility_cb (GcalCalendarComboRowItem *self)
+updated_visibility_cb (GcalCalendarRow *self)
 {
   g_autofree gchar *accessible_description = NULL;
 
@@ -75,8 +75,8 @@ updated_visibility_cb (GcalCalendarComboRowItem *self)
 }
 
 static void
-set_calendar (GcalCalendarComboRowItem *self,
-              GcalCalendar             *calendar)
+set_calendar (GcalCalendarRow *self,
+              GcalCalendar    *calendar)
 {
   g_return_if_fail (GCAL_IS_CALENDAR (calendar));
   g_set_object (&self->calendar, calendar);
@@ -102,22 +102,22 @@ set_calendar (GcalCalendarComboRowItem *self,
  */
 
 static void
-gcal_calendar_combo_row_item_finalize (GObject *object)
+gcal_calendar_row_finalize (GObject *object)
 {
-  GcalCalendarComboRowItem *self = (GcalCalendarComboRowItem *)object;
+  GcalCalendarRow *self = (GcalCalendarRow *)object;
 
   g_clear_object (&self->calendar);
 
-  G_OBJECT_CLASS (gcal_calendar_combo_row_item_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gcal_calendar_row_parent_class)->finalize (object);
 }
 
 static void
-gcal_calendar_combo_row_item_get_property (GObject    *object,
-                                           guint       prop_id,
-                                           GValue     *value,
-                                           GParamSpec *pspec)
+gcal_calendar_row_get_property (GObject    *object,
+                                guint       prop_id,
+                                GValue     *value,
+                                GParamSpec *pspec)
 {
-  GcalCalendarComboRowItem *self = GCAL_CALENDAR_COMBO_ROW_ITEM (object);
+  GcalCalendarRow *self = GCAL_CALENDAR_ROW (object);
 
   switch (prop_id)
     {
@@ -131,12 +131,12 @@ gcal_calendar_combo_row_item_get_property (GObject    *object,
 }
 
 static void
-gcal_calendar_combo_row_item_set_property (GObject      *object,
-                                           guint         prop_id,
-                                           const GValue *value,
-                                           GParamSpec   *pspec)
+gcal_calendar_row_set_property (GObject      *object,
+                                guint         prop_id,
+                                const GValue *value,
+                                GParamSpec   *pspec)
 {
-  GcalCalendarComboRowItem *self = GCAL_CALENDAR_COMBO_ROW_ITEM (object);
+  GcalCalendarRow *self = GCAL_CALENDAR_ROW (object);
 
   switch (prop_id)
     {
@@ -151,14 +151,14 @@ gcal_calendar_combo_row_item_set_property (GObject      *object,
 }
 
 static void
-gcal_calendar_combo_row_item_class_init (GcalCalendarComboRowItemClass *klass)
+gcal_calendar_row_class_init (GcalCalendarRowClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  object_class->finalize = gcal_calendar_combo_row_item_finalize;
-  object_class->get_property = gcal_calendar_combo_row_item_get_property;
-  object_class->set_property = gcal_calendar_combo_row_item_set_property;
+  object_class->finalize = gcal_calendar_row_finalize;
+  object_class->get_property = gcal_calendar_row_get_property;
+  object_class->set_property = gcal_calendar_row_set_property;
 
   properties[PROP_CALENDAR] = g_param_spec_object ("calendar",
                                                    "Calendar",
@@ -168,22 +168,22 @@ gcal_calendar_combo_row_item_class_init (GcalCalendarComboRowItemClass *klass)
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/common/gcal-calendar-combo-row-item.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/common/gcal-calendar-row.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarComboRowItem, color_image);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarComboRowItem, visibility_image);
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarRow, color_image);
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarRow, visibility_image);
 }
 
 static void
-gcal_calendar_combo_row_item_init (GcalCalendarComboRowItem *self)
+gcal_calendar_row_init (GcalCalendarRow *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
 GtkWidget*
-gcal_calendar_combo_row_item_new (GcalCalendar *calendar)
+gcal_calendar_row_new (GcalCalendar *calendar)
 {
-  return g_object_new (GCAL_TYPE_CALENDAR_COMBO_ROW_ITEM,
+  return g_object_new (GCAL_TYPE_CALENDAR_ROW,
                        "calendar", calendar,
                        NULL);
 }

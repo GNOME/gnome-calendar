@@ -1,8 +1,8 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $GcalCalendarComboRowItem: Adw.PreferencesRow {
-  Box {
+template $GcalCalendarRow: Adw.PreferencesRow {
+  child: Box {
     orientation: horizontal;
     spacing: 6;
 
@@ -23,5 +23,5 @@ template $GcalCalendarComboRowItem: Adw.PreferencesRow {
       hexpand: true;
       icon-name: "eye-not-looking-symbolic";
     }
-  }
+  };
 }
