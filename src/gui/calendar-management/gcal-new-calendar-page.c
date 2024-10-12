@@ -92,47 +92,6 @@ enum
  * Auxiliary methods
  */
 
-static gchar*
-calendar_path_to_name_suggestion (GFile *file)
-{
-  g_autofree gchar *unencoded_basename = NULL;
-  g_autofree gchar *basename = NULL;
-  gchar *ext;
-  guint i;
-
-  const gchar*
-  import_file_extensions[] = {
-    ".ical",
-    ".ics",
-    ".ifb",
-    ".icalendar",
-    ".vcs"
-  };
-
-  g_return_val_if_fail (G_IS_FILE (file), NULL);
-
-  unencoded_basename = g_file_get_basename (file);
-  basename = g_filename_display_name (unencoded_basename);
-
-  ext = strrchr (basename, '.');
-
-  if (!ext)
-    return NULL;
-
-  for (i = 0; i < G_N_ELEMENTS(import_file_extensions); i++)
-    {
-      if (g_ascii_strcasecmp (import_file_extensions[i], ext) == 0)
-        {
-           *ext = '\0';
-           break;
-        }
-    }
-
-  g_strdelimit (basename, "-_", ' ');
-
-  return g_steal_pointer (&basename);
-}
-
 static void
 update_add_button (GcalNewCalendarPage *self)
 {
