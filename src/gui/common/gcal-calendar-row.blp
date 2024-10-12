@@ -2,8 +2,7 @@ using Gtk 4.0;
 using Adw 1;
 
 template $GcalCalendarRow: Adw.PreferencesRow {
-  child: Box {
-    orientation: horizontal;
+  child: Box header_box {
     spacing: 6;
 
     Image color_image {
@@ -18,10 +17,19 @@ template $GcalCalendarRow: Adw.PreferencesRow {
       label: bind template.title;
     }
 
-    Image visibility_image {
+    Box {
+      spacing: 6;
       halign: end;
       hexpand: true;
-      icon-name: "eye-not-looking-symbolic";
+
+      Image visibility_image {
+        icon-name: "eye-not-looking-symbolic";
+      }
+
+      Box suffix {
+        spacing: 6;
+        visible: false;
+      }
     }
   };
 }

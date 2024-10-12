@@ -31,6 +31,8 @@ struct _GcalCalendarRow
 {
   AdwPreferencesRow   parent;
 
+  GtkBox             *suffix;
+  GtkBox             *header_box;
   GtkImage           *color_image;
   GtkImage           *visibility_image;
   GcalCalendar       *calendar;
@@ -122,7 +124,7 @@ gcal_calendar_row_get_property (GObject    *object,
   switch (prop_id)
     {
     case PROP_CALENDAR:
-      g_value_set_object (value, self->calendar);
+      g_value_set_object (value, gcal_calendar_row_get_calendar (self));
       break;
 
     default:
@@ -170,6 +172,8 @@ gcal_calendar_row_class_init (GcalCalendarRowClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/common/gcal-calendar-row.ui");
 
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarRow, suffix);
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarRow, header_box);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarRow, color_image);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarRow, visibility_image);
 }
@@ -186,4 +190,83 @@ gcal_calendar_row_new (GcalCalendar *calendar)
   return g_object_new (GCAL_TYPE_CALENDAR_ROW,
                        "calendar", calendar,
                        NULL);
+}
+
+/**
+ * gcal_calendar_row_get_calendar:
+ * @self: a #GcalCalendarRow
+ *
+ * Gets calendar from row.
+ *
+ * Returns: (transfer none): a #GcalCalendar
+ */
+GcalCalendar*
+gcal_calendar_row_get_calendar (GcalCalendarRow *self)
+{
+  g_return_val_if_fail (GCAL_IS_CALENDAR_ROW (self), NULL);
+
+  return self->calendar;
+}
+
+/**
+ * gcal_calendar_row_add_suffix:
+ * @self: a #GcalCalendarRow
+ * @widget: a #GtkWidget
+ *
+ * Adds a suffix widget to @self.
+ */
+void
+gcal_calendar_row_add_suffix (GcalCalendarRow *self,
+                              GtkWidget       *widget)
+{
+  g_return_if_fail (GCAL_IS_CALENDAR_ROW (self));
+  g_return_if_fail (GTK_IS_WIDGET (widget));
+  g_return_if_fail (gtk_widget_get_parent (widget) == NULL);
+
+  gtk_widget_set_visible (GTK_WIDGET (self->suffix), TRUE);
+  gtk_box_append (self->suffix, widget);
+}
+
+/**
+ * gcal_calendar_row_get_first_suffix_child:
+ * @self: a #GcalCalendarRow
+ *
+ * Gets the first child suffix widget.
+ *
+ * Returns: (transfer none): a #GtkWidget
+ */
+GtkWidget*
+gcal_calendar_row_get_first_suffix_child (GcalCalendarRow *self)
+{
+  g_return_val_if_fail (GCAL_IS_CALENDAR_ROW (self), NULL);
+
+  return gtk_widget_get_first_child (GTK_WIDGET (self->suffix));
+}
+
+/**
+ * gcal_calendar_row_add_header_class:
+ * @self: a #GcalCalendarRow
+ *
+ * Adds `header` CSS class to @header_box
+ */
+void
+gcal_calendar_row_add_header_class (GcalCalendarRow *self)
+{
+  g_return_if_fail (GCAL_IS_CALENDAR_ROW (self));
+
+  gtk_widget_add_css_class (GTK_WIDGET (self->header_box), "header");
+}
+
+/**
+ * gcal_calendar_row_remove_header_class:
+ * @self: a #GcalCalendarRow
+ *
+ * Removes `header` CSS class from @header_box
+ */
+void
+gcal_calendar_row_remove_header_class (GcalCalendarRow *self)
+{
+  g_return_if_fail (GCAL_IS_CALENDAR_ROW (self));
+
+  gtk_widget_remove_css_class (GTK_WIDGET (self->header_box), "header");
 }
