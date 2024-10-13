@@ -2,8 +2,8 @@ using Gtk 4.0;
 using Adw 1;
 
 template $GcalQuickAddPopover: Popover {
-  width-request: 360;
   show => $gtk_widget_grab_focus(summary_entry);
+  width-request: 360;
 
   styles [
     "quick-add-popover",
@@ -56,12 +56,13 @@ template $GcalQuickAddPopover: Popover {
         "undershoot-bottom",
       ]
 
-      child: ListBox calendars_listbox {
+      child: ListBox calendars_list_box {
         selection-mode: none;
         margin-start: 12;
         margin-end: 12;
         margin-top: 12;
         margin-bottom: 12;
+        row-activated => $row_activated_cb(template) not-swapped;
 
         styles [
           "boxed-list",
