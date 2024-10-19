@@ -106,6 +106,7 @@ You cannot delete or change this event.</property>
               <object class="GtkButton" id="done_button">
                 <property name="use-underline">True</property>
                 <property name="label" translatable="yes">_Done</property>
+                <property name="sensitive" bind-source="summary_section" bind-property="is-valid-title" bind-flags="default|sync-create" />
                 <signal name="clicked" handler="on_done_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
                 <style>
                   <class name="suggested-action"/>

@@ -36,6 +36,7 @@ struct _GcalSummarySection
   AdwEntryRow        *location_entry;
 
   GcalContext        *context;
+  gboolean            valid_title;
   GcalEvent          *event;
 };
 
@@ -49,8 +50,11 @@ enum
 {
   PROP_0,
   PROP_CONTEXT,
+  PROP_IS_VALID_TITLE,
   N_PROPS
 };
+
+static GParamSpec *properties [N_PROPS] = { NULL, };
 
 /*
  * GcalEventEditorSection interface
@@ -83,12 +87,19 @@ gcal_reminders_section_set_event (GcalEventEditorSection *section,
 }
 
 static void
-on_summary_entry_text_changed_cb (AdwEntryRow *entry_row)
+on_summary_entry_text_changed_cb (AdwEntryRow *entry_row,
+                                  gpointer    *user_data)
 {
-  if (gcal_is_valid_event_name (gtk_editable_get_text (GTK_EDITABLE (entry_row))))
+  GcalSummarySection *self = (GcalSummarySection *)user_data;
+
+  self->valid_title = gcal_is_valid_event_name (gtk_editable_get_text (GTK_EDITABLE (entry_row)));
+
+  if (self->valid_title)
     gtk_widget_remove_css_class (GTK_WIDGET (entry_row), "error");
   else
     gtk_widget_add_css_class (GTK_WIDGET (entry_row), "error");
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_IS_VALID_TITLE]);
 }
 
 static void
@@ -161,6 +172,10 @@ gcal_summary_section_get_property (GObject    *object,
       g_value_set_object (value, self->context);
       break;
 
+    case PROP_IS_VALID_TITLE:
+      g_value_set_boolean (value, self->valid_title);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -181,6 +196,7 @@ gcal_summary_section_set_property (GObject      *object,
       self->context = g_value_dup_object (value);
       break;
 
+    case PROP_IS_VALID_TITLE:
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -196,7 +212,20 @@ gcal_summary_section_class_init (GcalSummarySectionClass *klass)
   object_class->get_property = gcal_summary_section_get_property;
   object_class->set_property = gcal_summary_section_set_property;
 
-  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
+
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "Data context",
+                                                  NULL,
+                                                  GCAL_TYPE_CONTEXT,
+                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  properties[PROP_IS_VALID_TITLE] = g_param_spec_boolean ("is-valid-title",
+                                                          "Is valid title",
+                                                          "Whether it's a valid title.",
+                                                          FALSE,
+                                                          G_PARAM_READABLE);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-summary-section.ui");
 
