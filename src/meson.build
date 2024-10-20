@@ -16,7 +16,14 @@ gcal_deps = [
   m_dep,
 ]
 
-built_sources = gnome.mkenums_simple('gcal-enum-types', sources: enum_headers)
+enum_types = 'gcal-enum-types'
+
+built_sources = gnome.mkenums(
+  enum_types,
+     sources: enum_headers,
+  c_template: enum_types + '.c.template',
+  h_template: enum_types + '.h.template'
+)
 
 built_sources += gnome.gdbus_codegen(
   'gcal-shell-search-provider-generated',

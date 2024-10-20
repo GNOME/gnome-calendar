@@ -70,39 +70,6 @@ static GParamSpec* properties[N_PROPS] = { NULL, };
  * Auxiliary methods
  */
 
-GdkTexture*
-paintable_to_texture (GdkPaintable *paintable)
-{
-  g_autoptr (GtkSnapshot) snapshot = NULL;
-  g_autoptr (GskRenderNode) node = NULL;
-  g_autoptr (GskRenderer) renderer = NULL;
-  g_autoptr (GdkTexture) texture = NULL;
-  g_autoptr (GError) error = NULL;
-  graphene_rect_t viewport;
-
-  snapshot = gtk_snapshot_new ();
-  gdk_paintable_snapshot (paintable, snapshot,
-                          gdk_paintable_get_intrinsic_width (paintable),
-                          gdk_paintable_get_intrinsic_height (paintable));
-  node = gtk_snapshot_free_to_node (g_steal_pointer (&snapshot));
-
-  renderer = gsk_cairo_renderer_new ();
-  gsk_renderer_realize (renderer, NULL, &error);
-  if (error)
-    {
-      g_warning ("Couldn't realize Cairo renderer: %s", error->message);
-      return NULL;
-    }
-
-  viewport = GRAPHENE_RECT_INIT (0, 0,
-                                 gdk_paintable_get_intrinsic_width (paintable),
-                                 gdk_paintable_get_intrinsic_height (paintable));
-  texture = gsk_renderer_render_texture (renderer, node, &viewport);
-  gsk_renderer_unrealize (renderer);
-
-  return g_steal_pointer (&texture);
-}
-
 static gint
 sort_event_data (GcalEvent *a,
                  GcalEvent *b,
@@ -254,8 +221,8 @@ get_result_metas_cb (GcalShellSearchProvider  *self,
   for (i = 0; i < g_strv_length (results); i++)
     {
       g_autoptr (GdkPaintable) paintable = NULL;
-      g_autoptr (GdkTexture) texture = NULL;
       g_autoptr (GVariant) icon_variant = NULL;
+      g_autoptr (GdkPixbuf) gicon = NULL;
 
       uuid = results[i];
       event = g_hash_table_lookup (self->events, uuid);
@@ -265,8 +232,8 @@ get_result_metas_cb (GcalShellSearchProvider  *self,
       g_variant_builder_add (&builder, "{sv}", "name", g_variant_new_string (gcal_event_get_summary (event)));
 
       paintable = get_circle_paintable_from_color (gcal_event_get_color (event), 96);
-      texture = paintable_to_texture (paintable);
-      icon_variant = g_icon_serialize (G_ICON (texture));
+      gicon = paintable_to_pixbuf (paintable);
+      icon_variant = g_icon_serialize (G_ICON (gicon));
       g_variant_builder_add (&builder, "{sv}", "icon", icon_variant);
 
       local_datetime = g_date_time_to_local (gcal_event_get_date_start (event));
