@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-09-03 20:56+0000\n"
-"PO-Revision-Date: 2024-09-05 13:55+0300\n"
+"POT-Creation-Date: 2024-10-22 15:48+0000\n"
+"PO-Revision-Date: 2024-10-23 22:40+0300\n"
 "Last-Translator: Yuras Shumovich <shumovichy@gmail.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Generator: Poedit 3.5\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:3
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:7 src/main.c:35
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
 #: src/gui/gcal-quick-add-popover.ui:135 src/gui/gcal-window.ui:4
 #: src/gui/gcal-window.ui:147
 msgid "Calendar"
@@ -73,11 +73,11 @@ msgstr "Узровень маштабавання сеткі календара 
 msgid "The current zoom level of the week grid"
 msgstr "Бягучы ўзровень маштабавання сеткі календара на тыдзень"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:8
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "Кіраванне раскладам"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:11
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:17
 msgid ""
 "GNOME Calendar is an elegant tool to help you plan and stay on top of your "
 "schedule for upcoming days and weeks, whether your months are filled with "
@@ -89,7 +89,7 @@ msgstr ""
 "чым запоўнены вашы месяцы - сустрэчамі і нарадамі, грамадскімі "
 "мерапрыемствамі, паездкамі ці іншымі планамі."
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:16
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:22
 msgid ""
 "Easily create and manage unlimited calendars and events with GNOME "
 "Calendar's infinite scrolling month view, week timetable, and scheduling "
@@ -99,7 +99,7 @@ msgstr ""
 "Календары GNOME з бясконцай прагорткай і праглядам па месяцах, тыднях, а "
 "таксама па спісе запланаваных падзей."
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:20
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
 msgid ""
 "Integrating the latest GNOME technologies and design best practices, GNOME "
 "Calendar builds on top of the mature Evolution data server to manage large "
@@ -120,21 +120,17 @@ msgstr ""
 "можаце выкарыстоўваць яго ў любым месцы і ў любы час, нават калі "
 "падарожнічаеце (або пасля гібелі цывілізацыі)."
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:33
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
 msgid "Week view"
 msgstr "Прагляд тыдня"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:37
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
 msgid "Month view"
 msgstr "Прагляд месяца"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
 msgid "Event editor"
 msgstr "Рэдактар падзей"
-
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
-msgid "The GNOME Project"
-msgstr "Праект GNOME"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -183,7 +179,7 @@ msgid "Calendar “%s” removed"
 msgstr "Каляндар «%s» выдалены"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:363
-#: src/gui/gcal-window.c:836
+#: src/gui/gcal-window.c:834
 msgid "_Undo"
 msgstr "_Адрабіць"
 
@@ -250,7 +246,7 @@ msgstr "Прадвызначана дадаваць новыя падзеі ў �
 msgid "_Remove Calendar"
 msgstr "_Выдаліць каляндар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:158
+#: src/gui/calendar-management/gcal-new-calendar-page.c:117
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
@@ -258,17 +254,17 @@ msgstr[0] "Дадаць %1$u каляндар"
 msgstr[1] "Дадаць %1$u календары"
 msgstr[2] "Дадаць %1$u каляндароў"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.c:124
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Дадаць каляндар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:373
+#: src/gui/calendar-management/gcal-new-calendar-page.c:332
 msgid "The URL you have entered appears to be invalid."
 msgstr "URL-адрас, які вы ўвялі, падобны на памылковы."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:426
+#: src/gui/calendar-management/gcal-new-calendar-page.c:385
 msgid "A valid user and password are required to connect to this calendar."
 msgstr ""
 "Каб падключыцца да гэтага календара, патрабуецца сапраўдны карыстальнік і "
@@ -316,7 +312,7 @@ msgstr "Пароль"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
+#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1162
 msgid "_Cancel"
 msgstr "_Скасаваць"
 
@@ -494,47 +490,44 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "С"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:121
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Save"
 msgstr "Захаваць"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:121
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "Done"
 msgstr "Гатова"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:744
+#: src/gui/event-editor/gcal-event-editor-dialog.c:742
 msgid "New Event"
 msgstr "Новая падзея"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:22
-msgid ""
-"<b>This event is part of a read-only calendar</b>\n"
-"You cannot delete or change this event."
-msgstr ""
-"<b>Гэта падзея з незмяняльнага календара</b>\n"
-"Вы не можаце выдаліць або змяніць яе."
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:50
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
 msgid "Select Calendar"
 msgstr "Выберыце каляндар"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:108
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
 msgid "_Done"
 msgstr "_Гатова"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:135
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+msgid "This event is in a read-only calendar. It cannot be edited or deleted."
+msgstr ""
+"Гэта падзея з незмяняльнага календара. Яе немагчыма змяніць або выдаліць."
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:136
 msgid "Schedule"
 msgstr "Расклад"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:147
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:148
 msgid "Reminders"
 msgstr "Напаміны"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:160
 msgid "Notes"
 msgstr "Нататкі"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:176
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:177
 msgid "Delete Event"
 msgstr "Выдаліць падзею"
 
@@ -734,7 +727,7 @@ msgstr ""
 "Uladzimir Manulenka <vlma@tut.by>\n"
 "Юрась Шумовіч <shumovichy@gmail.com>"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
 msgid "Weather"
 msgstr "Надвор'е"
 
@@ -1222,27 +1215,27 @@ msgstr "Аўтаматычна вызначаць месцазнаходжанн
 msgid "Search locations"
 msgstr "Пошук месцазнаходжання"
 
-#: src/gui/gcal-window.c:350
+#: src/gui/gcal-window.c:347
 msgid "Week"
 msgstr "Тыдзень"
 
-#: src/gui/gcal-window.c:352
+#: src/gui/gcal-window.c:349
 msgid "Month"
 msgstr "Месяц"
 
-#: src/gui/gcal-window.c:834
+#: src/gui/gcal-window.c:832
 msgid "Another event deleted"
 msgstr "Выдалена яшчэ адна падзея"
 
-#: src/gui/gcal-window.c:834
+#: src/gui/gcal-window.c:832
 msgid "Event deleted"
 msgstr "Падзея выдалена"
 
-#: src/gui/gcal-window.c:899
+#: src/gui/gcal-window.c:897
 msgid "Could not import some files: Not ICS files"
 msgstr "Не ўдалося імпартаваць некаторыя файлы. Не з'яўляюцца файлам ICS"
 
-#: src/gui/gcal-window.c:904
+#: src/gui/gcal-window.c:902
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Не ўдалося імпартаваць «%s»: Не з'яўляецца файлам ICS"
@@ -1271,19 +1264,19 @@ msgstr "_Тыдзень"
 msgid "_Month"
 msgstr "_Месяц"
 
-#: src/gui/gcal-window.ui:349
+#: src/gui/gcal-window.ui:347
 msgid "_Date & Time Settings…"
 msgstr "Налады _даты і часу…"
 
-#: src/gui/gcal-window.ui:353
+#: src/gui/gcal-window.ui:351
 msgid "_Online Accounts…"
 msgstr "_Уліковыя запісы ў сетцы…"
 
-#: src/gui/gcal-window.ui:365
+#: src/gui/gcal-window.ui:363
 msgid "_Keyboard Shortcuts"
 msgstr "Спалучэнні _клавіш"
 
-#: src/gui/gcal-window.ui:369
+#: src/gui/gcal-window.ui:367
 msgid "_About Calendar"
 msgstr "Пр_а каляндар"
 
@@ -1468,51 +1461,54 @@ msgstr[2] "%d іншых падзей"
 
 #: src/gui/views/gcal-week-header.c:1006
 #, c-format
-msgid "week %d"
+msgid "Week %d"
 msgstr "%d тыдзень"
 
-#: src/utils/gcal-utils.c:1201
+#: src/utils/gcal-utils.c:1158
 msgid "Modify Multiple Events?"
 msgstr "Змяніць некалькі падзей?"
 
-#: src/utils/gcal-utils.c:1202
+#: src/utils/gcal-utils.c:1159
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr ""
 "Вы спрабуеце змяніць перыядычную падзею. Выбраныя вамі змены трэба ўжыць да:"
 
-#: src/utils/gcal-utils.c:1206
+#: src/utils/gcal-utils.c:1163
 msgid "_Only This Event"
 msgstr "Толькі _гэтая падзея"
 
-#: src/utils/gcal-utils.c:1212
+#: src/utils/gcal-utils.c:1169
 msgid "_Subsequent Events"
 msgstr "_Наступныя падзеі"
 
-#: src/utils/gcal-utils.c:1215
+#: src/utils/gcal-utils.c:1172
 msgid "_All Events"
 msgstr "_Усе падзеі"
 
-#: src/utils/gcal-utils.c:1317
+#: src/utils/gcal-utils.c:1274
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1318
+#: src/utils/gcal-utils.c:1275
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1319
+#: src/utils/gcal-utils.c:1276
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1277
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/utils/gcal-utils.c:1321
+#: src/utils/gcal-utils.c:1278
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "The GNOME Project"
+#~ msgstr "Праект GNOME"
 
 #~ msgid "Select a file"
 #~ msgstr "Выбраць файл"
