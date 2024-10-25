@@ -1271,11 +1271,26 @@ gcal_get_service_name_from_url (const gchar *url)
     const gchar *needle;
     const gchar *service_name;
   } service_name_vtable[] = {
+    // Conferencing
+    { "bluejeans", N_("BlueJeans") },
+    { "bigbluebutton", N_("BigBlueButton") },
+    { "bbb", N_("BigBlueButton") },
     { "meet.google.com", N_("Google Meet") },
     { "meet.jit.si", N_("Jitsi") },
-    { "whereby.com", N_("Whereby") },
-    { "zoom.us", N_("Zoom") },
+    { "jitsi", N_("Jitsi") },
+    { "meetings.dialpad.com", N_("Uber Conference") },
+    { "meet.gnome.com", N_("GNOME Meet") },
     { "teams.microsoft.com", N_("Microsoft Teams") },
+    { "whereby.com", N_("Whereby") },
+    { "webex", N_("Webex") },
+    { "zoom.us", N_("Zoom") },
+
+    // Map
+    { "geo:", N_("View Map") },
+    { "openstreetmap.org", N_("OpenStreetMap") },
+    { "maps.app.goo.gl", N_("Google Maps") },
+    { "google.com/maps", N_("Google Maps") },
+    { "bing.com/maps", N_("Bing Maps") },
   };
   gsize i;
 
