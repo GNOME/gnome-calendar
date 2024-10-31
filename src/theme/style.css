@@ -57,7 +57,7 @@ popover.events box {
 
 popover.events list {
     background-color: @theme_bg_color;
-    border-radius: 6px;
+    border-radius: 9px;
 }
 
 popover.events scrolledwindow {
@@ -65,7 +65,7 @@ popover.events scrolledwindow {
 }
 
 popover.events button {
-    border-radius: 6px;
+    border-radius: 9px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     border-style: solid none none;
@@ -469,7 +469,7 @@ datechooser {
 datechooser .current-week {
   background: alpha(currentColor, 0.1);
   color: @headerbar_fg_color;
-  border-radius: 6px;
+  border-radius: 9px;
 }
 
 menubutton stack > box {
