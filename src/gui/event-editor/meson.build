@@ -18,5 +18,6 @@ sources += files(
   'gcal-reminders-section.c',
   'gcal-schedule-section.c',
   'gcal-summary-section.c',
+  'gcal-time-chooser-row.c',
   'gcal-time-selector.c',
 )

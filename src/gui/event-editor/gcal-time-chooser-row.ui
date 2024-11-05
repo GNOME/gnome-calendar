@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalTimeChooserRow" parent="AdwEntryRow">
+
+    <child>
+      <object class="GtkEventControllerFocus">
+        <signal name="notify::contains-focus" handler="on_contains_focus_changed_cb" object="GcalTimeChooserRow" swapped="no" />
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkMenuButton">
+        <property name="icon-name">clock-alt-symbolic</property>
+        <property name="valign">center</property>
+        <property name="tooltip-text">Edit Time</property>
+        <property name="popover">
+          <object class="GtkPopover">
+            <property name="position">bottom</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+
+            <child>
+              <object class="GcalTimeSelector" id="time_selector">
+                <signal name="notify::time" handler="on_time_selected_changed_cb" object="GcalTimeChooserRow" swapped="no" />
+              </object>
+            </child>
+
+            <signal name="show" handler="on_time_popover_shown_cb" object="GcalTimeChooserRow" swapped="no" />
+          </object>
+        </property>
+
+        <accessibility>
+          <property name="label" translatable="yes">Edit time</property>
+        </accessibility>
+
+        <style>
+          <class name="flat" />
+        </style>
+      </object>
+    </child>
+
+  </template>
+</interface>

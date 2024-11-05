@@ -11,6 +11,7 @@
     <file compressed="true">gcal-reminders-section.ui</file>
     <file compressed="true">gcal-schedule-section.ui</file>
     <file compressed="true">gcal-summary-section.ui</file>
+    <file compressed="true">gcal-time-chooser-row.ui</file>
     <file compressed="true">gcal-time-selector.ui</file>
   </gresource>
 </gresources>
