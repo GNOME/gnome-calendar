@@ -1,3 +1,7 @@
+:root {
+  --event-border-radius: 2.5px;
+}
+
 event {
     margin: 1px;
     font-size: 0.9rem;
@@ -18,11 +22,11 @@ event.timed widget.edge {
 
 event.timed,
 event:not(.slanted):not(.slanted-start):not(.slanted-end) {
-    border-radius: 2.5px;
+    border-radius: var(--event-border-radius);
 }
 
 event.timed widget.edge {
-    border-radius: 2.5px;
+    border-radius: var(--event-border-radius);
     min-width: 5px;
 }
 
@@ -30,14 +34,14 @@ event.slanted,
 event.slanted-start,
 event.slanted-end:dir(rtl) {
     padding-left: 16px;
-    border-radius: 0 2.5px 2.5px 0;
+    border-radius: 0 var(--event-border-radius) var(--event-border-radius) 0;
 }
 
 event.slanted,
 event.slanted-end,
 event.slanted-start:dir(rtl) {
     padding-right: 16px;
-    border-radius: 2.5px 0 0 2.5px;
+    border-radius: var(--event-border-radius) 0 0 var(--event-border-radius);
 }
 
 event:not(.timed).color-dark {
