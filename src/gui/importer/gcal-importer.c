@@ -84,7 +84,7 @@ read_file_in_thread (GTask        *task,
   g_autoptr (GError) error = NULL;
   g_autofree gchar *contents = NULL;
   g_autofree gchar *path = NULL;
-  g_autofree gchar *encoding = NULL;
+  const gchar *encoding = NULL;
   ICalComponent *component;
   ICalErrorEnum ical_error;
   gsize length;
@@ -122,7 +122,7 @@ read_file_in_thread (GTask        *task,
       return;
     }
 
-  encoding = g_strdup (guess_file_encoding (contents, length));
+  encoding = guess_file_encoding (contents, length);
 
   if (g_strcmp0 (encoding, "UTF-8") != 0)
     {
