@@ -60,7 +60,7 @@ i_cal_error_enum_to_string (ICalErrorEnum ical_error)
 
 static const gchar*
 guess_file_encoding (const gchar *contents,
-                     gsize       length)
+                     gsize        length)
 {
   if (length > 4 && contents[0] == '\xFF' && contents[1] == '\xFE' && contents[2] == '\x00' && contents[3] == '\x00') /* UTF-32LE case */
     return "UTF-32LE";
