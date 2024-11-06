@@ -277,7 +277,6 @@ static void
 recalculate_calendar_colors_css (GcalWindow *self)
 {
   g_autoptr (GString) css_colors = NULL;
-  g_autoptr (GError) error = NULL;
   g_autoptr (GList) calendars = NULL;
   GcalManager *manager;
 
@@ -301,9 +300,6 @@ recalculate_calendar_colors_css (GcalWindow *self)
     }
 
   gtk_css_provider_load_from_string (self->colors_provider, css_colors->str);
-
-  if (error)
-    g_warning ("Error creating custom stylesheet. %s", error->message);
 }
 
 static void
