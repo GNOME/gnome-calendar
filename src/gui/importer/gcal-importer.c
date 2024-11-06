@@ -144,10 +144,7 @@ read_file_in_thread (GTask        *task,
       length = new_length;
     }
 
-  if (!g_utf8_validate (contents, length, NULL)) /* validate UTF-8 */
-    {
-      GCAL_TRACE_MSG ("File encoding cannot be validated as UTF-8");
-    }
+  g_assert (g_utf8_validate (contents, length, NULL));
 
   component = i_cal_parser_parse_string (contents);
   ical_error = i_cal_errno_return ();
