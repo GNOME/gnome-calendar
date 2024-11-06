@@ -45,33 +45,6 @@ calendar-view:selected {
     font-weight: bold;
 }
 
-popover.events {
-    background-color: @theme_bg_color;
-    padding: 0;
-}
-
-popover.events box {
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-}
-
-popover.events list {
-    background-color: @theme_bg_color;
-    border-radius: 9px;
-}
-
-popover.events scrolledwindow {
-    border-width: 0;
-}
-
-popover.events button {
-    border-radius: 9px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-style: solid none none;
-    box-shadow: none;
-}
-
 
 /* Event Popover */
 popover.event-popover,
