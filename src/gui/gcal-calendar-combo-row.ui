@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalCalendarComboRow" parent="AdwComboRow">
+
+    <property name="title" translatable="yes">Calendar</property>
+    <property name="title-lines">1</property>
+    <property name="factory">
+      <object class="GtkSignalListItemFactory">
+        <signal name="setup" handler="calendar_item_setup_cb"/>
+        <signal name="bind" handler="calendar_item_bind_cb"/>
+        <signal name="unbind" handler="calendar_item_unbind_cb"/>
+      </object>
+    </property>
+
+  </template>
+</interface>
