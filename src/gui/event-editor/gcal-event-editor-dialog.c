@@ -20,7 +20,7 @@
 #define G_LOG_DOMAIN "GcalEventEditorDialog"
 
 #include "gcal-alarm-row.h"
-#include "gcal-calendar-row.h"
+#include "gcal-calendar-combo-row.h"
 #include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-event-editor-dialog.h"
@@ -51,31 +51,26 @@ struct _GcalEventEditorDialog
 {
   AdwDialog               parent;
 
-  GtkListBox             *calendars_listbox;
-  GtkWidget              *cancel_button;
-  GtkWidget              *delete_group;
-  GtkWidget              *done_button;
-  GcalEventEditorSection *notes_section;
-  GcalEventEditorSection *reminders_section;
-  GcalEventEditorSection *schedule_section;
-  GtkWidget              *sources_button;
-  GtkWidget              *source_image;
-  GtkWidget              *source_label;
-  GtkWidget              *subtitle_label;
-  GcalEventEditorSection *summary_section;
-  GtkWidget              *titlebar;
-  GtkWidget              *title_label;
+  GcalCalendarComboRow     *calendar_combo_row;
+  GtkWidget                *cancel_button;
+  GtkWidget                *delete_group;
+  GtkWidget                *done_button;
+  GcalEventEditorSection   *notes_section;
+  GcalEventEditorSection   *reminders_section;
+  GcalEventEditorSection   *schedule_section;
+  GtkWidget                *source_label;
+  GcalEventEditorSection   *summary_section;
+  GtkWidget                *titlebar;
+  GtkWidget                *title_label;
 
 
   GcalEventEditorSection *sections[4];
 
 
   GMenu              *sources_menu;
-  GSimpleActionGroup *action_group;
 
   GcalContext        *context;
   GcalEvent          *event;
-  GcalCalendar       *selected_calendar;
 
   GBinding           *event_title_binding;
 
@@ -199,13 +194,6 @@ apply_event_properties_to_template_event (GcalEvent *template_event,
     }
 }
 
-static GtkWidget *
-create_row_func (gpointer data,
-                 gpointer user_data)
-{
-  return gcal_calendar_row_new ((GcalCalendar *) data);
-}
-
 static void
 setup_context (GcalEventEditorDialog *self)
 {
@@ -217,7 +205,7 @@ setup_context (GcalEventEditorDialog *self)
   manager = gcal_context_get_manager (self->context);
   calendars = gcal_create_writable_calendars_model (manager);
 
-  gtk_list_box_bind_model (self->calendars_listbox, calendars, create_row_func, self, NULL);
+  adw_combo_row_set_model ( ADW_COMBO_ROW (self->calendar_combo_row), calendars);
 
   GCAL_EXIT;
 }
@@ -226,51 +214,6 @@ setup_context (GcalEventEditorDialog *self)
 /*
  * Callbacks
  */
-
-static void
-on_calendar_selected_action_cb (GSimpleAction *action,
-                                GVariant      *value,
-                                gpointer       user_data)
-{
-  g_autoptr (GList) list = NULL;
-  GcalEventEditorDialog *self;
-  GcalManager *manager;
-  GList *aux;
-  const gchar *uid;
-
-  GCAL_ENTRY;
-
-  self = GCAL_EVENT_EDITOR_DIALOG (user_data);
-  manager = gcal_context_get_manager (self->context);
-  list = gcal_manager_get_calendars (manager);
-
-  /* retrieve selected calendar uid */
-  g_variant_get (value, "&s", &uid);
-
-  /* search for any source with the given UID */
-  for (aux = list; aux != NULL; aux = aux->next)
-    {
-      GcalCalendar *calendar = GCAL_CALENDAR (aux->data);
-
-      if (g_strcmp0 (gcal_calendar_get_id (calendar), uid) == 0)
-        {
-          g_autoptr (GdkPaintable) paintable = NULL;
-          const GdkRGBA *color;
-
-          /* retrieve color */
-          color = gcal_calendar_get_color (calendar);
-          paintable = get_circle_paintable_from_color (color, 16);
-          gtk_image_set_from_paintable (GTK_IMAGE (self->source_image), paintable);
-
-          self->selected_calendar = calendar;
-
-          gtk_label_set_label (GTK_LABEL (self->subtitle_label), gcal_calendar_get_name (calendar));
-          break;
-        }
-    }
-
-  GCAL_EXIT;
-}
 
 static void
 on_cancel_button_clicked_cb (GtkButton             *button,
@@ -412,7 +355,7 @@ on_done_button_clicked_cb (GtkButton             *button,
   if (gcal_calendar_is_read_only (calendar))
     GCAL_GOTO (out);
 
-  selected_calendar = g_steal_pointer (&self->selected_calendar);
+  selected_calendar = gcal_calendar_combo_row_get_calendar (self->calendar_combo_row);
   calendar_changed = selected_calendar && calendar != selected_calendar;
   can_show_mod_all = TRUE;
   if (!self->event_is_new)
@@ -498,7 +441,6 @@ gcal_event_editor_dialog_finalize (GObject *object)
 
   self = GCAL_EVENT_EDITOR_DIALOG (object);
 
-  g_clear_object (&self->action_group);
   g_clear_object (&self->context);
   g_clear_object (&self->event);
 
@@ -566,6 +508,7 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
+  g_type_ensure (GCAL_TYPE_CALENDAR_COMBO_ROW);
   g_type_ensure (GCAL_TYPE_NOTES_SECTION);
   g_type_ensure (GCAL_TYPE_REMINDERS_SECTION);
   g_type_ensure (GCAL_TYPE_SCHEDULE_SECTION);
@@ -621,16 +564,13 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-event-editor-dialog.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, calendars_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, calendar_combo_row);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, delete_group);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, done_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, notes_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, reminders_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, schedule_section);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, sources_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, source_image);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, subtitle_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, summary_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, titlebar);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, title_label);
@@ -645,22 +585,7 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
 static void
 gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
 {
-  const GActionEntry action_entries[] = {
-    { "select-calendar", on_calendar_selected_action_cb, "s" },
-  };
   gint i = 0;
-
-  /* Actions */
-  self->action_group = g_simple_action_group_new ();
-  g_action_map_add_action_entries (G_ACTION_MAP (self->action_group),
-                                   action_entries,
-                                   G_N_ELEMENTS (action_entries),
-                                   self);
-
-  gtk_widget_insert_action_group (GTK_WIDGET (self),
-                                  "event-editor-dialog",
-                                  G_ACTION_GROUP (self->action_group));
-
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
@@ -724,25 +649,13 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   if (self->sources_menu != NULL)
     g_menu_remove_all (self->sources_menu);
 
-  /* dialog titlebar's title & subtitle */
-  paintable = get_circle_paintable_from_color (gcal_event_get_color (cloned_event), 10);
-  gtk_image_set_from_paintable (GTK_IMAGE (self->source_image), paintable);
-
-  g_clear_pointer (&self->event_title_binding, g_binding_unbind);
-  self->event_title_binding = g_object_bind_property (cloned_event,
-                                                      "summary",
-                                                      self->title_label,
-                                                      "label",
-                                                      G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_add_weak_pointer (G_OBJECT (self->event_title_binding),
-                             (gpointer*) &self->event_title_binding);
-
-  /* change title when event name is empty */
-  if (!gcal_is_valid_event_name (gtk_label_get_label (GTK_LABEL (self->title_label))))
+  /* dialog titlebar's title */
+  if (new_event)
     gtk_label_set_label (GTK_LABEL (self->title_label), _("New Event"));
+  else
+    gtk_label_set_label (GTK_LABEL (self->title_label), _("Edit Event"));
 
-  gtk_label_set_label (GTK_LABEL (self->subtitle_label), gcal_calendar_get_name (calendar));
-  self->selected_calendar = calendar;
+  gcal_calendar_combo_row_set_calendar (self->calendar_combo_row, calendar);
 
   /* recurrence_changed */
   self->recurrence_changed = FALSE;

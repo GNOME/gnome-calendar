@@ -17,81 +17,12 @@
               </object>
             </child>
             <child type="title">
-              <object class="GtkMenuButton" id="sources_button">
-                <property name="popover">
-                  <object class="GtkPopover">
-                    <style>
-                      <class name="menu" />
-                    </style>
-                    <child>
-                      <object class="GtkScrolledWindow">
-                        <property name="propagate-natural-height">True</property>
-                        <property name="width-request">250</property>
-                        <property name="max-content-height">600</property>
-                        <property name="hscrollbar-policy">never</property>
-                        <child>
-                          <object class="GtkListBox" id="calendars_listbox">
-                            <property name="selection-mode">none</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </property>
-                <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
-                <property name="tooltip-text" translatable="yes">Select Calendar</property>
+              <object class="GtkLabel" id="title_label">
+                <property name="ellipsize">middle</property>
+                <property name="max_width_chars">40</property>
                 <style>
-                  <class name="flat"/>
-                  <class name="sources-button"/>
+                  <class name="title"/>
                 </style>
-                <child>
-                  <object class="GtkBox">
-                    <property name="spacing">6</property>
-                    <child>
-                      <object class="GtkBox" id="title_label_box">
-                        <property name="orientation">vertical</property>
-                        <property name="valign">center</property>
-                        <child>
-                          <object class="GtkLabel" id="title_label">
-                            <property name="ellipsize">middle</property>
-                            <property name="max_width_chars">40</property>
-                            <style>
-                              <class name="title"/>
-                            </style>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkBox" id="subtitle_box">
-                            <property name="orientation">horizontal</property>
-                            <property name="halign">center</property>
-                            <child>
-                              <object class="GtkImage" id="source_image">
-                                <style>
-                                  <class name="calendar-color-image"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="subtitle_label">
-                                <style>
-                                  <class name="subtitle"/>
-                                </style>
-                              </object>
-                            </child>
-                            <style>
-                              <class name="subtitle"/>
-                            </style>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImage" id="pan_down_image">
-                        <property name="icon_name">pan-down-symbolic</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
               </object>
             </child>
             <child type="end">
@@ -125,6 +56,16 @@
                     <child>
                       <object class="GcalSummarySection" id="summary_section">
                         <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <!-- Calendar choice -->
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <child>
+                      <object class="GcalCalendarComboRow" id="calendar_combo_row">
                       </object>
                     </child>
                   </object>
@@ -196,14 +137,6 @@
     <widgets>
       <widget name="cancel_button" />
       <widget name="done_button" />
-      <widget name="sources_button" />
-    </widgets>
-  </object>
-  <object class="GtkSizeGroup">
-    <property name="mode">vertical</property>
-    <widgets>
-      <widget name="pan_down_image" />
-      <widget name="title_label_box" />
     </widgets>
   </object>
 </interface>
