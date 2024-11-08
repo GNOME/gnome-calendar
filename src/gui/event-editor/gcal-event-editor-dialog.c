@@ -74,6 +74,8 @@ struct _GcalEventEditorDialog
 
   GBinding           *event_title_binding;
 
+  GListStore         *read_only_calendar_model;
+
   /* flags */
   gboolean          event_is_new;
   gboolean          recurrence_changed;
@@ -197,15 +199,27 @@ apply_event_properties_to_template_event (GcalEvent *template_event,
 static void
 setup_context (GcalEventEditorDialog *self)
 {
-  g_autoptr (GListModel) calendars = NULL;
+  g_autoptr (GtkFlattenListModel) flatten_model = NULL;
+  g_autoptr (GListModel) writable_calendars = NULL;
+  g_autoptr (GListStore) all_calendars = NULL;
   GcalManager *manager;
 
   GCAL_ENTRY;
 
-  manager = gcal_context_get_manager (self->context);
-  calendars = gcal_create_writable_calendars_model (manager);
+  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (self));
 
-  adw_combo_row_set_model ( ADW_COMBO_ROW (self->calendar_combo_row), calendars);
+  manager = gcal_context_get_manager (self->context);
+  writable_calendars = gcal_create_writable_calendars_model (manager);
+
+  self->read_only_calendar_model = g_list_store_new (GCAL_TYPE_CALENDAR);
+
+  all_calendars = g_list_store_new (G_TYPE_LIST_MODEL);
+  g_list_store_append (all_calendars, self->read_only_calendar_model);
+  g_list_store_append (all_calendars, writable_calendars);
+
+  flatten_model = gtk_flatten_list_model_new (G_LIST_MODEL (g_steal_pointer (&all_calendars)));
+
+  adw_combo_row_set_model (ADW_COMBO_ROW (self->calendar_combo_row), G_LIST_MODEL (flatten_model));
 
   GCAL_EXIT;
 }
@@ -441,6 +455,7 @@ gcal_event_editor_dialog_finalize (GObject *object)
 
   self = GCAL_EVENT_EDITOR_DIALOG (object);
 
+  g_clear_object (&self->read_only_calendar_model);
   g_clear_object (&self->context);
   g_clear_object (&self->event);
 
@@ -654,6 +669,10 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
     gtk_label_set_label (GTK_LABEL (self->title_label), _("New Event"));
   else
     gtk_label_set_label (GTK_LABEL (self->title_label), _("Edit Event"));
+
+  g_list_store_remove_all (self->read_only_calendar_model);
+  if (gcal_calendar_is_read_only (calendar))
+    g_list_store_append (self->read_only_calendar_model, calendar);
 
   gcal_calendar_combo_row_set_calendar (self->calendar_combo_row, calendar);
 
