@@ -66,6 +66,7 @@
                   <object class="AdwPreferencesGroup">
                     <child>
                       <object class="GcalCalendarComboRow" id="calendar_combo_row">
+                        <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
                       </object>
                     </child>
                   </object>
