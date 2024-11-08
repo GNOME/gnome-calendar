@@ -238,8 +238,12 @@ gcal_calendar_combo_row_set_calendar (GcalCalendarComboRow *self,
 
   for (guint i = 0; i < g_list_model_get_n_items (model); i++)
     {
-      if (g_list_model_get_item (model, i) == calendar)
-        adw_combo_row_set_selected (ADW_COMBO_ROW (self), i);
+      g_autoptr (GcalCalendar) aux = g_list_model_get_item (model, i);
+      if (aux == calendar)
+        {
+          adw_combo_row_set_selected (ADW_COMBO_ROW (self), i);
+          break;
+        }
     }
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CALENDAR]);
