@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-10-22 15:48+0000\n"
-"PO-Revision-Date: 2024-10-23 09:12+0200\n"
+"POT-Creation-Date: 2024-11-08 18:57+0000\n"
+"PO-Revision-Date: 2024-11-08 21:59+0100\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -23,8 +23,8 @@ msgstr ""
 
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
-#: src/gui/gcal-quick-add-popover.ui:135 src/gui/gcal-window.ui:4
-#: src/gui/gcal-window.ui:147
+#: src/gui/gcal-calendar-combo-row.ui:5 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "Koledar"
 
@@ -189,7 +189,7 @@ msgid "Calendar “%s” removed"
 msgstr "Koledar »%s« je odstranjen."
 
 #: src/gui/calendar-management/gcal-calendars-page.c:363
-#: src/gui/gcal-window.c:834
+#: src/gui/gcal-window.c:824
 msgid "_Undo"
 msgstr "_Razveljavi"
 
@@ -469,11 +469,6 @@ msgstr "Preklopi zvok alarma"
 msgid "Remove Alarm"
 msgstr "Odstrani alarm"
 
-#: src/gui/event-editor/gcal-calendar-row.c:70
-#: src/gui/importer/gcal-import-dialog.c:332
-msgid "This calendar is hidden"
-msgstr "Ta koledar je skrit"
-
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
 #. * NOTE: These grid abbreviations are always shown together
@@ -523,45 +518,45 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "S"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.c:115
 msgid "Save"
 msgstr "Shrani"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.c:115
 msgid "Done"
 msgstr "Končano"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:742
+#: src/gui/event-editor/gcal-event-editor-dialog.c:654
 msgid "New Event"
 msgstr "Nov dogodek"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
-msgid "Select Calendar"
-msgstr "Izbor koledarja"
+#: src/gui/event-editor/gcal-event-editor-dialog.c:656
+msgid "Edit Event"
+msgstr "Uredi dogodek"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:31
 msgid "_Done"
 msgstr "_Končano"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:45
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr ""
 "Ta dogodek je del koledarja samo za branje. Ne morete ga izbrisati ali "
 "spremeniti."
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:136
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:77
 msgid "Schedule"
 msgstr "Urnik"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:148
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:89
 msgid "Reminders"
 msgstr "Opomniki"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:160
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:101
 msgid "Notes"
 msgstr "Opombe"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:177
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:118
 msgid "Delete Event"
 msgstr "Izbriši dogodek"
 
@@ -617,19 +612,19 @@ msgstr "%A pred enim tednom"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/views/gcal-agenda-view.c:186
+#: src/gui/views/gcal-agenda-view.c:201
 msgid "Yesterday"
 msgstr "včeraj"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
-#: src/gui/views/gcal-agenda-view.c:182
+#: src/gui/views/gcal-agenda-view.c:197
 msgid "Today"
 msgstr "danes"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/views/gcal-agenda-view.c:184
+#: src/gui/views/gcal-agenda-view.c:199
 msgid "Tomorrow"
 msgstr "jutri"
 
@@ -778,6 +773,10 @@ msgstr "_Uskladi koledarje"
 #: src/gui/gcal-calendar-button.ui:41
 msgid "_Manage Calendars…"
 msgstr "_Upravljanje koledarjev …"
+
+#: src/gui/gcal-calendar-combo-row-item.c:70
+msgid "This calendar is hidden"
+msgstr "Ta koledar je skrit"
 
 #: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
@@ -1247,27 +1246,27 @@ msgstr "Samodejno določi mesto"
 msgid "Search locations"
 msgstr "Preišči mesta"
 
-#: src/gui/gcal-window.c:347
+#: src/gui/gcal-window.c:337
 msgid "Week"
 msgstr "Teden"
 
-#: src/gui/gcal-window.c:349
+#: src/gui/gcal-window.c:339
 msgid "Month"
 msgstr "Mesec"
 
-#: src/gui/gcal-window.c:832
+#: src/gui/gcal-window.c:822
 msgid "Another event deleted"
 msgstr "Izbrisan je drug dogodek"
 
-#: src/gui/gcal-window.c:832
+#: src/gui/gcal-window.c:822
 msgid "Event deleted"
 msgstr "Dogodek je izbrisan"
 
-#: src/gui/gcal-window.c:897
+#: src/gui/gcal-window.c:887
 msgid "Could not import some files: Not ICS files"
 msgstr "Nekaterih datotek ni bilo mogoče uvoziti: niso datoteke ICS"
 
-#: src/gui/gcal-window.c:902
+#: src/gui/gcal-window.c:892
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Datoteke »%s« ni bilo mogoče uvoziti: ni datoteka ICS"
@@ -1407,7 +1406,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Preklopi na mesečni pogled"
 
-#: src/gui/importer/gcal-import-dialog.c:470
+#: src/gui/importer/gcal-import-dialog.c:341
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1424,39 +1423,39 @@ msgstr "Uvozi datoteke …"
 msgid "_Import"
 msgstr "_Uvozi"
 
-#: src/gui/importer/gcal-import-dialog.ui:61
+#: src/gui/importer/gcal-import-dialog.ui:60
 msgid "C_alendar"
 msgstr "_Koledar"
 
-#: src/gui/importer/gcal-importer.c:33
+#: src/gui/importer/gcal-importer.c:34
 msgid "No error"
 msgstr "Brez napak"
 
-#: src/gui/importer/gcal-importer.c:36
+#: src/gui/importer/gcal-importer.c:37
 msgid "Bad argument to function"
 msgstr "Naveden je neustrezen argument za funkcijo"
 
-#: src/gui/importer/gcal-importer.c:40
+#: src/gui/importer/gcal-importer.c:41
 msgid "Failed to allocate a new object in memory"
 msgstr "Dodeljevanje novega predmeta v pomnilnik je spodletelo"
 
-#: src/gui/importer/gcal-importer.c:43
+#: src/gui/importer/gcal-importer.c:44
 msgid "File is malformed, invalid, or corrupted"
 msgstr "Datoteka je neustrezno oblikovana, neveljavna ali okvarjena"
 
-#: src/gui/importer/gcal-importer.c:46
+#: src/gui/importer/gcal-importer.c:47
 msgid "Failed to parse the calendar contents"
 msgstr "Razčlenjevanje vsebine koledarja je spodletelo"
 
-#: src/gui/importer/gcal-importer.c:49
+#: src/gui/importer/gcal-importer.c:50
 msgid "Failed to read file"
 msgstr "Branje datoteke je spodletelo"
 
-#: src/gui/importer/gcal-importer.c:56
+#: src/gui/importer/gcal-importer.c:57
 msgid "Internal error"
 msgstr "Notranja napaka"
 
-#: src/gui/importer/gcal-importer.c:94
+#: src/gui/importer/gcal-importer.c:112
 msgid "File is not an iCalendar (.ics) file"
 msgstr "Datoteka ni veljavna datoteka koledarja (.ics)"
 
@@ -1464,7 +1463,7 @@ msgstr "Datoteka ni veljavna datoteka koledarja (.ics)"
 msgid "Description"
 msgstr "Opis"
 
-#: src/gui/views/gcal-agenda-view.c:380
+#: src/gui/views/gcal-agenda-view.c:408
 msgid "On-going"
 msgstr "Še trajajoče"
 
