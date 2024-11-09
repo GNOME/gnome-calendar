@@ -9,15 +9,13 @@
 
         <child type="top">
           <object class="AdwHeaderBar">
-            <property name="show-end-title-buttons">False</property>
-            <property name="show-start-title-buttons">False</property>
-              <property name="title-widget">
-                <object class="AdwWindowTitle">
-                  <binding name="title">
-                    <lookup type="GtkEditable" name="text">name_entry</lookup>
-                  </binding>
-                </object>
-              </property>
+            <property name="title-widget">
+              <object class="AdwWindowTitle">
+                <binding name="title">
+                  <lookup type="GtkEditable" name="text">name_entry</lookup>
+                </binding>
+              </object>
+            </property>
           </object>
         </child>
 
@@ -98,6 +96,7 @@
                             <property name="with-alpha">False</property>
                           </object>
                         </property>
+                        <signal name="notify::rgba" handler="on_calendar_color_changed_cb" object="GcalEditCalendarPage" swapped="no"/>
                       </object>
                     </child>
 
@@ -109,6 +108,7 @@
                   <object class="AdwSwitchRow" id="calendar_visible_row">
                     <property name="title" translatable="yes">_Display Calendar</property>
                     <property name="use-underline">true</property>
+                    <signal name="notify::active" handler="on_calendar_visibility_changed_cb" object="GcalEditCalendarPage" swapped="no"/>
                   </object>
                 </child>
 

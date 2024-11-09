@@ -211,28 +211,38 @@ setup_calendar (GcalEditCalendarPage *self,
   gtk_widget_set_visible (self->remove_group, e_source_get_removable (source));
 }
 
-static void
-update_calendar (GcalEditCalendarPage *self)
-{
-  const GdkRGBA *color;
-
-  GCAL_ENTRY;
-
-  g_assert (self->calendar != NULL);
-
-  color = gtk_color_dialog_button_get_rgba (self->calendar_color_button);
-
-  gcal_calendar_set_visible (self->calendar, adw_switch_row_get_active (self->calendar_visible_row));
-  gcal_calendar_set_name (self->calendar, gtk_editable_get_text (GTK_EDITABLE (self->name_entry)));
-  gcal_calendar_set_color (self->calendar, color);
-
-  GCAL_EXIT;
-}
-
-
 /*
  * Callbacks
  */
+
+static void
+on_calendar_color_changed_cb (GtkColorDialogButton *button,
+                              GParamSpec           *pspec,
+                              GcalEditCalendarPage *self)
+{
+  gcal_calendar_set_color (self->calendar, gtk_color_dialog_button_get_rgba (button));
+}
+
+static void
+on_calendar_visibility_changed_cb (AdwSwitchRow         *row,
+                                   GParamSpec           *pspec,
+                                   GcalEditCalendarPage *self)
+{
+  gcal_calendar_set_visible (self->calendar, adw_switch_row_get_active (row));
+}
+
+static void
+on_default_calendar_changed_cb (AdwSwitchRow         *row,
+                                GParamSpec           *pspec,
+                                GcalEditCalendarPage *self)
+{
+  GcalManager *manager;
+
+  manager = gcal_context_get_manager (self->context);
+
+  if (adw_switch_row_get_active (row))
+    gcal_manager_set_default_calendar (manager, self->calendar);
+}
 
 static void
 on_remove_button_row_activated_cb (GtkButton            *button,
@@ -301,7 +311,7 @@ gcal_edit_calendar_page_deactivate (GcalCalendarManagementPage *page)
 
   self = GCAL_EDIT_CALENDAR_PAGE (page);
 
-  update_calendar (self);
+  gcal_calendar_set_name (self->calendar, gtk_editable_get_text (GTK_EDITABLE (self->name_entry)));
 
   manager = gcal_context_get_manager (self->context);
   gcal_manager_save_source (manager, gcal_calendar_get_source (self->calendar));
@@ -322,6 +332,16 @@ gcal_calendar_management_page_iface_init (GcalCalendarManagementPageInterface *i
 /*
  * GObject overrides
  */
+
+static void
+gcal_edit_calendar_page_dispose (GObject *object)
+{
+  GcalEditCalendarPage *self = GCAL_EDIT_CALENDAR_PAGE (object);
+
+  gcal_calendar_set_name (self->calendar, gtk_editable_get_text (GTK_EDITABLE (self->name_entry)));
+
+  G_OBJECT_CLASS (gcal_edit_calendar_page_parent_class)->dispose (object);
+}
 
 static void
 gcal_edit_calendar_page_finalize (GObject *object)
@@ -379,6 +399,7 @@ gcal_edit_calendar_page_class_init (GcalEditCalendarPageClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
+  object_class->dispose = gcal_edit_calendar_page_dispose;
   object_class->finalize = gcal_edit_calendar_page_finalize;
   object_class->get_property = gcal_edit_calendar_page_get_property;
   object_class->set_property = gcal_edit_calendar_page_set_property;
@@ -394,6 +415,9 @@ gcal_edit_calendar_page_class_init (GcalEditCalendarPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, name_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, remove_group);
 
+  gtk_widget_class_bind_template_callback (widget_class, on_calendar_color_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_calendar_visibility_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_default_calendar_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_remove_button_row_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_settings_button_clicked_cb);
 }
