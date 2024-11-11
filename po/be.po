@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-10-22 15:48+0000\n"
-"PO-Revision-Date: 2024-10-23 22:40+0300\n"
+"POT-Creation-Date: 2024-11-08 18:57+0000\n"
+"PO-Revision-Date: 2024-11-11 17:29+0300\n"
 "Last-Translator: Yuras Shumovich <shumovichy@gmail.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -16,8 +16,8 @@ msgstr ""
 
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
-#: src/gui/gcal-quick-add-popover.ui:135 src/gui/gcal-window.ui:4
-#: src/gui/gcal-window.ui:147
+#: src/gui/gcal-calendar-combo-row.ui:5 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "Каляндар"
 
@@ -179,7 +179,7 @@ msgid "Calendar “%s” removed"
 msgstr "Каляндар «%s» выдалены"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:363
-#: src/gui/gcal-window.c:834
+#: src/gui/gcal-window.c:824
 msgid "_Undo"
 msgstr "_Адрабіць"
 
@@ -436,11 +436,6 @@ msgstr "Пераключыць гук будзільніка"
 msgid "Remove Alarm"
 msgstr "Выдаліць будзільнік"
 
-#: src/gui/event-editor/gcal-calendar-row.c:70
-#: src/gui/importer/gcal-import-dialog.c:332
-msgid "This calendar is hidden"
-msgstr "Гэты каляндар схаваны"
-
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
 #. * NOTE: These grid abbreviations are always shown together
@@ -490,44 +485,44 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "С"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.c:115
 msgid "Save"
 msgstr "Захаваць"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.c:115
 msgid "Done"
 msgstr "Гатова"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:742
+#: src/gui/event-editor/gcal-event-editor-dialog.c:654
 msgid "New Event"
 msgstr "Новая падзея"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
-msgid "Select Calendar"
-msgstr "Выберыце каляндар"
+#: src/gui/event-editor/gcal-event-editor-dialog.c:656
+msgid "Edit Event"
+msgstr "Змяніць падзею"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:31
 msgid "_Done"
 msgstr "_Гатова"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:45
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr ""
 "Гэта падзея з незмяняльнага календара. Яе немагчыма змяніць або выдаліць."
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:136
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:77
 msgid "Schedule"
 msgstr "Расклад"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:148
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:89
 msgid "Reminders"
 msgstr "Напаміны"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:160
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:101
 msgid "Notes"
 msgstr "Нататкі"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:177
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:118
 msgid "Delete Event"
 msgstr "Выдаліць падзею"
 
@@ -583,19 +578,19 @@ msgstr "Мінулы(-ая) %A"
 
 #: src/gui/event-editor/gcal-schedule-section.c:242
 #: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/views/gcal-agenda-view.c:186
+#: src/gui/views/gcal-agenda-view.c:201
 msgid "Yesterday"
 msgstr "Учора"
 
 #: src/gui/event-editor/gcal-schedule-section.c:246
 #: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
-#: src/gui/views/gcal-agenda-view.c:182
+#: src/gui/views/gcal-agenda-view.c:197
 msgid "Today"
 msgstr "Сёння"
 
 #: src/gui/event-editor/gcal-schedule-section.c:250
 #: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/views/gcal-agenda-view.c:184
+#: src/gui/views/gcal-agenda-view.c:199
 msgid "Tomorrow"
 msgstr "Заўтра"
 
@@ -746,6 +741,10 @@ msgstr "_Сінхранізацыя календароў"
 #: src/gui/gcal-calendar-button.ui:41
 msgid "_Manage Calendars…"
 msgstr "_Кіраванне календарамі…"
+
+#: src/gui/gcal-calendar-combo-row-item.c:70
+msgid "This calendar is hidden"
+msgstr "Гэты каляндар схаваны"
 
 #: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
@@ -1215,27 +1214,27 @@ msgstr "Аўтаматычна вызначаць месцазнаходжанн
 msgid "Search locations"
 msgstr "Пошук месцазнаходжання"
 
-#: src/gui/gcal-window.c:347
+#: src/gui/gcal-window.c:337
 msgid "Week"
 msgstr "Тыдзень"
 
-#: src/gui/gcal-window.c:349
+#: src/gui/gcal-window.c:339
 msgid "Month"
 msgstr "Месяц"
 
-#: src/gui/gcal-window.c:832
+#: src/gui/gcal-window.c:822
 msgid "Another event deleted"
 msgstr "Выдалена яшчэ адна падзея"
 
-#: src/gui/gcal-window.c:832
+#: src/gui/gcal-window.c:822
 msgid "Event deleted"
 msgstr "Падзея выдалена"
 
-#: src/gui/gcal-window.c:897
+#: src/gui/gcal-window.c:887
 msgid "Could not import some files: Not ICS files"
 msgstr "Не ўдалося імпартаваць некаторыя файлы. Не з'яўляюцца файлам ICS"
 
-#: src/gui/gcal-window.c:902
+#: src/gui/gcal-window.c:892
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Не ўдалося імпартаваць «%s»: Не з'яўляецца файлам ICS"
@@ -1375,7 +1374,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Прагляд месяца"
 
-#: src/gui/importer/gcal-import-dialog.c:470
+#: src/gui/importer/gcal-import-dialog.c:341
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1391,39 +1390,39 @@ msgstr "Імпарт файлаў…"
 msgid "_Import"
 msgstr "І_мпартаваць"
 
-#: src/gui/importer/gcal-import-dialog.ui:61
+#: src/gui/importer/gcal-import-dialog.ui:60
 msgid "C_alendar"
 msgstr "_Каляндар"
 
-#: src/gui/importer/gcal-importer.c:33
+#: src/gui/importer/gcal-importer.c:34
 msgid "No error"
 msgstr "Без памылак"
 
-#: src/gui/importer/gcal-importer.c:36
+#: src/gui/importer/gcal-importer.c:37
 msgid "Bad argument to function"
 msgstr "Няправільны аргумент функцыі"
 
-#: src/gui/importer/gcal-importer.c:40
+#: src/gui/importer/gcal-importer.c:41
 msgid "Failed to allocate a new object in memory"
 msgstr "Не ўдалося вылучыць памяць для новага аб'екта"
 
-#: src/gui/importer/gcal-importer.c:43
+#: src/gui/importer/gcal-importer.c:44
 msgid "File is malformed, invalid, or corrupted"
 msgstr "Файл мае няправільны фармат або пашкоджаны"
 
-#: src/gui/importer/gcal-importer.c:46
+#: src/gui/importer/gcal-importer.c:47
 msgid "Failed to parse the calendar contents"
 msgstr "Не ўдалося разабраць змесціва календара"
 
-#: src/gui/importer/gcal-importer.c:49
+#: src/gui/importer/gcal-importer.c:50
 msgid "Failed to read file"
 msgstr "Не ўдалося прачытаць файл"
 
-#: src/gui/importer/gcal-importer.c:56
+#: src/gui/importer/gcal-importer.c:57
 msgid "Internal error"
 msgstr "Унутраная памылка"
 
-#: src/gui/importer/gcal-importer.c:94
+#: src/gui/importer/gcal-importer.c:112
 msgid "File is not an iCalendar (.ics) file"
 msgstr "Файл не з'яўляецца файлам iCalendar (.ics)"
 
@@ -1431,7 +1430,7 @@ msgstr "Файл не з'яўляецца файлам iCalendar (.ics)"
 msgid "Description"
 msgstr "Апісанне"
 
-#: src/gui/views/gcal-agenda-view.c:380
+#: src/gui/views/gcal-agenda-view.c:408
 msgid "On-going"
 msgstr "Працягваецца"
 
@@ -1506,6 +1505,9 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1278
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Select Calendar"
+#~ msgstr "Выберыце каляндар"
 
 #~ msgid "The GNOME Project"
 #~ msgstr "Праект GNOME"
