@@ -38,6 +38,7 @@ tests = [
   'range',
   'range-tree',
   #'server', # https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/1251
+  'utils',
 ]
 
 foreach test : tests
