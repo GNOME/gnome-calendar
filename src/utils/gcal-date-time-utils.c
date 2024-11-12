@@ -219,12 +219,25 @@ gcal_date_time_from_icaltime (const ICalTime *date)
 {
   g_autoptr (GTimeZone) tz = NULL;
   g_autoptr (GDateTime) dt = NULL;
-  const gchar *identifier;
   ICalTimezone *zone;
 
   zone = i_cal_time_get_timezone (date);
-  identifier = zone ? i_cal_timezone_get_location (zone) : NULL;
-  tz = identifier ? g_time_zone_new_identifier (identifier) : g_time_zone_new_utc ();
+
+  if (zone)
+    {
+      g_autoptr (ICalTime) date_clone = NULL;
+      gint is_daylight;
+      gint offset;
+
+      date_clone = i_cal_time_clone (date);
+      offset = i_cal_timezone_get_utc_offset (zone, date_clone, &is_daylight);
+      tz = g_time_zone_new_offset (offset);
+    }
+  else
+    {
+      tz = g_time_zone_new_utc ();
+    }
+
   dt = g_date_time_new (tz,
                         i_cal_time_get_year (date),
                         i_cal_time_get_month (date),
