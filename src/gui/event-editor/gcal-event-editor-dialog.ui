@@ -132,6 +132,18 @@
         </property>
       </object>
     </child>
+
+    <child>
+      <object class="GtkShortcutController">
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">&lt;Control&gt;s</property>
+            <property name="action">action(event-editor.save)</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
   </template>
   <object class="GtkSizeGroup">
     <property name="mode">vertical</property>

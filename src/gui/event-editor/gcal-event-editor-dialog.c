@@ -102,6 +102,10 @@ enum
 static guint signals[NUM_SIGNALS] = { 0, };
 static GParamSpec* properties[N_PROPS] = { NULL, };
 
+static void          on_ask_recurrence_response_save_cb          (GcalEvent          *event,
+                                                                  GcalRecurrenceModType mod_type,
+                                                                  gpointer              user_data);
+
 
 /*
  * Auxiliary methods
@@ -114,7 +118,7 @@ set_writable (GcalEventEditorDialog *self,
   if (self->writable == writable)
     return;
 
-  gtk_button_set_label (GTK_BUTTON (self->done_button), writable ? _("Save") : _("Done"));
+  gtk_button_set_label (GTK_BUTTON (self->done_button), writable ? _("_Save") : _("_Done"));
 
   self->writable = writable;
 
@@ -224,10 +228,109 @@ setup_context (GcalEventEditorDialog *self)
   GCAL_EXIT;
 }
 
+static void
+save_event_and_close_dialog (GcalEventEditorDialog *self)
+{
+  GcalCalendar *selected_calendar;
+  GcalCalendar *calendar;
+  GcalManager *manager;
+  gboolean can_show_mod_all;
+  gboolean was_recurrent;
+  gboolean calendar_changed;
+  gint i;
+
+  manager = gcal_context_get_manager (self->context);
+  calendar = gcal_event_get_calendar (self->event);
+
+  if (gcal_calendar_is_read_only (calendar))
+    GCAL_GOTO (out);
+
+  selected_calendar = gcal_calendar_combo_row_get_calendar (self->calendar_combo_row);
+  calendar_changed = selected_calendar && calendar != selected_calendar;
+  can_show_mod_all = TRUE;
+  if (!self->event_is_new)
+    {
+      gboolean anything_changed = calendar_changed;
+
+      for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
+        {
+          gboolean section_changed;
+
+          section_changed = gcal_event_editor_section_changed (self->sections[i]);
+          anything_changed |= section_changed;
+        }
+
+      if (!anything_changed)
+        goto out;
+
+      can_show_mod_all =
+        !gcal_schedule_section_recurrence_changed (GCAL_SCHEDULE_SECTION (self->schedule_section)) &&
+        !gcal_schedule_section_day_changed (GCAL_SCHEDULE_SECTION (self->schedule_section));
+    }
+
+  /*
+   * We don't want to ask the recurrence mod type if the event wasn't
+   * actually recurrent.
+   */
+  was_recurrent = gcal_event_has_recurrence (self->event);
+
+  for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
+    {
+      if (gcal_event_editor_section_changed (self->sections[i]))
+        gcal_event_editor_section_apply (self->sections[i]);
+    }
+
+  if (calendar_changed)
+    {
+      if (self->event_is_new)
+        {
+          gcal_event_set_calendar (self->event, selected_calendar);
+        }
+      else
+        {
+          ESource *source = gcal_calendar_get_source (selected_calendar);
+
+          gcal_manager_move_event_to_source (manager, self->event, source);
+          goto out;
+        }
+    }
+
+  if (self->event_is_new)
+    {
+      gcal_manager_create_event (manager, self->event);
+    }
+  else if (was_recurrent && gcal_event_has_recurrence (self->event))
+    {
+      gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
+                                                   self->event,
+                                                   can_show_mod_all,
+                                                   on_ask_recurrence_response_save_cb,
+                                                   self);
+      return;
+    }
+  else
+    {
+      gcal_manager_update_event (manager, self->event, GCAL_RECURRENCE_MOD_THIS_ONLY);
+    }
+
+out:
+  clear_and_hide_dialog (self);
+}
+
 
 /*
  * Callbacks
  */
+
+static void
+on_event_editor_save_action_activated_cb (GtkWidget   *widget,
+                                          const gchar *action_name,
+                                          GVariant    *parameter)
+{
+  GcalEventEditorDialog *self = GCAL_EVENT_EDITOR_DIALOG (widget);
+
+  save_event_and_close_dialog (self);
+}
 
 static void
 on_cancel_button_clicked_cb (GtkButton             *button,
@@ -355,90 +458,7 @@ static void
 on_done_button_clicked_cb (GtkButton             *button,
                            GcalEventEditorDialog *self)
 {
-  GcalCalendar *selected_calendar;
-  GcalCalendar *calendar;
-  GcalManager *manager;
-  gboolean can_show_mod_all;
-  gboolean was_recurrent;
-  gboolean calendar_changed;
-  gint i;
-
-  manager = gcal_context_get_manager (self->context);
-  calendar = gcal_event_get_calendar (self->event);
-
-  if (gcal_calendar_is_read_only (calendar))
-    GCAL_GOTO (out);
-
-  selected_calendar = gcal_calendar_combo_row_get_calendar (self->calendar_combo_row);
-  calendar_changed = selected_calendar && calendar != selected_calendar;
-  can_show_mod_all = TRUE;
-  if (!self->event_is_new)
-    {
-      gboolean anything_changed = calendar_changed;
-
-      for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
-        {
-          gboolean section_changed;
-
-          section_changed = gcal_event_editor_section_changed (self->sections[i]);
-          anything_changed |= section_changed;
-        }
-
-      if (!anything_changed)
-        goto out;
-
-      can_show_mod_all =
-        !gcal_schedule_section_recurrence_changed (GCAL_SCHEDULE_SECTION (self->schedule_section)) &&
-        !gcal_schedule_section_day_changed (GCAL_SCHEDULE_SECTION (self->schedule_section));
-    }
-
-  /*
-   * We don't want to ask the recurrence mod type if the event wasn't
-   * actually recurrent.
-   */
-  was_recurrent = gcal_event_has_recurrence (self->event);
-
-  for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
-    {
-      if (gcal_event_editor_section_changed (self->sections[i]))
-        gcal_event_editor_section_apply (self->sections[i]);
-    }
-
-  if (calendar_changed)
-    {
-      if (self->event_is_new)
-        {
-          gcal_event_set_calendar (self->event, selected_calendar);
-        }
-      else
-        {
-          ESource *source = gcal_calendar_get_source (selected_calendar);
-
-          gcal_manager_move_event_to_source (manager, self->event, source);
-          goto out;
-        }
-    }
-
-  if (self->event_is_new)
-    {
-      gcal_manager_create_event (manager, self->event);
-    }
-  else if (was_recurrent && gcal_event_has_recurrence (self->event))
-    {
-      gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
-                                                   self->event,
-                                                   can_show_mod_all,
-                                                   on_ask_recurrence_response_save_cb,
-                                                   self);
-      return;
-    }
-  else
-    {
-      gcal_manager_update_event (manager, self->event, GCAL_RECURRENCE_MOD_THIS_ONLY);
-    }
-
-out:
-  clear_and_hide_dialog (self);
+  save_event_and_close_dialog (self);
 }
 
 
@@ -595,6 +615,8 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_cancel_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_delete_row_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_done_button_clicked_cb);
+
+  gtk_widget_class_install_action (widget_class, "event-editor.save", NULL, on_event_editor_save_action_activated_cb);
 }
 
 static void
