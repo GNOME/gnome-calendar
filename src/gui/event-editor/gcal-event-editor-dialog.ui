@@ -29,7 +29,7 @@
               <object class="GtkButton" id="done_button">
                 <property name="use-underline">True</property>
                 <property name="label" translatable="yes">_Done</property>
-                <signal name="clicked" handler="on_done_button_clicked_cb" object="GcalEventEditorDialog" swapped="no"/>
+                <property name="action-name">event-editor.save</property>
                 <style>
                   <class name="suggested-action"/>
                 </style>

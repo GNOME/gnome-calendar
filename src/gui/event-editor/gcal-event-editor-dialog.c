@@ -455,13 +455,6 @@ on_ask_recurrence_response_save_cb (GcalEvent             *event,
   GCAL_EXIT;
 }
 
-static void
-on_done_button_clicked_cb (GtkButton             *button,
-                           GcalEventEditorDialog *self)
-{
-  save_event_and_close_dialog (self);
-}
-
 
 /*
  * Gobject overrides
@@ -616,7 +609,6 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   /* callbacks */
   gtk_widget_class_bind_template_callback (widget_class, on_cancel_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_delete_row_activated_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_done_button_clicked_cb);
 }
 
 static void
