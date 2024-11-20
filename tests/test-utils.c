@@ -20,45 +20,45 @@
 
 #include "gcal-utils.h"
 
-#define EVENT_STRING_FOR_DATE(dtstart,dtend)    \
-                   "BEGIN:VEVENT\n"             \
-                   "SUMMARY:Stub event\n"       \
-                   "UID:example@uid\n"          \
-                   "DTSTAMP:19970114T170000Z\n" \
-                   "DTSTART"dtstart"\n"        \
-                   "DTEND"dtend"\n"            \
-                   "END:VEVENT\n"
+#define EVENT_STRING_FOR_DATE(dtstart,dtend) \
+  "BEGIN:VEVENT\n"                           \
+  "SUMMARY:Stub event\n"                     \
+  "UID:example@uid\n"                        \
+  "DTSTAMP:19970114T170000Z\n"               \
+  "DTSTART"dtstart"\n"                       \
+  "DTEND"dtend"\n"                           \
+  "END:VEVENT\n"
 
-#define STUB_CALENDAR_VTZ(dtstart,dtend)                                 \
-                    "BEGIN:VCALENDAR\n"                                  \
-                    "VERSION:2.0\n"                                      \
-                    "METHOD:PUBLISH\n"                                   \
-                    "BEGIN:VTIMEZONE\n"                                  \
-                    "TZID:StubTz\n"                                      \
-                    "BEGIN:STANDARD\n"                                   \
-                    "DTSTART:16011028T030000\n"                          \
-                    "RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\n"          \
-                    "TZOFFSETFROM:+0200\n"                               \
-                    "TZOFFSETTO:+0100\n"                                 \
-                    "END:STANDARD\n"                                     \
-                    "BEGIN:DAYLIGHT\n"                                   \
-                    "DTSTART:16010325T020000\n"                          \
-                    "RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\n"           \
-                    "TZOFFSETFROM:+0100\n"                               \
-                    "TZOFFSETTO:+0200\n"                                 \
-                    "END:DAYLIGHT\n"                                     \
-                    "END:VTIMEZONE\n"                                    \
-                    "BEGIN:VEVENT\n"                                     \
-                    "DTSTART;TZID=StubTz"dtstart"\n"                     \
-                    "DTEND;TZID=StubTz"dtend"\n"                         \
-                    "LOCATION:somewhere\n"                               \
-                    "SEQUENCE:0\n"                                       \
-                    "UID:389584207457478\n"                              \
-                    "DTSTAMP:20240608T184316Z\n"                         \
-                    "SUMMARY:Test time zone\n"                           \
-                    "CATEGORIES:\n"                                      \
-                    "END:VEVENT\n"                                       \
-                    "END:VCALENDAR\n"
+#define STUB_CALENDAR_VTZ(dtstart,dtend)               \
+  "BEGIN:VCALENDAR\n"                                  \
+  "VERSION:2.0\n"                                      \
+  "METHOD:PUBLISH\n"                                   \
+  "BEGIN:VTIMEZONE\n"                                  \
+  "TZID:StubTz\n"                                      \
+  "BEGIN:STANDARD\n"                                   \
+  "DTSTART:16011028T030000\n"                          \
+  "RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\n"          \
+  "TZOFFSETFROM:+0200\n"                               \
+  "TZOFFSETTO:+0100\n"                                 \
+  "END:STANDARD\n"                                     \
+  "BEGIN:DAYLIGHT\n"                                   \
+  "DTSTART:16010325T020000\n"                          \
+  "RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\n"           \
+  "TZOFFSETFROM:+0100\n"                               \
+  "TZOFFSETTO:+0200\n"                                 \
+  "END:DAYLIGHT\n"                                     \
+  "END:VTIMEZONE\n"                                    \
+  "BEGIN:VEVENT\n"                                     \
+  "DTSTART;TZID=StubTz"dtstart"\n"                     \
+  "DTEND;TZID=StubTz"dtend"\n"                         \
+  "LOCATION:somewhere\n"                               \
+  "SEQUENCE:0\n"                                       \
+  "UID:389584207457478\n"                              \
+  "DTSTAMP:20240608T184316Z\n"                         \
+  "SUMMARY:Test time zone\n"                           \
+  "CATEGORIES:\n"                                      \
+  "END:VEVENT\n"                                       \
+  "END:VCALENDAR\n"
 
 /*********************************************************************************************************************/
 
@@ -68,27 +68,32 @@ date_time_from_icaltime (void)
   struct
     {
       const gchar *string;
-      const gchar *dt_start;
-      const gchar *dt_end;
+      const gchar *start;
+      const gchar *end;
     }
   events[] = {
     {
-      EVENT_STRING_FOR_DATE (";TZID=America/New_York:20241209T170000",
-      ";TZID=America/New_York:20241209T180000"), "2024-12-09T17:00:00-05", "2024-12-09T18:00:00-05"
+      .string = EVENT_STRING_FOR_DATE (";TZID=America/New_York:20241209T170000",
+                                       ";TZID=America/New_York:20241209T180000"),
+      .start = "2024-12-09T17:00:00-05",
+      .end = "2024-12-09T18:00:00-05",
     },
     {
-      EVENT_STRING_FOR_DATE(":20240709T170000Z", ":20240709T180000Z"), "2024-07-09T17:00:00Z",
-      "2024-07-09T18:00:00Z"
+      .string = EVENT_STRING_FOR_DATE (":20240709T170000Z", ":20240709T180000Z"),
+      .start = "2024-07-09T17:00:00Z",
+      .end = "2024-07-09T18:00:00Z",
     },
     {
       // Virtual time zone in standard time
-      STUB_CALENDAR_VTZ(":20241103T103000", ":20241103T114500"), "2024-11-03T10:30:00+01",
-      "2024-11-03T11:45:00+01"
+      .string = STUB_CALENDAR_VTZ (":20241103T103000", ":20241103T114500"),
+      .start = "2024-11-03T10:30:00+01",
+      .end = "2024-11-03T11:45:00+01",
     },
     {
       // Virtual time zone with Daylight Saving Time
-      STUB_CALENDAR_VTZ(":20240603T103000", ":20240603T114500"), "2024-06-03T10:30:00+02",
-      "2024-06-03T11:45:00+02"
+      .string = STUB_CALENDAR_VTZ (":20240603T103000", ":20240603T114500"),
+      .start = "2024-06-03T10:30:00+02",
+      .end = "2024-06-03T11:45:00+02",
     },
   };
 
@@ -97,9 +102,11 @@ date_time_from_icaltime (void)
 
       g_autoptr (GDateTime) gdt_start = NULL;
       g_autoptr (GDateTime) gdt_end = NULL;
+      g_autofree gchar *start_str = NULL;
+      g_autofree gchar *end_str = NULL;
+      ICalComponent *comp = NULL;
       ICalTime *dt_start = NULL;
       ICalTime *dt_end = NULL;
-      ICalComponent *comp = NULL;
 
       comp = i_cal_component_new_from_string (events[i].string);
       g_assert_nonnull (comp);
@@ -114,8 +121,11 @@ date_time_from_icaltime (void)
       gdt_end = gcal_date_time_from_icaltime (dt_end);
       g_assert_nonnull (gdt_end);
 
-      g_assert_cmpstr (g_date_time_format_iso8601 (gdt_start), ==, events[i].dt_start);
-      g_assert_cmpstr (g_date_time_format_iso8601 (gdt_end), ==, events[i].dt_end);
+      start_str = g_date_time_format_iso8601 (gdt_start);
+      end_str = g_date_time_format_iso8601 (gdt_end);
+
+      g_assert_cmpstr (start_str, ==, events[i].start);
+      g_assert_cmpstr (end_str, ==, events[i].end);
     }
 }
 
