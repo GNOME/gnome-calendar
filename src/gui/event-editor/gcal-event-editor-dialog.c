@@ -75,6 +75,7 @@ struct _GcalEventEditorDialog
   GBinding           *event_title_binding;
 
   GListStore         *read_only_calendar_model;
+  GSimpleActionGroup *action_group;
 
   /* flags */
   gboolean          event_is_new;
@@ -323,11 +324,11 @@ out:
  */
 
 static void
-on_event_editor_save_action_activated_cb (GtkWidget   *widget,
-                                          const gchar *action_name,
-                                          GVariant    *parameter)
+on_event_editor_save_action_activated_cb (GSimpleAction *action,
+                                          GVariant      *param,
+                                          gpointer       user_data)
 {
-  GcalEventEditorDialog *self = GCAL_EVENT_EDITOR_DIALOG (widget);
+  GcalEventEditorDialog *self = GCAL_EVENT_EDITOR_DIALOG (user_data);
 
   save_event_and_close_dialog (self);
 }
@@ -476,6 +477,7 @@ gcal_event_editor_dialog_finalize (GObject *object)
   self = GCAL_EVENT_EDITOR_DIALOG (object);
 
   g_clear_object (&self->read_only_calendar_model);
+  g_clear_object (&self->action_group);
   g_clear_object (&self->context);
   g_clear_object (&self->event);
 
@@ -615,14 +617,21 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_cancel_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_delete_row_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_done_button_clicked_cb);
-
-  gtk_widget_class_install_action (widget_class, "event-editor.save", NULL, on_event_editor_save_action_activated_cb);
 }
 
 static void
 gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
 {
+  static const GActionEntry actions[] = {
+    {"save", on_event_editor_save_action_activated_cb },
+  };
+
   gint i = 0;
+
+  /* Setup actions */
+  self->action_group = g_simple_action_group_new ();
+  g_action_map_add_action_entries (G_ACTION_MAP (self->action_group), actions, G_N_ELEMENTS (actions), self);
+  gtk_widget_insert_action_group (GTK_WIDGET (self), "event-editor", G_ACTION_GROUP (self->action_group));
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
