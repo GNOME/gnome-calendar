@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-11-08 18:57+0000\n"
-"PO-Revision-Date: 2024-11-08 21:59+0100\n"
+"POT-Creation-Date: 2024-11-19 18:02+0000\n"
+"PO-Revision-Date: 2024-11-22 11:24+0100\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -518,25 +518,22 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "S"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:115
-msgid "Save"
-msgstr "Shrani"
+#: src/gui/event-editor/gcal-event-editor-dialog.c:121
+msgid "_Save"
+msgstr "_Shrani"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:115
-msgid "Done"
-msgstr "Končano"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.c:654
-msgid "New Event"
-msgstr "Nov dogodek"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.c:656
-msgid "Edit Event"
-msgstr "Uredi dogodek"
-
+#: src/gui/event-editor/gcal-event-editor-dialog.c:121
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:31
 msgid "_Done"
 msgstr "_Končano"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:691
+msgid "New Event"
+msgstr "Nov dogodek"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:693
+msgid "Edit Event"
+msgstr "Uredi dogodek"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:45
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
@@ -544,19 +541,19 @@ msgstr ""
 "Ta dogodek je del koledarja samo za branje. Ne morete ga izbrisati ali "
 "spremeniti."
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:77
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:78
 msgid "Schedule"
 msgstr "Urnik"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:89
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:90
 msgid "Reminders"
 msgstr "Opomniki"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:101
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:102
 msgid "Notes"
 msgstr "Opombe"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:118
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:119
 msgid "Delete Event"
 msgstr "Izbriši dogodek"
 
