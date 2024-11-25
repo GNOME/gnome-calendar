@@ -60,8 +60,6 @@ struct _GcalEventEditorDialog
   GcalEventEditorSection   *schedule_section;
   GtkWidget                *source_label;
   GcalEventEditorSection   *summary_section;
-  GtkWidget                *titlebar;
-  GtkWidget                *title_label;
 
 
   GcalEventEditorSection *sections[4];
@@ -602,8 +600,6 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, reminders_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, schedule_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, summary_section);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, titlebar);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, title_label);
 
 
   /* callbacks */
@@ -687,11 +683,13 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   if (self->sources_menu != NULL)
     g_menu_remove_all (self->sources_menu);
 
-  /* dialog titlebar's title */
+  /* dialog's title */
   if (new_event)
-    gtk_label_set_label (GTK_LABEL (self->title_label), _("New Event"));
+    adw_dialog_set_title (ADW_DIALOG (self), _("New Event"));
+  else if (gcal_calendar_is_read_only (calendar))
+    adw_dialog_set_title (ADW_DIALOG (self), _("Event Details"));
   else
-    gtk_label_set_label (GTK_LABEL (self->title_label), _("Edit Event"));
+    adw_dialog_set_title (ADW_DIALOG (self), _("Edit Event"));
 
   g_list_store_remove_all (self->read_only_calendar_model);
   if (gcal_calendar_is_read_only (calendar))
