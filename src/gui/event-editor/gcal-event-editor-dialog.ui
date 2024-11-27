@@ -67,7 +67,6 @@
                 <!-- Schedule -->
                 <child>
                   <object class="AdwPreferencesGroup">
-                    <property name="title" translatable="yes">Schedule</property>
                     <child>
                       <object class="GcalScheduleSection" id="schedule_section">
                         <property name="sensitive" bind-source="GcalEventEditorDialog" bind-property="writable" bind-flags="default|sync-create" />
