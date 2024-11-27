@@ -10,6 +10,7 @@ sources += files(
   'gcal-alarm-row.c',
   'gcal-date-chooser.c',
   'gcal-date-chooser-day.c',
+  'gcal-date-chooser-row.c',
   'gcal-date-selector.c',
   'gcal-event-editor-dialog.c',
   'gcal-event-editor-section.c',
