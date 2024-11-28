@@ -549,6 +549,7 @@ gcal_reminders_section_class_init (GcalRemindersSectionClass *klass)
   object_class->set_property = gcal_reminders_section_set_property;
 
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
+  g_object_class_override_property (object_class, TRUE, "is-valid");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-reminders-section.ui");
 

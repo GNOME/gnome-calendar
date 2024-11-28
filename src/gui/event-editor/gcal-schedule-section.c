@@ -779,6 +779,7 @@ gcal_schedule_section_class_init (GcalScheduleSectionClass *klass)
   object_class->set_property = gcal_schedule_section_set_property;
 
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
+  g_object_class_override_property (object_class, TRUE, "is-valid");
 
   g_type_ensure (GCAL_TYPE_DATE_SELECTOR);
   g_type_ensure (GCAL_TYPE_TIME_SELECTOR);

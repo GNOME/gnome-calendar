@@ -35,6 +35,7 @@ struct _GcalSummarySection
   AdwEntryRow        *summary_entry;
   AdwEntryRow        *location_entry;
 
+  gboolean            is_valid;
   GcalContext        *context;
   GcalEvent          *event;
 };
@@ -49,8 +50,11 @@ enum
 {
   PROP_0,
   PROP_CONTEXT,
+  PROP_IS_VALID,
   N_PROPS
 };
+
+static GParamSpec *properties [N_PROPS] = { NULL, };
 
 /*
  * GcalEventEditorSection interface
@@ -83,12 +87,19 @@ gcal_reminders_section_set_event (GcalEventEditorSection *section,
 }
 
 static void
-on_summary_entry_text_changed_cb (AdwEntryRow *entry_row)
+on_summary_entry_text_changed_cb (AdwEntryRow *entry_row,
+                                  gpointer    *user_data)
 {
-  if (gcal_is_valid_event_name (gtk_editable_get_text (GTK_EDITABLE (entry_row))))
+  GcalSummarySection *self = (GcalSummarySection *)user_data;
+
+  self->is_valid = gcal_is_valid_event_name (gtk_editable_get_text (GTK_EDITABLE (entry_row)));
+
+  if (self->is_valid)
     gtk_widget_remove_css_class (GTK_WIDGET (entry_row), "error");
   else
     gtk_widget_add_css_class (GTK_WIDGET (entry_row), "error");
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_IS_VALID]);
 }
 
 static void
@@ -160,6 +171,9 @@ gcal_summary_section_get_property (GObject    *object,
     case PROP_CONTEXT:
       g_value_set_object (value, self->context);
       break;
+    case PROP_IS_VALID:
+      g_value_set_boolean (value, self->is_valid);
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -197,6 +211,7 @@ gcal_summary_section_class_init (GcalSummarySectionClass *klass)
   object_class->set_property = gcal_summary_section_set_property;
 
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
+  g_object_class_override_property (object_class, PROP_IS_VALID, "is-valid");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-summary-section.ui");
 
