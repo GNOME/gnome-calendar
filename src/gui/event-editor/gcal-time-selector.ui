@@ -37,18 +37,24 @@
 
     <!-- AM/PM -->
     <child>
-      <object class="GtkDropDown" id="period_dropdown">
+      <object class="AdwToggleGroup" id="period_toggle_group">
         <property name="visible">False</property>
         <property name="valign">center</property>
-        <signal name="notify::selected" handler="update_time" object="GcalTimeSelector" swapped="yes"/>
-        <property name="model">
-          <object class="GtkStringList">
-            <items>
-              <item translatable="yes">AM</item>
-              <item translatable="yes">PM</item>
-            </items>
+        <property name="active-name">am</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="AdwToggle">
+            <property name="label" translatable="yes">AM</property>
+            <property name="name">am</property>
           </object>
-        </property>
+        </child>
+        <child>
+          <object class="AdwToggle">
+            <property name="label" translatable="yes">PM</property>
+            <property name="name">pm</property>
+          </object>
+        </child>
+        <signal name="notify::active" handler="on_period_toggle_changed_cb" swapped="no"/>
       </object>
     </child>
   </template>

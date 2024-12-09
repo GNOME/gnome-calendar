@@ -34,7 +34,7 @@ struct _GcalTimeSelector
   GtkWidget *time_box;
   GtkWidget *hour_spin;
   GtkWidget *minute_spin;
-  GtkWidget *period_dropdown;
+  GtkWidget *period_toggle_group;
 
   GDateTime *time;
 
@@ -46,12 +46,6 @@ enum
   PROP_0,
   PROP_TIME,
   LAST_PROP
-};
-
-enum
-{
-  AM,
-  PM
 };
 
 G_DEFINE_TYPE (GcalTimeSelector, gcal_time_selector, GTK_TYPE_BOX);
@@ -70,7 +64,7 @@ update_time (GcalTimeSelector *selector)
     {
       hour = hour % 12;
 
-      if (gtk_drop_down_get_selected (GTK_DROP_DOWN (selector->period_dropdown)) == PM)
+      if (g_strcmp0 (adw_toggle_group_get_active_name (ADW_TOGGLE_GROUP (selector->period_toggle_group)), "pm") == 0)
         hour += 12;
     }
 
@@ -85,6 +79,14 @@ update_time (GcalTimeSelector *selector)
 
   g_clear_pointer (&new_time, g_date_time_unref);
   g_clear_pointer (&now, g_date_time_unref);
+}
+
+static void
+on_period_toggle_changed_cb (GtkWidget        *widget,
+                             GParamSpec       *pspec,
+                             GcalTimeSelector *selector)
+{
+  update_time (selector);
 }
 
 static gboolean
@@ -150,7 +152,7 @@ gcal_time_selector_set_time_format (GcalTimeSelector *selector,
   g_return_if_fail (GCAL_IS_TIME_SELECTOR (selector));
 
   selector->time_format = time_format;
-  gtk_widget_set_visible (selector->period_dropdown, time_format == GCAL_TIME_FORMAT_12H);
+  gtk_widget_set_visible (selector->period_toggle_group, time_format == GCAL_TIME_FORMAT_12H);
 
   if (time_format == GCAL_TIME_FORMAT_24H)
     {
@@ -210,10 +212,11 @@ gcal_time_selector_class_init (GcalTimeSelectorClass *klass)
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, hour_spin);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, minute_adjustment);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, minute_spin);
-  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, period_dropdown);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, period_toggle_group);
 
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), on_output);
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), update_time);
+  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), on_period_toggle_changed_cb);
 }
 
 static void
@@ -264,13 +267,13 @@ gcal_time_selector_set_time (GcalTimeSelector *selector,
 
       if (selector->time_format == GCAL_TIME_FORMAT_12H)
         {
-          g_signal_handlers_block_by_func (selector->period_dropdown, update_time, selector);
+          g_signal_handlers_block_by_func (selector->period_toggle_group, on_period_toggle_changed_cb, selector);
 
-          gtk_drop_down_set_selected (GTK_DROP_DOWN (selector->period_dropdown), hour >= 12);
+          adw_toggle_group_set_active_name (ADW_TOGGLE_GROUP (selector->period_toggle_group), hour >= 12 ? "pm" : "am");
           hour =  hour % 12;
           hour = (hour == 0)? 12 : hour;
 
-          g_signal_handlers_unblock_by_func (selector->period_dropdown, update_time, selector);
+          g_signal_handlers_unblock_by_func (selector->period_toggle_group, on_period_toggle_changed_cb, selector);
         }
 
       gtk_adjustment_set_value (selector->hour_adjustment, hour);
