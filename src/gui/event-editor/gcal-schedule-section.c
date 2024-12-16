@@ -704,6 +704,8 @@ static void
 gcal_schedule_section_init (GcalScheduleSection *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  on_time_format_changed_cb (self);
 }
 
 gboolean
