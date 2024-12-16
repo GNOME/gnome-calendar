@@ -5,6 +5,7 @@
     <file compressed="true">gcal-date-chooser.ui</file>
     <file compressed="true">gcal-date-chooser-day.ui</file>
     <file compressed="true">gcal-date-chooser-row.ui</file>
+    <file compressed="true">gcal-date-time-chooser.ui</file>
     <file compressed="true">gcal-date-selector.ui</file>
     <file compressed="true">gcal-event-editor-dialog.ui</file>
     <file compressed="true">gcal-multi-choice.ui</file>
@@ -12,7 +13,7 @@
     <file compressed="true">gcal-reminders-section.ui</file>
     <file compressed="true">gcal-schedule-section.ui</file>
     <file compressed="true">gcal-summary-section.ui</file>
-    <file compressed="true">gcal-time-chooser-row.ui</file>
-    <file compressed="true">gcal-time-selector.ui</file>
+    <file compressed="true">gcal-time-zone-dialog.ui</file>
+    <file compressed="true">gcal-time-zone-dialog-row.ui</file>
   </gresource>
 </gresources>

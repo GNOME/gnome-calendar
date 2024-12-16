@@ -57,4 +57,7 @@ ICalTimezone*        gcal_timezone_to_icaltimezone               (GTimeZone     
 GDateTime*           gcal_date_time_add_floating_minutes         (GDateTime          *initial,
                                                                   gint                minutes);
 
+gchar*               gcal_date_time_format_utc_offset            (GDateTime          *date_time);
+
 G_END_DECLS
+

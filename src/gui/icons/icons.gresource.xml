@@ -5,11 +5,14 @@
     <file compressed="true">calendar-month-symbolic.svg</file>
     <file compressed="true">calendar-week-symbolic.svg</file>
     <file compressed="true">calendar-today-symbolic.svg</file>
+    <file compressed="true">check-plain-symbolic.svg</file>
     <file compressed="true">clock-alt-symbolic.svg</file>
     <file compressed="true">checkmark-small-symbolic.svg</file>
     <file compressed="true">external-link-symbolic.svg</file>
     <file compressed="true">edit-symbolic.svg</file>
     <file compressed="true">eye-not-looking-symbolic.svg</file>
+    <file compressed="true">globe-symbolic.svg</file>
     <file compressed="true">info-outline-symbolic.svg</file>
+    <file compressed="true">loupe-large-symbolic.svg</file>
   </gresource>
 </gresources>

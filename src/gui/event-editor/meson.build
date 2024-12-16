@@ -11,6 +11,7 @@ sources += files(
   'gcal-date-chooser.c',
   'gcal-date-chooser-day.c',
   'gcal-date-chooser-row.c',
+  'gcal-date-time-chooser.c',
   'gcal-date-selector.c',
   'gcal-event-editor-dialog.c',
   'gcal-event-editor-section.c',
@@ -19,6 +20,6 @@ sources += files(
   'gcal-reminders-section.c',
   'gcal-schedule-section.c',
   'gcal-summary-section.c',
-  'gcal-time-chooser-row.c',
-  'gcal-time-selector.c',
+  'gcal-time-zone-dialog.c',
+  'gcal-time-zone-dialog-row.c',
 )

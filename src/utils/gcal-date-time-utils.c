@@ -299,3 +299,48 @@ gcal_date_time_add_floating_minutes (GDateTime *initial,
   offset = offset / 1000000;
   return g_date_time_add_seconds (result, offset);
 }
+
+/**
+ * gcal_date_time_add_floating_minutes:
+ * @date_time: #GDateTime for which to calculate the UTC difference
+ *
+ * Creates a string "UTC+-n" where n is the offset to UTC of date_time.
+ *
+ * Returns: (transfer full): A new string.
+ */
+gchar*
+gcal_date_time_format_utc_offset (GDateTime *date_time)
+{
+  g_autoptr (GTimeZone) local_time_zone = NULL;
+  g_autoptr (GString) utc_str = NULL;
+  gint64 utc_offset_seconds;
+
+  utc_str = g_string_new ("UTC");
+  utc_offset_seconds = g_date_time_get_utc_offset (date_time) / (1000 * 1000);
+
+  if (utc_offset_seconds != 0)
+    {
+      gboolean negative;
+      gint64 minutes;
+      gint64 hours;
+
+      negative = utc_offset_seconds < 0;
+
+      if (negative)
+        utc_offset_seconds = -utc_offset_seconds;
+
+      hours = utc_offset_seconds / 3600;
+      minutes = (utc_offset_seconds - hours*3600) / 60;
+
+      g_string_append (utc_str, negative ? "-" : "+");
+      g_string_append_printf (utc_str, "%ld", hours);
+
+      if (minutes != 0)
+        {
+          g_string_append (utc_str, ":");
+          g_string_append_printf (utc_str, "%02ld", minutes);
+        }
+    }
+
+  return g_string_free_and_steal (g_steal_pointer (&utc_str));
+}

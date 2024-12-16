@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<interface>
+  <template class="GcalDateTimeChooser" parent="AdwPreferencesGroup">
+
+    <child>
+      <object class="GcalDateChooserRow" id="date_row">
+        <property name="title" translatable="yes">Date</property>
+        <signal name="notify::date" handler="on_date_changed_cb" object="GcalDateTimeChooser" swapped="yes" />
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwEntryRow" id="time_row">
+        <property name="title" translatable="yes">Time</property>
+
+        <child>
+          <object class="GtkEventControllerFocus">
+            <signal name="notify::contains-focus" handler="on_time_row_contains_focus_changed_cb" object="GcalDateTimeChooser" swapped="no"/>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkMenuButton">
+            <property name="icon-name">clock-alt-symbolic</property>
+            <property name="valign">center</property>
+            <property name="tooltip-text">Edit Time</property>
+            <property name="popover">
+              <object class="GtkPopover" id="time_popover">
+                <property name="position">bottom</property>
+
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">15</property>
+                    <property name="margin-top">6</property>
+                    <property name="margin-bottom">6</property>
+                    <property name="margin-start">6</property>
+                    <property name="margin-end">6</property>
+                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">12</property>
+                        <property name="halign">center</property>
+                        <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">6</property>
+                            <property name="halign">center</property>
+
+                            <!-- Hour -->
+                            <child>
+                              <object class="GtkSpinButton">
+                                <property name="xalign">0.5</property>
+                                <property name="orientation">vertical</property>
+                                <property name="adjustment">hour_adjustment</property>
+                                <property name="wrap">True</property>
+                                <signal name="output" handler="on_spin_button_output_cb" object="GcalDateTimeChooser" swapped="no"/>
+                                <signal name="wrapped" handler="on_hour_spin_button_wrapped_cb" object="GcalDateTimeChooser" swapped="no"/>
+                              </object>
+                            </child>
+
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">:</property>
+                              </object>
+                            </child>
+
+                            <!-- Minute -->
+                            <child>
+                              <object class="GtkSpinButton">
+                                <property name="xalign">0.5</property>
+                                <property name="orientation">vertical</property>
+                                <property name="adjustment">minute_adjustment</property>
+                                <property name="wrap">True</property>
+                                <signal name="output" handler="on_spin_button_output_cb" object="GcalDateTimeChooser" swapped="no"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- AM/PM -->
+                        <child>
+                          <object class="AdwToggleGroup" id="period_toggle_group">
+                            <property name="visible">False</property>
+                            <property name="valign">center</property>
+                            <property name="active-name">am</property>
+                            <child>
+                              <object class="AdwToggle">
+                                <property name="label" translatable="yes">AM</property>
+                                <property name="name">am</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwToggle">
+                                <property name="label" translatable="yes">PM</property>
+                                <property name="name">pm</property>
+                              </object>
+                            </child>
+                            <signal name="notify::active" handler="on_period_toggle_group_active_changed_cb" swapped="no"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                    <child>
+                      <object class="GtkButton">
+                        <property name="valign">center</property>
+                        <property name="tooltip-text" translatable="yes">Change Timezone</property>
+
+                        <child>
+                          <object class="AdwButtonContent" id="time_zone_button_content">
+                            <property name="icon-name">globe-symbolic</property>
+                          </object>
+                        </child>
+
+                        <signal name="clicked" handler="on_time_zone_button_clicked_cb" object="GcalDateTimeChooser" swapped="no"/>
+
+                        <accessibility>
+                          <property name="label" translatable="yes">Change Timezone</property>
+                        </accessibility>
+                      </object>
+                    </child>
+
+                  </object>
+                </child>
+
+                <signal name="show" handler="on_time_popover_shown_cb" object="GcalDateTimeChooser" swapped="no" />
+              </object>
+            </property>
+
+            <accessibility>
+              <property name="label" translatable="yes">Edit time</property>
+            </accessibility>
+
+            <style>
+              <class name="flat" />
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+
+  <object class="GtkAdjustment" id="hour_adjustment">
+    <property name="upper">23</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">5</property>
+    <signal name="value-changed" handler="on_spin_buttons_value_changed_cb" object="GcalDateTimeChooser" swapped="yes"/>
+  </object>
+  <object class="GtkAdjustment" id="minute_adjustment">
+    <property name="upper">59</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+    <signal name="value-changed" handler="on_spin_buttons_value_changed_cb" object="GcalDateTimeChooser" swapped="yes"/>
+  </object>
+</interface>
+

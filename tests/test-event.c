@@ -335,55 +335,6 @@ event_date_create_tzid (void)
 /*********************************************************************************************************************/
 
 static void
-event_date_edit_tzid (void)
-{
-  struct {
-    const gchar *string;
-    const gchar *tz;
-  } events[] = {
-    {
-      EVENT_STRING_FOR_DATE (";TZID=Europe/Madrid:20170818T130000", ";TZID=Europe/Madrid:20170818T140000"),
-      "Europe/Madrid"
-    },
-    {
-      // https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/170
-      EVENT_STRING_FOR_DATE (";TZID=Europe/London:20170818T130000", ";TZID=Europe/London:20170818T140000"),
-      "Europe/London"
-    },
-    {
-      EVENT_STRING_FOR_DATE (";TZID=America/Costa_Rica:20170818T130000", ";TZID=America/Costa_Rica:20170818T140000"),
-      "America/Costa_Rica"
-    },
-  };
-
-  g_test_bug ("170");
-
-  for (size_t i = 0; i < G_N_ELEMENTS (events); i++)
-    {
-      g_autoptr (GDateTime) datetime = NULL;
-      g_autoptr (GTimeZone) timezone = NULL;
-      g_autoptr (GcalEvent) event = NULL;
-      g_autoptr (GError) error = NULL;
-
-      ECalComponentDateTime *dt_end = NULL;
-
-      event = create_event_for_string (events[i].string, &error);
-      g_assert_no_error (error);
-
-      // modify the event and check the tz in the result
-      timezone = g_time_zone_new_identifier (events[i].tz);
-      datetime = g_date_time_new (timezone, 2017, 8, 18, 15, 00, 00.);
-      gcal_event_set_date_end (event, datetime);
-
-      dt_end = e_cal_component_get_dtend (gcal_event_get_component (event));
-      g_assert_cmpstr (e_cal_component_datetime_get_tzid (dt_end), ==, "UTC");
-      e_cal_component_datetime_free (dt_end);
-    }
-}
-
-/*********************************************************************************************************************/
-
-static void
 event_date_check_tz (void)
 {
   struct
@@ -456,7 +407,6 @@ main (gint   argc,
   g_test_add_func ("/event/date/end", event_date_end);
   g_test_add_func ("/event/date/singleday", event_date_singleday);
   g_test_add_func ("/event/date/multiday", event_date_multiday);
-  g_test_add_func ("/event/date/edit-tzid", event_date_edit_tzid);
   g_test_add_func ("/event/date/create-tzid", event_date_create_tzid);
   g_test_add_func ("/event/date/check-tz", event_date_check_tz);
 

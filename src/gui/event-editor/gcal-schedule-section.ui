@@ -21,61 +21,46 @@
             <property name="name">time-slot</property>
           </object>
         </child>
-        <signal name="notify::active" handler="on_schedule_type_changed_cb" swapped="no"/>
+      </object>
+    </child>
+
+    <!-- Start date -->
+    <child>
+      <object class="AdwPreferencesGroup" id="start_date_group">
+        <child>
+          <object class="GcalDateChooserRow" id="start_date_row">
+            <property name="title" translatable="yes">Start Date</property>
+            <signal name="notify::date" handler="on_start_date_changed_cb" object="GcalScheduleSection" swapped="no" />
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <!-- End date -->
+    <child>
+      <object class="AdwPreferencesGroup" id="end_date_group">
+        <child>
+          <object class="GcalDateChooserRow" id="end_date_row">
+            <property name="title" translatable="yes">End Date</property>
+            <signal name="notify::date" handler="on_end_date_changed_cb" object="GcalScheduleSection" swapped="no" />
+          </object>
+        </child>
       </object>
     </child>
 
     <child>
-      <object class="GtkBox">
-        <property name="homogeneous">True</property>
-        <property name="spacing">12</property>
-
-        <!-- Start date -->
-        <child>
-          <object class="AdwPreferencesGroup">
-            <child>
-              <object class="GcalDateChooserRow" id="start_date_row">
-                <property name="title" translatable="yes">Start Date</property>
-                <signal name="notify::date" handler="sync_datetimes" object="GcalScheduleSection" swapped="yes" />
-              </object>
-            </child>
-
-            <child>
-              <object class="GcalTimeChooserRow" id ="start_time_row">
-                <property name="title" translatable="yes">Start Time</property>
-                <signal name="notify::time" handler="sync_datetimes" object="GcalScheduleSection" swapped="yes" />
-              </object>
-            </child>
-          </object>
-        </child>
-
+      <object class="GcalDateTimeChooser" id="start_date_time_chooser">
+        <property name="date-label" translatable="yes">Start Date</property>
+        <property name="time-label" translatable="yes">Start Time</property>
+        <signal name="notify::date-time" handler="on_start_date_time_changed_cb" object="GcalScheduleSection" swapped="no" />
       </object>
     </child>
 
     <child>
-      <object class="GtkBox">
-        <property name="homogeneous">True</property>
-        <property name="spacing">12</property>
-
-        <!-- End date -->
-        <child>
-          <object class="AdwPreferencesGroup">
-            <child>
-              <object class="GcalDateChooserRow" id="end_date_row">
-                <property name="title" translatable="yes">End Date</property>
-                <signal name="notify::date" handler="sync_datetimes" object="GcalScheduleSection" swapped="yes" />
-              </object>
-            </child>
-
-            <child>
-              <object class="GcalTimeChooserRow" id ="end_time_row">
-                <property name="title" translatable="yes">End Time</property>
-                <signal name="notify::time" handler="sync_datetimes" object="GcalScheduleSection" swapped="yes" />
-              </object>
-            </child>
-          </object>
-        </child>
-
+      <object class="GcalDateTimeChooser" id="end_date_time_chooser">
+        <property name="date-label" translatable="yes">End Date</property>
+        <property name="time-label" translatable="yes">End Time</property>
+        <signal name="notify::date-time" handler="on_end_date_time_changed_cb" object="GcalScheduleSection" swapped="no" />
       </object>
     </child>
 

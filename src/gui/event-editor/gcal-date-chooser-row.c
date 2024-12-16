@@ -299,9 +299,16 @@ void
 gcal_date_chooser_row_set_date (GcalDateChooserRow *self,
                                 GDateTime          *date)
 {
+  g_autoptr (GDateTime) date_utc = NULL;
+
   g_return_if_fail (GCAL_IS_DATE_CHOOSER_ROW (self));
 
-  gcal_view_set_date (GCAL_VIEW (self->date_chooser), date);
+  date_utc = g_date_time_new_utc (g_date_time_get_year (date),
+                                  g_date_time_get_month (date),
+                                  g_date_time_get_day_of_month (date),
+                                  0, 0, 0);
+
+  gcal_view_set_date (GCAL_VIEW (self->date_chooser), date_utc);
 
   update_entry (self);
 

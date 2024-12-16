@@ -27,6 +27,8 @@ src/gui/event-editor/gcal-schedule-section.ui
 src/gui/event-editor/gcal-summary-section.c
 src/gui/event-editor/gcal-summary-section.ui
 src/gui/event-editor/gcal-time-selector.ui
+src/gui/event-editor/gcal-time-zone-dialog.c
+src/gui/event-editor/gcal-time-zone-dialog.ui
 src/gui/gcal-application.c
 src/gui/gcal-calendar-button.ui
 src/gui/gcal-calendar-combo-row.ui

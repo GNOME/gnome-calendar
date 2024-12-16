@@ -490,11 +490,10 @@ on_window_new_event_cb (GSimpleAction *action,
   GcalEvent *event;
 
   self = GCAL_WINDOW (user_data);
-  start = g_date_time_new (gcal_context_get_timezone (self->context),
-                           g_date_time_get_year (self->active_date),
-                           g_date_time_get_month (self->active_date),
-                           g_date_time_get_day_of_month (self->active_date),
-                           0, 0, 0);
+  start = g_date_time_new_utc (g_date_time_get_year (self->active_date),
+                               g_date_time_get_month (self->active_date),
+                               g_date_time_get_day_of_month (self->active_date),
+                               0, 0, 0);
   end = g_date_time_add_days (start, 1);
 
   manager = gcal_context_get_manager (self->context);
