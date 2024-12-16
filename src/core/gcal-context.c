@@ -310,6 +310,7 @@ gcal_context_init (GcalContext *self)
   self->clock = gcal_clock_new ();
   self->settings = g_settings_new ("org.gnome.calendar");
   self->weather_service = gcal_weather_service_new ();
+  self->time_format = GCAL_TIME_FORMAT_24H;
 
   self->timezone_monitor = gcal_time_zone_monitor_new ();
   g_signal_connect_object (self->timezone_monitor,
