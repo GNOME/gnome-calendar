@@ -23,6 +23,7 @@ build-flatpak-aarch64:
   extends: '.flatpak@aarch64'
   stage: build
   before_script: []
+  when: manual
 
 nightly:
   extends: '.publish_nightly'
@@ -31,3 +32,4 @@ nightly:
 nightly-aarch64:
   extends: '.publish_nightly'
   needs: ['build-flatpak-aarch64']
+  when: manual
