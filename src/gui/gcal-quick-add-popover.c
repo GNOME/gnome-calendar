@@ -97,7 +97,7 @@ create_calendar_row (GcalManager  *manager,
   gtk_box_append (GTK_BOX (box), label);
 
   /* Selected icon */
-  selected_icon = gtk_image_new_from_icon_name ("emblem-ok-symbolic");
+  selected_icon = gtk_image_new_from_icon_name ("checkmark-small-symbolic");
   gtk_widget_set_visible (selected_icon, FALSE);
   gtk_box_append (GTK_BOX (box), selected_icon);
 

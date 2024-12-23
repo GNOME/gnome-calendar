@@ -28,7 +28,7 @@
             <property name="name">success</property>
             <property name="child">
               <object class="GtkImage" id="success_image">
-                <property name="icon_name">emblem-ok-symbolic</property>
+                <property name="icon_name">checkmark-small-symbolic</property>
               </object>
             </property>
           </object>
