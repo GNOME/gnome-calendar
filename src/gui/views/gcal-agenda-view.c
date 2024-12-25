@@ -317,18 +317,36 @@ schedule_position_scroll (GcalAgendaView *self)
                                                 self);
 }
 
+static GDateTime*
+all_day_to_local (GDateTime *dt)
+{
+  return g_date_time_new_local (g_date_time_get_year (dt),
+                                g_date_time_get_month (dt),
+                                g_date_time_get_day_of_month (dt),
+                                0, 0, 0);
+}
+
 static int
 sort_func (GtkListBoxRow *row1,
            GtkListBoxRow *row2,
            gpointer       user_data)
 {
   GcalAgendaView *self = GCAL_AGENDA_VIEW (user_data);
+  g_autoptr (GDateTime) start_date1 = get_start_date_for_row (self, row1);
+  g_autoptr (GDateTime) start_date2 = get_start_date_for_row (self, row2);
+  g_autoptr (GDateTime) end_date1 = NULL;
+  g_autoptr (GDateTime) end_date2 = NULL;
   gboolean multiday1, multiday2;
   gboolean all_day1, all_day2;
   int result;
 
-  result = g_date_time_compare (get_start_date_for_row (self, row1),
-                                get_start_date_for_row (self, row2));
+  all_day1 = get_row_is_all_day (row1);
+  all_day2 = get_row_is_all_day (row2);
+
+  start_date1 = all_day1 ? all_day_to_local (start_date1) : g_date_time_to_local (start_date1);
+  start_date2 = all_day2 ? all_day_to_local (start_date2) : g_date_time_to_local (start_date2);
+
+  result = g_date_time_compare (start_date1, start_date2);
 
   /* Sort multi day events before multi single day events of the same day. */
   if (result != 0)
@@ -340,14 +358,13 @@ sort_func (GtkListBoxRow *row1,
   if (multiday1 != multiday2)
     return multiday1 ? -1 : 1;
 
-  all_day1 = get_row_is_all_day (row1);
-  all_day2 = get_row_is_all_day (row2);
-
   if (all_day1 != all_day2)
     return all_day1 ? -1 : 1;
 
-  return g_date_time_compare (get_end_date_for_row (self, row1),
-                              get_end_date_for_row (self, row2));
+  end_date1 = g_date_time_to_local (get_end_date_for_row (self, row1));
+  end_date2 = g_date_time_to_local (get_end_date_for_row (self, row2));
+
+  return g_date_time_compare (end_date1, end_date2);
 }
 
 static void
@@ -356,14 +373,18 @@ update_header (GtkListBoxRow *row,
                gpointer       user_data)
 {
   GcalAgendaView *self = GCAL_AGENDA_VIEW (user_data);
-  GDateTime *start = get_start_date_for_row (self, row);
-  GDateTime *end = get_end_date_for_row (self, row);
   GtkWidget *widget = gtk_list_box_row_get_child (row);
+  gboolean event_all_day = get_row_is_all_day (row);
+  g_autoptr (GDateTime) start = get_start_date_for_row (self, row);
+  g_autoptr (GDateTime) end = get_end_date_for_row (self, row);
+  g_autoptr (GDateTime) today = NULL;
+  g_autoptr (GDateTime) end_midnight = NULL;
   GcalEvent *event = NULL;
   g_autofree gchar *label = NULL;
   GtkWidget *header;
-  g_autoptr (GDateTime) today = NULL;
-  g_autoptr (GDateTime) end_midnight = NULL;
+
+  start = event_all_day ? g_date_time_ref (start) : g_date_time_to_local (start);
+  end = event_all_day ? g_date_time_ref (end) : g_date_time_to_local (end);
 
   if (GCAL_IS_EVENT_WIDGET (widget))
     event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
@@ -372,10 +393,12 @@ update_header (GtkListBoxRow *row,
 
   if (before)
     {
-      GDateTime *before_start = get_start_date_for_row (self, before);
-      GDateTime *before_end = get_end_date_for_row (self, before);
+      g_autoptr (GDateTime) before_start = get_start_date_for_row (self, before);
+      g_autoptr (GDateTime) before_end = get_end_date_for_row (self, before);
       gboolean before_all_day = get_row_is_all_day (before);
-      gboolean event_all_day = get_row_is_all_day (row);
+
+      before_start = before_all_day ? g_date_time_ref (before_start) : g_date_time_to_local (before_start);
+      before_end = before_all_day ? g_date_time_ref (before_end) : g_date_time_to_local (before_end);
 
       if (get_row_is_multiday (row) &&
           get_row_is_multiday (before) &&
@@ -456,8 +479,11 @@ count_events_on_data (GcalRange *range,
 {
   ChildData *child_data = data;
   GcalAgendaView *self = user_data;
+  g_autoptr (GDateTime) event_date = gcal_event_get_date_start (child_data->event);
 
-  if (gcal_date_time_compare_date (self->date, gcal_event_get_date_start (child_data->event)) == 0)
+  event_date = gcal_event_get_all_day (child_data->event) ? g_date_time_ref (event_date) : g_date_time_to_local (event_date);
+
+  if (gcal_date_time_compare_date (self->date, event_date) == 0)
     self->events_on_date++;
 
   return FALSE;
@@ -574,6 +600,7 @@ gcal_agenda_view_add_event (GcalTimelineSubscriber *subscriber,
                             GcalEvent              *event)
 {
   GcalAgendaView *self = GCAL_AGENDA_VIEW (subscriber);
+  g_autoptr (GDateTime) event_date = gcal_event_get_date_start (event);
   GtkWidget *widget, *row;
   GcalTimestampPolicy timestamp_policy;
 
@@ -583,7 +610,9 @@ gcal_agenda_view_add_event (GcalTimelineSubscriber *subscriber,
 
   g_object_ref (event);
 
-  if (gcal_date_time_compare_date (self->date, gcal_event_get_date_start (event)) == 0)
+  event_date = gcal_event_get_all_day (event) ? g_date_time_ref (event_date) : g_date_time_to_local (event_date);
+
+  if (gcal_date_time_compare_date (self->date, event_date) == 0)
     {
       self->events_on_date++;
       update_no_events_row (self);
@@ -634,6 +663,7 @@ gcal_agenda_view_remove_event (GcalTimelineSubscriber *subscriber,
 {
   GcalAgendaView *self = GCAL_AGENDA_VIEW (subscriber);
   const gchar *uid = gcal_event_get_uid (event);
+  g_autoptr (GDateTime) event_date = gcal_event_get_date_start (event);
   GPtrArray *widgets;
   guint i;
 
@@ -641,7 +671,9 @@ gcal_agenda_view_remove_event (GcalTimelineSubscriber *subscriber,
 
   widgets = gcal_range_tree_get_all_data (self->events);
 
-  if (gcal_date_time_compare_date (self->date, gcal_event_get_date_start (event)) == 0)
+  event_date = gcal_event_get_all_day (event) ? g_date_time_ref (event_date) : g_date_time_to_local (event_date);
+
+  if (gcal_date_time_compare_date (self->date, event_date) == 0)
     {
       self->events_on_date--;
       update_no_events_row (self);
