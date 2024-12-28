@@ -8,7 +8,7 @@ first to ensure that you create a clear and specific issue.
 <!--
 Provide at least the following information:
 * Your OS and version
-* Affected GNOME Calendar version
+* Affected GNOME Calendar version (please test the latest "nightly" development version too; see https://handbook.gnome.org/testing.html for details)
 -->
 
 ### Bug summary
