@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-11-08 18:57+0000\n"
-"PO-Revision-Date: 2024-11-11 17:29+0300\n"
+"POT-Creation-Date: 2024-11-29 13:52+0000\n"
+"PO-Revision-Date: 2024-12-28 12:08+0300\n"
 "Last-Translator: Yuras Shumovich <shumovichy@gmail.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -311,7 +311,7 @@ msgid "Password"
 msgstr "Пароль"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:16
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1162
 msgid "_Cancel"
 msgstr "_Скасаваць"
@@ -485,44 +485,45 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "С"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:115
-msgid "Save"
-msgstr "Захаваць"
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+msgid "_Save"
+msgstr "_Захаваць"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:115
-msgid "Done"
-msgstr "Гатова"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.c:654
-msgid "New Event"
-msgstr "Новая падзея"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.c:656
-msgid "Edit Event"
-msgstr "Змяніць падзею"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:31
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:23
 msgid "_Done"
 msgstr "_Гатова"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:45
+#: src/gui/event-editor/gcal-event-editor-dialog.c:688
+msgid "New Event"
+msgstr "Новая падзея"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:690
+msgid "Event Details"
+msgstr "Дэталі падзеі"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:692
+msgid "Edit Event"
+msgstr "Змяніць падзею"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:37
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr ""
 "Гэта падзея з незмяняльнага календара. Яе немагчыма змяніць або выдаліць."
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:77
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:70
 msgid "Schedule"
 msgstr "Расклад"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:89
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:82
 msgid "Reminders"
 msgstr "Напаміны"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:101
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:94
 msgid "Notes"
 msgstr "Нататкі"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:118
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:111
 msgid "Delete Event"
 msgstr "Выдаліць падзею"
 
@@ -1505,6 +1506,9 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1278
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Done"
+#~ msgstr "Гатова"
 
 #~ msgid "Select Calendar"
 #~ msgstr "Выберыце каляндар"
