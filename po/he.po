@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-11-08 18:57+0000\n"
-"PO-Revision-Date: 2024-11-24 08:30+0200\n"
+"POT-Creation-Date: 2024-11-29 13:52+0000\n"
+"PO-Revision-Date: 2025-01-05 15:01+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <yoseforb@gmail.com>\n"
 "Language: he\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
 "2 : 3);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.5\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
@@ -313,7 +313,7 @@ msgid "Password"
 msgstr "ססמה"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:16
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1162
 msgid "_Cancel"
 msgstr "_ביטול"
@@ -500,43 +500,44 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "ש"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:115
-msgid "Save"
-msgstr "שמירה"
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+msgid "_Save"
+msgstr "_שמירה"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:115
-msgid "Done"
-msgstr "בוצע"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.c:654
-msgid "New Event"
-msgstr "אירוע חדש"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.c:656
-msgid "Edit Event"
-msgstr "עריכת אירוע"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:31
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:23
 msgid "_Done"
 msgstr "_בוצע"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:45
+#: src/gui/event-editor/gcal-event-editor-dialog.c:688
+msgid "New Event"
+msgstr "אירוע חדש"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:690
+msgid "Event Details"
+msgstr "פרטי אירוע"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:692
+msgid "Edit Event"
+msgstr "עריכת אירוע"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:37
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr "האירוע הזה הוא חלק מלוח שנה לקריאה בלבד. לא ניתן למחוק או לשנות אותו."
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:77
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:70
 msgid "Schedule"
 msgstr "לוח זמנים"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:89
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:82
 msgid "Reminders"
 msgstr "תזכורות"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:101
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:94
 msgid "Notes"
 msgstr "הערות"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:118
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:111
 msgid "Delete Event"
 msgstr "מחיקת אירוע"
 
@@ -1522,6 +1523,9 @@ msgstr "תקריב"
 #: src/utils/gcal-utils.c:1278
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Done"
+#~ msgstr "בוצע"
 
 #~ msgid "The GNOME Project"
 #~ msgstr "מיזם GNOME"
