@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-08-19 01:14+0000\n"
-"PO-Revision-Date: 2024-08-31 14:55+0700\n"
+"POT-Creation-Date: 2024-10-22 15:49+0000\n"
+"PO-Revision-Date: 2025-01-10 18:01+0700\n"
 "Last-Translator: Akom Chotiphantawanon <knight2000@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
 "Language: th\n"
@@ -179,7 +179,7 @@ msgid "_Undo"
 msgstr "เ_รียกคืน"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:4
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:145
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "ปฏิทิน"
 
@@ -215,12 +215,12 @@ msgid "Open in Settings"
 msgstr "เปิดในการตั้งค่า"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:27
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "ชื่อปฏิทิน"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:35
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "สี"
 
@@ -240,27 +240,23 @@ msgstr "เพิ่มงานกิจกรรมใหม่ในปฏิ
 msgid "_Remove Calendar"
 msgstr "_ลบปฏิทิน"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "เลือกไฟล์"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:160
+#: src/gui/calendar-management/gcal-new-calendar-page.c:117
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "เพิ่มปฏิทิน %1$u อัน"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:167
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:194
+#: src/gui/calendar-management/gcal-new-calendar-page.c:124
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "เพิ่มปฏิทิน"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:418
+#: src/gui/calendar-management/gcal-new-calendar-page.c:332
 msgid "The URL you have entered appears to be invalid."
 msgstr "ดูเหมือนว่า URL ที่คุณป้อนจะมีรูปแบบไม่ถูกต้อง"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:471
+#: src/gui/calendar-management/gcal-new-calendar-page.c:385
 msgid "A valid user and password are required to connect to this calendar."
 msgstr "ต้องระบุผู้ใช้และรหัสผ่านที่ถูกต้องเพื่อเชื่อมต่อกับปฏิทินนี้"
 
@@ -268,25 +264,23 @@ msgstr "ต้องระบุผู้ใช้และรหัสผ่า
 msgid "New Calendar"
 msgstr "ปฏิทินใหม่"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:63
-msgid "Import a Calendar"
-msgstr "นำเข้าปฏิทิน"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "สร้างปฏิทินในเครื่อง"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:80
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "เชื่อมต่อกับปฏิทินออนไลน์"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to import, or open a "
-"supported calendar file."
-msgstr "นอกจากนี้คุณยังสามารถป้อนที่อยู่เว็บของปฏิทินออนไลน์ที่คุณต้องการจะนำเข้า หรือเปิดไฟล์ปฏิทินที่รองรับก็ได้"
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only be updated by the "
+"provider will be added as read-only."
+msgstr ""
+"รองรับ URL ที่เป็น HTTPS, CalDAV หรือ Webcal "
+"ปฏิทินออนไลน์ที่เฉพาะผู้ให้บริการเท่านั้นสามารถปรับปรุงข้อมูลได้จะถูกเพิ่มแบบอ่านอย่างเดียว"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:109
-msgid "Open a File"
-msgstr "เปิดไฟล์"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:112
-msgid "Calendar files"
-msgstr "ไฟล์ปฏิทิน"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:169
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it through the <a "
 "href=\"GOA\">online account settings</a>."
@@ -294,25 +288,25 @@ msgstr ""
 "ถ้าปฏิทินที่ต้องการเพิ่มเป็นส่วนหนึ่งของบัญชีออนไลน์ของคุณ คุณก็สามารถเพิ่มปฏิทินผ่าน <a href=\"GOA\">ค่าตั้งบัญชีออนไลน์</"
 "a> ได้"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:217
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
 msgstr "ข้อมูลลับ"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:225
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "ผู้ใช้"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:230
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "รหัสผ่าน"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:15 src/gui/importer/gcal-import-dialog.ui:19
-#: src/utils/gcal-utils.c:1205
+#: src/utils/gcal-utils.c:1162
 msgid "_Cancel"
 msgstr "_ยกเลิก"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:242
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "เ_ชื่อมต่อ"
 
@@ -405,6 +399,10 @@ msgstr "เปิด-ปิดใช้เสียงแจ้งเตือ�
 #: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "ลบรายการแจ้งเตือน"
+
+#: src/gui/event-editor/gcal-calendar-row.c:70 src/gui/importer/gcal-import-dialog.c:332
+msgid "This calendar is hidden"
+msgstr "ปฏิทินนี้ถูกซ่อนไว้"
 
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
@@ -687,7 +685,7 @@ msgstr ""
 "Akom Chotiphantawanon <knight2000@gmail.com>\n"
 "Aefgh Threenine <aefgh39622@gmail.com>"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
 msgid "Weather"
 msgstr "พยากรณ์อากาศ"
 
@@ -1208,31 +1206,35 @@ msgstr "ปล่อยไฟล์งานกิจกรรมเพื่อ
 msgid "Main Menu"
 msgstr "เมนูหลัก"
 
-#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:242
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "_วันนี้"
 
-#: src/gui/gcal-window.ui:279
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "ไปที่วันนี้"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
 msgstr "_สัปดาห์"
 
-#: src/gui/gcal-window.ui:294
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
 msgstr "เ_ดือน"
 
-#: src/gui/gcal-window.ui:347
+#: src/gui/gcal-window.ui:349
 msgid "_Date & Time Settings…"
 msgstr "_ตั้งค่าวันที่และเวลา…"
 
-#: src/gui/gcal-window.ui:351
+#: src/gui/gcal-window.ui:353
 msgid "_Online Accounts…"
 msgstr "บัญชี_ออนไลน์…"
 
-#: src/gui/gcal-window.ui:363
+#: src/gui/gcal-window.ui:365
 msgid "_Keyboard Shortcuts"
 msgstr "ปุ่ม_ลัดแป้นพิมพ์"
 
-#: src/gui/gcal-window.ui:367
+#: src/gui/gcal-window.ui:369
 msgid "_About Calendar"
 msgstr "เ_กี่ยวกับ “ปฏิทิน”"
 
@@ -1331,7 +1333,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "มุมมองเดือน"
 
-#: src/gui/importer/gcal-import-dialog.c:421
+#: src/gui/importer/gcal-import-dialog.c:470
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1416,47 +1418,64 @@ msgstr[0] "งานกิจกรรมอื่น %d งาน"
 msgid "week %d"
 msgstr "สัปดาห์ที่ %d"
 
-#: src/utils/gcal-utils.c:1201
+#: src/utils/gcal-utils.c:1158
 msgid "Modify Multiple Events?"
 msgstr "ต้องการแก้ไขงานกิจกรรมหลายงานหรือไม่?"
 
-#: src/utils/gcal-utils.c:1202
+#: src/utils/gcal-utils.c:1159
 msgid ""
 "The event you are trying to modify is recurring. The changes you have selected should be "
 "applied to:"
 msgstr "งานกิจกรรมที่คุณกำลังจะแก้ไขเป็นงานกิจกรรมที่เกิดซ้ำ การเปลี่ยนแปลงที่คุณเลือกควรนำไปใช้กับ:"
 
-#: src/utils/gcal-utils.c:1206
+#: src/utils/gcal-utils.c:1163
 msgid "_Only This Event"
 msgstr "เ_ฉพาะงานกิจกรรมนี้"
 
-#: src/utils/gcal-utils.c:1212
+#: src/utils/gcal-utils.c:1169
 msgid "_Subsequent Events"
 msgstr "งานกิจกรรมที่_ตามมา"
 
-#: src/utils/gcal-utils.c:1215
+#: src/utils/gcal-utils.c:1172
 msgid "_All Events"
 msgstr "_ทุกงานกิจกรรม"
 
-#: src/utils/gcal-utils.c:1317
+#: src/utils/gcal-utils.c:1274
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1318
+#: src/utils/gcal-utils.c:1275
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1319
+#: src/utils/gcal-utils.c:1276
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1277
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/utils/gcal-utils.c:1321
+#: src/utils/gcal-utils.c:1278
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Select a file"
+#~ msgstr "เลือกไฟล์"
+
+#~ msgid "Import a Calendar"
+#~ msgstr "นำเข้าปฏิทิน"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to import, or open a "
+#~ "supported calendar file."
+#~ msgstr "นอกจากนี้คุณยังสามารถป้อนที่อยู่เว็บของปฏิทินออนไลน์ที่คุณต้องการจะนำเข้า หรือเปิดไฟล์ปฏิทินที่รองรับก็ได้"
+
+#~ msgid "Open a File"
+#~ msgstr "เปิดไฟล์"
+
+#~ msgid "Calendar files"
+#~ msgstr "ไฟล์ปฏิทิน"
 
 #~ msgid "_Add Calendar…"
 #~ msgstr "เ_พิ่มปฏิทิน…"
@@ -1576,9 +1595,6 @@ msgstr "Microsoft Teams"
 
 #~ msgid "From Web…"
 #~ msgstr "จากเว็บ…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "ปฏิทินในเครื่องรายการใหม่…"
 
 #~ msgid "No results found"
 #~ msgstr "ไม่พบผลลัพธ์"
