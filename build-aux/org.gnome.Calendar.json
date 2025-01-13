@@ -130,7 +130,7 @@
                 {
                     "type" : "git",
                     "url" : "https://gitlab.gnome.org/GNOME/gcr.git",
-                    "branch" : "master"
+                    "branch" : "main"
                 }
             ]
         },
