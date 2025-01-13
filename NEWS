@@ -1,3 +1,11 @@
+Major changes in 48.alpha:
+* Many design improvements to the event editor dialog, such as a rearranged
+  all-day / timed selection, moving the event calendar to a row, and more.
+* Show a banner in the event editor when the calendar is read-only
+* Improve capitalization of title strings in the Week view header
+* Fix event order in the sidebar
+* Updated translations
+
 Major changes in 47.0:
 * Updated translations
 
