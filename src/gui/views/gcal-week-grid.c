@@ -74,6 +74,7 @@ struct _GcalWeekGrid
   struct {
     gint              cell;
     GtkWidget        *widget;
+    gint              event_minutes;
   } dnd;
 
   GcalContext        *context;
@@ -487,8 +488,19 @@ on_drop_target_motion_cb (GtkDropTarget *drop_target,
                           GcalWeekGrid  *self)
 {
   GCAL_ENTRY;
+  GcalEventWidget *event_widget;
+  const GValue *value;
+  GDateTime *start, *end;
 
   self->dnd.cell = get_dnd_cell (self, x, y);
+  value = gtk_drop_target_get_value (drop_target);
+  event_widget = g_value_get_object (value);
+
+  start = gcal_event_widget_get_date_start (event_widget);
+  end = gcal_event_widget_get_date_end (event_widget);
+
+  self->dnd.event_minutes = g_date_time_difference (end, start) / G_TIME_SPAN_MINUTE;
+
   gtk_widget_queue_allocate (GTK_WIDGET (self));
 
   GCAL_RETURN (GDK_ACTION_COPY);
@@ -665,12 +677,13 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
 
   if (gtk_widget_should_layout (self->dnd.widget))
     {
-      gdouble cell_height;
+      gdouble cell_height, event_height;
       gint column, row;
 
       g_assert (self->dnd.cell != -1);
 
       cell_height = minutes_height * 30;
+      event_height = minutes_height * self->dnd.event_minutes;
       column = self->dnd.cell / (MINUTES_PER_DAY / 30);
       row = self->dnd.cell - column * 48;
 
@@ -679,7 +692,7 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
                                   .x = column * column_width,
                                   .y = row * cell_height,
                                   .width = column_width,
-                                  .height = cell_height,
+                                  .height = event_height,
                                 },
                                 baseline);
     }
@@ -876,6 +889,7 @@ gcal_week_grid_init (GcalWeekGrid *self)
   gtk_widget_add_controller (GTK_WIDGET (self), self->motion_controller);
 
   drop_target = gtk_drop_target_new (GCAL_TYPE_EVENT_WIDGET, GDK_ACTION_COPY);
+  gtk_drop_target_set_preload (drop_target, TRUE);
   g_signal_connect (drop_target, "drop", G_CALLBACK (on_drop_target_drop_cb), self);
   g_signal_connect (drop_target, "enter", G_CALLBACK (on_drop_target_enter_cb), self);
   g_signal_connect (drop_target, "leave", G_CALLBACK (on_drop_target_leave_cb), self);
