@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-11-29 13:52+0000\n"
-"PO-Revision-Date: 2024-11-29 17:05+0300\n"
+"POT-Creation-Date: 2025-01-13 13:36+0000\n"
+"PO-Revision-Date: 2025-01-14 15:12+0300\n"
 "Last-Translator: Artur So <arturios2005@mail.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -220,7 +220,7 @@ msgstr "На этом компьютере"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:4
 msgid "Edit Calendar"
-msgstr "Редактировать календарь"
+msgstr "Редактирование календаря"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:34
 msgid "Account"
@@ -496,6 +496,35 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "Сб"
 
+#: src/gui/event-editor/gcal-date-chooser-row.ui:15
+msgid "Edit Date"
+msgstr "Редактирование даты"
+
+#: src/gui/event-editor/gcal-date-chooser-row.ui:38
+msgid "Edit date"
+msgstr "Редактировать дату"
+
+#: src/gui/event-editor/gcal-time-chooser-row.c:92
+#: src/gui/event-editor/gcal-time-chooser-row.c:154
+#: src/gui/event-editor/gcal-time-selector.ui:47
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "AM"
+msgstr "AM"
+
+#: src/gui/event-editor/gcal-time-chooser-row.c:92
+#: src/gui/event-editor/gcal-time-selector.ui:53
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "PM"
+msgstr "PM"
+
+#: src/gui/event-editor/gcal-time-chooser-row.ui:15
+msgid "Edit Time"
+msgstr "Редактирование времени"
+
+#: src/gui/event-editor/gcal-time-chooser-row.ui:35
+msgid "Edit time"
+msgstr "Редактировать время"
+
 #: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "_Save"
 msgstr "_Сохранить"
@@ -515,7 +544,7 @@ msgstr "Подробности события"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:692
 msgid "Edit Event"
-msgstr "Редактировать событие"
+msgstr "Редактирование события"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:37
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
@@ -523,19 +552,15 @@ msgstr ""
 "Это событие находится в календаре, доступном только для чтения. Его нельзя "
 "редактировать или удалять."
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:70
-msgid "Schedule"
-msgstr "Расписание"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:82
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:81
 msgid "Reminders"
 msgstr "Напоминания"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:94
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:93
 msgid "Notes"
 msgstr "Примечания"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:111
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:110
 msgid "Delete Event"
 msgstr "Удалить событие"
 
@@ -583,105 +608,76 @@ msgstr "3 дня"
 msgid "1 Week"
 msgstr "1 неделя"
 
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:238
-#, c-format
-msgid "Last %A"
-msgstr "%A на прошлой неделе"
+#: src/gui/event-editor/gcal-schedule-section.ui:12
+msgid "_All Day"
+msgstr "_Весь день"
 
-#: src/gui/event-editor/gcal-schedule-section.c:242
-#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/views/gcal-agenda-view.c:201
-msgid "Yesterday"
-msgstr "Вчера"
+#: src/gui/event-editor/gcal-schedule-section.ui:19
+msgid "_Time Slot"
+msgstr "_Отрезок времени"
 
-#: src/gui/event-editor/gcal-schedule-section.c:246
-#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
-#: src/gui/views/gcal-agenda-view.c:197
-msgid "Today"
-msgstr "Сегодня"
+#: src/gui/event-editor/gcal-schedule-section.ui:38
+msgid "Start Date"
+msgstr "Дата начала"
 
-#: src/gui/event-editor/gcal-schedule-section.c:250
-#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/views/gcal-agenda-view.c:199
-msgid "Tomorrow"
-msgstr "Завтра"
+#: src/gui/event-editor/gcal-schedule-section.ui:45
+msgid "Start Time"
+msgstr "Время начала"
 
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:255
-#, c-format
-msgid "This %A"
-msgstr "%A на этой неделе"
+#: src/gui/event-editor/gcal-schedule-section.ui:65
+msgid "End Date"
+msgstr "Дата окончания"
 
-#.
-#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
-#. * formatted time (e.g. 03:14 PM, or 21:29)
-#.
-#: src/gui/event-editor/gcal-schedule-section.c:285
-#, c-format
-msgid "%1$s, %2$s"
-msgstr "%1$s %2$s"
+#: src/gui/event-editor/gcal-schedule-section.ui:72
+msgid "End Time"
+msgstr "Время окончания"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:17
-msgid "All Day"
-msgstr "Весь день"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:34
-#: src/gui/importer/gcal-import-file-row.c:178
-msgid "Starts"
-msgstr "Начало"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:77
-#: src/gui/importer/gcal-import-file-row.c:179
-msgid "Ends"
-msgstr "Конец"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:120
+#: src/gui/event-editor/gcal-schedule-section.ui:89
 msgid "Repeat"
-msgstr "Повторять"
+msgstr "Повтор"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:125
+#: src/gui/event-editor/gcal-schedule-section.ui:94
 msgid "No Repeat"
 msgstr "Не повторять"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:126
+#: src/gui/event-editor/gcal-schedule-section.ui:95
 msgid "Daily"
 msgstr "Каждый день"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:127
+#: src/gui/event-editor/gcal-schedule-section.ui:96
 msgid "Monday – Friday"
 msgstr "С понедельника по пятницу"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:128
+#: src/gui/event-editor/gcal-schedule-section.ui:97
 msgid "Weekly"
 msgstr "Каждую неделю"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:129
+#: src/gui/event-editor/gcal-schedule-section.ui:98
 msgid "Monthly"
 msgstr "Каждый месяц"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:130
+#: src/gui/event-editor/gcal-schedule-section.ui:99
 msgid "Yearly"
 msgstr "Каждый год"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:141
+#: src/gui/event-editor/gcal-schedule-section.ui:110
 msgid "End Repeat"
-msgstr "Конец повтора"
+msgstr "Окончание повтора"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:146
+#: src/gui/event-editor/gcal-schedule-section.ui:115
 msgid "Forever"
 msgstr "Всегда"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:147
-#: src/gui/event-editor/gcal-schedule-section.ui:160
+#: src/gui/event-editor/gcal-schedule-section.ui:116
+#: src/gui/event-editor/gcal-schedule-section.ui:129
 msgid "Number of Occurrences"
 msgstr "Число повторений"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:148
+#: src/gui/event-editor/gcal-schedule-section.ui:117
 msgid "Until Date"
 msgstr "До даты"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:179
+#: src/gui/event-editor/gcal-schedule-section.ui:148
 msgid "End Repeat Date"
 msgstr "Дата окончания повтора"
 
@@ -693,16 +689,6 @@ msgstr "Заголовок"
 #: src/gui/event-editor/gcal-time-selector.ui:22
 msgid ":"
 msgstr ":"
-
-#: src/gui/event-editor/gcal-time-selector.ui:47
-#: src/gui/views/gcal-week-hour-bar.c:57
-msgid "AM"
-msgstr "AM"
-
-#: src/gui/event-editor/gcal-time-selector.ui:48
-#: src/gui/views/gcal-week-hour-bar.c:57
-msgid "PM"
-msgstr "PM"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
@@ -843,6 +829,21 @@ msgstr "%1$s %2$d, %3$s"
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%1$s %2$d, %3$d, %4$s"
+
+#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
+#: src/gui/views/gcal-agenda-view.c:197
+msgid "Today"
+msgstr "Сегодня"
+
+#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
+#: src/gui/views/gcal-agenda-view.c:199
+msgid "Tomorrow"
+msgstr "Завтра"
+
+#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
+#: src/gui/views/gcal-agenda-view.c:201
+msgid "Yesterday"
+msgstr "Вчера"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), and %2$d is
@@ -1441,6 +1442,14 @@ msgstr "Внутренняя ошибка"
 msgid "File is not an iCalendar (.ics) file"
 msgstr "Файл не является файлом iCalendar (.ics)"
 
+#: src/gui/importer/gcal-import-file-row.c:178
+msgid "Starts"
+msgstr "Начало"
+
+#: src/gui/importer/gcal-import-file-row.c:179
+msgid "Ends"
+msgstr "Конец"
+
 #: src/gui/importer/gcal-import-file-row.c:180
 msgid "Description"
 msgstr "Описание"
@@ -1453,7 +1462,7 @@ msgstr "Продолжается"
 msgid "No events"
 msgstr "Нет событий"
 
-#: src/gui/views/gcal-month-popover.ui:59
+#: src/gui/views/gcal-month-popover.ui:69
 msgid "New Event…"
 msgstr "Создать событие…"
 
@@ -1521,6 +1530,21 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1278
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Schedule"
+#~ msgstr "Расписание"
+
+#, c-format
+#~ msgid "Last %A"
+#~ msgstr "%A на прошлой неделе"
+
+#, c-format
+#~ msgid "This %A"
+#~ msgstr "%A на этой неделе"
+
+#, c-format
+#~ msgid "%1$s, %2$s"
+#~ msgstr "%1$s %2$s"
 
 #~ msgid "The GNOME Project"
 #~ msgstr "Проект GNOME"
