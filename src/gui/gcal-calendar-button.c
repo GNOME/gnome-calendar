@@ -95,6 +95,7 @@ create_row_func (gpointer data,
   /* source name label */
   label = gtk_label_new (gcal_calendar_get_name (calendar));
   gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+  gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
   gtk_widget_set_hexpand (label, TRUE);
 
   /* checkbox */
