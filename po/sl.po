@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the gnome-calendar package.
 #
 # Matej Urbančič <mateju@src.gnome.org>, + 2012–2024.
+# Martin Srebotnjak <miles@filmsi.net>, 2024,2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-01-11 13:57+0000\n"
-"PO-Revision-Date: 2025-01-12 16:40+0100\n"
+"POT-Creation-Date: 2025-01-13 13:36+0000\n"
+"PO-Revision-Date: 2025-01-17 11:21+0100\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -538,6 +539,10 @@ msgstr "dop"
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "pop"
+
+#: src/gui/event-editor/gcal-time-chooser-row.ui:15
+msgid "Edit Time"
+msgstr "Uredi čas"
 
 #: src/gui/event-editor/gcal-time-chooser-row.ui:35
 msgid "Edit time"
