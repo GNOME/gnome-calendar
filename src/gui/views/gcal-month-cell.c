@@ -334,7 +334,7 @@ on_breakpoint_changed_cb (GcalMonthCell *self,
  */
 
 static void
-gcal_month_cell_finalize (GObject *object)
+gcal_month_cell_dispose (GObject *object)
 {
   GcalMonthCell *self = (GcalMonthCell *)object;
 
@@ -344,7 +344,7 @@ gcal_month_cell_finalize (GObject *object)
   gcal_clear_date_time (&self->date);
   g_clear_object (&self->context);
 
-  G_OBJECT_CLASS (gcal_month_cell_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gcal_month_cell_parent_class)->dispose (object);
 }
 
 
@@ -394,7 +394,7 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  object_class->finalize = gcal_month_cell_finalize;
+  object_class->dispose = gcal_month_cell_dispose;
   object_class->set_property = gcal_month_cell_set_property;
   object_class->get_property = gcal_month_cell_get_property;
 
