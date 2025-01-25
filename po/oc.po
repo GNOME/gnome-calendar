@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-11-29 13:52+0000\n"
-"PO-Revision-Date: 2024-12-20 10:39+0100\n"
+"POT-Creation-Date: 2025-01-13 13:36+0000\n"
+"PO-Revision-Date: 2025-01-25 20:00+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -479,6 +479,35 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "DS"
 
+#: src/gui/event-editor/gcal-date-chooser-row.ui:15
+msgid "Edit Date"
+msgstr "Modificar la data"
+
+#: src/gui/event-editor/gcal-date-chooser-row.ui:38
+msgid "Edit date"
+msgstr "Modificar la data"
+
+#: src/gui/event-editor/gcal-time-chooser-row.c:92
+#: src/gui/event-editor/gcal-time-chooser-row.c:154
+#: src/gui/event-editor/gcal-time-selector.ui:47
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "AM"
+msgstr "AM"
+
+#: src/gui/event-editor/gcal-time-chooser-row.c:92
+#: src/gui/event-editor/gcal-time-selector.ui:53
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "PM"
+msgstr "PM"
+
+#: src/gui/event-editor/gcal-time-chooser-row.ui:15
+msgid "Edit Time"
+msgstr "Modificar l'ora"
+
+#: src/gui/event-editor/gcal-time-chooser-row.ui:35
+msgid "Edit time"
+msgstr "Modificar l'ora"
+
 #: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "_Save"
 msgstr "_Enregistrar"
@@ -506,19 +535,15 @@ msgstr ""
 "Aqueste eveniment fa part d’un agenda en lectura sola. Se pòt pas modificar "
 "o suprimir."
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:70
-msgid "Schedule"
-msgstr "Oraris"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:82
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:81
 msgid "Reminders"
 msgstr "Rapèls"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:94
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:93
 msgid "Notes"
 msgstr "Nòtas"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:111
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:110
 msgid "Delete Event"
 msgstr "Suprimir l'eveniment"
 
@@ -566,105 +591,76 @@ msgstr "3 jorns"
 msgid "1 Week"
 msgstr "1 setmana"
 
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:238
-#, c-format
-msgid "Last %A"
-msgstr "%A passat"
+#: src/gui/event-editor/gcal-schedule-section.ui:12
+msgid "_All Day"
+msgstr "_Tota la jornada"
 
-#: src/gui/event-editor/gcal-schedule-section.c:242
-#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/views/gcal-agenda-view.c:201
-msgid "Yesterday"
-msgstr "Ièr"
+#: src/gui/event-editor/gcal-schedule-section.ui:19
+msgid "_Time Slot"
+msgstr "_Orari"
 
-#: src/gui/event-editor/gcal-schedule-section.c:246
-#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
-#: src/gui/views/gcal-agenda-view.c:197
-msgid "Today"
-msgstr "Uèi"
+#: src/gui/event-editor/gcal-schedule-section.ui:38
+msgid "Start Date"
+msgstr "Data de debuta"
 
-#: src/gui/event-editor/gcal-schedule-section.c:250
-#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/views/gcal-agenda-view.c:199
-msgid "Tomorrow"
-msgstr "Deman"
+#: src/gui/event-editor/gcal-schedule-section.ui:45
+msgid "Start Time"
+msgstr "Ora de debuta"
 
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:255
-#, c-format
-msgid "This %A"
-msgstr "Aqueste %A"
+#: src/gui/event-editor/gcal-schedule-section.ui:65
+msgid "End Date"
+msgstr "Data de fin"
 
-#.
-#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
-#. * formatted time (e.g. 03:14 PM, or 21:29)
-#.
-#: src/gui/event-editor/gcal-schedule-section.c:285
-#, c-format
-msgid "%1$s, %2$s"
-msgstr "%1$s, %2$s"
+#: src/gui/event-editor/gcal-schedule-section.ui:72
+msgid "End Time"
+msgstr "Ora de fin"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:17
-msgid "All Day"
-msgstr "Tota la jornada"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:34
-#: src/gui/importer/gcal-import-file-row.c:178
-msgid "Starts"
-msgstr "S'avia"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:77
-#: src/gui/importer/gcal-import-file-row.c:179
-msgid "Ends"
-msgstr "S'acaba"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:120
+#: src/gui/event-editor/gcal-schedule-section.ui:89
 msgid "Repeat"
 msgstr "Repetir"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:125
+#: src/gui/event-editor/gcal-schedule-section.ui:94
 msgid "No Repeat"
 msgstr "Repetir pas"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:126
+#: src/gui/event-editor/gcal-schedule-section.ui:95
 msgid "Daily"
 msgstr "A cada jorn"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:127
+#: src/gui/event-editor/gcal-schedule-section.ui:96
 msgid "Monday – Friday"
 msgstr "Del diluns al divendres"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:128
+#: src/gui/event-editor/gcal-schedule-section.ui:97
 msgid "Weekly"
 msgstr "A cada setmana"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:129
+#: src/gui/event-editor/gcal-schedule-section.ui:98
 msgid "Monthly"
 msgstr "A cada mes"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:130
+#: src/gui/event-editor/gcal-schedule-section.ui:99
 msgid "Yearly"
 msgstr "A cada an"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:141
+#: src/gui/event-editor/gcal-schedule-section.ui:110
 msgid "End Repeat"
 msgstr "Fin de repeticion"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:146
+#: src/gui/event-editor/gcal-schedule-section.ui:115
 msgid "Forever"
 msgstr "Totjorn"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:147
-#: src/gui/event-editor/gcal-schedule-section.ui:160
+#: src/gui/event-editor/gcal-schedule-section.ui:116
+#: src/gui/event-editor/gcal-schedule-section.ui:129
 msgid "Number of Occurrences"
 msgstr "Nombre d’ocurréncias"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:148
+#: src/gui/event-editor/gcal-schedule-section.ui:117
 msgid "Until Date"
 msgstr "Fins al"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:179
+#: src/gui/event-editor/gcal-schedule-section.ui:148
 msgid "End Repeat Date"
 msgstr "Data de fin de repeticion"
 
@@ -676,16 +672,6 @@ msgstr "Títol"
 #: src/gui/event-editor/gcal-time-selector.ui:22
 msgid ":"
 msgstr ":"
-
-#: src/gui/event-editor/gcal-time-selector.ui:47
-#: src/gui/views/gcal-week-hour-bar.c:57
-msgid "AM"
-msgstr "AM"
-
-#: src/gui/event-editor/gcal-time-selector.ui:48
-#: src/gui/views/gcal-week-hour-bar.c:57
-msgid "PM"
-msgstr "PM"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
@@ -824,6 +810,21 @@ msgstr "%2$d %1$s a %3$s"
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%2$d %1$s de %3$d a %4$s"
+
+#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
+#: src/gui/views/gcal-agenda-view.c:197
+msgid "Today"
+msgstr "Uèi"
+
+#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
+#: src/gui/views/gcal-agenda-view.c:199
+msgid "Tomorrow"
+msgstr "Deman"
+
+#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
+#: src/gui/views/gcal-agenda-view.c:201
+msgid "Yesterday"
+msgstr "Ièr"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), and %2$d is
@@ -1421,6 +1422,14 @@ msgstr "Error intèrna"
 msgid "File is not an iCalendar (.ics) file"
 msgstr "Lo fichièr es pas un fichièr iCalendar (.ics)"
 
+#: src/gui/importer/gcal-import-file-row.c:178
+msgid "Starts"
+msgstr "S'avia"
+
+#: src/gui/importer/gcal-import-file-row.c:179
+msgid "Ends"
+msgstr "S'acaba"
+
 #: src/gui/importer/gcal-import-file-row.c:180
 msgid "Description"
 msgstr "Descripcion"
@@ -1433,7 +1442,7 @@ msgstr "En cors"
 msgid "No events"
 msgstr "Pas cap d'eveniment"
 
-#: src/gui/views/gcal-month-popover.ui:59
+#: src/gui/views/gcal-month-popover.ui:69
 msgid "New Event…"
 msgstr "Eveniment novèl…"
 
@@ -1500,6 +1509,18 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1278
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "Schedule"
+#~ msgstr "Oraris"
+
+#~ msgid "Last %A"
+#~ msgstr "%A passat"
+
+#~ msgid "This %A"
+#~ msgstr "Aqueste %A"
+
+#~ msgid "%1$s, %2$s"
+#~ msgstr "%1$s, %2$s"
 
 #~ msgid "The GNOME Project"
 #~ msgstr "Lo projècte GNOME"
@@ -1673,9 +1694,6 @@ msgstr "Microsoft Teams"
 
 #~ msgid "Date"
 #~ msgstr "Data"
-
-#~ msgid "Time"
-#~ msgstr "Ora"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "Apondre un eveni_ment…"
