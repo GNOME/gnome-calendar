@@ -178,7 +178,7 @@ begin_zoom (GcalWeekView *self,
   center = gtk_adjustment_get_value (vadjustment) + view_center_y - gtk_adjustment_get_lower (vadjustment);
   height = gtk_adjustment_get_upper (vadjustment) - gtk_adjustment_get_lower (vadjustment);
 
-  self->gesture_zoom_center = center / height;
+  self->gesture_zoom_center = height != 0.f ? center / height : 1.0;
 
   self->initial_zoom_level = self->zoom_level;
 }
