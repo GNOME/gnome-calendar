@@ -126,7 +126,7 @@
     <release date="2023-09-18" version="45.0" type="stable">
       <description>
         <ul>
-          <li>New month view with inifinite scrolling support</li>
+          <li>New month view with infinite scrolling support</li>
           <li>Lots of performance and stability fixes</li>
           <li>Improved visuals for the sidebar</li>
           <li>Use modern widgets in various places</li>
@@ -302,7 +302,7 @@
         <p>This is the alpha version of the next big release of GNOME Calendar, and it brings the following new features and improvements:</p>
         <ul>
           <li>Big code refactorings that lead to more stability and ease of maintainership.</li>
-          <li>Follow-up improvements after rewritting the Month view.</li>
+          <li>Follow-up improvements after rewriting the Month view.</li>
           <li>The Flatpak Nightly builds of GNOME Calendar now have debugging and tracing enabled by default. This
             will allow testers to report bugs with more precision.
           </li>
