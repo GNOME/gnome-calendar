@@ -17,7 +17,8 @@ src/gui/event-editor/gcal-alarm-row.c
 src/gui/event-editor/gcal-alarm-row.ui
 src/gui/event-editor/gcal-date-chooser.c
 src/gui/event-editor/gcal-date-chooser-row.ui
-src/gui/event-editor/gcal-time-chooser-row.c
+src/gui/event-editor/gcal-date-time-chooser.c
+src/gui/event-editor/gcal-date-time-chooser.ui
 src/gui/event-editor/gcal-time-chooser-row.ui
 src/gui/event-editor/gcal-event-editor-dialog.c
 src/gui/event-editor/gcal-event-editor-dialog.ui
@@ -26,7 +27,6 @@ src/gui/event-editor/gcal-schedule-section.c
 src/gui/event-editor/gcal-schedule-section.ui
 src/gui/event-editor/gcal-summary-section.c
 src/gui/event-editor/gcal-summary-section.ui
-src/gui/event-editor/gcal-time-selector.ui
 src/gui/event-editor/gcal-time-zone-dialog.c
 src/gui/event-editor/gcal-time-zone-dialog.ui
 src/gui/gcal-application.c
