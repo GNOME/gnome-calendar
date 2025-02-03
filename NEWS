@@ -1,3 +1,9 @@
+Major changes in 48.beta:
+* Allow selecting timezones for the start and end times of events
+* Fix calendar name overflow in the calendars popover list
+* Improve display of weather information in the Month view
+* Updated translations
+
 Major changes in 48.alpha2:
 * Many design improvements to the event editor dialog, such as a rearranged
   all-day / timed selection, moving the event calendar to a row, and more.
