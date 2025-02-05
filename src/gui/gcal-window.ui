@@ -82,6 +82,13 @@
         </child>
         <child>
           <object class="GtkShortcut">
+            <property name="trigger">&lt;Alt&gt;3</property>
+            <property name="action">action(win.change-view)</property>
+            <property name="arguments">3</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcut">
             <property name="trigger">&lt;Ctrl&gt;n</property>
             <property name="action">action(win.new-event)</property>
           </object>
@@ -147,81 +154,51 @@
                 <property name="sidebar">
                   <object class="AdwToolbarView">
                     <child type="top">
-                      <object class="GtkBox">
-                        <property name="orientation">vertical</property>
-
-                        <child>
-                          <object class="AdwHeaderBar">
-                            <child type="start">
-                              <object class="GcalSyncIndicator" id="sync_indicator" />
-                            </child>
-                            <property name="title-widget">
-                              <object class="GcalCalendarButton" id="calendars_button" />
-                            </property>
-                            <child type="end">
-                              <object class="GtkMenuButton" id="menu_button">
-                                <property name="icon-name">open-menu-symbolic</property>
-                                <property name="popover">win_menu</property>
-                                <property name="tooltip-text" translatable="yes">Main Menu</property>
-                                <property name="primary">True</property>
-                              </object>
-                            </child>
+                      <object class="AdwHeaderBar">
+                        <child type="start">
+                          <object class="GcalSyncIndicator" id="sync_indicator" />
+                        </child>
+                        <property name="title-widget">
+                          <object class="GcalCalendarButton" id="calendars_button" />
+                        </property>
+                        <child type="end">
+                          <object class="GtkMenuButton" id="menu_button">
+                            <property name="icon-name">open-menu-symbolic</property>
+                            <property name="popover">win_menu</property>
+                            <property name="tooltip-text" translatable="yes">Main Menu</property>
+                            <property name="primary">True</property>
                           </object>
                         </child>
+                      </object>
+                    </child>
 
+                    <property name="content">
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GcalDateChooser" id="date_chooser">
-                            <property name="split-month-year">False</property>
+                            <property name="split-month-year">True</property>
                             <property name="vexpand">False</property>
                             <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional" />
                             <signal name="day-selected" handler="day_selected" object="GcalWindow" swapped="yes" />
                           </object>
                         </child>
-
-                      </object>
-
-                    </child>
-
-                    <property name="content">
-                      <object class="GcalAgendaView" id="agenda_view">
-                        <property name="vexpand">True</property>
-                        <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional" />
-                        <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no" />
-                        <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no" />
+                        <child>
+                          <object class="GcalCalendarList" id="calendars_list" />
+                        </child>
                       </object>
                     </property>
-
-                    <child type="bottom">
-                      <object class="GtkActionBar" id="action_bar">
-                        <property name="revealed">False</property>
-                        <child type="start">
-                          <object class="GtkButton">
-                            <property name="action-name">win.today</property>
-                            <property name="child">
-                              <object class="AdwButtonContent">
-                                <property name="label" translatable="yes">_Today</property>
-                                <property name="use-underline">True</property>
-                                <property name="icon-name">calendar-today-symbolic</property>
-                                <property name="can-shrink">True</property>
-                                <property name="tooltip-text" translatable="yes">Go to Today</property>
-                              </object>
-                            </property>
-                          </object>
-                        </child>
-                        <child type="end">
-                          <object class="GcalToolbarEnd" id="sidebar_toolbar_end" />
-                        </child>
-                      </object>
-                    </child>
                   </object>
                 </property>
 
                 <!-- Main content -->
                 <property name="content">
-                  <object class="AdwToolbarView">
+                  <object class="AdwToolbarView" id="main_toolbar">
                     <style>
                       <class name="view" />
                     </style>
+
+                    <property name="reveal-bottom-bars">False</property>
 
                     <child type="top">
                       <object class="AdwHeaderBar" id="header_bar">
@@ -279,7 +256,7 @@
                           <class name="view" />
                         </style>
                         <child>
-                          <object class="AdwViewStackPage">
+                          <object class="AdwViewStackPage" id="week_page">
                             <property name="name">week</property>
                             <property name="title" translatable="yes">_Week</property>
                             <property name="use-underline">True</property>
@@ -294,7 +271,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="AdwViewStackPage">
+                          <object class="AdwViewStackPage" id="month_page">
                             <property name="name">month</property>
                             <property name="title" translatable="yes">_Month</property>
                             <property name="use-underline">True</property>
@@ -309,8 +286,47 @@
                             </property>
                           </object>
                         </child>
+                        <child>
+                          <object class="AdwViewStackPage" id="agenda_page">
+                            <property name="name">agenda</property>
+                            <property name="title" translatable="yes">_Agenda</property>
+                            <property name="use-underline">True</property>
+                            <property name="icon-name">calendar-agenda-symbolic</property>
+                            <property name="visible">False</property>
+                            <property name="child">
+                              <object class="GcalAgendaView" id="agenda_view">
+                                <property name="vexpand">True</property>
+                                <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional" />
+                                <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no" />
+                                <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no" />
+                              </object>
+                            </property>
+                          </object>
+                        </child>
                       </object>
                     </property>
+
+                    <child type="bottom">
+                      <object class="GtkActionBar">
+                        <child type="start">
+                          <object class="GtkButton">
+                            <property name="action-name">win.today</property>
+                            <property name="child">
+                              <object class="AdwButtonContent">
+                                <property name="label" translatable="yes">_Today</property>
+                                <property name="use-underline">True</property>
+                                <property name="icon-name">calendar-today-symbolic</property>
+                                <property name="can-shrink">True</property>
+                                <property name="tooltip-text" translatable="yes">Go to Today</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <child type="end">
+                          <object class="GcalToolbarEnd" id="sidebar_toolbar_end" />
+                        </child>
+                      </object>
+                    </child>
 
                   </object>
                 </property>
@@ -321,14 +337,19 @@
       </object>
     </child>
 
+    <signal name="notify::current-breakpoint" handler="on_breakpoint_changed" object="GcalWindow" swapped="no" />
+
     <child>
       <object class="AdwBreakpoint">
         <condition>max-width: 700sp</condition>
         <setter object="split_view" property="collapsed">True</setter>
-        <setter object="split_view" property="show-sidebar">True</setter>
-        <setter object="action_bar" property="revealed">True</setter>
-        <!-- This needs to be set so that focus does not stay in the content pane when folding. -->
-        <setter object="content_page" property="sensitive">False</setter>
+        <setter object="split_view" property="show-sidebar">False</setter>
+        <setter object="main_toolbar" property="reveal-bottom-bars">True</setter>
+
+        <!-- only make views optimised for certain width visible here -->
+        <setter object="week_page" property="visible">False</setter>
+        <setter object="month_page" property="visible">False</setter>
+        <setter object="agenda_page" property="visible">True</setter>
       </object>
     </child>
   </template>

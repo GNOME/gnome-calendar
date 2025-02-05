@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/org/gnome/calendar/icons/scalable/emblems/">
     <file compressed="true">add-reminder-symbolic.svg</file>
+    <file compressed="true">calendar-agenda-symbolic.svg</file>
     <file compressed="true">calendar-month-symbolic.svg</file>
     <file compressed="true">calendar-week-symbolic.svg</file>
     <file compressed="true">calendar-today-symbolic.svg</file>

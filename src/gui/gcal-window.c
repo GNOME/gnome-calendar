@@ -109,7 +109,6 @@ struct _GcalWindow
   GtkWidget              *month_view;
   GtkWidget              *agenda_view;
   GtkWidget              *date_chooser;
-  GtkWidget              *action_bar;
   GcalSyncIndicator      *sync_indicator;
   GcalToolbarEnd         *toolbar_end;
   GcalToolbarEnd         *sidebar_toolbar_end;
@@ -203,6 +202,7 @@ update_today_action_enabled (GcalWindow *window)
     {
     case GCAL_WINDOW_VIEW_WEEK:
     case GCAL_WINDOW_VIEW_MONTH:
+    case GCAL_WINDOW_VIEW_AGENDA:
       enabled = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
                 g_date_time_get_week_of_year (window->active_date) !=  g_date_time_get_week_of_year (now);
 
@@ -263,7 +263,6 @@ update_active_date (GcalWindow *window,
 
   for (i = 0; i < GCAL_WINDOW_VIEW_N_VIEWS; i++)
     gcal_view_set_date (GCAL_VIEW (window->views[i]), new_date);
-  gcal_view_set_date (GCAL_VIEW (window->agenda_view), new_date);
   gcal_view_set_date (GCAL_VIEW (window->date_chooser), new_date);
 
   update_today_action_enabled (window);
@@ -333,10 +332,17 @@ content_title (GcalWindow     *self,
                GcalWindowView  active_view)
 {
   /* We check for NULL so we get the right page name during initialization */
-  if (active_view == GCAL_WINDOW_VIEW_WEEK)
-    return g_strdup (_("Week"));
-  else
-    return g_strdup (_("Month"));
+  switch (active_view)
+    {
+    case GCAL_WINDOW_VIEW_WEEK:
+      return g_strdup (_("Week"));
+    case GCAL_WINDOW_VIEW_MONTH:
+      return g_strdup (_("Month"));
+    case GCAL_WINDOW_VIEW_AGENDA:
+      return g_strdup (_("Agenda"));
+    default:
+      return g_strdup (_("Calendar"));
+    }
 }
 
 static inline void
@@ -595,6 +601,32 @@ on_window_undo_delete_event_cb (GSimpleAction *action,
 }
 
 static void
+on_breakpoint_changed (GObject *object,
+                       GParamSpec *pspec,
+                       GcalWindow *window)
+{
+  gint32 view = window->active_view;
+
+  while (!adw_view_stack_page_get_visible (adw_view_stack_get_page (window->views_stack, window->views[view])))
+    {
+      view--;
+
+      if (view < 0)
+        view += GCAL_WINDOW_VIEW_N_VIEWS;
+
+      if (view == window->active_view)
+        return;
+    }
+
+  if (window->active_view != view)
+    {
+      window->active_view = view;
+      adw_view_stack_set_visible_child (window->views_stack, window->views[window->active_view]);
+      g_object_notify_by_pspec (G_OBJECT (window), properties[PROP_ACTIVE_VIEW]);
+    }
+}
+
+static void
 view_changed (GObject    *object,
               GParamSpec *pspec,
               gpointer    user_data)
@@ -608,6 +640,14 @@ view_changed (GObject    *object,
 
   /* XXX: this is the destruction process */
   if (!gtk_widget_get_visible (GTK_WIDGET (window->views_stack)))
+    return;
+
+  /*
+   * As there are no guarantees for the order of AdwBreakpoint setters,
+   * it is possible that the agenda view disappears before the month and
+   * week views reappears, and vice versa.
+   */
+  if (!adw_view_stack_get_visible_child_name (window->views_stack))
     return;
 
   eklass = g_type_class_ref (GCAL_TYPE_WINDOW_VIEW);
@@ -1271,7 +1311,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, menu_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, action_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, sidebar_toolbar_end);
@@ -1285,6 +1324,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, drop_overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, drop_target);
 
+  gtk_widget_class_bind_template_callback (widget_class, on_breakpoint_changed);
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
 
   /* Event creation related */
@@ -1329,6 +1369,7 @@ gcal_window_init (GcalWindow *self)
 
   self->views[GCAL_WINDOW_VIEW_WEEK] = self->week_view;
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;
+  self->views[GCAL_WINDOW_VIEW_AGENDA] = self->agenda_view;
 
   self->active_date = g_date_time_new_from_unix_local (0);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
