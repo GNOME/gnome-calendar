@@ -59,3 +59,4 @@ src/gui/views/gcal-week-header.c
 src/gui/views/gcal-week-hour-bar.c
 src/gui/views/gcal-week-view.c
 src/utils/gcal-utils.c
+
