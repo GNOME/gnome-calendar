@@ -129,7 +129,9 @@
               </object>
             </property>
             <property name="child">
-              <object class="AdwNavigationSplitView" id="split_view">
+              <object class="AdwOverlaySplitView" id="split_view">
+                <property name="pin-sidebar">True</property>
+                <property name="show-sidebar">False</property>
                 <child>
                   <object class="GtkDropTarget" id="drop_target">
                     <property name="actions">copy</property>
@@ -143,169 +145,173 @@
                 </style>
                 <!-- Sidebar -->
                 <property name="sidebar">
-                  <object class="AdwNavigationPage">
-                    <property name="title" translatable="yes">Calendar</property>
-                    <property name="child">
-                      <object class="AdwToolbarView">
-                        <child type="top">
-                          <object class="GtkBox">
-                            <property name="orientation">vertical</property>
+                  <object class="AdwToolbarView">
+                    <child type="top">
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
 
-                            <child>
-                              <object class="AdwHeaderBar">
-                                <child type="start">
-                                  <object class="GcalSyncIndicator" id="sync_indicator" />
-                                </child>
-                                <property name="title-widget">
-                                  <object class="GcalCalendarButton" id="calendars_button" />
-                                </property>
-                                <child type="end">
-                                  <object class="GtkMenuButton" id="menu_button">
-                                    <property name="icon-name">open-menu-symbolic</property>
-                                    <property name="popover">win_menu</property>
-                                    <property name="tooltip-text" translatable="yes">Main Menu</property>
-                                    <property name="primary">True</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-
-                            <child>
-                              <object class="GcalDateChooser" id="date_chooser">
-                                <property name="split-month-year">False</property>
-                                <property name="vexpand">False</property>
-                                <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
-                                <signal name="day-selected" handler="day_selected" object="GcalWindow" swapped="yes"/>
-                              </object>
-                            </child>
-
-                          </object>
-
-                        </child>
-
-                        <property name="content">
-                          <object class="GcalAgendaView" id="agenda_view">
-                            <property name="vexpand">True</property>
-                            <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
-                            <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
-                            <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
-                          </object>
-                        </property>
-
-                        <child type="bottom">
-                          <object class="GtkActionBar" id="action_bar">
-                            <property name="revealed">False</property>
+                        <child>
+                          <object class="AdwHeaderBar">
                             <child type="start">
-                              <object class="GtkButton">
-                                <property name="action-name">win.today</property>
-                                <property name="child">
-                                  <object class="AdwButtonContent">
-                                    <property name="label" translatable="yes">_Today</property>
-                                    <property name="use-underline">True</property>
-                                    <property name="icon-name">calendar-today-symbolic</property>
-                                    <property name="can-shrink">True</property>
-                                    <property name="tooltip-text" translatable="yes">Go to Today</property>
-                                  </object>
-                                </property>
-                              </object>
+                              <object class="GcalSyncIndicator" id="sync_indicator" />
                             </child>
+                            <property name="title-widget">
+                              <object class="GcalCalendarButton" id="calendars_button" />
+                            </property>
                             <child type="end">
-                              <object class="GcalToolbarEnd" id="sidebar_toolbar_end"/>
+                              <object class="GtkMenuButton" id="menu_button">
+                                <property name="icon-name">open-menu-symbolic</property>
+                                <property name="popover">win_menu</property>
+                                <property name="tooltip-text" translatable="yes">Main Menu</property>
+                                <property name="primary">True</property>
+                              </object>
                             </child>
                           </object>
                         </child>
+
+                        <child>
+                          <object class="GcalDateChooser" id="date_chooser">
+                            <property name="split-month-year">False</property>
+                            <property name="vexpand">False</property>
+                            <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional" />
+                            <signal name="day-selected" handler="day_selected" object="GcalWindow" swapped="yes" />
+                          </object>
+                        </child>
+
+                      </object>
+
+                    </child>
+
+                    <property name="content">
+                      <object class="GcalAgendaView" id="agenda_view">
+                        <property name="vexpand">True</property>
+                        <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional" />
+                        <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no" />
+                        <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no" />
                       </object>
                     </property>
+
+                    <child type="bottom">
+                      <object class="GtkActionBar" id="action_bar">
+                        <property name="revealed">False</property>
+                        <child type="start">
+                          <object class="GtkButton">
+                            <property name="action-name">win.today</property>
+                            <property name="child">
+                              <object class="AdwButtonContent">
+                                <property name="label" translatable="yes">_Today</property>
+                                <property name="use-underline">True</property>
+                                <property name="icon-name">calendar-today-symbolic</property>
+                                <property name="can-shrink">True</property>
+                                <property name="tooltip-text" translatable="yes">Go to Today</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <child type="end">
+                          <object class="GcalToolbarEnd" id="sidebar_toolbar_end" />
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </property>
 
                 <!-- Main content -->
                 <property name="content">
-                  <object class="AdwNavigationPage" id="content_page">
-                    <binding name="title">
-                      <closure type="gchararray" function="content_title">
-                        <lookup type="GcalWindow" name="active-view"/>
-                      </closure>
-                    </binding>
-                    <property name="child">
-                      <object class="AdwToolbarView">
-                        <style>
-                          <class name="view" />
-                        </style>
+                  <object class="AdwToolbarView">
+                    <style>
+                      <class name="view" />
+                    </style>
 
-                        <child type="top">
-                          <object class="AdwHeaderBar" id="header_bar">
+                    <child type="top">
+                      <object class="AdwHeaderBar" id="header_bar">
+                        <child type="start">
+                          <object class="GtkToggleButton" id="sidebar_button">
+                            <property name="icon-name">sidebar-show-symbolic</property>
+                            <property name="tooltip-text" translatable="yes">Toggle Sidebar</property>
+                            <property name="active" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | bidirectional" />
                             <child>
-                              <object class="GtkButton">
-                                <property name="action-name">win.today</property>
-                                <property name="child">
-                                  <object class="AdwButtonContent">
-                                    <property name="label" translatable="yes">_Today</property>
-                                    <property name="use-underline">True</property>
-                                    <property name="icon-name">calendar-today-symbolic</property>
-                                    <property name="can-shrink">True</property>
-                                    <property name="tooltip-text" translatable="yes">Go to Today</property>
+                              <object class="GtkShortcutController">
+                                <property name="scope">managed</property>
+                                <child>
+                                  <object class="GtkShortcut">
+                                    <property name="trigger">F9</property>
+                                    <property name="action">activate</property>
                                   </object>
-                                </property>
+                                </child>
                               </object>
-                            </child>
-                            <child type="title">
-                              <object class="AdwViewSwitcher" id="views_switcher">
-                                <property name="stack">views_stack</property>
-                                <property name="policy">wide</property>
-                              </object>
-                            </child>
-                            <child type="end">
-                              <object class="GcalToolbarEnd" id="toolbar_end" />
                             </child>
                           </object>
                         </child>
-
-
-                        <property name="content">
-                          <object class="AdwViewStack" id="views_stack">
-                            <property name="hexpand">True</property>
-                            <property name="vexpand">True</property>
-                            <signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no"/>
-                            <style>
-                              <class name="view"/>
-                            </style>
-                            <child>
-                              <object class="AdwViewStackPage">
-                                <property name="name">week</property>
-                                <property name="title" translatable="yes">_Week</property>
+                        <child type="start">
+                          <object class="GtkButton">
+                            <property name="action-name">win.today</property>
+                            <property name="child">
+                              <object class="AdwButtonContent">
+                                <property name="label" translatable="yes">_Today</property>
                                 <property name="use-underline">True</property>
-                                <property name="icon-name">calendar-week-symbolic</property>
-                                <property name="child">
-                                  <object class="GcalWeekView" id="week_view">
-                                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
-                                    <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
-                                    <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
-                                  </object>
-                                </property>
+                                <property name="icon-name">calendar-today-symbolic</property>
+                                <property name="can-shrink">True</property>
+                                <property name="tooltip-text" translatable="yes">Go to Today</property>
                               </object>
-                            </child>
-                            <child>
-                              <object class="AdwViewStackPage">
-                                <property name="name">month</property>
-                                <property name="title" translatable="yes">_Month</property>
-                                <property name="use-underline">True</property>
-                                <property name="icon-name">calendar-month-symbolic</property>
-                                <property name="child">
-                                  <object class="GcalMonthView" id="month_view">
-                                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
-                                    <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
-                                    <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
-                                    <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
-                                  </object>
-                                </property>
-                              </object>
-                            </child>
+                            </property>
+                          </object>
+                        </child>
+                        <property name="title-widget">
+                          <object class="AdwViewSwitcher" id="views_switcher">
+                            <property name="stack">views_stack</property>
+                            <property name="policy">wide</property>
                           </object>
                         </property>
+                        <child type="end">
+                          <object class="GcalToolbarEnd" id="toolbar_end" />
+                        </child>
+                      </object>
+                    </child>
 
+
+                    <property name="content">
+                      <object class="AdwViewStack" id="views_stack">
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no" />
+                        <style>
+                          <class name="view" />
+                        </style>
+                        <child>
+                          <object class="AdwViewStackPage">
+                            <property name="name">week</property>
+                            <property name="title" translatable="yes">_Week</property>
+                            <property name="use-underline">True</property>
+                            <property name="icon-name">calendar-week-symbolic</property>
+                            <property name="child">
+                              <object class="GcalWeekView" id="week_view">
+                                <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional" />
+                                <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no" />
+                                <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no" />
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwViewStackPage">
+                            <property name="name">month</property>
+                            <property name="title" translatable="yes">_Month</property>
+                            <property name="use-underline">True</property>
+                            <property name="icon-name">calendar-month-symbolic</property>
+                            <property name="child">
+                              <object class="GcalMonthView" id="month_view">
+                                <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional" />
+                                <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no" />
+                                <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no" />
+                                <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no" />
+                              </object>
+                            </property>
+                          </object>
+                        </child>
                       </object>
                     </property>
+
                   </object>
                 </property>
               </object>
@@ -319,6 +325,7 @@
       <object class="AdwBreakpoint">
         <condition>max-width: 700sp</condition>
         <setter object="split_view" property="collapsed">True</setter>
+        <setter object="split_view" property="show-sidebar">True</setter>
         <setter object="action_bar" property="revealed">True</setter>
         <!-- This needs to be set so that focus does not stay in the content pane when folding. -->
         <setter object="content_page" property="sensitive">False</setter>
