@@ -438,7 +438,13 @@ gcal_event_widget_update_timestamp (GcalEventWidget *self)
         time = g_date_time_to_local (gcal_event_get_date_end (self->event));
 
       if (gcal_event_get_all_day (self->event) || gcal_event_is_multiday (self->event))
-        timestamp_str = g_date_time_format (time, "%a %B %e");
+        /*
+         * Translators: %A is the abbreviated day name, %B is the month name
+         * and %d is the day of the month as a number between 0 and 31.
+         * More formats can be found on the doc:
+         * https://docs.gtk.org/glib/method.DateTime.format.html
+         */
+        timestamp_str = g_date_time_format (time, _("%a %B %d"));
       else if (gcal_context_get_time_format (self->context) == GCAL_TIME_FORMAT_24H)
         timestamp_str = g_date_time_format (time, "%R");
       else
