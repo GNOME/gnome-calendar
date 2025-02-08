@@ -42,7 +42,6 @@ src/gui/gcal-quick-add-popover.c
 src/gui/gcal-quick-add-popover.ui
 src/gui/gcal-search-button.ui
 src/gui/gcal-sync-indicator.ui
-src/gui/gcal-toolbar-end.ui
 src/gui/gcal-weather-settings.ui
 src/gui/gcal-window.c
 src/gui/gcal-window.ui

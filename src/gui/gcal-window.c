@@ -22,6 +22,7 @@
 #include "gcal-agenda-view.h"
 #include "gcal-calendar-list.h"
 #include "gcal-calendar-management-dialog.h"
+#include "gcal-calendar-navigation-button.h"
 #include "config.h"
 #include "gcal-date-chooser.h"
 #include "gcal-debug.h"
@@ -36,7 +37,6 @@
 #include "gcal-sync-indicator.h"
 #include "gcal-timeline.h"
 #include "gcal-timeline-subscriber.h"
-#include "gcal-toolbar-end.h"
 #include "gcal-view.h"
 #include "gcal-weather-settings.h"
 #include "gcal-week-view.h"
@@ -110,14 +110,12 @@ struct _GcalWindow
   GtkWidget              *agenda_view;
   GtkWidget              *date_chooser;
   GcalSyncIndicator      *sync_indicator;
-  GcalToolbarEnd         *toolbar_end;
-  GcalToolbarEnd         *sidebar_toolbar_end;
+  GtkWidget              *search_button;
   AdwNavigationSplitView *split_view;
 
   /* header_bar widgets */
   GtkWidget          *calendars_list;
   GtkWidget          *menu_button;
-  GtkWidget          *views_switcher;
 
   GcalEventEditorDialog *event_editor;
   GtkWidget             *import_dialog;
@@ -1050,7 +1048,6 @@ gcal_window_finalize (GObject *object)
     }
 
   g_clear_object (&window->context);
-  g_clear_object (&window->views_switcher);
 
   gcal_clear_date_time (&window->active_date);
 
@@ -1125,8 +1122,7 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->event_editor, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->sync_indicator, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "context", self->toolbar_end, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "context", self->sidebar_toolbar_end, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->search_button, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   /* CSS */
   load_css_providers (self);
@@ -1252,13 +1248,14 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   g_type_ensure (GCAL_TYPE_AGENDA_VIEW);
   g_type_ensure (GCAL_TYPE_CALENDAR_LIST);
+  g_type_ensure (GCAL_TYPE_CALENDAR_NAVIGATION_BUTTON);
   g_type_ensure (GCAL_TYPE_DATE_CHOOSER);
   g_type_ensure (GCAL_TYPE_EVENT_EDITOR_DIALOG);
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
   g_type_ensure (GCAL_TYPE_QUICK_ADD_POPOVER);
   g_type_ensure (GCAL_TYPE_SYNC_INDICATOR);
-  g_type_ensure (GCAL_TYPE_TOOLBAR_END);
+  g_type_ensure (GCAL_TYPE_SEARCH_BUTTON);
   g_type_ensure (GCAL_TYPE_WEATHER_SETTINGS);
   g_type_ensure (GCAL_TYPE_WEEK_VIEW);
   g_type_ensure (GCAL_TYPE_DROP_OVERLAY);
@@ -1313,12 +1310,10 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, overlay);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, sidebar_toolbar_end);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, split_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, sync_indicator);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, toolbar_end);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, weather_settings);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, week_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, drop_overlay);
@@ -1420,18 +1415,9 @@ void
 gcal_window_set_search_query (GcalWindow  *self,
                               const gchar *query)
 {
-  GtkWidget *search_button;
-  GcalToolbarEnd *toolbar_end;
-
   g_return_if_fail (GCAL_IS_WINDOW (self));
 
-  if (adw_navigation_split_view_get_collapsed (self->split_view))
-    toolbar_end = self->sidebar_toolbar_end;
-  else
-    toolbar_end = self->toolbar_end;
-
-  search_button = gcal_toolbar_end_get_search_button (toolbar_end);
-  gcal_search_button_search (GCAL_SEARCH_BUTTON (search_button), query);
+  gcal_search_button_search (GCAL_SEARCH_BUTTON (self->search_button), query);
 }
 
 /**

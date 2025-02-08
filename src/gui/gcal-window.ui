@@ -160,19 +160,7 @@
                 <property name="sidebar">
                   <object class="AdwToolbarView">
                     <child type="top">
-                      <object class="AdwHeaderBar">
-                        <child type="start">
-                          <object class="GcalSyncIndicator" id="sync_indicator" />
-                        </child>
-                        <child type="end">
-                          <object class="GtkMenuButton" id="menu_button">
-                            <property name="icon-name">open-menu-symbolic</property>
-                            <property name="popover">win_menu</property>
-                            <property name="tooltip-text" translatable="yes">Main Menu</property>
-                            <property name="primary">True</property>
-                          </object>
-                        </child>
-                      </object>
+                      <object class="AdwHeaderBar" />
                     </child>
 
                     <property name="content">
@@ -201,8 +189,6 @@
                       <class name="view" />
                     </style>
 
-                    <property name="reveal-bottom-bars">False</property>
-
                     <child type="top">
                       <object class="AdwHeaderBar" id="header_bar">
                         <child type="start">
@@ -224,27 +210,26 @@
                           </object>
                         </child>
                         <child type="start">
-                          <object class="GtkButton">
-                            <property name="action-name">win.today</property>
-                            <property name="child">
-                              <object class="AdwButtonContent">
-                                <property name="label" translatable="yes">_Today</property>
-                                <property name="use-underline">True</property>
-                                <property name="icon-name">calendar-today-symbolic</property>
-                                <property name="can-shrink">True</property>
-                                <property name="tooltip-text" translatable="yes">Go to Today</property>
-                              </object>
-                            </property>
-                          </object>
+                          <object class="GcalSyncIndicator" id="sync_indicator" />
                         </child>
                         <property name="title-widget">
-                          <object class="AdwViewSwitcher" id="views_switcher">
-                            <property name="stack">views_stack</property>
-                            <property name="policy">wide</property>
+                          <object class="GcalCalendarNavigationButton" id="navigation_button_title">
+                            <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional" />
+                            <property name="active" bind-source="split_view" bind-property="show-sidebar" bind-flags="sync-create | invert-boolean" />
                           </object>
                         </property>
                         <child type="end">
-                          <object class="GcalToolbarEnd" id="toolbar_end" />
+                          <object class="GtkMenuButton" id="menu_button">
+                            <property name="icon-name">open-menu-symbolic</property>
+                            <property name="popover">win_menu</property>
+                            <property name="tooltip-text" translatable="yes">Main Menu</property>
+                            <property name="primary">True</property>
+                          </object>
+                        </child>
+                        <child type="end">
+                          <object class="GcalSearchButton" id="search_button">
+                            <property name="tooltip-text" translatable="yes" context="tooltip">Search</property>
+                          </object>
                         </child>
                       </object>
                     </child>
@@ -325,8 +310,29 @@
                             </property>
                           </object>
                         </child>
+                        <child type="center">
+                          <object class="AdwBin" id="view_switcher_bin">
+                            <property name="child">
+                              <object class="AdwViewSwitcher" id="view_switcher_wide">
+                                <property name="stack">views_stack</property>
+                                <property name="policy">wide</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
                         <child type="end">
-                          <object class="GcalToolbarEnd" id="sidebar_toolbar_end" />
+                          <object class="GtkButton">
+                            <property name="icon-name">list-add-symbolic</property>
+                            <property name="action-name">win.new-event</property>
+                            <property name="tooltip-text" translatable="yes" context="tooltip">Add Event</property>
+                          </object>
+                        </child>
+                        <child type="end">
+                          <object class="GtkButton">
+                            <property name="icon-name">x-office-calendar-symbolic</property>
+                            <property name="tooltip-text" translatable="yes">Manage Calendars</property>
+                            <property name="action-name">win.show-calendars</property>
+                          </object>
                         </child>
                       </object>
                     </child>
@@ -344,11 +350,24 @@
 
     <child>
       <object class="AdwBreakpoint">
+        <condition>max-width: 1000sp</condition>
+        <setter object="split_view" property="collapsed">True</setter>
+        <setter object="view_switcher_bin" property="child">view_switcher_narrow</setter>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwBreakpoint">
         <condition>max-width: 700sp</condition>
         <setter object="split_view" property="collapsed">True</setter>
-        <setter object="split_view" property="show-sidebar">False</setter>
-        <setter object="main_toolbar" property="reveal-bottom-bars">True</setter>
+        <setter object="view_switcher_bin" property="visible">False</setter> <!-- set child to view_switcher_narrow here once there are multiple mobile-friendly views -->
 
+        <setter object="split_view" property="show-sidebar">False</setter>
+        <setter object="sidebar_button" property="visible">False</setter>
+
+        <!-- remove once agenda view no longer needs always visible date chooser -->
+        <setter object="header_bar" property="title-widget"></setter>
+        <setter object="navigation_button_title" property="active">False</setter>
         <!-- only make views optimised for certain width visible here -->
         <setter object="week_page" property="visible">False</setter>
         <setter object="month_page" property="visible">False</setter>
@@ -356,6 +375,15 @@
       </object>
     </child>
   </template>
+
+  <object class="AdwInlineViewSwitcher" id="view_switcher_narrow">
+    <style>
+      <class name="flat" />
+    </style>
+    <property name="stack">views_stack</property>
+    <property name="display-mode">icons</property>
+  </object>
+
   <object class="GcalQuickAddPopover" id="quick_add_popover">
     <signal name="edit-event" handler="edit_event" object="GcalWindow" swapped="no"/>
     <signal name="closed" handler="close_new_event_widget" object="GcalWindow" swapped="no"/>
@@ -370,10 +398,6 @@
       <item>
         <attribute name="label" translatable="yes">_Synchronize Calendars</attribute>
         <attribute name="action">app.sync</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Manage Calendars</attribute>
-        <attribute name="action">win.show-calendars</attribute>
       </item>
     </section>
     <section>
