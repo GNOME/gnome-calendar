@@ -387,6 +387,21 @@ syncindicator {
 }
 
 /*
+ * Calendar list-style
+ */
+
+/* per https://gitlab.gnome.org/GNOME/libadwaita/-/blob/1ff329681652fa99ecac89092d7639063a5972cc/src/stylesheet/widgets/_menus.scss */
+.calendar-list check {
+  min-width: 14px;
+  min-height: 14px;
+  -gtk-icon-size: 14px;
+  padding: 2px;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+}
+
+/*
  * Styles for the drop overlay.
  * From Amberol https://gitlab.gnome.org/World/amberol/-/blob/0dd6250ffd294b14532c428dcb76ae42086a5923/src/gtk/style.css
  */

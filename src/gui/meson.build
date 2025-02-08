@@ -16,7 +16,7 @@ built_sources += gnome.compile_resources(
 
 sources += files(
   'gcal-application.c',
-  'gcal-calendar-button.c',
+  'gcal-calendar-list.c',
   'gcal-drop-overlay.c',
   'gcal-event-popover.c',
   'gcal-event-widget.c',

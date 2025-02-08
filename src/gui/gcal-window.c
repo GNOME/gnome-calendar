@@ -20,8 +20,8 @@
 #define G_LOG_DOMAIN "GcalWindow"
 
 #include "gcal-agenda-view.h"
+#include "gcal-calendar-list.h"
 #include "gcal-calendar-management-dialog.h"
-#include "gcal-calendar-button.h"
 #include "config.h"
 #include "gcal-date-chooser.h"
 #include "gcal-debug.h"
@@ -115,7 +115,7 @@ struct _GcalWindow
   AdwNavigationSplitView *split_view;
 
   /* header_bar widgets */
-  GtkWidget          *calendars_button;
+  GtkWidget          *calendars_list;
   GtkWidget          *menu_button;
   GtkWidget          *views_switcher;
 
@@ -1116,7 +1116,7 @@ gcal_window_constructed (GObject *object)
    * FIXME: this is a hack around the issue that happens when trying to bind
    * these properties using the GtkBuilder .ui file.
    */
-  g_object_bind_property (self, "context", self->calendars_button, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->calendars_list, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->weather_settings, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->week_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
@@ -1251,7 +1251,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   GtkWidgetClass *widget_class;
 
   g_type_ensure (GCAL_TYPE_AGENDA_VIEW);
-  g_type_ensure (GCAL_TYPE_CALENDAR_BUTTON);
+  g_type_ensure (GCAL_TYPE_CALENDAR_LIST);
   g_type_ensure (GCAL_TYPE_DATE_CHOOSER);
   g_type_ensure (GCAL_TYPE_EVENT_EDITOR_DIALOG);
   g_type_ensure (GCAL_TYPE_MANAGER);
@@ -1305,7 +1305,7 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   /* widgets */
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, agenda_view);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_list);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, date_chooser);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, event_editor);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);

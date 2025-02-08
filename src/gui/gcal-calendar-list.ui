@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalCalendarList" parent="AdwBin">
+    <property name="child">
+      <object class="GtkScrolledWindow">
+        <property name="hscrollbar_policy">never</property>
+        <property name="propagate-natural-height">True</property>
+        <property name="propagate-natural-width">True</property>
+        <property name="child">
+          <object class="AdwClamp">
+            <property name="maximum-size">800</property>
+            <property name="tightening-threshold">800</property>
+            <property name="child">
+              <object class="GtkListBox" id="calendar_listbox">
+                <style>
+                  <class name="navigation-sidebar" />
+                </style>
+                <property name="hexpand">True</property>
+                <property name="selection_mode">none</property>
+                <signal name="row-activated" handler="on_listbox_row_activated_cb" object="GcalCalendarList" swapped="no" />
+                <style>
+                  <class name="calendar-list" />
+                </style>
+              </object>
+            </property>
+          </object>
+        </property>
+      </object>
+    </property>
+  </template>
+</interface>

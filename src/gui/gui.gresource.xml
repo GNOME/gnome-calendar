@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/calendar/ui/gui">
-    <file compressed="true">gcal-calendar-button.ui</file>
+    <file compressed="true">gcal-calendar-list.ui</file>
     <file compressed="true">gcal-event-popover.ui</file>
     <file compressed="true">gcal-event-widget.ui</file>
     <file compressed="true">gcal-meeting-row.ui</file>

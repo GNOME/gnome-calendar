@@ -1,4 +1,4 @@
-/* gcal-calendar-button.c
+/* gcal-calendar-list.c
  *
  * Copyright 2019 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
@@ -18,14 +18,14 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#define G_LOG_DOMAIN "GcalCalendarButton"
+#define G_LOG_DOMAIN "GcalCalendarList"
 
+#include "gcal-calendar-list.h"
 #include "gcal-calendar.h"
-#include "gcal-calendar-button.h"
 #include "gcal-context.h"
 #include "gcal-utils.h"
 
-struct _GcalCalendarButton
+struct _GcalCalendarList
 {
   AdwBin              parent;
 
@@ -34,7 +34,7 @@ struct _GcalCalendarButton
   GcalContext        *context;
 };
 
-G_DEFINE_TYPE (GcalCalendarButton, gcal_calendar_button, ADW_TYPE_BIN)
+G_DEFINE_TYPE (GcalCalendarList, gcal_calendar_list, ADW_TYPE_BIN)
 
 enum
 {
@@ -71,9 +71,7 @@ create_row_func (gpointer data,
 
   calendar = GCAL_CALENDAR (data);
 
-  row = g_object_new (GTK_TYPE_LIST_BOX_ROW,
-                      "css-name", "modelbutton",
-                      NULL);
+  row = g_object_new (GTK_TYPE_LIST_BOX_ROW, NULL);
 
   /* main box */
   box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
@@ -123,9 +121,9 @@ create_row_func (gpointer data,
  */
 
 static void
-on_listbox_row_activated_cb (GtkListBox          *listbox,
-                             GtkListBoxRow       *row,
-                             GcalCalendarButton *self)
+on_listbox_row_activated_cb (GtkListBox *listbox,
+                             GtkListBoxRow *row,
+                             GcalCalendarList *self)
 {
   GtkCheckButton *check = g_object_get_data (G_OBJECT (row), "check");
 
@@ -138,22 +136,22 @@ on_listbox_row_activated_cb (GtkListBox          *listbox,
  */
 
 static void
-gcal_calendar_button_finalize (GObject *object)
+gcal_calendar_list_finalize (GObject *object)
 {
-  GcalCalendarButton *self = (GcalCalendarButton *)object;
+  GcalCalendarList *self = (GcalCalendarList *) object;
 
   g_clear_object (&self->context);
 
-  G_OBJECT_CLASS (gcal_calendar_button_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gcal_calendar_list_parent_class)->finalize (object);
 }
 
 static void
-gcal_calendar_button_get_property (GObject    *object,
-                                    guint       prop_id,
-                                    GValue     *value,
-                                    GParamSpec *pspec)
+gcal_calendar_list_get_property (GObject *object,
+                                 guint prop_id,
+                                 GValue *value,
+                                 GParamSpec *pspec)
 {
-  GcalCalendarButton *self = GCAL_CALENDAR_BUTTON (object);
+  GcalCalendarList *self = GCAL_CALENDAR_LIST (object);
 
   switch (prop_id)
     {
@@ -167,12 +165,12 @@ gcal_calendar_button_get_property (GObject    *object,
 }
 
 static void
-gcal_calendar_button_set_property (GObject      *object,
-                                    guint         prop_id,
-                                    const GValue *value,
-                                    GParamSpec   *pspec)
+gcal_calendar_list_set_property (GObject *object,
+                                 guint prop_id,
+                                 const GValue *value,
+                                 GParamSpec *pspec)
 {
-  GcalCalendarButton *self = GCAL_CALENDAR_BUTTON (object);
+  GcalCalendarList *self = GCAL_CALENDAR_LIST (object);
 
   switch (prop_id)
     {
@@ -198,17 +196,17 @@ gcal_calendar_button_set_property (GObject      *object,
 }
 
 static void
-gcal_calendar_button_class_init (GcalCalendarButtonClass *klass)
+gcal_calendar_list_class_init (GcalCalendarListClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  object_class->finalize = gcal_calendar_button_finalize;
-  object_class->get_property = gcal_calendar_button_get_property;
-  object_class->set_property = gcal_calendar_button_set_property;
+  object_class->finalize = gcal_calendar_list_finalize;
+  object_class->get_property = gcal_calendar_list_get_property;
+  object_class->set_property = gcal_calendar_list_set_property;
 
   /**
-   * GcalCalendarButton::context:
+   * GcalCalendarList::context:
    *
    * The #GcalContext of the application.
    */
@@ -220,15 +218,15 @@ gcal_calendar_button_class_init (GcalCalendarButtonClass *klass)
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-calendar-button.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-calendar-list.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarButton, calendar_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarList, calendar_listbox);
 
   gtk_widget_class_bind_template_callback (widget_class, on_listbox_row_activated_cb);
 }
 
 static void
-gcal_calendar_button_init (GcalCalendarButton *self)
+gcal_calendar_list_init (GcalCalendarList *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
 }

@@ -1,4 +1,4 @@
-/* gcal-calendar-button.h
+/* gcal-calendar-list.h
  *
  * Copyright 2019 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
@@ -24,7 +24,7 @@
 
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_CALENDAR_BUTTON (gcal_calendar_button_get_type())
-G_DECLARE_FINAL_TYPE (GcalCalendarButton, gcal_calendar_button, GCAL, CALENDAR_BUTTON, AdwBin)
+#define GCAL_TYPE_CALENDAR_LIST (gcal_calendar_list_get_type ())
+G_DECLARE_FINAL_TYPE (GcalCalendarList, gcal_calendar_list, GCAL, CALENDAR_LIST, AdwBin)
 
 G_END_DECLS
