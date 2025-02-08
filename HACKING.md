@@ -132,6 +132,17 @@ foo_bar_do_somthing_sync (a, 1, object, data,
                           &error);
 ```
 
+### Automatic Cleanup Variables
+
+GLib provides macros like `g_auto`, `g_autoptr`, and `g_autofree` for automatic 
+cleanup of variables when they go out of scope.
+
+Choose `g_auto` for non-pointer or stack-based types with custom cleanup, 
+`g_autoptr` for pointer types with type-specific cleanup functions, and 
+`g_autofree` for memory allocated with `g_malloc()` that should be freed using `g_free()`.
+
+For more details, visit the official documentation [here](https://docs.gtk.org/glib/auto-cleanup.html).
+
 # Contributing guidelines
 
 See CONTRIBUTING.md file for the contribution guidelines, and the Code of Conduct

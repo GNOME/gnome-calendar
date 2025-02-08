@@ -64,6 +64,10 @@ size, disability, ethnicity, gender identity and expression, level of experience
 nationality, personal appearance, race, religion, or sexual identity and
 orientation.
 
+## About GNOME Calendar  
+
+Learn more about GNOME Calendar by reading our [HACKING.md](HACKING.md) file.
+
 ### Attribution
 
 This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,

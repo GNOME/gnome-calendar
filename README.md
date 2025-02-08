@@ -6,6 +6,9 @@ effort.
 
 [![Flatpak](https://flathub.org/api/badge?svg&locale=en)](https://flathub.org/apps/details/org.gnome.Calendar)
 
+## Contributors Guide  
+
+Check out our [CONTRIBUTING.md](CONTRIBUTING.md) and [HACKING.md](HACKING.md) for more details.
 
 ## Useful links
 
