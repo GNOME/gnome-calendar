@@ -50,8 +50,6 @@ struct _GcalMonthView
   GtkWidget          parent;
 
   GtkWidget          *header;
-  GtkWidget          *month_label;
-  GtkWidget          *year_label;
   GtkWidget          *weekday_label[7];
 
   GtkEventController *motion_controller;
@@ -227,9 +225,6 @@ update_header_labels (GcalMonthView *self)
                                     g_date_time_get_year (first_visible_date),
                                     g_date_time_get_year (last_visible_date));
     }
-
-  gtk_label_set_label (GTK_LABEL (self->month_label), month_string);
-  gtk_label_set_label (GTK_LABEL (self->year_label), year_string);
 }
 
 static inline void
@@ -1652,9 +1647,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-month-view.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalMonthView, month_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, motion_controller);
-  gtk_widget_class_bind_template_child (widget_class, GcalMonthView, year_label);
 
   gtk_widget_class_bind_template_child_full (widget_class, "label_0", FALSE, G_STRUCT_OFFSET (GcalMonthView, weekday_label[0]));
   gtk_widget_class_bind_template_child_full (widget_class, "label_1", FALSE, G_STRUCT_OFFSET (GcalMonthView, weekday_label[1]));

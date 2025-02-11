@@ -38,113 +38,87 @@
     <!-- Header -->
     <child type="header">
       <object class="GtkBox">
-        <property name="orientation">vertical</property>
+        <style>
+          <class name="month-header" />
+          <class name="view" />
+        </style>
+        <property name="homogeneous">True</property>
         <child>
-          <object class="GtkBox">
-            <child>
-              <object class="GtkLabel" id="month_label">
-                <property name="hexpand">true</property>
-                <property name="xalign">0.0</property>
-                <style>
-                  <class name="month-name" />
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="year_label">
-                <property name="hexpand">true</property>
-                <property name="xalign">1.0</property>
-                <style>
-                  <class name="secondary-label" />
-                </style>
-              </object>
-            </child>
+          <object class="GtkLabel" id="label_0">
+            <property name="margin-start">6</property>
+            <property name="hexpand">true</property>
+            <property name="xalign">0.0</property>
+            <style>
+              <class name="header" />
+            </style>
           </object>
         </child>
 
         <child>
-          <object class="GtkBox">
-            <property name="margin-bottom">6</property>
-            <property name="homogeneous">True</property>
-            <child>
-              <object class="GtkLabel" id="label_0">
-                <property name="margin-start">6</property>
-                <property name="hexpand">true</property>
-                <property name="xalign">0.0</property>
-                <style>
-                  <class name="header" />
-                </style>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkLabel" id="label_1">
-                <property name="margin-start">6</property>
-                <property name="hexpand">true</property>
-                <property name="xalign">0.0</property>
-                <style>
-                  <class name="header" />
-                </style>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkLabel" id="label_2">
-                <property name="margin-start">6</property>
-                <property name="hexpand">true</property>
-                <property name="xalign">0.0</property>
-                <style>
-                  <class name="header" />
-                </style>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkLabel" id="label_3">
-                <property name="margin-start">6</property>
-                <property name="hexpand">true</property>
-                <property name="xalign">0.0</property>
-                <style>
-                  <class name="header" />
-                </style>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkLabel" id="label_4">
-                <property name="margin-start">6</property>
-                <property name="hexpand">true</property>
-                <property name="xalign">0.0</property>
-                <style>
-                  <class name="header" />
-                </style>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkLabel" id="label_5">
-                <property name="margin-start">6</property>
-                <property name="hexpand">true</property>
-                <property name="xalign">0.0</property>
-                <style>
-                  <class name="header" />
-                </style>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkLabel" id="label_6">
-                <property name="margin-start">6</property>
-                <property name="hexpand">true</property>
-                <property name="xalign">0.0</property>
-                <style>
-                  <class name="header" />
-                </style>
-              </object>
-            </child>
+          <object class="GtkLabel" id="label_1">
+            <property name="margin-start">6</property>
+            <property name="hexpand">true</property>
+            <property name="xalign">0.0</property>
+            <style>
+              <class name="header" />
+            </style>
           </object>
         </child>
 
+        <child>
+          <object class="GtkLabel" id="label_2">
+            <property name="margin-start">6</property>
+            <property name="hexpand">true</property>
+            <property name="xalign">0.0</property>
+            <style>
+              <class name="header" />
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel" id="label_3">
+            <property name="margin-start">6</property>
+            <property name="hexpand">true</property>
+            <property name="xalign">0.0</property>
+            <style>
+              <class name="header" />
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel" id="label_4">
+            <property name="margin-start">6</property>
+            <property name="hexpand">true</property>
+            <property name="xalign">0.0</property>
+            <style>
+              <class name="header" />
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel" id="label_5">
+            <property name="margin-start">6</property>
+            <property name="hexpand">true</property>
+            <property name="xalign">0.0</property>
+            <style>
+              <class name="header" />
+            </style>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel" id="label_6">
+            <property name="margin-start">6</property>
+            <property name="hexpand">true</property>
+            <property name="xalign">0.0</property>
+            <style>
+              <class name="header" />
+            </style>
+          </object>
+        </child>
       </object>
     </child>
 
