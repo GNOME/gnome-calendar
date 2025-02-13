@@ -122,6 +122,9 @@ struct _GcalWindow
 
   GtkWidget          *last_focused_widget;
 
+  GtkButton          *next_date_button;
+  GtkButton          *previous_date_button;
+
   /* new event popover widgets */
   GtkWidget          *quick_add_popover;
 
@@ -216,6 +219,45 @@ update_today_action_enabled (GcalWindow *window)
 
   action = G_SIMPLE_ACTION (g_action_map_lookup_action (G_ACTION_MAP (window), "today"));
   g_simple_action_set_enabled (action, enabled);
+
+  GCAL_EXIT;
+}
+
+static void
+update_view_buttons (GcalWindow *window)
+{
+  GCAL_ENTRY;
+
+  switch (gcal_view_get_time_direction (GCAL_VIEW (window->views[window->active_view])))
+    {
+    case GTK_ORIENTATION_VERTICAL:
+      gtk_button_set_icon_name (window->previous_date_button, "go-up-symbolic");
+      gtk_button_set_icon_name (window->next_date_button, "go-down-symbolic");
+      break;
+    case GTK_ORIENTATION_HORIZONTAL:
+      gtk_button_set_icon_name (window->previous_date_button, "go-previous-symbolic");
+      gtk_button_set_icon_name (window->next_date_button, "go-next-symbolic");
+      break;
+    }
+
+  switch (window->active_view)
+    {
+    case GCAL_WINDOW_VIEW_WEEK:
+      gtk_widget_set_tooltip_text (GTK_WIDGET (window->previous_date_button), _("Go to previous week"));
+      gtk_widget_set_tooltip_text (GTK_WIDGET (window->next_date_button), _("Go to next week"));
+      break;
+    case GCAL_WINDOW_VIEW_MONTH:
+      gtk_widget_set_tooltip_text (GTK_WIDGET (window->previous_date_button), _("Go to previous month"));
+      gtk_widget_set_tooltip_text (GTK_WIDGET (window->next_date_button), _("Go to next month"));
+      break;
+    case GCAL_WINDOW_VIEW_AGENDA:
+      gtk_widget_set_tooltip_text (GTK_WIDGET (window->previous_date_button), _("Go to previous day"));
+      gtk_widget_set_tooltip_text (GTK_WIDGET (window->next_date_button), _("Go to next day"));
+      break;
+    default:
+      g_assert_not_reached ();
+      break;
+    }
 
   GCAL_EXIT;
 }
@@ -657,6 +699,7 @@ view_changed (GObject    *object,
 
   window->active_view = view_type;
   update_today_action_enabled (window);
+  update_view_buttons (window);
   g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
 }
 
@@ -1308,8 +1351,10 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, menu_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, next_date_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, overlay);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, previous_date_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, split_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, sync_indicator);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_button);

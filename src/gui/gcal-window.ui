@@ -297,6 +297,18 @@
                     <child type="bottom">
                       <object class="GtkActionBar">
                         <child type="start">
+                          <object class="GtkButton" id="previous_date_button">
+                            <property name="icon-name">go-previous-symbolic</property>
+                            <property name="action-name">win.previous-date</property>
+                          </object>
+                        </child>
+                        <child type="start">
+                          <object class="GtkButton" id="next_date_button">
+                            <property name="icon-name">go-next-symbolic</property>
+                            <property name="action-name">win.next-date</property>
+                          </object>
+                        </child>
+                        <child type="start">
                           <object class="GtkButton">
                             <property name="action-name">win.today</property>
                             <property name="child">
@@ -362,6 +374,8 @@
         <setter object="split_view" property="collapsed">True</setter>
         <setter object="view_switcher_bin" property="visible">False</setter> <!-- set child to view_switcher_narrow here once there are multiple mobile-friendly views -->
 
+        <setter object="previous_date_button" property="visible">False</setter>
+        <setter object="next_date_button" property="visible">False</setter>
         <setter object="split_view" property="show-sidebar">False</setter>
         <setter object="sidebar_button" property="visible">False</setter>
 
