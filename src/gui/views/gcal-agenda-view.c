@@ -201,12 +201,12 @@ new_date_header_string (GDateTime *date)
     return g_strdup (_("Yesterday"));
   else
     /*
-     * Translators: %A is the abbreviated day name, %B is the month name
+     * Translators: %a is the abbreviated day name, %B is the month name
      * and %d is the day of the month as a number between 0 and 31.
      * More formats can be found on the doc:
      * https://docs.gtk.org/glib/method.DateTime.format.html
      */
-    return g_date_time_format (date, _("%A %B %d"));
+    return g_date_time_format (date, _("%a %B %d"));
 }
 
 
