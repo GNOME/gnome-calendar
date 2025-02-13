@@ -295,14 +295,21 @@ monthcell:nth-child(7n + 1):dir(rtl) {
  */
 
 calendar-view.scrolling > box {
-  background-color: transparent;
   box-shadow: var(--headerbar-shade-color) 0 2px 4px;
-  transition: box-shadow 200ms;
 }
 
+calendar-view > box, calendar-view {
+  transition: box-shadow 200ms, background 200ms;
+}
 
-calendar-view:not(.scrolling) > box {
-  transition: box-shadow 200ms;
+/* similar to https://gitlab.gnome.org/GNOME/libadwaita/-/blob/649967044e269a0118ae09a9ff0ecba90cc58300/src/stylesheet/_drawing.scss#L57 */
+calendar-view.scrolling {
+  box-shadow: inset 0px -1px color-mix(in srgb, var(--shade-color) 75%, transparent);
+  background: linear-gradient(to top, color-mix(in srgb, var(--shade-color) 75%, transparent), transparent 4px);
+}
+
+.month-header {
+  padding-bottom: 6px;
 }
 
 /*
