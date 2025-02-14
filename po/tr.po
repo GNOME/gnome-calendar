@@ -1,5 +1,5 @@
 # Turkish translation for gnome-calendar.
-# Copyright (C) 2015-2024 gnome-calendar's COPYRIGHT HOLDER
+# Copyright (C) 2015-2025 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 #
 # Taner Orak <tnrork@gmail.com>, 2015.
@@ -7,16 +7,16 @@
 # Furkan Ahmet Kara <furkanahmetkara.fk@gmail.com>, 2017.
 # Muhammet Kara <muhammetk@gmail.com>, 2015, 2016, 2017.
 # Çağrı Dolaz <dolazcagri@gmail.com>, 2017.
-# Sabri Ünal <yakushabb@gmail.com>, 2019, 2020, 2022, 2023, 2024.
+# Sabri Ünal <yakushabb@gmail.com>, 2019, 2020, 2022-2025.
 # Emin Tufan Çetin <etcetin@gmail.com>, 2017-2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-01-11 13:57+0000\n"
-"PO-Revision-Date: 2025-01-11 08:00+0300\n"
-"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
+"POT-Creation-Date: 2025-02-06 15:54+0000\n"
+"PO-Revision-Date: 2025-02-09 16:18+0300\n"
+"Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
 "Language-Team: Türkçe <takim@gnome.org.tr>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -191,7 +191,7 @@ msgid "Calendar “%s” removed"
 msgstr "“%s” takvimi silindi"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:363
-#: src/gui/gcal-window.c:824
+#: src/gui/gcal-window.c:823
 msgid "_Undo"
 msgstr "_Geri Al"
 
@@ -475,22 +475,52 @@ msgstr "Tarihi Düzenle"
 msgid "Edit date"
 msgstr "Tarihi düzenle"
 
-#: src/gui/event-editor/gcal-time-chooser-row.c:92
-#: src/gui/event-editor/gcal-time-chooser-row.c:154
-#: src/gui/event-editor/gcal-time-selector.ui:47
+#. Translators: "%1$s" is the timezone identifier (e.g. UTC, America/Sao_Paulo)
+#. * and "%2$s" is the timezone offset (e.g. UTC-3).
+#.
+#: src/gui/event-editor/gcal-date-time-chooser.c:141
+#, c-format
+msgid "%1$s (%2$s)"
+msgstr "%1$s (%2$s)"
+
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.c:270
+#: src/gui/event-editor/gcal-date-time-chooser.ui:90
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "ÖÖ"
 
-#: src/gui/event-editor/gcal-time-chooser-row.c:92
-#: src/gui/event-editor/gcal-time-selector.ui:53
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.ui:96
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "ÖS"
 
+#: src/gui/event-editor/gcal-date-time-chooser.ui:7
+msgid "Date"
+msgstr "Tarih"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:14
+msgid "Time"
+msgstr "Saat"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:65
+msgid ":"
+msgstr ":"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:109
+#: src/gui/event-editor/gcal-date-time-chooser.ui:120
+msgid "Change Timezone"
+msgstr "Saat Dilimini Değiştir"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:133
 #: src/gui/event-editor/gcal-time-chooser-row.ui:35
 msgid "Edit time"
 msgstr "Saati düzenle"
+
+#: src/gui/event-editor/gcal-time-chooser-row.ui:15
+msgid "Edit Time"
+msgstr "Saati Düzenle"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "_Save"
@@ -581,68 +611,70 @@ msgstr "_Tüm Gün"
 msgid "_Time Slot"
 msgstr "_Saat Aralığı"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:38
+#: src/gui/event-editor/gcal-schedule-section.ui:32
+#: src/gui/event-editor/gcal-schedule-section.ui:53
 msgid "Start Date"
 msgstr "Başlangıç Tarihi"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:45
-msgid "Start Time"
-msgstr "Başlangıç Saati"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:65
+#: src/gui/event-editor/gcal-schedule-section.ui:44
+#: src/gui/event-editor/gcal-schedule-section.ui:61
 msgid "End Date"
 msgstr "Bitiş Tarihi"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:72
+#: src/gui/event-editor/gcal-schedule-section.ui:54
+msgid "Start Time"
+msgstr "Başlangıç Saati"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:62
 msgid "End Time"
 msgstr "Bitiş Saati"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:89
+#: src/gui/event-editor/gcal-schedule-section.ui:74
 msgid "Repeat"
 msgstr "Yinele"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:94
+#: src/gui/event-editor/gcal-schedule-section.ui:79
 msgid "No Repeat"
 msgstr "Yineleme"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:95
+#: src/gui/event-editor/gcal-schedule-section.ui:80
 msgid "Daily"
 msgstr "Günlük"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:96
+#: src/gui/event-editor/gcal-schedule-section.ui:81
 msgid "Monday – Friday"
 msgstr "Pazartesi – Cuma"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:97
+#: src/gui/event-editor/gcal-schedule-section.ui:82
 msgid "Weekly"
 msgstr "Haftalık"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:98
+#: src/gui/event-editor/gcal-schedule-section.ui:83
 msgid "Monthly"
 msgstr "Aylık"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:99
+#: src/gui/event-editor/gcal-schedule-section.ui:84
 msgid "Yearly"
 msgstr "Yıllık"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:110
+#: src/gui/event-editor/gcal-schedule-section.ui:95
 msgid "End Repeat"
 msgstr "Yineleme Bitişi"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:115
+#: src/gui/event-editor/gcal-schedule-section.ui:100
 msgid "Forever"
 msgstr "Sonsuza Dek"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:116
-#: src/gui/event-editor/gcal-schedule-section.ui:129
+#: src/gui/event-editor/gcal-schedule-section.ui:101
+#: src/gui/event-editor/gcal-schedule-section.ui:114
 msgid "Number of Occurrences"
 msgstr "Oluş Sayısı"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:117
+#: src/gui/event-editor/gcal-schedule-section.ui:102
 msgid "Until Date"
 msgstr "Belirli Tarihe Dek"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:148
+#: src/gui/event-editor/gcal-schedule-section.ui:133
 msgid "End Repeat Date"
 msgstr "Yineleme Bitiş Tarihi"
 
@@ -651,9 +683,25 @@ msgstr "Yineleme Bitiş Tarihi"
 msgid "Title"
 msgstr "Başlık"
 
-#: src/gui/event-editor/gcal-time-selector.ui:22
-msgid ":"
-msgstr ":"
+#. Translators: "%1$s" is the city / region name, and
+#. * "%2$s" is the country name (already localized).
+#.
+#: src/gui/event-editor/gcal-time-zone-dialog.c:84
+#, c-format
+msgid "%1$s, %2$s"
+msgstr "%1$s, %2$s"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:4
+msgid "Select Timezone"
+msgstr "Saat Dilimi Seç"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:16
+msgid "Search Locations"
+msgstr "Konum Ara"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:31
+msgid "Search for a Timezone"
+msgstr "Saat Dilimi Ara"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
@@ -921,6 +969,16 @@ msgstr ""
 "\n"
 "\n"
 "%sʼde"
+
+#.
+#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/gcal-event-widget.c:447
+msgid "%a %B %d"
+msgstr "%d %B %a"
 
 #: src/gui/gcal-meeting-row.c:72
 msgid "Unknown Service"
@@ -1201,19 +1259,19 @@ msgstr "Hafta"
 msgid "Month"
 msgstr "Ay"
 
-#: src/gui/gcal-window.c:822
+#: src/gui/gcal-window.c:821
 msgid "Another event deleted"
 msgstr "Başka bir olay silindi"
 
-#: src/gui/gcal-window.c:822
+#: src/gui/gcal-window.c:821
 msgid "Event deleted"
 msgstr "Olay silindi"
 
-#: src/gui/gcal-window.c:887
+#: src/gui/gcal-window.c:886
 msgid "Could not import some files: Not ICS files"
 msgstr "Kimi dosyalar içe aktarılamadı: ICS dosyası değil"
 
-#: src/gui/gcal-window.c:892
+#: src/gui/gcal-window.c:891
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "“%s” içe aktarılamadı: ICS dosyası değil"
@@ -1415,7 +1473,17 @@ msgstr "Bitiş"
 msgid "Description"
 msgstr "Açıklama"
 
-#: src/gui/views/gcal-agenda-view.c:408
+#.
+#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/views/gcal-agenda-view.c:209
+msgid "%A %B %d"
+msgstr "%d %B %A"
+
+#: src/gui/views/gcal-agenda-view.c:414
 msgid "On-going"
 msgstr "Süren"
 
@@ -1489,43 +1557,3 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1278
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
-
-#~ msgid "Schedule"
-#~ msgstr "Zamanlama"
-
-#, c-format
-#~ msgid "Last %A"
-#~ msgstr "Geçen %A"
-
-#, c-format
-#~ msgid "This %A"
-#~ msgstr "Bu %A"
-
-#, c-format
-#~ msgid "%1$s, %2$s"
-#~ msgstr "%1$s, %2$s"
-
-#~ msgid "The GNOME Project"
-#~ msgstr "GNOME Projesi"
-
-#~ msgid "Done"
-#~ msgstr "Tamam"
-
-#~ msgid "Select Calendar"
-#~ msgstr "Takvim Seç"
-
-#~ msgid "Select a file"
-#~ msgstr "Dosya seç"
-
-#~ msgid ""
-#~ "Alternatively, enter the web address of an online calendar you want to "
-#~ "import, or open a supported calendar file."
-#~ msgstr ""
-#~ "Diğer seçenek olarak, içe aktarmak istediğiniz çevrim içi takvimin "
-#~ "internet adresini girin ya da desteklenen takvim dosyasını açın."
-
-#~ msgid "Open a File"
-#~ msgstr "Dosya Aç"
-
-#~ msgid "Calendar files"
-#~ msgstr "Takvim dosyaları"
