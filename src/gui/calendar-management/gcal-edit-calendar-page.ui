@@ -112,14 +112,6 @@
                   </object>
                 </child>
 
-                <child>
-                  <object class="AdwSwitchRow" id="default_row">
-                    <property name="title" translatable="yes">Default _Calendar</property>
-                    <property name="subtitle" translatable="yes">Add new events to this calendar by default</property>
-                    <property name="use-underline">true</property>
-                  </object>
-                </child>
-
               </object>
             </child>
 

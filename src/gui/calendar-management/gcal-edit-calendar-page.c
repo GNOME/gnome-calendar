@@ -36,7 +36,6 @@ struct _GcalEditCalendarPage
   GtkColorDialogButton *calendar_color_button;
   AdwSwitchRow       *calendar_visible_row;
   AdwActionRow       *calendar_url_row;
-  AdwSwitchRow       *default_row;
   AdwEntryRow        *name_entry;
   GtkWidget          *remove_group;
 
@@ -213,8 +212,6 @@ setup_calendar (GcalEditCalendarPage *self,
   gtk_editable_set_text (GTK_EDITABLE (self->name_entry), gcal_calendar_get_name (calendar));
   adw_switch_row_set_active (self->calendar_visible_row, gcal_calendar_get_visible (calendar));
 
-  adw_switch_row_set_active (self->default_row, source == default_source);
-  gtk_widget_set_visible (GTK_WIDGET (self->default_row), !gcal_calendar_is_read_only (calendar));
   gtk_widget_set_visible (self->remove_group, e_source_get_removable (source));
 }
 
@@ -234,9 +231,6 @@ update_calendar (GcalEditCalendarPage *self)
   gcal_calendar_set_visible (self->calendar, adw_switch_row_get_active (self->calendar_visible_row));
   gcal_calendar_set_name (self->calendar, gtk_editable_get_text (GTK_EDITABLE (self->name_entry)));
   gcal_calendar_set_color (self->calendar, color);
-
-  if (adw_switch_row_get_active (self->default_row))
-    gcal_manager_set_default_calendar (manager, self->calendar);
 
   GCAL_EXIT;
 }
@@ -403,7 +397,6 @@ gcal_edit_calendar_page_class_init (GcalEditCalendarPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_color_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_url_row);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_visible_row);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, default_row);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, name_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, remove_group);
 
