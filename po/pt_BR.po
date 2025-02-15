@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-02-12 20:31+0000\n"
-"PO-Revision-Date: 2025-02-13 00:39-0300\n"
+"POT-Creation-Date: 2025-02-13 03:42+0000\n"
+"PO-Revision-Date: 2025-02-15 11:08-0300\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <https://br.gnome.org/traducao>\n"
 "Language: pt_BR\n"
@@ -613,23 +613,23 @@ msgstr "30 minutos"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:71
 msgid "1 Hour"
-msgstr "1 Hora"
+msgstr "1 hora"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:77
 msgid "1 Day"
-msgstr "1 Dia"
+msgstr "1 dia"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:83
 msgid "2 Days"
-msgstr "2 Dias"
+msgstr "2 dias"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:89
 msgid "3 Days"
-msgstr "3 Dias"
+msgstr "3 dias"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:95
 msgid "1 Week"
-msgstr "1 Semana"
+msgstr "1 semana"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:12
 msgid "_All Day"
@@ -671,7 +671,7 @@ msgstr "Diariamente"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:81
 msgid "Monday – Friday"
-msgstr "Segunda-feira – Sexta-feira"
+msgstr "Segunda – Sexta"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:82
 msgid "Weekly"
