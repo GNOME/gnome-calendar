@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-02-01 22:51+0000\n"
-"PO-Revision-Date: 2025-02-02 16:42+0300\n"
+"POT-Creation-Date: 2025-02-06 15:54+0000\n"
+"PO-Revision-Date: 2025-02-07 15:19+0300\n"
 "Last-Translator: Artur So <arturios2005@mail.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -1003,6 +1003,16 @@ msgstr ""
 "\n"
 "В %s"
 
+#.
+#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/gcal-event-widget.c:447
+msgid "%a %B %d"
+msgstr "%a %d %B"
+
 #: src/gui/gcal-meeting-row.c:72
 msgid "Unknown Service"
 msgstr "Неизвестный сервис"
@@ -1498,7 +1508,17 @@ msgstr "Конец"
 msgid "Description"
 msgstr "Описание"
 
-#: src/gui/views/gcal-agenda-view.c:408
+#.
+#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/views/gcal-agenda-view.c:209
+msgid "%A %B %d"
+msgstr "%A %d %B"
+
+#: src/gui/views/gcal-agenda-view.c:414
 msgid "On-going"
 msgstr "Продолжается"
 
