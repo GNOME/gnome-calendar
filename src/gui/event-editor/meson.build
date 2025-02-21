@@ -8,8 +8,6 @@ built_sources += gnome.compile_resources(
 
 sources += files(
   'gcal-alarm-row.c',
-  'gcal-date-chooser.c',
-  'gcal-date-chooser-day.c',
   'gcal-date-chooser-row.c',
   'gcal-date-time-chooser.c',
   'gcal-date-selector.c',

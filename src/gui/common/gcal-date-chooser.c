@@ -903,7 +903,7 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
                                         NULL,
                                         G_TYPE_NONE, 0);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-date-chooser.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/common/gcal-date-chooser.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, combined_choice);
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, month_choice);

@@ -9,4 +9,6 @@ built_sources += gnome.compile_resources(
 sources += files(
   'gcal-calendar-combo-row-item.c',
   'gcal-calendar-combo-row.c',
+  'gcal-date-chooser.c',
+  'gcal-date-chooser-day.c',
 )

@@ -3,5 +3,7 @@
   <gresource prefix="/org/gnome/calendar/ui/common">
     <file compressed="true">gcal-calendar-combo-row-item.ui</file>
     <file compressed="true">gcal-calendar-combo-row.ui</file>
+    <file compressed="true">gcal-date-chooser.ui</file>
+    <file compressed="true">gcal-date-chooser-day.ui</file>
   </gresource>
 </gresources>

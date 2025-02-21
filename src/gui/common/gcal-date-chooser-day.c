@@ -146,7 +146,7 @@ gcal_date_chooser_day_class_init (GcalDateChooserDayClass *class)
 
   g_object_class_install_properties (object_class, NUM_PROPS, properties);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-date-chooser-day.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/common/gcal-date-chooser-day.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooserDay, dot_revealer);
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooserDay, label);
