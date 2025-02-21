@@ -190,7 +190,7 @@ gcal_calendar_combo_row_class_init (GcalCalendarComboRowClass *klass)
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-calendar-combo-row.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/common/gcal-calendar-combo-row.ui");
 
   gtk_widget_class_bind_template_callback (widget_class, calendar_item_setup_cb);
   gtk_widget_class_bind_template_callback (widget_class, calendar_item_bind_cb);

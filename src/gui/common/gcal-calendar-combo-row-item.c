@@ -168,7 +168,7 @@ gcal_calendar_combo_row_item_class_init (GcalCalendarComboRowItemClass *klass)
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-calendar-combo-row-item.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/common/gcal-calendar-combo-row-item.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarComboRowItem, color_image);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarComboRowItem, visibility_image);
