@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the gnome-calendar package.
 # Amir Farsi <amir_farsi@ymail.com>, 2013.
 # Arash Mousavi <mousavi.arash@gmail.com>, 2013-2017.
-# Danial Behzadi <dani.behzi@ubuntu.com>, 2018-2024.
+# Danial Behzadi <dani.behzi@ubuntu.com>, 2018-2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-10-22 11:51+0000\n"
-"PO-Revision-Date: 2024-10-22 15:30+0330\n"
+"POT-Creation-Date: 2025-02-12 20:31+0000\n"
+"PO-Revision-Date: 2025-02-23 21:34+0330\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "Language: fa\n"
@@ -18,12 +18,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.5\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
-#: src/gui/gcal-quick-add-popover.ui:135 src/gui/gcal-window.ui:4
-#: src/gui/gcal-window.ui:147
+#: src/gui/gcal-calendar-combo-row.ui:5 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "تقویم"
 
@@ -180,7 +180,7 @@ msgstr "تنظیمات تقویم"
 msgid "Calendar “%s” removed"
 msgstr "تقویم «%s» برداشته شد"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:363 src/gui/gcal-window.c:836
+#: src/gui/calendar-management/gcal-calendars-page.c:363 src/gui/gcal-window.c:823
 msgid "_Undo"
 msgstr "_برگردان"
 
@@ -307,7 +307,7 @@ msgid "Password"
 msgstr "گذرواژه"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:16
 #: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1162
 msgid "_Cancel"
 msgstr "_لغو"
@@ -406,11 +406,6 @@ msgstr "تغییر وضعیت صدای هشدار"
 msgid "Remove Alarm"
 msgstr "برداشتن هشدار"
 
-#: src/gui/event-editor/gcal-calendar-row.c:70
-#: src/gui/importer/gcal-import-dialog.c:332
-msgid "This calendar is hidden"
-msgstr "این تقویم نهفته است"
-
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
 #. * NOTE: These grid abbreviations are always shown together
@@ -460,43 +455,95 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "ش"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
-msgid "Save"
-msgstr "ذخیره"
+#: src/gui/event-editor/gcal-date-chooser-row.ui:15
+msgid "Edit Date"
+msgstr "ویرایش تاریخ"
+
+#: src/gui/event-editor/gcal-date-chooser-row.ui:38
+msgid "Edit date"
+msgstr "ویرایش تاریخ"
+
+#. Translators: "%1$s" is the timezone identifier (e.g. UTC, America/Sao_Paulo)
+#. * and "%2$s" is the timezone offset (e.g. UTC-3).
+#.
+#: src/gui/event-editor/gcal-date-time-chooser.c:141
+#, c-format
+msgid "%1$s (%2$s)"
+msgstr "%1$s ‏(%2$s)"
+
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.c:270
+#: src/gui/event-editor/gcal-date-time-chooser.ui:90
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "AM"
+msgstr "صبح"
+
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.ui:96
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "PM"
+msgstr "عصر"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:7
+msgid "Date"
+msgstr "تاریخ"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:14
+msgid "Time"
+msgstr "زمان"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:65
+msgid ":"
+msgstr ":"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:109
+#: src/gui/event-editor/gcal-date-time-chooser.ui:120
+msgid "Change Timezone"
+msgstr "تغییر ناحیهٔ زمانی"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:133
+#: src/gui/event-editor/gcal-time-chooser-row.ui:35
+msgid "Edit time"
+msgstr "ویرایش نام"
+
+#: src/gui/event-editor/gcal-time-chooser-row.ui:15
+msgid "Edit Time"
+msgstr "ویرایش زمان"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:120
-msgid "Done"
-msgstr "انجام شد"
+msgid "_Save"
+msgstr "_ذخیره"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:742
-msgid "New Event"
-msgstr "رویداد جدید"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
-msgid "Select Calendar"
-msgstr "گزینش تقویم"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:23
 msgid "_Done"
 msgstr "_انجام شد"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:114
+#: src/gui/event-editor/gcal-event-editor-dialog.c:688
+msgid "New Event"
+msgstr "رویداد جدید"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:690
+msgid "Event Details"
+msgstr "جزییات رویداد"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:692
+msgid "Edit Event"
+msgstr "ویرایش رویداد"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:37
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr "این رویداد در تقویمی فقط خواندنی است. نمی‌تواند ویراسته یا حذف شود."
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:136
-msgid "Schedule"
-msgstr "زمان‌بندی"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:148
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:81
 msgid "Reminders"
 msgstr "یادآوری‌ها"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:160
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:93
 msgid "Notes"
 msgstr "یادداشت‌ها"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:177
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:110
 msgid "Delete Event"
 msgstr "حذف رویداد"
 
@@ -544,105 +591,78 @@ msgstr "۳ روز"
 msgid "1 Week"
 msgstr "۱ هفته"
 
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:238
-#, c-format
-msgid "Last %A"
-msgstr "%Aٔ پیش"
+#: src/gui/event-editor/gcal-schedule-section.ui:12
+msgid "_All Day"
+msgstr "_تمام روز"
 
-#: src/gui/event-editor/gcal-schedule-section.c:242
-#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/views/gcal-agenda-view.c:186
-msgid "Yesterday"
-msgstr "دیروز"
+#: src/gui/event-editor/gcal-schedule-section.ui:19
+msgid "_Time Slot"
+msgstr "_بازهٔ زمانی"
 
-#: src/gui/event-editor/gcal-schedule-section.c:246
-#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
-#: src/gui/views/gcal-agenda-view.c:182
-msgid "Today"
-msgstr "امروز"
+#: src/gui/event-editor/gcal-schedule-section.ui:32
+#: src/gui/event-editor/gcal-schedule-section.ui:53
+msgid "Start Date"
+msgstr "تاریخ آغاز"
 
-#: src/gui/event-editor/gcal-schedule-section.c:250
-#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/views/gcal-agenda-view.c:184
-msgid "Tomorrow"
-msgstr "فردا"
+#: src/gui/event-editor/gcal-schedule-section.ui:44
+#: src/gui/event-editor/gcal-schedule-section.ui:61
+msgid "End Date"
+msgstr "تاریخ پایان"
 
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:255
-#, c-format
-msgid "This %A"
-msgstr "این %A"
+#: src/gui/event-editor/gcal-schedule-section.ui:54
+msgid "Start Time"
+msgstr "زمان آغاز"
 
-#.
-#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
-#. * formatted time (e.g. 03:14 PM, or 21:29)
-#.
-#: src/gui/event-editor/gcal-schedule-section.c:285
-#, c-format
-msgid "%1$s, %2$s"
-msgstr "%2$s %1$s"
+#: src/gui/event-editor/gcal-schedule-section.ui:62
+msgid "End Time"
+msgstr "زمان پایان"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:17
-msgid "All Day"
-msgstr "تمام روز"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:34
-#: src/gui/importer/gcal-import-file-row.c:178
-msgid "Starts"
-msgstr "شروع از"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:77
-#: src/gui/importer/gcal-import-file-row.c:179
-msgid "Ends"
-msgstr "اتمام در"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:120
+#: src/gui/event-editor/gcal-schedule-section.ui:74
 msgid "Repeat"
 msgstr "تکرار"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:125
+#: src/gui/event-editor/gcal-schedule-section.ui:79
 msgid "No Repeat"
 msgstr "بدون تکرار"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:126
+#: src/gui/event-editor/gcal-schedule-section.ui:80
 msgid "Daily"
 msgstr "روزانه"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:127
+#: src/gui/event-editor/gcal-schedule-section.ui:81
 msgid "Monday – Friday"
 msgstr "دوشنبه - جمعه"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:128
+#: src/gui/event-editor/gcal-schedule-section.ui:82
 msgid "Weekly"
 msgstr "هفتگی"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:129
+#: src/gui/event-editor/gcal-schedule-section.ui:83
 msgid "Monthly"
 msgstr "ماهانه"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:130
+#: src/gui/event-editor/gcal-schedule-section.ui:84
 msgid "Yearly"
 msgstr "سالانه"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:141
+#: src/gui/event-editor/gcal-schedule-section.ui:95
 msgid "End Repeat"
 msgstr "پایان تکرار"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:146
+#: src/gui/event-editor/gcal-schedule-section.ui:100
 msgid "Forever"
 msgstr "برای همیشه"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:147
-#: src/gui/event-editor/gcal-schedule-section.ui:160
+#: src/gui/event-editor/gcal-schedule-section.ui:101
+#: src/gui/event-editor/gcal-schedule-section.ui:114
 msgid "Number of Occurrences"
 msgstr "تعداد رخدادها"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:148
+#: src/gui/event-editor/gcal-schedule-section.ui:102
 msgid "Until Date"
 msgstr "تاریخ پایان"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:179
+#: src/gui/event-editor/gcal-schedule-section.ui:133
 msgid "End Repeat Date"
 msgstr "تاریخ پایان تکرار"
 
@@ -651,19 +671,25 @@ msgstr "تاریخ پایان تکرار"
 msgid "Title"
 msgstr "عنوان"
 
-#: src/gui/event-editor/gcal-time-selector.ui:22
-msgid ":"
-msgstr ":"
+#. Translators: "%1$s" is the city / region name, and
+#. * "%2$s" is the country name (already localized).
+#.
+#: src/gui/event-editor/gcal-time-zone-dialog.c:84
+#, c-format
+msgid "%1$s, %2$s"
+msgstr "%2$s %1$s"
 
-#: src/gui/event-editor/gcal-time-selector.ui:47
-#: src/gui/views/gcal-week-hour-bar.c:57
-msgid "AM"
-msgstr "صبح"
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:4
+msgid "Select Timezone"
+msgstr "گزینش ناحیهٔ زمانی"
 
-#: src/gui/event-editor/gcal-time-selector.ui:48
-#: src/gui/views/gcal-week-hour-bar.c:57
-msgid "PM"
-msgstr "عصر"
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:16
+msgid "Search Locations"
+msgstr "جست‌وجوی مکان‌ها"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:31
+msgid "Search for a Timezone"
+msgstr "جست‌وجوی ناحیهٔ زمانی"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
@@ -697,7 +723,7 @@ msgstr ""
 "دانیال بهزادی <dani.behzi@ubuntu.com>\n"
 "امیر فارسی <amir_farsi@ymail.com>"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
 msgid "Weather"
 msgstr "آب‌وهوا"
 
@@ -716,6 +742,10 @@ msgstr "_همگام‌سازی تقویم‌ها"
 #: src/gui/gcal-calendar-button.ui:41
 msgid "_Manage Calendars…"
 msgstr "_مدیریت تقویم‌ها…"
+
+#: src/gui/gcal-calendar-combo-row-item.c:70
+msgid "This calendar is hidden"
+msgstr "این تقویم نهفته است"
 
 #: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
@@ -799,6 +829,21 @@ msgstr "%2$Id %1$s، %3$s"
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%2$Id %1$s %3$Id، %4$s"
+
+#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
+#: src/gui/views/gcal-agenda-view.c:197
+msgid "Today"
+msgstr "امروز"
+
+#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
+#: src/gui/views/gcal-agenda-view.c:199
+msgid "Tomorrow"
+msgstr "فردا"
+
+#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
+#: src/gui/views/gcal-agenda-view.c:201
+msgid "Yesterday"
+msgstr "دیروز"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), and %2$d is
@@ -913,6 +958,16 @@ msgstr ""
 "\n"
 "\n"
 "در %s"
+
+#.
+#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/gcal-event-widget.c:447
+msgid "%a %B %d"
+msgstr "%a %Od %OB"
 
 #: src/gui/gcal-meeting-row.c:72
 msgid "Unknown Service"
@@ -1185,27 +1240,27 @@ msgstr "موقعیت خودکار"
 msgid "Search locations"
 msgstr "جست‌وجوی مکان‌ها"
 
-#: src/gui/gcal-window.c:350
+#: src/gui/gcal-window.c:337
 msgid "Week"
 msgstr "هفته"
 
-#: src/gui/gcal-window.c:352
+#: src/gui/gcal-window.c:339
 msgid "Month"
 msgstr "ماه"
 
-#: src/gui/gcal-window.c:834
+#: src/gui/gcal-window.c:821
 msgid "Another event deleted"
 msgstr "رویدادی دیگر حذف شد"
 
-#: src/gui/gcal-window.c:834
+#: src/gui/gcal-window.c:821
 msgid "Event deleted"
 msgstr "رویداد حذف شد"
 
-#: src/gui/gcal-window.c:899
+#: src/gui/gcal-window.c:886
 msgid "Could not import some files: Not ICS files"
 msgstr "نتوانست برخی پرونده‌ها را درون بریزد: پروندهٔ ICS نبودند"
 
-#: src/gui/gcal-window.c:904
+#: src/gui/gcal-window.c:891
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "نتوانست «%s» را درون بریزد: پروندهٔ ICS نبود"
@@ -1234,19 +1289,19 @@ msgstr "_هفته"
 msgid "_Month"
 msgstr "م_اه"
 
-#: src/gui/gcal-window.ui:349
+#: src/gui/gcal-window.ui:347
 msgid "_Date & Time Settings…"
 msgstr "_تنظیمات تاریخ و زمان…"
 
-#: src/gui/gcal-window.ui:353
+#: src/gui/gcal-window.ui:351
 msgid "_Online Accounts…"
 msgstr "حساب‌های _برخط…"
 
-#: src/gui/gcal-window.ui:365
+#: src/gui/gcal-window.ui:363
 msgid "_Keyboard Shortcuts"
 msgstr "_میان‌برهای صفحه‌کلید"
 
-#: src/gui/gcal-window.ui:369
+#: src/gui/gcal-window.ui:367
 msgid "_About Calendar"
 msgstr "_دربارهٔ تقویم"
 
@@ -1345,7 +1400,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "نمای ماهانه"
 
-#: src/gui/importer/gcal-import-dialog.c:470
+#: src/gui/importer/gcal-import-dialog.c:341
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1359,47 +1414,65 @@ msgstr "درون‌ریزی پرونده…"
 msgid "_Import"
 msgstr "_درون‌ریزی"
 
-#: src/gui/importer/gcal-import-dialog.ui:61
+#: src/gui/importer/gcal-import-dialog.ui:60
 msgid "C_alendar"
 msgstr "_تقویم"
 
-#: src/gui/importer/gcal-importer.c:33
+#: src/gui/importer/gcal-importer.c:34
 msgid "No error"
 msgstr "بدون خطا"
 
-#: src/gui/importer/gcal-importer.c:36
+#: src/gui/importer/gcal-importer.c:37
 msgid "Bad argument to function"
 msgstr "آرگومان تابع بد"
 
-#: src/gui/importer/gcal-importer.c:40
+#: src/gui/importer/gcal-importer.c:41
 msgid "Failed to allocate a new object in memory"
 msgstr "شکست در تخصیص شی جدید به حافظه"
 
-#: src/gui/importer/gcal-importer.c:43
+#: src/gui/importer/gcal-importer.c:44
 msgid "File is malformed, invalid, or corrupted"
 msgstr "پرونده بدریخت، نامعتبر یا خراب شده است"
 
-#: src/gui/importer/gcal-importer.c:46
+#: src/gui/importer/gcal-importer.c:47
 msgid "Failed to parse the calendar contents"
 msgstr "شکست در تجزیهٔ محتوای تقویم"
 
-#: src/gui/importer/gcal-importer.c:49
+#: src/gui/importer/gcal-importer.c:50
 msgid "Failed to read file"
 msgstr "شکست در خواندن پرونده"
 
-#: src/gui/importer/gcal-importer.c:56
+#: src/gui/importer/gcal-importer.c:57
 msgid "Internal error"
 msgstr "خطای داخلی"
 
-#: src/gui/importer/gcal-importer.c:94
+#: src/gui/importer/gcal-importer.c:112
 msgid "File is not an iCalendar (.ics) file"
 msgstr "یک پروندهٔ آی‌کلندر (‪.ics‬) نیست"
+
+#: src/gui/importer/gcal-import-file-row.c:178
+msgid "Starts"
+msgstr "شروع از"
+
+#: src/gui/importer/gcal-import-file-row.c:179
+msgid "Ends"
+msgstr "اتمام در"
 
 #: src/gui/importer/gcal-import-file-row.c:180
 msgid "Description"
 msgstr "شرح"
 
-#: src/gui/views/gcal-agenda-view.c:380
+#.
+#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/views/gcal-agenda-view.c:209
+msgid "%A %B %d"
+msgstr "%A %Od %OB"
+
+#: src/gui/views/gcal-agenda-view.c:414
 msgid "On-going"
 msgstr "در دست اقدام"
 
@@ -1407,7 +1480,7 @@ msgstr "در دست اقدام"
 msgid "No events"
 msgstr "بدون رویداد"
 
-#: src/gui/views/gcal-month-popover.ui:59
+#: src/gui/views/gcal-month-popover.ui:69
 msgid "New Event…"
 msgstr "رویداد جدید…"
 
@@ -1474,11 +1547,25 @@ msgstr "زوم"
 msgid "Microsoft Teams"
 msgstr "تیمز مایکروسافت"
 
+#~ msgid "Done"
+#~ msgstr "انجام شد"
+
+#~ msgid "Select Calendar"
+#~ msgstr "گزینش تقویم"
+
+#~ msgid "Schedule"
+#~ msgstr "زمان‌بندی"
+
+#, c-format
+#~ msgid "Last %A"
+#~ msgstr "%Aٔ پیش"
+
+#, c-format
+#~ msgid "This %A"
+#~ msgstr "این %A"
+
 #~ msgid "The GNOME Project"
 #~ msgstr "پروژهٔ گنوم"
-
-#~ msgid "Select a file"
-#~ msgstr "گزینش یک پرونده"
 
 #~ msgid "Import a Calendar"
 #~ msgstr "درون‌ریزی یک تقویم"
@@ -1595,10 +1682,6 @@ msgstr "تیمز مایکروسافت"
 #~ msgstr "بازکردن"
 
 #~ msgctxt "tooltip"
-#~ msgid "Search for events"
-#~ msgstr "جست‌وجو برای رویدادها"
-
-#~ msgctxt "tooltip"
 #~ msgid "Add a new event"
 #~ msgstr "افزودن رویدادی جدید"
 
@@ -1621,20 +1704,11 @@ msgstr "تیمز مایکروسافت"
 #~ msgid "%B %d…"
 #~ msgstr "%Od %OB…"
 
-#~ msgid "%B %d"
-#~ msgstr "%Od %OB"
-
 #~ msgid "Calendar management"
 #~ msgstr "مدیریت تقویم"
 
 #~ msgid "Check this out!"
 #~ msgstr "این را ببینید!"
-
-#~ msgid "Date"
-#~ msgstr "تاریخ"
-
-#~ msgid "Time"
-#~ msgstr "زمان"
 
 #~ msgid "From Web…"
 #~ msgstr "از وب…"
@@ -1768,9 +1842,6 @@ msgstr "تیمز مایکروسافت"
 
 #~ msgid "WWW 99 - WWW 99"
 #~ msgstr "ف ف ف ۵۵ - ف ف ف ۵۵"
-
-#~ msgid "Change the time"
-#~ msgstr "تغییر ساعت"
 
 #~ msgid "List"
 #~ msgstr "لیست"
