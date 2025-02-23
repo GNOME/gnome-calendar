@@ -5,13 +5,13 @@
 # Mykola Tkach <Stuartlittle1970@gmail.com>, 2016.
 # Daniel Korostil <ted.korostiled@gmail.com>, 2015-2019.
 # Danylo Korostil <ted.korostiled@gmail.com>, 2020.
-# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022, 2023, 2024.
+# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022, 2023, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2024-09-03 20:56+0000\n"
-"PO-Revision-Date: 2024-09-04 19:25+0300\n"
+"POT-Creation-Date: 2025-02-12 20:31+0000\n"
+"PO-Revision-Date: 2025-02-23 22:36+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -25,9 +25,9 @@ msgstr ""
 "X-Project-Style: gnome\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:3
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:7 src/main.c:35
-#: src/gui/gcal-quick-add-popover.ui:135 src/gui/gcal-window.ui:4
-#: src/gui/gcal-window.ui:147
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
+#: src/gui/gcal-calendar-combo-row.ui:5 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "Календар"
 
@@ -83,11 +83,11 @@ msgstr "Рівень масштабування таблиці тижня"
 msgid "The current zoom level of the week grid"
 msgstr "Поточний рівень масштабування таблиці тижня"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:8
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "Керування вашим розкладом"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:11
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:17
 msgid ""
 "GNOME Calendar is an elegant tool to help you plan and stay on top of your "
 "schedule for upcoming days and weeks, whether your months are filled with "
@@ -99,7 +99,7 @@ msgstr ""
 "засіданнями та зустрічами, громадськими подіями, подорожами або іншими "
 "подіями вашого життя."
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:16
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:22
 msgid ""
 "Easily create and manage unlimited calendars and events with GNOME "
 "Calendar's infinite scrolling month view, week timetable, and scheduling "
@@ -109,7 +109,7 @@ msgstr ""
 "за допомогою нескінченного списку перегляду місяця, розкладу тижня та панелі "
 "списку планування «Календаря GNOME»."
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:20
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
 msgid ""
 "Integrating the latest GNOME technologies and design best practices, GNOME "
 "Calendar builds on top of the mature Evolution data server to manage large "
@@ -131,21 +131,17 @@ msgstr ""
 "користуватися програмою будь-де і будь-коли під час подорожей (або після "
 "краху цивілізації.)"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:33
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
 msgid "Week view"
 msgstr "Перегляд тижня"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:37
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
 msgid "Month view"
 msgstr "Перегляд місяця"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
 msgid "Event editor"
 msgstr "Редактор подій"
-
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
-msgid "The GNOME Project"
-msgstr "Проєкт GNOME"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -194,7 +190,7 @@ msgid "Calendar “%s” removed"
 msgstr "Календар «%s» вилучено"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:363
-#: src/gui/gcal-window.c:836
+#: src/gui/gcal-window.c:823
 msgid "_Undo"
 msgstr "_Скасувати"
 
@@ -261,7 +257,7 @@ msgstr "Типово додати нову подію до цього кален
 msgid "_Remove Calendar"
 msgstr "Ви_лучити календар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:158
+#: src/gui/calendar-management/gcal-new-calendar-page.c:117
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
@@ -270,17 +266,17 @@ msgstr[1] "Додати %1$u календарі"
 msgstr[2] "Додати %1$u календарів"
 msgstr[3] "Додати календар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:165
+#: src/gui/calendar-management/gcal-new-calendar-page.c:124
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:160
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Додати календар"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:373
+#: src/gui/calendar-management/gcal-new-calendar-page.c:332
 msgid "The URL you have entered appears to be invalid."
 msgstr "Здається, вами введено некоректну адресу."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:426
+#: src/gui/calendar-management/gcal-new-calendar-page.c:385
 msgid "A valid user and password are required to connect to this calendar."
 msgstr ""
 "Для з'єднання з цим календарем слід вказати коректні дані щодо користувача і "
@@ -291,7 +287,6 @@ msgid "New Calendar"
 msgstr "Календар"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:23
-#| msgid "New Local Calendar…"
 msgid "Create a Local Calendar"
 msgstr "Створити локальний календар"
 
@@ -304,9 +299,9 @@ msgid ""
 "HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
 "be updated by the provider will be added as read-only."
 msgstr ""
-"Передбачено підтримку адрес HTTPS, CalDAV або Webcal. Інтернет-календарі,"
-" які може оновлювати лише надавач даних, буде додано як придатні лише до"
-" читання."
+"Передбачено підтримку адрес HTTPS, CalDAV або Webcal. Інтернет-календарі, "
+"які може оновлювати лише надавач даних, буде додано як придатні лише до "
+"читання."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
@@ -330,8 +325,8 @@ msgid "Password"
 msgstr "Пароль"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:207
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:15
-#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1205
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:16
+#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1162
 msgid "_Cancel"
 msgstr "_Скасувати"
 
@@ -468,12 +463,6 @@ msgstr "Перемкнути звук попередження"
 msgid "Remove Alarm"
 msgstr "Вилучити нагадування"
 
-#: src/gui/event-editor/gcal-calendar-row.c:70
-#: src/gui/importer/gcal-import-dialog.c:332
-#| msgid "%s (this calendar is read-only)"
-msgid "This calendar is hidden"
-msgstr "Цей календар приховано"
-
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
 #. * NOTE: These grid abbreviations are always shown together
@@ -523,48 +512,108 @@ msgctxt "grid saturday"
 msgid "S"
 msgstr "С"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:121
-msgid "Save"
-msgstr "Зберегти"
+#: src/gui/event-editor/gcal-date-chooser-row.ui:15
+#| msgid "End Repeat Date"
+msgid "Edit Date"
+msgstr "Змінити дату"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:121
-msgid "Done"
-msgstr "Зроблено"
+#: src/gui/event-editor/gcal-date-chooser-row.ui:38
+#| msgid "Edit calendar"
+msgid "Edit date"
+msgstr "Змінити дату"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:744
-msgid "New Event"
-msgstr "Нова подія"
+#. Translators: "%1$s" is the timezone identifier (e.g. UTC, America/Sao_Paulo)
+#. * and "%2$s" is the timezone offset (e.g. UTC-3).
+#.
+#: src/gui/event-editor/gcal-date-time-chooser.c:141
+#, c-format
+#| msgid "%1$s, %2$s"
+msgid "%1$s (%2$s)"
+msgstr "%1$s (%2$s)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:22
-msgid ""
-"<b>This event is part of a read-only calendar</b>\n"
-"You cannot delete or change this event."
-msgstr ""
-"<b>Цей запис події є частиною календаря, який призначено лише для читання</"
-"b>\n"
-"Ви не можете вилучити чи змінити цей запис події."
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.c:270
+#: src/gui/event-editor/gcal-date-time-chooser.ui:90
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "AM"
+msgstr "AM"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:50
-msgid "Select Calendar"
-msgstr "Виберіть календар"
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.ui:96
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "PM"
+msgstr "PM"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:108
+#: src/gui/event-editor/gcal-date-time-chooser.ui:7
+msgid "Date"
+msgstr "Дата"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:14
+msgid "Time"
+msgstr "Час"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:65
+msgid ":"
+msgstr ":"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:109
+#: src/gui/event-editor/gcal-date-time-chooser.ui:120
+msgid "Change Timezone"
+msgstr "Змінити часовий пояс"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:133
+#: src/gui/event-editor/gcal-time-chooser-row.ui:35
+msgid "Edit time"
+msgstr "Змінити час"
+
+#: src/gui/event-editor/gcal-time-chooser-row.ui:15
+#| msgid "Time"
+msgid "Edit Time"
+msgstr "Змінити час"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#| msgid "Save"
+msgid "_Save"
+msgstr "З_берегти"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:23
 msgid "_Done"
 msgstr "В_иконано"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:135
-msgid "Schedule"
-msgstr "Розклад"
+#: src/gui/event-editor/gcal-event-editor-dialog.c:688
+msgid "New Event"
+msgstr "Нова подія"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:147
+#: src/gui/event-editor/gcal-event-editor-dialog.c:690
+#| msgid "More Details"
+msgid "Event Details"
+msgstr "Подробиці події"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:692
+#| msgctxt "tooltip"
+#| msgid "Add Event"
+msgid "Edit Event"
+msgstr "Редагування події"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:37
+#| msgid ""
+#| "<b>This event is part of a read-only calendar</b>\n"
+#| "You cannot delete or change this event."
+msgid "This event is in a read-only calendar. It cannot be edited or deleted."
+msgstr ""
+"Цей запис події є частиною призначеного лише для читання календаря. Його не"
+" можна редагувати або вилучати."
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:81
 msgid "Reminders"
 msgstr "Нагадування"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:159
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:93
 msgid "Notes"
 msgstr "Примітки"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:176
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:110
 msgid "Delete Event"
 msgstr "Вилучити подію"
 
@@ -612,105 +661,83 @@ msgstr "3 дні"
 msgid "1 Week"
 msgstr "1 тиждень"
 
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:238
-#, c-format
-msgid "Last %A"
-msgstr "Останній %A"
+#: src/gui/event-editor/gcal-schedule-section.ui:12
+#| msgid "All Day"
+msgid "_All Day"
+msgstr "_Увесь день"
 
-#: src/gui/event-editor/gcal-schedule-section.c:242
-#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/views/gcal-agenda-view.c:186
-msgid "Yesterday"
-msgstr "Учора"
+#: src/gui/event-editor/gcal-schedule-section.ui:19
+msgid "_Time Slot"
+msgstr "_Часовий слот"
 
-#: src/gui/event-editor/gcal-schedule-section.c:246
-#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
-#: src/gui/views/gcal-agenda-view.c:182
-msgid "Today"
-msgstr "Сьогодні"
+#: src/gui/event-editor/gcal-schedule-section.ui:32
+#: src/gui/event-editor/gcal-schedule-section.ui:53
+#| msgid "Starts"
+msgid "Start Date"
+msgstr "Дата початку"
 
-#: src/gui/event-editor/gcal-schedule-section.c:250
-#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/views/gcal-agenda-view.c:184
-msgid "Tomorrow"
-msgstr "Завтра"
+#: src/gui/event-editor/gcal-schedule-section.ui:44
+#: src/gui/event-editor/gcal-schedule-section.ui:61
+#| msgid "End Repeat Date"
+msgid "End Date"
+msgstr "Дата завершення"
 
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:255
-#, c-format
-msgid "This %A"
-msgstr "Цей %A"
+#: src/gui/event-editor/gcal-schedule-section.ui:54
+#| msgid "Starts"
+msgid "Start Time"
+msgstr "Час початку"
 
-#.
-#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
-#. * formatted time (e.g. 03:14 PM, or 21:29)
-#.
-#: src/gui/event-editor/gcal-schedule-section.c:285
-#, c-format
-msgid "%1$s, %2$s"
-msgstr "%1$s, %2$s"
+#: src/gui/event-editor/gcal-schedule-section.ui:62
+#| msgid "Time"
+msgid "End Time"
+msgstr "Час завершення"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:17
-msgid "All Day"
-msgstr "Увесь день"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:34
-#: src/gui/importer/gcal-import-file-row.c:178
-msgid "Starts"
-msgstr "Початки"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:77
-#: src/gui/importer/gcal-import-file-row.c:179
-msgid "Ends"
-msgstr "Кінці"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:120
+#: src/gui/event-editor/gcal-schedule-section.ui:74
 msgid "Repeat"
 msgstr "Повторювати"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:125
+#: src/gui/event-editor/gcal-schedule-section.ui:79
 msgid "No Repeat"
 msgstr "Не повторювати"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:126
+#: src/gui/event-editor/gcal-schedule-section.ui:80
 msgid "Daily"
 msgstr "Щоденно"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:127
+#: src/gui/event-editor/gcal-schedule-section.ui:81
 msgid "Monday – Friday"
 msgstr "Понеділок – П'ятниця"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:128
+#: src/gui/event-editor/gcal-schedule-section.ui:82
 msgid "Weekly"
 msgstr "Щотижнево"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:129
+#: src/gui/event-editor/gcal-schedule-section.ui:83
 msgid "Monthly"
 msgstr "Щомісячно"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:130
+#: src/gui/event-editor/gcal-schedule-section.ui:84
 msgid "Yearly"
 msgstr "Щороку"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:141
+#: src/gui/event-editor/gcal-schedule-section.ui:95
 msgid "End Repeat"
 msgstr "Завершити повтори"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:146
+#: src/gui/event-editor/gcal-schedule-section.ui:100
 msgid "Forever"
 msgstr "Назавжди"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:147
-#: src/gui/event-editor/gcal-schedule-section.ui:160
+#: src/gui/event-editor/gcal-schedule-section.ui:101
+#: src/gui/event-editor/gcal-schedule-section.ui:114
 msgid "Number of Occurrences"
 msgstr "Кількість подій"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:148
+#: src/gui/event-editor/gcal-schedule-section.ui:102
 msgid "Until Date"
 msgstr "До дати"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:179
+#: src/gui/event-editor/gcal-schedule-section.ui:133
 msgid "End Repeat Date"
 msgstr "Дата завершення повтору"
 
@@ -719,19 +746,29 @@ msgstr "Дата завершення повтору"
 msgid "Title"
 msgstr "Заголовок"
 
-#: src/gui/event-editor/gcal-time-selector.ui:22
-msgid ":"
-msgstr ":"
+#. Translators: "%1$s" is the city / region name, and
+#. * "%2$s" is the country name (already localized).
+#.
+#: src/gui/event-editor/gcal-time-zone-dialog.c:84
+#, c-format
+msgid "%1$s, %2$s"
+msgstr "%1$s, %2$s"
 
-#: src/gui/event-editor/gcal-time-selector.ui:47
-#: src/gui/views/gcal-week-hour-bar.c:57
-msgid "AM"
-msgstr "AM"
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:4
+#| msgid "Select a file"
+msgid "Select Timezone"
+msgstr "Виберіть часовий пояс"
 
-#: src/gui/event-editor/gcal-time-selector.ui:48
-#: src/gui/views/gcal-week-hour-bar.c:57
-msgid "PM"
-msgstr "PM"
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:16
+#| msgid "Search locations"
+msgid "Search Locations"
+msgstr "Пошук за місцями"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:31
+#| msgctxt "tooltip"
+#| msgid "Search for events"
+msgid "Search for a Timezone"
+msgstr "Пошук часового поясу"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
@@ -764,7 +801,7 @@ msgstr ""
 "Daniel Korostil <ted.korostiled@gmail.com>, 2015-2016.\n"
 "Mykola Tkach <Stuartlittle1970@gmail.com>, 2014-2016."
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:357
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
 msgid "Weather"
 msgstr "Погода"
 
@@ -783,6 +820,10 @@ msgstr "_Синхронізувати"
 #: src/gui/gcal-calendar-button.ui:41
 msgid "_Manage Calendars…"
 msgstr "_Керування календарями…"
+
+#: src/gui/gcal-calendar-combo-row-item.c:70
+msgid "This calendar is hidden"
+msgstr "Цей календар приховано"
 
 #: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
@@ -866,6 +907,21 @@ msgstr "%2$d %1$s, %3$s"
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%2$d %1$s, %3$d, %4$s"
+
+#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
+#: src/gui/views/gcal-agenda-view.c:197
+msgid "Today"
+msgstr "Сьогодні"
+
+#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
+#: src/gui/views/gcal-agenda-view.c:199
+msgid "Tomorrow"
+msgstr "Завтра"
+
+#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
+#: src/gui/views/gcal-agenda-view.c:201
+msgid "Yesterday"
+msgstr "Учора"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), and %2$d is
@@ -981,6 +1037,17 @@ msgstr ""
 "\n"
 "\n"
 "%s"
+
+#.
+#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/gcal-event-widget.c:447
+#| msgid "%B %d"
+msgid "%a %B %d"
+msgstr "%a %B %d"
 
 #: src/gui/gcal-meeting-row.c:72
 msgid "Unknown Service"
@@ -1253,27 +1320,27 @@ msgstr "Автоматичне визначення місцевості"
 msgid "Search locations"
 msgstr "Пошук за місцями"
 
-#: src/gui/gcal-window.c:350
+#: src/gui/gcal-window.c:337
 msgid "Week"
 msgstr "Тиждень"
 
-#: src/gui/gcal-window.c:352
+#: src/gui/gcal-window.c:339
 msgid "Month"
 msgstr "Місяць"
 
-#: src/gui/gcal-window.c:834
+#: src/gui/gcal-window.c:821
 msgid "Another event deleted"
 msgstr "Іншу подію вилучено"
 
-#: src/gui/gcal-window.c:834
+#: src/gui/gcal-window.c:821
 msgid "Event deleted"
 msgstr "Подію вилучено"
 
-#: src/gui/gcal-window.c:899
+#: src/gui/gcal-window.c:886
 msgid "Could not import some files: Not ICS files"
 msgstr "Не вдалося імпортувати деякі файли: це не файли ICS"
 
-#: src/gui/gcal-window.c:904
+#: src/gui/gcal-window.c:891
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Не вдалося імпортувати «%s»: це не файл ICS"
@@ -1291,7 +1358,6 @@ msgid "_Today"
 msgstr "С_ьогодні"
 
 #: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
-#| msgid "to Today"
 msgid "Go to Today"
 msgstr "Перейти до сьогоднішнього дня"
 
@@ -1303,19 +1369,19 @@ msgstr "_Тиждень"
 msgid "_Month"
 msgstr "_Місяць"
 
-#: src/gui/gcal-window.ui:349
+#: src/gui/gcal-window.ui:347
 msgid "_Date & Time Settings…"
 msgstr "П_араметри дати і часу…"
 
-#: src/gui/gcal-window.ui:353
+#: src/gui/gcal-window.ui:351
 msgid "_Online Accounts…"
 msgstr "Мережеві _облікові записи"
 
-#: src/gui/gcal-window.ui:365
+#: src/gui/gcal-window.ui:363
 msgid "_Keyboard Shortcuts"
 msgstr "_Клавіатурні скорочення"
 
-#: src/gui/gcal-window.ui:369
+#: src/gui/gcal-window.ui:367
 msgid "_About Calendar"
 msgstr "Про _Календар"
 
@@ -1414,7 +1480,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Перегляд місяця"
 
-#: src/gui/importer/gcal-import-dialog.c:470
+#: src/gui/importer/gcal-import-dialog.c:341
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1431,48 +1497,67 @@ msgstr "Імпортувати файли…"
 msgid "_Import"
 msgstr "_Імпортувати"
 
-#: src/gui/importer/gcal-import-dialog.ui:61
+#: src/gui/importer/gcal-import-dialog.ui:60
 msgid "C_alendar"
 msgstr "К_алендар"
 
-#: src/gui/importer/gcal-importer.c:33
+#: src/gui/importer/gcal-importer.c:34
 msgid "No error"
 msgstr "Без помилок"
 
-#: src/gui/importer/gcal-importer.c:36
+#: src/gui/importer/gcal-importer.c:37
 msgid "Bad argument to function"
 msgstr "Помилковий аргумент функції"
 
-#: src/gui/importer/gcal-importer.c:40
+#: src/gui/importer/gcal-importer.c:41
 msgid "Failed to allocate a new object in memory"
 msgstr "Не вдалося розмістити новий об'єкт у пам'яті"
 
-#: src/gui/importer/gcal-importer.c:43
+#: src/gui/importer/gcal-importer.c:44
 msgid "File is malformed, invalid, or corrupted"
 msgstr ""
 "Файл записано у помилковому форматуванні, він є некоректним або пошкодженим"
 
-#: src/gui/importer/gcal-importer.c:46
+#: src/gui/importer/gcal-importer.c:47
 msgid "Failed to parse the calendar contents"
 msgstr "Не вдалося обробити вміст календаря"
 
-#: src/gui/importer/gcal-importer.c:49
+#: src/gui/importer/gcal-importer.c:50
 msgid "Failed to read file"
 msgstr "Не вдалося прочитати файл"
 
-#: src/gui/importer/gcal-importer.c:56
+#: src/gui/importer/gcal-importer.c:57
 msgid "Internal error"
 msgstr "Внутрішня помилка"
 
-#: src/gui/importer/gcal-importer.c:94
+#: src/gui/importer/gcal-importer.c:112
 msgid "File is not an iCalendar (.ics) file"
 msgstr "Файл не є файлом iCalendar (.ics)"
+
+#: src/gui/importer/gcal-import-file-row.c:178
+msgid "Starts"
+msgstr "Початки"
+
+#: src/gui/importer/gcal-import-file-row.c:179
+msgid "Ends"
+msgstr "Кінці"
 
 #: src/gui/importer/gcal-import-file-row.c:180
 msgid "Description"
 msgstr "Опис"
 
-#: src/gui/views/gcal-agenda-view.c:380
+#.
+#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/views/gcal-agenda-view.c:209
+#| msgid "%B %d"
+msgid "%A %B %d"
+msgstr "%A %B %d"
+
+#: src/gui/views/gcal-agenda-view.c:414
 msgid "On-going"
 msgstr "Невдовзі"
 
@@ -1480,7 +1565,7 @@ msgstr "Невдовзі"
 msgid "No events"
 msgstr "Немає подій"
 
-#: src/gui/views/gcal-month-popover.ui:59
+#: src/gui/views/gcal-month-popover.ui:69
 msgid "New Event…"
 msgstr "Створити подію"
 
@@ -1503,14 +1588,15 @@ msgstr[3] "Інша %d подія"
 
 #: src/gui/views/gcal-week-header.c:1006
 #, c-format
-msgid "week %d"
+#| msgid "week %d"
+msgid "Week %d"
 msgstr "тиждень %d"
 
-#: src/utils/gcal-utils.c:1201
+#: src/utils/gcal-utils.c:1158
 msgid "Modify Multiple Events?"
 msgstr "Змінити декілька подій?"
 
-#: src/utils/gcal-utils.c:1202
+#: src/utils/gcal-utils.c:1159
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1518,40 +1604,57 @@ msgstr ""
 "Подія, яку ви намагаєтесь редагувати, — повторювана. Зміни, які ви вибрали, "
 "слід застосувати до:"
 
-#: src/utils/gcal-utils.c:1206
+#: src/utils/gcal-utils.c:1163
 msgid "_Only This Event"
 msgstr "_Лише для цієї події"
 
-#: src/utils/gcal-utils.c:1212
+#: src/utils/gcal-utils.c:1169
 msgid "_Subsequent Events"
 msgstr "Для _наступних подій"
 
-#: src/utils/gcal-utils.c:1215
+#: src/utils/gcal-utils.c:1172
 msgid "_All Events"
 msgstr "Для _всіх подій"
 
-#: src/utils/gcal-utils.c:1317
+#: src/utils/gcal-utils.c:1274
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1318
+#: src/utils/gcal-utils.c:1275
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1319
+#: src/utils/gcal-utils.c:1276
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1320
+#: src/utils/gcal-utils.c:1277
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/utils/gcal-utils.c:1321
+#: src/utils/gcal-utils.c:1278
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
-#~ msgid "Select a file"
-#~ msgstr "Виберіть файл"
+#~ msgid "The GNOME Project"
+#~ msgstr "Проєкт GNOME"
+
+#~ msgid "Done"
+#~ msgstr "Зроблено"
+
+#~ msgid "Select Calendar"
+#~ msgstr "Виберіть календар"
+
+#~ msgid "Schedule"
+#~ msgstr "Розклад"
+
+#, c-format
+#~ msgid "Last %A"
+#~ msgstr "Останній %A"
+
+#, c-format
+#~ msgid "This %A"
+#~ msgstr "Цей %A"
 
 #~ msgid "Import a Calendar"
 #~ msgstr "Вилучити календар"
@@ -1669,10 +1772,6 @@ msgstr "Microsoft Teams"
 #~ msgstr "Відкрити"
 
 #~ msgctxt "tooltip"
-#~ msgid "Search for events"
-#~ msgstr "Пошук подій"
-
-#~ msgctxt "tooltip"
 #~ msgid "Add a new event"
 #~ msgstr "Створити подію"
 
@@ -1696,9 +1795,6 @@ msgstr "Microsoft Teams"
 #~ msgid "%B %d…"
 #~ msgstr "%B %d"
 
-#~ msgid "%B %d"
-#~ msgstr "%B %d"
-
 #~ msgid "Check this out!"
 #~ msgstr "Зацініть!"
 
@@ -1710,12 +1806,6 @@ msgstr "Microsoft Teams"
 
 #~ msgid "Sources disabled last time Calendar ran"
 #~ msgstr "Джерела вимкнені після останнього запуску календаря"
-
-#~ msgid "Date"
-#~ msgstr "Дата"
-
-#~ msgid "Time"
-#~ msgstr "Час"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "Додати _подію…"
@@ -1806,9 +1896,6 @@ msgstr "Microsoft Teams"
 
 #~ msgid "Create"
 #~ msgstr "Створити"
-
-#~ msgid "More Details"
-#~ msgstr "Докладніше"
 
 #~ msgid "%.2d:%.2d %s"
 #~ msgstr "%.2d:%.2d %s"
