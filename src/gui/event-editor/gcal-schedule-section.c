@@ -471,16 +471,14 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
 }
 
 static void
-gcal_schedule_section_apply (GcalEventEditorSection *section)
+gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
+                                      GcalEvent           *event)
 {
   GDateTime *start_date, *end_date;
   GcalRecurrenceFrequency freq;
-  GcalScheduleSection *self;
   gboolean all_day;
 
   GCAL_ENTRY;
-
-  self = GCAL_SCHEDULE_SECTION (section);
 
   all_day = all_day_selected (self);
 
@@ -505,7 +503,7 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
     }
 #endif
 
-  gcal_event_set_all_day (self->event, all_day);
+  gcal_event_set_all_day (event, all_day);
 
   /*
    * The end date for multi-day events is exclusive, so we bump it by a day.
@@ -519,8 +517,8 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
       end_date = fake_end_date;
     }
 
-  gcal_event_set_date_start (self->event, start_date);
-  gcal_event_set_date_end (self->event, end_date);
+  gcal_event_set_date_start (event, start_date);
+  gcal_event_set_date_end (event, end_date);
 
   /* Check Repeat popover and set recurrence-rules accordingly */
 
@@ -543,17 +541,29 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
       if (!gcal_recurrence_is_equal (self->values->recur, recur))
         {
           /* Remove the previous recurrence... */
-          remove_recurrence_properties (self->event);
+          remove_recurrence_properties (event);
 
           /* ... and set the new one */
-          gcal_event_set_recurrence (self->event, recur);
+          gcal_event_set_recurrence (event, recur);
         }
     }
   else
     {
       /* When NO_REPEAT is set, make sure to remove the old recurrent */
-      remove_recurrence_properties (self->event);
+      remove_recurrence_properties (event);
     }
+
+  GCAL_EXIT;
+}
+
+static void
+gcal_schedule_section_apply (GcalEventEditorSection *section)
+{
+  GcalScheduleSection *self = GCAL_SCHEDULE_SECTION (section);
+
+  GCAL_ENTRY;
+
+  gcal_schedule_section_apply_to_event (self, self->event);
 
   gcal_schedule_values_free (self->values);
   self->values = gcal_schedule_values_from_event (self->event);
