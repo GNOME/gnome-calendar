@@ -346,8 +346,8 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   GDateTime* date_time_end = NULL;
   GcalRecurrenceLimitType limit_type;
   GcalRecurrenceFrequency frequency;
-  GcalRecurrence *recur;
   gboolean all_day, new_event;
+  GcalScheduleValues *values;
 
   GCAL_ENTRY;
 
@@ -357,11 +357,12 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   self->flags = flags;
 
   self->values = gcal_schedule_values_from_event (event);
+  values = self->values; /* alias to avoid "self->values" everywhere */
 
   if (!event)
     GCAL_RETURN ();
 
-  all_day = gcal_event_get_all_day (event);
+  all_day = values->all_day;
   new_event = flags & GCAL_EVENT_EDITOR_FLAG_NEW_EVENT;
 
   /* schedule type  */
@@ -374,8 +375,8 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   gtk_widget_set_visible (GTK_WIDGET (self->end_date_time_chooser), !all_day);
 
   /* retrieve start and end date-times */
-  date_time_start = gcal_event_get_date_start (event);
-  date_time_end = gcal_event_get_date_end (event);
+  date_time_start = values->date_start;
+  date_time_end = values->date_end;
   /*
    * This is subtracting what has been added in action_button_clicked ().
    * See bug 769300.
@@ -427,9 +428,16 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   unblock_date_signals (self);
 
   /* Recurrences */
-  recur = gcal_event_get_recurrence (event);
-  frequency = recur ? recur->frequency : GCAL_RECURRENCE_NO_REPEAT;
-  limit_type = recur ? recur->limit_type : GCAL_RECURRENCE_FOREVER;
+  if (values->recur)
+    {
+      frequency = values->recur->frequency;
+      limit_type = values->recur->limit_type;
+    }
+  else
+    {
+      frequency = GCAL_RECURRENCE_NO_REPEAT;
+      limit_type = GCAL_RECURRENCE_FOREVER;
+    }
 
   adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_combo), frequency);
   adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_duration_combo), limit_type);
@@ -447,11 +455,11 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   switch (limit_type)
     {
     case GCAL_RECURRENCE_COUNT:
-      gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), recur->limit.count);
+      gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), values->recur->limit.count);
       break;
 
     case GCAL_RECURRENCE_UNTIL:
-      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->until_date_selector), recur->limit.until);
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->until_date_selector), values->recur->limit.until);
       break;
 
     case GCAL_RECURRENCE_FOREVER:
