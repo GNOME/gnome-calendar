@@ -98,6 +98,15 @@ gcal_schedule_values_copy (const GcalScheduleValues *values)
   return copy;
 }
 
+static GcalScheduleValues *
+gcal_schedule_values_set_all_day (const GcalScheduleValues *values, gboolean all_day)
+{
+  GcalScheduleValues *copy = gcal_schedule_values_copy (values);
+
+  copy->all_day = all_day;
+  return copy;
+}
+
 /*
  * Auxiliary methods
  */
