@@ -574,7 +574,7 @@ gcal_schedule_section_changed (GcalEventEditorSection *section)
 
   self = GCAL_SCHEDULE_SECTION (section);
   all_day = all_day_selected (self);
-  was_all_day = gcal_event_get_all_day (self->event);
+  was_all_day = self->values->all_day;
 
   /* All day */
   if (all_day != was_all_day)
@@ -590,8 +590,8 @@ gcal_schedule_section_changed (GcalEventEditorSection *section)
     start_date = gcal_date_chooser_row_get_date (self->start_date_row);
     end_date = gcal_date_chooser_row_get_date (self->end_date_row);
   }
-  prev_start_date = gcal_event_get_date_start (self->event);
-  prev_end_date = gcal_event_get_date_end (self->event);
+  prev_start_date = self->values->date_start;
+  prev_end_date = self->values->date_end;
 
   start_tz = g_date_time_get_timezone (start_date);
   end_tz = g_date_time_get_timezone (end_date);
@@ -611,7 +611,7 @@ gcal_schedule_section_changed (GcalEventEditorSection *section)
       end_date = fake_end_date;
     }
 
-  if (!g_date_time_equal (end_date, gcal_event_get_date_end (self->event)))
+  if (!g_date_time_equal (end_date, self->values->date_end))
     GCAL_RETURN (TRUE);
   if (g_strcmp0 (g_time_zone_get_identifier (end_tz), g_time_zone_get_identifier (prev_end_tz)) != 0)
     GCAL_RETURN (TRUE);
@@ -746,7 +746,7 @@ gcal_schedule_section_recurrence_changed (GcalScheduleSection *self)
   g_return_val_if_fail (GCAL_IS_SCHEDULE_SECTION (self), FALSE);
 
   freq = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_combo));
-  if (freq == GCAL_RECURRENCE_NO_REPEAT && !gcal_event_get_recurrence (self->event))
+  if (freq == GCAL_RECURRENCE_NO_REPEAT && !self->values->recur)
     GCAL_RETURN (FALSE);
 
   recurrence = gcal_recurrence_new ();
@@ -757,7 +757,7 @@ gcal_schedule_section_recurrence_changed (GcalScheduleSection *self)
   else if (recurrence->limit_type == GCAL_RECURRENCE_COUNT)
     recurrence->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
 
-  GCAL_RETURN (!gcal_recurrence_is_equal (recurrence, gcal_event_get_recurrence (self->event)));
+  GCAL_RETURN (!gcal_recurrence_is_equal (recurrence, self->values->recur));
 }
 
 gboolean
@@ -783,8 +783,8 @@ gcal_schedule_section_day_changed (GcalScheduleSection *self)
       end_date = gcal_date_chooser_row_get_date (self->end_date_row);
     }
 
-  GCAL_RETURN (gcal_date_time_compare_date (start_date, gcal_event_get_date_start (self->event)) < 0 ||
-               gcal_date_time_compare_date (end_date, gcal_event_get_date_end (self->event)) > 0);
+  GCAL_RETURN (gcal_date_time_compare_date (start_date, self->values->date_start) < 0 ||
+               gcal_date_time_compare_date (end_date, self->values->date_end) > 0);
 }
 
 /**
