@@ -476,7 +476,6 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
   GDateTime *start_date, *end_date;
   GcalRecurrenceFrequency freq;
   GcalScheduleSection *self;
-  GcalRecurrence *old_recur;
   gboolean all_day;
 
   GCAL_ENTRY;
@@ -524,7 +523,7 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
   gcal_event_set_date_end (self->event, end_date);
 
   /* Check Repeat popover and set recurrence-rules accordingly */
-  old_recur = gcal_event_get_recurrence (self->event);
+
   freq = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_combo));
 
   if (freq != GCAL_RECURRENCE_NO_REPEAT)
@@ -541,7 +540,7 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
         recur->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
 
       /* Only apply the new recurrence if it's different from the old one */
-      if (!gcal_recurrence_is_equal (old_recur, recur))
+      if (!gcal_recurrence_is_equal (self->values->recur, recur))
         {
           /* Remove the previous recurrence... */
           remove_recurrence_properties (self->event);
@@ -555,6 +554,9 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
       /* When NO_REPEAT is set, make sure to remove the old recurrent */
       remove_recurrence_properties (self->event);
     }
+
+  gcal_schedule_values_free (self->values);
+  self->values = gcal_schedule_values_from_event (self->event);
 
   GCAL_EXIT;
 }
