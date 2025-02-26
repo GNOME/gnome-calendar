@@ -68,6 +68,7 @@ typedef struct
   gboolean schedule_type_all_day;
   gboolean date_widgets_visible;
   gboolean date_time_widgets_visible;
+  GcalTimeFormat time_format;
 } WidgetState;
 
 static void widget_state_free (WidgetState *state);
@@ -115,6 +116,7 @@ gcal_schedule_values_copy (const GcalScheduleValues *values)
   copy->date_start = values->date_start ? g_date_time_ref (values->date_start) : NULL;
   copy->date_end = values->date_end ? g_date_time_ref (values->date_end) : NULL;
   copy->recur = values->recur ? gcal_recurrence_ref (values->recur) : NULL;
+  copy->time_format = values->time_format;
 
   return copy;
 }
@@ -128,6 +130,15 @@ gcal_schedule_values_set_all_day (const GcalScheduleValues *values, gboolean all
   return copy;
 }
 
+static GcalScheduleValues *
+gcal_schedule_values_set_time_format (const GcalScheduleValues *values, GcalTimeFormat time_format)
+{
+  GcalScheduleValues *copy = gcal_schedule_values_copy (values);
+
+  copy->time_format = time_format;
+  return copy;
+}
+
 static WidgetState *
 widget_state_from_values (const GcalScheduleValues *values)
 {
@@ -136,6 +147,7 @@ widget_state_from_values (const GcalScheduleValues *values)
   state->schedule_type_all_day = values->all_day;
   state->date_widgets_visible = values->all_day;
   state->date_time_widgets_visible = !values->all_day;
+  state->time_format = values->time_format;
 
   return state;
 }
@@ -203,6 +215,9 @@ update_widgets (GcalScheduleSection *self,
   gtk_widget_set_visible (GTK_WIDGET (self->end_date_group), state->date_widgets_visible);
   gtk_widget_set_visible (GTK_WIDGET (self->start_date_time_chooser), state->date_time_widgets_visible);
   gtk_widget_set_visible (GTK_WIDGET (self->end_date_time_chooser), state->date_time_widgets_visible);
+
+  gcal_date_time_chooser_set_time_format (self->start_date_time_chooser, state->time_format);
+  gcal_date_time_chooser_set_time_format (self->end_date_time_chooser, state->time_format);
 
   g_signal_handlers_unblock_by_func (self->schedule_type_toggle_group, on_schedule_type_changed_cb, self);
 }
@@ -387,8 +402,11 @@ on_time_format_changed_cb (GcalScheduleSection *self)
 {
   GcalTimeFormat time_format = gcal_context_get_time_format (self->context);
 
-  gcal_date_time_chooser_set_time_format (self->start_date_time_chooser, time_format);
-  gcal_date_time_chooser_set_time_format (self->end_date_time_chooser, time_format);
+  GcalScheduleValues *updated = gcal_schedule_values_set_time_format (self->values, time_format);
+
+  WidgetState *state = widget_state_from_values (updated);
+  update_widgets (self, state);
+  widget_state_free (state);
 }
 
 
@@ -422,6 +440,7 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   GcalRecurrenceLimitType limit_type;
   GcalRecurrenceFrequency frequency;
   gboolean all_day, new_event;
+  GcalTimeFormat time_format;
   GcalScheduleValues *values;
   g_autoptr (WidgetState) state = NULL;
 
@@ -432,7 +451,8 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   g_set_object (&self->event, event);
   self->flags = flags;
 
-  self->values = gcal_schedule_values_from_event (event);
+  time_format = gcal_context_get_time_format (self->context);
+  self->values = gcal_schedule_values_from_event (event, time_format);
   values = self->values; /* alias to avoid "self->values" everywhere */
 
   if (!event)
@@ -636,7 +656,9 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
   gcal_schedule_section_apply_to_event (self, self->event);
 
   gcal_schedule_values_free (self->values);
-  self->values = gcal_schedule_values_from_event (self->event);
+
+  GcalTimeFormat time_format = gcal_context_get_time_format (self->context);
+  self->values = gcal_schedule_values_from_event (self->event, time_format);
 
   GCAL_EXIT;
 }
@@ -762,7 +784,6 @@ gcal_schedule_section_set_property (GObject      *object,
                                G_CALLBACK (on_time_format_changed_cb),
                                self,
                                G_CONNECT_SWAPPED);
-      on_time_format_changed_cb (self);
       break;
 
     default:
@@ -874,7 +895,8 @@ gcal_schedule_section_day_changed (GcalScheduleSection *self)
  * gcal_schedule_values_free().
  */
 GcalScheduleValues *
-gcal_schedule_values_from_event (GcalEvent *event)
+gcal_schedule_values_from_event (GcalEvent      *event,
+                                 GcalTimeFormat  time_format)
 {
   GcalScheduleValues *values = g_new0 (GcalScheduleValues, 1);
 
@@ -891,6 +913,8 @@ gcal_schedule_values_from_event (GcalEvent *event)
           values->recur = gcal_recurrence_ref (recur);
         }
     }
+
+  values->time_format = time_format;
 
   return values;
 }

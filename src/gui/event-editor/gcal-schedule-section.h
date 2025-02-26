@@ -39,13 +39,15 @@ typedef struct
   GDateTime *date_start;
   GDateTime *date_end;
   GcalRecurrence *recur;
+  GcalTimeFormat time_format;
 } GcalScheduleValues;
 
 gboolean             gcal_schedule_section_recurrence_changed    (GcalScheduleSection *self);
 
 gboolean             gcal_schedule_section_day_changed           (GcalScheduleSection *self);
 
-GcalScheduleValues  *gcal_schedule_values_from_event             (GcalEvent *event);
+GcalScheduleValues  *gcal_schedule_values_from_event             (GcalEvent          *event,
+                                                                  GcalTimeFormat      time_format);
 void                 gcal_schedule_values_free                   (GcalScheduleValues *values);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalScheduleValues, gcal_schedule_values_free);
