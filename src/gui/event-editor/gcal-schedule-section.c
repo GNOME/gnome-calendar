@@ -57,6 +57,22 @@ struct _GcalScheduleSection
   GcalEventEditorFlags flags;
 };
 
+/* Desired state of the widgets, computed from GcalScheduleValues.
+ *
+ * There is some subtle logic to decide how to update the widgets based on how
+ * each of them causes the GcalScheduleValues to be modified.  We encapsulate
+ * the desired state in this struct, so we can have tests for it.
+ */
+typedef struct
+{
+  gboolean date_widgets_visible;
+  gboolean date_time_widgets_visible;
+} WidgetState;
+
+static void widget_state_free (WidgetState *state);
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (WidgetState, widget_state_free);
+
 static void          gcal_event_editor_section_iface_init        (GcalEventEditorSectionInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GcalScheduleSection, gcal_schedule_section, GTK_TYPE_BOX,
@@ -107,6 +123,23 @@ gcal_schedule_values_set_all_day (const GcalScheduleValues *values, gboolean all
   return copy;
 }
 
+static WidgetState *
+widget_state_from_values (const GcalScheduleValues *values)
+{
+  WidgetState *state = g_new0 (WidgetState, 1);
+
+  state->date_widgets_visible = values->all_day;
+  state->date_time_widgets_visible = !values->all_day;
+
+  return state;
+}
+
+static void
+widget_state_free (WidgetState *state)
+{
+  g_free (state);
+}
+
 /*
  * Auxiliary methods
  */
@@ -151,6 +184,15 @@ remove_recurrence_properties (GcalEvent *event)
   e_cal_component_commit_sequence (comp);
 }
 
+static void
+update_widgets (GcalScheduleSection *self,
+                WidgetState         *state)
+{
+  gtk_widget_set_visible (GTK_WIDGET (self->start_date_group), state->date_widgets_visible);
+  gtk_widget_set_visible (GTK_WIDGET (self->end_date_group), state->date_widgets_visible);
+  gtk_widget_set_visible (GTK_WIDGET (self->start_date_time_chooser), state->date_time_widgets_visible);
+  gtk_widget_set_visible (GTK_WIDGET (self->end_date_time_chooser), state->date_time_widgets_visible);
+}
 
 /*
  * Callbacks
@@ -162,13 +204,12 @@ on_schedule_type_changed_cb (GtkWidget           *widget,
                              GcalScheduleSection *self)
 {
   gboolean all_day = all_day_selected (self);
-
-  gtk_widget_set_visible (GTK_WIDGET (self->start_date_group), all_day);
-  gtk_widget_set_visible (GTK_WIDGET (self->end_date_group), all_day);
-  gtk_widget_set_visible (GTK_WIDGET (self->start_date_time_chooser), !all_day);
-  gtk_widget_set_visible (GTK_WIDGET (self->end_date_time_chooser), !all_day);
+  GcalScheduleValues *updated = gcal_schedule_values_set_all_day (self->values, all_day);
+  g_autoptr (WidgetState) state = widget_state_from_values (updated);
 
   block_date_signals (self);
+
+  update_widgets (self, state);
 
   if (all_day)
     {
