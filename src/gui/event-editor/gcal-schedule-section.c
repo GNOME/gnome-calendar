@@ -65,6 +65,7 @@ struct _GcalScheduleSection
  */
 typedef struct
 {
+  gboolean schedule_type_all_day;
   gboolean date_widgets_visible;
   gboolean date_time_widgets_visible;
 } WidgetState;
@@ -101,6 +102,10 @@ static void          on_end_date_time_changed_cb                 (GtkWidget     
                                                                   GParamSpec         *pspec,
                                                                   GcalScheduleSection *self);
 
+static void          on_schedule_type_changed_cb                 (GtkWidget           *widget,
+                                                                  GParamSpec          *pspec,
+                                                                  GcalScheduleSection *self);
+
 static GcalScheduleValues *
 gcal_schedule_values_copy (const GcalScheduleValues *values)
 {
@@ -128,6 +133,7 @@ widget_state_from_values (const GcalScheduleValues *values)
 {
   WidgetState *state = g_new0 (WidgetState, 1);
 
+  state->schedule_type_all_day = values->all_day;
   state->date_widgets_visible = values->all_day;
   state->date_time_widgets_visible = !values->all_day;
 
@@ -188,11 +194,17 @@ static void
 update_widgets (GcalScheduleSection *self,
                 WidgetState         *state)
 {
+  g_signal_handlers_block_by_func (self->schedule_type_toggle_group, on_schedule_type_changed_cb, self);
+
+  adw_toggle_group_set_active_name (self->schedule_type_toggle_group,
+                                    state->schedule_type_all_day ? "all-day" : "time-slot");
 
   gtk_widget_set_visible (GTK_WIDGET (self->start_date_group), state->date_widgets_visible);
   gtk_widget_set_visible (GTK_WIDGET (self->end_date_group), state->date_widgets_visible);
   gtk_widget_set_visible (GTK_WIDGET (self->start_date_time_chooser), state->date_time_widgets_visible);
   gtk_widget_set_visible (GTK_WIDGET (self->end_date_time_chooser), state->date_time_widgets_visible);
+
+  g_signal_handlers_unblock_by_func (self->schedule_type_toggle_group, on_schedule_type_changed_cb, self);
 }
 
 /*
@@ -428,10 +440,6 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
 
   all_day = values->all_day;
   new_event = flags & GCAL_EVENT_EDITOR_FLAG_NEW_EVENT;
-
-  /* schedule type  */
-  adw_toggle_group_set_active_name (self->schedule_type_toggle_group,
-                                    all_day ? "all-day" : "time-slot");
 
   state = widget_state_from_values (values);
   update_widgets (self, state);
