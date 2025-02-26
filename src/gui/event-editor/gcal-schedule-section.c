@@ -188,6 +188,7 @@ static void
 update_widgets (GcalScheduleSection *self,
                 WidgetState         *state)
 {
+
   gtk_widget_set_visible (GTK_WIDGET (self->start_date_group), state->date_widgets_visible);
   gtk_widget_set_visible (GTK_WIDGET (self->end_date_group), state->date_widgets_visible);
   gtk_widget_set_visible (GTK_WIDGET (self->start_date_time_chooser), state->date_time_widgets_visible);
@@ -410,6 +411,7 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   GcalRecurrenceFrequency frequency;
   gboolean all_day, new_event;
   GcalScheduleValues *values;
+  g_autoptr (WidgetState) state = NULL;
 
   GCAL_ENTRY;
 
@@ -431,10 +433,8 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   adw_toggle_group_set_active_name (self->schedule_type_toggle_group,
                                     all_day ? "all-day" : "time-slot");
 
-  gtk_widget_set_visible (GTK_WIDGET (self->start_date_group), all_day);
-  gtk_widget_set_visible (GTK_WIDGET (self->end_date_group), all_day);
-  gtk_widget_set_visible (GTK_WIDGET (self->start_date_time_chooser), !all_day);
-  gtk_widget_set_visible (GTK_WIDGET (self->end_date_time_chooser), !all_day);
+  state = widget_state_from_values (values);
+  update_widgets (self, state);
 
   /* retrieve start and end date-times */
   date_time_start = values->date_start;
