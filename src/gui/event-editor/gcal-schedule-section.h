@@ -23,6 +23,10 @@
 #include <adwaita.h>
 #include <gtk/gtk.h>
 
+#include "gcal-enums.h"
+#include "gcal-event.h"
+#include "gcal-recurrence.h"
+
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_SCHEDULE_SECTION (gcal_schedule_section_get_type())
@@ -51,5 +55,9 @@ GcalScheduleValues  *gcal_schedule_values_from_event             (GcalEvent     
 void                 gcal_schedule_values_free                   (GcalScheduleValues *values);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalScheduleValues, gcal_schedule_values_free);
+
+/* Tests */
+
+void gcal_schedule_section_add_tests (void);
 
 G_END_DECLS

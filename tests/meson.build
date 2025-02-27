@@ -35,6 +35,7 @@ tests = [
   'daylight-saving',
   #'discoverer', # https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/1251
   'event',
+  'internals',
   'range',
   'range-tree',
   #'server', # https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/1251

@@ -949,3 +949,9 @@ gcal_schedule_values_free (GcalScheduleValues *values)
 
   g_free (values);
 }
+
+void
+gcal_schedule_section_add_tests (void)
+{
+  /* g_test_add_func ("/event_editor/schedule_section/...", ...); */
+}
