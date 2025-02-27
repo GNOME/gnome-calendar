@@ -166,6 +166,7 @@
         {
             "name" : "gnome-calendar",
             "buildsystem" : "meson",
+            "run-tests": true,
             "sources" : [
                 {
                     "type" : "dir",
