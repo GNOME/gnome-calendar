@@ -139,6 +139,21 @@ gcal_schedule_values_set_time_format (const GcalScheduleValues *values, GcalTime
   return copy;
 }
 
+/* The start_date_row widget has changed.  We need to sync it to the values and
+ * adjust the other values based on it.
+ */
+static GcalScheduleValues *
+gcal_schedule_values_set_start_date (const GcalScheduleValues *values, GDateTime *t)
+{
+  GcalScheduleValues *copy = gcal_schedule_values_copy (values);
+
+  /* move from on_start_date_changed_cb */
+
+  /* copy t to date_start */
+
+  /* the conditional is to adjust in case start > end.  Write a test for that. */
+}
+
 static WidgetState *
 widget_state_from_values (const GcalScheduleValues *values)
 {
