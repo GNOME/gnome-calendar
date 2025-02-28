@@ -48,6 +48,11 @@ static GParamSpec *properties[NUM_PROPS] = { NULL, };
 
 G_DEFINE_TYPE (GcalDateChooserDay, gcal_date_chooser_day, GTK_TYPE_BUTTON)
 
+
+/*
+ * GObject overrides
+ */
+
 static void
 gcal_date_chooser_day_dispose (GObject *object)
 {
@@ -158,6 +163,18 @@ gcal_date_chooser_day_init (GcalDateChooserDay *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
+
+/*
+ * Public API
+ */
+
+/**
+ * gcal_date_chooser_day_new:
+ *
+ * Creates a new `DateChooserDay`.
+ *
+ * Returns: the newly created `DateChooserDay`
+ */
 GtkWidget*
 gcal_date_chooser_day_new (void)
 {
@@ -174,7 +191,8 @@ gcal_date_chooser_day_set_date (GcalDateChooserDay *self,
   gboolean today;
   gint weekday;
 
-  g_assert (date != NULL);
+  g_assert (GCAL_IS_DATE_CHOOSER_DAY (self));
+  g_assert (date);
 
   g_clear_pointer (&self->date, g_date_time_unref);
   self->date = g_date_time_ref (date);
@@ -200,6 +218,8 @@ gcal_date_chooser_day_set_date (GcalDateChooserDay *self,
 GDateTime*
 gcal_date_chooser_day_get_date (GcalDateChooserDay *self)
 {
+  g_assert (GCAL_IS_DATE_CHOOSER_DAY (self));
+
   return self->date;
 }
 
@@ -207,6 +227,8 @@ void
 gcal_date_chooser_day_set_other_month (GcalDateChooserDay *self,
                                        gboolean            other_month)
 {
+  g_assert (GCAL_IS_DATE_CHOOSER_DAY (self));
+
   if (other_month)
     gtk_widget_add_css_class (GTK_WIDGET (self), "other-month");
   else
@@ -227,7 +249,7 @@ void
 gcal_date_chooser_day_set_has_dot (GcalDateChooserDay *self,
                                    gboolean            has_dot)
 {
-  g_return_if_fail (GCAL_IS_DATE_CHOOSER_DAY (self));
+  g_assert (GCAL_IS_DATE_CHOOSER_DAY (self));
 
   has_dot = !!has_dot;
 
@@ -248,7 +270,7 @@ gcal_date_chooser_day_set_has_dot (GcalDateChooserDay *self,
 gboolean
 gcal_date_chooser_day_get_has_dot (GcalDateChooserDay *self)
 {
-  g_return_val_if_fail (GCAL_IS_DATE_CHOOSER_DAY (self), FALSE);
+  g_assert (GCAL_IS_DATE_CHOOSER_DAY (self));
 
   return gtk_widget_get_visible (self->dot_revealer);
 }
@@ -267,7 +289,7 @@ void
 gcal_date_chooser_day_set_dot_visible (GcalDateChooserDay *self,
                                        gboolean            dot_visible)
 {
-  g_return_if_fail (GCAL_IS_DATE_CHOOSER_DAY (self));
+  g_assert (GCAL_IS_DATE_CHOOSER_DAY (self));
 
   dot_visible = !!dot_visible;
 
@@ -288,7 +310,7 @@ gcal_date_chooser_day_set_dot_visible (GcalDateChooserDay *self,
 gboolean
 gcal_date_chooser_day_get_dot_visible (GcalDateChooserDay *self)
 {
-  g_return_val_if_fail (GCAL_IS_DATE_CHOOSER_DAY (self), FALSE);
+  g_assert (GCAL_IS_DATE_CHOOSER_DAY (self));
 
   return gtk_revealer_get_reveal_child (GTK_REVEALER (self->dot_revealer));
 }
@@ -297,7 +319,11 @@ void
 gcal_date_chooser_day_set_selected (GcalDateChooserDay *self,
                                     gboolean            selected)
 {
-  GtkWidget *widget = GTK_WIDGET (self);
+  GtkWidget *widget;
+
+  g_assert (GCAL_IS_DATE_CHOOSER_DAY (self));
+
+  widget = GTK_WIDGET (self);
 
   if (G_UNLIKELY (selected))
     {

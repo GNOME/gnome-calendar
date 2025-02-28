@@ -1090,6 +1090,18 @@ gcal_date_chooser_init (GcalDateChooser *self)
   gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
 }
 
+
+/*
+ * Public API
+ */
+
+/**
+ * gcal_date_chooser_new:
+ *
+ * Creates a new `DateChooser`.
+ *
+ * Returns: the newly created `DateChooser`
+ */
 GtkWidget*
 gcal_date_chooser_new (void)
 {

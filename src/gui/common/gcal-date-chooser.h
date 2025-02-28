@@ -15,8 +15,7 @@
  * License along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __GCAL_DATE_CHOOSER_H__
-#define __GCAL_DATE_CHOOSER_H__
+#pragma once
 
 #include <adwaita.h>
 
@@ -59,5 +58,3 @@ void                 gcal_date_chooser_set_split_month_year      (GcalDateChoose
                                                                   gboolean            setting);
 
 G_END_DECLS
-
-#endif /* __GCAL_DATE_CHOOSER_H__ */
