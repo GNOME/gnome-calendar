@@ -1,7 +1,7 @@
 Major changes in 48.beta:
 * Allow selecting timezones for the start and end times of events
 * Fix calendar name overflow in the calendars popover list
-* Improve display of weather information in the Month view
+* Auto-hide weather temperature labels in Month view when space is insufficient
 * Updated translations
 
 Major changes in 48.alpha2:
