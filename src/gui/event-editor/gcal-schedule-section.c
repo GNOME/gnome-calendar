@@ -477,9 +477,13 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   /* retrieve start and end date-times */
   date_time_start = values->date_start;
   date_time_end = g_date_time_ref (values->date_end);
-  /*
-   * This is subtracting what has been added in action_button_clicked ().
-   * See bug 769300.
+
+  /* While in iCalendar a single-day all-day event goes from $day to $day+1, we don't want
+   * to show a single-day all-day event as starting on Feb 1 and ending on Feb 2, for
+   * example.  So, we subtract a day from the end date to show the expected thing to the
+   * user.  We restore this when setting the date-time back on the event.
+   *
+   * See https://bugzilla.gnome.org/show_bug.cgi?id=769300 for the original bug about this.
    */
   date_time_end = all_day ? g_date_time_add_days (date_time_end, -1) : date_time_end;
 
@@ -573,13 +577,13 @@ gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
 
   gcal_event_set_all_day (event, all_day);
 
-  /*
-   * The end date for multi-day events is exclusive, so we bump it by a day.
-   * This fixes the discrepancy between the end day of the event and how it
-   * is displayed in the month view. See bug 769300.
-   */
   if (all_day)
     {
+      /* See the comment "While in iCalendar" elsewhere in this file.  Here we restore the
+       * correct date-time for the event.
+       *
+       * See https://bugzilla.gnome.org/show_bug.cgi?id=769300 for the original bug about this.
+       */
       GDateTime *fake_end_date = g_date_time_add_days (end_date, 1);
 
       end_date = fake_end_date;
