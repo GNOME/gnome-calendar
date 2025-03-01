@@ -445,10 +445,6 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
                                  GcalEvent              *event,
                                  GcalEventEditorFlags    flags)
 {
-  g_autoptr (GDateTime) date_time_start_utc = NULL;
-  g_autoptr (GDateTime) date_time_end_utc = NULL;
-  g_autoptr (GDateTime) date_time_start_local = NULL;
-  g_autoptr (GDateTime) date_time_end_local = NULL;
   GcalScheduleSection *self;
   GDateTime* date_time_start = NULL;
   GDateTime* date_time_end = NULL;
@@ -488,41 +484,17 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
    */
   date_time_end = all_day ? g_date_time_add_days (date_time_end, -1) : date_time_end;
 
-  date_time_start_utc = g_date_time_new_utc (g_date_time_get_year (date_time_start),
-                                             g_date_time_get_month (date_time_start),
-                                             g_date_time_get_day_of_month (date_time_start),
-                                             0, 0, 0);
-
-  date_time_end_utc = g_date_time_new_utc (g_date_time_get_year (date_time_end),
-                                           g_date_time_get_month (date_time_end),
-                                           g_date_time_get_day_of_month (date_time_end),
-                                           0, 0, 0);
-
-  date_time_start_local = g_date_time_new_local (g_date_time_get_year (date_time_start),
-                                                 g_date_time_get_month (date_time_start),
-                                                 g_date_time_get_day_of_month (date_time_start),
-                                                 g_date_time_get_hour (date_time_start),
-                                                 g_date_time_get_minute (date_time_start),
-                                                 0);
-
-  date_time_end_local = g_date_time_new_local (g_date_time_get_year (date_time_end),
-                                               g_date_time_get_month (date_time_end),
-                                               g_date_time_get_day_of_month (date_time_end),
-                                               g_date_time_get_hour (date_time_end),
-                                               g_date_time_get_minute (date_time_end),
-                                               0);
-
   block_date_signals (self);
 
   /* date */
-  gcal_date_chooser_row_set_date (self->start_date_row, date_time_start_utc);
-  gcal_date_chooser_row_set_date (self->end_date_row, date_time_end_utc);
+  gcal_date_chooser_row_set_date (self->start_date_row, date_time_start);
+  gcal_date_chooser_row_set_date (self->end_date_row, date_time_end);
 
   /* date-time */
   if (new_event || all_day)
     {
-      gcal_date_time_chooser_set_date_time (self->start_date_time_chooser, date_time_start_local);
-      gcal_date_time_chooser_set_date_time (self->end_date_time_chooser, date_time_end_local);
+      gcal_date_time_chooser_set_date_time (self->start_date_time_chooser, date_time_start);
+      gcal_date_time_chooser_set_date_time (self->end_date_time_chooser, date_time_end);
     }
   else
     {
