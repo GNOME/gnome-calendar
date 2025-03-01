@@ -439,7 +439,7 @@ gcal_event_widget_update_timestamp (GcalEventWidget *self)
 
       if (gcal_event_get_all_day (self->event) || gcal_event_is_multiday (self->event))
         /*
-         * Translators: %A is the abbreviated day name, %B is the month name
+         * Translators: %a is the abbreviated day name, %B is the month name
          * and %d is the day of the month as a number between 0 and 31.
          * More formats can be found on the doc:
          * https://docs.gtk.org/glib/method.DateTime.format.html
