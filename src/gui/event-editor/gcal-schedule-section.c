@@ -491,16 +491,8 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   gcal_date_chooser_row_set_date (self->end_date_row, date_time_end);
 
   /* date-time */
-  if (new_event || all_day)
-    {
-      gcal_date_time_chooser_set_date_time (self->start_date_time_chooser, date_time_start);
-      gcal_date_time_chooser_set_date_time (self->end_date_time_chooser, date_time_end);
-    }
-  else
-    {
-      gcal_date_time_chooser_set_date_time (self->start_date_time_chooser, date_time_start);
-      gcal_date_time_chooser_set_date_time (self->end_date_time_chooser, date_time_end);
-    }
+  gcal_date_time_chooser_set_date_time (self->start_date_time_chooser, date_time_start);
+  gcal_date_time_chooser_set_date_time (self->end_date_time_chooser, date_time_end);
 
   unblock_date_signals (self);
 
