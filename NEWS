@@ -1,3 +1,8 @@
+Major changes in 48.rc:
+* Round temperatures to integer precision in weather forecast,
+  to save space and reflect the approximate nature of the forecasts
+* Updated translations
+
 Major changes in 48.beta:
 * Allow selecting timezones for the start and end times of events
 * Fix calendar name overflow in the calendars popover list
