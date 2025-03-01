@@ -546,7 +546,8 @@ static void
 gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
                                       GcalEvent           *event)
 {
-  GDateTime *start_date, *end_date;
+  g_autoptr (GDateTime) start_date = NULL;
+  g_autoptr (GDateTime) end_date = NULL;
   GcalRecurrenceFrequency freq;
   gboolean all_day;
 
@@ -561,8 +562,8 @@ gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
     }
   else
     {
-      start_date = gcal_date_chooser_row_get_date (self->start_date_row);
-      end_date = gcal_date_chooser_row_get_date (self->end_date_row);
+      start_date = g_date_time_ref (gcal_date_chooser_row_get_date (self->start_date_row));
+      end_date = g_date_time_ref (gcal_date_chooser_row_get_date (self->end_date_row));
     }
 
 #ifdef GCAL_ENABLE_TRACE
