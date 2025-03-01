@@ -450,7 +450,7 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   GDateTime* date_time_end = NULL;
   GcalRecurrenceLimitType limit_type;
   GcalRecurrenceFrequency frequency;
-  gboolean all_day, new_event;
+  gboolean all_day;
   GcalTimeFormat time_format;
   GcalScheduleValues *values;
   g_autoptr (WidgetState) state = NULL;
@@ -470,7 +470,6 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
     GCAL_RETURN ();
 
   all_day = values->all_day;
-  new_event = flags & GCAL_EVENT_EDITOR_FLAG_NEW_EVENT;
 
   state = widget_state_from_values (values);
   update_widgets (self, state);
