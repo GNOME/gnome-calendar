@@ -447,7 +447,7 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
 {
   GcalScheduleSection *self;
   GDateTime* date_time_start = NULL;
-  GDateTime* date_time_end = NULL;
+  g_autoptr (GDateTime) date_time_end = NULL;
   GcalRecurrenceLimitType limit_type;
   GcalRecurrenceFrequency frequency;
   gboolean all_day;
@@ -476,7 +476,7 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
 
   /* retrieve start and end date-times */
   date_time_start = values->date_start;
-  date_time_end = values->date_end;
+  date_time_end = g_date_time_ref (values->date_end);
   /*
    * This is subtracting what has been added in action_button_clicked ().
    * See bug 769300.
