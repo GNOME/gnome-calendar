@@ -69,6 +69,12 @@ typedef struct
   gboolean date_widgets_visible;
   gboolean date_time_widgets_visible;
   GcalTimeFormat time_format;
+
+  /* Note that the displayed date/time may not correspond to the real data in the
+   * GcalScheduleValues.  See the comment in widget_state_from_values().
+   */
+  GDateTime *date_time_start;
+  GDateTime *date_time_end;
 } WidgetState;
 
 static void widget_state_free (WidgetState *state);
@@ -164,12 +170,34 @@ widget_state_from_values (const GcalScheduleValues *values)
   state->date_time_widgets_visible = !values->all_day;
   state->time_format = values->time_format;
 
+  g_assert (values->date_start);
+  state->date_time_start = g_date_time_ref (values->date_start);
+
+  if (values->all_day)
+    {
+      /* While in iCalendar a single-day all-day event goes from $day to $day+1, we don't want
+       * to show a single-day all-day event as starting on Feb 1 and ending on Feb 2, for
+       * example.  So, we subtract a day from the end date to show the expected thing to the
+       * user.  We restore this when setting the date-time back on the event.
+       *
+       * See https://bugzilla.gnome.org/show_bug.cgi?id=769300 for the original bug about this.
+       */
+      state->date_time_end = g_date_time_add_days (values->date_end, -1);
+    }
+  else
+    {
+      g_assert (values->date_end);
+      state->date_time_end = g_date_time_ref (values->date_end);
+    }
+
   return state;
 }
 
 static void
 widget_state_free (WidgetState *state)
 {
+  g_date_time_unref (state->date_time_start);
+  g_date_time_unref (state->date_time_end);
   g_free (state);
 }
 
@@ -222,6 +250,7 @@ update_widgets (GcalScheduleSection *self,
                 WidgetState         *state)
 {
   g_signal_handlers_block_by_func (self->schedule_type_toggle_group, on_schedule_type_changed_cb, self);
+  block_date_signals (self);
 
   adw_toggle_group_set_active_name (self->schedule_type_toggle_group,
                                     state->schedule_type_all_day ? "all-day" : "time-slot");
@@ -234,6 +263,15 @@ update_widgets (GcalScheduleSection *self,
   gcal_date_time_chooser_set_time_format (self->start_date_time_chooser, state->time_format);
   gcal_date_time_chooser_set_time_format (self->end_date_time_chooser, state->time_format);
 
+  /* date */
+  gcal_date_chooser_row_set_date (self->start_date_row, state->date_time_start);
+  gcal_date_chooser_row_set_date (self->end_date_row, state->date_time_end);
+
+  /* date-time */
+  gcal_date_time_chooser_set_date_time (self->start_date_time_chooser, state->date_time_start);
+  gcal_date_time_chooser_set_date_time (self->end_date_time_chooser, state->date_time_end);
+
+  unblock_date_signals (self);
   g_signal_handlers_unblock_by_func (self->schedule_type_toggle_group, on_schedule_type_changed_cb, self);
 }
 
@@ -446,11 +484,8 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
                                  GcalEventEditorFlags    flags)
 {
   GcalScheduleSection *self;
-  GDateTime* date_time_start = NULL;
-  g_autoptr (GDateTime) date_time_end = NULL;
   GcalRecurrenceLimitType limit_type;
   GcalRecurrenceFrequency frequency;
-  gboolean all_day;
   GcalTimeFormat time_format;
   GcalScheduleValues *values;
   g_autoptr (WidgetState) state = NULL;
@@ -469,35 +504,8 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   if (!event)
     GCAL_RETURN ();
 
-  all_day = values->all_day;
-
   state = widget_state_from_values (values);
   update_widgets (self, state);
-
-  /* retrieve start and end date-times */
-  date_time_start = values->date_start;
-  date_time_end = g_date_time_ref (values->date_end);
-
-  /* While in iCalendar a single-day all-day event goes from $day to $day+1, we don't want
-   * to show a single-day all-day event as starting on Feb 1 and ending on Feb 2, for
-   * example.  So, we subtract a day from the end date to show the expected thing to the
-   * user.  We restore this when setting the date-time back on the event.
-   *
-   * See https://bugzilla.gnome.org/show_bug.cgi?id=769300 for the original bug about this.
-   */
-  date_time_end = all_day ? g_date_time_add_days (date_time_end, -1) : date_time_end;
-
-  block_date_signals (self);
-
-  /* date */
-  gcal_date_chooser_row_set_date (self->start_date_row, date_time_start);
-  gcal_date_chooser_row_set_date (self->end_date_row, date_time_end);
-
-  /* date-time */
-  gcal_date_time_chooser_set_date_time (self->start_date_time_chooser, date_time_start);
-  gcal_date_time_chooser_set_date_time (self->end_date_time_chooser, date_time_end);
-
-  unblock_date_signals (self);
 
   /* Recurrences */
   if (values->recur)
