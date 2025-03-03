@@ -275,6 +275,22 @@ update_widgets (GcalScheduleSection *self,
   g_signal_handlers_unblock_by_func (self->schedule_type_toggle_group, on_schedule_type_changed_cb, self);
 }
 
+/* Updates the widgets, and the current values, from the specified ones.
+ *
+ * This will free the current values and replace them with new ones.
+ */
+static void
+update_from_values (GcalScheduleSection *self,
+                    GcalScheduleValues *values)
+{
+  g_autoptr (WidgetState) state = widget_state_from_values (values);
+
+  update_widgets (self, state);
+
+  gcal_schedule_values_free (self->values);
+  self->values = values;
+}
+
 /*
  * Callbacks
  */
@@ -286,11 +302,9 @@ on_schedule_type_changed_cb (GtkWidget           *widget,
 {
   gboolean all_day = all_day_selected (self);
   GcalScheduleValues *updated = gcal_schedule_values_set_all_day (self->values, all_day);
-  g_autoptr (WidgetState) state = widget_state_from_values (updated);
+  update_from_values (self, updated);
 
   block_date_signals (self);
-
-  update_widgets (self, state);
 
   if (all_day)
     {
