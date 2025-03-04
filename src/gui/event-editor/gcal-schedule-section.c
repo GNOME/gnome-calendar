@@ -566,7 +566,7 @@ gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
        */
       GDateTime *fake_end_date = g_date_time_add_days (end_date, 1);
 
-      end_date = fake_end_date;
+      gcal_set_date_time (&end_date, fake_end_date);
     }
 
   gcal_event_set_date_start (event, start_date);
