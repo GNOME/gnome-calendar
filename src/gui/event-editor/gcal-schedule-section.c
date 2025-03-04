@@ -910,6 +910,31 @@ gcal_schedule_values_free (GcalScheduleValues *values)
   g_free (values);
 }
 
+/* Builds a new Gcalschedulevalues from two ISO 8601 date-times; be sure to include your timezone if you need it */
+static GcalScheduleValues *
+values_with_date_times(const char *start, const char *end)
+{
+  g_autoptr (GDateTime) start_date = g_date_time_new_from_iso8601 (start, NULL);
+  g_assert (start_date != NULL);
+
+  g_autoptr (GDateTime) end_date = g_date_time_new_from_iso8601 (end, NULL);
+  g_assert (end_date != NULL);
+
+  GcalScheduleValues *values = g_new0 (GcalScheduleValues, 1);
+
+  *values = (GcalScheduleValues) {
+    .all_day = FALSE,
+    .orig_date_start = g_date_time_ref (start_date),
+    .orig_date_end = g_date_time_ref (end_date),
+    .date_start = g_date_time_ref (start_date),
+    .date_end = g_date_time_ref (end_date),
+    .recur = NULL,
+    .time_format = GCAL_TIME_FORMAT_24H,
+  };
+
+  return values;
+}
+
 static void
 test_setting_start_date_after_end_date_resets_end_date (void)
 {
@@ -921,23 +946,8 @@ test_setting_start_date_after_end_date_resets_end_date (void)
    *
    * We want to test that end becomes 12:00 as well.
    */
-  g_autoptr (GDateTime) date = g_date_time_new_from_iso8601 ("20250303T10:00:00-06:00", NULL);
-  g_assert (date != NULL);
-
-  g_autoptr (GDateTime) one_hour_later = g_date_time_new_from_iso8601 ("20250303T11:00:00-06:00", NULL);
-  g_assert (one_hour_later != NULL);
-
-  g_autoptr (GcalScheduleValues) values = g_new (GcalScheduleValues, 1);
-
-  *values = (GcalScheduleValues) {
-    .all_day = FALSE,
-    .orig_date_start = g_date_time_ref (date),
-    .orig_date_end = g_date_time_ref (one_hour_later),
-    .date_start = g_date_time_ref (date),
-    .date_end = g_date_time_ref (one_hour_later),
-    .recur = NULL,
-    .time_format = GCAL_TIME_FORMAT_24H,
-  };
+  g_autoptr (GcalScheduleValues) values = values_with_date_times("20250303T10:00:00-06:00",
+                                                                 "20250303T11:00:00-06:00");
 
   g_autoptr (GDateTime) two_hours_later = g_date_time_new_from_iso8601 ("20250303T12:00:00-06:00", NULL);
 
@@ -957,23 +967,8 @@ test_setting_end_date_before_start_date_resets_start_date (void)
    *
    * We want to test that start becomes 09:00 as well.
    */
-  g_autoptr (GDateTime) date = g_date_time_new_from_iso8601 ("20250303T10:00:00-06:00", NULL);
-  g_assert (date != NULL);
-
-  g_autoptr (GDateTime) one_hour_later = g_date_time_new_from_iso8601 ("20250303T11:00:00-06:00", NULL);
-  g_assert (one_hour_later != NULL);
-
-  g_autoptr (GcalScheduleValues) values = g_new (GcalScheduleValues, 1);
-
-  *values = (GcalScheduleValues) {
-    .all_day = FALSE,
-    .orig_date_start = g_date_time_ref (date),
-    .orig_date_end = g_date_time_ref (one_hour_later),
-    .date_start = g_date_time_ref (date),
-    .date_end = g_date_time_ref (one_hour_later),
-    .recur = NULL,
-    .time_format = GCAL_TIME_FORMAT_24H,
-  };
+  g_autoptr (GcalScheduleValues) values = values_with_date_times("20250303T10:00:00-06:00",
+                                                                 "20250303T11:00:00-06:00");
 
   g_autoptr (GDateTime) two_hours_earlier = g_date_time_new_from_iso8601 ("20250303T09:00:00-06:00", NULL);
 
