@@ -539,22 +539,11 @@ gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
   g_autoptr (GDateTime) start_date = NULL;
   g_autoptr (GDateTime) end_date = NULL;
   GcalRecurrenceFrequency freq;
-  gboolean all_day;
 
   GCAL_ENTRY;
 
-  all_day = all_day_selected (self);
-
-  if (!all_day)
-    {
-      start_date = gcal_date_time_chooser_get_date_time (self->start_date_time_chooser);
-      end_date = gcal_date_time_chooser_get_date_time (self->end_date_time_chooser);
-    }
-  else
-    {
-      start_date = g_date_time_ref (gcal_date_chooser_row_get_date (self->start_date_row));
-      end_date = g_date_time_ref (gcal_date_chooser_row_get_date (self->end_date_row));
-    }
+  start_date = g_date_time_ref (self->values->date_start);
+  end_date = g_date_time_ref (self->values->date_end);
 
 #ifdef GCAL_ENABLE_TRACE
     {
@@ -566,9 +555,9 @@ gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
     }
 #endif
 
-  gcal_event_set_all_day (event, all_day);
+  gcal_event_set_all_day (event, self->values->all_day);
 
-  if (all_day)
+  if (self->values->all_day)
     {
       /* See the comment "While in iCalendar" elsewhere in this file.  Here we restore the
        * correct date-time for the event.
