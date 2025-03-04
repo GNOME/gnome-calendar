@@ -183,6 +183,25 @@ gcal_schedule_values_set_end_date (const GcalScheduleValues *values, GDateTime *
   return copy;
 }
 
+static GcalScheduleValues *
+gcal_schedule_values_set_start_date_time (const GcalScheduleValues *values, GDateTime *start)
+{
+  GcalScheduleValues *copy = gcal_schedule_values_copy (values);
+
+  gcal_set_date_time (&copy->date_start, start);
+
+  if (g_date_time_compare (start, copy->date_end) == 1)
+    {
+      GTimeZone *end_tz = g_date_time_get_timezone (copy->date_end);
+      g_autoptr (GDateTime) new_end = g_date_time_add_hours (start, 1);
+      g_autoptr (GDateTime) new_end_in_end_tz = g_date_time_to_timezone (new_end, end_tz);
+
+      gcal_set_date_time (&copy->date_end, new_end_in_end_tz);
+    }
+
+  return copy;
+}
+
 static WidgetState *
 widget_state_from_values (const GcalScheduleValues *values)
 {
@@ -353,27 +372,9 @@ on_start_date_time_changed_cb (GtkWidget           *widget,
                                GParamSpec          *pspec,
                                GcalScheduleSection *self)
 {
-  GDateTime *start, *end;
-
-  GCAL_ENTRY;
-
-  block_date_signals (self);
-
-  start = gcal_date_time_chooser_get_date_time (self->start_date_time_chooser);
-  end = gcal_date_time_chooser_get_date_time (self->end_date_time_chooser);
-
-  if (g_date_time_compare (start, end) == 1)
-    {
-      GTimeZone *end_tz = g_date_time_get_timezone (end);
-      g_autoptr (GDateTime) new_end = g_date_time_add_hours (start, 1);
-      g_autoptr (GDateTime) new_end_in_end_tz = g_date_time_to_timezone (new_end, end_tz);
-
-      gcal_date_time_chooser_set_date_time (self->end_date_time_chooser, new_end_in_end_tz);
-    }
-
-  unblock_date_signals (self);
-
-  GCAL_EXIT;
+  GDateTime *start = gcal_date_time_chooser_get_date_time (self->start_date_time_chooser);
+  GcalScheduleValues *updated = gcal_schedule_values_set_start_date_time (self->values, start);
+  update_from_values (self, updated);
 }
 
 static void
@@ -980,6 +981,32 @@ test_setting_end_date_before_start_date_resets_start_date (void)
 }
 
 static void
+test_setting_start_datetime_preserves_end_timezone (void)
+{
+  /* Start with
+   *   start = 10:00, UTC-6
+   *   end   = 11:30, UTC-5  (note the different timezone; event is 30 minutes long)
+   *
+   * Set the start date to 11:30, UTC-6
+   *
+   * End date should be 13:30, UTC-5 (i.e. end_date was set to the same as start_date, but in a different tz)
+   *
+   * (imagine driving for one hour while crossing timezones)
+   */
+  g_autoptr (GcalScheduleValues) values = values_with_date_times("20250303T10:00:00-06:00",
+                                                                 "20250303T11:30:00-05:00");
+  g_assert (g_date_time_compare (values->date_start, values->date_end) == -1);
+
+  g_autoptr (GDateTime) new_start = g_date_time_new_from_iso8601 ("20250303T11:30:00-06:00", NULL);
+  g_autoptr (GDateTime) expected_end = g_date_time_new_from_iso8601 ("20250303T13:30:00-05:00", NULL);
+
+  g_autoptr (GcalScheduleValues) new_values = gcal_schedule_values_set_start_date_time (values, new_start);
+  g_assert (g_date_time_equal (new_values->date_start, new_start));
+
+  g_assert (g_date_time_equal (new_values->date_end, expected_end));
+}
+
+static void
 test_turning_all_day_on_displays_sensible_dates (void)
 {
   g_autoptr (GDateTime) date = g_date_time_new_from_iso8601 ("20250303T12:34:56-06:00", NULL);
@@ -1027,6 +1054,8 @@ gcal_schedule_section_add_tests (void)
                    test_setting_start_date_after_end_date_resets_end_date);
   g_test_add_func ("/event_editor/schedule_section/setting_end_date_before_start_date_resets_start_date",
                    test_setting_end_date_before_start_date_resets_start_date);
+  g_test_add_func ("/event_editor/schedule_section/setting_start_datetime_preserves_end_timezone",
+                   test_setting_start_datetime_preserves_end_timezone);
   g_test_add_func ("/event_editor/schedule_section/turning_all_day_on_displays_sensible_dates",
                    test_turning_all_day_on_displays_sensible_dates);
 }
