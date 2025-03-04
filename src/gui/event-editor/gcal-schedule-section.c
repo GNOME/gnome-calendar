@@ -920,6 +920,8 @@ values_with_date_times(const char *start, const char *end)
   g_autoptr (GDateTime) end_date = g_date_time_new_from_iso8601 (end, NULL);
   g_assert (end_date != NULL);
 
+  g_assert (g_date_time_compare (start_date, end_date) == -1);
+
   GcalScheduleValues *values = g_new0 (GcalScheduleValues, 1);
 
   *values = (GcalScheduleValues) {
