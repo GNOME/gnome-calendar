@@ -165,6 +165,24 @@ gcal_schedule_values_set_start_date (const GcalScheduleValues *values, GDateTime
   return copy;
 }
 
+/* The end_date_row widget has changed.  We need to sync it to the values and
+ * adjust the other values based on it.
+ */
+static GcalScheduleValues *
+gcal_schedule_values_set_end_date (const GcalScheduleValues *values, GDateTime *end)
+{
+  GcalScheduleValues *copy = gcal_schedule_values_copy (values);
+
+  gcal_set_date_time (&copy->date_end, end);
+
+  if (g_date_time_compare (copy->date_start, end) == 1)
+    {
+      gcal_set_date_time (&copy->date_start, end);
+    }
+
+  return copy;
+}
+
 static WidgetState *
 widget_state_from_values (const GcalScheduleValues *values)
 {
@@ -325,27 +343,9 @@ on_end_date_changed_cb (GtkWidget           *widget,
                         GParamSpec          *pspec,
                         GcalScheduleSection *self)
 {
-  GDateTime *start, *end;
-
-  GCAL_ENTRY;
-
-  block_date_signals (self);
-
-  start = gcal_date_chooser_row_get_date (self->start_date_row);
-  end = gcal_date_chooser_row_get_date (self->end_date_row);
-
-  if (g_date_time_compare (start, end) == 1)
-    {
-      gcal_date_chooser_row_set_date (self->start_date_row, end);
-      gcal_date_time_chooser_set_date (self->start_date_time_chooser, end);
-    }
-
-  // Keep the date row and the date-time chooser in sync
-  gcal_date_time_chooser_set_date (self->end_date_time_chooser, end);
-
-  unblock_date_signals (self);
-
-  GCAL_EXIT;
+  GDateTime *end = gcal_date_chooser_row_get_date (self->end_date_row);
+  GcalScheduleValues *updated = gcal_schedule_values_set_end_date (self->values, end);
+  update_from_values (self, updated);
 }
 
 static void
@@ -947,6 +947,42 @@ test_setting_start_date_after_end_date_resets_end_date (void)
 }
 
 static void
+test_setting_end_date_before_start_date_resets_start_date (void)
+{
+  /* We start with
+   *   start = 10:00
+   *   end   = 11:00
+   *
+   * Then we set end to 09:00
+   *
+   * We want to test that start becomes 09:00 as well.
+   */
+  g_autoptr (GDateTime) date = g_date_time_new_from_iso8601 ("20250303T10:00:00-06:00", NULL);
+  g_assert (date != NULL);
+
+  g_autoptr (GDateTime) one_hour_later = g_date_time_new_from_iso8601 ("20250303T11:00:00-06:00", NULL);
+  g_assert (one_hour_later != NULL);
+
+  g_autoptr (GcalScheduleValues) values = g_new (GcalScheduleValues, 1);
+
+  *values = (GcalScheduleValues) {
+    .all_day = FALSE,
+    .orig_date_start = g_date_time_ref (date),
+    .orig_date_end = g_date_time_ref (one_hour_later),
+    .date_start = g_date_time_ref (date),
+    .date_end = g_date_time_ref (one_hour_later),
+    .recur = NULL,
+    .time_format = GCAL_TIME_FORMAT_24H,
+  };
+
+  g_autoptr (GDateTime) two_hours_earlier = g_date_time_new_from_iso8601 ("20250303T09:00:00-06:00", NULL);
+
+  g_autoptr (GcalScheduleValues) new_values = gcal_schedule_values_set_end_date (values, two_hours_earlier);
+  g_assert (g_date_time_equal (new_values->date_start, two_hours_earlier));
+  g_assert (g_date_time_equal (new_values->date_end, two_hours_earlier));
+}
+
+static void
 test_turning_all_day_on_displays_sensible_dates (void)
 {
   g_autoptr (GDateTime) date = g_date_time_new_from_iso8601 ("20250303T12:34:56-06:00", NULL);
@@ -992,6 +1028,8 @@ gcal_schedule_section_add_tests (void)
 {
   g_test_add_func ("/event_editor/schedule_section/setting_start_date_after_end_date_resets_end_date",
                    test_setting_start_date_after_end_date_resets_end_date);
+  g_test_add_func ("/event_editor/schedule_section/setting_end_date_before_start_date_resets_start_date",
+                   test_setting_end_date_before_start_date_resets_start_date);
   g_test_add_func ("/event_editor/schedule_section/turning_all_day_on_displays_sensible_dates",
                    test_turning_all_day_on_displays_sensible_dates);
 }
