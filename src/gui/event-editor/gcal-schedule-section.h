@@ -40,8 +40,16 @@ G_DECLARE_FINAL_TYPE (GcalScheduleSection, gcal_schedule_section, GCAL, SCHEDULE
 typedef struct
 {
   gboolean all_day;
+
+  /* Original times from the GcalEvent.  We keep these around to be able to reconstruct
+   * the event's duration in case the all-day toggle gets turned on and off repeatedly.
+   */
+  GDateTime *orig_date_start;
+  GDateTime *orig_date_end;
+
   GDateTime *date_start;
   GDateTime *date_end;
+
   GcalRecurrence *recur;
   GcalTimeFormat time_format;
 } GcalScheduleValues;

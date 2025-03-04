@@ -119,6 +119,8 @@ gcal_schedule_values_copy (const GcalScheduleValues *values)
   GcalScheduleValues *copy = g_new0 (GcalScheduleValues, 1);
 
   copy->all_day = values->all_day;
+  copy->orig_date_start = values->orig_date_start ? g_date_time_ref (values->orig_date_start) : NULL;
+  copy->orig_date_end = values->orig_date_end ? g_date_time_ref (values->orig_date_end) : NULL;
   copy->date_start = values->date_start ? g_date_time_ref (values->date_start) : NULL;
   copy->date_end = values->date_end ? g_date_time_ref (values->date_end) : NULL;
   copy->recur = values->recur ? gcal_recurrence_ref (values->recur) : NULL;
@@ -889,8 +891,12 @@ gcal_schedule_values_from_event (GcalEvent      *event,
       GcalRecurrence *recur = gcal_event_get_recurrence (event);
 
       values->all_day = gcal_event_get_all_day (event);
-      values->date_start = g_date_time_ref (gcal_event_get_date_start (event));
-      values->date_end = g_date_time_ref (gcal_event_get_date_end (event));
+
+      values->orig_date_start = g_date_time_ref (gcal_event_get_date_start (event));
+      values->date_start = g_date_time_ref (values->orig_date_start);
+
+      values->orig_date_end = g_date_time_ref (gcal_event_get_date_end (event));
+      values->date_end = g_date_time_ref (values->orig_date_end);
 
       if (recur)
         {
@@ -932,6 +938,8 @@ test_turning_all_day_on_displays_sensible_dates (void)
 
   *values = (GcalScheduleValues) {
     .all_day = FALSE,
+    .orig_date_start = g_date_time_ref (date),
+    .orig_date_end = g_date_time_ref (one_hour_later),
     .date_start = g_date_time_ref (date),
     .date_end = g_date_time_ref (one_hour_later),
     .recur = NULL,
