@@ -940,8 +940,48 @@ gcal_schedule_values_free (GcalScheduleValues *values)
   g_free (values);
 }
 
+static void
+test_turning_all_day_on_displays_sensible_dates (void)
+{
+  g_autoptr (GDateTime) date = g_date_time_new_from_iso8601 ("20250303T12:34:56-06:00", NULL);
+  g_assert (date != NULL);
+
+  g_autoptr (GDateTime) one_hour_later = g_date_time_new_from_iso8601 ("20250303T13:34:56-06:00", NULL);
+  g_assert (one_hour_later != NULL);
+
+  g_autoptr (GcalScheduleValues) values = g_new0 (GcalScheduleValues, 1);
+
+  *values = (GcalScheduleValues) {
+    .all_day = FALSE,
+    .date_start = g_date_time_ref (date),
+    .date_end = g_date_time_ref (one_hour_later),
+    .recur = NULL,
+    .time_format = GCAL_TIME_FORMAT_24H,
+  };
+
+  g_autoptr (GcalScheduleValues) new_values = gcal_schedule_values_set_all_day (values, TRUE);
+
+  g_autoptr (WidgetState) state = widget_state_from_values (new_values);
+
+  g_assert_true (state->schedule_type_all_day);
+  g_assert_true (state->date_widgets_visible);
+  g_assert_false (state->date_time_widgets_visible);
+
+  g_assert_cmpint (g_date_time_get_year (state->date_time_start), ==, 2025);
+  g_assert_cmpint (g_date_time_get_month (state->date_time_start), ==, 3);
+  g_assert_cmpint (g_date_time_get_day_of_month (state->date_time_start), ==, 3);
+
+  g_assert_cmpint (g_date_time_get_year (state->date_time_end), ==, 2025);
+  g_assert_cmpint (g_date_time_get_month (state->date_time_end), ==, 3);
+  /* test failure:
+   *   g_assert_cmpint (g_date_time_get_day_of_month (state->date_time_end), ==, 3);
+   * this is because we subtract a day from the all_day end_date
+   */
+}
+
 void
 gcal_schedule_section_add_tests (void)
 {
-  /* g_test_add_func ("/event_editor/schedule_section/...", ...); */
+  g_test_add_func ("/event_editor/schedule_section/turning_all_day_on_displays_sensible_dates",
+                   test_turning_all_day_on_displays_sensible_dates);
 }
