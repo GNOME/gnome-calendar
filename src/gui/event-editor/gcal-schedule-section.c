@@ -303,27 +303,6 @@ on_schedule_type_changed_cb (GtkWidget           *widget,
   gboolean all_day = all_day_selected (self);
   GcalScheduleValues *updated = gcal_schedule_values_set_all_day (self->values, all_day);
   update_from_values (self, updated);
-
-  block_date_signals (self);
-
-  if (all_day)
-    {
-      g_autoptr (GDateTime) start_local = NULL;
-      g_autoptr (GDateTime) end_local = NULL;
-
-      GDateTime *start = gcal_date_time_chooser_get_date_time (self->start_date_time_chooser);
-      GDateTime *end = gcal_date_time_chooser_get_date_time (self->end_date_time_chooser);
-
-      start_local = g_date_time_to_local (start);
-      end_local = g_date_time_to_local (end);
-
-      gcal_date_chooser_row_set_date (self->start_date_row, start_local);
-      gcal_date_chooser_row_set_date (self->end_date_row, end_local);
-      gcal_date_time_chooser_set_date_time (self->start_date_time_chooser, start_local);
-      gcal_date_time_chooser_set_date_time (self->end_date_time_chooser, end_local);
-    }
-
-  unblock_date_signals (self);
 }
 
 static void
