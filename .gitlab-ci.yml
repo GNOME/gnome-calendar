@@ -16,8 +16,14 @@ variables:
   TARBALL_ARTIFACT_PATH: ".flatpak-builder/build/${FLATPAK_MODULE}/_flatpak_build/meson-dist/${CI_PROJECT_NAME}-${CI_COMMIT_TAG}.tar.xz"
 
 stages:
+  - check
   - build
   - deploy
+
+style-check-diff:
+  stage: check
+  script:
+    - .gitlab-ci/run-style-check-diff.sh
 
 build-flatpak:
   extends: '.flatpak@x86_64'
