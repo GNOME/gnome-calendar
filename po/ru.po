@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-02-06 15:54+0000\n"
-"PO-Revision-Date: 2025-02-07 15:19+0300\n"
+"POT-Creation-Date: 2025-03-01 15:37+0000\n"
+"PO-Revision-Date: 2025-03-02 11:49+0300\n"
 "Last-Translator: Artur So <arturios2005@mail.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -498,7 +498,7 @@ msgstr "Сб"
 
 #: src/gui/event-editor/gcal-date-chooser-row.ui:15
 msgid "Edit Date"
-msgstr "Редактирование даты"
+msgstr "Редактировать дату"
 
 #: src/gui/event-editor/gcal-date-chooser-row.ui:38
 msgid "Edit date"
@@ -549,7 +549,7 @@ msgstr "Редактировать время"
 
 #: src/gui/event-editor/gcal-time-chooser-row.ui:15
 msgid "Edit Time"
-msgstr "Редактирование времени"
+msgstr "Редактировать время"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "_Save"
@@ -674,7 +674,7 @@ msgstr "Каждый день"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:81
 msgid "Monday – Friday"
-msgstr "С понедельника по пятницу"
+msgstr "Понедельник – пятница"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:82
 msgid "Weekly"
@@ -1004,7 +1004,7 @@ msgstr ""
 "В %s"
 
 #.
-#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * Translators: %a is the abbreviated day name, %B is the month name
 #. * and %d is the day of the month as a number between 0 and 31.
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
@@ -1509,7 +1509,7 @@ msgid "Description"
 msgstr "Описание"
 
 #.
-#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * Translators: %A is the full day name, %B is the month name
 #. * and %d is the day of the month as a number between 0 and 31.
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
