@@ -134,6 +134,79 @@ gcal_schedule_values_set_all_day (const GcalScheduleValues *values, gboolean all
 {
   GcalScheduleValues *copy = gcal_schedule_values_copy (values);
 
+  if (all_day == values->all_day)
+    {
+      return copy;
+    }
+
+  if (all_day)
+    {
+      /* We are switching from a time-slot event to an all-day one.  If we had
+       *
+       *   date_start = $day1 + $time
+       *   date_end   = $day2 + $time
+       *
+       * we want to switch to
+       *
+       *   date_start = $day1 + 00:00 (midnight)
+       *   date_end   = $day2 + 1 day + 00:00 (midnight of the next day)
+       */
+
+      GDateTime *start = values->date_start;
+      GDateTime *end = values->date_end;
+
+      g_autoptr (GDateTime) new_start = g_date_time_new (g_date_time_get_timezone (start),
+                                                         g_date_time_get_year (start),
+                                                         g_date_time_get_month (start),
+                                                         g_date_time_get_day_of_month (start),
+                                                         0,
+                                                         0,
+                                                         0.0);
+
+      g_autoptr (GDateTime) tmp = g_date_time_new (g_date_time_get_timezone (end),
+                                                   g_date_time_get_year (end),
+                                                   g_date_time_get_month (end),
+                                                   g_date_time_get_day_of_month (end),
+                                                   0,
+                                                   0,
+                                                   0.0);
+      g_autoptr (GDateTime) new_end = g_date_time_add_days (tmp, 1);
+
+      gcal_set_date_time (&copy->date_start, new_start);
+      gcal_set_date_time (&copy->date_end, new_end);
+    }
+  else
+    {
+      /* We are switching from an all-day event to a time-slot one.  In this case,
+       * we want to preserve the current dates, but restore the times of the original
+       * event.
+       */
+
+      GDateTime *start = values->date_start;
+      GDateTime *end = values->date_end;
+
+      g_autoptr (GDateTime) new_start = g_date_time_new (g_date_time_get_timezone (start),
+                                                         g_date_time_get_year (start),
+                                                         g_date_time_get_month (start),
+                                                         g_date_time_get_day_of_month (start),
+                                                         g_date_time_get_hour (values->orig_date_start),
+                                                         g_date_time_get_minute (values->orig_date_start),
+                                                         g_date_time_get_seconds (values->orig_date_start));
+
+      g_autoptr (GDateTime) tmp = g_date_time_new (g_date_time_get_timezone (end),
+                                                   g_date_time_get_year (end),
+                                                   g_date_time_get_month (end),
+                                                   g_date_time_get_day_of_month (end),
+                                                   g_date_time_get_hour (values->orig_date_end),
+                                                   g_date_time_get_minute (values->orig_date_end),
+                                                   g_date_time_get_seconds (values->orig_date_end));
+
+      g_autoptr (GDateTime) new_end = g_date_time_add_days (tmp, -1);
+
+      gcal_set_date_time (&copy->date_start, new_start);
+      gcal_set_date_time (&copy->date_end, new_end);
+    }
+
   copy->all_day = all_day;
   return copy;
 }
@@ -557,6 +630,7 @@ gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
 
   GCAL_ENTRY;
 
+  gcal_event_set_all_day (event, self->values->all_day);
   gcal_event_set_date_start (event, self->values->date_start);
   gcal_event_set_date_end (event, self->values->date_end);
 
@@ -1077,6 +1151,46 @@ test_all_day_displays_sensible_dates_and_roundtrips (void)
   g_assert_cmpint (g_date_time_get_day_of_month (new_state->date_time_end), ==, 4);
 }
 
+static void
+test_43_switching_to_all_day_preserves_timezones (void)
+{
+  g_test_bug ("43");
+  /* https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/43
+   *
+   * Given an event that is not all-day, e.g. from $day1-12:00 to $day2-13:00, if one turns it to an
+   * all-day event, we want to switch the dates like this:
+   *
+   *   start: $day1's 00:00
+   *   end: $day2's 24:00 (e.g. ($day2 + 1)'s 00:00)
+   *
+   * Also test that after that, changing the dates and turning off all-day restores the
+   * original times.
+   */
+
+  g_autoptr (GcalScheduleValues) values = values_with_date_times ("20250303T12:00:00-06:00",
+                                                                  "20250304T13:00:00-06:00");
+
+  /* set all-day and check that this modified the times to midnight */
+
+  g_autoptr (GcalScheduleValues) all_day_values = gcal_schedule_values_set_all_day (values, TRUE);
+
+  g_autoptr (GDateTime) expected_start_date = g_date_time_new_from_iso8601 ("20250303T00:00:00-06:00", NULL);
+  g_autoptr (GDateTime) expected_end_date = g_date_time_new_from_iso8601 ("20250305T00:00:00-06:00", NULL);
+
+  g_assert (g_date_time_equal (all_day_values->date_start, expected_start_date));
+  g_assert (g_date_time_equal (all_day_values->date_end, expected_end_date));
+
+  /* turn off all-day; check that times were restored */
+
+  g_autoptr (GcalScheduleValues) not_all_day_values = gcal_schedule_values_set_all_day (all_day_values, FALSE);
+
+  g_autoptr (GDateTime) expected_start_date2 = g_date_time_new_from_iso8601 ("20250303T12:00:00-06:00", NULL);
+  g_autoptr (GDateTime) expected_end_date2 = g_date_time_new_from_iso8601 ("20250304T13:00:00-06:00", NULL);
+
+  g_assert (g_date_time_equal (not_all_day_values->date_start, expected_start_date2));
+  g_assert (g_date_time_equal (not_all_day_values->date_end, expected_end_date2));
+}
+
 void
 gcal_schedule_section_add_tests (void)
 {
@@ -1090,4 +1204,6 @@ gcal_schedule_section_add_tests (void)
                    test_setting_end_datetime_preserves_start_timezone);
   g_test_add_func ("/event_editor/schedule_section/all_day_displays_sensible_dates_and_roundtrips",
                    test_all_day_displays_sensible_dates_and_roundtrips);
+  g_test_add_func ("/event_editor/schedule_section/43_switching_to_all_day_preserves_timezones",
+                   test_43_switching_to_all_day_preserves_timezones);
 }
