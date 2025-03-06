@@ -1025,8 +1025,6 @@ test_all_day_displays_sensible_dates_and_roundtrips (void)
    * Then, change the end date to one day later, to get a two-day event.
    *
    * Check that the values gets back end = (start + 2 days)
-
-   * FIXME: here, do the above
    */
 
   g_autoptr (GDateTime) date = g_date_time_new_from_iso8601 ("20250303T00:00:00-06:00", NULL);
