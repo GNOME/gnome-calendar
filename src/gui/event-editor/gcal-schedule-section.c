@@ -173,7 +173,19 @@ gcal_schedule_values_set_end_date (const GcalScheduleValues *values, GDateTime *
 {
   GcalScheduleValues *copy = gcal_schedule_values_copy (values);
 
-  gcal_set_date_time (&copy->date_end, end);
+  if (copy->all_day)
+    {
+      /* See the comment "While in iCalendar..." in widget_state_from_values().  Here we
+       * take the human-readable end-date, and turn it into the appropriate value for
+       * iCalendar.
+       */
+      g_autoptr (GDateTime) fake_end_date = g_date_time_add_days (end, 1);
+      gcal_set_date_time (&copy->date_end, fake_end_date);
+    }
+  else
+    {
+      gcal_set_date_time (&copy->date_end, end);
+    }
 
   if (g_date_time_compare (copy->date_start, end) == 1)
     {
@@ -236,12 +248,17 @@ widget_state_from_values (const GcalScheduleValues *values)
 
   if (values->all_day)
     {
-      /* While in iCalendar a single-day all-day event goes from $day to $day+1, we don't want
-       * to show a single-day all-day event as starting on Feb 1 and ending on Feb 2, for
-       * example.  So, we subtract a day from the end date to show the expected thing to the
-       * user.  We restore this when setting the date-time back on the event.
+      /* While in iCalendar a single-day all-day event goes from $day to $day+1, we don't
+       * want to show the user a single-day all-day event as starting on Feb 1 and ending
+       * on Feb 2, for example.
+       *
+       * So, we maintain the "real" data in GcalScheduleValues with the $day+1 as iCalendar wants,
+       * but for display purposes, we subtract a day from the end date to show the expected thing to the
+       * user.  When the widget changes, we add the day back - see gcal_schedule_values_set_end_date().
        *
        * See https://bugzilla.gnome.org/show_bug.cgi?id=769300 for the original bug about this.
+       *
+       * Keep in sync with gcal_schedule_values_set_end_date().
        */
       state->date_time_end = g_date_time_add_days (values->date_end, -1);
     }
@@ -536,41 +553,12 @@ static void
 gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
                                       GcalEvent           *event)
 {
-  g_autoptr (GDateTime) start_date = NULL;
-  g_autoptr (GDateTime) end_date = NULL;
   GcalRecurrenceFrequency freq;
 
   GCAL_ENTRY;
 
-  start_date = g_date_time_ref (self->values->date_start);
-  end_date = g_date_time_ref (self->values->date_end);
-
-#ifdef GCAL_ENABLE_TRACE
-    {
-      g_autofree gchar *start_dt_string = g_date_time_format (start_date, "%x %X %z");
-      g_autofree gchar *end_dt_string = g_date_time_format (end_date, "%x %X %z");
-
-      g_debug ("New start date: %s", start_dt_string);
-      g_debug ("New end date: %s", end_dt_string);
-    }
-#endif
-
-  gcal_event_set_all_day (event, self->values->all_day);
-
-  if (self->values->all_day)
-    {
-      /* See the comment "While in iCalendar" elsewhere in this file.  Here we restore the
-       * correct date-time for the event.
-       *
-       * See https://bugzilla.gnome.org/show_bug.cgi?id=769300 for the original bug about this.
-       */
-      GDateTime *fake_end_date = g_date_time_add_days (end_date, 1);
-
-      gcal_set_date_time (&end_date, fake_end_date);
-    }
-
-  gcal_event_set_date_start (event, start_date);
-  gcal_event_set_date_end (event, end_date);
+  gcal_event_set_date_start (event, self->values->date_start);
+  gcal_event_set_date_end (event, self->values->date_end);
 
   /* Check Repeat popover and set recurrence-rules accordingly */
 
@@ -1023,29 +1011,45 @@ test_setting_end_datetime_preserves_start_timezone (void)
 }
 
 static void
-test_turning_all_day_on_displays_sensible_dates (void)
+test_all_day_displays_sensible_dates_and_roundtrips (void)
 {
-  g_autoptr (GDateTime) date = g_date_time_new_from_iso8601 ("20250303T12:34:56-06:00", NULL);
+  /* Start with this, per iCalendar's convention for a single-day all-day event:
+   *
+   *   start = midnight
+   *   end = next midnight
+   *   all_day = true
+   *
+   * Then, pass that on to the widgets, and check that they display the same date for start/end,
+   * since users see "all day, start=2025/03/03, end=2025/03/03" and think sure, a single all-day.
+   *
+   * Then, change the end date to one day later, to get a two-day event.
+   *
+   * Check that the values gets back end = (start + 2 days)
+
+   * FIXME: here, do the above
+   */
+
+  g_autoptr (GDateTime) date = g_date_time_new_from_iso8601 ("20250303T00:00:00-06:00", NULL);
   g_assert (date != NULL);
 
-  g_autoptr (GDateTime) one_hour_later = g_date_time_new_from_iso8601 ("20250303T13:34:56-06:00", NULL);
-  g_assert (one_hour_later != NULL);
+  g_autoptr (GDateTime) next_day = g_date_time_new_from_iso8601 ("20250304T00:00:00-06:00", NULL);
+  g_assert (next_day != NULL);
 
   g_autoptr (GcalScheduleValues) values = g_new0 (GcalScheduleValues, 1);
 
   *values = (GcalScheduleValues) {
-    .all_day = FALSE,
+    .all_day = TRUE,
     .orig_date_start = g_date_time_ref (date),
-    .orig_date_end = g_date_time_ref (one_hour_later),
+    .orig_date_end = g_date_time_ref (next_day),
     .date_start = g_date_time_ref (date),
-    .date_end = g_date_time_ref (one_hour_later),
+    .date_end = g_date_time_ref (next_day),
     .recur = NULL,
     .time_format = GCAL_TIME_FORMAT_24H,
   };
 
-  g_autoptr (GcalScheduleValues) new_values = gcal_schedule_values_set_all_day (values, TRUE);
+  /* Compute the widget state from the values; check the displayed dates (should be the same) */
 
-  g_autoptr (WidgetState) state = widget_state_from_values (new_values);
+  g_autoptr (WidgetState) state = widget_state_from_values (values);
 
   g_assert_true (state->schedule_type_all_day);
   g_assert_true (state->date_widgets_visible);
@@ -1057,10 +1061,22 @@ test_turning_all_day_on_displays_sensible_dates (void)
 
   g_assert_cmpint (g_date_time_get_year (state->date_time_end), ==, 2025);
   g_assert_cmpint (g_date_time_get_month (state->date_time_end), ==, 3);
-  /* test failure:
-   *   g_assert_cmpint (g_date_time_get_day_of_month (state->date_time_end), ==, 3);
-   * this is because we subtract a day from the all_day end_date
-   */
+  g_assert_cmpint (g_date_time_get_day_of_month (state->date_time_end), ==, 3);
+
+  /* Add a day to the end date */
+
+  g_autoptr (GDateTime) displayed_end_date_plus_one_day = g_date_time_new_from_iso8601 ("20250304T00:00:00-06:00", NULL);
+  g_assert (displayed_end_date_plus_one_day != NULL);
+  GcalScheduleValues *new_values = gcal_schedule_values_set_end_date (values, displayed_end_date_plus_one_day);
+
+  /* Check the real iCalendar value for the new date, should be different from the displayed value */
+
+  g_assert_cmpint (g_date_time_get_day_of_month (new_values->date_end), ==, 5);
+
+  /* Roundtrip back to widgets and check the displayed value */
+
+  g_autoptr (WidgetState) new_state = widget_state_from_values (new_values);
+  g_assert_cmpint (g_date_time_get_day_of_month (new_state->date_time_end), ==, 4);
 }
 
 void
@@ -1074,6 +1090,6 @@ gcal_schedule_section_add_tests (void)
                    test_setting_start_datetime_preserves_end_timezone);
   g_test_add_func ("/event_editor/schedule_section/setting_end_datetime_preserves_start_timezone",
                    test_setting_end_datetime_preserves_start_timezone);
-  g_test_add_func ("/event_editor/schedule_section/turning_all_day_on_displays_sensible_dates",
-                   test_turning_all_day_on_displays_sensible_dates);
+  g_test_add_func ("/event_editor/schedule_section/all_day_displays_sensible_dates_and_roundtrips",
+                   test_all_day_displays_sensible_dates_and_roundtrips);
 }
