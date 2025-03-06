@@ -23,7 +23,7 @@
           <object class="GtkMenuButton">
             <property name="icon-name">clock-alt-symbolic</property>
             <property name="valign">center</property>
-            <property name="tooltip-text">Edit Time</property>
+            <property name="tooltip-text" translatable="yes">Edit Time</property>
             <property name="popover">
               <object class="GtkPopover" id="time_popover">
                 <property name="position">bottom</property>
