@@ -888,28 +888,12 @@ gcal_schedule_section_recurrence_changed (GcalScheduleSection *self)
 gboolean
 gcal_schedule_section_day_changed (GcalScheduleSection *self)
 {
-  GDateTime *start_date, *end_date;
-  gboolean all_day;
-
   g_return_val_if_fail (GCAL_IS_SCHEDULE_SECTION (self), FALSE);
 
   GCAL_ENTRY;
 
-  all_day = all_day_selected (self);
-
-   if (all_day)
-    {
-      start_date = gcal_date_time_chooser_get_date_time (self->start_date_time_chooser);
-      end_date = gcal_date_time_chooser_get_date_time (self->end_date_time_chooser);
-    }
-  else
-    {
-      start_date = gcal_date_chooser_row_get_date (self->start_date_row);
-      end_date = gcal_date_chooser_row_get_date (self->end_date_row);
-    }
-
-  GCAL_RETURN (gcal_date_time_compare_date (start_date, self->values->date_start) < 0 ||
-               gcal_date_time_compare_date (end_date, self->values->date_end) > 0);
+  GCAL_RETURN (gcal_date_time_compare_date (self->values->date_start, self->values->orig_date_start) < 0 ||
+               gcal_date_time_compare_date (self->values->date_end, self->values->orig_date_end) > 0);
 }
 
 /**
