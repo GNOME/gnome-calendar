@@ -44,6 +44,7 @@ typedef struct
   /* Original times from the GcalEvent.  We keep these around to be able to reconstruct
    * the event's duration in case the all-day toggle gets turned on and off repeatedly.
    */
+  gboolean orig_all_day;
   GDateTime *orig_date_start;
   GDateTime *orig_date_end;
 

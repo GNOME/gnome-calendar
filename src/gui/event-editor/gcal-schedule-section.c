@@ -119,6 +119,7 @@ gcal_schedule_values_copy (const GcalScheduleValues *values)
   GcalScheduleValues *copy = g_new0 (GcalScheduleValues, 1);
 
   copy->all_day = values->all_day;
+  copy->orig_all_day = values->orig_all_day;
   copy->orig_date_start = values->orig_date_start ? g_date_time_ref (values->orig_date_start) : NULL;
   copy->orig_date_end = values->orig_date_end ? g_date_time_ref (values->orig_date_end) : NULL;
   copy->date_start = values->date_start ? g_date_time_ref (values->date_start) : NULL;
@@ -912,7 +913,8 @@ gcal_schedule_values_from_event (GcalEvent      *event,
     {
       GcalRecurrence *recur = gcal_event_get_recurrence (event);
 
-      values->all_day = gcal_event_get_all_day (event);
+      values->orig_all_day = gcal_event_get_all_day (event);
+      values->all_day = values->orig_all_day;
 
       values->orig_date_start = g_date_time_ref (gcal_event_get_date_start (event));
       values->date_start = g_date_time_ref (values->orig_date_start);
