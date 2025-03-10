@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2025-02-12 20:31+0000\n"
-"PO-Revision-Date: 2025-03-08 19:07+0100\n"
+"PO-Revision-Date: 2025-03-10 20:21+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -549,7 +549,7 @@ msgstr "Ny begivenhed"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:690
 msgid "Event Details"
-msgstr "Redigér detaljer"
+msgstr "Begivenhedsdetaljer"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:692
 msgid "Edit Event"
