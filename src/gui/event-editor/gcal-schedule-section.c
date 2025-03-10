@@ -942,6 +942,8 @@ gcal_schedule_values_free (GcalScheduleValues *values)
 {
   values->all_day = FALSE;
 
+  g_clear_pointer (&values->orig_date_start, g_date_time_unref);
+  g_clear_pointer (&values->orig_date_end, g_date_time_unref);
   g_clear_pointer (&values->date_start, g_date_time_unref);
   g_clear_pointer (&values->date_end, g_date_time_unref);
   g_clear_pointer (&values->recur, gcal_recurrence_unref);
