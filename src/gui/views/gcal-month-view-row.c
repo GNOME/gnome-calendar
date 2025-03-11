@@ -51,6 +51,7 @@ struct _GcalMonthViewRow
 
   GListStore         *events;
   GHashTable         *layout_blocks;
+  gboolean            layout_blocks_valid;
 
   GcalContext        *context;
 };
@@ -61,6 +62,10 @@ static gint          compare_events_cb                           (gconstpointer 
 
 static void          on_event_widget_activated_cb                (GcalEventWidget    *widget,
                                                                   GcalMonthViewRow   *self);
+
+static gboolean      widget_tick_cb                              (GtkWidget          *widget,
+                                                                  GdkFrameClock      *frame_clock,
+                                                                  gpointer            user_data);
 
 G_DEFINE_FINAL_TYPE (GcalMonthViewRow, gcal_month_view_row, GTK_TYPE_WIDGET)
 
@@ -173,6 +178,8 @@ prepare_layout_blocks (GcalMonthViewRow *self,
   guint weekday_heights[7] = { 0, };
   guint n_events;
 
+  g_assert (self->layout_blocks_valid);
+
   n_events = g_list_model_get_n_items (G_LIST_MODEL (self->events));
 
   for (guint i = 0; i < 7; i++)
@@ -274,6 +281,10 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
   guint events_at_weekday[7] = { 0, };
   guint n_events;
 
+  GCAL_ENTRY;
+
+  g_assert (!self->layout_blocks_valid);
+
   range_start = gcal_range_get_start (self->range);
   n_events = g_list_model_get_n_items (G_LIST_MODEL (self->events));
 
@@ -363,6 +374,29 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
 
       g_hash_table_insert (self->layout_blocks, event, g_steal_pointer (&blocks));
     }
+
+  self->layout_blocks_valid = TRUE;
+
+  GCAL_EXIT;
+}
+
+static void
+invalidate_layout_blocks (GcalMonthViewRow *self)
+{
+  GCAL_ENTRY;
+
+  if (!self->layout_blocks_valid)
+    GCAL_RETURN ();
+
+  if (gtk_widget_get_mapped (GTK_WIDGET (self)))
+    {
+      gtk_widget_add_tick_callback (GTK_WIDGET (self), widget_tick_cb, self, NULL);
+      gtk_widget_queue_allocate (GTK_WIDGET (self));
+    }
+
+  self->layout_blocks_valid = FALSE;
+
+  GCAL_EXIT;
 }
 
 
@@ -399,10 +433,39 @@ on_month_cell_show_overflow_cb (GcalMonthCell    *cell,
   g_signal_emit (self, signals[SHOW_OVERFLOW], 0, cell);
 }
 
+static gboolean
+widget_tick_cb (GtkWidget     *widget,
+                GdkFrameClock *frame_clock,
+                gpointer       user_data)
+{
+  GcalMonthViewRow *self = (GcalMonthViewRow *) widget;
+
+  GCAL_ENTRY;
+
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+
+  recalculate_layout_blocks (self);
+
+  GCAL_RETURN (G_SOURCE_REMOVE);
+}
+
 
 /*
  * GtkWidget overrides
  */
+
+static void
+gcal_month_view_row_map (GtkWidget *widget)
+{
+  GcalMonthViewRow *self = (GcalMonthViewRow *) widget;
+
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+
+  GTK_WIDGET_CLASS (gcal_month_view_row_parent_class)->map (widget);
+
+  if (!self->layout_blocks_valid)
+    recalculate_layout_blocks (self);
+}
 
 static void
 gcal_month_view_row_measure (GtkWidget      *widget,
@@ -485,6 +548,7 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
     }
 
   /* Event widgets */
+  if (self->layout_blocks_valid)
     {
       gdouble cell_y[7];
       guint overflows[7] = { 0, };
@@ -610,6 +674,7 @@ gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
   object_class->get_property = gcal_month_view_row_get_property;
   object_class->set_property = gcal_month_view_row_set_property;
 
+  widget_class->map = gcal_month_view_row_map;
   widget_class->measure = gcal_month_view_row_measure;
   widget_class->size_allocate = gcal_month_view_row_size_allocate;
 
@@ -645,6 +710,7 @@ gcal_month_view_row_init (GcalMonthViewRow *self)
 {
   self->events = g_list_store_new (GCAL_TYPE_EVENT);
   self->layout_blocks = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_ptr_array_unref);
+  self->layout_blocks_valid = TRUE;
 
   for (guint i = 0; i < 7; i++)
     {
@@ -712,6 +778,7 @@ gcal_month_view_row_set_range (GcalMonthViewRow *self,
   /* Preemptively remove all event widgets */
   g_list_store_remove_all (self->events);
   g_hash_table_remove_all (self->layout_blocks);
+  invalidate_layout_blocks (self);
 
   start = gcal_range_get_start (range);
   for (guint i = 0; i < 7; i++)
@@ -729,7 +796,7 @@ gcal_month_view_row_add_event (GcalMonthViewRow *self,
   g_assert (GCAL_IS_EVENT (event));
 
   g_list_store_insert_sorted (self->events, event, compare_events_cb, self);
-  recalculate_layout_blocks (self);
+  invalidate_layout_blocks (self);
 }
 
 void
@@ -753,7 +820,7 @@ gcal_month_view_row_remove_event (GcalMonthViewRow *self,
     }
 
   g_list_store_remove (self->events, position);
-  recalculate_layout_blocks (self);
+  invalidate_layout_blocks (self);
 
   GCAL_EXIT;
 }
