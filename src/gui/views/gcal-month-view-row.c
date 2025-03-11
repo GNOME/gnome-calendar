@@ -759,8 +759,8 @@ gcal_month_view_row_remove_event (GcalMonthViewRow *self,
 }
 
 void
-gcal_month_view_row_update_style_for_date   (GcalMonthViewRow *self,
-                                             GDateTime        *date)
+gcal_month_view_row_update_style_for_date (GcalMonthViewRow *self,
+                                           GDateTime        *date)
 {
   g_autoptr (GDateTime) range_start = NULL;
 
