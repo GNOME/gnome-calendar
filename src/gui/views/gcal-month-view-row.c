@@ -785,6 +785,8 @@ gcal_month_view_row_set_range (GcalMonthViewRow *self,
       g_autoptr (GDateTime) day = g_date_time_add_days (start, i);
       gcal_month_cell_set_date (GCAL_MONTH_CELL (self->day_cells[i]), day);
     }
+
+  GCAL_EXIT;
 }
 
 void
