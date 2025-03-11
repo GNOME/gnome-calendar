@@ -37,7 +37,7 @@ struct _GcalScheduleSection
 {
   GtkBox               parent;
 
-  GcalScheduleValues  *values;
+  GcalScheduleSectionValues *values;
 
   AdwToggleGroup      *schedule_type_toggle_group;
   AdwPreferencesGroup *start_date_group;
@@ -68,6 +68,7 @@ typedef struct
   gboolean schedule_type_all_day;
   gboolean date_widgets_visible;
   gboolean date_time_widgets_visible;
+
   GcalTimeFormat time_format;
 
   /* Note that the displayed date/time may not correspond to the real data in the
@@ -75,6 +76,14 @@ typedef struct
    */
   GDateTime *date_time_start;
   GDateTime *date_time_end;
+
+  struct {
+    gboolean duration_combo_visible;
+    GcalRecurrenceFrequency frequency;
+    GcalRecurrenceLimitType limit_type;
+    guint limit_count;
+    GDateTime *limit_until;
+  } recurrence;
 } WidgetState;
 
 static void widget_state_free (WidgetState *state);
@@ -113,29 +122,60 @@ static void          on_schedule_type_changed_cb                 (GtkWidget     
                                                                   GParamSpec          *pspec,
                                                                   GcalScheduleSection *self);
 
-static GcalScheduleValues *
+static GcalScheduleValues
 gcal_schedule_values_copy (const GcalScheduleValues *values)
 {
-  GcalScheduleValues *copy = g_new0 (GcalScheduleValues, 1);
+  GcalScheduleValues copy;
 
-  copy->all_day = values->all_day;
-  copy->orig_all_day = values->orig_all_day;
-  copy->orig_date_start = values->orig_date_start ? g_date_time_ref (values->orig_date_start) : NULL;
-  copy->orig_date_end = values->orig_date_end ? g_date_time_ref (values->orig_date_end) : NULL;
-  copy->date_start = values->date_start ? g_date_time_ref (values->date_start) : NULL;
-  copy->date_end = values->date_end ? g_date_time_ref (values->date_end) : NULL;
-  copy->recur = values->recur ? gcal_recurrence_ref (values->recur) : NULL;
+  copy.all_day = values->all_day;
+  copy.date_start = values->date_start ? g_date_time_ref (values->date_start) : NULL;
+  copy.date_end = values->date_end ? g_date_time_ref (values->date_end) : NULL;
+  copy.recur = values->recur ? gcal_recurrence_ref (values->recur) : NULL;
+
+  return copy;
+}
+
+static GcalScheduleSectionValues *
+gcal_schedule_section_values_copy (const GcalScheduleSectionValues *values)
+{
+  GcalScheduleSectionValues *copy = g_new0 (GcalScheduleSectionValues, 1);
+
+  copy->orig = gcal_schedule_values_copy (&values->orig);
+  copy->curr = gcal_schedule_values_copy (&values->curr);
   copy->time_format = values->time_format;
 
   return copy;
 }
 
-static GcalScheduleValues *
-gcal_schedule_values_set_all_day (const GcalScheduleValues *values, gboolean all_day)
+static void
+gcal_schedule_values_free (GcalScheduleValues *values)
 {
-  GcalScheduleValues *copy = gcal_schedule_values_copy (values);
+  values->all_day = FALSE;
 
-  if (all_day == values->all_day)
+  g_clear_pointer (&values->date_start, g_date_time_unref);
+  g_clear_pointer (&values->date_end, g_date_time_unref);
+  g_clear_pointer (&values->recur, gcal_recurrence_unref);
+}
+
+/**
+ * gcal_schedule_section_values_free():
+ *
+ * Frees the contents of @values.
+ */
+void
+gcal_schedule_section_values_free (GcalScheduleSectionValues *values)
+{
+  gcal_schedule_values_free (&values->orig);
+  gcal_schedule_values_free (&values->curr);
+  g_free (values);
+}
+
+static GcalScheduleSectionValues*
+gcal_schedule_section_values_set_all_day (const GcalScheduleSectionValues *values, gboolean all_day)
+{
+  GcalScheduleSectionValues *copy = gcal_schedule_section_values_copy (values);
+
+  if (all_day == values->curr.all_day)
     {
       return copy;
     }
@@ -153,8 +193,8 @@ gcal_schedule_values_set_all_day (const GcalScheduleValues *values, gboolean all
        *   date_end   = $day2 + 1 day + 00:00 (midnight of the next day)
        */
 
-      GDateTime *start = values->date_start;
-      GDateTime *end = values->date_end;
+      GDateTime *start = values->curr.date_start;
+      GDateTime *end = values->curr.date_end;
 
       g_autoptr (GDateTime) new_start = g_date_time_new (g_date_time_get_timezone (start),
                                                          g_date_time_get_year (start),
@@ -173,8 +213,8 @@ gcal_schedule_values_set_all_day (const GcalScheduleValues *values, gboolean all
                                                    0.0);
       g_autoptr (GDateTime) new_end = g_date_time_add_days (tmp, 1);
 
-      gcal_set_date_time (&copy->date_start, new_start);
-      gcal_set_date_time (&copy->date_end, new_end);
+      gcal_set_date_time (&copy->curr.date_start, new_start);
+      gcal_set_date_time (&copy->curr.date_end, new_end);
     }
   else
     {
@@ -183,39 +223,39 @@ gcal_schedule_values_set_all_day (const GcalScheduleValues *values, gboolean all
        * event.
        */
 
-      GDateTime *start = values->date_start;
-      GDateTime *end = values->date_end;
+      GDateTime *start = values->curr.date_start;
+      GDateTime *end = values->curr.date_end;
 
       g_autoptr (GDateTime) new_start = g_date_time_new (g_date_time_get_timezone (start),
                                                          g_date_time_get_year (start),
                                                          g_date_time_get_month (start),
                                                          g_date_time_get_day_of_month (start),
-                                                         g_date_time_get_hour (values->orig_date_start),
-                                                         g_date_time_get_minute (values->orig_date_start),
-                                                         g_date_time_get_seconds (values->orig_date_start));
+                                                         g_date_time_get_hour (values->orig.date_start),
+                                                         g_date_time_get_minute (values->orig.date_start),
+                                                         g_date_time_get_seconds (values->orig.date_start));
 
       g_autoptr (GDateTime) tmp = g_date_time_new (g_date_time_get_timezone (end),
                                                    g_date_time_get_year (end),
                                                    g_date_time_get_month (end),
                                                    g_date_time_get_day_of_month (end),
-                                                   g_date_time_get_hour (values->orig_date_end),
-                                                   g_date_time_get_minute (values->orig_date_end),
-                                                   g_date_time_get_seconds (values->orig_date_end));
+                                                   g_date_time_get_hour (values->orig.date_end),
+                                                   g_date_time_get_minute (values->orig.date_end),
+                                                   g_date_time_get_seconds (values->orig.date_end));
 
       g_autoptr (GDateTime) new_end = g_date_time_add_days (tmp, -1);
 
-      gcal_set_date_time (&copy->date_start, new_start);
-      gcal_set_date_time (&copy->date_end, new_end);
+      gcal_set_date_time (&copy->curr.date_start, new_start);
+      gcal_set_date_time (&copy->curr.date_end, new_end);
     }
 
-  copy->all_day = all_day;
+  copy->curr.all_day = all_day;
   return copy;
 }
 
-static GcalScheduleValues *
-gcal_schedule_values_set_time_format (const GcalScheduleValues *values, GcalTimeFormat time_format)
+static GcalScheduleSectionValues *
+gcal_schedule_section_values_set_time_format (const GcalScheduleSectionValues *values, GcalTimeFormat time_format)
 {
-  GcalScheduleValues *copy = gcal_schedule_values_copy (values);
+  GcalScheduleSectionValues *copy = gcal_schedule_section_values_copy (values);
 
   copy->time_format = time_format;
   return copy;
@@ -224,16 +264,16 @@ gcal_schedule_values_set_time_format (const GcalScheduleValues *values, GcalTime
 /* The start_date_row widget has changed.  We need to sync it to the values and
  * adjust the other values based on it.
  */
-static GcalScheduleValues *
-gcal_schedule_values_set_start_date (const GcalScheduleValues *values, GDateTime *start)
+static GcalScheduleSectionValues *
+gcal_schedule_section_values_set_start_date (const GcalScheduleSectionValues *values, GDateTime *start)
 {
-  GcalScheduleValues *copy = gcal_schedule_values_copy (values);
+  GcalScheduleSectionValues *copy = gcal_schedule_section_values_copy (values);
 
-  gcal_set_date_time (&copy->date_start, start);
+  gcal_set_date_time (&copy->curr.date_start, start);
 
-  if (g_date_time_compare (start, copy->date_end) == 1)
+  if (g_date_time_compare (start, copy->curr.date_end) == 1)
     {
-      gcal_set_date_time (&copy->date_end, start);
+      gcal_set_date_time (&copy->curr.date_end, start);
     }
 
   return copy;
@@ -242,85 +282,85 @@ gcal_schedule_values_set_start_date (const GcalScheduleValues *values, GDateTime
 /* The end_date_row widget has changed.  We need to sync it to the values and
  * adjust the other values based on it.
  */
-static GcalScheduleValues *
-gcal_schedule_values_set_end_date (const GcalScheduleValues *values, GDateTime *end)
+static GcalScheduleSectionValues *
+gcal_schedule_section_values_set_end_date (const GcalScheduleSectionValues *values, GDateTime *end)
 {
-  GcalScheduleValues *copy = gcal_schedule_values_copy (values);
+  GcalScheduleSectionValues *copy = gcal_schedule_section_values_copy (values);
 
-  if (copy->all_day)
+  if (copy->curr.all_day)
     {
       /* See the comment "While in iCalendar..." in widget_state_from_values().  Here we
        * take the human-readable end-date, and turn it into the appropriate value for
        * iCalendar.
        */
       g_autoptr (GDateTime) fake_end_date = g_date_time_add_days (end, 1);
-      gcal_set_date_time (&copy->date_end, fake_end_date);
+      gcal_set_date_time (&copy->curr.date_end, fake_end_date);
     }
   else
     {
-      gcal_set_date_time (&copy->date_end, end);
+      gcal_set_date_time (&copy->curr.date_end, end);
     }
 
-  if (g_date_time_compare (copy->date_start, end) == 1)
+  if (g_date_time_compare (copy->curr.date_start, end) == 1)
     {
-      gcal_set_date_time (&copy->date_start, end);
+      gcal_set_date_time (&copy->curr.date_start, end);
     }
 
   return copy;
 }
 
-static GcalScheduleValues *
-gcal_schedule_values_set_start_date_time (const GcalScheduleValues *values, GDateTime *start)
+static GcalScheduleSectionValues *
+gcal_schedule_section_values_set_start_date_time (const GcalScheduleSectionValues *values, GDateTime *start)
 {
-  GcalScheduleValues *copy = gcal_schedule_values_copy (values);
+  GcalScheduleSectionValues *copy = gcal_schedule_section_values_copy (values);
 
-  gcal_set_date_time (&copy->date_start, start);
+  gcal_set_date_time (&copy->curr.date_start, start);
 
-  if (g_date_time_compare (start, copy->date_end) == 1)
+  if (g_date_time_compare (start, copy->curr.date_end) == 1)
     {
-      GTimeZone *end_tz = g_date_time_get_timezone (copy->date_end);
+      GTimeZone *end_tz = g_date_time_get_timezone (copy->curr.date_end);
       g_autoptr (GDateTime) new_end = g_date_time_add_hours (start, 1);
       g_autoptr (GDateTime) new_end_in_end_tz = g_date_time_to_timezone (new_end, end_tz);
 
-      gcal_set_date_time (&copy->date_end, new_end_in_end_tz);
+      gcal_set_date_time (&copy->curr.date_end, new_end_in_end_tz);
     }
 
   return copy;
 }
 
-static GcalScheduleValues *
-gcal_schedule_values_set_end_date_time (const GcalScheduleValues *values, GDateTime *end)
+static GcalScheduleSectionValues *
+gcal_schedule_section_values_set_end_date_time (const GcalScheduleSectionValues *values, GDateTime *end)
 {
-  GcalScheduleValues *copy = gcal_schedule_values_copy (values);
+  GcalScheduleSectionValues *copy = gcal_schedule_section_values_copy (values);
 
-  gcal_set_date_time (&copy->date_end, end);
+  gcal_set_date_time (&copy->curr.date_end, end);
 
-  if (g_date_time_compare (copy->date_start, end) == 1)
+  if (g_date_time_compare (copy->curr.date_start, end) == 1)
     {
-      GTimeZone *start_tz = g_date_time_get_timezone (copy->date_start);
+      GTimeZone *start_tz = g_date_time_get_timezone (copy->curr.date_start);
       g_autoptr (GDateTime) new_start = g_date_time_add_hours (end, -1);
       g_autoptr (GDateTime) new_start_in_start_tz = g_date_time_to_timezone (new_start, start_tz);
 
-      gcal_set_date_time (&copy->date_start, new_start_in_start_tz);
+      gcal_set_date_time (&copy->curr.date_start, new_start_in_start_tz);
     }
 
   return copy;
 }
 
 static WidgetState *
-widget_state_from_values (const GcalScheduleValues *values)
+widget_state_from_values (const GcalScheduleSectionValues *values)
 {
   WidgetState *state = g_new0 (WidgetState, 1);
 
-  state->schedule_type_all_day = values->all_day;
-  state->date_widgets_visible = values->all_day;
-  state->date_time_widgets_visible = !values->all_day;
+  state->schedule_type_all_day = values->curr.all_day;
+  state->date_widgets_visible = values->curr.all_day;
+  state->date_time_widgets_visible = !values->curr.all_day;
   state->time_format = values->time_format;
 
-  g_assert (values->date_start);
-  state->date_time_start = g_date_time_ref (values->date_start);
+  g_assert (values->curr.date_start);
+  state->date_time_start = g_date_time_ref (values->curr.date_start);
 
-  if (values->all_day)
+  if (values->curr.all_day)
     {
       /* While in iCalendar a single-day all-day event goes from $day to $day+1, we don't
        * want to show the user a single-day all-day event as starting on Feb 1 and ending
@@ -334,12 +374,45 @@ widget_state_from_values (const GcalScheduleValues *values)
        *
        * Keep in sync with gcal_schedule_values_set_end_date().
        */
-      state->date_time_end = g_date_time_add_days (values->date_end, -1);
+      state->date_time_end = g_date_time_add_days (values->curr.date_end, -1);
     }
   else
     {
-      g_assert (values->date_end);
-      state->date_time_end = g_date_time_ref (values->date_end);
+      g_assert (values->curr.date_end);
+      state->date_time_end = g_date_time_ref (values->curr.date_end);
+    }
+
+  if (values->curr.recur && values->curr.recur->frequency != GCAL_RECURRENCE_NO_REPEAT)
+    {
+      state->recurrence.duration_combo_visible = TRUE;
+      state->recurrence.frequency = values->curr.recur->frequency;
+      state->recurrence.limit_type = values->curr.recur->limit_type;
+
+      switch (values->curr.recur->limit_type)
+        {
+        case GCAL_RECURRENCE_COUNT:
+          state->recurrence.limit_count = values->curr.recur->limit.count;
+          break;
+
+        case GCAL_RECURRENCE_UNTIL:
+          state->recurrence.limit_until = g_date_time_ref (values->curr.recur->limit.until);
+          break;
+
+        case GCAL_RECURRENCE_FOREVER:
+          state->recurrence.limit_count = 0;
+          break;
+
+        default:
+          g_assert_not_reached ();
+        }
+    }
+  else
+    {
+      state->recurrence.duration_combo_visible = FALSE;
+      state->recurrence.frequency = GCAL_RECURRENCE_NO_REPEAT;
+      state->recurrence.limit_type = GCAL_RECURRENCE_FOREVER;
+      state->recurrence.limit_count = 0;
+      state->recurrence.limit_until = NULL;
     }
 
   return state;
@@ -350,6 +423,12 @@ widget_state_free (WidgetState *state)
 {
   g_date_time_unref (state->date_time_start);
   g_date_time_unref (state->date_time_end);
+
+  if (state->recurrence.limit_until)
+    {
+      g_date_time_unref (state->recurrence.limit_until);
+    }
+
   g_free (state);
 }
 
@@ -423,8 +502,25 @@ update_widgets (GcalScheduleSection *self,
   gcal_date_time_chooser_set_date_time (self->start_date_time_chooser, state->date_time_start);
   gcal_date_time_chooser_set_date_time (self->end_date_time_chooser, state->date_time_end);
 
+  /* Recurrences */
+  gtk_widget_set_visible (self->repeat_duration_combo, state->recurrence.duration_combo_visible);
+
+  adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_combo), state->recurrence.frequency);
+  adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_duration_combo), state->recurrence.limit_type);
+
+  gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), state->recurrence.limit_count);
+  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->until_date_selector), state->recurrence.limit_until);
+
   unblock_date_signals (self);
   g_signal_handlers_unblock_by_func (self->schedule_type_toggle_group, on_schedule_type_changed_cb, self);
+}
+
+/* Recomputes and sets the widget state.  Assumes self->values has already been updated. */
+static void
+refresh (GcalScheduleSection *self)
+{
+  g_autoptr (WidgetState) state = widget_state_from_values (self->values);
+  update_widgets (self, state);
 }
 
 /* Updates the widgets, and the current values, from the specified ones.
@@ -432,15 +528,13 @@ update_widgets (GcalScheduleSection *self,
  * This will free the current values and replace them with new ones.
  */
 static void
-update_from_values (GcalScheduleSection *self,
-                    GcalScheduleValues *values)
+update_from_section_values (GcalScheduleSection *self,
+                            GcalScheduleSectionValues *values)
 {
-  g_autoptr (WidgetState) state = widget_state_from_values (values);
-
-  update_widgets (self, state);
-
-  gcal_schedule_values_free (self->values);
+  gcal_schedule_section_values_free (self->values);
   self->values = values;
+
+  refresh (self);
 }
 
 /*
@@ -453,8 +547,8 @@ on_schedule_type_changed_cb (GtkWidget           *widget,
                              GcalScheduleSection *self)
 {
   gboolean all_day = all_day_selected (self);
-  GcalScheduleValues *updated = gcal_schedule_values_set_all_day (self->values, all_day);
-  update_from_values (self, updated);
+  GcalScheduleSectionValues *updated = gcal_schedule_section_values_set_all_day (self->values, all_day);
+  update_from_section_values (self, updated);
 }
 
 static void
@@ -463,8 +557,8 @@ on_start_date_changed_cb (GtkWidget           *widget,
                           GcalScheduleSection *self)
 {
   GDateTime *start = gcal_date_chooser_row_get_date (self->start_date_row);
-  GcalScheduleValues *updated = gcal_schedule_values_set_start_date (self->values, start);
-  update_from_values (self, updated);
+  GcalScheduleSectionValues *updated = gcal_schedule_section_values_set_start_date (self->values, start);
+  update_from_section_values (self, updated);
 }
 
 static void
@@ -473,8 +567,8 @@ on_end_date_changed_cb (GtkWidget           *widget,
                         GcalScheduleSection *self)
 {
   GDateTime *end = gcal_date_chooser_row_get_date (self->end_date_row);
-  GcalScheduleValues *updated = gcal_schedule_values_set_end_date (self->values, end);
-  update_from_values (self, updated);
+  GcalScheduleSectionValues *updated = gcal_schedule_section_values_set_end_date (self->values, end);
+  update_from_section_values (self, updated);
 }
 
 static void
@@ -483,8 +577,8 @@ on_start_date_time_changed_cb (GtkWidget           *widget,
                                GcalScheduleSection *self)
 {
   GDateTime *start = gcal_date_time_chooser_get_date_time (self->start_date_time_chooser);
-  GcalScheduleValues *updated = gcal_schedule_values_set_start_date_time (self->values, start);
-  update_from_values (self, updated);
+  GcalScheduleSectionValues *updated = gcal_schedule_section_values_set_start_date_time (self->values, start);
+  update_from_section_values (self, updated);
 }
 
 static void
@@ -493,8 +587,8 @@ on_end_date_time_changed_cb (GtkWidget           *widget,
                              GcalScheduleSection *self)
 {
   GDateTime *end = gcal_date_time_chooser_get_date_time (self->end_date_time_chooser);
-  GcalScheduleValues *updated = gcal_schedule_values_set_end_date_time (self->values, end);
-  update_from_values (self, updated);
+  GcalScheduleSectionValues *updated = gcal_schedule_section_values_set_end_date_time (self->values, end);
+  update_from_section_values (self, updated);
 }
 
 static void
@@ -528,11 +622,9 @@ on_time_format_changed_cb (GcalScheduleSection *self)
 {
   GcalTimeFormat time_format = gcal_context_get_time_format (self->context);
 
-  GcalScheduleValues *updated = gcal_schedule_values_set_time_format (self->values, time_format);
+  GcalScheduleSectionValues *updated = gcal_schedule_section_values_set_time_format (self->values, time_format);
 
-  WidgetState *state = widget_state_from_values (updated);
-  update_widgets (self, state);
-  widget_state_free (state);
+  update_from_section_values (self, updated);
 }
 
 
@@ -557,11 +649,7 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
                                  GcalEventEditorFlags    flags)
 {
   GcalScheduleSection *self;
-  GcalRecurrenceLimitType limit_type;
-  GcalRecurrenceFrequency frequency;
   GcalTimeFormat time_format;
-  GcalScheduleValues *values;
-  g_autoptr (WidgetState) state = NULL;
 
   GCAL_ENTRY;
 
@@ -571,54 +659,12 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   self->flags = flags;
 
   time_format = gcal_context_get_time_format (self->context);
-  self->values = gcal_schedule_values_from_event (event, time_format);
-  values = self->values; /* alias to avoid "self->values" everywhere */
+  self->values = gcal_schedule_section_values_from_event (event, time_format);
 
   if (!event)
     GCAL_RETURN ();
 
-  state = widget_state_from_values (values);
-  update_widgets (self, state);
-
-  /* Recurrences */
-  if (values->recur)
-    {
-      frequency = values->recur->frequency;
-      limit_type = values->recur->limit_type;
-    }
-  else
-    {
-      frequency = GCAL_RECURRENCE_NO_REPEAT;
-      limit_type = GCAL_RECURRENCE_FOREVER;
-    }
-
-  adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_combo), frequency);
-  adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_duration_combo), limit_type);
-
-  if (frequency == GCAL_RECURRENCE_NO_REPEAT)
-    {
-      gtk_widget_set_visible (self->repeat_duration_combo, FALSE);
-    }
-  else
-    {
-      gtk_widget_set_visible (self->repeat_duration_combo, TRUE);
-      gtk_widget_set_visible (self->repeat_duration_combo, TRUE);
-    }
-
-  switch (limit_type)
-    {
-    case GCAL_RECURRENCE_COUNT:
-      gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), values->recur->limit.count);
-      break;
-
-    case GCAL_RECURRENCE_UNTIL:
-      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->until_date_selector), values->recur->limit.until);
-      break;
-
-    case GCAL_RECURRENCE_FOREVER:
-      gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), 0);
-      break;
-    }
+  refresh (self);
 
   GCAL_EXIT;
 }
@@ -631,9 +677,9 @@ gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
 
   GCAL_ENTRY;
 
-  gcal_event_set_all_day (event, self->values->all_day);
-  gcal_event_set_date_start (event, self->values->date_start);
-  gcal_event_set_date_end (event, self->values->date_end);
+  gcal_event_set_all_day (event, self->values->curr.all_day);
+  gcal_event_set_date_start (event, self->values->curr.date_start);
+  gcal_event_set_date_end (event, self->values->curr.date_end);
 
   /* Check Repeat popover and set recurrence-rules accordingly */
 
@@ -653,7 +699,7 @@ gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
         recur->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
 
       /* Only apply the new recurrence if it's different from the old one */
-      if (!gcal_recurrence_is_equal (self->values->recur, recur))
+      if (!gcal_recurrence_is_equal (self->values->curr.recur, recur))
         {
           /* Remove the previous recurrence... */
           remove_recurrence_properties (event);
@@ -680,71 +726,65 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
 
   gcal_schedule_section_apply_to_event (self, self->event);
 
-  gcal_schedule_values_free (self->values);
+  gcal_schedule_section_values_free (self->values);
 
   GcalTimeFormat time_format = gcal_context_get_time_format (self->context);
-  self->values = gcal_schedule_values_from_event (self->event, time_format);
+  self->values = gcal_schedule_section_values_from_event (self->event, time_format);
 
   GCAL_EXIT;
 }
 
 static gboolean
+recurrence_changed (const GcalScheduleSectionValues *values)
+{
+  return !gcal_recurrence_is_equal (values->orig.recur, values->curr.recur);
+}
+
+static gboolean
+day_changed (const GcalScheduleSectionValues *values)
+{
+  return (gcal_date_time_compare_date (values->curr.date_start, values->orig.date_start) < 0 ||
+          gcal_date_time_compare_date (values->curr.date_end, values->orig.date_end) > 0);
+}
+
+static gboolean
+values_changed (const GcalScheduleSectionValues *values)
+{
+  const GcalScheduleValues *orig = &values->orig;
+  const GcalScheduleValues *curr = &values->curr;
+
+  if (orig->all_day != curr->all_day)
+    return TRUE;
+
+  GTimeZone *orig_start_tz, *orig_end_tz, *start_tz, *end_tz;
+  orig_start_tz = g_date_time_get_timezone (orig->date_start);
+  orig_end_tz = g_date_time_get_timezone (orig->date_end);
+  start_tz = g_date_time_get_timezone (curr->date_start);
+  end_tz = g_date_time_get_timezone (curr->date_end);
+
+  if (!g_date_time_equal (orig->date_start, curr->date_start))
+    return TRUE;
+
+  if (g_strcmp0 (g_time_zone_get_identifier (start_tz), g_time_zone_get_identifier (orig_start_tz)) != 0)
+    return TRUE;
+
+  if (!g_date_time_equal (orig->date_end, curr->date_end))
+    return TRUE;
+
+  if (g_strcmp0 (g_time_zone_get_identifier (end_tz), g_time_zone_get_identifier (orig_end_tz)) != 0)
+    return TRUE;
+
+  return recurrence_changed (values);
+}
+
+static gboolean
 gcal_schedule_section_changed (GcalEventEditorSection *section)
 {
-  GcalScheduleSection *self;
-  GDateTime *start_date, *end_date, *prev_start_date, *prev_end_date;
-  GTimeZone *start_tz, *end_tz, *prev_start_tz, *prev_end_tz;
-  gboolean was_all_day;
-  gboolean all_day;
+  GcalScheduleSection *self = GCAL_SCHEDULE_SECTION (section);
 
   GCAL_ENTRY;
 
-  self = GCAL_SCHEDULE_SECTION (section);
-  all_day = all_day_selected (self);
-  was_all_day = self->values->all_day;
-
-  /* All day */
-  if (all_day != was_all_day)
-    GCAL_RETURN (TRUE);
-
-  if (!all_day)
-  {
-    start_date = gcal_date_time_chooser_get_date_time (self->start_date_time_chooser);
-    end_date = gcal_date_time_chooser_get_date_time (self->end_date_time_chooser);
-  }
-  else
-  {
-    start_date = gcal_date_chooser_row_get_date (self->start_date_row);
-    end_date = gcal_date_chooser_row_get_date (self->end_date_row);
-  }
-  prev_start_date = self->values->date_start;
-  prev_end_date = self->values->date_end;
-
-  start_tz = g_date_time_get_timezone (start_date);
-  end_tz = g_date_time_get_timezone (end_date);
-  prev_start_tz = g_date_time_get_timezone (prev_start_date);
-  prev_end_tz = g_date_time_get_timezone (prev_end_date);
-
-  /* Start date */
-  if (!g_date_time_equal (start_date, prev_start_date))
-    GCAL_RETURN (TRUE);
-  if (g_strcmp0 (g_time_zone_get_identifier (start_tz), g_time_zone_get_identifier (prev_start_tz)) != 0)
-    GCAL_RETURN (TRUE);
-
-  /* End date */
-  if (all_day)
-    {
-      GDateTime *fake_end_date = g_date_time_add_days (end_date, 1);
-      end_date = fake_end_date;
-    }
-
-  if (!g_date_time_equal (end_date, self->values->date_end))
-    GCAL_RETURN (TRUE);
-  if (g_strcmp0 (g_time_zone_get_identifier (end_tz), g_time_zone_get_identifier (prev_end_tz)) != 0)
-    GCAL_RETURN (TRUE);
-
-  /* Recurrency */
-  GCAL_RETURN (gcal_schedule_section_recurrence_changed (self));
+  GCAL_RETURN (values_changed (self->values));
 }
 
 static void
@@ -765,7 +805,7 @@ gcal_schedule_section_finalize (GObject *object)
 {
   GcalScheduleSection *self = (GcalScheduleSection *)object;
 
-  g_clear_pointer (&self->values, gcal_schedule_values_free);
+  g_clear_pointer (&self->values, gcal_schedule_section_values_free);
   g_clear_object (&self->context);
   g_clear_object (&self->event);
 
@@ -866,24 +906,9 @@ gcal_schedule_section_init (GcalScheduleSection *self)
 gboolean
 gcal_schedule_section_recurrence_changed (GcalScheduleSection *self)
 {
-  g_autoptr (GcalRecurrence) recurrence = NULL;
-  GcalRecurrenceFrequency freq;
-
   g_return_val_if_fail (GCAL_IS_SCHEDULE_SECTION (self), FALSE);
 
-  freq = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_combo));
-  if (freq == GCAL_RECURRENCE_NO_REPEAT && !self->values->recur)
-    GCAL_RETURN (FALSE);
-
-  recurrence = gcal_recurrence_new ();
-  recurrence->frequency = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_combo));
-  recurrence->limit_type = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_duration_combo));
-  if (recurrence->limit_type == GCAL_RECURRENCE_UNTIL)
-    recurrence->limit.until = g_date_time_ref (gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector)));
-  else if (recurrence->limit_type == GCAL_RECURRENCE_COUNT)
-    recurrence->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
-
-  GCAL_RETURN (!gcal_recurrence_is_equal (recurrence, self->values->recur));
+  return recurrence_changed (self->values);
 }
 
 gboolean
@@ -891,69 +916,56 @@ gcal_schedule_section_day_changed (GcalScheduleSection *self)
 {
   g_return_val_if_fail (GCAL_IS_SCHEDULE_SECTION (self), FALSE);
 
-  GCAL_ENTRY;
-
-  GCAL_RETURN (gcal_date_time_compare_date (self->values->date_start, self->values->orig_date_start) < 0 ||
-               gcal_date_time_compare_date (self->values->date_end, self->values->orig_date_end) > 0);
+  return day_changed (self->values);
 }
 
 /**
  * Extracts the values from @event that are needed to populate #GcalScheduleSection.
  *
- * Returns: a #GcalscheduleValues ready for use.  Free it with
- * gcal_schedule_values_free().
+ * Returns: a #GcalScheduleSectionValues ready for use.  Free it with
+ * gcal_schedule_section_values_free().
  */
-GcalScheduleValues *
-gcal_schedule_values_from_event (GcalEvent      *event,
-                                 GcalTimeFormat  time_format)
+GcalScheduleSectionValues *
+gcal_schedule_section_values_from_event (GcalEvent      *event,
+                                         GcalTimeFormat  time_format)
 {
-  GcalScheduleValues *values = g_new0 (GcalScheduleValues, 1);
+  GcalScheduleValues values;
+  memset (&values, 0, sizeof (values));
 
   if (event)
     {
       GcalRecurrence *recur = gcal_event_get_recurrence (event);
 
-      values->orig_all_day = gcal_event_get_all_day (event);
-      values->all_day = values->orig_all_day;
-
-      values->orig_date_start = g_date_time_ref (gcal_event_get_date_start (event));
-      values->date_start = g_date_time_ref (values->orig_date_start);
-
-      values->orig_date_end = g_date_time_ref (gcal_event_get_date_end (event));
-      values->date_end = g_date_time_ref (values->orig_date_end);
+      values.all_day = gcal_event_get_all_day (event);
+      values.date_start = g_date_time_ref (gcal_event_get_date_start (event));
+      values.date_end = g_date_time_ref (gcal_event_get_date_end (event));
 
       if (recur)
         {
-          values->recur = gcal_recurrence_ref (recur);
+          values.recur = gcal_recurrence_ref (recur);
+        }
+      else
+        {
+          values.recur = NULL;
         }
     }
 
-  values->time_format = time_format;
+  GcalScheduleSectionValues *section_values = g_new0 (GcalScheduleSectionValues, 1);
 
-  return values;
+  *section_values = (GcalScheduleSectionValues) {
+    .orig = gcal_schedule_values_copy (&values),
+    .curr = values,
+    .time_format = time_format,
+  };
+
+  return section_values;
 }
 
-/**
- * Frees the contents of @values.  Does not free the @values pointer itself;
- * this structure is meant to be allocated on the stack.
- */
-void
-gcal_schedule_values_free (GcalScheduleValues *values)
-{
-  values->all_day = FALSE;
-
-  g_clear_pointer (&values->orig_date_start, g_date_time_unref);
-  g_clear_pointer (&values->orig_date_end, g_date_time_unref);
-  g_clear_pointer (&values->date_start, g_date_time_unref);
-  g_clear_pointer (&values->date_end, g_date_time_unref);
-  g_clear_pointer (&values->recur, gcal_recurrence_unref);
-
-  g_free (values);
-}
-
-/* Builds a new Gcalschedulevalues from two ISO 8601 date-times; be sure to include your timezone if you need it */
-static GcalScheduleValues *
-values_with_date_times(const char *start, const char *end)
+/* Builds a new GcalscheduleSectgionValues from two ISO 8601 date-times; be sure to
+ * include your timezone if you need it.  This function is just to be used from tests.
+ **/
+static GcalScheduleValues
+values_with_date_times (const char *start, const char *end, gboolean all_day)
 {
   g_autoptr (GDateTime) start_date = g_date_time_new_from_iso8601 (start, NULL);
   g_assert (start_date != NULL);
@@ -963,19 +975,30 @@ values_with_date_times(const char *start, const char *end)
 
   g_assert (g_date_time_compare (start_date, end_date) == -1);
 
-  GcalScheduleValues *values = g_new0 (GcalScheduleValues, 1);
-
-  *values = (GcalScheduleValues) {
-    .all_day = FALSE,
-    .orig_date_start = g_date_time_ref (start_date),
-    .orig_date_end = g_date_time_ref (end_date),
+  GcalScheduleValues values = {
+    .all_day = all_day,
     .date_start = g_date_time_ref (start_date),
     .date_end = g_date_time_ref (end_date),
     .recur = NULL,
-    .time_format = GCAL_TIME_FORMAT_24H,
   };
 
   return values;
+}
+
+static GcalScheduleSectionValues *
+section_values_with_date_times (const char *start, const char *end, gboolean all_day)
+{
+  GcalScheduleValues values = values_with_date_times (start, end, all_day);
+
+  GcalScheduleSectionValues *section_values = g_new0 (GcalScheduleSectionValues, 1);
+
+  *section_values = (GcalScheduleSectionValues) {
+    .orig = gcal_schedule_values_copy (&values),
+    .curr = values,
+    .time_format = GCAL_TIME_FORMAT_24H,
+  };
+
+  return section_values;
 }
 
 static void
@@ -989,14 +1012,15 @@ test_setting_start_date_after_end_date_resets_end_date (void)
    *
    * We want to test that end becomes 12:00 as well.
    */
-  g_autoptr (GcalScheduleValues) values = values_with_date_times("20250303T10:00:00-06:00",
-                                                                 "20250303T11:00:00-06:00");
+  g_autoptr (GcalScheduleSectionValues) values = section_values_with_date_times("20250303T10:00:00-06:00",
+                                                                                "20250303T11:00:00-06:00",
+                                                                                FALSE);
 
   g_autoptr (GDateTime) two_hours_later = g_date_time_new_from_iso8601 ("20250303T12:00:00-06:00", NULL);
 
-  g_autoptr (GcalScheduleValues) new_values = gcal_schedule_values_set_start_date (values, two_hours_later);
-  g_assert (g_date_time_equal (new_values->date_start, two_hours_later));
-  g_assert (g_date_time_equal (new_values->date_end, two_hours_later));
+  g_autoptr (GcalScheduleSectionValues) new_values = gcal_schedule_section_values_set_start_date (values, two_hours_later);
+  g_assert (g_date_time_equal (new_values->curr.date_start, two_hours_later));
+  g_assert (g_date_time_equal (new_values->curr.date_end, two_hours_later));
 }
 
 static void
@@ -1010,14 +1034,15 @@ test_setting_end_date_before_start_date_resets_start_date (void)
    *
    * We want to test that start becomes 09:00 as well.
    */
-  g_autoptr (GcalScheduleValues) values = values_with_date_times("20250303T10:00:00-06:00",
-                                                                 "20250303T11:00:00-06:00");
+  g_autoptr (GcalScheduleSectionValues) values = section_values_with_date_times("20250303T10:00:00-06:00",
+                                                                                "20250303T11:00:00-06:00",
+                                                                                FALSE);
 
   g_autoptr (GDateTime) two_hours_earlier = g_date_time_new_from_iso8601 ("20250303T09:00:00-06:00", NULL);
 
-  g_autoptr (GcalScheduleValues) new_values = gcal_schedule_values_set_end_date (values, two_hours_earlier);
-  g_assert (g_date_time_equal (new_values->date_start, two_hours_earlier));
-  g_assert (g_date_time_equal (new_values->date_end, two_hours_earlier));
+  g_autoptr (GcalScheduleSectionValues) new_values = gcal_schedule_section_values_set_end_date (values, two_hours_earlier);
+  g_assert (g_date_time_equal (new_values->curr.date_start, two_hours_earlier));
+  g_assert (g_date_time_equal (new_values->curr.date_end, two_hours_earlier));
 }
 
 static void
@@ -1033,17 +1058,18 @@ test_setting_start_datetime_preserves_end_timezone (void)
    *
    * (imagine driving for one hour while crossing timezones)
    */
-  g_autoptr (GcalScheduleValues) values = values_with_date_times("20250303T10:00:00-06:00",
-                                                                 "20250303T11:30:00-05:00");
-  g_assert (g_date_time_compare (values->date_start, values->date_end) == -1);
+  g_autoptr (GcalScheduleSectionValues) values = section_values_with_date_times("20250303T10:00:00-06:00",
+                                                                                "20250303T11:30:00-05:00",
+                                                                                FALSE);
+  g_assert (g_date_time_compare (values->curr.date_start, values->curr.date_end) == -1);
 
   g_autoptr (GDateTime) new_start = g_date_time_new_from_iso8601 ("20250303T11:30:00-06:00", NULL);
   g_autoptr (GDateTime) expected_end = g_date_time_new_from_iso8601 ("20250303T13:30:00-05:00", NULL);
 
-  g_autoptr (GcalScheduleValues) new_values = gcal_schedule_values_set_start_date_time (values, new_start);
-  g_assert (g_date_time_equal (new_values->date_start, new_start));
+  g_autoptr (GcalScheduleSectionValues) new_values = gcal_schedule_section_values_set_start_date_time (values, new_start);
+  g_assert (g_date_time_equal (new_values->curr.date_start, new_start));
 
-  g_assert (g_date_time_equal (new_values->date_end, expected_end));
+  g_assert (g_date_time_equal (new_values->curr.date_end, expected_end));
 }
 
 static void
@@ -1059,17 +1085,18 @@ test_setting_end_datetime_preserves_start_timezone (void)
    *
    * (imagine driving for one hour while crossing timezones)
    */
-  g_autoptr (GcalScheduleValues) values = values_with_date_times("20250303T10:00:00-06:00",
-                                                                 "20250303T11:30:00-05:00");
-  g_assert (g_date_time_compare (values->date_start, values->date_end) == -1);
+  g_autoptr (GcalScheduleSectionValues) values = section_values_with_date_times("20250303T10:00:00-06:00",
+                                                                                "20250303T11:30:00-05:00",
+                                                                                FALSE);
+  g_assert (g_date_time_compare (values->curr.date_start, values->curr.date_end) == -1);
 
   g_autoptr (GDateTime) new_end = g_date_time_new_from_iso8601 ("20250303T09:30:00-05:00", NULL);
   g_autoptr (GDateTime) expected_start = g_date_time_new_from_iso8601 ("20250303T07:30:00-06:00", NULL);
 
-  g_autoptr (GcalScheduleValues) new_values = gcal_schedule_values_set_end_date_time (values, new_end);
-  g_assert (g_date_time_equal (new_values->date_end, new_end));
+  g_autoptr (GcalScheduleSectionValues) new_values = gcal_schedule_section_values_set_end_date_time (values, new_end);
+  g_assert (g_date_time_equal (new_values->curr.date_end, new_end));
 
-  g_assert (g_date_time_equal (new_values->date_start, expected_start));
+  g_assert (g_date_time_equal (new_values->curr.date_start, expected_start));
 }
 
 static void
@@ -1089,23 +1116,9 @@ test_all_day_displays_sensible_dates_and_roundtrips (void)
    * Check that the values gets back end = (start + 2 days)
    */
 
-  g_autoptr (GDateTime) date = g_date_time_new_from_iso8601 ("20250303T00:00:00-06:00", NULL);
-  g_assert (date != NULL);
-
-  g_autoptr (GDateTime) next_day = g_date_time_new_from_iso8601 ("20250304T00:00:00-06:00", NULL);
-  g_assert (next_day != NULL);
-
-  g_autoptr (GcalScheduleValues) values = g_new0 (GcalScheduleValues, 1);
-
-  *values = (GcalScheduleValues) {
-    .all_day = TRUE,
-    .orig_date_start = g_date_time_ref (date),
-    .orig_date_end = g_date_time_ref (next_day),
-    .date_start = g_date_time_ref (date),
-    .date_end = g_date_time_ref (next_day),
-    .recur = NULL,
-    .time_format = GCAL_TIME_FORMAT_24H,
-  };
+  g_autoptr (GcalScheduleSectionValues) values = section_values_with_date_times ("20250303T00:00:00-06:00",
+                                                                                 "20250304T00:00:00-06:00",
+                                                                                 TRUE);
 
   /* Compute the widget state from the values; check the displayed dates (should be the same) */
 
@@ -1127,11 +1140,11 @@ test_all_day_displays_sensible_dates_and_roundtrips (void)
 
   g_autoptr (GDateTime) displayed_end_date_plus_one_day = g_date_time_new_from_iso8601 ("20250304T00:00:00-06:00", NULL);
   g_assert (displayed_end_date_plus_one_day != NULL);
-  GcalScheduleValues *new_values = gcal_schedule_values_set_end_date (values, displayed_end_date_plus_one_day);
+  g_autoptr (GcalScheduleSectionValues) new_values = gcal_schedule_section_values_set_end_date (values, displayed_end_date_plus_one_day);
 
   /* Check the real iCalendar value for the new date, should be different from the displayed value */
 
-  g_assert_cmpint (g_date_time_get_day_of_month (new_values->date_end), ==, 5);
+  g_assert_cmpint (g_date_time_get_day_of_month (new_values->curr.date_end), ==, 5);
 
   /* Roundtrip back to widgets and check the displayed value */
 
@@ -1155,28 +1168,29 @@ test_43_switching_to_all_day_preserves_timezones (void)
    * original times.
    */
 
-  g_autoptr (GcalScheduleValues) values = values_with_date_times ("20250303T12:00:00-06:00",
-                                                                  "20250304T13:00:00-06:00");
+  g_autoptr (GcalScheduleSectionValues) values = section_values_with_date_times ("20250303T12:00:00-06:00",
+                                                                                 "20250304T13:00:00-06:00",
+                                                                                 FALSE);
 
   /* set all-day and check that this modified the times to midnight */
 
-  g_autoptr (GcalScheduleValues) all_day_values = gcal_schedule_values_set_all_day (values, TRUE);
+  g_autoptr (GcalScheduleSectionValues) all_day_values = gcal_schedule_section_values_set_all_day (values, TRUE);
 
   g_autoptr (GDateTime) expected_start_date = g_date_time_new_from_iso8601 ("20250303T00:00:00-06:00", NULL);
   g_autoptr (GDateTime) expected_end_date = g_date_time_new_from_iso8601 ("20250305T00:00:00-06:00", NULL);
 
-  g_assert (g_date_time_equal (all_day_values->date_start, expected_start_date));
-  g_assert (g_date_time_equal (all_day_values->date_end, expected_end_date));
+  g_assert (g_date_time_equal (all_day_values->curr.date_start, expected_start_date));
+  g_assert (g_date_time_equal (all_day_values->curr.date_end, expected_end_date));
 
   /* turn off all-day; check that times were restored */
 
-  g_autoptr (GcalScheduleValues) not_all_day_values = gcal_schedule_values_set_all_day (all_day_values, FALSE);
+  g_autoptr (GcalScheduleSectionValues) not_all_day_values = gcal_schedule_section_values_set_all_day (all_day_values, FALSE);
 
   g_autoptr (GDateTime) expected_start_date2 = g_date_time_new_from_iso8601 ("20250303T12:00:00-06:00", NULL);
   g_autoptr (GDateTime) expected_end_date2 = g_date_time_new_from_iso8601 ("20250304T13:00:00-06:00", NULL);
 
-  g_assert (g_date_time_equal (not_all_day_values->date_start, expected_start_date2));
-  g_assert (g_date_time_equal (not_all_day_values->date_end, expected_end_date2));
+  g_assert (g_date_time_equal (not_all_day_values->curr.date_start, expected_start_date2));
+  g_assert (g_date_time_equal (not_all_day_values->curr.date_end, expected_end_date2));
 }
 
 void

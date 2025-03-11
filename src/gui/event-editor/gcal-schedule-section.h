@@ -41,29 +41,33 @@ typedef struct
 {
   gboolean all_day;
 
-  /* Original times from the GcalEvent.  We keep these around to be able to reconstruct
-   * the event's duration in case the all-day toggle gets turned on and off repeatedly.
-   */
-  gboolean orig_all_day;
-  GDateTime *orig_date_start;
-  GDateTime *orig_date_end;
-
   GDateTime *date_start;
   GDateTime *date_end;
 
   GcalRecurrence *recur;
-  GcalTimeFormat time_format;
 } GcalScheduleValues;
+
+typedef struct
+{
+  /* original values from event */
+  GcalScheduleValues orig;
+
+  /* current values, as modified by actions from widgets */
+  GcalScheduleValues curr;
+
+  /* copied from GcalContext to avoid a dependency on it */
+  GcalTimeFormat time_format;
+} GcalScheduleSectionValues;
 
 gboolean             gcal_schedule_section_recurrence_changed    (GcalScheduleSection *self);
 
 gboolean             gcal_schedule_section_day_changed           (GcalScheduleSection *self);
 
-GcalScheduleValues  *gcal_schedule_values_from_event             (GcalEvent          *event,
-                                                                  GcalTimeFormat      time_format);
-void                 gcal_schedule_values_free                   (GcalScheduleValues *values);
+GcalScheduleSectionValues *gcal_schedule_section_values_from_event     (GcalEvent                 *event,
+                                                                        GcalTimeFormat             time_format);
+void                       gcal_schedule_section_values_free           (GcalScheduleSectionValues *values);
 
-G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalScheduleValues, gcal_schedule_values_free);
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalScheduleSectionValues, gcal_schedule_section_values_free);
 
 /* Tests */
 
