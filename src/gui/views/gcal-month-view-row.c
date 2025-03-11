@@ -314,7 +314,6 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
               GtkWidget *event_widget;
 
               event_widget = gcal_event_widget_new (self->context, event);
-              // TODO: gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event_widget), gcal_calendar_is_read_only (calendar));
               if (!gcal_event_get_all_day (event) && !gcal_event_is_multiday (event))
                 gcal_event_widget_set_timestamp_policy (GCAL_EVENT_WIDGET (event_widget), GCAL_TIMESTAMP_POLICY_START);
               setup_child_widget (self, event_widget);

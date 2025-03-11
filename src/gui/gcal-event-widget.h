@@ -54,9 +54,6 @@ GDateTime*           gcal_event_widget_get_date_end              (GcalEventWidge
 void                 gcal_event_widget_set_date_end              (GcalEventWidget    *self,
                                                                   GDateTime          *date_end);
 
-void                 gcal_event_widget_set_read_only             (GcalEventWidget    *event,
-                                                                  gboolean            read_only);
-
 void                 gcal_event_widget_set_timestamp_policy      (GcalEventWidget     *event,
                                                                   GcalTimestampPolicy  timestamp_policy);
 

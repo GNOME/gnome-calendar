@@ -62,7 +62,6 @@ struct _GcalEventWidget
   GtkWidget          *preview_popover;
 
   /* internal data */
-  gboolean            read_only : 1;
   gchar              *css_class;
 
   GcalEvent          *event;
@@ -103,6 +102,11 @@ typedef enum
 } CursorType;
 
 static guint signals[NUM_SIGNALS] = { 0, };
+
+static gboolean read_only_to_propagation_phase_cb (GBinding     *binding,
+                                                   const GValue *from_value,
+                                                   GValue       *to_value,
+                                                   gpointer      user_data);
 
 G_DEFINE_TYPE_WITH_CODE (GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET,
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL));
@@ -503,6 +507,16 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
                           "text",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
+  g_object_bind_property_full (gcal_event_get_calendar (event),
+                               "read-only",
+                               self->drag_source,
+                               "propagation-phase",
+                               G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE,
+                               read_only_to_propagation_phase_cb,
+                               NULL,
+                               self,
+                               NULL);
+
   gcal_event_widget_update_style (self);
   gcal_event_widget_update_timestamp (self);
 }
@@ -581,6 +595,24 @@ on_event_popover_edit_cb (GtkWidget   *event_popover,
                                PreviewData *data)
 {
   reply_preview_callback (event_popover, data, GCAL_EVENT_PREVIEW_ACTION_EDIT);
+}
+
+static gboolean
+read_only_to_propagation_phase_cb (GBinding     *binding,
+                                   const GValue *from_value,
+                                   GValue       *to_value,
+                                   gpointer      user_data)
+{
+  GtkPropagationPhase phase;
+
+  if (g_value_get_boolean (from_value))
+    phase = GTK_PHASE_NONE;
+  else
+    phase = GTK_PHASE_BUBBLE;
+
+  g_value_set_enum (to_value, phase);
+
+  return TRUE;
 }
 
 
@@ -853,18 +885,6 @@ gcal_event_widget_new (GcalContext *context,
                        NULL);
 }
 
-void
-gcal_event_widget_set_read_only (GcalEventWidget *event,
-                                 gboolean         read_only)
-{
-  g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
-
-  gtk_event_controller_set_propagation_phase (event->drag_source,
-                                              read_only ? GTK_PHASE_NONE : GTK_PHASE_BUBBLE);
-
-  event->read_only = read_only;
-}
-
 /**
  * gcal_event_widget_get_date_end:
  * @self: a #GcalEventWidget
@@ -1044,12 +1064,7 @@ gcal_event_widget_get_event (GcalEventWidget *self)
 GtkWidget*
 gcal_event_widget_clone (GcalEventWidget *widget)
 {
-  GtkWidget *new_widget;
-
-  new_widget = gcal_event_widget_new (widget->context, widget->event);
-  gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (new_widget), widget->read_only);
-
-  return new_widget;
+  return gcal_event_widget_new (widget->context, widget->event);
 }
 
 /**
