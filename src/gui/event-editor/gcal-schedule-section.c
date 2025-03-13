@@ -357,29 +357,41 @@ widget_state_from_values (const GcalScheduleSectionValues *values)
   state->date_time_widgets_visible = !values->curr.all_day;
   state->time_format = values->time_format;
 
-  g_assert (values->curr.date_start);
-  state->date_time_start = g_date_time_ref (values->curr.date_start);
-
-  if (values->curr.all_day)
+  if (values->curr.date_start && values->curr.date_end)
     {
-      /* While in iCalendar a single-day all-day event goes from $day to $day+1, we don't
-       * want to show the user a single-day all-day event as starting on Feb 1 and ending
-       * on Feb 2, for example.
-       *
-       * So, we maintain the "real" data in GcalScheduleValues with the $day+1 as iCalendar wants,
-       * but for display purposes, we subtract a day from the end date to show the expected thing to the
-       * user.  When the widget changes, we add the day back - see gcal_schedule_values_set_end_date().
-       *
-       * See https://bugzilla.gnome.org/show_bug.cgi?id=769300 for the original bug about this.
-       *
-       * Keep in sync with gcal_schedule_values_set_end_date().
-       */
-      state->date_time_end = g_date_time_add_days (values->curr.date_end, -1);
+      state->date_time_start = g_date_time_ref (values->curr.date_start);
+
+      if (values->curr.all_day)
+        {
+          /* While in iCalendar a single-day all-day event goes from $day to $day+1, we don't
+           * want to show the user a single-day all-day event as starting on Feb 1 and ending
+           * on Feb 2, for example.
+           *
+           * So, we maintain the "real" data in GcalScheduleValues with the $day+1 as iCalendar wants,
+           * but for display purposes, we subtract a day from the end date to show the expected thing to the
+           * user.  When the widget changes, we add the day back - see gcal_schedule_values_set_end_date().
+           *
+           * See https://bugzilla.gnome.org/show_bug.cgi?id=769300 for the original bug about this.
+           *
+           * Keep in sync with gcal_schedule_values_set_end_date().
+           */
+          state->date_time_end = g_date_time_add_days (values->curr.date_end, -1);
+        }
+      else
+        {
+          state->date_time_end = g_date_time_ref (values->curr.date_end);
+        }
     }
   else
     {
-      g_assert (values->curr.date_end);
-      state->date_time_end = g_date_time_ref (values->curr.date_end);
+      /* The event editor can be instantiated but not shown yet, and we may get a
+       * notification that the time_format changed.  In that case, the event will not be
+       * set yet, and so the dates will not be set either - hence the test above for
+       * date_start and date_end not being NULL.  Handle that by setting NULL dates for
+       * the widgets.
+       */
+      state->date_time_start = NULL;
+      state->date_time_end = NULL;
     }
 
   if (values->curr.recur && values->curr.recur->frequency != GCAL_RECURRENCE_NO_REPEAT)
@@ -495,12 +507,17 @@ update_widgets (GcalScheduleSection *self,
   gcal_date_time_chooser_set_time_format (self->end_date_time_chooser, state->time_format);
 
   /* date */
-  gcal_date_chooser_row_set_date (self->start_date_row, state->date_time_start);
-  gcal_date_chooser_row_set_date (self->end_date_row, state->date_time_end);
+  if (state->date_time_start)
+    {
+      gcal_date_chooser_row_set_date (self->start_date_row, state->date_time_start);
+      gcal_date_time_chooser_set_date_time (self->start_date_time_chooser, state->date_time_start);
+    }
 
-  /* date-time */
-  gcal_date_time_chooser_set_date_time (self->start_date_time_chooser, state->date_time_start);
-  gcal_date_time_chooser_set_date_time (self->end_date_time_chooser, state->date_time_end);
+  if (state->date_time_end)
+    {
+      gcal_date_chooser_row_set_date (self->end_date_row, state->date_time_end);
+      gcal_date_time_chooser_set_date_time (self->end_date_time_chooser, state->date_time_end);
+    }
 
   /* Recurrences */
   gtk_widget_set_visible (self->repeat_duration_combo, state->recurrence.duration_combo_visible);
@@ -509,7 +526,11 @@ update_widgets (GcalScheduleSection *self,
   adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_duration_combo), state->recurrence.limit_type);
 
   gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), state->recurrence.limit_count);
-  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->until_date_selector), state->recurrence.limit_until);
+
+  if (state->recurrence.limit_until)
+    {
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->until_date_selector), state->recurrence.limit_until);
+    }
 
   unblock_date_signals (self);
   g_signal_handlers_unblock_by_func (self->schedule_type_toggle_group, on_schedule_type_changed_cb, self);
@@ -620,11 +641,17 @@ on_repeat_type_changed_cb (GtkWidget           *widget,
 static void
 on_time_format_changed_cb (GcalScheduleSection *self)
 {
-  GcalTimeFormat time_format = gcal_context_get_time_format (self->context);
+  if (self->event)
+    {
+      /* Apparently we can be notified that the time format changed, even when
+       * there has not been an event set yet.  This breaks the code downstream.
+       */
+      GcalTimeFormat time_format = gcal_context_get_time_format (self->context);
 
-  GcalScheduleSectionValues *updated = gcal_schedule_section_values_set_time_format (self->values, time_format);
+      GcalScheduleSectionValues *updated = gcal_schedule_section_values_set_time_format (self->values, time_format);
 
-  update_from_section_values (self, updated);
+      update_from_section_values (self, updated);
+    }
 }
 
 
