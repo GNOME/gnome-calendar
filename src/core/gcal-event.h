@@ -128,12 +128,6 @@ void                 gcal_event_set_recurrence                   (GcalEvent     
 
 GcalRecurrence*      gcal_event_get_recurrence                   (GcalEvent          *self);
 
-void                 gcal_event_save_original_timezones          (GcalEvent          *self);
-
-void                 gcal_event_get_original_timezones           (GcalEvent          *self,
-                                                                  GTimeZone         **start_tz,
-                                                                  GTimeZone         **end_tz);
-
 gchar*               gcal_event_format_date                      (GcalEvent          *self);
 
 gboolean             gcal_event_overlaps                         (GcalEvent          *self,
