@@ -1,3 +1,7 @@
+Major changes in 48.0:
+* Improve performance of the Month view
+* Updated translations
+
 Major changes in 48.rc:
 * Round temperatures to integer precision in weather forecast,
   to save space and reflect the approximate nature of the forecasts
