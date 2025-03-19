@@ -468,9 +468,9 @@ on_drop_target_leave_cb (GtkDropTarget *drop_target,
 
 static GdkDragAction
 on_drop_target_motion_cb (GtkDropTarget *drop_target,
-                         gdouble        x,
-                         gdouble        y,
-                         GcalWeekGrid  *self)
+                          gdouble        x,
+                          gdouble        y,
+                          GcalWeekGrid  *self)
 {
   GCAL_ENTRY;
 
