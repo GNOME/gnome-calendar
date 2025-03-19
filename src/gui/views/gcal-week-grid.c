@@ -618,35 +618,22 @@ gcal_week_grid_snapshot (GtkWidget   *widget,
                          GtkSnapshot *snapshot)
 {
   g_autoptr (GPtrArray) widgets = NULL;
-  GtkStyleContext *context;
   GcalWeekGrid *self;
-  GtkBorder padding;
-  GdkRGBA color;
-  guint i;
   gint width, height;
 
   self = GCAL_WEEK_GRID (widget);
-  context = gtk_widget_get_style_context (widget);
-
-  gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "lines");
-  gtk_style_context_get_color (context, &color);
-  gtk_style_context_get_padding (context, &padding);
-
   width = gtk_widget_get_width (widget);
   height = gtk_widget_get_height (widget);
 
-  gcal_week_view_common_snapshot_hour_lines (widget, snapshot, GTK_ORIENTATION_HORIZONTAL, &color, width, height);
-  gcal_week_view_common_snapshot_hour_lines (widget, snapshot, GTK_ORIENTATION_VERTICAL, &color, width, height);
-
-  gtk_style_context_restore (context);
+  gcal_week_view_common_snapshot_hour_lines (widget, snapshot, GTK_ORIENTATION_HORIZONTAL, width, height);
+  gcal_week_view_common_snapshot_hour_lines (widget, snapshot, GTK_ORIENTATION_VERTICAL, width, height);
 
   /* First, draw the selection */
   gtk_widget_snapshot_child (widget, self->selection.widget, snapshot);
   gtk_widget_snapshot_child (widget, self->dnd.widget, snapshot);
 
   widgets = gcal_range_tree_get_all_data (self->events);
-  for (i = 0; i < widgets->len; i++)
+  for (guint i = 0; i < widgets->len; i++)
     {
       ChildData *child_data = g_ptr_array_index (widgets, i);
 

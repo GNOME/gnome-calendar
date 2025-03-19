@@ -1324,7 +1324,6 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   GtkStyleContext *context;
   GcalWeekHeader *self;
   GtkStateFlags state;
-  GdkRGBA color;
   int alloc_width;
   int alloc_height;
   GDateTime *week_start, *week_end;
@@ -1421,14 +1420,9 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   width = gtk_widget_get_width (widget) - start_x;
   height = gtk_widget_get_height (widget) - start_y;
 
-  gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "lines");
-  gtk_style_context_get_color (context, &color);
-  gtk_style_context_restore (context);
-
   gtk_snapshot_save (snapshot);
   gtk_snapshot_translate (snapshot, &GRAPHENE_POINT_INIT (x, y));
-  gcal_week_view_common_snapshot_hour_lines (widget, snapshot, GTK_ORIENTATION_HORIZONTAL, &color, width, height);
+  gcal_week_view_common_snapshot_hour_lines (widget, snapshot, GTK_ORIENTATION_HORIZONTAL, width, height);
   gtk_snapshot_restore (snapshot);
 
   GTK_WIDGET_CLASS (gcal_week_header_parent_class)->snapshot (widget, snapshot);

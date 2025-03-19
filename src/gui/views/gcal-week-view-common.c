@@ -25,17 +25,22 @@ void
 gcal_week_view_common_snapshot_hour_lines (GtkWidget      *widget,
                                            GtkSnapshot    *snapshot,
                                            GtkOrientation  orientation,
-                                           const GdkRGBA  *line_color,
                                            gint            width,
                                            gint            height)
 {
+  GtkStyleContext *context;
   GdkRGBA color;
   gboolean ltr;
   gdouble column_width;
   guint i;
 
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
-  color = *line_color;
+
+  context = gtk_widget_get_style_context (widget);
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "lines");
+  gtk_style_context_get_color (context, &color);
+  gtk_style_context_restore (context);
 
   column_width = width / 7.0;
 
@@ -63,7 +68,7 @@ gcal_week_view_common_snapshot_hour_lines (GtkWidget      *widget,
       for (i = 1; i < 24; i++)
         {
           gtk_snapshot_append_color (snapshot,
-                                     line_color,
+                                     &color,
                                      &GRAPHENE_RECT_INIT (0.f,
                                                           ALIGNED ((height / 24.0) * i),
                                                           width,

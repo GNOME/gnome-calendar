@@ -27,7 +27,6 @@ G_BEGIN_DECLS
 void                 gcal_week_view_common_snapshot_hour_lines   (GtkWidget          *widget,
                                                                   GtkSnapshot        *snapshot,
                                                                   GtkOrientation      orientation,
-                                                                  const GdkRGBA      *line_color,
                                                                   gint                width,
                                                                   gint                height);
 

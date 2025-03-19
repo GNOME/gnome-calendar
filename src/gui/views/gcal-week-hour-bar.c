@@ -65,25 +65,13 @@ static void
 gcal_week_hour_bar_snapshot (GtkWidget   *widget,
                              GtkSnapshot *snapshot)
 {
-  GtkStyleContext *context;
-  GtkWidget *child;
-  GdkRGBA color;
-
-  context = gtk_widget_get_style_context (widget);
-
-  gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "lines");
-  gtk_style_context_get_color (context, &color);
-  gtk_style_context_restore (context);
-
   gcal_week_view_common_snapshot_hour_lines (widget,
                                              snapshot,
                                              GTK_ORIENTATION_VERTICAL,
-                                             &color,
                                              gtk_widget_get_width (widget),
                                              gtk_widget_get_height (widget));
 
-  for (child = gtk_widget_get_first_child (widget);
+  for (GtkWidget *child = gtk_widget_get_first_child (widget);
        child;
        child = gtk_widget_get_next_sibling (child))
     {
