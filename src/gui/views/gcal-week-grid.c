@@ -477,7 +477,7 @@ on_drop_target_motion_cb (GtkDropTarget *drop_target,
   self->dnd.cell = get_dnd_cell (self, x, y);
   gtk_widget_queue_draw (GTK_WIDGET (self));
 
-  GCAL_RETURN (self->dnd.cell != -1 ? GDK_ACTION_COPY : 0);
+  GCAL_RETURN (GDK_ACTION_COPY);
 }
 
 static void
