@@ -207,7 +207,6 @@ on_click_gesture_pressed_cb (GtkGestureClick *click_gesture,
 
   g_assert (self->selection.start == -1);
   g_assert (self->selection.end == -1);
-  g_assert (self->selection.widget == NULL);
 
   minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / MINUTES_PER_DAY;
   column_width = floor (gtk_widget_get_width (GTK_WIDGET (self)) / 7);
@@ -218,8 +217,7 @@ on_click_gesture_pressed_cb (GtkGestureClick *click_gesture,
   self->selection.start = (column * MINUTES_PER_DAY + minute) / 30;
   self->selection.end = self->selection.start;
 
-  self->selection.widget = gcal_create_selection_widget ();
-  gtk_widget_insert_after (self->selection.widget, GTK_WIDGET (self), NULL);
+  gtk_widget_set_visible (self->selection.widget, TRUE);
 
   gtk_event_controller_set_propagation_phase (self->motion_controller, GTK_PHASE_BUBBLE);
 }
@@ -504,6 +502,7 @@ gcal_week_grid_dispose (GObject *object)
   g_clear_pointer (&self->dnd.widget, gtk_widget_unparent);
   g_clear_pointer (&self->events, gcal_range_tree_unref);
   g_clear_pointer (&self->now_strip, gtk_widget_unparent);
+  g_clear_pointer (&self->selection.widget, gtk_widget_unparent);
 
   G_OBJECT_CLASS (gcal_week_grid_parent_class)->dispose (object);
 }
@@ -643,8 +642,7 @@ gcal_week_grid_snapshot (GtkWidget   *widget,
   gtk_style_context_restore (context);
 
   /* First, draw the selection */
-  if (self->selection.widget)
-    gtk_widget_snapshot_child (widget, self->selection.widget, snapshot);
+  gtk_widget_snapshot_child (widget, self->selection.widget, snapshot);
   gtk_widget_snapshot_child (widget, self->dnd.widget, snapshot);
 
   widgets = gcal_range_tree_get_all_data (self->events);
@@ -681,7 +679,7 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
   column_width = (gdouble) width / 7.0;
 
   /* Selection */
-  if (self->selection.widget)
+  if (gtk_widget_should_layout (self->selection.widget))
     {
       gint selection_height;
       gint column;
@@ -908,6 +906,9 @@ gcal_week_grid_init (GcalWeekGrid *self)
 
   self->selection.start = -1;
   self->selection.end = -1;
+  self->selection.widget = gcal_create_selection_widget ();
+  gtk_widget_set_visible (self->selection.widget, FALSE);
+  gtk_widget_set_parent (self->selection.widget, GTK_WIDGET (self));
 
   self->dnd.cell = -1;
   self->dnd.widget = gcal_create_drop_target_widget ();
@@ -1030,7 +1031,7 @@ gcal_week_grid_clear_marks (GcalWeekGrid *self)
 
   self->selection.start = -1;
   self->selection.end = -1;
-  g_clear_pointer (&self->selection.widget, gtk_widget_unparent);
+  gtk_widget_set_visible (self->selection.widget, FALSE);
 }
 
 void
