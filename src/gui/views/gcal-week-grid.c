@@ -70,7 +70,10 @@ struct _GcalWeekGrid
     gint              end;
     GtkWidget        *widget;
   } selection;
-  gint                dnd_cell;
+
+  struct {
+    gint              cell;
+  } dnd;
 
   GcalContext        *context;
 };
@@ -457,7 +460,7 @@ on_drop_target_leave_cb (GtkDropTarget *drop_target,
 {
   GCAL_ENTRY;
 
-  self->dnd_cell = -1;
+  self->dnd.cell = -1;
   gtk_widget_queue_draw (GTK_WIDGET (self));
 
   GCAL_EXIT;
@@ -471,10 +474,10 @@ on_drop_target_motion_cb (GtkDropTarget *drop_target,
 {
   GCAL_ENTRY;
 
-  self->dnd_cell = get_dnd_cell (self, x, y);
+  self->dnd.cell = get_dnd_cell (self, x, y);
   gtk_widget_queue_draw (GTK_WIDGET (self));
 
-  GCAL_RETURN (self->dnd_cell != -1 ? GDK_ACTION_COPY : 0);
+  GCAL_RETURN (self->dnd.cell != -1 ? GDK_ACTION_COPY : 0);
 }
 
 static void
@@ -622,14 +625,14 @@ gcal_week_grid_snapshot (GtkWidget   *widget,
   minutes_height = (gdouble) height / MINUTES_PER_DAY;
 
   /* Drag and Drop highlight */
-  if (self->dnd_cell != -1)
+  if (self->dnd.cell != -1)
     {
       gdouble cell_height;
       gint column, row;
 
       cell_height = minutes_height * 30;
-      column = self->dnd_cell / (MINUTES_PER_DAY / 30);
-      row = self->dnd_cell - column * 48;
+      column = self->dnd.cell / (MINUTES_PER_DAY / 30);
+      row = self->dnd.cell - column * 48;
 
       gtk_style_context_save (context);
       gtk_style_context_add_class (context, "dnd");
@@ -893,7 +896,7 @@ gcal_week_grid_init (GcalWeekGrid *self)
 
   self->selection.start = -1;
   self->selection.end = -1;
-  self->dnd_cell = -1;
+  self->dnd.cell = -1;
 
   self->events = gcal_range_tree_new_with_free_func (child_data_free);
 
