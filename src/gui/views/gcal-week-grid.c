@@ -562,55 +562,10 @@ gcal_week_grid_measure (GtkWidget      *widget,
                         gint           *minimum_baseline,
                         gint           *natural_baseline)
 {
-  g_autoptr (PangoLayout) layout = NULL;
-  PangoFontDescription *font_desc;
-  GtkStyleContext *context;
-  PangoContext *pango_context;
-  GtkBorder padding;
-  gint hours_12_height;
-  gint hours_24_height;
-  gint cell_height;
-  gint height;
-
-  if (orientation == GTK_ORIENTATION_HORIZONTAL)
-    {
-      if (minimum)
-        *minimum = 1;
-      if (natural)
-        *natural = 1;
-      return;
-    }
-
-  context = gtk_widget_get_style_context (widget);
-
-  gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "hours");
-
-  gtk_style_context_get_padding (context, &padding);
-
-  pango_context = gtk_widget_get_pango_context (widget);
-  font_desc = pango_context_get_font_description (pango_context);
-
-  layout = pango_layout_new (pango_context);
-  pango_layout_set_font_description (layout, font_desc);
-
-  pango_layout_set_text (layout, _("00 AM"), -1);
-  pango_layout_get_pixel_size (layout, NULL, &hours_12_height);
-
-  pango_layout_set_text (layout, _("00:00"), -1);
-  pango_layout_get_pixel_size (layout, NULL, &hours_24_height);
-
-  cell_height = MAX (hours_12_height, hours_24_height) + padding.top + padding.bottom;
-  height = cell_height * 48;
-
-  gtk_style_context_restore (context);
-
-  /* Report the height */
   if (minimum)
-    *minimum = height;
-
+    *minimum = 1;
   if (natural)
-    *natural = height;
+    *natural = 1;
 }
 
 static void
