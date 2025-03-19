@@ -1,3 +1,7 @@
+Major changes in 48.1:
+* Cleanup some deprecation warnings
+* Fix release notes
+
 Major changes in 48.0:
 * Improve performance of the Month view
 * Updated translations

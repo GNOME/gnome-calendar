@@ -86,6 +86,15 @@
 
   <releases>
 
+    <release date="2025-03-19" version="48.1" type="stable">
+      <description>
+        <ul>
+          <li>Cleanup deprecation warnings</li>
+          <li>Fix release notes</li>
+        </ul>
+      </description>
+    </release>
+
     <release date="2025-03-19" version="48.0" type="stable">
       <description>
         <ul>
