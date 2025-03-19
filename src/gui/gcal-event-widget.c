@@ -234,9 +234,12 @@ static void
 gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
                                      GcalEvent       *event)
 {
-  g_autoptr (GDateTime) tooltip_start, tooltip_end;
-  g_autofree gchar *start, *end, *escaped_summary;
+  g_autoptr (GDateTime) tooltip_start = NULL;
+  g_autoptr (GDateTime) tooltip_end = NULL;
+  g_autofree gchar *escaped_summary = NULL;
   g_autofree gchar *location = NULL;
+  g_autofree gchar *start = NULL;
+  g_autofree gchar *end = NULL;
   GString *tooltip_mesg;
   gboolean allday, multiday, is_ltr;
   guint description_len;
