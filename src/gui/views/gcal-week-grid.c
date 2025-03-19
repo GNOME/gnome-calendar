@@ -64,8 +64,10 @@ struct _GcalWeekGrid
    * These fields are "cells" rather than minutes. Each cell
    * correspond to 30 minutes.
    */
-  gint                selection_start;
-  gint                selection_end;
+  struct {
+    gint              start;
+    gint              end;
+  } selection;
   gint                dnd_cell;
 
   GcalContext        *context;
@@ -203,8 +205,8 @@ on_click_gesture_pressed_cb (GtkGestureClick *click_gesture,
   minute = y / minute_height;
   minute = minute - (minute % 30);
 
-  self->selection_start = (column * MINUTES_PER_DAY + minute) / 30;
-  self->selection_end = self->selection_start;
+  self->selection.start = (column * MINUTES_PER_DAY + minute) / 30;
+  self->selection.end = self->selection.start;
 
   gtk_widget_queue_draw (GTK_WIDGET (self));
 
@@ -229,11 +231,11 @@ on_motion_controller_motion_cb (GtkEventControllerMotion *motion_controller,
   gint minute;
 
   minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / MINUTES_PER_DAY;
-  column = self->selection_start * 30 / MINUTES_PER_DAY;
+  column = self->selection.start * 30 / MINUTES_PER_DAY;
   minute = y / minute_height;
   minute = minute - (minute % 30);
 
-  self->selection_end = (column * MINUTES_PER_DAY + minute) / 30;
+  self->selection.end = (column * MINUTES_PER_DAY + minute) / 30;
 
   gtk_widget_queue_draw (GTK_WIDGET (self));
 }
@@ -264,14 +266,14 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
   ltr = gtk_widget_get_direction (GTK_WIDGET (self)) != GTK_TEXT_DIR_RTL;
 
   minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / MINUTES_PER_DAY;
-  column = self->selection_start * 30 / MINUTES_PER_DAY;
+  column = self->selection.start * 30 / MINUTES_PER_DAY;
   minute = y / minute_height;
   minute = minute - (minute % 30);
 
-  self->selection_end = (column * MINUTES_PER_DAY + minute) / 30;
+  self->selection.end = (column * MINUTES_PER_DAY + minute) / 30;
 
-  start_cell = self->selection_start;
-  end_cell = self->selection_end;
+  start_cell = self->selection.start;
+  end_cell = self->selection.end;
 
   if (start_cell > end_cell)
     {
@@ -615,15 +617,15 @@ gcal_week_grid_snapshot (GtkWidget   *widget,
   minutes_height = (gdouble) height / MINUTES_PER_DAY;
 
   /* First, draw the selection */
-  if (self->selection_start != -1 && self->selection_end != -1)
+  if (self->selection.start != -1 && self->selection.end != -1)
     {
       gint selection_height;
       gint column;
       gint start;
       gint end;
 
-      start = self->selection_start;
-      end = self->selection_end;
+      start = self->selection.start;
+      end = self->selection.end;
 
       /* Swap cells if needed */
       if (start > end)
@@ -874,8 +876,8 @@ gcal_week_grid_init (GcalWeekGrid *self)
   GtkDropTarget *drop_target;
   GtkGesture *click_gesture;
 
-  self->selection_start = -1;
-  self->selection_end = -1;
+  self->selection.start = -1;
+  self->selection.end = -1;
   self->dnd_cell = -1;
 
   self->events = gcal_range_tree_new_with_free_func (child_data_free);
@@ -991,8 +993,8 @@ gcal_week_grid_clear_marks (GcalWeekGrid *self)
 {
   g_return_if_fail (GCAL_IS_WEEK_GRID (self));
 
-  self->selection_start = -1;
-  self->selection_end = -1;
+  self->selection.start = -1;
+  self->selection.end = -1;
 
   gtk_widget_queue_draw (GTK_WIDGET (self));
 }
