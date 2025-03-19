@@ -113,7 +113,7 @@ no_auth_handler_cb (SoupServer        *server,
                     GHashTable        *query,
                     gpointer           user_data)
 {
-  g_debug ("No authenticaton needed");
+  g_debug ("No authentication needed");
 
   if (g_strcmp0 (soup_server_message_get_method (message), SOUP_METHOD_GET) == 0)
     process_get (message, "/public", path);
@@ -130,7 +130,7 @@ auth_handler_cb (SoupServer        *server,
                  GHashTable        *query,
                  gpointer           user_data)
 {
-  g_debug ("Needs authenticaton");
+  g_debug ("Needs authentication");
 
   if (g_strcmp0 (soup_server_message_get_method (message), SOUP_METHOD_GET) == 0)
     process_get (message, "/secret-area", path);
