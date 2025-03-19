@@ -23,6 +23,7 @@
 #include "gcal-clock.h"
 #include "gcal-context.h"
 #include "gcal-debug.h"
+#include "gcal-gui-utils.h"
 #include "gcal-week-grid.h"
 #include "gcal-week-view.h"
 #include "gcal-week-view-common.h"
@@ -67,6 +68,7 @@ struct _GcalWeekGrid
   struct {
     gint              start;
     gint              end;
+    GtkWidget        *widget;
   } selection;
   gint                dnd_cell;
 
@@ -199,6 +201,10 @@ on_click_gesture_pressed_cb (GtkGestureClick *click_gesture,
   gint column;
   gint minute;
 
+  g_assert (self->selection.start == -1);
+  g_assert (self->selection.end == -1);
+  g_assert (self->selection.widget == NULL);
+
   minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / MINUTES_PER_DAY;
   column_width = floor (gtk_widget_get_width (GTK_WIDGET (self)) / 7);
   column = (gint) x / column_width;
@@ -208,7 +214,8 @@ on_click_gesture_pressed_cb (GtkGestureClick *click_gesture,
   self->selection.start = (column * MINUTES_PER_DAY + minute) / 30;
   self->selection.end = self->selection.start;
 
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  self->selection.widget = gcal_create_selection_widget ();
+  gtk_widget_insert_after (self->selection.widget, GTK_WIDGET (self), NULL);
 
   gtk_event_controller_set_propagation_phase (self->motion_controller, GTK_PHASE_BUBBLE);
 }
@@ -237,7 +244,7 @@ on_motion_controller_motion_cb (GtkEventControllerMotion *motion_controller,
 
   self->selection.end = (column * MINUTES_PER_DAY + minute) / 30;
 
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  gtk_widget_queue_allocate (GTK_WIDGET (self));
 }
 
 static void
@@ -282,7 +289,7 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
       start_cell = start_cell - end_cell;
     }
 
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  gtk_widget_queue_allocate (GTK_WIDGET (self));
 
   /* Fake the week view's event so we can control the X and Y values */
   weekview = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_WEEK_VIEW);
@@ -593,18 +600,16 @@ gcal_week_grid_snapshot (GtkWidget   *widget,
 {
   g_autoptr (GPtrArray) widgets = NULL;
   GtkStyleContext *context;
-  GtkStateFlags state;
   GcalWeekGrid *self;
   GtkBorder padding;
   GdkRGBA color;
   gdouble minutes_height;
-  gdouble x, column_width;
+  gdouble column_width;
   guint i;
   gint width, height;
 
   self = GCAL_WEEK_GRID (widget);
   context = gtk_widget_get_style_context (widget);
-  state = gtk_widget_get_state_flags (widget);
 
   gtk_style_context_save (context);
   gtk_style_context_add_class (context, "lines");
@@ -615,43 +620,6 @@ gcal_week_grid_snapshot (GtkWidget   *widget,
   height = gtk_widget_get_height (widget);
   column_width = width / 7.0;
   minutes_height = (gdouble) height / MINUTES_PER_DAY;
-
-  /* First, draw the selection */
-  if (self->selection.start != -1 && self->selection.end != -1)
-    {
-      gint selection_height;
-      gint column;
-      gint start;
-      gint end;
-
-      start = self->selection.start;
-      end = self->selection.end;
-
-      /* Swap cells if needed */
-      if (start > end)
-        {
-          start = start + end;
-          end = start - end;
-          start = start - end;
-        }
-
-      column = start * 30 / MINUTES_PER_DAY;
-      selection_height = (end - start + 1) * 30 * minutes_height;
-
-      x = column * column_width;
-
-      gtk_style_context_save (context);
-      gtk_style_context_set_state (context, state | GTK_STATE_FLAG_SELECTED);
-
-      gtk_snapshot_render_background (snapshot,
-                                      context,
-                                      ALIGNED (x),
-                                      round ((start * 30 % MINUTES_PER_DAY) * minutes_height),
-                                      column_width,
-                                      selection_height);
-
-      gtk_style_context_restore (context);
-    }
 
   /* Drag and Drop highlight */
   if (self->dnd_cell != -1)
@@ -680,6 +648,10 @@ gcal_week_grid_snapshot (GtkWidget   *widget,
   gcal_week_view_common_snapshot_hour_lines (widget, snapshot, GTK_ORIENTATION_VERTICAL, &color, width, height);
 
   gtk_style_context_restore (context);
+
+  /* First, draw the selection */
+  if (self->selection.widget)
+    gtk_widget_snapshot_child (widget, self->selection.widget, snapshot);
 
   widgets = gcal_range_tree_get_all_data (self->events);
   for (i = 0; i < widgets->len; i++)
@@ -713,6 +685,49 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
   /* Preliminary calculations */
   minutes_height = (gdouble) height / MINUTES_PER_DAY;
   column_width = (gdouble) width / 7.0;
+
+  /* Selection */
+  if (self->selection.widget)
+    {
+      gint selection_height;
+      gint column;
+      gint start;
+      gint end;
+      gint y;
+
+      g_assert (self->selection.start != -1);
+      g_assert (self->selection.end != -1);
+
+      start = self->selection.start;
+      end = self->selection.end;
+
+      /* Swap cells if needed */
+      if (start > end)
+        {
+          start = start + end;
+          end = start - end;
+          start = start - end;
+        }
+
+      column = start * 30 / MINUTES_PER_DAY;
+
+#define Y_POSITION(cell_) (round (((cell_) * 30 % MINUTES_PER_DAY) * minutes_height))
+
+      x = column * column_width;
+      y = Y_POSITION (start);
+      selection_height = Y_POSITION (end + 1) - y;
+
+#undef Y_POSITION
+
+      gtk_widget_size_allocate (self->selection.widget,
+                                &(GtkAllocation) {
+                                  .x = x,
+                                  .y = y,
+                                  .width = column_width - 1,
+                                  .height = selection_height,
+                                },
+                                baseline);
+    }
 
   /* Temporary range tree to hold positioned events' indexes */
   overlaps = gcal_range_tree_new ();
@@ -995,8 +1010,7 @@ gcal_week_grid_clear_marks (GcalWeekGrid *self)
 
   self->selection.start = -1;
   self->selection.end = -1;
-
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  g_clear_pointer (&self->selection.widget, gtk_widget_unparent);
 }
 
 void
