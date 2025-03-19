@@ -73,6 +73,7 @@ struct _GcalWeekGrid
 
   struct {
     gint              cell;
+    GtkWidget        *widget;
   } dnd;
 
   GcalContext        *context;
@@ -454,6 +455,21 @@ on_drop_target_drop_cb (GtkDropTarget *drop_target,
   GCAL_RETURN (TRUE);
 }
 
+static GdkDragAction
+on_drop_target_enter_cb (GtkDropTarget *drop_target,
+                         gdouble        x,
+                         gdouble        y,
+                         GcalWeekGrid  *self)
+{
+
+  GCAL_ENTRY;
+
+  self->dnd.cell = get_dnd_cell (self, x, y);
+  gtk_widget_set_visible (self->dnd.widget, TRUE);
+
+  GCAL_RETURN (GDK_ACTION_COPY);
+}
+
 static void
 on_drop_target_leave_cb (GtkDropTarget *drop_target,
                          GcalWeekGrid  *self)
@@ -461,7 +477,7 @@ on_drop_target_leave_cb (GtkDropTarget *drop_target,
   GCAL_ENTRY;
 
   self->dnd.cell = -1;
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  gtk_widget_set_visible (self->dnd.widget, FALSE);
 
   GCAL_EXIT;
 }
@@ -475,7 +491,7 @@ on_drop_target_motion_cb (GtkDropTarget *drop_target,
   GCAL_ENTRY;
 
   self->dnd.cell = get_dnd_cell (self, x, y);
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  gtk_widget_queue_allocate (GTK_WIDGET (self));
 
   GCAL_RETURN (GDK_ACTION_COPY);
 }
@@ -485,6 +501,7 @@ gcal_week_grid_dispose (GObject *object)
 {
   GcalWeekGrid *self = GCAL_WEEK_GRID (object);
 
+  g_clear_pointer (&self->dnd.widget, gtk_widget_unparent);
   g_clear_pointer (&self->events, gcal_range_tree_unref);
   g_clear_pointer (&self->now_strip, gtk_widget_unparent);
 
@@ -606,8 +623,6 @@ gcal_week_grid_snapshot (GtkWidget   *widget,
   GcalWeekGrid *self;
   GtkBorder padding;
   GdkRGBA color;
-  gdouble minutes_height;
-  gdouble column_width;
   guint i;
   gint width, height;
 
@@ -621,31 +636,6 @@ gcal_week_grid_snapshot (GtkWidget   *widget,
 
   width = gtk_widget_get_width (widget);
   height = gtk_widget_get_height (widget);
-  column_width = width / 7.0;
-  minutes_height = (gdouble) height / MINUTES_PER_DAY;
-
-  /* Drag and Drop highlight */
-  if (self->dnd.cell != -1)
-    {
-      gdouble cell_height;
-      gint column, row;
-
-      cell_height = minutes_height * 30;
-      column = self->dnd.cell / (MINUTES_PER_DAY / 30);
-      row = self->dnd.cell - column * 48;
-
-      gtk_style_context_save (context);
-      gtk_style_context_add_class (context, "dnd");
-
-      gtk_snapshot_render_background (snapshot,
-                                      context,
-                                      column * column_width,
-                                      row * cell_height,
-                                      column_width,
-                                      cell_height);
-
-      gtk_style_context_restore (context);
-    }
 
   gcal_week_view_common_snapshot_hour_lines (widget, snapshot, GTK_ORIENTATION_HORIZONTAL, &color, width, height);
   gcal_week_view_common_snapshot_hour_lines (widget, snapshot, GTK_ORIENTATION_VERTICAL, &color, width, height);
@@ -655,6 +645,7 @@ gcal_week_grid_snapshot (GtkWidget   *widget,
   /* First, draw the selection */
   if (self->selection.widget)
     gtk_widget_snapshot_child (widget, self->selection.widget, snapshot);
+  gtk_widget_snapshot_child (widget, self->dnd.widget, snapshot);
 
   widgets = gcal_range_tree_get_all_data (self->events);
   for (i = 0; i < widgets->len; i++)
@@ -728,6 +719,27 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
                                   .y = y,
                                   .width = column_width - 1,
                                   .height = selection_height,
+                                },
+                                baseline);
+    }
+
+  if (gtk_widget_should_layout (self->dnd.widget))
+    {
+      gdouble cell_height;
+      gint column, row;
+
+      g_assert (self->dnd.cell != -1);
+
+      cell_height = minutes_height * 30;
+      column = self->dnd.cell / (MINUTES_PER_DAY / 30);
+      row = self->dnd.cell - column * 48;
+
+      gtk_widget_size_allocate (self->dnd.widget,
+                                &(GtkAllocation) {
+                                  .x = column * column_width,
+                                  .y = row * cell_height,
+                                  .width = column_width,
+                                  .height = cell_height,
                                 },
                                 baseline);
     }
@@ -896,7 +908,11 @@ gcal_week_grid_init (GcalWeekGrid *self)
 
   self->selection.start = -1;
   self->selection.end = -1;
+
   self->dnd.cell = -1;
+  self->dnd.widget = gcal_create_drop_target_widget ();
+  gtk_widget_set_visible (self->dnd.widget, FALSE);
+  gtk_widget_set_parent (self->dnd.widget, GTK_WIDGET (self));
 
   self->events = gcal_range_tree_new_with_free_func (child_data_free);
 
@@ -918,6 +934,7 @@ gcal_week_grid_init (GcalWeekGrid *self)
 
   drop_target = gtk_drop_target_new (GCAL_TYPE_EVENT_WIDGET, GDK_ACTION_COPY);
   g_signal_connect (drop_target, "drop", G_CALLBACK (on_drop_target_drop_cb), self);
+  g_signal_connect (drop_target, "enter", G_CALLBACK (on_drop_target_enter_cb), self);
   g_signal_connect (drop_target, "leave", G_CALLBACK (on_drop_target_leave_cb), self);
   g_signal_connect (drop_target, "motion", G_CALLBACK (on_drop_target_motion_cb), self);
   gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
