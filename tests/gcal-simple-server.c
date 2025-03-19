@@ -296,8 +296,8 @@ gcal_simple_server_start (GcalSimpleServer *self)
 void
 gcal_simple_server_stop (GcalSimpleServer *self)
 {
+  g_autoptr (GSource) source = NULL;
   GMainContext *context;
-  g_autoptr (GSource) source;
 
   g_return_if_fail (GCAL_IS_SIMPLE_SERVER (self));
 
