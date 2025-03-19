@@ -341,10 +341,15 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
 
   if (allday && !multiday)
     {
+      g_assert (start != NULL);
+
       g_string_append_printf (tooltip_mesg, "\n%s", start);
     }
   else
     {
+      g_assert (start != NULL);
+      g_assert (end != NULL);
+
       g_string_append_printf (tooltip_mesg,
                               "\n%s - %s",
                               is_ltr ? start : end,
