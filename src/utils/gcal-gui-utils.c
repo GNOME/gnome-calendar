@@ -30,3 +30,11 @@ gcal_create_selection_widget (void)
                        "css-name", "selection",
                        NULL);
 }
+
+GtkWidget*
+gcal_create_drop_target_widget (void)
+{
+  return g_object_new (ADW_TYPE_BIN,
+                       "css-name", "droptarget",
+                       NULL);
+}

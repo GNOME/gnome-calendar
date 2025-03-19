@@ -27,4 +27,6 @@ G_BEGIN_DECLS
 
 GtkWidget* gcal_create_selection_widget (void);
 
+GtkWidget* gcal_create_drop_target_widget (void);
+
 G_END_DECLS
