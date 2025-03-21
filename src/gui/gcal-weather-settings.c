@@ -250,7 +250,7 @@ on_weather_location_searchbox_changed_cb (GtkEntry            *entry,
   auto_location = gtk_switch_get_active (self->weather_auto_location_switch);
   location = get_checked_fixed_location (self);
 
-  if (!location && !auto_location)
+  if (!location && !auto_location && gtk_entry_get_text_length (entry) > 0)
     {
       gtk_widget_add_css_class (GTK_WIDGET (self->weather_location_entry), "error");
     }
