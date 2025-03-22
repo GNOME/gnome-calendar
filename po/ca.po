@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2025-02-06 15:54+0000\n"
-"PO-Revision-Date: 2025-02-07 12:10+0200\n"
+"PO-Revision-Date: 2025-03-22 12:10+0200\n"
 "Last-Translator: Jordi Mas i Hernàndez <jmas@softcatala.org>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -943,7 +943,7 @@ msgstr ""
 
 #: src/gui/gcal-event-popover.ui:107
 msgid "No event notes"
-msgstr "Sense notes d'esdeveniment"
+msgstr "No hi ha notes de la cita"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google
 #. Meet")
@@ -977,7 +977,7 @@ msgstr ""
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #: src/gui/gcal-event-widget.c:447
 msgid "%a %B %d"
-msgstr "%a %B %d"
+msgstr "%a %d %B"
 
 #: src/gui/gcal-meeting-row.c:72
 msgid "Unknown Service"
@@ -1372,7 +1372,7 @@ msgstr "Navegació"
 #: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Go Back"
-msgstr "Torna enrere"
+msgstr "Ves enrere"
 
 #: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
