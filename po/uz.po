@@ -1,0 +1,1815 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
+"POT-Creation-Date: 2025-03-19 23:03+0000\n"
+"PO-Revision-Date: 2022-03-16 15:09+0500\n"
+"Last-Translator: Umidjon Almasov <umidjon@almasov.uz>\n"
+"Language-Team: Uzbek\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: data/org.gnome.Calendar.desktop.in.in:3
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
+#: src/gui/gcal-calendar-combo-row.ui:5 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:147
+msgid "Calendar"
+msgstr "Taqvim"
+
+#: data/org.gnome.Calendar.desktop.in.in:4
+msgid "Access and manage your calendars"
+msgstr "Taqvimlaringizga kirish va ularni boshqarish"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.Calendar.desktop.in.in:13
+msgid "Calendar;Event;Reminder;"
+msgstr "Taqvim;Tadbir;Eslatma;"
+
+#: data/org.gnome.calendar.gschema.xml.in:6
+msgid "Window maximized"
+msgstr "Oyna kattalashtirilgan"
+
+#: data/org.gnome.calendar.gschema.xml.in:7
+msgid "Window maximized state"
+msgstr "Oyna kattalashtirilgan holati"
+
+#: data/org.gnome.calendar.gschema.xml.in:11
+msgid "Window size"
+msgstr "Oyna oʼlchami"
+
+#: data/org.gnome.calendar.gschema.xml.in:12
+msgid "Window size (width and height)."
+msgstr "Oyna oʼlchami (kenglik va balandlik)."
+
+#: data/org.gnome.calendar.gschema.xml.in:16
+msgid "Type of the active view"
+msgstr "Faol koʼrinish turi"
+
+#: data/org.gnome.calendar.gschema.xml.in:17
+msgid "Type of the active window view, default value is: monthly view"
+msgstr "Faol oyna koʼrinishi turi, standart qiymat: oy koʼrinishi"
+
+#: data/org.gnome.calendar.gschema.xml.in:21
+msgid "Weather Service Configuration"
+msgstr "Ob-havo xizmati konfiguratsiyasi"
+
+#: data/org.gnome.calendar.gschema.xml.in:22
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr ""
+"Ob-havo hisobotlari koʼrsatilishi, avtomatik joylashuvlar va joy nomi "
+"ishlatilishi"
+
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr ""
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr ""
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
+#, fuzzy
+#| msgid "Manage your calendars"
+msgid "Manage your schedule"
+msgstr "Taqvimlaringizni boshqaring"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:17
+msgid ""
+"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
+"schedule for upcoming days and weeks, whether your months are filled with "
+"meetings and appointments, public events, travel logistics, or other "
+"commitments in your life."
+msgstr ""
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:22
+msgid ""
+"Easily create and manage unlimited calendars and events with GNOME "
+"Calendar's infinite scrolling month view, week timetable, and scheduling "
+"list view."
+msgstr ""
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
+msgid ""
+"Integrating the latest GNOME technologies and design best practices, GNOME "
+"Calendar builds on top of the mature Evolution data server to manage large "
+"quantities of events and to provide integration with other applications. You "
+"can add calendars from various online calendaring services (like NextCloud, "
+"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
+"your events across multiple devices and platforms. GNOME Calendar also "
+"supports local and offline calendaring, so you can use it anywhere and "
+"anytime while travelling (or after civilization's collapse.)"
+msgstr ""
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "Week view"
+msgstr "Hafta koʼrinishi"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "Month view"
+msgid "Month view"
+msgstr "Oy koʼrinishi"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+#, fuzzy
+#| msgid "Event deleted"
+msgid "Event editor"
+msgstr "Tadbir oʻchirilgan"
+
+#. Translators: %1$s is the start date and %2$s is the end date.
+#. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
+#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:422
+#, c-format
+msgid "%1$s — %2$s"
+msgstr "%1$s — %2$s"
+
+#.
+#. * Translators: %1$s is the start date, %2$s is the start time,
+#. * %3$s is the end date, and %4$s is the end time.
+#.
+#: src/core/gcal-event.c:1910
+#, c-format
+msgid "%1$s %2$s — %3$s %4$s"
+msgstr "%1$s %2$s — %3$s %4$s"
+
+#. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
+#: src/core/gcal-event.c:1926 src/gui/gcal-quick-add-popover.c:471
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s, %2$s – %3$s"
+
+#: src/gui/calendar-management/calendar-row.ui:19
+#, fuzzy
+#| msgid "Remove Calendar"
+msgid "Read-Only Calendar"
+msgstr "Taqvimni olib tashlash"
+
+#: src/gui/calendar-management/calendar-row.ui:29
+#, fuzzy
+#| msgid "Display calendar"
+msgid "Display Calendar"
+msgstr "Taqvimni koʼrsatish"
+
+#: src/gui/calendar-management/calendar-row.ui:39
+#, fuzzy
+#| msgid "Display calendar"
+msgid "Edit calendar"
+msgstr "Taqvimni koʼrsatish"
+
+#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
+msgid "Calendar Settings"
+msgstr "Taqvim sozlashlari"
+
+#. Create the new toast
+#. TRANSLATORS: %s is a calendar name.
+#: src/gui/calendar-management/gcal-calendars-page.c:358
+#, fuzzy, c-format
+#| msgid "Calendar <b>%s</b> removed"
+msgid "Calendar “%s” removed"
+msgstr "<b>%s</b> taqvimi olib tashlangan"
+
+#: src/gui/calendar-management/gcal-calendars-page.c:363
+#: src/gui/gcal-window.c:823
+msgid "_Undo"
+msgstr "_Ortga qaytarish"
+
+#: src/gui/calendar-management/gcal-calendars-page.ui:4
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
+msgid "Calendars"
+msgstr "Taqvimlar"
+
+#: src/gui/calendar-management/gcal-calendars-page.ui:67
+#, fuzzy
+#| msgid "Add Calendar…"
+msgid "_Add Calendar"
+msgstr "Taqvim qoʼshish…"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:189
+#, fuzzy
+#| msgid "Calendar"
+msgid "Calendar URL"
+msgstr "Taqvim"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:207
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
+#: src/gui/event-editor/gcal-summary-section.ui:24
+#: src/gui/gcal-event-popover.ui:165
+#: src/gui/importer/gcal-import-file-row.c:177
+msgid "Location"
+msgstr "Joylashuv"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:208
+msgid "On This Computer"
+msgstr ""
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:4
+#, fuzzy
+#| msgid "Calendar"
+msgid "Edit Calendar"
+msgstr "Taqvim"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:34
+msgid "Account"
+msgstr "Hisob"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:42
+#, fuzzy
+#| msgid "Calendar Settings"
+msgid "Open in Settings"
+msgstr "Taqvim sozlashlari"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
+msgid "Calendar Name"
+msgstr "Taqvim nomi"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
+msgid "Color"
+msgstr "Rang"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:110
+#, fuzzy
+#| msgid "Display calendar"
+msgid "_Display Calendar"
+msgstr "Taqvimni koʼrsatish"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:124
+#, fuzzy
+#| msgid "Remove Calendar"
+msgid "_Remove Calendar"
+msgstr "Taqvimni olib tashlash"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:117
+#, fuzzy, c-format
+#| msgid "Add Calendar…"
+msgid "Add Calendar"
+msgid_plural "Add %1$u Calendars"
+msgstr[0] "Taqvim qoʼshish…"
+msgstr[1] "Taqvim qoʼshish…"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:124
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
+#, fuzzy
+#| msgid "Add Calendar…"
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "Taqvim qoʼshish…"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:332
+msgid "The URL you have entered appears to be invalid."
+msgstr ""
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:385
+msgid "A valid user and password are required to connect to this calendar."
+msgstr ""
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:4
+msgid "New Calendar"
+msgstr "Yangi taqvim"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+#, fuzzy
+#| msgid "Import a Calendar"
+msgid "Create a Local Calendar"
+msgstr "Taqvimni import qilish"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr ""
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
+msgid ""
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
+msgstr ""
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
+msgid ""
+"If the calendar belongs to one of your online accounts, you can add it "
+"through the <a href=\"GOA\">online account settings</a>."
+msgstr ""
+"Agar taqvim onlayn hisoblaringizdan biriga tegishli boʼlsa, uni <a "
+"href=\"GOA\">onlayn hisob sozlamalari</a> orqali qoʼshishingiz mumkin."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
+msgid "Credentials"
+msgstr ""
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
+msgid "User"
+msgstr "Foydalanuvchi"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
+msgid "Password"
+msgstr "Parol"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:16
+#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1162
+msgid "_Cancel"
+msgstr "_Bekor qilish"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
+#, fuzzy
+#| msgid "Connect"
+msgid "_Connect"
+msgstr "Ulanish"
+
+#: src/gui/event-editor/gcal-alarm-row.c:85
+#, c-format
+msgid "%1$u day, %2$u hour, and %3$u minute before"
+msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u kun, %2$u soat va %3$u daqiqa oldin"
+msgstr[1] "%1$u kun, %2$u soat va %3$u daqiqa oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:89
+#, c-format
+msgid "%1$u day, %2$u hours, and %3$u minute before"
+msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u kun, %2$u soat va %3$u daqiqa oldin"
+msgstr[1] "%1$u kun, %2$u soat va %3$u daqiqa oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:95
+#, c-format
+msgid "%1$u days, %2$u hour, and %3$u minute before"
+msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u kun, %2$u soat va %3$u daqiqa oldin"
+msgstr[1] "%1$u kun, %2$u soat va %3$u daqiqa oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:99
+#, c-format
+msgid "%1$u days, %2$u hours, and %3$u minute before"
+msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u kun, %2$u soat va %3$u daqiqa oldin"
+msgstr[1] "%1$u kun, %2$u soat va %3$u daqiqa oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:114
+#, c-format
+msgid "%1$u day and %2$u hour before"
+msgid_plural "%1$u day and %2$u hours before"
+msgstr[0] "%1$u kun va %2$u soat oldin"
+msgstr[1] "%1$u kun va %2$u soat oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:118
+#, c-format
+msgid "%1$u days and %2$u hour before"
+msgid_plural "%1$u days and %2$u hours before"
+msgstr[0] "%1$u kun va %2$u soat oldin"
+msgstr[1] "%1$u kun va %2$u soat oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:134
+#, c-format
+msgid "%1$u day and %2$u minute before"
+msgid_plural "%1$u day and %2$u minutes before"
+msgstr[0] "%1$u kun va %2$u soat oldin"
+msgstr[1] "%1$u kun va %2$u soat oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:138
+#, c-format
+msgid "%1$u days and %2$u minute before"
+msgid_plural "%1$u days and %2$u minutes before"
+msgstr[0] "%1$u kun va %2$u soat oldin"
+msgstr[1] "%1$u kun va %2$u soat oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:148
+#, c-format
+msgid "%1$u day before"
+msgid_plural "%1$u days before"
+msgstr[0] "%1$u kun oldin"
+msgstr[1] "%1$u kun oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:166
+#, c-format
+msgid "%1$u hour and %2$u minute before"
+msgid_plural "%1$u hour and %2$u minutes before"
+msgstr[0] "%1$u soat va %2$u daqiqa oldin"
+msgstr[1] "%1$u soat va %2$u daqiqa oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:170
+#, c-format
+msgid "%1$u hours and %2$u minute before"
+msgid_plural "%1$u hours and %2$u minutes before"
+msgstr[0] "%1$u soat va %2$u daqiqa oldin"
+msgstr[1] "%1$u soat va %2$u daqiqa oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:180
+#, c-format
+msgid "%1$u hour before"
+msgid_plural "%1$u hours before"
+msgstr[0] "%1$u soat oldin"
+msgstr[1] "%1$u soat oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:192
+#, c-format
+msgid "%1$u minute before"
+msgid_plural "%1$u minutes before"
+msgstr[0] "%1$u daqiqa oldin"
+msgstr[1] "%1$u daqiqa oldin"
+
+#: src/gui/event-editor/gcal-alarm-row.c:199
+msgid "Event start time"
+msgstr "Tadbir boshlanish vaqti"
+
+#: src/gui/event-editor/gcal-alarm-row.ui:8
+msgid "Toggle Alarm Sound"
+msgstr ""
+
+#: src/gui/event-editor/gcal-alarm-row.ui:20
+#, fuzzy
+#| msgid "Remove the alarm"
+msgid "Remove Alarm"
+msgstr "Signalni olib tashlash"
+
+#. Translators: Calendar grid abbreviation for Sunday.
+#. *
+#. * NOTE: These grid abbreviations are always shown together
+#. * and in order, e.g. "S M T W T F S".
+#. *
+#. * Please make sure these abbreviations match GNOME Shell's
+#. * abbreviations for your language.
+#.
+#: src/gui/event-editor/gcal-date-chooser.c:272
+msgctxt "grid sunday"
+msgid "S"
+msgstr ""
+
+#. Translators: Calendar grid abbreviation for Monday
+#: src/gui/event-editor/gcal-date-chooser.c:277
+#, fuzzy
+#| msgid "AM"
+msgctxt "grid monday"
+msgid "M"
+msgstr "AM"
+
+#. Translators: Calendar grid abbreviation for Tuesday
+#: src/gui/event-editor/gcal-date-chooser.c:282
+msgctxt "grid tuesday"
+msgid "T"
+msgstr ""
+
+#. Translators: Calendar grid abbreviation for Wednesday
+#: src/gui/event-editor/gcal-date-chooser.c:287
+msgctxt "grid wednesday"
+msgid "W"
+msgstr ""
+
+#. Translators: Calendar grid abbreviation for Thursday
+#: src/gui/event-editor/gcal-date-chooser.c:292
+msgctxt "grid thursday"
+msgid "T"
+msgstr ""
+
+#. Translators: Calendar grid abbreviation for Friday
+#: src/gui/event-editor/gcal-date-chooser.c:297
+msgctxt "grid friday"
+msgid "F"
+msgstr ""
+
+#. Translators: Calendar grid abbreviation for Saturday
+#: src/gui/event-editor/gcal-date-chooser.c:302
+msgctxt "grid saturday"
+msgid "S"
+msgstr ""
+
+#: src/gui/event-editor/gcal-date-chooser-row.ui:15
+#, fuzzy
+#| msgid "End Repeat Date"
+msgid "Edit Date"
+msgstr "Takrorlashni tugatish sanasi"
+
+#: src/gui/event-editor/gcal-date-chooser-row.ui:38
+msgid "Edit date"
+msgstr ""
+
+#. Translators: "%1$s" is the timezone identifier (e.g. UTC, America/Sao_Paulo)
+#. * and "%2$s" is the timezone offset (e.g. UTC-3).
+#.
+#: src/gui/event-editor/gcal-date-time-chooser.c:141
+#, fuzzy, c-format
+#| msgid "%1$s, %2$s"
+msgid "%1$s (%2$s)"
+msgstr "%1$s, %2$s"
+
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.c:270
+#: src/gui/event-editor/gcal-date-time-chooser.ui:90
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "AM"
+msgstr "AM"
+
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.ui:96
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "PM"
+msgstr "PM"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:7
+msgid "Date"
+msgstr ""
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:14
+msgid "Time"
+msgstr ""
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:26
+#: src/gui/event-editor/gcal-time-chooser-row.ui:15
+msgid "Edit Time"
+msgstr ""
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:65
+msgid ":"
+msgstr ":"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:109
+#: src/gui/event-editor/gcal-date-time-chooser.ui:120
+msgid "Change Timezone"
+msgstr ""
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:133
+#: src/gui/event-editor/gcal-time-chooser-row.ui:35
+msgid "Edit time"
+msgstr ""
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#, fuzzy
+#| msgid "Save"
+msgid "_Save"
+msgstr "Saqlash"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:23
+#, fuzzy
+#| msgid "Done"
+msgid "_Done"
+msgstr "Bajarilgan"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:688
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "New event"
+msgid "New Event"
+msgstr "Yangi Tadbir"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:690
+#, fuzzy
+#| msgid "Edit Details…"
+msgid "Event Details"
+msgstr "Tafsilotlarni tahrirlash…"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:692
+#, fuzzy
+#| msgid "Delete Event"
+msgid "Edit Event"
+msgstr "Tadbirni oʼchirish"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:37
+msgid "This event is in a read-only calendar. It cannot be edited or deleted."
+msgstr ""
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:81
+msgid "Reminders"
+msgstr "Eslatmalar"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:93
+msgid "Notes"
+msgstr "Izohlar"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:110
+msgid "Delete Event"
+msgstr "Tadbirni oʼchirish"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:17
+#, fuzzy
+#| msgid "Add a Reminder…"
+msgid "Add Reminder"
+msgstr "Eslatma qoʼshish…"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:41
+#, fuzzy
+#| msgid "Event start time"
+msgid "Event start"
+msgstr "Tadbir boshlanish vaqti"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:47
+#, fuzzy
+#| msgid "5 minutes"
+msgid "5 Minutes"
+msgstr "5 daqiqa"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:53
+#, fuzzy
+#| msgid "10 minutes"
+msgid "10 Minutes"
+msgstr "10 daqiqa"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:59
+#, fuzzy
+#| msgid "15 minutes"
+msgid "15 Minutes"
+msgstr "15 daqiqa"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:65
+#, fuzzy
+#| msgid "30 minutes"
+msgid "30 Minutes"
+msgstr "30 daqiqa"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:71
+msgid "1 Hour"
+msgstr ""
+
+#: src/gui/event-editor/gcal-reminders-section.ui:77
+#, fuzzy
+#| msgid "All Day"
+msgid "1 Day"
+msgstr "Kun davomida"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:83
+#, fuzzy
+#| msgid "All Day"
+msgid "2 Days"
+msgstr "Kun davomida"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:89
+#, fuzzy
+#| msgid "All Day"
+msgid "3 Days"
+msgstr "Kun davomida"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:95
+#, fuzzy
+#| msgid "Week"
+msgid "1 Week"
+msgstr "Hafta"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:13
+#, fuzzy
+#| msgid "All Day"
+msgid "_All Day"
+msgstr "Kun davomida"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:20
+msgid "_Time Slot"
+msgstr ""
+
+#: src/gui/event-editor/gcal-schedule-section.ui:33
+#: src/gui/event-editor/gcal-schedule-section.ui:54
+#, fuzzy
+#| msgid "Starts"
+msgid "Start Date"
+msgstr "Boshlanadi"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:45
+#: src/gui/event-editor/gcal-schedule-section.ui:62
+#, fuzzy
+#| msgid "End Repeat Date"
+msgid "End Date"
+msgstr "Takrorlashni tugatish sanasi"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:55
+#, fuzzy
+#| msgid "Starts"
+msgid "Start Time"
+msgstr "Boshlanadi"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:63
+msgid "End Time"
+msgstr ""
+
+#: src/gui/event-editor/gcal-schedule-section.ui:75
+msgid "Repeat"
+msgstr "Takrorlash"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:80
+msgid "No Repeat"
+msgstr "Takrorlash yoʼq"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:81
+msgid "Daily"
+msgstr "Har kun"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:82
+msgid "Monday – Friday"
+msgstr "Dushanba – Juma"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:83
+msgid "Weekly"
+msgstr "Har hafta"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:84
+msgid "Monthly"
+msgstr "Har oy"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:85
+msgid "Yearly"
+msgstr "Har yil"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:96
+msgid "End Repeat"
+msgstr "Takrorlashni tugatish"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:101
+msgid "Forever"
+msgstr "Abadiy"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:102
+#: src/gui/event-editor/gcal-schedule-section.ui:115
+msgid "Number of Occurrences"
+msgstr "Hodisalar soni"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:103
+msgid "Until Date"
+msgstr "Sanagacha"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:134
+msgid "End Repeat Date"
+msgstr "Takrorlashni tugatish sanasi"
+
+#: src/gui/event-editor/gcal-summary-section.ui:16
+#: src/gui/importer/gcal-import-file-row.c:176
+msgid "Title"
+msgstr "Sarlavha"
+
+#. Translators: "%1$s" is the city / region name, and
+#. * "%2$s" is the country name (already localized).
+#.
+#: src/gui/event-editor/gcal-time-zone-dialog.c:84
+#, c-format
+msgid "%1$s, %2$s"
+msgstr "%1$s, %2$s"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:4
+#, fuzzy
+#| msgid "Select a file"
+msgid "Select Timezone"
+msgstr "Faylni tanlash"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:16
+#, fuzzy
+#| msgid "Location"
+msgid "Search Locations"
+msgstr "Joylashuv"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:31
+#, fuzzy
+#| msgctxt "tooltip"
+#| msgid "Search for events"
+msgid "Search for a Timezone"
+msgstr "Tadbirlarni qidirish"
+
+#: src/gui/gcal-application.c:58
+msgid "Quit GNOME Calendar"
+msgstr "GNOME taqvimidan chiqish"
+
+#: src/gui/gcal-application.c:63
+msgid "Display version number"
+msgstr "Versiya raqamini koʼrsatish"
+
+#: src/gui/gcal-application.c:68
+msgid "Enable debug messages"
+msgstr "Nosozliklarni tuzatish xabarlarini yoqish"
+
+#: src/gui/gcal-application.c:73
+msgid "Open calendar on the passed date"
+msgstr "Taqvimni oʼtgan sanada ochish"
+
+#: src/gui/gcal-application.c:78
+msgid "Open calendar showing the passed event"
+msgstr "Oʼtkazilgan tadbirni koʼrsatadigan taqvimni ochish"
+
+#: src/gui/gcal-application.c:144
+#, c-format
+msgid "Copyright © 2012–%d The Calendar authors"
+msgstr "Mualliflik huquqi © 2012–%d Taqvim mualliflari"
+
+#: src/gui/gcal-application.c:239
+msgid "translator-credits"
+msgstr "Umidjon Almasov <umidjon@almasov.uz>, 2022"
+
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+msgid "Weather"
+msgstr "Ob-havo"
+
+#: src/gui/gcal-calendar-button.ui:6
+msgid "Manage Calendars"
+msgstr "Taqvimlarni boshqarish"
+
+#: src/gui/gcal-calendar-button.ui:8
+#, fuzzy
+#| msgid "Calendars"
+msgid "_Calendars"
+msgstr "Taqvimlar"
+
+#: src/gui/gcal-calendar-button.ui:37
+msgid "_Synchronize Calendars"
+msgstr "_Taqvimlarni sinxronlash"
+
+#: src/gui/gcal-calendar-button.ui:41
+#, fuzzy
+#| msgid "Manage Calendars…"
+msgid "_Manage Calendars…"
+msgstr "Taqvimlarni boshqarish…"
+
+#: src/gui/gcal-calendar-combo-row-item.c:70
+#, fuzzy
+#| msgid "%s (this calendar is read-only)"
+msgid "This calendar is hidden"
+msgstr "%s (bu taqvim faqat oʼqish uchun)"
+
+#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:253
+msgid "January"
+msgstr "Yanvar"
+
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:254
+msgid "February"
+msgstr "Fevral"
+
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:255
+msgid "March"
+msgstr "Mart"
+
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:256
+msgid "April"
+msgstr "Aprel"
+
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:257
+msgid "May"
+msgstr "May"
+
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:258
+msgid "June"
+msgstr "Iyun"
+
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:259
+msgid "July"
+msgstr "Iyul"
+
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:260
+msgid "August"
+msgstr "Avgust"
+
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:261
+msgid "September"
+msgstr "Sentyabr"
+
+#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:262
+msgid "October"
+msgstr "Oktyabr"
+
+#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:263
+msgid "November"
+msgstr "Noyabr"
+
+#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:264
+msgid "December"
+msgstr "Dekabr"
+
+#: src/gui/gcal-event-popover.c:161
+#, c-format
+msgid "Today %s"
+msgstr "Bugun %s"
+
+#: src/gui/gcal-event-popover.c:165
+#, c-format
+msgid "Tomorrow %s"
+msgstr "Ertaga %s"
+
+#: src/gui/gcal-event-popover.c:169
+#, c-format
+msgid "Yesterday %s"
+msgstr "Kecha %s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, and %3$ is the hour. This format string results in dates
+#. * like "November 21, 22:00".
+#.
+#: src/gui/gcal-event-popover.c:178
+#, c-format
+msgid "%1$s %2$d, %3$s"
+msgstr "%1$s %2$d, %3$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$d is the year, and %4$s is the hour. This format string
+#. * results in dates like "November 21, 2020, 22:00".
+#.
+#: src/gui/gcal-event-popover.c:190
+#, c-format
+msgid "%1$s %2$d, %3$d, %4$s"
+msgstr "%1$s %2$d, %3$d, %4$s"
+
+#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
+#: src/gui/views/gcal-agenda-view.c:197
+msgid "Today"
+msgstr "Bugun"
+
+#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
+#: src/gui/views/gcal-agenda-view.c:199
+msgid "Tomorrow"
+msgstr "Ertaga"
+
+#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
+#: src/gui/views/gcal-agenda-view.c:201
+msgid "Yesterday"
+msgstr "Kecha"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), and %2$d is
+#. * the day of month. This format string results in dates like
+#. * "November 21".
+#.
+#: src/gui/gcal-event-popover.c:219 src/gui/gcal-event-popover.c:333
+#, c-format
+msgid "%1$s %2$d"
+msgstr "%1$s %2$d"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, and %3$d is the year. This format string results in dates
+#. * like "November 21, 2020".
+#.
+#: src/gui/gcal-event-popover.c:230 src/gui/gcal-event-popover.c:344
+#, c-format
+msgid "%1$s %2$d, %3$d"
+msgstr "%1$s %2$d, %3$d"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Today, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:264
+#, c-format
+msgid "Today, %1$s — %2$s"
+msgstr "Bugun %1$s — %2$s"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Tomorrow, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:272
+#, c-format
+msgid "Tomorrow, %1$s – %2$s"
+msgstr "Ertaga %1$s – %2$s"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Tomorrow, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:280
+#, c-format
+msgid "Yesterday, %1$s – %2$s"
+msgstr "Kecha, %1$s – %2$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$s is the start hour, and %4$s is the end hour. This
+#. * format string results in dates like "November 21, 19:00 — 22:00".
+#.
+#: src/gui/gcal-event-popover.c:289
+#, c-format
+msgid "%1$s %2$d, %3$s – %4$s"
+msgstr "%1$s %2$d, %3$s – %4$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$d is the year, %4$s is the start hour, and %5$s is the
+#. * end hour. This format string results in dates like:
+#. *
+#. * "November 21, 2021, 19:00 — 22:00".
+#.
+#: src/gui/gcal-event-popover.c:304
+#, c-format
+msgid "%1$s %2$d, %3$d, %4$s – %5$s"
+msgstr "%1$s %2$d, %3$d, %4$s – %5$s"
+
+#: src/gui/gcal-event-popover.c:369
+msgid "View Additional Details"
+msgstr ""
+
+#: src/gui/gcal-event-popover.c:374
+#, fuzzy
+#| msgid "Edit Details…"
+msgid "Edit Additional Details"
+msgstr "Tafsilotlarni tahrirlash…"
+
+#: src/gui/gcal-event-popover.ui:66
+msgid ""
+"<b>This event is part of a read-only calendar</b>\n"
+"    You cannot delete or change this event."
+msgstr ""
+
+#: src/gui/gcal-event-popover.ui:107
+#, fuzzy
+#| msgid "No event information"
+msgid "No event notes"
+msgstr "Tadbir haqida ma'lumot yoʼq"
+
+#. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
+#: src/gui/gcal-event-widget.c:381
+#, c-format
+msgid ""
+"\n"
+"\n"
+"On %s"
+msgstr ""
+
+#. Translators: %s is a URL informed as the location of the event
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:394 src/gui/gcal-event-widget.c:400
+#, fuzzy, c-format
+#| msgid "At %s"
+msgid ""
+"\n"
+"\n"
+"At %s"
+msgstr "%s da"
+
+#.
+#. * Translators: %a is the abbreviated day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/gcal-event-widget.c:459
+msgid "%a %B %d"
+msgstr ""
+
+#: src/gui/gcal-meeting-row.c:72
+msgid "Unknown Service"
+msgstr "Noma'lum xizmat"
+
+#. Translators: "Join" as in "Join meeting"
+#: src/gui/gcal-meeting-row.ui:41
+#, fuzzy
+#| msgid "Join"
+msgid "_Join"
+msgstr "Qoʼshilish"
+
+#: src/gui/gcal-quick-add-popover.c:116
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (bu taqvim faqat oʼqish uchun)"
+
+#: src/gui/gcal-quick-add-popover.c:231
+msgid "from next Monday"
+msgstr "keyingi dushanbadan"
+
+#: src/gui/gcal-quick-add-popover.c:232
+msgid "from next Tuesday"
+msgstr "keyingi seshanbadan"
+
+#: src/gui/gcal-quick-add-popover.c:233
+msgid "from next Wednesday"
+msgstr "keyingi chorshanbadan"
+
+#: src/gui/gcal-quick-add-popover.c:234
+msgid "from next Thursday"
+msgstr "keyingi payshanbadan"
+
+#: src/gui/gcal-quick-add-popover.c:235
+msgid "from next Friday"
+msgstr "keyingi jumadan"
+
+#: src/gui/gcal-quick-add-popover.c:236
+msgid "from next Saturday"
+msgstr "keyingi shanbadan"
+
+#: src/gui/gcal-quick-add-popover.c:237
+msgid "from next Sunday"
+msgstr "keyingi yakshanbadan"
+
+#: src/gui/gcal-quick-add-popover.c:242
+msgid "to next Monday"
+msgstr "keyingi dushanbagacha"
+
+#: src/gui/gcal-quick-add-popover.c:243
+msgid "to next Tuesday"
+msgstr "keyingi seshanbagacha"
+
+#: src/gui/gcal-quick-add-popover.c:244
+msgid "to next Wednesday"
+msgstr "keyingi chorshanbagacha"
+
+#: src/gui/gcal-quick-add-popover.c:245
+msgid "to next Thursday"
+msgstr "keyingi payshanbagacha"
+
+#: src/gui/gcal-quick-add-popover.c:246
+msgid "to next Friday"
+msgstr "keyingi jumagacha"
+
+#: src/gui/gcal-quick-add-popover.c:247
+msgid "to next Saturday"
+msgstr "keyingi shanbagacha"
+
+#: src/gui/gcal-quick-add-popover.c:248
+msgid "to next Sunday"
+msgstr "keyingi yakshanbagacha"
+
+#: src/gui/gcal-quick-add-popover.c:273
+#, c-format
+msgid "from Today"
+msgstr "bugundan"
+
+#: src/gui/gcal-quick-add-popover.c:277
+#, c-format
+msgid "from Tomorrow"
+msgstr "ertadan"
+
+#: src/gui/gcal-quick-add-popover.c:281
+#, c-format
+msgid "from Yesterday"
+msgstr "kechadan"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gui/gcal-quick-add-popover.c:299
+#, c-format
+msgid "from %1$s %2$s"
+msgstr "%1$s %2$s dan"
+
+#: src/gui/gcal-quick-add-popover.c:310
+#, c-format
+msgid "to Today"
+msgstr "bugungacha"
+
+#: src/gui/gcal-quick-add-popover.c:314
+#, c-format
+msgid "to Tomorrow"
+msgstr "ertagacha"
+
+#: src/gui/gcal-quick-add-popover.c:318
+#, c-format
+msgid "to Yesterday"
+msgstr "kechagacha"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gui/gcal-quick-add-popover.c:336
+#, c-format
+msgid "to %1$s %2$s"
+msgstr "%1$s %2$s gacha"
+
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
+#: src/gui/gcal-quick-add-popover.c:343
+#, c-format
+msgid "New Event %1$s %2$s"
+msgstr "Yangi tadbir %1$s %2$s"
+
+#: src/gui/gcal-quick-add-popover.c:360
+#, c-format
+msgid "New Event Today"
+msgstr "Bugun yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:364
+#, c-format
+msgid "New Event Tomorrow"
+msgstr "Ertaga yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:368
+#, c-format
+msgid "New Event Yesterday"
+msgstr "Kecha yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:374
+msgid "New Event next Monday"
+msgstr "Keyingi dushanba kuni yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:375
+msgid "New Event next Tuesday"
+msgstr "Keyingi seshanba kuni yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:376
+msgid "New Event next Wednesday"
+msgstr "Keyingi chorshanba kuni yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:377
+msgid "New Event next Thursday"
+msgstr "Keyingi payshanba kuni yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:378
+msgid "New Event next Friday"
+msgstr "Keyingi juma kuni yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:379
+msgid "New Event next Saturday"
+msgstr "Keyingi shanba kuni yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:380
+msgid "New Event next Sunday"
+msgstr "Keyingi yakshanba kuni yangi tadbir"
+
+#. Translators: %d is the numeric day of month
+#: src/gui/gcal-quick-add-popover.c:392
+#, c-format
+msgid "New Event on January %d"
+msgstr "%d yanvarda yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:393
+#, c-format
+msgid "New Event on February %d"
+msgstr "%d fevralda yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:394
+#, c-format
+msgid "New Event on March %d"
+msgstr "%d martda yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:395
+#, c-format
+msgid "New Event on April %d"
+msgstr "%d aprelda yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:396
+#, c-format
+msgid "New Event on May %d"
+msgstr "%d mayda yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:397
+#, c-format
+msgid "New Event on June %d"
+msgstr "%d iyunda yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:398
+#, c-format
+msgid "New Event on July %d"
+msgstr "%d iyulda yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:399
+#, c-format
+msgid "New Event on August %d"
+msgstr "%d avgustda yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:400
+#, c-format
+msgid "New Event on September %d"
+msgstr "%d sentyabrda yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:401
+#, c-format
+msgid "New Event on October %d"
+msgstr "%d oktyabrda yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:402
+#, c-format
+msgid "New Event on November %d"
+msgstr "%d noyabrda yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.c:403
+#, c-format
+msgid "New Event on December %d"
+msgstr "%d dekabrda yangi tadbir"
+
+#: src/gui/gcal-quick-add-popover.ui:87
+msgid "Edit Details…"
+msgstr "Tafsilotlarni tahrirlash…"
+
+#: src/gui/gcal-quick-add-popover.ui:98
+msgid "Add"
+msgstr "Qoʼshish"
+
+#: src/gui/gcal-search-button.ui:29
+#, fuzzy
+#| msgctxt "tooltip"
+#| msgid "Search for events"
+msgid "Search Events"
+msgstr "Tadbirlarni qidirish"
+
+#: src/gui/gcal-search-button.ui:54
+#, fuzzy
+#| msgctxt "tooltip"
+#| msgid "Search for events"
+msgid "Search events"
+msgstr "Tadbirlarni qidirish"
+
+#: src/gui/gcal-sync-indicator.ui:21
+#, fuzzy
+#| msgctxt "tooltip"
+#| msgid "Synchronizing remote calendars…"
+msgctxt "tooltip"
+msgid "Synchronizing Remote Calendars"
+msgstr "Masofaviy taqvimlar sinxronlanmoqda…"
+
+#: src/gui/gcal-toolbar-end.ui:9
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "Search"
+msgctxt "tooltip"
+msgid "Search"
+msgstr "Qidirish"
+
+#: src/gui/gcal-toolbar-end.ui:16
+#, fuzzy
+#| msgctxt "tooltip"
+#| msgid "Add a new event"
+msgctxt "tooltip"
+msgid "Add Event"
+msgstr "Yangi tadbir qoʼshish"
+
+#: src/gui/gcal-weather-settings.ui:17
+msgid "Show Weather"
+msgstr "Ob-havoni koʼrsatish"
+
+#: src/gui/gcal-weather-settings.ui:34
+msgid "Automatic Location"
+msgstr "Avtomatik joylashuv"
+
+#: src/gui/gcal-weather-settings.ui:46
+#, fuzzy
+#| msgctxt "tooltip"
+#| msgid "Search for events"
+msgid "Search locations"
+msgstr "Tadbirlarni qidirish"
+
+#: src/gui/gcal-window.c:337
+msgid "Week"
+msgstr "Hafta"
+
+#: src/gui/gcal-window.c:339
+msgid "Month"
+msgstr "Oy"
+
+#: src/gui/gcal-window.c:821
+msgid "Another event deleted"
+msgstr "Boshqa tadbir oʻchirilgan"
+
+#: src/gui/gcal-window.c:821
+msgid "Event deleted"
+msgstr "Tadbir oʻchirilgan"
+
+#: src/gui/gcal-window.c:886
+msgid "Could not import some files: Not ICS files"
+msgstr ""
+
+#: src/gui/gcal-window.c:891
+#, c-format
+msgid "Could not import “%s”: Not an ICS file"
+msgstr ""
+
+#: src/gui/gcal-window.ui:123
+msgid "Drop Event Files to Import"
+msgstr ""
+
+#: src/gui/gcal-window.ui:166
+msgid "Main Menu"
+msgstr ""
+
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
+#, fuzzy
+#| msgid "Today"
+msgid "_Today"
+msgstr "Bugun"
+
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+#, fuzzy
+#| msgid "to Today"
+msgid "Go to Today"
+msgstr "bugungacha"
+
+#: src/gui/gcal-window.ui:281
+#, fuzzy
+#| msgid "Week"
+msgid "_Week"
+msgstr "Hafta"
+
+#: src/gui/gcal-window.ui:296
+#, fuzzy
+#| msgid "Month"
+msgid "_Month"
+msgstr "Oy"
+
+#: src/gui/gcal-window.ui:347
+msgid "_Date & Time Settings…"
+msgstr ""
+
+#: src/gui/gcal-window.ui:351
+msgid "_Online Accounts…"
+msgstr "_Onlayn hisoblar…"
+
+#: src/gui/gcal-window.ui:363
+msgid "_Keyboard Shortcuts"
+msgstr "_Klaviatura yorliqlari"
+
+#: src/gui/gcal-window.ui:367
+msgid "_About Calendar"
+msgstr "_Taqvim haqida"
+
+#: src/gui/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Umumiy"
+
+#: src/gui/gtk/help-overlay.ui:14
+#, fuzzy
+#| msgid "Open a File"
+msgctxt "shortcut window"
+msgid "Open Main Menu"
+msgstr "Faylni ochish"
+
+#: src/gui/gtk/help-overlay.ui:20
+#, fuzzy
+#| msgid "New Calendar"
+msgctxt "shortcut window"
+msgid "Open Calendars Menu"
+msgstr "Yangi taqvim"
+
+#: src/gui/gtk/help-overlay.ui:26
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "New event"
+msgctxt "shortcut window"
+msgid "New Event"
+msgstr "Yangi Tadbir"
+
+#: src/gui/gtk/help-overlay.ui:32
+#, fuzzy
+#| msgid "Manage Calendars"
+msgctxt "shortcut window"
+msgid "Manage Calendars"
+msgstr "Taqvimlarni boshqarish"
+
+#: src/gui/gtk/help-overlay.ui:38
+#, fuzzy
+#| msgid "_Synchronize Calendars"
+msgctxt "shortcut window"
+msgid "Synchronize Calendars"
+msgstr "_Taqvimlarni sinxronlash"
+
+#: src/gui/gtk/help-overlay.ui:44
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "Close window"
+msgctxt "shortcut window"
+msgid "Close Window"
+msgstr "Oynani yopish"
+
+#: src/gui/gtk/help-overlay.ui:50
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Qidirish"
+
+#: src/gui/gtk/help-overlay.ui:56
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "Show help"
+msgctxt "shortcut window"
+msgid "Show Help"
+msgstr "Yordamni koʼrsatish"
+
+#: src/gui/gtk/help-overlay.ui:62
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "Yorliqlar"
+
+#: src/gui/gtk/help-overlay.ui:70
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "Navigatsiya"
+
+#: src/gui/gtk/help-overlay.ui:73
+msgctxt "shortcut window"
+msgid "Go Back"
+msgstr ""
+
+#: src/gui/gtk/help-overlay.ui:79
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "Go forward"
+msgctxt "shortcut window"
+msgid "Go Forward"
+msgstr "Oldinga oʼtish"
+
+#: src/gui/gtk/help-overlay.ui:85
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "Show today"
+msgctxt "shortcut window"
+msgid "Show Today"
+msgstr "Bugungi kunni koʼrsatish"
+
+#: src/gui/gtk/help-overlay.ui:91
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "Next view"
+msgctxt "shortcut window"
+msgid "Next View"
+msgstr "Keyingi koʼrinish"
+
+#: src/gui/gtk/help-overlay.ui:97
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "Previous view"
+msgctxt "shortcut window"
+msgid "Previous View"
+msgstr "Oldingi koʼrinish"
+
+#: src/gui/gtk/help-overlay.ui:105
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Koʼrinish"
+
+#: src/gui/gtk/help-overlay.ui:108
+#, fuzzy
+#| msgid "Week view"
+msgctxt "shortcut window"
+msgid "Week View"
+msgstr "Hafta koʼrinishi"
+
+#: src/gui/gtk/help-overlay.ui:114
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "Month view"
+msgctxt "shortcut window"
+msgid "Month View"
+msgstr "Oy koʼrinishi"
+
+#: src/gui/importer/gcal-import-dialog.c:341
+#, c-format
+msgid "Import %d event"
+msgid_plural "Import %d events"
+msgstr[0] "%d ta hodisani import qilish"
+msgstr[1] "%d ta hodisani import qilish"
+
+#: src/gui/importer/gcal-import-dialog.ui:4
+msgid "Import Files…"
+msgstr "Fayllarni import qilish…"
+
+#: src/gui/importer/gcal-import-dialog.ui:28
+msgid "_Import"
+msgstr "_Import qilish"
+
+#: src/gui/importer/gcal-import-dialog.ui:60
+msgid "C_alendar"
+msgstr "_Taqvim"
+
+#: src/gui/importer/gcal-importer.c:34
+msgid "No error"
+msgstr "Xato yoʻq"
+
+#: src/gui/importer/gcal-importer.c:37
+msgid "Bad argument to function"
+msgstr "Funksiya uchun yomon argument"
+
+#: src/gui/importer/gcal-importer.c:41
+msgid "Failed to allocate a new object in memory"
+msgstr "Xotirada yangi ob'ektni ajratib boʼlmadi"
+
+#: src/gui/importer/gcal-importer.c:44
+msgid "File is malformed, invalid, or corrupted"
+msgstr "Fayl notoʼgʼri tuzilgan, yaroqsiz yoki buzilgan"
+
+#: src/gui/importer/gcal-importer.c:47
+msgid "Failed to parse the calendar contents"
+msgstr "Taqvim tarkibini tahlil qilib boʼlmadi"
+
+#: src/gui/importer/gcal-importer.c:50
+msgid "Failed to read file"
+msgstr "Faylni oʼqib boʼlmadi"
+
+#: src/gui/importer/gcal-importer.c:57
+msgid "Internal error"
+msgstr "Ichki xato"
+
+#: src/gui/importer/gcal-importer.c:112
+msgid "File is not an iCalendar (.ics) file"
+msgstr "Fayl iCalendar (.ics) fayli emas"
+
+#: src/gui/importer/gcal-import-file-row.c:178
+msgid "Starts"
+msgstr "Boshlanadi"
+
+#: src/gui/importer/gcal-import-file-row.c:179
+msgid "Ends"
+msgstr "Tugaydi"
+
+#: src/gui/importer/gcal-import-file-row.c:180
+msgid "Description"
+msgstr "Tavsif"
+
+#.
+#. * Translators: %A is the full day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/views/gcal-agenda-view.c:209
+msgid "%A %B %d"
+msgstr ""
+
+#: src/gui/views/gcal-agenda-view.c:414
+msgid "On-going"
+msgstr ""
+
+#: src/gui/views/gcal-agenda-view.ui:22
+#, fuzzy
+#| msgctxt "shortcut window"
+#| msgid "New event"
+msgid "No events"
+msgstr "Yangi Tadbir"
+
+#: src/gui/views/gcal-month-popover.ui:69
+msgid "New Event…"
+msgstr "Yangi tadbir…"
+
+#: src/gui/views/gcal-week-header.c:474
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Boshqa tadbir"
+msgstr[1] "Boshqa %d ta tadbir"
+
+#: src/gui/views/gcal-week-header.c:1006
+#, fuzzy, c-format
+#| msgid "week %d"
+msgid "Week %d"
+msgstr "hafta %d"
+
+#: src/utils/gcal-utils.c:1158
+msgid "Modify Multiple Events?"
+msgstr ""
+
+#: src/utils/gcal-utils.c:1159
+msgid ""
+"The event you are trying to modify is recurring. The changes you have "
+"selected should be applied to:"
+msgstr ""
+"Siz oʼzgartirmoqchi boʼlgan tadbir takrorlanmoqda. Siz tanlagan oʼzgarishlar "
+"quyidagilarga qoʼllanilishi kerak:"
+
+#: src/utils/gcal-utils.c:1163
+msgid "_Only This Event"
+msgstr "_Faqat shu tadbir"
+
+#: src/utils/gcal-utils.c:1169
+#, fuzzy
+#| msgid "_Subsequent events"
+msgid "_Subsequent Events"
+msgstr "_Keyingi tadbirlar"
+
+#: src/utils/gcal-utils.c:1172
+#, fuzzy
+#| msgid "_All events"
+msgid "_All Events"
+msgstr "_Barcha tadbirlar"
+
+#: src/utils/gcal-utils.c:1274
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#: src/utils/gcal-utils.c:1275
+msgid "Jitsi"
+msgstr "Jitsi"
+
+#: src/utils/gcal-utils.c:1276
+msgid "Whereby"
+msgstr "Whereby"
+
+#: src/utils/gcal-utils.c:1277
+msgid "Zoom"
+msgstr "Zoom"
+
+#: src/utils/gcal-utils.c:1278
+msgid "Microsoft Teams"
+msgstr ""
+
+#~ msgid "Calendar for GNOME"
+#~ msgstr "GNOME uchun taqvim"
+
+#~ msgid ""
+#~ "GNOME Calendar is a simple and beautiful calendar application designed to "
+#~ "perfectly fit the GNOME desktop. By reusing the components which the "
+#~ "GNOME desktop is built on, Calendar nicely integrates with the GNOME "
+#~ "ecosystem."
+#~ msgstr ""
+#~ "GNOME taqvimi - bu GNOME ish stoliga toʼliq moslashish uchun "
+#~ "moʼljallangan oddiy va chiroyli taqvim ilovasi. GNOME ish stoli "
+#~ "oʼrnatilgan komponentlardan qayta foydalanish orqali taqvim GNOME "
+#~ "ekotizimiga yaxshi mos tushadi."
+
+#~ msgid ""
+#~ "We aim to find the perfect balance between nicely crafted features and "
+#~ "user-centred usability. No excess, nothing missing. You’ll feel "
+#~ "comfortable using Calendar, like you’ve been using it for ages!"
+#~ msgstr ""
+#~ "Biz yaxshi yaratilgan xususiyatlar va foydalanuvchiga yoʼnaltirilgan "
+#~ "qulaylik oʼrtasidagi mukammal muvozanatni topishni maqsad qilganmiz. "
+#~ "Ortiqcha narsa yoʼq, yetishmaydigan narsa yoʼq. Taqvimdan uzoq vaqtdan "
+#~ "beri foydalanib kelganingizdek, oʼzingizni qulay his qilasiz!"
+
+#~ msgid "Year view"
+#~ msgstr "Yil koʼrinishi"
+
+#~ msgid "Window position"
+#~ msgstr "Oyna joylashuvi"
+
+#~ msgid "Window position (x and y)."
+#~ msgstr "Oyna joylashuvi (x va y)."
+
+#~ msgid "Undo"
+#~ msgstr "Ortga qaytarish"
+
+#~ msgid "Settings"
+#~ msgstr "Sozlamalar"
+
+#~ msgid "Calendar name"
+#~ msgstr "Taqvim nomi"
+
+#~ msgid "Add new events to this calendar by default"
+#~ msgstr "Standart boʼyicha ushbu taqvimga yangi tadbirlar qoʼshish"
+
+#~ msgid "Cancel"
+#~ msgstr "Bekor qilish"
+
+#~ msgid "Open"
+#~ msgstr "Ochish"
+
+#~ msgid "Calendar files"
+#~ msgstr "Taqvim fayllari"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "Shu bilan bir qatorda, import qilmoqchi boʼlgan onlayn taqvimning veb-"
+#~ "manzilini kiriting yoki qoʼllab-quvvatlanadigan taqvim faylini oching."
+
+#~ msgid "Toggles the sound of the alarm"
+#~ msgstr "Signal ovozini oʼzgartiradi"
+
+#~ msgid "Click to select the calendar"
+#~ msgstr "Taqvimni tanlash uchun bosish"
+
+#~ msgid "Schedule"
+#~ msgstr "Reja"
+
+#~ msgid "1 hour"
+#~ msgstr "1 soat"
+
+#~ msgid "1 day"
+#~ msgstr "1 kun"
+
+#~ msgid "2 days"
+#~ msgstr "2 kun"
+
+#~ msgid "3 days"
+#~ msgstr "3 kun"
+
+#~ msgid "1 week"
+#~ msgstr "1 hafta"
+
+#, c-format
+#~ msgid "Last %A"
+#~ msgstr "Oxirgi %A"
+
+#, c-format
+#~ msgid "This %A"
+#~ msgstr "Shu %A"
+
+#~ msgid "No. of occurrences"
+#~ msgstr "Hodisalar soni"
+
+#~ msgid "Unnamed event"
+#~ msgstr "Nomsiz tadbir"
+
+#~ msgid "Edit…"
+#~ msgstr "Tahrirlash…"
+
+#~ msgid "Year"
+#~ msgstr "Yil"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Go back"
+#~ msgstr "Orqaga oʼtish"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Week view"
+#~ msgstr "Hafta koʼrinishi"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Year view"
+#~ msgstr "Yil koʼrinishi"
+
+#~ msgid "00 AM"
+#~ msgstr "00 AM"
+
+#~ msgid "00:00"
+#~ msgstr "00:00"
