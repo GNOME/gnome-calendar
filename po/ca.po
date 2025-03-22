@@ -2,7 +2,7 @@
 # Copyright (C) 2012 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 #
-# Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2024
+# Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2025
 # Gil Forcada Codinachs <gil.gnome@gmail.com>, 2018.
 #
 # N.T.
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2024-09-07 15:48+0000\n"
-"PO-Revision-Date: 2024-09-14 12:10+0200\n"
+"PO-Revision-Date: 2025-03-22 12:10+0200\n"
 "Last-Translator: Jordi Mas i Hernàndez <jmas@softcatala.org>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -922,7 +922,7 @@ msgstr ""
 
 #: src/gui/gcal-event-popover.ui:107
 msgid "No event notes"
-msgstr "Sense notes d'esdeveniment"
+msgstr "No hi ha notes de la cita"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
 #: src/gui/gcal-event-widget.c:369
@@ -1343,7 +1343,7 @@ msgstr "Navegació"
 #: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Go Back"
-msgstr "Torna enrere"
+msgstr "Ves enrere"
 
 #: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
@@ -1510,99 +1510,3 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1321
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
-
-#~ msgid "_Add Calendar…"
-#~ msgstr "_Afegeix un calendari…"
-
-#~ msgid "Select a file"
-#~ msgstr "Selecciona un fitxer"
-
-#~ msgid ""
-#~ "Alternatively, enter the web address of an online calendar you want to "
-#~ "import, or open a supported calendar file."
-#~ msgstr ""
-#~ "Alternativament, introduïu una adreça web d'un calendari en línia que "
-#~ "vulgueu importar, o obriu un fitxer de calendari compatible."
-
-#~ msgid "Open a File"
-#~ msgstr "Obre un fitxer"
-
-#~ msgid "Calendar files"
-#~ msgstr "Fitxers del calendari"
-
-#~ msgid "No event information"
-#~ msgstr "Sense informació de la cita"
-
-#~ msgid "Edit…"
-#~ msgstr "Edita…"
-
-#~ msgid "Calendar for GNOME"
-#~ msgstr "Calendari per al GNOME"
-
-#~ msgid ""
-#~ "GNOME Calendar is a simple and beautiful calendar application designed to "
-#~ "perfectly fit the GNOME desktop. By reusing the components which the "
-#~ "GNOME desktop is built on, Calendar nicely integrates with the GNOME "
-#~ "ecosystem."
-#~ msgstr ""
-#~ "El Calendari del GNOME és una aplicació de calendari simple i bonica "
-#~ "dissenyada per a encaixar perfectament amb l'escriptori GNOME. Gràcies a "
-#~ "la reutilització dels components amb què s'ha construït l'escriptori "
-#~ "GNOME, el Calendari s'integra bé amb l'ecosistema GNOME."
-
-#~ msgid ""
-#~ "We aim to find the perfect balance between nicely crafted features and "
-#~ "user-centred usability. No excess, nothing missing. You’ll feel "
-#~ "comfortable using Calendar, like you’ve been using it for ages!"
-#~ msgstr ""
-#~ "El nostre objectiu és trobar l'equilibri perfecte entre característiques "
-#~ "ben elaborades i usabilitat centrada en l'usuari. Sense excessos ni "
-#~ "mancances. Us trobareu a gust usant el Calendari, com si l'haguéssiu "
-#~ "utilitzat sempre!"
-
-#~ msgid "Toggles the sound of the alarm"
-#~ msgstr "Commuta el so de l'alarma"
-
-#~ msgid "Click to select the calendar"
-#~ msgstr "Feu clic per a seleccionar el calendari"
-
-#~ msgid "1 hour"
-#~ msgstr "1 hora"
-
-#~ msgid "1 day"
-#~ msgstr "1 dia"
-
-#~ msgid "2 days"
-#~ msgstr "2 dies"
-
-#~ msgid "3 days"
-#~ msgstr "3 dies"
-
-#~ msgid "1 week"
-#~ msgstr "1 setmana"
-
-#~ msgid "No. of occurrences"
-#~ msgstr "Nombre d'ocurrències"
-
-#~ msgid "Unnamed event"
-#~ msgstr "Cita sense nom"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Manage calendars"
-#~ msgstr "Gestiona els calendaris"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Synchronize calendars"
-#~ msgstr "Sincronitza els calendaris"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Go back"
-#~ msgstr "Ves enrere"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Week view"
-#~ msgstr "Vista setmanal"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Month view"
-#~ msgstr "Vista mensual"
