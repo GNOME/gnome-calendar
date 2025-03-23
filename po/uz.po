@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-03-19 23:03+0000\n"
-"PO-Revision-Date: 2022-03-16 15:09+0500\n"
+"POT-Creation-Date: 2025-03-22 22:02+0000\n"
+"PO-Revision-Date: 2025-03-23 21:37+0500\n"
 "Last-Translator: Umidjon Almasov <umidjon@almasov.uz>\n"
 "Language-Team: Uzbek\n"
 "Language: uz\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.5\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
@@ -72,15 +72,13 @@ msgstr ""
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Zoom level of the week grid"
-msgstr ""
+msgstr "Hafta panjarasining kattalashtirish darajasi"
 
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid "The current zoom level of the week grid"
-msgstr ""
+msgstr "Hafta panjarasining joriy kattalashtirish darajasi"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
-#, fuzzy
-#| msgid "Manage your calendars"
 msgid "Manage your schedule"
 msgstr "Taqvimlaringizni boshqaring"
 
@@ -91,6 +89,10 @@ msgid ""
 "meetings and appointments, public events, travel logistics, or other "
 "commitments in your life."
 msgstr ""
+"GNOME Taqvimi - bu sizning oylaringiz uchrashuvlar va uchrashuvlar, ommaviy "
+"tadbirlar, sayohat logistikasi yoki hayotingizdagi boshqa majburiyatlarga "
+"to’la bo’ladimi, kelgusi kunlar va haftalar uchun rejalaringizni "
+"rejalashtirishga yordam beradigan ajoyib vositadir."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:22
 msgid ""
@@ -98,6 +100,9 @@ msgid ""
 "Calendar's infinite scrolling month view, week timetable, and scheduling "
 "list view."
 msgstr ""
+"GNOME Taqvimning cheksiz aylanuvchi oy koʻrinishi, hafta jadvali va "
+"rejalashtirish roʻyxati koʻrinishida cheksiz kalendar va tadbirlarni "
+"osongina yarating va boshqaring."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
 msgid ""
@@ -110,23 +115,28 @@ msgid ""
 "supports local and offline calendaring, so you can use it anywhere and "
 "anytime while travelling (or after civilization's collapse.)"
 msgstr ""
+"Eng soʻnggi GNOME texnologiyalari va dizayndagi ilgʻor tajribalarni "
+"birlashtirgan holda, GNOME Taqvimi katta hajmdagi voqealarni boshqarish va "
+"boshqa ilovalar bilan integratsiyani taʼminlash uchun yetuk Evolution "
+"maʼlumotlar serveri ustiga quradi. Siz turli xil onlayn kalendar "
+"xizmatlaridan (masalan, NextCloud, Google Calendar va CalDAV / WebDAV "
+"serverlari) taqvimlarni qo’shishingiz mumkin, bu sizga tadbirlaringizni bir "
+"nechta qurilmalar va platformalarda sinxronlashtirish imkonini beradi. GNOME "
+"Taqvimi mahalliy va oflayn taqvimni ham qoʻllab-quvvatlaydi, shuning uchun "
+"siz undan istalgan joyda va istalgan vaqtda sayohat paytida (yoki "
+"tsivilizatsiya qulagandan keyin) foydalanishingiz mumkin."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
 msgid "Week view"
 msgstr "Hafta koʼrinishi"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Month view"
 msgid "Month view"
-msgstr "Oy koʼrinishi"
+msgstr "Oy ko'rinishi"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
-#, fuzzy
-#| msgid "Event deleted"
 msgid "Event editor"
-msgstr "Tadbir oʻchirilgan"
+msgstr "Tadbir muharriri"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
@@ -152,22 +162,16 @@ msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
 #: src/gui/calendar-management/calendar-row.ui:19
-#, fuzzy
-#| msgid "Remove Calendar"
 msgid "Read-Only Calendar"
-msgstr "Taqvimni olib tashlash"
+msgstr "Faqat o’qish uchun kalendar"
 
 #: src/gui/calendar-management/calendar-row.ui:29
-#, fuzzy
-#| msgid "Display calendar"
 msgid "Display Calendar"
 msgstr "Taqvimni koʼrsatish"
 
 #: src/gui/calendar-management/calendar-row.ui:39
-#, fuzzy
-#| msgid "Display calendar"
 msgid "Edit calendar"
-msgstr "Taqvimni koʼrsatish"
+msgstr "Kalendarni tahrirlash"
 
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
@@ -176,10 +180,9 @@ msgstr "Taqvim sozlashlari"
 #. Create the new toast
 #. TRANSLATORS: %s is a calendar name.
 #: src/gui/calendar-management/gcal-calendars-page.c:358
-#, fuzzy, c-format
-#| msgid "Calendar <b>%s</b> removed"
+#, c-format
 msgid "Calendar “%s” removed"
-msgstr "<b>%s</b> taqvimi olib tashlangan"
+msgstr "“%s” taqvimi olib tashlandi"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:363
 #: src/gui/gcal-window.c:823
@@ -192,16 +195,12 @@ msgid "Calendars"
 msgstr "Taqvimlar"
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:67
-#, fuzzy
-#| msgid "Add Calendar…"
 msgid "_Add Calendar"
-msgstr "Taqvim qoʼshish…"
+msgstr "_Taqvim qo’shish"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:189
-#, fuzzy
-#| msgid "Calendar"
 msgid "Calendar URL"
-msgstr "Taqvim"
+msgstr "Taqvim URL manzili"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:207
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
@@ -213,23 +212,19 @@ msgstr "Joylashuv"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:208
 msgid "On This Computer"
-msgstr ""
+msgstr "Bu Kompyuterda"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:4
-#, fuzzy
-#| msgid "Calendar"
 msgid "Edit Calendar"
-msgstr "Taqvim"
+msgstr "Kalendarni tahrirlash"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:34
 msgid "Account"
 msgstr "Hisob"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:42
-#, fuzzy
-#| msgid "Calendar Settings"
 msgid "Open in Settings"
-msgstr "Taqvim sozlashlari"
+msgstr "Sozlamalarda oching"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:28
@@ -242,60 +237,55 @@ msgid "Color"
 msgstr "Rang"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:110
-#, fuzzy
-#| msgid "Display calendar"
 msgid "_Display Calendar"
-msgstr "Taqvimni koʼrsatish"
+msgstr "_Taqvimni ko’rsatish"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:124
-#, fuzzy
-#| msgid "Remove Calendar"
 msgid "_Remove Calendar"
-msgstr "Taqvimni olib tashlash"
+msgstr "_Taqvimni oʻchirish"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:117
-#, fuzzy, c-format
-#| msgid "Add Calendar…"
+#, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
-msgstr[0] "Taqvim qoʼshish…"
-msgstr[1] "Taqvim qoʼshish…"
+msgstr[0] "Taqvim qo’shish"
+msgstr[1] "%1$u taqvim qo‘shing"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:124
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:160
-#, fuzzy
-#| msgid "Add Calendar…"
 msgctxt "button"
 msgid "Add Calendar"
-msgstr "Taqvim qoʼshish…"
+msgstr "Taqvim qoʼshish"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:332
 msgid "The URL you have entered appears to be invalid."
-msgstr ""
+msgstr "Siz kiritgan URL noto‘g‘ri ko‘rinadi."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:385
 msgid "A valid user and password are required to connect to this calendar."
 msgstr ""
+"Ushbu kalendarga ulanish uchun haqiqiy foydalanuvchi va parol talab qilinadi."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
 msgstr "Yangi taqvim"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:23
-#, fuzzy
-#| msgid "Import a Calendar"
 msgid "Create a Local Calendar"
-msgstr "Taqvimni import qilish"
+msgstr "Mahalliy kalendar yarating"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:60
 msgid "Connect to an Online Calendar"
-msgstr ""
+msgstr "Onlayn kalendarga ulaning"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
 "HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
 "be updated by the provider will be added as read-only."
 msgstr ""
+"HTTPS, CalDAV yoki Webcal URL manzillari qo’llab-quvvatlanadi. Faqat "
+"provayder tomonidan yangilanishi mumkin bo’lgan onlayn kalendarlar faqat "
+"o’qish uchun qo’shiladi."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
@@ -307,7 +297,7 @@ msgstr ""
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
-msgstr ""
+msgstr "Hisob ma’lumotlari"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
@@ -324,10 +314,8 @@ msgid "_Cancel"
 msgstr "_Bekor qilish"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:208
-#, fuzzy
-#| msgid "Connect"
 msgid "_Connect"
-msgstr "Ulanish"
+msgstr "_Ulanish"
 
 #: src/gui/event-editor/gcal-alarm-row.c:85
 #, c-format
@@ -426,11 +414,9 @@ msgstr "Tadbir boshlanish vaqti"
 
 #: src/gui/event-editor/gcal-alarm-row.ui:8
 msgid "Toggle Alarm Sound"
-msgstr ""
+msgstr "Signal tovushini oʻzgartirish"
 
 #: src/gui/event-editor/gcal-alarm-row.ui:20
-#, fuzzy
-#| msgid "Remove the alarm"
 msgid "Remove Alarm"
 msgstr "Signalni olib tashlash"
 
@@ -445,64 +431,59 @@ msgstr "Signalni olib tashlash"
 #: src/gui/event-editor/gcal-date-chooser.c:272
 msgctxt "grid sunday"
 msgid "S"
-msgstr ""
+msgstr "YA"
 
 #. Translators: Calendar grid abbreviation for Monday
 #: src/gui/event-editor/gcal-date-chooser.c:277
-#, fuzzy
-#| msgid "AM"
 msgctxt "grid monday"
 msgid "M"
-msgstr "AM"
+msgstr "DU"
 
 #. Translators: Calendar grid abbreviation for Tuesday
 #: src/gui/event-editor/gcal-date-chooser.c:282
 msgctxt "grid tuesday"
 msgid "T"
-msgstr ""
+msgstr "SE"
 
 #. Translators: Calendar grid abbreviation for Wednesday
 #: src/gui/event-editor/gcal-date-chooser.c:287
 msgctxt "grid wednesday"
 msgid "W"
-msgstr ""
+msgstr "CH"
 
 #. Translators: Calendar grid abbreviation for Thursday
 #: src/gui/event-editor/gcal-date-chooser.c:292
 msgctxt "grid thursday"
 msgid "T"
-msgstr ""
+msgstr "PA"
 
 #. Translators: Calendar grid abbreviation for Friday
 #: src/gui/event-editor/gcal-date-chooser.c:297
 msgctxt "grid friday"
 msgid "F"
-msgstr ""
+msgstr "JU"
 
 #. Translators: Calendar grid abbreviation for Saturday
 #: src/gui/event-editor/gcal-date-chooser.c:302
 msgctxt "grid saturday"
 msgid "S"
-msgstr ""
+msgstr "SH"
 
 #: src/gui/event-editor/gcal-date-chooser-row.ui:15
-#, fuzzy
-#| msgid "End Repeat Date"
 msgid "Edit Date"
-msgstr "Takrorlashni tugatish sanasi"
+msgstr "Tahrirlash sanasi"
 
 #: src/gui/event-editor/gcal-date-chooser-row.ui:38
 msgid "Edit date"
-msgstr ""
+msgstr "Tahrirlash sanasi"
 
 #. Translators: "%1$s" is the timezone identifier (e.g. UTC, America/Sao_Paulo)
 #. * and "%2$s" is the timezone offset (e.g. UTC-3).
 #.
 #: src/gui/event-editor/gcal-date-time-chooser.c:141
-#, fuzzy, c-format
-#| msgid "%1$s, %2$s"
+#, c-format
 msgid "%1$s (%2$s)"
-msgstr "%1$s, %2$s"
+msgstr "%1$s (%2$s)"
 
 #: src/gui/event-editor/gcal-date-time-chooser.c:205
 #: src/gui/event-editor/gcal-date-time-chooser.c:270
@@ -519,16 +500,16 @@ msgstr "PM"
 
 #: src/gui/event-editor/gcal-date-time-chooser.ui:7
 msgid "Date"
-msgstr ""
+msgstr "Sana"
 
 #: src/gui/event-editor/gcal-date-time-chooser.ui:14
 msgid "Time"
-msgstr ""
+msgstr "Vaqt"
 
 #: src/gui/event-editor/gcal-date-time-chooser.ui:26
 #: src/gui/event-editor/gcal-time-chooser-row.ui:15
 msgid "Edit Time"
-msgstr ""
+msgstr "Vaqtni tahrirlash"
 
 #: src/gui/event-editor/gcal-date-time-chooser.ui:65
 msgid ":"
@@ -537,48 +518,39 @@ msgstr ":"
 #: src/gui/event-editor/gcal-date-time-chooser.ui:109
 #: src/gui/event-editor/gcal-date-time-chooser.ui:120
 msgid "Change Timezone"
-msgstr ""
+msgstr "Vaqt mintaqasini o’zgartirish"
 
 #: src/gui/event-editor/gcal-date-time-chooser.ui:133
 #: src/gui/event-editor/gcal-time-chooser-row.ui:35
 msgid "Edit time"
-msgstr ""
+msgstr "Vaqtni tahrirlash"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:120
-#, fuzzy
-#| msgid "Save"
 msgid "_Save"
-msgstr "Saqlash"
+msgstr "_Saqlash"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:120
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:23
-#, fuzzy
-#| msgid "Done"
 msgid "_Done"
-msgstr "Bajarilgan"
+msgstr "_Bajarilgan"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:688
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "New event"
 msgid "New Event"
 msgstr "Yangi Tadbir"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:690
-#, fuzzy
-#| msgid "Edit Details…"
 msgid "Event Details"
-msgstr "Tafsilotlarni tahrirlash…"
+msgstr "Tadbir tafsilotlari"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:692
-#, fuzzy
-#| msgid "Delete Event"
 msgid "Edit Event"
-msgstr "Tadbirni oʼchirish"
+msgstr "Tadbirni tahrirlash"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:37
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr ""
+"Bu tadbir faqat oʻqish uchun taqvimga kiritilgan. Uni tahrirlash yoki "
+"oʻchirib boʻlmaydi."
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:81
 msgid "Reminders"
@@ -593,102 +565,74 @@ msgid "Delete Event"
 msgstr "Tadbirni oʼchirish"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:17
-#, fuzzy
-#| msgid "Add a Reminder…"
 msgid "Add Reminder"
-msgstr "Eslatma qoʼshish…"
+msgstr "Eslatma qoʼshish"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:41
-#, fuzzy
-#| msgid "Event start time"
 msgid "Event start"
 msgstr "Tadbir boshlanish vaqti"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:47
-#, fuzzy
-#| msgid "5 minutes"
 msgid "5 Minutes"
 msgstr "5 daqiqa"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:53
-#, fuzzy
-#| msgid "10 minutes"
 msgid "10 Minutes"
 msgstr "10 daqiqa"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:59
-#, fuzzy
-#| msgid "15 minutes"
 msgid "15 Minutes"
 msgstr "15 daqiqa"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:65
-#, fuzzy
-#| msgid "30 minutes"
 msgid "30 Minutes"
 msgstr "30 daqiqa"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:71
 msgid "1 Hour"
-msgstr ""
+msgstr "1 soat"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:77
-#, fuzzy
-#| msgid "All Day"
 msgid "1 Day"
-msgstr "Kun davomida"
+msgstr "1 kun"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:83
-#, fuzzy
-#| msgid "All Day"
 msgid "2 Days"
-msgstr "Kun davomida"
+msgstr "2 kun"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:89
-#, fuzzy
-#| msgid "All Day"
 msgid "3 Days"
-msgstr "Kun davomida"
+msgstr "3 kun"
 
 #: src/gui/event-editor/gcal-reminders-section.ui:95
-#, fuzzy
-#| msgid "Week"
 msgid "1 Week"
-msgstr "Hafta"
+msgstr "1 Hafta"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:13
-#, fuzzy
-#| msgid "All Day"
 msgid "_All Day"
-msgstr "Kun davomida"
+msgstr "_Kun davomida"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:20
 msgid "_Time Slot"
-msgstr ""
+msgstr "_Vaqt oralig’i"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:33
 #: src/gui/event-editor/gcal-schedule-section.ui:54
-#, fuzzy
-#| msgid "Starts"
 msgid "Start Date"
-msgstr "Boshlanadi"
+msgstr "Boshlanish sanasi"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:45
 #: src/gui/event-editor/gcal-schedule-section.ui:62
-#, fuzzy
-#| msgid "End Repeat Date"
 msgid "End Date"
-msgstr "Takrorlashni tugatish sanasi"
+msgstr "Tugash sanasi"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:55
-#, fuzzy
-#| msgid "Starts"
 msgid "Start Time"
-msgstr "Boshlanadi"
+msgstr "Boshlanish vaqti"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:63
 msgid "End Time"
-msgstr ""
+msgstr "Tugash vaqti"
 
 #: src/gui/event-editor/gcal-schedule-section.ui:75
 msgid "Repeat"
@@ -753,23 +697,16 @@ msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
 #: src/gui/event-editor/gcal-time-zone-dialog.ui:4
-#, fuzzy
-#| msgid "Select a file"
 msgid "Select Timezone"
-msgstr "Faylni tanlash"
+msgstr "Vaqt mintaqasini tanlang"
 
 #: src/gui/event-editor/gcal-time-zone-dialog.ui:16
-#, fuzzy
-#| msgid "Location"
 msgid "Search Locations"
-msgstr "Joylashuv"
+msgstr "Joylarni qidirish"
 
 #: src/gui/event-editor/gcal-time-zone-dialog.ui:31
-#, fuzzy
-#| msgctxt "tooltip"
-#| msgid "Search for events"
 msgid "Search for a Timezone"
-msgstr "Tadbirlarni qidirish"
+msgstr "Vaqt mintaqasini qidiring"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
@@ -798,7 +735,7 @@ msgstr "Mualliflik huquqi © 2012–%d Taqvim mualliflari"
 
 #: src/gui/gcal-application.c:239
 msgid "translator-credits"
-msgstr "Umidjon Almasov <umidjon@almasov.uz>, 2022"
+msgstr "tarjimonlarga minnatdorchilik"
 
 #: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
 msgid "Weather"
@@ -809,26 +746,20 @@ msgid "Manage Calendars"
 msgstr "Taqvimlarni boshqarish"
 
 #: src/gui/gcal-calendar-button.ui:8
-#, fuzzy
-#| msgid "Calendars"
 msgid "_Calendars"
-msgstr "Taqvimlar"
+msgstr "_Taqvimlar"
 
 #: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
 msgstr "_Taqvimlarni sinxronlash"
 
 #: src/gui/gcal-calendar-button.ui:41
-#, fuzzy
-#| msgid "Manage Calendars…"
 msgid "_Manage Calendars…"
-msgstr "Taqvimlarni boshqarish…"
+msgstr "_Taqvimlarni boshqarish…"
 
 #: src/gui/gcal-calendar-combo-row-item.c:70
-#, fuzzy
-#| msgid "%s (this calendar is read-only)"
 msgid "This calendar is hidden"
-msgstr "%s (bu taqvim faqat oʼqish uchun)"
+msgstr "Bu kalendar yashirin"
 
 #: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
@@ -999,23 +930,21 @@ msgstr "%1$s %2$d, %3$d, %4$s – %5$s"
 
 #: src/gui/gcal-event-popover.c:369
 msgid "View Additional Details"
-msgstr ""
+msgstr "Qo’shimcha ma’lumotlarni ko’rish"
 
 #: src/gui/gcal-event-popover.c:374
-#, fuzzy
-#| msgid "Edit Details…"
 msgid "Edit Additional Details"
-msgstr "Tafsilotlarni tahrirlash…"
+msgstr "Tafsilotlarni tahrirlash"
 
 #: src/gui/gcal-event-popover.ui:66
 msgid ""
 "<b>This event is part of a read-only calendar</b>\n"
 "    You cannot delete or change this event."
 msgstr ""
+"<b>Bu tadbir faqat oʻqish uchun moʻljallangan taqvimning bir qismidir</b>\n"
+" Siz bu hodisani oʻchira olmaysiz yoki oʻzgartira olmaysiz."
 
 #: src/gui/gcal-event-popover.ui:107
-#, fuzzy
-#| msgid "No event information"
 msgid "No event notes"
 msgstr "Tadbir haqida ma'lumot yoʼq"
 
@@ -1027,17 +956,22 @@ msgid ""
 "\n"
 "On %s"
 msgstr ""
+"\n"
+"\n"
+"%s da"
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
 #: src/gui/gcal-event-widget.c:394 src/gui/gcal-event-widget.c:400
-#, fuzzy, c-format
-#| msgid "At %s"
+#, c-format
 msgid ""
 "\n"
 "\n"
 "At %s"
-msgstr "%s da"
+msgstr ""
+"\n"
+"\n"
+"%s da"
 
 #.
 #. * Translators: %a is the abbreviated day name, %B is the month name
@@ -1047,7 +981,7 @@ msgstr "%s da"
 #.
 #: src/gui/gcal-event-widget.c:459
 msgid "%a %B %d"
-msgstr ""
+msgstr "%a %B %d"
 
 #: src/gui/gcal-meeting-row.c:72
 msgid "Unknown Service"
@@ -1055,10 +989,8 @@ msgstr "Noma'lum xizmat"
 
 #. Translators: "Join" as in "Join meeting"
 #: src/gui/gcal-meeting-row.ui:41
-#, fuzzy
-#| msgid "Join"
 msgid "_Join"
-msgstr "Qoʼshilish"
+msgstr "_Qoʼshilish"
 
 #: src/gui/gcal-quick-add-popover.c:116
 #, c-format
@@ -1288,39 +1220,24 @@ msgid "Add"
 msgstr "Qoʼshish"
 
 #: src/gui/gcal-search-button.ui:29
-#, fuzzy
-#| msgctxt "tooltip"
-#| msgid "Search for events"
 msgid "Search Events"
 msgstr "Tadbirlarni qidirish"
 
 #: src/gui/gcal-search-button.ui:54
-#, fuzzy
-#| msgctxt "tooltip"
-#| msgid "Search for events"
 msgid "Search events"
 msgstr "Tadbirlarni qidirish"
 
 #: src/gui/gcal-sync-indicator.ui:21
-#, fuzzy
-#| msgctxt "tooltip"
-#| msgid "Synchronizing remote calendars…"
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars"
-msgstr "Masofaviy taqvimlar sinxronlanmoqda…"
+msgstr "Masofaviy taqvimlar sinxronlanmoqda"
 
 #: src/gui/gcal-toolbar-end.ui:9
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Search"
 msgctxt "tooltip"
 msgid "Search"
 msgstr "Qidirish"
 
 #: src/gui/gcal-toolbar-end.ui:16
-#, fuzzy
-#| msgctxt "tooltip"
-#| msgid "Add a new event"
 msgctxt "tooltip"
 msgid "Add Event"
 msgstr "Yangi tadbir qoʼshish"
@@ -1334,11 +1251,8 @@ msgid "Automatic Location"
 msgstr "Avtomatik joylashuv"
 
 #: src/gui/gcal-weather-settings.ui:46
-#, fuzzy
-#| msgctxt "tooltip"
-#| msgid "Search for events"
 msgid "Search locations"
-msgstr "Tadbirlarni qidirish"
+msgstr "Qo’shimcha ma’lumotlarni ko’rish"
 
 #: src/gui/gcal-window.c:337
 msgid "Week"
@@ -1358,48 +1272,40 @@ msgstr "Tadbir oʻchirilgan"
 
 #: src/gui/gcal-window.c:886
 msgid "Could not import some files: Not ICS files"
-msgstr ""
+msgstr "Ayrim fayllarni import qilib bo‘lmadi: ICS fayllari emas"
 
 #: src/gui/gcal-window.c:891
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
-msgstr ""
+msgstr "“%s” import qilinmadi: ICS fayli emas"
 
 #: src/gui/gcal-window.ui:123
 msgid "Drop Event Files to Import"
-msgstr ""
+msgstr "Hodisa fayllarini import qilish uchun qoldiring"
 
 #: src/gui/gcal-window.ui:166
 msgid "Main Menu"
-msgstr ""
+msgstr "Asosiy menyu"
 
 #: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
-#, fuzzy
-#| msgid "Today"
 msgid "_Today"
-msgstr "Bugun"
+msgstr "_Bugun"
 
 #: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
-#, fuzzy
-#| msgid "to Today"
 msgid "Go to Today"
-msgstr "bugungacha"
+msgstr "Bugunga o’ting"
 
 #: src/gui/gcal-window.ui:281
-#, fuzzy
-#| msgid "Week"
 msgid "_Week"
-msgstr "Hafta"
+msgstr "_Hafta"
 
 #: src/gui/gcal-window.ui:296
-#, fuzzy
-#| msgid "Month"
 msgid "_Month"
-msgstr "Oy"
+msgstr "_Oy"
 
 #: src/gui/gcal-window.ui:347
 msgid "_Date & Time Settings…"
-msgstr ""
+msgstr "_Sana va vaqt sozlamalari…"
 
 #: src/gui/gcal-window.ui:351
 msgid "_Online Accounts…"
@@ -1419,45 +1325,31 @@ msgid "General"
 msgstr "Umumiy"
 
 #: src/gui/gtk/help-overlay.ui:14
-#, fuzzy
-#| msgid "Open a File"
 msgctxt "shortcut window"
 msgid "Open Main Menu"
-msgstr "Faylni ochish"
+msgstr "Asosiy menyuni oching"
 
 #: src/gui/gtk/help-overlay.ui:20
-#, fuzzy
-#| msgid "New Calendar"
 msgctxt "shortcut window"
 msgid "Open Calendars Menu"
-msgstr "Yangi taqvim"
+msgstr "Kalendarlar menyusini oching"
 
 #: src/gui/gtk/help-overlay.ui:26
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "New event"
 msgctxt "shortcut window"
 msgid "New Event"
 msgstr "Yangi Tadbir"
 
 #: src/gui/gtk/help-overlay.ui:32
-#, fuzzy
-#| msgid "Manage Calendars"
 msgctxt "shortcut window"
 msgid "Manage Calendars"
 msgstr "Taqvimlarni boshqarish"
 
 #: src/gui/gtk/help-overlay.ui:38
-#, fuzzy
-#| msgid "_Synchronize Calendars"
 msgctxt "shortcut window"
 msgid "Synchronize Calendars"
 msgstr "_Taqvimlarni sinxronlash"
 
 #: src/gui/gtk/help-overlay.ui:44
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Close window"
 msgctxt "shortcut window"
 msgid "Close Window"
 msgstr "Oynani yopish"
@@ -1468,9 +1360,6 @@ msgid "Search"
 msgstr "Qidirish"
 
 #: src/gui/gtk/help-overlay.ui:56
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Show help"
 msgctxt "shortcut window"
 msgid "Show Help"
 msgstr "Yordamni koʼrsatish"
@@ -1488,36 +1377,24 @@ msgstr "Navigatsiya"
 #: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Go Back"
-msgstr ""
+msgstr "Ortga qaytish"
 
 #: src/gui/gtk/help-overlay.ui:79
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Go forward"
 msgctxt "shortcut window"
 msgid "Go Forward"
 msgstr "Oldinga oʼtish"
 
 #: src/gui/gtk/help-overlay.ui:85
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Show today"
 msgctxt "shortcut window"
 msgid "Show Today"
 msgstr "Bugungi kunni koʼrsatish"
 
 #: src/gui/gtk/help-overlay.ui:91
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Next view"
 msgctxt "shortcut window"
 msgid "Next View"
 msgstr "Keyingi koʼrinish"
 
 #: src/gui/gtk/help-overlay.ui:97
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Previous view"
 msgctxt "shortcut window"
 msgid "Previous View"
 msgstr "Oldingi koʼrinish"
@@ -1528,16 +1405,11 @@ msgid "View"
 msgstr "Koʼrinish"
 
 #: src/gui/gtk/help-overlay.ui:108
-#, fuzzy
-#| msgid "Week view"
 msgctxt "shortcut window"
 msgid "Week View"
 msgstr "Hafta koʼrinishi"
 
 #: src/gui/gtk/help-overlay.ui:114
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Month view"
 msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Oy koʼrinishi"
@@ -1613,18 +1485,15 @@ msgstr "Tavsif"
 #.
 #: src/gui/views/gcal-agenda-view.c:209
 msgid "%A %B %d"
-msgstr ""
+msgstr "%A %B %d"
 
 #: src/gui/views/gcal-agenda-view.c:414
 msgid "On-going"
-msgstr ""
+msgstr "Davom etmoqda"
 
 #: src/gui/views/gcal-agenda-view.ui:22
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "New event"
 msgid "No events"
-msgstr "Yangi Tadbir"
+msgstr "Tadbir yo’q"
 
 #: src/gui/views/gcal-month-popover.ui:69
 msgid "New Event…"
@@ -1638,14 +1507,13 @@ msgstr[0] "Boshqa tadbir"
 msgstr[1] "Boshqa %d ta tadbir"
 
 #: src/gui/views/gcal-week-header.c:1006
-#, fuzzy, c-format
-#| msgid "week %d"
+#, c-format
 msgid "Week %d"
-msgstr "hafta %d"
+msgstr "Hafta %d"
 
 #: src/utils/gcal-utils.c:1158
 msgid "Modify Multiple Events?"
-msgstr ""
+msgstr "Bir nechta hodisalar o’zgartirilsinmi?"
 
 #: src/utils/gcal-utils.c:1159
 msgid ""
@@ -1660,14 +1528,10 @@ msgid "_Only This Event"
 msgstr "_Faqat shu tadbir"
 
 #: src/utils/gcal-utils.c:1169
-#, fuzzy
-#| msgid "_Subsequent events"
 msgid "_Subsequent Events"
 msgstr "_Keyingi tadbirlar"
 
 #: src/utils/gcal-utils.c:1172
-#, fuzzy
-#| msgid "_All events"
 msgid "_All Events"
 msgstr "_Barcha tadbirlar"
 
@@ -1689,7 +1553,7 @@ msgstr "Zoom"
 
 #: src/utils/gcal-utils.c:1278
 msgid "Microsoft Teams"
-msgstr ""
+msgstr "Microsoft Teams"
 
 #~ msgid "Calendar for GNOME"
 #~ msgstr "GNOME uchun taqvim"
