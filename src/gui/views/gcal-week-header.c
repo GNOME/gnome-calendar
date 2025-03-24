@@ -104,8 +104,10 @@ struct _GcalWeekHeader
 
   GDateTime          *active_date;
 
-  gint                selection_start;
-  gint                selection_end;
+  struct {
+    gint              start;
+    gint              end;
+  } selection;
   gint                dnd_cell;
 
   /* Array of nullable weather infos for each day, starting with Sunday. */
@@ -262,8 +264,8 @@ on_button_pressed (GtkGestureClick *click_gesture,
   column_width = width / 7.0;
   column = ltr ? (x / column_width) : (7  - x / column_width);
 
-  self->selection_start = column;
-  self->selection_end = column;
+  self->selection.start = column;
+  self->selection.end = column;
 
   gtk_widget_queue_draw (GTK_WIDGET (self));
 
@@ -287,7 +289,7 @@ on_motion_notify (GtkEventControllerMotion *motion_event,
   column_width = width / 7.0;
   column = ltr ? (x / column_width) : (7  - x / column_width);
 
-  self->selection_end = column;
+  self->selection.end = column;
 
   gtk_widget_queue_draw (GTK_WIDGET (self));
 }
@@ -317,15 +319,15 @@ on_button_released (GtkGestureClick *click_gesture,
   column_width = width / 7.0;
   column = ltr ? (x / column_width) : (7  - x / column_width);
 
-  self->selection_end = column;
+  self->selection.end = column;
 
   gtk_widget_queue_draw (GTK_WIDGET (self));
 
   /* Fake the week view's event so we can control the X and Y values */
   weekview = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_WEEK_VIEW);
 
-  start = self->selection_start;
-  end = self->selection_end;
+  start = self->selection.start;
+  end = self->selection.end;
 
   if (start > end)
     {
@@ -1410,14 +1412,14 @@ gcal_week_header_snapshot (GtkWidget   *widget,
     }
 
   /* Draw the selection background */
-  if (self->selection_start != -1 && self->selection_end != -1)
+  if (self->selection.start != -1 && self->selection.end != -1)
     {
       gint selection_width;
       gint selection_x;
       gint start, end;
 
-      start = self->selection_start;
-      end = self->selection_end;
+      start = self->selection.start;
+      end = self->selection.end;
 
       if (start > end)
         {
@@ -1547,8 +1549,8 @@ gcal_week_header_init (GcalWeekHeader *self)
   gint i;
 
   self->expanded = FALSE;
-  self->selection_start = -1;
-  self->selection_end = -1;
+  self->selection.start = -1;
+  self->selection.end = -1;
   self->dnd_cell = -1;
   self->first_weekday = get_first_weekday ();
 
@@ -1783,8 +1785,8 @@ gcal_week_header_clear_marks (GcalWeekHeader *self)
 {
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
 
-  self->selection_start = -1;
-  self->selection_end = -1;
+  self->selection.start = -1;
+  self->selection.end = -1;
 
   gtk_widget_queue_draw (GTK_WIDGET (self));
 }
