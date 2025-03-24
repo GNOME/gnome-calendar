@@ -1,65 +1,44 @@
 <?xml version="1.0"?>
 <interface>
   <template class="GcalWeekHeader" parent="GtkBox">
-    <property name="hexpand">True</property>
-    <property name="vexpand">False</property>
-    <property name="orientation">vertical</property>
-    <style>
-      <class name="week-header" />
-    </style>
-    <child>
-      <object class="GtkBox" id="header_labels_box">
-        <property name="orientation">horizontal</property>
-        <child>
-          <object class="GtkLabel" id="month_label">
-            <property name="label">Month</property>
-            <property name="yalign">0</property>
-            <property name="ellipsize">end</property>
-            <style>
-              <class name="primary-label" />
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="week_label">
-            <property name="hexpand">True</property>
-            <property name="xalign">0</property>
-            <property name="yalign">0</property>
-            <property name="label">Week</property>
-            <style>
-              <class name="secondary-label" />
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="year_label">
-            <property name="label">Year</property>
-            <property name="yalign">0</property>
-            <style>
-              <class name="secondary-label" />
-            </style>
-          </object>
-        </child>
-      </object>
-    </child>
     <child>
       <object class="GtkBox">
-        <property name="orientation">horizontal</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">False</property>
+        <property name="orientation">vertical</property>
+        <style>
+          <class name="week-header" />
+        </style>
         <child>
-          <object class="GtkBox" id="expand_button_box">
-            <property name="hexpand">False</property>
+          <object class="GtkBox" id="header_labels_box">
+            <property name="orientation">horizontal</property>
             <child>
-              <object class="GtkButton" id="expand_button">
-                <property name="visible">False</property>
-                <property name="hexpand">True</property>
-                <property name="halign">center</property>
-                <property name="valign">end</property>
-                <property name="margin-bottom">6</property>
-                <property name="icon_name">go-down-symbolic</property>
-                <signal name="clicked" handler="on_expand_action_activated" object="GcalWeekHeader" swapped="yes"/>
+              <object class="GtkLabel" id="month_label">
+                <property name="label">Month</property>
+                <property name="yalign">0</property>
+                <property name="ellipsize">end</property>
                 <style>
-                  <class name="flat" />
-                  <class name="circular" />
+                  <class name="primary-label" />
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="week_label">
+                <property name="hexpand">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label">Week</property>
+                <style>
+                  <class name="secondary-label" />
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="year_label">
+                <property name="label">Year</property>
+                <property name="yalign">0</property>
+                <style>
+                  <class name="secondary-label" />
                 </style>
               </object>
             </child>
@@ -67,55 +46,81 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="orientation">vertical</property>
-
-            <!-- Gestures -->
+            <property name="orientation">horizontal</property>
             <child>
-              <object class="GtkGestureClick">
-                <property name="button">1</property>
-                <signal name="pressed" handler="on_button_pressed" object="GcalWeekHeader" swapped="no" />
-                <signal name="released" handler="on_button_released" object="GcalWeekHeader" swapped="no" />
+              <object class="GtkBox" id="expand_button_box">
+                <property name="hexpand">False</property>
+                <child>
+                  <object class="GtkButton" id="expand_button">
+                    <property name="visible">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="halign">center</property>
+                    <property name="valign">end</property>
+                    <property name="margin-bottom">6</property>
+                    <property name="icon_name">go-down-symbolic</property>
+                    <signal name="clicked" handler="on_expand_action_activated" object="GcalWeekHeader" swapped="yes"/>
+                    <style>
+                      <class name="flat" />
+                      <class name="circular" />
+                    </style>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkEventControllerMotion" id="motion_controller">
-                <property name="propagation-phase">none</property>
-                <signal name="motion" handler="on_motion_notify" object="GcalWeekHeader" swapped="no" />
-              </object>
-            </child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
 
-            <child>
-              <object class="GtkBox" id="weekdays_box">
-                <property name="homogeneous">True</property>
-              </object>
-            </child>
-
-            <child>
-              <object class="GtkScrolledWindow" id="scrolledwindow">
-                <property name="hscrollbar-policy">never</property>
-                <property name="vscrollbar-policy">never</property>
-                <property name="propagate-natural-height">True</property>
-                <property name="margin-bottom">2</property>
+                <!-- Gestures -->
+                <child>
+                  <object class="GtkGestureClick">
+                    <property name="button">1</property>
+                    <signal name="pressed" handler="on_button_pressed" object="GcalWeekHeader" swapped="no" />
+                    <signal name="released" handler="on_button_released" object="GcalWeekHeader" swapped="no" />
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkEventControllerMotion" id="motion_controller">
+                    <property name="propagation-phase">none</property>
+                    <signal name="motion" handler="on_motion_notify" object="GcalWeekHeader" swapped="no" />
+                  </object>
+                </child>
 
                 <child>
-                  <object class="GtkViewport">
+                  <object class="GtkBox" id="weekdays_box">
+                    <property name="homogeneous">True</property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkScrolledWindow" id="scrolledwindow">
+                    <property name="hscrollbar-policy">never</property>
+                    <property name="vscrollbar-policy">never</property>
+                    <property name="propagate-natural-height">True</property>
+                    <property name="margin-bottom">2</property>
+
                     <child>
-                      <object class="GtkGrid" id="grid">
-                        <property name="column-homogeneous">True</property>
-                        <property name="hexpand">True</property>
-                        <property name="column-spacing">6</property>
-                        <property name="row-spacing">2</property>
-                        <property name="margin-start">6</property>
+                      <object class="GtkViewport">
+                        <child>
+                          <object class="GtkGrid" id="grid">
+                            <property name="column-homogeneous">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="column-spacing">6</property>
+                            <property name="row-spacing">2</property>
+                            <property name="margin-start">6</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
+
                   </object>
                 </child>
 
               </object>
             </child>
-
           </object>
         </child>
+
       </object>
     </child>
   </template>
