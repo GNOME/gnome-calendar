@@ -69,7 +69,7 @@ typedef struct
 
 struct _GcalWeekHeader
 {
-  GtkBox              parent;
+  GtkWidget           parent;
 
   GtkGrid            *grid;
   GtkWidget          *month_label;
@@ -81,6 +81,7 @@ struct _GcalWeekHeader
   GtkWidget          *header_labels_box;
   GtkEventController *motion_controller;
   GtkBox             *weekdays_box;
+  GtkWidget          *main_box;
 
   GcalContext        *context;
 
@@ -127,7 +128,7 @@ enum
 
 static guint signals[LAST_SIGNAL] = { 0, };
 
-G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_BOX);
+G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_WIDGET);
 
 
 /* WeatherInfoDay methods */
@@ -1318,6 +1319,40 @@ on_drop_target_motion_cb (GtkDropTarget  *drop_target,
 /* Drawing area content and size */
 
 static void
+gcal_week_header_measure (GtkWidget      *widget,
+                          GtkOrientation  orientation,
+                          gint            for_size,
+                          gint           *minimum,
+                          gint           *natural,
+                          gint           *minimum_baseline,
+                          gint           *natural_baseline)
+{
+  GcalWeekHeader *self = (GcalWeekHeader *) widget;
+
+  g_assert (GCAL_IS_WEEK_HEADER (self));
+
+  gtk_widget_measure (self->main_box,
+                      orientation,
+                      for_size,
+                      minimum, natural,
+                      minimum_baseline,
+                      natural_baseline);
+}
+
+static void
+gcal_week_header_size_allocate (GtkWidget *widget,
+                                gint       width,
+                                gint       height,
+                                gint       baseline)
+{
+  GcalWeekHeader *self = (GcalWeekHeader *) widget;
+
+  g_assert (GCAL_IS_WEEK_HEADER (self));
+
+  gtk_widget_allocate (self->main_box, width, height, baseline, NULL);
+}
+
+static void
 gcal_week_header_snapshot (GtkWidget   *widget,
                            GtkSnapshot *snapshot)
 {
@@ -1437,6 +1472,18 @@ gcal_week_header_snapshot (GtkWidget   *widget,
  */
 
 static void
+gcal_week_header_dispose (GObject *object)
+{
+  GcalWeekHeader *self = (GcalWeekHeader *) object;
+
+  g_assert (GCAL_IS_WEEK_HEADER (self));
+
+  gtk_widget_dispose_template (GTK_WIDGET (self), GCAL_TYPE_WEEK_HEADER);
+
+  G_OBJECT_CLASS (gcal_week_header_parent_class)->dispose (object);
+}
+
+static void
 gcal_week_header_finalize (GObject *object)
 {
   GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
@@ -1459,8 +1506,11 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   GObjectClass *object_class = G_OBJECT_CLASS (kclass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (kclass);
 
+  object_class->dispose = gcal_week_header_dispose;
   object_class->finalize = gcal_week_header_finalize;
 
+  widget_class->measure = gcal_week_header_measure;
+  widget_class->size_allocate = gcal_week_header_size_allocate;
   widget_class->snapshot = gcal_week_header_snapshot;
 
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
@@ -1477,6 +1527,7 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, grid);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, header_labels_box);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, main_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, month_label);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, motion_controller);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, scrolledwindow);

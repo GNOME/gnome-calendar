@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <interface>
-  <template class="GcalWeekHeader" parent="GtkBox">
+  <template class="GcalWeekHeader" parent="GtkWidget">
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="main_box">
         <property name="hexpand">True</property>
         <property name="vexpand">False</property>
         <property name="orientation">vertical</property>

@@ -30,7 +30,7 @@ G_BEGIN_DECLS
 
 #define GCAL_TYPE_WEEK_HEADER (gcal_week_header_get_type())
 
-G_DECLARE_FINAL_TYPE (GcalWeekHeader, gcal_week_header, GCAL, WEEK_HEADER, GtkBox)
+G_DECLARE_FINAL_TYPE (GcalWeekHeader, gcal_week_header, GCAL, WEEK_HEADER, GtkWidget)
 
 void                 gcal_week_header_set_context                (GcalWeekHeader     *self,
                                                                   GcalContext        *context);
