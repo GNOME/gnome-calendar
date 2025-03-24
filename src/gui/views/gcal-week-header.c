@@ -26,6 +26,7 @@
 #include "gcal-clock.h"
 #include "gcal-debug.h"
 #include "gcal-event-widget.h"
+#include "gcal-gui-utils.h"
 #include "gcal-utils.h"
 #include "gcal-view-private.h"
 #include "gcal-week-header.h"
@@ -107,6 +108,7 @@ struct _GcalWeekHeader
   struct {
     gint              start;
     gint              end;
+    GtkWidget        *widget;
   } selection;
   gint                dnd_cell;
 
@@ -267,7 +269,7 @@ on_button_pressed (GtkGestureClick *click_gesture,
   self->selection.start = column;
   self->selection.end = column;
 
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  gtk_widget_set_visible (self->selection.widget, TRUE);
 
   gtk_event_controller_set_propagation_phase (self->motion_controller,
                                               GTK_PHASE_BUBBLE);
@@ -291,7 +293,7 @@ on_motion_notify (GtkEventControllerMotion *motion_event,
 
   self->selection.end = column;
 
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  gtk_widget_queue_allocate (GTK_WIDGET (self));
 }
 
 static void
@@ -320,8 +322,7 @@ on_button_released (GtkGestureClick *click_gesture,
   column = ltr ? (x / column_width) : (7  - x / column_width);
 
   self->selection.end = column;
-
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  gtk_widget_queue_allocate (GTK_WIDGET (self));
 
   /* Fake the week view's event so we can control the X and Y values */
   weekview = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_WEEK_VIEW);
@@ -1348,10 +1349,56 @@ gcal_week_header_size_allocate (GtkWidget *widget,
                                 gint       baseline)
 {
   GcalWeekHeader *self = (GcalWeekHeader *) widget;
+  gboolean ltr;
+  gdouble cell_width;
+  gint start_x;
+  gint start_y;
 
   g_assert (GCAL_IS_WEEK_HEADER (self));
 
   gtk_widget_allocate (self->main_box, width, height, baseline, NULL);
+
+  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
+  start_x = ltr ? gtk_widget_get_width (self->expand_button_box) : 0;
+  start_y = gtk_widget_get_height (self->header_labels_box);
+
+  if (!ltr)
+    width -= gtk_widget_get_width (self->expand_button_box);
+
+  cell_width = (width - start_x) / 7.0;
+
+  if (gtk_widget_should_layout (self->selection.widget))
+    {
+      gint selection_width;
+      gint selection_x;
+      gint start, end;
+
+      g_assert (self->selection.start != -1);
+      g_assert (self->selection.end != -1);
+
+      start = self->selection.start;
+      end = self->selection.end;
+
+      if (start > end)
+        {
+          start = start + end;
+          end = start - end;
+          start = start - end;
+        }
+
+      selection_width = (end - start + 1) * cell_width;
+      selection_x = ltr ? (start * cell_width) : (width - (start * cell_width + selection_width));
+
+
+      gtk_widget_size_allocate (self->selection.widget,
+                                &(GtkAllocation) {
+                                  .x = ALIGNED (start_x + selection_x),
+                                  .y = start_y - 6,
+                                  .width = ALIGNED (selection_width + 1),
+                                  .height = height - start_y + 6,
+                                },
+                                baseline);
+    }
 }
 
 static void
@@ -1361,7 +1408,6 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   g_autoptr (GDateTime) week_start = NULL;
   GtkStyleContext *context;
   GcalWeekHeader *self;
-  GtkStateFlags state;
   int alloc_width;
   int alloc_height;
   gboolean ltr;
@@ -1377,7 +1423,6 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   /* Fonts and colour selection */
   self = GCAL_WEEK_HEADER (widget);
   context = gtk_widget_get_style_context (widget);
-  state = gtk_style_context_get_state (context);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   start_x = ltr ? gtk_widget_get_width (self->expand_button_box) : 0;
@@ -1414,41 +1459,6 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   /* Draw the selection background */
   if (self->selection.start != -1 && self->selection.end != -1)
     {
-      gint selection_width;
-      gint selection_x;
-      gint start, end;
-
-      start = self->selection.start;
-      end = self->selection.end;
-
-      if (start > end)
-        {
-          start = start + end;
-          end = start - end;
-          start = start - end;
-        }
-
-      gtk_style_context_save (context);
-      gtk_style_context_set_state (context, state | GTK_STATE_FLAG_SELECTED);
-
-      selection_width = (end - start + 1) * cell_width;
-      selection_x = ltr ? (start * cell_width) : (alloc_width - (start * cell_width + selection_width));
-
-      gtk_snapshot_render_background (snapshot,
-                                      context,
-                                      ALIGNED (start_x + selection_x) + 0.33,
-                                      start_y - 6,
-                                      ALIGNED (selection_width + 1),
-                                      alloc_height - start_y + 6);
-
-      gtk_snapshot_render_frame (snapshot,
-                                 context,
-                                 ALIGNED (start_x + selection_x) + 0.33,
-                                 start_y - 6,
-                                 ALIGNED (selection_width + 1),
-                                 alloc_height - start_y + 6);
-
-      gtk_style_context_restore (context);
     }
 
   x = ALIGNED (ltr ? start_x : alloc_width - start_x);
@@ -1461,6 +1471,7 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   gcal_week_view_common_snapshot_hour_lines (widget, snapshot, GTK_ORIENTATION_HORIZONTAL, width, height);
   gtk_snapshot_restore (snapshot);
 
+  gtk_widget_snapshot_child (widget, self->selection.widget, snapshot);
   gtk_widget_snapshot_child (widget, self->main_box, snapshot);
 }
 
@@ -1475,6 +1486,8 @@ gcal_week_header_dispose (GObject *object)
   GcalWeekHeader *self = (GcalWeekHeader *) object;
 
   g_assert (GCAL_IS_WEEK_HEADER (self));
+
+  g_clear_pointer (&self->selection.widget, gtk_widget_unparent);
 
   gtk_widget_dispose_template (GTK_WIDGET (self), GCAL_TYPE_WEEK_HEADER);
 
@@ -1539,7 +1552,7 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   gtk_widget_class_bind_template_callback (widget_class, on_expand_action_activated);
   gtk_widget_class_bind_template_callback (widget_class, on_motion_notify);
 
-  gtk_widget_class_set_css_name (widget_class, "calendar-view");
+  gtk_widget_class_set_css_name (widget_class, "weekheader");
 }
 
 static void
@@ -1549,8 +1562,13 @@ gcal_week_header_init (GcalWeekHeader *self)
   gint i;
 
   self->expanded = FALSE;
+
   self->selection.start = -1;
   self->selection.end = -1;
+  self->selection.widget = gcal_create_selection_widget ();
+  gtk_widget_set_visible (self->selection.widget, FALSE);
+  gtk_widget_set_parent (self->selection.widget, GTK_WIDGET (self));
+
   self->dnd_cell = -1;
   self->first_weekday = get_first_weekday ();
 
@@ -1787,8 +1805,7 @@ gcal_week_header_clear_marks (GcalWeekHeader *self)
 
   self->selection.start = -1;
   self->selection.end = -1;
-
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  gtk_widget_set_visible (self->selection.widget, FALSE);
 }
 
 void

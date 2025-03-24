@@ -251,6 +251,7 @@ weekgrid.dnd, .week-header.dnd {
     background-color: alpha(@accent_bg_color, 0.25);
 }
 
+weekheader > selection,
 weekgrid > selection,
 weekgrid > droptarget {
     background-color: alpha(@accent_bg_color, 0.25);
