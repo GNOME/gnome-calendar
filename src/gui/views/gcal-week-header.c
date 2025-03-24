@@ -1356,12 +1356,12 @@ static void
 gcal_week_header_snapshot (GtkWidget   *widget,
                            GtkSnapshot *snapshot)
 {
+  g_autoptr (GDateTime) week_start = NULL;
   GtkStyleContext *context;
   GcalWeekHeader *self;
   GtkStateFlags state;
   int alloc_width;
   int alloc_height;
-  GDateTime *week_start, *week_end;
   gboolean ltr;
   gdouble cell_width;
   gint current_cell;
@@ -1388,7 +1388,6 @@ gcal_week_header_snapshot (GtkWidget   *widget,
     alloc_width -= gtk_widget_get_width (self->expand_button_box);
 
   week_start = gcal_date_time_get_start_of_week (self->active_date);
-  week_end = g_date_time_add_days (week_start, 6);
   current_cell = g_date_time_get_day_of_week (self->active_date) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
 
@@ -1461,9 +1460,6 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   gtk_snapshot_restore (snapshot);
 
   gtk_widget_snapshot_child (widget, self->main_box, snapshot);
-
-  g_clear_pointer (&week_start, g_date_time_unref);
-  g_clear_pointer (&week_end, g_date_time_unref);
 }
 
 
