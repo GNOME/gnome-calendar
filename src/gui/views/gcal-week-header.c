@@ -1460,7 +1460,7 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   gcal_week_view_common_snapshot_hour_lines (widget, snapshot, GTK_ORIENTATION_HORIZONTAL, width, height);
   gtk_snapshot_restore (snapshot);
 
-  GTK_WIDGET_CLASS (gcal_week_header_parent_class)->snapshot (widget, snapshot);
+  gtk_widget_snapshot_child (widget, self->main_box, snapshot);
 
   g_clear_pointer (&week_start, g_date_time_unref);
   g_clear_pointer (&week_end, g_date_time_unref);
