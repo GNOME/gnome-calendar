@@ -110,7 +110,10 @@ struct _GcalWeekHeader
     gint              end;
     GtkWidget        *widget;
   } selection;
-  gint                dnd_cell;
+
+  struct {
+    gint              cell;
+  } dnd;
 
   /* Array of nullable weather infos for each day, starting with Sunday. */
   WeatherInfoDay      weather_infos[7];
@@ -1299,7 +1302,7 @@ on_drop_target_leave_cb (GtkDropTarget  *drop_target,
 {
   GCAL_ENTRY;
 
-  self->dnd_cell = -1;
+  self->dnd.cell = -1;
   gtk_widget_queue_draw (GTK_WIDGET (self));
 
   GCAL_EXIT;
@@ -1313,10 +1316,10 @@ on_drop_target_motion_cb (GtkDropTarget  *drop_target,
 {
   GCAL_ENTRY;
 
-  self->dnd_cell = get_dnd_cell (self, x, y);
+  self->dnd.cell = get_dnd_cell (self, x, y);
   gtk_widget_queue_draw (GTK_WIDGET (self));
 
-  GCAL_RETURN (self->dnd_cell != -1 ? GDK_ACTION_COPY : 0);
+  GCAL_RETURN (self->dnd.cell != -1 ? GDK_ACTION_COPY : 0);
 }
 
 /* Drawing area content and size */
@@ -1441,14 +1444,14 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   cell_width = (alloc_width - start_x) / 7.0;
 
   /* Drag and Drop highlight */
-  if (self->dnd_cell != -1)
+  if (self->dnd.cell != -1)
     {
       gtk_style_context_save (context);
       gtk_style_context_add_class (context, "dnd");
 
       gtk_snapshot_render_background (snapshot,
                                       context,
-                                      start_x + self->dnd_cell * cell_width,
+                                      start_x + self->dnd.cell * cell_width,
                                       start_y,
                                       cell_width,
                                       alloc_height - start_y);
@@ -1569,7 +1572,7 @@ gcal_week_header_init (GcalWeekHeader *self)
   gtk_widget_set_visible (self->selection.widget, FALSE);
   gtk_widget_set_parent (self->selection.widget, GTK_WIDGET (self));
 
-  self->dnd_cell = -1;
+  self->dnd.cell = -1;
   self->first_weekday = get_first_weekday ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
