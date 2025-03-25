@@ -113,6 +113,7 @@ struct _GcalWeekHeader
 
   struct {
     gint              cell;
+    GtkWidget        *widget;
   } dnd;
 
   /* Array of nullable weather infos for each day, starting with Sunday. */
@@ -1296,6 +1297,21 @@ on_drop_target_drop_cb (GtkDropTarget  *drop_target,
   GCAL_RETURN (TRUE);
 }
 
+static GdkDragAction
+on_drop_target_enter_cb (GtkDropTarget  *drop_target,
+                         gdouble         x,
+                         gdouble         y,
+                         GcalWeekHeader *self)
+{
+
+  GCAL_ENTRY;
+
+  self->dnd.cell = get_dnd_cell (self, x, y);
+  gtk_widget_set_visible (self->dnd.widget, self->dnd.cell != -1);
+
+  GCAL_RETURN (self->dnd.cell != -1 ? GDK_ACTION_COPY : 0);
+}
+
 static void
 on_drop_target_leave_cb (GtkDropTarget  *drop_target,
                          GcalWeekHeader *self)
@@ -1303,7 +1319,7 @@ on_drop_target_leave_cb (GtkDropTarget  *drop_target,
   GCAL_ENTRY;
 
   self->dnd.cell = -1;
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  gtk_widget_set_visible (self->dnd.widget, FALSE);
 
   GCAL_EXIT;
 }
@@ -1317,7 +1333,8 @@ on_drop_target_motion_cb (GtkDropTarget  *drop_target,
   GCAL_ENTRY;
 
   self->dnd.cell = get_dnd_cell (self, x, y);
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  gtk_widget_set_visible (self->dnd.widget, self->dnd.cell != -1);
+  gtk_widget_queue_allocate (GTK_WIDGET (self));
 
   GCAL_RETURN (self->dnd.cell != -1 ? GDK_ACTION_COPY : 0);
 }
@@ -1402,6 +1419,18 @@ gcal_week_header_size_allocate (GtkWidget *widget,
                                 },
                                 baseline);
     }
+
+  if (gtk_widget_should_layout (self->dnd.widget))
+    {
+      gtk_widget_size_allocate (self->dnd.widget,
+                                &(GtkAllocation) {
+                                  .x = start_x + self->dnd.cell * cell_width,
+                                  .y = start_y - 6,
+                                  .width = cell_width,
+                                  .height = height - start_y + 6,
+                                },
+                                baseline);
+    }
 }
 
 static void
@@ -1409,12 +1438,9 @@ gcal_week_header_snapshot (GtkWidget   *widget,
                            GtkSnapshot *snapshot)
 {
   g_autoptr (GDateTime) week_start = NULL;
-  GtkStyleContext *context;
   GcalWeekHeader *self;
   int alloc_width;
-  int alloc_height;
   gboolean ltr;
-  gdouble cell_width;
   gint current_cell;
   gint start_x;
   gint start_y;
@@ -1425,14 +1451,12 @@ gcal_week_header_snapshot (GtkWidget   *widget,
 
   /* Fonts and colour selection */
   self = GCAL_WEEK_HEADER (widget);
-  context = gtk_widget_get_style_context (widget);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   start_x = ltr ? gtk_widget_get_width (self->expand_button_box) : 0;
   start_y = gtk_widget_get_height (self->header_labels_box);
 
   alloc_width = gtk_widget_get_width (widget);
-  alloc_height = gtk_widget_get_height (widget);
 
   if (!ltr)
     alloc_width -= gtk_widget_get_width (self->expand_button_box);
@@ -1440,29 +1464,6 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   week_start = gcal_date_time_get_start_of_week (self->active_date);
   current_cell = g_date_time_get_day_of_week (self->active_date) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
-
-  cell_width = (alloc_width - start_x) / 7.0;
-
-  /* Drag and Drop highlight */
-  if (self->dnd.cell != -1)
-    {
-      gtk_style_context_save (context);
-      gtk_style_context_add_class (context, "dnd");
-
-      gtk_snapshot_render_background (snapshot,
-                                      context,
-                                      start_x + self->dnd.cell * cell_width,
-                                      start_y,
-                                      cell_width,
-                                      alloc_height - start_y);
-
-      gtk_style_context_restore (context);
-    }
-
-  /* Draw the selection background */
-  if (self->selection.start != -1 && self->selection.end != -1)
-    {
-    }
 
   x = ALIGNED (ltr ? start_x : alloc_width - start_x);
   y = start_y;
@@ -1475,6 +1476,7 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   gtk_snapshot_restore (snapshot);
 
   gtk_widget_snapshot_child (widget, self->selection.widget, snapshot);
+  gtk_widget_snapshot_child (widget, self->dnd.widget, snapshot);
   gtk_widget_snapshot_child (widget, self->main_box, snapshot);
 }
 
@@ -1490,6 +1492,7 @@ gcal_week_header_dispose (GObject *object)
 
   g_assert (GCAL_IS_WEEK_HEADER (self));
 
+  g_clear_pointer (&self->dnd.widget, gtk_widget_unparent);
   g_clear_pointer (&self->selection.widget, gtk_widget_unparent);
 
   gtk_widget_dispose_template (GTK_WIDGET (self), GCAL_TYPE_WEEK_HEADER);
@@ -1573,6 +1576,10 @@ gcal_week_header_init (GcalWeekHeader *self)
   gtk_widget_set_parent (self->selection.widget, GTK_WIDGET (self));
 
   self->dnd.cell = -1;
+  self->dnd.widget = gcal_create_drop_target_widget ();
+  gtk_widget_set_visible (self->dnd.widget, FALSE);
+  gtk_widget_set_parent (self->dnd.widget, GTK_WIDGET (self));
+
   self->first_weekday = get_first_weekday ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
@@ -1607,6 +1614,7 @@ gcal_week_header_init (GcalWeekHeader *self)
 
   drop_target = gtk_drop_target_new (GCAL_TYPE_EVENT_WIDGET, GDK_ACTION_COPY);
   g_signal_connect (drop_target, "drop", G_CALLBACK (on_drop_target_drop_cb), self);
+  g_signal_connect (drop_target, "enter", G_CALLBACK (on_drop_target_enter_cb), self);
   g_signal_connect (drop_target, "leave", G_CALLBACK (on_drop_target_leave_cb), self);
   g_signal_connect (drop_target, "motion", G_CALLBACK (on_drop_target_motion_cb), self);
   gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));

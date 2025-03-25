@@ -243,16 +243,13 @@ weekgrid > widget.now-strip {
     min-height: 2px;
 }
 
-.week-header:selected {
-    background-color: alpha(@accent_bg_color, 0.25);
-}
-
 weekgrid.dnd, .week-header.dnd {
     background-color: alpha(@accent_bg_color, 0.25);
 }
 
 weekheader > selection,
 weekgrid > selection,
+weekheader > droptarget,
 weekgrid > droptarget {
     background-color: alpha(@accent_bg_color, 0.25);
     border-radius: 6px;
