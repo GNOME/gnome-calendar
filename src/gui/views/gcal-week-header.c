@@ -73,13 +73,9 @@ struct _GcalWeekHeader
   GtkWidget           parent;
 
   GtkGrid            *grid;
-  GtkWidget          *month_label;
-  GtkWidget          *week_label;
-  GtkWidget          *year_label;
   GtkWidget          *scrolledwindow;
   GtkButton          *expand_button;
   GtkWidget          *expand_button_box;
-  GtkWidget          *header_labels_box;
   GtkEventController *motion_controller;
   GtkBox             *weekdays_box;
   GtkWidget          *main_box;
@@ -977,49 +973,16 @@ update_unchanged_events (GcalWeekHeader *self,
 static void
 update_title (GcalWeekHeader *self)
 {
-  GDateTime *week_start, *week_end, *week_mid;
-  gchar *year_label, *month_label, *week_label;
+  g_autoptr (GDateTime) week_start = NULL;
   gint today_column;
-  gint i;
 
   if(!self->active_date)
     return;
 
   week_start = gcal_date_time_get_start_of_week (self->active_date);
-  week_end = g_date_time_add_days (week_start, 6);
-  week_mid = g_date_time_add_days (week_start, 3);
-
-  if (g_date_time_get_month (week_start) == g_date_time_get_month (week_end))
-    {
-      month_label = g_strdup_printf ("%s", gcal_get_month_name (g_date_time_get_month (week_start) - 1));
-    }
-  else
-    {
-      month_label = g_strdup_printf("%s–%s ",
-                                    gcal_get_month_name (g_date_time_get_month (week_start) -1),
-                                    gcal_get_month_name (g_date_time_get_month (week_end) - 1));
-    }
-
-  if (g_date_time_get_year (week_start) == g_date_time_get_year (week_end))
-    {
-      year_label = g_strdup_printf ("%d", g_date_time_get_year (week_start));
-    }
-  else
-    {
-      year_label = g_strdup_printf ("%d–%d",
-                                    g_date_time_get_year (week_start),
-                                    g_date_time_get_year (week_end));
-    }
-
-  week_label = g_strdup_printf (_("Week %d"), g_date_time_get_week_of_year (week_mid));
-
-  gtk_label_set_label (GTK_LABEL (self->month_label), month_label);
-  gtk_label_set_label (GTK_LABEL (self->week_label), week_label);
-  gtk_label_set_label (GTK_LABEL (self->year_label), year_label);
-
   today_column = get_today_column (self);
 
-  for (i = 0; i < 7; i++)
+  for (gint i = 0; i < 7; i++)
     {
       g_autoptr (GDateTime) day = NULL;
       g_autofree gchar *weekday_date = NULL;
@@ -1058,13 +1021,6 @@ update_title (GcalWeekHeader *self)
       weekday_abv = g_utf8_strup (weekday, -1);
       gtk_label_set_label (GTK_LABEL (header->weekday_name_label), weekday_abv);
     }
-
-  g_clear_pointer (&week_start, g_date_time_unref);
-  g_clear_pointer (&week_end, g_date_time_unref);
-  g_clear_pointer (&week_mid, g_date_time_unref);
-  g_clear_pointer (&month_label, g_free);
-  g_clear_pointer (&week_label, g_free);
-  g_clear_pointer (&year_label, g_free);
 }
 
 static void
@@ -1372,7 +1328,6 @@ gcal_week_header_size_allocate (GtkWidget *widget,
   gboolean ltr;
   gdouble cell_width;
   gint start_x;
-  gint start_y;
 
   g_assert (GCAL_IS_WEEK_HEADER (self));
 
@@ -1380,7 +1335,6 @@ gcal_week_header_size_allocate (GtkWidget *widget,
 
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
   start_x = ltr ? gtk_widget_get_width (self->expand_button_box) : 0;
-  start_y = gtk_widget_get_height (self->header_labels_box);
 
   if (!ltr)
     width -= gtk_widget_get_width (self->expand_button_box);
@@ -1413,9 +1367,9 @@ gcal_week_header_size_allocate (GtkWidget *widget,
       gtk_widget_size_allocate (self->selection.widget,
                                 &(GtkAllocation) {
                                   .x = ALIGNED (start_x + selection_x),
-                                  .y = start_y - 6,
+                                  .y = -6,
                                   .width = ALIGNED (selection_width + 1),
-                                  .height = height - start_y + 6,
+                                  .height = height + 6,
                                 },
                                 baseline);
     }
@@ -1425,9 +1379,9 @@ gcal_week_header_size_allocate (GtkWidget *widget,
       gtk_widget_size_allocate (self->dnd.widget,
                                 &(GtkAllocation) {
                                   .x = start_x + self->dnd.cell * cell_width,
-                                  .y = start_y - 6,
+                                  .y = -6,
                                   .width = cell_width,
-                                  .height = height - start_y + 6,
+                                  .height = height + 6,
                                 },
                                 baseline);
     }
@@ -1443,18 +1397,15 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   gboolean ltr;
   gint current_cell;
   gint start_x;
-  gint start_y;
   gint height;
   gint width;
   gint x;
-  gint y;
 
   /* Fonts and colour selection */
   self = GCAL_WEEK_HEADER (widget);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   start_x = ltr ? gtk_widget_get_width (self->expand_button_box) : 0;
-  start_y = gtk_widget_get_height (self->header_labels_box);
 
   alloc_width = gtk_widget_get_width (widget);
 
@@ -1466,12 +1417,11 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   current_cell = (7 + current_cell - self->first_weekday) % 7;
 
   x = ALIGNED (ltr ? start_x : alloc_width - start_x);
-  y = start_y;
   width = gtk_widget_get_width (widget) - start_x;
-  height = gtk_widget_get_height (widget) - start_y;
+  height = gtk_widget_get_height (widget);
 
   gtk_snapshot_save (snapshot);
-  gtk_snapshot_translate (snapshot, &GRAPHENE_POINT_INIT (x, y));
+  gtk_snapshot_translate (snapshot, &GRAPHENE_POINT_INIT (x, 0));
   gcal_week_view_common_snapshot_hour_lines (widget, snapshot, GTK_ORIENTATION_HORIZONTAL, width, height);
   gtk_snapshot_restore (snapshot);
 
@@ -1543,15 +1493,11 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, grid);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, header_labels_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, main_box);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, month_label);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, motion_controller);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, scrolledwindow);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, sizegroup);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, week_label);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, weekdays_box);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, year_label);
 
   gtk_widget_class_bind_template_callback (widget_class, on_button_pressed);
   gtk_widget_class_bind_template_callback (widget_class, on_button_released);

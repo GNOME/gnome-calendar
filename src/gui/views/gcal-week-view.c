@@ -41,8 +41,11 @@ struct _GcalWeekView
   GtkWidget          *content;
   GtkWidget          *header;
   GcalWeekHourBar    *hours_bar;
+  GtkLabel           *month_label;
   GtkWidget          *scrolled_window;
+  GtkLabel           *week_label;
   GtkWidget          *week_grid;
+  GtkLabel           *year_label;
 
   /* property */
   GDateTime          *date;
@@ -91,6 +94,52 @@ G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GTK_TYPE_BOX,
 #define MAX_ZOOM_LEVEL 3.0
 
 /* Auxiliary methods */
+static void
+update_title_labels (GcalWeekView *self)
+{
+  g_autoptr (GDateTime) week_start = NULL;
+  g_autoptr (GDateTime) week_end = NULL;
+  g_autoptr (GDateTime) week_mid = NULL;
+  g_autofree gchar *month_label = NULL;
+  g_autofree gchar *year_label = NULL;
+  g_autofree gchar *week_label = NULL;
+
+  g_assert (GCAL_IS_WEEK_VIEW (self));
+  g_assert (self->date != NULL);
+
+  week_start = gcal_date_time_get_start_of_week (self->date);
+  week_end = g_date_time_add_days (week_start, 6);
+  week_mid = g_date_time_add_days (week_start, 3);
+
+  if (g_date_time_get_month (week_start) == g_date_time_get_month (week_end))
+    {
+      month_label = g_strdup_printf ("%s", gcal_get_month_name (g_date_time_get_month (week_start) - 1));
+    }
+  else
+    {
+      month_label = g_strdup_printf("%s–%s ",
+                                    gcal_get_month_name (g_date_time_get_month (week_start) -1),
+                                    gcal_get_month_name (g_date_time_get_month (week_end) - 1));
+    }
+
+  if (g_date_time_get_year (week_start) == g_date_time_get_year (week_end))
+    {
+      year_label = g_strdup_printf ("%d", g_date_time_get_year (week_start));
+    }
+  else
+    {
+      year_label = g_strdup_printf ("%d–%d",
+                                    g_date_time_get_year (week_start),
+                                    g_date_time_get_year (week_end));
+    }
+
+  week_label = g_strdup_printf (_("Week %d"), g_date_time_get_week_of_year (week_mid));
+
+  gtk_label_set_label (self->month_label, month_label);
+  gtk_label_set_label (self->week_label, week_label);
+  gtk_label_set_label (self->year_label, year_label);
+}
+
 static gboolean
 update_grid_scroll_position (GcalWeekView *self)
 {
@@ -407,6 +456,7 @@ gcal_week_view_set_date (GcalView  *view,
   gcal_week_grid_set_date (GCAL_WEEK_GRID (self->week_grid), date);
   gcal_week_header_set_date (GCAL_WEEK_HEADER (self->header), date);
 
+  update_title_labels (self);
   schedule_position_scroll (self);
 
   gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
@@ -643,8 +693,11 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, content);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, header);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, hours_bar);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, month_label);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, scrolled_window);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, week_label);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, week_grid);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, year_label);
 
   gtk_widget_class_bind_template_callback (widget_class, on_event_activated);
   gtk_widget_class_bind_template_callback (widget_class, on_motion_controller_enter_cb);
