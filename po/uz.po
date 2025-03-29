@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-03-22 22:02+0000\n"
-"PO-Revision-Date: 2025-03-23 21:37+0500\n"
+"POT-Creation-Date: 2025-03-23 16:38+0000\n"
+"PO-Revision-Date: 2025-03-29 22:02+0500\n"
 "Last-Translator: Umidjon Almasov <umidjon@almasov.uz>\n"
 "Language-Team: Uzbek\n"
 "Language: uz\n"
@@ -735,7 +735,7 @@ msgstr "Mualliflik huquqi © 2012–%d Taqvim mualliflari"
 
 #: src/gui/gcal-application.c:239
 msgid "translator-credits"
-msgstr "tarjimonlarga minnatdorchilik"
+msgstr "Baxrom Raxmatov <magdiyevbahrom@gmail.com>"
 
 #: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
 msgid "Weather"
