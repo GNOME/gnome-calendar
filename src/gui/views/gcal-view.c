@@ -67,6 +67,19 @@ gcal_view_default_init (GcalViewInterface *iface)
                                                             G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   /**
+   * GcalView::time-direction:
+   *
+   * Orientation determining in which direction time is going for the view
+   */
+  g_object_interface_install_property (iface,
+                                       g_param_spec_enum ("time-direction",
+                                                          NULL,
+                                                          NULL,
+                                                          GTK_TYPE_ORIENTATION,
+                                                          GTK_ORIENTATION_VERTICAL,
+                                                          G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+  /**
    * GcalView::create-event:
    *
    * Emitted when the view wants to create an event.
@@ -146,6 +159,26 @@ gcal_view_get_context (GcalView *self)
   g_object_unref (context);
 
   return context;
+}
+
+/**
+ * gcal_view_get_time_direction:
+ * @self: a #GcalView
+ *
+ * Retrieves the orientation of the direction in which the view visualises time.
+ *
+ * Returns: (transfer none): a #GtkOrientation
+ */
+GtkOrientation
+gcal_view_get_time_direction (GcalView *self)
+{
+  GtkOrientation time_direction;
+
+  g_return_val_if_fail (GCAL_IS_VIEW (self), GTK_ORIENTATION_VERTICAL);
+
+  g_object_get (self, "time-direction", &time_direction, NULL);
+
+  return time_direction;
 }
 
 /**

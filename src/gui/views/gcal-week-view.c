@@ -75,6 +75,7 @@ enum
   PROP_0,
   PROP_DATE,
   PROP_CONTEXT,
+  PROP_TIME_DIRECTION,
   NUM_PROPS
 };
 
@@ -615,6 +616,10 @@ gcal_week_view_get_property (GObject       *object,
       g_value_set_object (value, self->context);
       break;
 
+    case PROP_TIME_DIRECTION:
+      g_value_set_enum (value, GTK_ORIENTATION_HORIZONTAL);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -637,6 +642,7 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
+  g_object_class_override_property (object_class, PROP_TIME_DIRECTION, "time-direction");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-week-view.ui");
 

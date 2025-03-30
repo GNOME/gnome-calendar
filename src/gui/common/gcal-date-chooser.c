@@ -102,6 +102,7 @@ enum
   PROP_SPLIT_MONTH_YEAR,
   PROP_DATE,
   PROP_CONTEXT,
+  PROP_TIME_DIRECTION,
   NUM_PROPERTIES = PROP_SPLIT_MONTH_YEAR + 1,
 };
 
@@ -739,6 +740,10 @@ calendar_get_property (GObject    *obj,
       g_value_set_boolean (value, self->split_month_year);
       break;
 
+    case PROP_TIME_DIRECTION:
+      g_value_set_enum (value, GTK_ORIENTATION_VERTICAL);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, property_id, pspec);
       break;
@@ -894,6 +899,7 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
+  g_object_class_override_property (object_class, PROP_TIME_DIRECTION, "time-direction");
 
   signals[DAY_SELECTED] = g_signal_new ("day-selected",
                                         G_OBJECT_CLASS_TYPE (object_class),
