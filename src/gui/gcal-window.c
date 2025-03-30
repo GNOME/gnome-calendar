@@ -446,16 +446,21 @@ on_view_action_activated (GSimpleAction *action,
 
   view = g_variant_get_int32 (param);
 
-  /* -1 means next view */
+  /* -1 means next view, -2 means previous view */
   if (view == -1)
-    view = ++(window->active_view);
+    view = window->active_view + 1;
   else if (view == -2)
-    view = --(window->active_view);
+    view = window->active_view - 1;
 
-  window->active_view = CLAMP (view, 0, GCAL_WINDOW_VIEW_N_VIEWS - 1);
-  adw_view_stack_set_visible_child (window->views_stack, window->views[window->active_view]);
+  view = CLAMP (view, 0, GCAL_WINDOW_VIEW_N_VIEWS - 1);
 
-  g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
+  if (adw_view_stack_page_get_visible (adw_view_stack_get_page (window->views_stack, window->views[view])))
+    {
+      window->active_view = view;
+      adw_view_stack_set_visible_child (window->views_stack, window->views[window->active_view]);
+
+      g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
+    }
 
   GCAL_EXIT;
 }
@@ -1110,7 +1115,6 @@ gcal_window_set_property (GObject      *object,
     {
     case PROP_ACTIVE_VIEW:
       self->active_view = g_value_get_enum (value);
-      gtk_widget_set_visible (self->views[self->active_view], TRUE);
       adw_view_stack_set_visible_child (self->views_stack, self->views[self->active_view]);
       break;
 
