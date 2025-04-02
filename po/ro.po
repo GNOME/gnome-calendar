@@ -3,77 +3,40 @@
 # This file is distributed under the same license as the gnome-calendar package.
 # va511e <va511e@yahoo.com>, 2015.
 # Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>, 2015.
+# Antonio Marin <gnmer.6qxyg@slmail.me>, 2025.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2023-08-17 16:13+0000\n"
-"PO-Revision-Date: 2023-10-09 17:35+0300\n"
-"Last-Translator: Florentina Mușat <florentina [dot] musat [dot] 28 [at] "
-"gmail [dot] com>\n"
-"Language-Team: Gnome Romanian Translation Team\n"
+"POT-Creation-Date: 2025-03-29 17:03+0000\n"
+"PO-Revision-Date: 2025-04-02 19:15+0200\n"
+"Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
+"Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2);\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Gtranslator 47.1\n"
 "X-Project-Style: gnome\n"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
-#: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:178 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:124
+#: data/org.gnome.Calendar.desktop.in.in:3
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
+#: src/gui/gcal-calendar-combo-row.ui:5 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "Calendar"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
-msgid "Calendar for GNOME"
-msgstr "Calendar pentru GNOME"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
-msgid ""
-"GNOME Calendar is a simple and beautiful calendar application designed to "
-"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
-msgstr ""
-"Calendar GNOME este o aplicație de calendar simplă și frumoasă concepută "
-"pentru a se potrivi perfect pentru desktopul GNOME. Prin reutilizarea "
-"componentelor pe care desktopul GNOME este construit, Calendar se integrează "
-"uniform cu ecosistemul GNOME."
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
-msgid ""
-"We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, nothing missing. You’ll feel comfortable using "
-"Calendar, like you’ve been using it for ages!"
-msgstr ""
-"Scopul nostru este de a găsi echilibrul perfect între caracteristici frumos "
-"concepute și gradul de utilizare centrată pe utilizator. Fără exces, fără "
-"lipsuri. Vă veți simți confortabil folosind Calendar, ca și cum l-ați fi "
-"folosit dintotdeauna!"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:24
-msgid "Week view"
-msgstr "Vizualizare săptămânală"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:28
-msgid "Month view"
-msgstr "Vizualizare lunară"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:32
-msgid "Event editor"
-msgstr "Editor de evenimente"
-
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
-msgstr "Accesați și administrați calendarele"
+msgstr "Accesează și administrează calendare"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in.in:13
 msgid "Calendar;Event;Reminder;"
-msgstr "Calendar;Event;Reminder;Eveniment;Memento;"
+msgstr "Calendar;Event;Reminder;Eveniment;Memento;Amintire;Reamintire;"
 
 #: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
@@ -81,25 +44,25 @@ msgstr "Fereastră maximizată"
 
 #: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
-msgstr "Stare fereastră maximizată"
+msgstr "Starea ferestrei maximizate"
 
 #: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
-msgstr "Dimensiunea ferestrei"
+msgstr "Mărimea ferestrei"
 
 #: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
-msgstr "Dimensiunea ferestrei (lățime și înălțime)."
+msgstr "Mărimea ferestrei (lățime și înălțime)."
 
 #: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Type of the active view"
-msgstr "Tipul de vedere activ"
+msgstr "Tipul vederii active"
 
 #: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
-"Tipul activ de vizualizare a ferestrei, valoarea implicită este: vizualizare "
-"lunară"
+"Tipul de vizualizare a ferestrei active, valoarea prestabilită este: "
+"vizualizare lunară"
 
 #: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
@@ -110,20 +73,79 @@ msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
-"Dacă sunt arătate rapoartele de vreme, sunt utilizate locațiile automate și "
-"un nume de locație"
+"Dacă să fie arătate rapoartele meteorologice, să fie utilizată localizarea "
+"automată și numele unei localități"
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Zoom level of the week grid"
-msgstr "Nivelul de focalizare a grilei săptămânale"
+msgstr "Nivelul de mărire a grilei săptămânale"
 
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid "The current zoom level of the week grid"
-msgstr "Nivelul curent de focalizare a grilei săptămânale"
+msgstr "Nivelul actual de mărire a grilei săptămânale"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
+msgid "Manage your schedule"
+msgstr "Gestionează activitățile"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:17
+msgid ""
+"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
+"schedule for upcoming days and weeks, whether your months are filled with "
+"meetings and appointments, public events, travel logistics, or other "
+"commitments in your life."
+msgstr ""
+"Calendarul GNOME este un instrument elegant care ajută la planificarea și "
+"respectarea programului pentru zilele și săptămânile următoare, indiferent "
+"dacă lunile sunt pline de întâlniri și programări, evenimente publice, "
+"călătorii sau alte angajamente din viața personală."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:22
+msgid ""
+"Easily create and manage unlimited calendars and events with GNOME "
+"Calendar's infinite scrolling month view, week timetable, and scheduling "
+"list view."
+msgstr ""
+"Creează și gestionează cu ușurință calendare și evenimente nelimitate cu "
+"vizualizarea lunară cu derulare infinită, orarul săptămânal și vizualizarea "
+"listei de planificări din calendarul GNOME."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
+msgid ""
+"Integrating the latest GNOME technologies and design best practices, GNOME "
+"Calendar builds on top of the mature Evolution data server to manage large "
+"quantities of events and to provide integration with other applications. You "
+"can add calendars from various online calendaring services (like NextCloud, "
+"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
+"your events across multiple devices and platforms. GNOME Calendar also "
+"supports local and offline calendaring, so you can use it anywhere and "
+"anytime while travelling (or after civilization's collapse.)"
+msgstr ""
+"Integrând cele mai recente tehnologii GNOME și cele mai bune practici de "
+"proiectare, calendarul GNOME se bazează pe serverul matur de date Evolution "
+"pentru a gestiona cantități mari de evenimente și pentru a oferi integrare "
+"cu alte aplicații. Pot fi adăugate calendare de la diverse servicii de "
+"calendare online (cum ar fi NextCloud, Google Calendar și servere CalDAV / "
+"WebDAV), permițând sincronizarea evenimentelor între mai multe aparate și "
+"platforme. Calendarul GNOME oferă, de asemenea, calendar local și fără "
+"conectare la internet, pentru a-l putea utiliza oriunde și oricând în timpul "
+"călătoriilor (sau după prăbușirea civilizației)."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "Week view"
+msgstr "Vizualizare săptămânală"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "Month view"
+msgstr "Vizualizare lunară"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "Event editor"
+msgstr "Modifică evenimente"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1906 src/gui/gcal-event-popover.c:395
+#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:422
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -132,90 +154,102 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1914
+#: src/core/gcal-event.c:1910
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1930 src/gui/gcal-quick-add-popover.c:461
+#: src/core/gcal-event.c:1926 src/gui/gcal-quick-add-popover.c:471
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
+
+#: src/gui/calendar-management/calendar-row.ui:19
+msgid "Read-Only Calendar"
+msgstr "Calendar doar de citit"
+
+#: src/gui/calendar-management/calendar-row.ui:29
+msgid "Display Calendar"
+msgstr "Afișează calendarul"
+
+#: src/gui/calendar-management/calendar-row.ui:39
+msgid "Edit calendar"
+msgstr "Modifică calendarul"
 
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
 msgstr "Configurări calendar"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:345
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:141
-msgid "Calendars"
-msgstr "Calendare"
-
 #. Create the new toast
-#: src/gui/calendar-management/gcal-calendars-page.c:370
+#. TRANSLATORS: %s is a calendar name.
+#: src/gui/calendar-management/gcal-calendars-page.c:358
 #, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "Calendarul <b>%s</b> a fost eliminat"
+msgid "Calendar “%s” removed"
+msgstr "Calendarul „%s” a fost eliminat"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:375
-#: src/gui/gcal-window.c:743
+#: src/gui/calendar-management/gcal-calendars-page.c:363
+#: src/gui/gcal-window.c:823
 msgid "_Undo"
 msgstr "An_ulează"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:55
-msgid "Add Calendar…"
-msgstr "Adaugă un calendar…"
+#: src/gui/calendar-management/gcal-calendars-page.ui:4
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
+msgid "Calendars"
+msgstr "Calendare"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:22
+#: src/gui/calendar-management/gcal-calendars-page.ui:67
+msgid "_Add Calendar"
+msgstr "_Adaugă un calendar"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:189
+msgid "Calendar URL"
+msgstr "URL-ul calendarului"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:207
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
+#: src/gui/event-editor/gcal-summary-section.ui:24
+#: src/gui/gcal-event-popover.ui:165
+#: src/gui/importer/gcal-import-file-row.c:177
+msgid "Location"
+msgstr "Locul"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:208
+msgid "On This Computer"
+msgstr "În acest computer"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:4
+msgid "Edit Calendar"
+msgstr "Modifică calendarul"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:34
 msgid "Account"
 msgstr "Cont"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:30
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:42
 msgid "Open in Settings"
 msgstr "Deschide în configurări"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:53
-#: src/gui/event-editor/gcal-summary-section.ui:23
-#: src/gui/gcal-event-popover.ui:113
-#: src/gui/importer/gcal-import-file-row.c:151
-msgid "Location"
-msgstr "Locație"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:24
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
-msgstr "Nume calendar"
+msgstr "Numele calendarului"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:72
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:32
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "Culoare"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:110
 msgid "_Display Calendar"
 msgstr "_Afișează calendarul"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:100
-msgid "Default _Calendar"
-msgstr "_Calendar implicit"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:101
-msgid "Add new events to this calendar by default."
-msgstr "Adaugă evenimente noi la acest calendar în mod implicit."
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:124
 msgid "_Remove Calendar"
 msgstr "_Elimină calendarul"
 
-#: src/gui/calendar-management/gcal-file-chooser-button.c:51
-msgid "Select a file"
-msgstr "Selectează un fișier"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:158
-#: src/gui/calendar-management/gcal-new-calendar-page.c:165
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:190
+#: src/gui/calendar-management/gcal-new-calendar-page.c:117
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
@@ -223,380 +257,480 @@ msgstr[0] "Adaugă un calendar"
 msgstr[1] "Adaugă %1$u calendare"
 msgstr[2] "Adaugă %1$u de calendare"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:516
+#: src/gui/calendar-management/gcal-new-calendar-page.c:124
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "Adaugă un calendar"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:332
+msgid "The URL you have entered appears to be invalid."
+msgstr "URL-ul introdus nu pare corect."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:385
+msgid "A valid user and password are required to connect to this calendar."
+msgstr ""
+"Pentru conectarea la acest calendar sunt necesare un nume de utilizator și o "
+"parolă."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:4
 msgid "New Calendar"
 msgstr "Calendar nou"
 
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "Creează un calendar local"
+
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:60
-msgid "Import a Calendar"
-msgstr "Importă un calendar"
+msgid "Connect to an Online Calendar"
+msgstr "Conectează la un calendar online"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:77
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
 msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
 msgstr ""
-"Alternativ, introduceți adresa web a unui calendar online pe care doriți să "
-"îl importați, sau deschideți un fișier de calendar suportat."
+"Sunt acceptate URL-urile HTTPS, CalDAV sau Webcal. Calendarele online care "
+"pot fi actualizate numai de către furnizor vor fi adăugate ca fiind doar de "
+"citit."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
-msgid "Open a File"
-msgstr "Deschide un fișier"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:108
-msgid "Calendar files"
-msgstr "Fișiere calendar"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:165
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"În cazul în care calendarul aparține unuia dintre conturile online, îl "
-"puteți adăuga prin <a href=\"GOA\">configurările contului online</a>."
+"În cazul în care calendarul aparține unuia dintre propriile conturi online, "
+"poate fi adăugat prin <a href=\"GOA\">configurările contului online</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:213
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
-msgstr "Acreditări"
+msgstr "Date de acces"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:221
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
-msgstr "Utilizator"
+msgstr "Utilizatorul"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:226
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
-msgstr "Parolă"
+msgstr "Parola"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:237
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:28
-#: src/gui/importer/gcal-import-dialog.ui:20 src/utils/gcal-utils.c:1301
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:16
+#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1162
 msgid "_Cancel"
 msgstr "_Anulează"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:238
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
-msgstr "_Conectare"
+msgstr "_Conectează"
 
-#: src/gui/event-editor/gcal-alarm-row.c:84
+#: src/gui/event-editor/gcal-alarm-row.c:85
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
-msgstr[0] "%1$u zi, %2$u oră, și %3$u minut în urmă"
-msgstr[1] "%1$u zi, %2$u oră, și %3$u minute în urmă"
-msgstr[2] "%1$u zi, %2$u oră, și %3$u de minute în urmă"
+msgstr[0] "%1$u zi, %2$u oră, și %3$u minut înainte"
+msgstr[1] "%1$u zi, %2$u oră, și %3$u minute înainte"
+msgstr[2] "%1$u zi, %2$u oră, și %3$u de minute înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:88
+#: src/gui/event-editor/gcal-alarm-row.c:89
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
-msgstr[0] "%1$u zi, %2$u ore, și %3$u minut în urmă"
-msgstr[1] "%1$u zi, %2$u ore, și %3$u minute în urmă"
-msgstr[2] "%1$u zi, %2$u de ore, și %3$u de minute în urmă"
+msgstr[0] "%1$u zi, %2$u ore, și %3$u minut înainte"
+msgstr[1] "%1$u zi, %2$u ore, și %3$u minute înainte"
+msgstr[2] "%1$u zi, %2$u de ore, și %3$u de minute înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:94
+#: src/gui/event-editor/gcal-alarm-row.c:95
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
-msgstr[0] "%1$u zile, %2$u oră, și %3$u minut în urmă"
-msgstr[1] "%1$u zile, %2$u oră, și %3$u minute în urmă"
-msgstr[2] "%1$u zile, %2$u oră, și %3$u de minute în urmă"
+msgstr[0] "%1$u zile, %2$u oră, și %3$u minut înainte"
+msgstr[1] "%1$u zile, %2$u oră, și %3$u minute înainte"
+msgstr[2] "%1$u de zile, %2$u oră, și %3$u de minute înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:98
+#: src/gui/event-editor/gcal-alarm-row.c:99
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
-msgstr[0] "%1$u zile, %2$u ore, și %3$u minut în urmă"
-msgstr[1] "%1$u zile, %2$u ore, și %3$u minute în urmă"
-msgstr[2] "%1$u zile, %2$u ore, și %3$u de minute în urmă"
+msgstr[0] "%1$u zile, %2$u ore, și %3$u minut înainte"
+msgstr[1] "%1$u zile, %2$u ore, și %3$u minute înainte"
+msgstr[2] "%1$u de zile, %2$u de ore, și %3$u de minute înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:113
+#: src/gui/event-editor/gcal-alarm-row.c:114
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
-msgstr[0] "%1$u zi și %2$u oră în urmă"
-msgstr[1] "%1$u zi și %2$u ore în urmă"
-msgstr[2] "%1$u zi și %2$u de ore în urmă"
+msgstr[0] "%1$u zi și %2$u oră înainte"
+msgstr[1] "%1$u zi și %2$u ore înainte"
+msgstr[2] "%1$u zi și %2$u de ore înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:117
+#: src/gui/event-editor/gcal-alarm-row.c:118
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
-msgstr[0] "%1$u zile și %2$u oră în urmă"
-msgstr[1] "%1$u zile și %2$u ore în urmă"
-msgstr[2] "%1$u zile și %2$u de ore în urmă"
+msgstr[0] "%1$u zile și %2$u oră înainte"
+msgstr[1] "%1$u zile și %2$u ore înainte"
+msgstr[2] "%1$u de zile și %2$u de ore înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:133
+#: src/gui/event-editor/gcal-alarm-row.c:134
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
-msgstr[0] "%1$u zi și %2$u minut în urmă"
-msgstr[1] "%1$u zi și %2$u minute în urmă"
-msgstr[2] "%1$u zi și %2$u de minute în urmă"
+msgstr[0] "%1$u zi și %2$u minut înainte"
+msgstr[1] "%1$u zi și %2$u minute înainte"
+msgstr[2] "%1$u zi și %2$u de minute înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:137
+#: src/gui/event-editor/gcal-alarm-row.c:138
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
-msgstr[0] "%1$u zile și %2$u minut în urmă"
-msgstr[1] "%1$u zile și %2$u minute în urmă"
-msgstr[2] "%1$u zile și %2$u de minute în urmă"
+msgstr[0] "%1$u zile și %2$u minut înainte"
+msgstr[1] "%1$u zile și %2$u minute înainte"
+msgstr[2] "%1$u de zile și %2$u de minute înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:147
+#: src/gui/event-editor/gcal-alarm-row.c:148
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
-msgstr[0] "%1$u zi în urmă"
-msgstr[1] "%1$u zile în urmă"
-msgstr[2] "%1$u de zile în urmă"
+msgstr[0] "%1$u zi înainte"
+msgstr[1] "%1$u zile înainte"
+msgstr[2] "%1$u de zile înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:165
+#: src/gui/event-editor/gcal-alarm-row.c:166
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
-msgstr[0] "%1$u oră și %2$u minut în urmă"
-msgstr[1] "%1$u oră și %2$u minute în urmă"
-msgstr[2] "%1$u oră și %2$u de minute în urmă"
+msgstr[0] "%1$u oră și %2$u minut înainte"
+msgstr[1] "%1$u oră și %2$u minute înainte"
+msgstr[2] "%1$u oră și %2$u de minute înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:169
+#: src/gui/event-editor/gcal-alarm-row.c:170
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
-msgstr[0] "%1$u ore și%2$u minut în urmă"
-msgstr[1] "%1$u ore și%2$u minute în urmă"
-msgstr[2] "%1$u ore și%2$u de minute în urmă"
+msgstr[0] "%1$u ore și%2$u minut înainte"
+msgstr[1] "%1$u ore și%2$u minute înainte"
+msgstr[2] "%1$u de ore și%2$u de minute înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:179
+#: src/gui/event-editor/gcal-alarm-row.c:180
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
-msgstr[0] "%1$u oră în urmă"
-msgstr[1] "%1$u ore în urmă"
-msgstr[2] "%1$u de ore în urmă"
+msgstr[0] "%1$u oră înainte"
+msgstr[1] "%1$u ore înainte"
+msgstr[2] "%1$u de ore înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:191
+#: src/gui/event-editor/gcal-alarm-row.c:192
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
-msgstr[0] "%1$u minut în urmă"
-msgstr[1] "%1$u minute în urmă"
-msgstr[2] "%1$u de minute în urmă"
+msgstr[0] "%1$u minut înainte"
+msgstr[1] "%1$u minute înainte"
+msgstr[2] "%1$u de minute înainte"
 
-#: src/gui/event-editor/gcal-alarm-row.c:198
+#: src/gui/event-editor/gcal-alarm-row.c:199
 msgid "Event start time"
-msgstr "Timpul de începere al eveniventului"
+msgstr "Începutul evenimentului"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:11
-msgid "Toggles the sound of the alarm"
-msgstr "Comută sunetul alarmei"
+#: src/gui/event-editor/gcal-alarm-row.ui:8
+msgid "Toggle Alarm Sound"
+msgstr "Sunet de înștiințare Pornit/Oprit"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:21
-msgid "Remove the alarm"
-msgstr "Elimină alarma"
+#: src/gui/event-editor/gcal-alarm-row.ui:20
+msgid "Remove Alarm"
+msgstr "Elimină sunetul"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
-msgid "Save"
-msgstr "Salvează"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.c:187
-msgid "Done"
-msgstr "Terminat"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:42
-msgid "Click to select the calendar"
-msgstr "Apăsați clic pentru a selecta calendarul"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:100
-msgid "_Done"
-msgstr "T_erminat"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:127
-msgid "Schedule"
-msgstr "Program"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:139
-msgid "Reminders"
-msgstr "Mementouri"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:151
-msgid "Notes"
-msgstr "Note"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:171
-msgid "Delete Event"
-msgstr "Șterge evenimentul"
-
-#: src/gui/event-editor/gcal-reminders-section.ui:26
-msgid "Add a Reminder…"
-msgstr "Adaugă un memento…"
-
-#: src/gui/event-editor/gcal-reminders-section.ui:52
-msgid "5 minutes"
-msgstr "5 minute"
-
-#: src/gui/event-editor/gcal-reminders-section.ui:58
-msgid "10 minutes"
-msgstr "10 minute"
-
-#: src/gui/event-editor/gcal-reminders-section.ui:64
-msgid "15 minutes"
-msgstr "15 minute"
-
-#: src/gui/event-editor/gcal-reminders-section.ui:70
-msgid "30 minutes"
-msgstr "30 de minute"
-
-#: src/gui/event-editor/gcal-reminders-section.ui:76
-msgid "1 hour"
-msgstr "o oră"
-
-#: src/gui/event-editor/gcal-reminders-section.ui:82
-msgid "1 day"
-msgstr "o zi"
-
-#: src/gui/event-editor/gcal-reminders-section.ui:88
-msgid "2 days"
-msgstr "2 zile"
-
-#: src/gui/event-editor/gcal-reminders-section.ui:94
-msgid "3 days"
-msgstr "3 zile"
-
-#: src/gui/event-editor/gcal-reminders-section.ui:100
-msgid "1 week"
-msgstr "o săptămână"
-
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:238
-#, c-format
-msgid "Last %A"
-msgstr "%A trecută"
-
-#: src/gui/event-editor/gcal-schedule-section.c:242
-#: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
-#: src/gui/views/gcal-agenda-view.c:186
-msgid "Yesterday"
-msgstr "Ieri"
-
-#: src/gui/event-editor/gcal-schedule-section.c:246
-#: src/gui/gcal-event-popover.c:199 src/gui/gcal-event-popover.c:313
-#: src/gui/views/gcal-agenda-view.c:182
-msgid "Today"
-msgstr "Astăzi"
-
-#: src/gui/event-editor/gcal-schedule-section.c:250
-#: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
-#: src/gui/views/gcal-agenda-view.c:184
-msgid "Tomorrow"
-msgstr "Mâine"
-
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:255
-#, c-format
-msgid "This %A"
-msgstr "%A aceasta"
-
+#. Translators: Calendar grid abbreviation for Sunday.
+#. *
+#. * NOTE: These grid abbreviations are always shown together
+#. * and in order, e.g. "S M T W T F S".
+#. *
+#. * Please make sure these abbreviations match GNOME Shell's
+#. * abbreviations for your language.
 #.
-#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
-#. * formatted time (e.g. 03:14 PM, or 21:29)
+#: src/gui/event-editor/gcal-date-chooser.c:272
+msgctxt "grid sunday"
+msgid "S"
+msgstr "D"
+
+#. Translators: Calendar grid abbreviation for Monday
+#: src/gui/event-editor/gcal-date-chooser.c:277
+msgctxt "grid monday"
+msgid "M"
+msgstr "L"
+
+#. Translators: Calendar grid abbreviation for Tuesday
+#: src/gui/event-editor/gcal-date-chooser.c:282
+msgctxt "grid tuesday"
+msgid "T"
+msgstr "M"
+
+#. Translators: Calendar grid abbreviation for Wednesday
+#: src/gui/event-editor/gcal-date-chooser.c:287
+msgctxt "grid wednesday"
+msgid "W"
+msgstr "M"
+
+#. Translators: Calendar grid abbreviation for Thursday
+#: src/gui/event-editor/gcal-date-chooser.c:292
+msgctxt "grid thursday"
+msgid "T"
+msgstr "J"
+
+#. Translators: Calendar grid abbreviation for Friday
+#: src/gui/event-editor/gcal-date-chooser.c:297
+msgctxt "grid friday"
+msgid "F"
+msgstr "V"
+
+#. Translators: Calendar grid abbreviation for Saturday
+#: src/gui/event-editor/gcal-date-chooser.c:302
+msgctxt "grid saturday"
+msgid "S"
+msgstr "S"
+
+#: src/gui/event-editor/gcal-date-chooser-row.ui:15
+msgid "Edit Date"
+msgstr "Modifică data"
+
+#: src/gui/event-editor/gcal-date-chooser-row.ui:38
+msgid "Edit date"
+msgstr "Modifică data"
+
+#. Translators: "%1$s" is the timezone identifier (e.g. UTC, America/Sao_Paulo)
+#. * and "%2$s" is the timezone offset (e.g. UTC-3).
 #.
-#: src/gui/event-editor/gcal-schedule-section.c:285
+#: src/gui/event-editor/gcal-date-time-chooser.c:141
 #, c-format
-msgid "%1$s, %2$s"
-msgstr "%1$s, %2$s"
+msgid "%1$s (%2$s)"
+msgstr "%1$s (%2$s)"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:17
-msgid "All Day"
-msgstr "Toată ziua"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:34
-#: src/gui/importer/gcal-import-file-row.c:152
-msgid "Starts"
-msgstr "Începe"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:77
-#: src/gui/importer/gcal-import-file-row.c:153
-msgid "Ends"
-msgstr "Se termină"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:120
-msgid "Repeat"
-msgstr "Repetă"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:125
-msgid "No Repeat"
-msgstr "Fără repetare"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:126
-msgid "Daily"
-msgstr "Zilnic"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:127
-msgid "Monday – Friday"
-msgstr "Luni - Vineri"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:128
-msgid "Weekly"
-msgstr "Săptămânal"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:129
-msgid "Monthly"
-msgstr "Lunar"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:130
-msgid "Yearly"
-msgstr "Anual"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:141
-msgid "End Repeat"
-msgstr "Sfârșitul repetării"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:146
-msgid "Forever"
-msgstr "Întotdeauna"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:147
-msgid "No. of occurrences"
-msgstr "Nr. de apariții"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:148
-msgid "Until Date"
-msgstr "Până la data"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:160
-msgid "Number of Occurrences"
-msgstr "Număr de apariții"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:179
-msgid "End Repeat Date"
-msgstr "Sfârșitul date de repetare"
-
-#: src/gui/event-editor/gcal-summary-section.c:78
-#: src/gui/gcal-quick-add-popover.c:676
-msgid "Unnamed event"
-msgstr "Eveniment nedenumit"
-
-#: src/gui/event-editor/gcal-summary-section.ui:16
-#: src/gui/importer/gcal-import-file-row.c:150
-msgid "Title"
-msgstr "Titlu"
-
-#: src/gui/event-editor/gcal-time-selector.ui:22
-msgid ":"
-msgstr ":"
-
-#: src/gui/event-editor/gcal-time-selector.ui:46
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.c:270
+#: src/gui/event-editor/gcal-date-time-chooser.ui:90
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "AM"
 
-#: src/gui/event-editor/gcal-time-selector.ui:47
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.ui:96
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "PM"
 
+#: src/gui/event-editor/gcal-date-time-chooser.ui:7
+msgid "Date"
+msgstr "Data"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:14
+msgid "Time"
+msgstr "Ora"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:26
+#: src/gui/event-editor/gcal-time-chooser-row.ui:15
+msgid "Edit Time"
+msgstr "Modifică ora"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:65
+msgid ":"
+msgstr ":"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:109
+#: src/gui/event-editor/gcal-date-time-chooser.ui:120
+msgid "Change Timezone"
+msgstr "Schimbă fusul orar"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:133
+#: src/gui/event-editor/gcal-time-chooser-row.ui:35
+msgid "Edit time"
+msgstr "Modifică ora"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+msgid "_Save"
+msgstr "_Salvează"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:23
+msgid "_Done"
+msgstr "T_erminat"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:688
+msgid "New Event"
+msgstr "Eveniment nou"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:690
+msgid "Event Details"
+msgstr "Detaliile evenimentului"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:692
+msgid "Edit Event"
+msgstr "Modifică evenimentul"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:37
+msgid "This event is in a read-only calendar. It cannot be edited or deleted."
+msgstr ""
+"Acest eveniment se află într-un calendar doar de citit. Acesta nu poate fi "
+"modificat sau șters."
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:81
+msgid "Reminders"
+msgstr "Reamintiri"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:93
+msgid "Notes"
+msgstr "Mențiuni"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:110
+msgid "Delete Event"
+msgstr "Șterge evenimentul"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:17
+msgid "Add Reminder"
+msgstr "Adaugă reamintirea"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:41
+msgid "Event start"
+msgstr "Începutul evenimentului"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:47
+msgid "5 Minutes"
+msgstr "5 minute"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:53
+msgid "10 Minutes"
+msgstr "10 minute"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:59
+msgid "15 Minutes"
+msgstr "15 minute"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:65
+msgid "30 Minutes"
+msgstr "30 de minute"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:71
+msgid "1 Hour"
+msgstr "1 oră"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:77
+msgid "1 Day"
+msgstr "1 zi"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:83
+msgid "2 Days"
+msgstr "2 zile"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:89
+msgid "3 Days"
+msgstr "3 zile"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:95
+msgid "1 Week"
+msgstr "1 săptămână"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:13
+msgid "_All Day"
+msgstr "_Toată ziua"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:20
+msgid "_Time Slot"
+msgstr "Interval _orar"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:33
+#: src/gui/event-editor/gcal-schedule-section.ui:54
+msgid "Start Date"
+msgstr "Data începerii"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:45
+#: src/gui/event-editor/gcal-schedule-section.ui:62
+msgid "End Date"
+msgstr "Data terminării"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:55
+msgid "Start Time"
+msgstr "Ora începerii"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:63
+msgid "End Time"
+msgstr "Ora terminării"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:75
+msgid "Repeat"
+msgstr "Repetă"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:80
+msgid "No Repeat"
+msgstr "Fără repetare"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:81
+msgid "Daily"
+msgstr "Zilnic"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:82
+msgid "Monday – Friday"
+msgstr "Luni - Vineri"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:83
+msgid "Weekly"
+msgstr "Săptămânal"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:84
+msgid "Monthly"
+msgstr "Lunar"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:85
+msgid "Yearly"
+msgstr "Anual"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:96
+msgid "End Repeat"
+msgstr "Repetare"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:101
+msgid "Forever"
+msgstr "Totdeauna"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:102
+#: src/gui/event-editor/gcal-schedule-section.ui:115
+msgid "Number of Occurrences"
+msgstr "Numărul de repetări"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:103
+msgid "Until Date"
+msgstr "Până la data"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:134
+msgid "End Repeat Date"
+msgstr "Sfârșitul repetării"
+
+#: src/gui/event-editor/gcal-summary-section.ui:16
+#: src/gui/importer/gcal-import-file-row.c:176
+msgid "Title"
+msgstr "Titlu"
+
+#. Translators: "%1$s" is the city / region name, and
+#. * "%2$s" is the country name (already localized).
+#.
+#: src/gui/event-editor/gcal-time-zone-dialog.c:84
+#, c-format
+msgid "%1$s, %2$s"
+msgstr "%1$s, %2$s"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:4
+msgid "Select Timezone"
+msgstr "Alege fusul orar"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:16
+msgid "Search Locations"
+msgstr "Caută locuri"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:31
+msgid "Search for a Timezone"
+msgstr "Caută un fus orar"
+
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
-msgstr "Părăsește Calendar GNOME"
+msgstr "Închide calendarul GNOME"
 
 #: src/gui/gcal-application.c:63
 msgid "Display version number"
@@ -608,35 +742,32 @@ msgstr "Activează mesajele de depanare"
 
 #: src/gui/gcal-application.c:73
 msgid "Open calendar on the passed date"
-msgstr "Deschide calendarul la data trecută"
+msgstr "Deschide calendarul la data indicată"
 
 #: src/gui/gcal-application.c:78
 msgid "Open calendar showing the passed event"
-msgstr "Deschide calendarul care arată evenimentul trecut"
+msgstr "Deschide calendarul care arată evenimentul indicat"
 
 #: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Drepturi de autor © 2012–%d autorii lui Calendar"
 
-#: src/gui/gcal-application.c:180
-msgid "The GNOME Project"
-msgstr "Proiectul GNOME"
-
-#: src/gui/gcal-application.c:189
+#: src/gui/gcal-application.c:239
 msgid "translator-credits"
 msgstr ""
 "va511e \n"
 "Adrian Gabor <raziel [underscore] theripper [at] yahoo [dot] com\n"
-"Florentina Mușat <florentina.musat.28 [at] gmail [dot] com>, 2019"
+"Florentina Mușat <florentina.musat.28 [at] gmail [dot] com>, 2019\n"
+"Antonio Marin <gnmer [dot] 6qxyg [at] slmail [dot] me>, 2025"
 
-#: src/gui/gcal-application.c:194 src/gui/gcal-window.ui:332
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
 msgid "Weather"
-msgstr "Vreme"
+msgstr "Vremea"
 
 #: src/gui/gcal-calendar-button.ui:6
 msgid "Manage Calendars"
-msgstr "Administrează calendarele"
+msgstr "Gestionare calendare"
 
 #: src/gui/gcal-calendar-button.ui:8
 msgid "_Calendars"
@@ -644,71 +775,75 @@ msgstr "_Calendare"
 
 #: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
-msgstr "_Sincronizează calendarele"
+msgstr "_Sincronizare calendare"
 
 #: src/gui/gcal-calendar-button.ui:41
-msgid "Manage Calendars…"
-msgstr "Administrează calendare…"
+msgid "_Manage Calendars…"
+msgstr "_Gestionare calendare…"
 
-#: src/gui/gcal-event-popover.c:122 src/gui/gcal-quick-add-popover.c:255
+#: src/gui/gcal-calendar-combo-row-item.c:70
+msgid "This calendar is hidden"
+msgstr "Acest calendar este ascuns"
+
+#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
-msgstr "ianuarie"
+msgstr "Ianuarie"
 
-#: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:256
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:254
 msgid "February"
-msgstr "februarie"
+msgstr "Februarie"
 
-#: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:257
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:255
 msgid "March"
-msgstr "martie"
+msgstr "Martie"
 
-#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:258
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:256
 msgid "April"
-msgstr "aprilie"
+msgstr "Aprilie"
 
-#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:259
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:257
 msgid "May"
-msgstr "mai"
+msgstr "Mai"
 
-#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:260
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:258
 msgid "June"
-msgstr "iunie"
+msgstr "Iunie"
 
-#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:261
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:259
 msgid "July"
-msgstr "iulie"
+msgstr "Iulie"
 
-#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:262
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:260
 msgid "August"
-msgstr "august"
+msgstr "August"
 
-#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:263
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:261
 msgid "September"
-msgstr "septembrie"
+msgstr "Septembrie"
 
-#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:264
+#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:262
 msgid "October"
-msgstr "octombrie"
+msgstr "Octombrie"
 
-#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:265
+#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:263
 msgid "November"
-msgstr "noiembrie"
+msgstr "Noiembrie"
 
-#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:266
+#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:264
 msgid "December"
-msgstr "decembrie"
+msgstr "Decembrie"
 
-#: src/gui/gcal-event-popover.c:158
+#: src/gui/gcal-event-popover.c:161
 #, c-format
 msgid "Today %s"
 msgstr "Astăzi %s"
 
-#: src/gui/gcal-event-popover.c:162
+#: src/gui/gcal-event-popover.c:165
 #, c-format
 msgid "Tomorrow %s"
 msgstr "Mâine %s"
 
-#: src/gui/gcal-event-popover.c:166
+#: src/gui/gcal-event-popover.c:169
 #, c-format
 msgid "Yesterday %s"
 msgstr "Ieri %s"
@@ -718,7 +853,7 @@ msgstr "Ieri %s"
 #. * of month, and %3$ is the hour. This format string results in dates
 #. * like "November 21, 22:00".
 #.
-#: src/gui/gcal-event-popover.c:175
+#: src/gui/gcal-event-popover.c:178
 #, c-format
 msgid "%1$s %2$d, %3$s"
 msgstr "%2$d %1$s, %3$s"
@@ -728,17 +863,32 @@ msgstr "%2$d %1$s, %3$s"
 #. * of month, %3$d is the year, and %4$s is the hour. This format string
 #. * results in dates like "November 21, 2020, 22:00".
 #.
-#: src/gui/gcal-event-popover.c:187
+#: src/gui/gcal-event-popover.c:190
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%2$d %1$s, %3$d, %4$s"
+
+#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
+#: src/gui/views/gcal-agenda-view.c:197
+msgid "Today"
+msgstr "Astăzi"
+
+#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
+#: src/gui/views/gcal-agenda-view.c:199
+msgid "Tomorrow"
+msgstr "Mâine"
+
+#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
+#: src/gui/views/gcal-agenda-view.c:201
+msgid "Yesterday"
+msgstr "Ieri"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), and %2$d is
 #. * the day of month. This format string results in dates like
 #. * "November 21".
 #.
-#: src/gui/gcal-event-popover.c:216 src/gui/gcal-event-popover.c:330
+#: src/gui/gcal-event-popover.c:219 src/gui/gcal-event-popover.c:333
 #, c-format
 msgid "%1$s %2$d"
 msgstr "%2$d %1$s"
@@ -748,7 +898,7 @@ msgstr "%2$d %1$s"
 #. * of month, and %3$d is the year. This format string results in dates
 #. * like "November 21, 2020".
 #.
-#: src/gui/gcal-event-popover.c:227 src/gui/gcal-event-popover.c:341
+#: src/gui/gcal-event-popover.c:230 src/gui/gcal-event-popover.c:344
 #, c-format
 msgid "%1$s %2$d, %3$d"
 msgstr "%2$d %1$s, %3$d"
@@ -757,7 +907,7 @@ msgstr "%2$d %1$s, %3$d"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Today, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:261
+#: src/gui/gcal-event-popover.c:264
 #, c-format
 msgid "Today, %1$s — %2$s"
 msgstr "Astăzi, %1$s — %2$s"
@@ -766,7 +916,7 @@ msgstr "Astăzi, %1$s — %2$s"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:269
+#: src/gui/gcal-event-popover.c:272
 #, c-format
 msgid "Tomorrow, %1$s – %2$s"
 msgstr "Mâine, %1$s — %2$s"
@@ -775,7 +925,7 @@ msgstr "Mâine, %1$s — %2$s"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:277
+#: src/gui/gcal-event-popover.c:280
 #, c-format
 msgid "Yesterday, %1$s – %2$s"
 msgstr "Ieri, %1$s – %2$s"
@@ -785,7 +935,7 @@ msgstr "Ieri, %1$s – %2$s"
 #. * of month, %3$s is the start hour, and %4$s is the end hour. This
 #. * format string results in dates like "November 21, 19:00 — 22:00".
 #.
-#: src/gui/gcal-event-popover.c:286
+#: src/gui/gcal-event-popover.c:289
 #, c-format
 msgid "%1$s %2$d, %3$s – %4$s"
 msgstr "%2$d %1$s, %3$s – %4$s"
@@ -797,126 +947,147 @@ msgstr "%2$d %1$s, %3$s – %4$s"
 #. *
 #. * "November 21, 2021, 19:00 — 22:00".
 #.
-#: src/gui/gcal-event-popover.c:301
+#: src/gui/gcal-event-popover.c:304
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%2$d %1$s, %3$d, %4$s – %5$s"
 
-#: src/gui/gcal-event-popover.ui:73
-msgid "No event information"
-msgstr "Nu sunt informații despre eveniment"
+#: src/gui/gcal-event-popover.c:369
+msgid "View Additional Details"
+msgstr "Detalii suplimentare"
 
-#: src/gui/gcal-event-popover.ui:171
-msgid "Edit…"
-msgstr "Editează…"
+#: src/gui/gcal-event-popover.c:374
+msgid "Edit Additional Details"
+msgstr "Modifică detaliile suplimentare"
 
-#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:351
+#: src/gui/gcal-event-popover.ui:66
+msgid ""
+"<b>This event is part of a read-only calendar</b>\n"
+"    You cannot delete or change this event."
+msgstr ""
+"<b>Acest eveniment face parte dintr-un calendar doar de citit</b>\n"
+"    Acest eveniment nu poate fi șters sau modificat."
+
+#: src/gui/gcal-event-popover.ui:107
+msgid "No event notes"
+msgstr "Nicio mențiune"
+
+#. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
+#: src/gui/gcal-event-widget.c:381
 #, c-format
-msgid "At %s"
-msgstr "La %s"
+msgid ""
+"\n"
+"\n"
+"On %s"
+msgstr ""
+"\n"
+"\n"
+"Pe %s"
 
-#: src/gui/gcal-meeting-row.c:67
-msgid "Google Meet"
-msgstr "Google Meet"
+#. Translators: %s is a URL informed as the location of the event
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:394 src/gui/gcal-event-widget.c:400
+#, c-format
+msgid ""
+"\n"
+"\n"
+"At %s"
+msgstr ""
+"\n"
+"\n"
+"În %s"
 
-#: src/gui/gcal-meeting-row.c:68
-msgid "Jitsi"
-msgstr "Jitsi"
+#.
+#. * Translators: %a is the abbreviated day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/gcal-event-widget.c:459
+msgid "%a %B %d"
+msgstr "%a %d %B"
 
-#: src/gui/gcal-meeting-row.c:69
-msgid "Whereby"
-msgstr "Whereby"
-
-#: src/gui/gcal-meeting-row.c:70
-msgid "Zoom"
-msgstr "Zoom"
-
-#: src/gui/gcal-meeting-row.c:71
-msgid "Microsoft Teams"
-msgstr "Microsoft Teams"
-
-#: src/gui/gcal-meeting-row.c:81
+#: src/gui/gcal-meeting-row.c:72
 msgid "Unknown Service"
 msgstr "Serviciu necunoscut"
 
 #. Translators: "Join" as in "Join meeting"
-#: src/gui/gcal-meeting-row.ui:13
-msgid "Join"
-msgstr "Alăturare"
+#: src/gui/gcal-meeting-row.ui:41
+msgid "_Join"
+msgstr "_Participă"
 
-#: src/gui/gcal-quick-add-popover.c:118
+#: src/gui/gcal-quick-add-popover.c:116
 #, c-format
 msgid "%s (this calendar is read-only)"
-msgstr "%s (acest calendar este protejat la scriere)"
+msgstr "%s (acest calendar este doar de citit)"
 
-#: src/gui/gcal-quick-add-popover.c:233
+#: src/gui/gcal-quick-add-popover.c:231
 msgid "from next Monday"
 msgstr "de lunea viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:234
+#: src/gui/gcal-quick-add-popover.c:232
 msgid "from next Tuesday"
 msgstr "de marțea viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:235
+#: src/gui/gcal-quick-add-popover.c:233
 msgid "from next Wednesday"
 msgstr "de miercurea viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:236
+#: src/gui/gcal-quick-add-popover.c:234
 msgid "from next Thursday"
 msgstr "de joia viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:237
+#: src/gui/gcal-quick-add-popover.c:235
 msgid "from next Friday"
 msgstr "de vinerea viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:238
+#: src/gui/gcal-quick-add-popover.c:236
 msgid "from next Saturday"
 msgstr "de sâmbăta viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:239
+#: src/gui/gcal-quick-add-popover.c:237
 msgid "from next Sunday"
 msgstr "de duminica viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:244
+#: src/gui/gcal-quick-add-popover.c:242
 msgid "to next Monday"
 msgstr "până lunea viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:245
+#: src/gui/gcal-quick-add-popover.c:243
 msgid "to next Tuesday"
 msgstr "până marțea viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:246
+#: src/gui/gcal-quick-add-popover.c:244
 msgid "to next Wednesday"
 msgstr "până miercurea viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:247
+#: src/gui/gcal-quick-add-popover.c:245
 msgid "to next Thursday"
 msgstr "până joia viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:248
+#: src/gui/gcal-quick-add-popover.c:246
 msgid "to next Friday"
 msgstr "până vinerea viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:249
+#: src/gui/gcal-quick-add-popover.c:247
 msgid "to next Saturday"
 msgstr "până sâmbăta viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:250
+#: src/gui/gcal-quick-add-popover.c:248
 msgid "to next Sunday"
 msgstr "până duminica viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:275
+#: src/gui/gcal-quick-add-popover.c:273
 #, c-format
 msgid "from Today"
 msgstr "de astăzi"
 
-#: src/gui/gcal-quick-add-popover.c:279
+#: src/gui/gcal-quick-add-popover.c:277
 #, c-format
 msgid "from Tomorrow"
 msgstr "de mâine"
 
-#: src/gui/gcal-quick-add-popover.c:283
+#: src/gui/gcal-quick-add-popover.c:281
 #, c-format
 msgid "from Yesterday"
 msgstr "de ieri"
@@ -925,22 +1096,22 @@ msgstr "de ieri"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:301
+#: src/gui/gcal-quick-add-popover.c:299
 #, c-format
 msgid "from %1$s %2$s"
-msgstr "din %1$s %2$s"
+msgstr "de pe %2$s %1$s"
 
-#: src/gui/gcal-quick-add-popover.c:312
+#: src/gui/gcal-quick-add-popover.c:310
 #, c-format
 msgid "to Today"
 msgstr "până astăzi"
 
-#: src/gui/gcal-quick-add-popover.c:316
+#: src/gui/gcal-quick-add-popover.c:314
 #, c-format
 msgid "to Tomorrow"
 msgstr "până mâine"
 
-#: src/gui/gcal-quick-add-popover.c:320
+#: src/gui/gcal-quick-add-popover.c:318
 #, c-format
 msgid "to Yesterday"
 msgstr "până ieri"
@@ -949,137 +1120,141 @@ msgstr "până ieri"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:338
+#: src/gui/gcal-quick-add-popover.c:336
 #, c-format
 msgid "to %1$s %2$s"
-msgstr "până la %1$s %2$s"
+msgstr "până pe %2$s %1$s"
 
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
-#: src/gui/gcal-quick-add-popover.c:345
+#: src/gui/gcal-quick-add-popover.c:343
 #, c-format
 msgid "New Event %1$s %2$s"
-msgstr "Eveniment nou pe %1$s %2$s"
+msgstr "Eveniment nou %1$s %2$s"
 
-#: src/gui/gcal-quick-add-popover.c:362
+#: src/gui/gcal-quick-add-popover.c:360
 #, c-format
 msgid "New Event Today"
 msgstr "Eveniment nou astăzi"
 
-#: src/gui/gcal-quick-add-popover.c:366
+#: src/gui/gcal-quick-add-popover.c:364
 #, c-format
 msgid "New Event Tomorrow"
 msgstr "Eveniment nou mâine"
 
-#: src/gui/gcal-quick-add-popover.c:370
+#: src/gui/gcal-quick-add-popover.c:368
 #, c-format
 msgid "New Event Yesterday"
 msgstr "Eveniment nou ieri"
 
-#: src/gui/gcal-quick-add-popover.c:376
+#: src/gui/gcal-quick-add-popover.c:374
 msgid "New Event next Monday"
 msgstr "Eveniment nou lunea viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:377
+#: src/gui/gcal-quick-add-popover.c:375
 msgid "New Event next Tuesday"
 msgstr "Eveniment nou marțea viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:378
+#: src/gui/gcal-quick-add-popover.c:376
 msgid "New Event next Wednesday"
 msgstr "Eveniment nou miercurea viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:379
+#: src/gui/gcal-quick-add-popover.c:377
 msgid "New Event next Thursday"
 msgstr "Eveniment nou joia viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:380
+#: src/gui/gcal-quick-add-popover.c:378
 msgid "New Event next Friday"
 msgstr "Eveniment nou vinerea viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:381
+#: src/gui/gcal-quick-add-popover.c:379
 msgid "New Event next Saturday"
 msgstr "Eveniment nou sâmbăta viitoare"
 
-#: src/gui/gcal-quick-add-popover.c:382
+#: src/gui/gcal-quick-add-popover.c:380
 msgid "New Event next Sunday"
 msgstr "Eveniment nou duminica viitoare"
 
 #. Translators: %d is the numeric day of month
-#: src/gui/gcal-quick-add-popover.c:394
+#: src/gui/gcal-quick-add-popover.c:392
 #, c-format
 msgid "New Event on January %d"
 msgstr "Eveniment nou pe %d ianuarie"
 
-#: src/gui/gcal-quick-add-popover.c:395
+#: src/gui/gcal-quick-add-popover.c:393
 #, c-format
 msgid "New Event on February %d"
 msgstr "Eveniment nou pe %d februarie"
 
-#: src/gui/gcal-quick-add-popover.c:396
+#: src/gui/gcal-quick-add-popover.c:394
 #, c-format
 msgid "New Event on March %d"
 msgstr "Eveniment nou pe %d martie"
 
-#: src/gui/gcal-quick-add-popover.c:397
+#: src/gui/gcal-quick-add-popover.c:395
 #, c-format
 msgid "New Event on April %d"
 msgstr "Eveniment nou pe %d aprilie"
 
-#: src/gui/gcal-quick-add-popover.c:398
+#: src/gui/gcal-quick-add-popover.c:396
 #, c-format
 msgid "New Event on May %d"
 msgstr "Eveniment nou pe %d mai"
 
-#: src/gui/gcal-quick-add-popover.c:399
+#: src/gui/gcal-quick-add-popover.c:397
 #, c-format
 msgid "New Event on June %d"
 msgstr "Eveniment nou pe %d iunie"
 
-#: src/gui/gcal-quick-add-popover.c:400
+#: src/gui/gcal-quick-add-popover.c:398
 #, c-format
 msgid "New Event on July %d"
 msgstr "Eveniment nou pe %d iulie"
 
-#: src/gui/gcal-quick-add-popover.c:401
+#: src/gui/gcal-quick-add-popover.c:399
 #, c-format
 msgid "New Event on August %d"
 msgstr "Eveniment nou pe %d august"
 
-#: src/gui/gcal-quick-add-popover.c:402
+#: src/gui/gcal-quick-add-popover.c:400
 #, c-format
 msgid "New Event on September %d"
 msgstr "Eveniment nou pe %d septembrie"
 
-#: src/gui/gcal-quick-add-popover.c:403
+#: src/gui/gcal-quick-add-popover.c:401
 #, c-format
 msgid "New Event on October %d"
 msgstr "Eveniment nou pe %d octombrie"
 
-#: src/gui/gcal-quick-add-popover.c:404
+#: src/gui/gcal-quick-add-popover.c:402
 #, c-format
 msgid "New Event on November %d"
 msgstr "Eveniment nou pe %d noiembrie"
 
-#: src/gui/gcal-quick-add-popover.c:405
+#: src/gui/gcal-quick-add-popover.c:403
 #, c-format
 msgid "New Event on December %d"
 msgstr "Eveniment nou pe %d decembrie"
 
 #: src/gui/gcal-quick-add-popover.ui:87
 msgid "Edit Details…"
-msgstr "Editează detaliile…"
+msgstr "Modifică detaliile…"
 
 #: src/gui/gcal-quick-add-popover.ui:98
 msgid "Add"
 msgstr "Adaugă"
 
-#: src/gui/gcal-search-button.ui:53
+#: src/gui/gcal-search-button.ui:29
+msgid "Search Events"
+msgstr "Caută evenimente"
+
+#: src/gui/gcal-search-button.ui:54
 msgid "Search events"
 msgstr "Caută evenimente"
 
 #: src/gui/gcal-sync-indicator.ui:21
 msgctxt "tooltip"
-msgid "Synchronizing Remote Calendars…"
-msgstr "Se sincronizează calendarele la distanță…"
+msgid "Synchronizing Remote Calendars"
+msgstr "Se sincronizează calendarele la distanță"
 
 #: src/gui/gcal-toolbar-end.ui:9
 msgctxt "tooltip"
@@ -1097,146 +1272,173 @@ msgstr "Arată vremea"
 
 #: src/gui/gcal-weather-settings.ui:34
 msgid "Automatic Location"
-msgstr "Locație automată"
+msgstr "Localizare automată"
 
 #: src/gui/gcal-weather-settings.ui:46
 msgid "Search locations"
-msgstr "Caută locațiile"
+msgstr "Caută locuri"
 
-#: src/gui/gcal-window.c:333
+#: src/gui/gcal-window.c:337
 msgid "Week"
-msgstr "Săptămână"
+msgstr "Săptămâna"
 
-#: src/gui/gcal-window.c:335
+#: src/gui/gcal-window.c:339
 msgid "Month"
-msgstr "Lună"
+msgstr "Luna"
 
-#: src/gui/gcal-window.c:741
+#: src/gui/gcal-window.c:821
 msgid "Another event deleted"
 msgstr "Un alt eveniment șters"
 
-#: src/gui/gcal-window.c:741
+#: src/gui/gcal-window.c:821
 msgid "Event deleted"
 msgstr "Eveniment șters"
 
-#: src/gui/gcal-window.ui:143
-msgid "Main Menu"
-msgstr "Meniu principal"
+#: src/gui/gcal-window.c:886
+msgid "Could not import some files: Not ICS files"
+msgstr "Nu s-au putut importa unele fișiere: Nu sunt fișiere ICS"
 
-#: src/gui/gcal-window.ui:180 src/gui/gcal-window.ui:219
+#: src/gui/gcal-window.c:891
+#, c-format
+msgid "Could not import “%s”: Not an ICS file"
+msgstr "Nu s-a putut importa „%s”: Nu este un fișier ICS"
+
+#: src/gui/gcal-window.ui:123
+msgid "Drop Event Files to Import"
+msgstr "Încarcă evenimente de importat"
+
+#: src/gui/gcal-window.ui:166
+msgid "Main Menu"
+msgstr "Opțiuni"
+
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
 msgid "_Today"
 msgstr "As_tăzi"
 
-#: src/gui/gcal-window.ui:255
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "La Astăzi"
+
+#: src/gui/gcal-window.ui:281
 msgid "_Week"
-msgstr "_Săptămână"
+msgstr "_Săptămâna"
 
-#: src/gui/gcal-window.ui:270
+#: src/gui/gcal-window.ui:296
 msgid "_Month"
-msgstr "_Lună"
+msgstr "_Luna"
 
-#: src/gui/gcal-window.ui:324
+#: src/gui/gcal-window.ui:347
 msgid "_Date & Time Settings…"
 msgstr "Configurare _dată și oră…"
 
-#: src/gui/gcal-window.ui:328
+#: src/gui/gcal-window.ui:351
 msgid "_Online Accounts…"
-msgstr "_Conturi online…"
+msgstr "Conturi _online…"
 
-#: src/gui/gcal-window.ui:340
+#: src/gui/gcal-window.ui:363
 msgid "_Keyboard Shortcuts"
-msgstr "S_curtături de tastatură"
+msgstr "S_curtături"
 
-#: src/gui/gcal-window.ui:344
+#: src/gui/gcal-window.ui:367
 msgid "_About Calendar"
-msgstr "_Despre Calendar"
+msgstr "Despre Calend_ar"
 
 #: src/gui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
-msgstr "General"
+msgstr "Generale"
 
 #: src/gui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
-msgid "New event"
-msgstr "Eveniment nou"
+msgid "Open Main Menu"
+msgstr "Arată opțiunile"
 
 #: src/gui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
-msgid "Manage calendars"
-msgstr "Administrează calendarele"
+msgid "Open Calendars Menu"
+msgstr "Opțiuni Calendare"
 
 #: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
-msgid "Synchronize calendars"
-msgstr "Sincronizează calendarele"
+msgid "New Event"
+msgstr "Eveniment nou"
 
 #: src/gui/gtk/help-overlay.ui:32
 msgctxt "shortcut window"
-msgid "Close window"
-msgstr "Închide fereastra"
+msgid "Manage Calendars"
+msgstr "Gestionare calendare"
 
 #: src/gui/gtk/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Synchronize Calendars"
+msgstr "Sincronizare calendare"
+
+#: src/gui/gtk/help-overlay.ui:44
+msgctxt "shortcut window"
+msgid "Close Window"
+msgstr "Închide fereastra"
+
+#: src/gui/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Caută"
 
-#: src/gui/gtk/help-overlay.ui:44
+#: src/gui/gtk/help-overlay.ui:56
 msgctxt "shortcut window"
-msgid "Show help"
+msgid "Show Help"
 msgstr "Arată ajutorul"
 
-#: src/gui/gtk/help-overlay.ui:50
+#: src/gui/gtk/help-overlay.ui:62
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "Scurtături"
 
-#: src/gui/gtk/help-overlay.ui:58
+#: src/gui/gtk/help-overlay.ui:70
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Navigare"
 
-#: src/gui/gtk/help-overlay.ui:61
-msgctxt "shortcut window"
-msgid "Go back"
-msgstr "Navighează înapoi"
-
-#: src/gui/gtk/help-overlay.ui:67
-msgctxt "shortcut window"
-msgid "Go forward"
-msgstr "Navighează înainte"
-
 #: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
-msgid "Show today"
-msgstr "Arată astăzi"
+msgid "Go Back"
+msgstr "Înapoi"
 
 #: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
-msgid "Next view"
-msgstr "Următoarea vizualizare"
+msgid "Go Forward"
+msgstr "Înainte"
 
 #: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
-msgid "Previous view"
-msgstr "Precedenta vizualizare"
+msgid "Show Today"
+msgstr "Arată Astăzi"
 
-#: src/gui/gtk/help-overlay.ui:93
+#: src/gui/gtk/help-overlay.ui:91
+msgctxt "shortcut window"
+msgid "Next View"
+msgstr "Următoarea"
+
+#: src/gui/gtk/help-overlay.ui:97
+msgctxt "shortcut window"
+msgid "Previous View"
+msgstr "Precedenta"
+
+#: src/gui/gtk/help-overlay.ui:105
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Vizualizare"
 
-#: src/gui/gtk/help-overlay.ui:96
+#: src/gui/gtk/help-overlay.ui:108
 msgctxt "shortcut window"
-msgid "Week view"
-msgstr "Vizualizare săptămânală"
+msgid "Week View"
+msgstr "Săptămâna"
 
-#: src/gui/gtk/help-overlay.ui:102
+#: src/gui/gtk/help-overlay.ui:114
 msgctxt "shortcut window"
-msgid "Month view"
-msgstr "Vizualizare lunară"
+msgid "Month View"
+msgstr "Luna"
 
-#: src/gui/importer/gcal-import-dialog.c:396
+#: src/gui/importer/gcal-import-dialog.c:341
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1248,69 +1450,79 @@ msgstr[2] "Importă %d de evenimente"
 msgid "Import Files…"
 msgstr "Importă fișiere…"
 
-#: src/gui/importer/gcal-import-dialog.ui:29
+#: src/gui/importer/gcal-import-dialog.ui:28
 msgid "_Import"
 msgstr "_Importă"
 
-#: src/gui/importer/gcal-import-dialog.ui:49
+#: src/gui/importer/gcal-import-dialog.ui:60
 msgid "C_alendar"
 msgstr "C_alendar"
 
-#: src/gui/importer/gcal-importer.c:33
+#: src/gui/importer/gcal-importer.c:34
 msgid "No error"
 msgstr "Nicio eroare"
 
-#: src/gui/importer/gcal-importer.c:36
+#: src/gui/importer/gcal-importer.c:37
 msgid "Bad argument to function"
 msgstr "Argument greșit la funcție"
 
-#: src/gui/importer/gcal-importer.c:40
+#: src/gui/importer/gcal-importer.c:41
 msgid "Failed to allocate a new object in memory"
 msgstr "Eșec la alocarea unui nou obiect în memorie"
 
-#: src/gui/importer/gcal-importer.c:43
+#: src/gui/importer/gcal-importer.c:44
 msgid "File is malformed, invalid, or corrupted"
-msgstr "Fișierul este deteriorat, nevalid sau corupt"
+msgstr "Fișierul este deteriorat sau greșit"
 
-#: src/gui/importer/gcal-importer.c:46
+#: src/gui/importer/gcal-importer.c:47
 msgid "Failed to parse the calendar contents"
-msgstr "Eșec la parsarea conținutului calendarului"
+msgstr "Nu s-a reușit analizarea conținutului calendarului"
 
-#: src/gui/importer/gcal-importer.c:49
+#: src/gui/importer/gcal-importer.c:50
 msgid "Failed to read file"
-msgstr "Eșec la citirea fișierului"
+msgstr "Nu s-a reușit citirea fișierului"
 
-#: src/gui/importer/gcal-importer.c:56
+#: src/gui/importer/gcal-importer.c:57
 msgid "Internal error"
 msgstr "Eroare internă"
 
-#: src/gui/importer/gcal-importer.c:94
+#: src/gui/importer/gcal-importer.c:112
 msgid "File is not an iCalendar (.ics) file"
-msgstr "Fișierul nu este un fișier iCalendar (.ics)"
+msgstr "Fișierul nu este iCalendar (.ics)"
 
-#: src/gui/importer/gcal-import-file-row.c:154
+#: src/gui/importer/gcal-import-file-row.c:178
+msgid "Starts"
+msgstr "Începe"
+
+#: src/gui/importer/gcal-import-file-row.c:179
+msgid "Ends"
+msgstr "Se termină"
+
+#: src/gui/importer/gcal-import-file-row.c:180
 msgid "Description"
 msgstr "Descriere"
 
-#: src/gui/views/gcal-agenda-view.c:366
+#.
+#. * Translators: %A is the full day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/views/gcal-agenda-view.c:209
+msgid "%A %B %d"
+msgstr "%A %e %B"
+
+#: src/gui/views/gcal-agenda-view.c:414
 msgid "On-going"
-msgstr "În curs de desfășurare"
+msgstr "În curs"
 
 #: src/gui/views/gcal-agenda-view.ui:22
 msgid "No events"
-msgstr "Nu există evenimente"
+msgstr "Niciun eveniment"
 
-#: src/gui/views/gcal-month-popover.ui:59
+#: src/gui/views/gcal-month-popover.ui:69
 msgid "New Event…"
 msgstr "Eveniment nou…"
-
-#: src/gui/views/gcal-week-grid.c:578
-msgid "00 AM"
-msgstr "00 AM"
-
-#: src/gui/views/gcal-week-grid.c:581
-msgid "00:00"
-msgstr "00:00"
 
 #: src/gui/views/gcal-week-header.c:474
 #, c-format
@@ -1322,202 +1534,49 @@ msgstr[2] "Alte %d de evenimente"
 
 #: src/gui/views/gcal-week-header.c:1006
 #, c-format
-msgid "week %d"
-msgstr "săptămâna %d"
+msgid "Week %d"
+msgstr "Săptămâna %d"
 
-#: src/utils/gcal-utils.c:1297
+#: src/utils/gcal-utils.c:1158
 msgid "Modify Multiple Events?"
-msgstr "Modificați evenimente multiple?"
+msgstr "Se modifică mai multe evenimente?"
 
-#: src/utils/gcal-utils.c:1298
+#: src/utils/gcal-utils.c:1159
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr ""
-"Evenimentul pe care încercați să îl modificați este recurent. Modificările "
-"pe care le-ați selectat ar trebui să fie aplicate la:"
+"Se încearcă modificarea unui eveniment care se repetă. Modificările alese ar "
+"trebui aplicate:"
 
-#: src/utils/gcal-utils.c:1302
+#: src/utils/gcal-utils.c:1163
 msgid "_Only This Event"
-msgstr "D_oar acest eveniment"
+msgstr "D_oar acestui eveniment"
 
-#: src/utils/gcal-utils.c:1308
+#: src/utils/gcal-utils.c:1169
 msgid "_Subsequent Events"
-msgstr "Evenimente _ulterioare"
+msgstr "Evenimentelor _următoare"
 
-#: src/utils/gcal-utils.c:1311
+#: src/utils/gcal-utils.c:1172
 msgid "_All Events"
-msgstr "To_ate evenimentele"
+msgstr "_Tuturor evenimentelor"
 
-#~ msgid "Year view"
-#~ msgstr "Vizualizare anuală"
+#: src/utils/gcal-utils.c:1274
+msgid "Google Meet"
+msgstr "Google Meet"
 
-#~ msgid "Window position"
-#~ msgstr "Poziția ferestrei"
+#: src/utils/gcal-utils.c:1275
+msgid "Jitsi"
+msgstr "Jitsi"
 
-#~ msgid "Window position (x and y)."
-#~ msgstr "Poziția ferestrei (x și y)."
+#: src/utils/gcal-utils.c:1276
+msgid "Whereby"
+msgstr "Whereby"
 
-#~ msgid "Follow system night light"
-#~ msgstr "Urmează lumina de noapte a sistemului"
+#: src/utils/gcal-utils.c:1277
+msgid "Zoom"
+msgstr "Zoom"
 
-#~ msgid "Use GNOME night light setting to activate night-mode."
-#~ msgstr ""
-#~ "Utilizează configurarea luminii de noapte GNOME pentru a activa modul "
-#~ "nocturn."
-
-#~ msgid "Settings"
-#~ msgstr "Configurări"
-
-#~ msgid "Calendar name"
-#~ msgstr "Numele calendarului"
-
-#~ msgid "Cancel"
-#~ msgstr "Anulare"
-
-#~ msgid "Year"
-#~ msgstr "An"
-
-#~ msgctxt "tooltip"
-#~ msgid "Add a new event"
-#~ msgstr "Adaugă un eveniment nou"
-
-#~ msgid "Manage your calendars"
-#~ msgstr "Administrați calendarele"
-
-#~ msgctxt "tooltip"
-#~ msgid "Search for events"
-#~ msgstr "Caută evenimente"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Year view"
-#~ msgstr "Vizualizare anuală"
-
-#~ msgid "%B %d…"
-#~ msgstr "%B %d…"
-
-#~ msgid "%B %d"
-#~ msgstr "%B %d"
-
-#~ msgid "Add Event…"
-#~ msgstr "Adaugă eveniment…"
-
-#~ msgid "Check this out!"
-#~ msgstr "Verificați asta!"
-
-#~ msgid "Calendar management"
-#~ msgstr "Administrare calendar"
-
-#~ msgid "Date"
-#~ msgstr "Dată"
-
-#~ msgid "Time"
-#~ msgstr "Oră"
-
-#~ msgid "From Web…"
-#~ msgstr "De pe Web…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "Calendar local nou…"
-
-#~ msgid "No results found"
-#~ msgstr "Niciun rezultat găsit"
-
-#~ msgid "Try a different search"
-#~ msgstr "Încercați o căutare diferită"
-
-#~ msgid "%d week before"
-#~ msgid_plural "%d weeks before"
-#~ msgstr[0] "%d săptămână înainte"
-#~ msgstr[1] "%d săptămâni înainte"
-#~ msgstr[2] "%d de săptămâni înainte"
-
-#~ msgid "%s AM"
-#~ msgstr "%s AM"
-
-#~ msgid "%s PM"
-#~ msgstr "%s PM"
-
-#~ msgid "org.gnome.Calendar"
-#~ msgstr "org.gnome.Calendar"
-
-#~ msgid "Click to set up"
-#~ msgstr "Clic pentru a configura"
-
-#~ msgid "Nextcloud"
-#~ msgstr "Nextcloud"
-
-#~ msgid "Overview"
-#~ msgstr "Prezentare generală"
-
-#~ msgid "Edit Calendar"
-#~ msgstr "Editează calendarul"
-
-#~ msgid "Calendar Address"
-#~ msgstr "Adresa calendarului"
-
-#~ msgid "All day"
-#~ msgstr "Toată ziua"
-
-#~ msgid "Use the entry above to search for events."
-#~ msgstr "Folosiți intrarea de mai sus pentru a căuta evenimente."
-
-#~ msgid "Open"
-#~ msgstr "Deschide"
-
-#~ msgid "Unnamed Calendar"
-#~ msgstr "Calendar fără nume"
-
-#~ msgid "Off"
-#~ msgstr "Oprit"
-
-#~ msgid "On"
-#~ msgstr "Pornit"
-
-#~ msgid "Expired"
-#~ msgstr "Expirat"
-
-#~ msgid "_About"
-#~ msgstr "_Despre"
-
-#~ msgid "_Quit"
-#~ msgstr "_Ieșire"
-
-#~ msgid "Add Eve_nt…"
-#~ msgstr "Adaugă evenime_nt…"
-
-#~ msgid "List of the disabled sources"
-#~ msgstr "Lista surselor dezactivate"
-
-#~ msgid "Sources disabled last time Calendar ran"
-#~ msgstr "Sursele au fost dezactivate ultima dată când Calendar a rulat"
-
-#~ msgid "Create"
-#~ msgstr "Creează"
-
-#~ msgid "- Calendar management"
-#~ msgstr "- Administrare calendar"
-
-#~ msgid "Copyright © %Id The Calendar authors"
-#~ msgstr "Drepturi de autor © %Id autorii Calendar"
-
-#~ msgid "%m/%d/%y"
-#~ msgstr "%m/%d/%y"
-
-#~ msgid "Other events"
-#~ msgstr "Alte evenimente"
-
-#~ msgid "%.2d:%.2d AM"
-#~ msgstr "%.2d:%.2d AM"
-
-#~ msgid "%.2d:%.2d PM"
-#~ msgstr "%.2d:%.2d PM"
-
-#~ msgid "Midnight"
-#~ msgstr "Miezul nopții"
-
-#~ msgid "Noon"
-#~ msgstr "Amiază"
-
-#~ msgid "00:00 PM"
-#~ msgstr "00:00 PM"
+#: src/utils/gcal-utils.c:1278
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
