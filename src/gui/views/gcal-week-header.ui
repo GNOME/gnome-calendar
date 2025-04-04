@@ -65,7 +65,4 @@
       </object>
     </child>
   </template>
-  <object class="GtkSizeGroup" id="sizegroup">
-    <property name="mode">horizontal</property>
-  </object>
 </interface>

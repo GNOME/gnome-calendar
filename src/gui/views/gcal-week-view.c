@@ -716,15 +716,10 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 static void
 gcal_week_view_init (GcalWeekView *self)
 {
-  GtkSizeGroup *size_group;
-
   gtk_widget_init_template (GTK_WIDGET (self));
 
   self->zoom_level = 1.0;
 
   gtk_widget_set_size_request (self->content, -1, HEIGHT_DEFAULT);
-
-  size_group = gcal_week_header_get_sidebar_size_group (GCAL_WEEK_HEADER (self->header));
-  gtk_size_group_add_widget (size_group, GTK_WIDGET (self->hours_bar));
 }
 

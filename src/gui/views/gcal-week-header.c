@@ -113,8 +113,6 @@ struct _GcalWeekHeader
 
   /* Array of nullable weather infos for each day, starting with Sunday. */
   WeatherInfoDay      weather_infos[7];
-
-  GtkSizeGroup       *sizegroup;
 };
 
 typedef enum
@@ -1542,7 +1540,6 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, main_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, motion_controller);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, scrolledwindow);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, sizegroup);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, weekdays_box);
 
   gtk_widget_class_bind_template_callback (widget_class, on_button_pressed);
@@ -1791,14 +1788,6 @@ gcal_week_header_get_children_by_uuid (GcalWeekHeader        *self,
   result = filter_children_by_uid_and_modtype (GTK_WIDGET (self->grid), mod, uuid);
 
   GCAL_RETURN (g_steal_pointer (&result));
-}
-
-GtkSizeGroup*
-gcal_week_header_get_sidebar_size_group (GcalWeekHeader *self)
-{
-  g_return_val_if_fail (GCAL_IS_WEEK_HEADER (self), NULL);
-
-  return self->sizegroup;
 }
 
 void

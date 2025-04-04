@@ -45,8 +45,6 @@ GList*               gcal_week_header_get_children_by_uuid       (GcalWeekHeader
                                                                   GcalRecurrenceModType  mod,
                                                                   const gchar           *uuid);
 
-GtkSizeGroup*        gcal_week_header_get_sidebar_size_group     (GcalWeekHeader     *self);
-
 void                 gcal_week_header_clear_marks                (GcalWeekHeader     *self);
 
 void                 gcal_week_header_set_date                   (GcalWeekHeader     *self,
