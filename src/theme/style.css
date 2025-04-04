@@ -256,6 +256,11 @@ weekgrid > droptarget {
     margin: 2px 0 1px 2px;
 }
 
+button.week-header-expander:checked image {
+    transform: rotateZ(180deg);
+    transition: 200ms;
+}
+
 /*
  * Month cell
  */
