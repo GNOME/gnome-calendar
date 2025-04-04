@@ -206,11 +206,6 @@ label.month-name {
 
 /* Week View CSS */
 
-.week-header {
-    padding: 0px;
-    border-bottom: solid @borders 1px;
-}
-
 .week-header .week-number {
     font-size: 16pt;
     font-weight: bold;

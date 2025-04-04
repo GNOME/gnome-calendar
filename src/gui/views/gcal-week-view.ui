@@ -87,6 +87,10 @@
     </child>
 
     <child>
+      <object class="GtkSeparator" />
+    </child>
+
+    <child>
       <object class="GtkScrolledWindow" id="scrolled_window">
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
