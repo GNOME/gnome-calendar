@@ -74,8 +74,6 @@ struct _GcalWeekHeader
 
   GtkGrid            *grid;
   GtkWidget          *scrolledwindow;
-  GtkButton          *expand_button;
-  GtkWidget          *expand_button_box;
   GtkEventController *motion_controller;
   GtkBox             *weekdays_box;
   GtkWidget          *main_box;
@@ -511,8 +509,6 @@ update_overflow (GcalWeekHeader *self)
           self->overflow_label[i] = NULL;
         }
     }
-
-  gtk_widget_set_visible (GTK_WIDGET (self->expand_button), show_expand);
 
   if (self->can_expand != show_expand)
     {
@@ -1051,7 +1047,6 @@ header_collapse (GcalWeekHeader *self)
                                   GTK_POLICY_NEVER,
                                   GTK_POLICY_NEVER);
   gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolledwindow), -1);
-  gtk_button_set_icon_name (self->expand_button, "go-down-symbolic");
 
   layout_manager = gtk_widget_get_layout_manager (GTK_WIDGET (self->grid));
 
@@ -1093,8 +1088,6 @@ header_expand (GcalWeekHeader *self)
   /* TODO: animate this transition */
   gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolledwindow),
                                               gtk_widget_get_height (week_view) / 2);
-
-  gtk_button_set_icon_name (self->expand_button, "go-up-symbolic");
 
   child = gtk_widget_get_first_child (GTK_WIDGET (self->grid));
   while (child)
@@ -1343,19 +1336,13 @@ gcal_week_header_size_allocate (GtkWidget *widget,
   GcalWeekHeader *self = (GcalWeekHeader *) widget;
   gboolean ltr;
   gdouble cell_width;
-  gint start_x;
 
   g_assert (GCAL_IS_WEEK_HEADER (self));
 
   gtk_widget_allocate (self->main_box, width, height, baseline, NULL);
 
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
-  start_x = ltr ? gtk_widget_get_width (self->expand_button_box) : 0;
-
-  if (!ltr)
-    width -= gtk_widget_get_width (self->expand_button_box);
-
-  cell_width = (width - start_x) / 7.0;
+  cell_width = width / 7.0;
 
   if (gtk_widget_should_layout (self->selection.widget))
     {
@@ -1382,7 +1369,7 @@ gcal_week_header_size_allocate (GtkWidget *widget,
 
       gtk_widget_size_allocate (self->selection.widget,
                                 &(GtkAllocation) {
-                                  .x = ALIGNED (start_x + selection_x),
+                                  .x = ALIGNED (selection_x),
                                   .y = -6,
                                   .width = ALIGNED (selection_width + 1),
                                   .height = height + 6,
@@ -1394,7 +1381,7 @@ gcal_week_header_size_allocate (GtkWidget *widget,
     {
       gtk_widget_size_allocate (self->dnd.widget,
                                 &(GtkAllocation) {
-                                  .x = start_x + self->dnd.cell * cell_width,
+                                  .x = self->dnd.cell * cell_width,
                                   .y = -6,
                                   .width = cell_width,
                                   .height = height + 6,
@@ -1409,10 +1396,8 @@ gcal_week_header_snapshot (GtkWidget   *widget,
 {
   g_autoptr (GDateTime) week_start = NULL;
   GcalWeekHeader *self;
-  int alloc_width;
   gboolean ltr;
   gint current_cell;
-  gint start_x;
   gint height;
   gint width;
   gint x;
@@ -1420,21 +1405,13 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   /* Fonts and colour selection */
   self = GCAL_WEEK_HEADER (widget);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
-
-  start_x = ltr ? gtk_widget_get_width (self->expand_button_box) : 0;
-
-  alloc_width = gtk_widget_get_width (widget);
-
-  if (!ltr)
-    alloc_width -= gtk_widget_get_width (self->expand_button_box);
-
   week_start = gcal_date_time_get_start_of_week (self->active_date);
   current_cell = g_date_time_get_day_of_week (self->active_date) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
 
-  x = ALIGNED (ltr ? start_x : alloc_width - start_x);
-  width = gtk_widget_get_width (widget) - start_x;
+  width = gtk_widget_get_width (widget);
   height = gtk_widget_get_height (widget);
+  x = ALIGNED (ltr ? 0 : width);
 
   gtk_snapshot_save (snapshot);
   gtk_snapshot_translate (snapshot, &GRAPHENE_POINT_INIT (x, 0));
@@ -1561,8 +1538,6 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-week-header.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, grid);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, main_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, motion_controller);

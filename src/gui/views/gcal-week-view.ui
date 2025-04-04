@@ -47,8 +47,38 @@
         </child>
 
         <child>
-          <object class="GcalWeekHeader" id="header">
-            <signal name="event-activated" handler="on_event_activated" object="GcalWeekView" swapped="yes" />
+          <object class="GtkBox">
+            <property name="orientation">horizontal</property>
+
+            <!-- Expand / Collapse button -->
+            <child>
+              <object class="GtkBox" id="expand_button_box">
+                <property name="hexpand">False</property>
+                <child>
+                  <object class="GtkToggleButton">
+                    <property name="visible" bind-source="header" bind-property="can-expand" bind-flags="sync-create" />
+                    <property name="active" bind-source="header" bind-property="expanded" bind-flags="sync-create|bidirectional" />
+                    <property name="hexpand">True</property>
+                    <property name="halign">center</property>
+                    <property name="valign">end</property>
+                    <property name="margin-bottom">6</property>
+                    <property name="icon_name">go-down-symbolic</property>
+                    <style>
+                      <class name="flat" />
+                      <class name="circular" />
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child>
+              <object class="GcalWeekHeader" id="header">
+                <property name="hexpand">True</property>
+                <signal name="event-activated" handler="on_event_activated" object="GcalWeekView" swapped="yes" />
+              </object>
+            </child>
+
           </object>
         </child>
 
@@ -113,4 +143,12 @@
       </object>
     </child>
   </template>
+
+  <object class="GtkSizeGroup" id="sizegroup">
+    <property name="mode">horizontal</property>
+    <widgets>
+      <widget name="expand_button_box" />
+      <widget name="hours_bar" />
+    </widgets>
+  </object>
 </interface>
