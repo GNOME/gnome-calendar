@@ -126,11 +126,19 @@ typedef enum
 
 enum
 {
+  PROP_0,
+  PROP_EXPANDED,
+  N_PROPS,
+};
+
+enum
+{
   EVENT_ACTIVATED,
   LAST_SIGNAL
 };
 
 static guint signals[LAST_SIGNAL] = { 0, };
+static GParamSpec *properties [N_PROPS];
 
 G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_WIDGET);
 
@@ -1468,6 +1476,44 @@ gcal_week_header_finalize (GObject *object)
 }
 
 static void
+gcal_week_header_get_property (GObject    *object,
+                               guint       prop_id,
+                               GValue     *value,
+                               GParamSpec *pspec)
+{
+  GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
+
+  switch (prop_id)
+    {
+    case PROP_EXPANDED:
+      g_value_set_boolean (value, self->expanded);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gcal_week_header_set_property (GObject      *object,
+                               guint         prop_id,
+                               const GValue *value,
+                               GParamSpec   *pspec)
+{
+  GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
+
+  switch (prop_id)
+    {
+    case PROP_EXPANDED:
+      gcal_week_header_set_expanded (self, g_value_get_boolean (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
 gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (kclass);
@@ -1475,10 +1521,18 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
 
   object_class->dispose = gcal_week_header_dispose;
   object_class->finalize = gcal_week_header_finalize;
+  object_class->get_property = gcal_week_header_get_property;
+  object_class->set_property = gcal_week_header_set_property;
 
   widget_class->measure = gcal_week_header_measure;
   widget_class->size_allocate = gcal_week_header_size_allocate;
   widget_class->snapshot = gcal_week_header_snapshot;
+
+  properties[PROP_EXPANDED] = g_param_spec_boolean ("expanded", NULL, NULL,
+                                                    FALSE,
+                                                    G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_WEEK_HEADER,
@@ -1795,3 +1849,27 @@ gcal_week_header_set_date (GcalWeekHeader *self,
   update_weather_infos (self);
 }
 
+gboolean
+gcal_week_header_get_expanded (GcalWeekHeader *self)
+{
+  g_assert (GCAL_IS_WEEK_HEADER (self));
+
+  return self->expanded;
+}
+
+void
+gcal_week_header_set_expanded (GcalWeekHeader *self,
+                               gboolean        expanded)
+{
+  g_assert (GCAL_IS_WEEK_HEADER (self));
+
+  if (self->expanded == expanded)
+    return;
+
+  if (expanded)
+    header_expand (self);
+  else
+    header_collapse (self);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EXPANDED]);
+}
