@@ -97,6 +97,7 @@ struct _GcalWeekHeader
    * Used for checking if the header is in collapsed state or expand state
    * false is collapse state true is expand state
    */
+  gboolean            can_expand;
   gboolean            expanded;
 
   GDateTime          *active_date;
@@ -127,6 +128,7 @@ typedef enum
 enum
 {
   PROP_0,
+  PROP_CAN_EXPAND,
   PROP_EXPANDED,
   N_PROPS,
 };
@@ -511,6 +513,12 @@ update_overflow (GcalWeekHeader *self)
     }
 
   gtk_widget_set_visible (GTK_WIDGET (self->expand_button), show_expand);
+
+  if (self->can_expand != show_expand)
+    {
+      self->can_expand = show_expand;
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CAN_EXPAND]);
+    }
 }
 
 static void
@@ -1485,6 +1493,10 @@ gcal_week_header_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_CAN_EXPAND:
+      g_value_set_boolean (value, self->can_expand);
+      break;
+
     case PROP_EXPANDED:
       g_value_set_boolean (value, self->expanded);
       break;
@@ -1508,6 +1520,7 @@ gcal_week_header_set_property (GObject      *object,
       gcal_week_header_set_expanded (self, g_value_get_boolean (value));
       break;
 
+    case PROP_CAN_EXPAND:
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -1527,6 +1540,10 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   widget_class->measure = gcal_week_header_measure;
   widget_class->size_allocate = gcal_week_header_size_allocate;
   widget_class->snapshot = gcal_week_header_snapshot;
+
+  properties[PROP_CAN_EXPAND] = g_param_spec_boolean ("can-expand", NULL, NULL,
+                                                      FALSE,
+                                                      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_EXPANDED] = g_param_spec_boolean ("expanded", NULL, NULL,
                                                     FALSE,
@@ -1847,6 +1864,14 @@ gcal_week_header_set_date (GcalWeekHeader *self,
     update_unchanged_events (self, self->active_date);
 
   update_weather_infos (self);
+}
+
+gboolean
+gcal_week_header_get_can_expand (GcalWeekHeader *self)
+{
+  g_assert (GCAL_IS_WEEK_HEADER (self));
+
+  return self->can_expand;
 }
 
 gboolean

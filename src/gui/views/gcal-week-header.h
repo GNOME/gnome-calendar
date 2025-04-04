@@ -52,6 +52,8 @@ void                 gcal_week_header_clear_marks                (GcalWeekHeader
 void                 gcal_week_header_set_date                   (GcalWeekHeader     *self,
                                                                   GDateTime          *date);
 
+gboolean             gcal_week_header_get_can_expand             (GcalWeekHeader     *self);
+
 gboolean             gcal_week_header_get_expanded               (GcalWeekHeader     *self);
 void                 gcal_week_header_set_expanded               (GcalWeekHeader     *self,
                                                                   gboolean            expanded);
