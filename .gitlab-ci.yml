@@ -21,7 +21,10 @@ stages:
   - deploy
 
 style-check-diff:
+  image: fedora:latest
   stage: check
+  before_script:
+    - dnf install -y git
   script:
     - .gitlab-ci/run-style-check-diff.sh
 
