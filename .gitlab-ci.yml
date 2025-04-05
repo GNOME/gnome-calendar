@@ -24,7 +24,7 @@ style-check-diff:
   image: fedora:latest
   stage: check
   before_script:
-    - dnf install -y git
+    - dnf install -y clang git python
   script:
     - .gitlab-ci/run-style-check-diff.sh
 
