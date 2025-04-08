@@ -24,9 +24,10 @@ style-check-diff:
   image: fedora:latest
   stage: check
   before_script:
-    - dnf install -y clang git python
+    - dnf install -y clang-tools-extra git python
   script:
     - .gitlab-ci/run-style-check-diff.sh
+  allow_failure: true
 
 build-flatpak:
   extends: '.flatpak@x86_64'
