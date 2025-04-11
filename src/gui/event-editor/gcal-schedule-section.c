@@ -124,6 +124,8 @@ static void          on_schedule_type_changed_cb                 (GtkWidget     
                                                                   GParamSpec          *pspec,
                                                                   GcalScheduleSection *self);
 
+static void          on_number_of_occurrences_changed_cb         (GcalScheduleSection *self);
+
 static GcalScheduleValues
 gcal_schedule_values_copy (const GcalScheduleValues *values)
 {
@@ -441,6 +443,22 @@ gcal_schedule_section_values_set_recur_limit_type (const GcalScheduleSectionValu
   return copy;
 }
 
+static GcalScheduleSectionValues *
+gcal_schedule_section_values_set_recurrence_count (const GcalScheduleSectionValues *values,
+                                                   guint count)
+{
+  GcalScheduleSectionValues *copy = gcal_schedule_section_values_copy (values);
+
+  /* An old recurrence would already be present */
+  g_assert (copy->curr.recur != NULL);
+  g_assert (copy->curr.recur->frequency != GCAL_RECURRENCE_NO_REPEAT);
+  g_assert (copy->curr.recur->limit_type == GCAL_RECURRENCE_COUNT);
+
+  copy->curr.recur->limit.count = count;
+
+  return copy;
+}
+
 static WidgetState *
 widget_state_from_values (const GcalScheduleSectionValues *values)
 {
@@ -591,6 +609,7 @@ update_widgets (GcalScheduleSection *self,
                 WidgetState         *state)
 {
   g_signal_handlers_block_by_func (self->schedule_type_toggle_group, on_schedule_type_changed_cb, self);
+  g_signal_handlers_block_by_func (self->number_of_occurrences_spin, on_number_of_occurrences_changed_cb, self);
   block_date_signals (self);
 
   adw_toggle_group_set_active_name (self->schedule_type_toggle_group,
@@ -632,10 +651,12 @@ update_widgets (GcalScheduleSection *self,
   gtk_widget_set_visible (self->number_of_occurrences_spin, state->recurrence.number_of_occurrences_visible);
   if (state->recurrence.number_of_occurrences_visible)
     {
+      g_print ("update widgets: limit_count = %u\n", state->recurrence.limit_count);
       gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), state->recurrence.limit_count);
     }
 
   unblock_date_signals (self);
+  g_signal_handlers_unblock_by_func (self->number_of_occurrences_spin, on_number_of_occurrences_changed_cb, self);
   g_signal_handlers_unblock_by_func (self->schedule_type_toggle_group, on_schedule_type_changed_cb, self);
 }
 
@@ -712,6 +733,14 @@ on_end_date_time_changed_cb (GtkWidget           *widget,
 {
   GDateTime *end = gcal_date_time_chooser_get_date_time (self->end_date_time_chooser);
   GcalScheduleSectionValues *updated = gcal_schedule_section_values_set_end_date_time (self->values, end);
+  update_from_section_values (self, updated);
+}
+
+static void
+on_number_of_occurrences_changed_cb (GcalScheduleSection *self)
+{
+  guint count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
+  GcalScheduleSectionValues *updated = gcal_schedule_section_values_set_recurrence_count (self->values, count);
   update_from_section_values (self, updated);
 }
 
@@ -1017,6 +1046,7 @@ gcal_schedule_section_class_init (GcalScheduleSectionClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_end_date_time_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_repeat_duration_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_repeat_type_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_number_of_occurrences_changed_cb);
 }
 
 static void

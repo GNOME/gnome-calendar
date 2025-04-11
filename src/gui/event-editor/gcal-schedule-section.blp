@@ -94,6 +94,7 @@ template $GcalScheduleSection: Box {
         numeric: true;
         adjustment: number_of_occurrences_adjustment;
         valign: center;
+        value-changed => $on_number_of_occurrences_changed_cb() swapped;
       }
     }
 
