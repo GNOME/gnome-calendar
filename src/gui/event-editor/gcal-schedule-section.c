@@ -352,6 +352,7 @@ recur_change_frequency (GcalRecurrence *old_recur, GcalRecurrenceFrequency frequ
 {
   if (frequency == GCAL_RECURRENCE_NO_REPEAT)
     {
+      /* Invariant: GCAL_RECURRENCE_NO_REPEAT is reduced to a NULL recurrence */
       return NULL;
     }
   else
@@ -373,12 +374,65 @@ recur_change_frequency (GcalRecurrence *old_recur, GcalRecurrenceFrequency frequ
     }
 }
 
+static GcalRecurrence *
+recur_change_limit_type (GcalRecurrence *old_recur, GcalRecurrenceLimitType limit_type, GDateTime *date_start)
+{
+  /* An old recurrence would already be present with something other than GCAL_RECURRENCE_NO_REPEAT */
+  g_assert (old_recur != NULL);
+  g_assert (old_recur->frequency != GCAL_RECURRENCE_NO_REPEAT);
+
+  GcalRecurrence *new_recur = gcal_recurrence_copy (old_recur);
+
+  if (limit_type == old_recur->limit_type)
+    {
+      return new_recur;
+    }
+  else
+    {
+      new_recur->limit_type = limit_type;
+
+      switch (limit_type)
+        {
+        case GCAL_RECURRENCE_FOREVER:
+          break;
+
+        case GCAL_RECURRENCE_COUNT:
+          /* Other policies are possible.  This is just "more than once". */
+          new_recur->limit.count = 2;
+          break;
+
+        case GCAL_RECURRENCE_UNTIL:
+          /* Again, other policies are possible.  For now, leave the decision to the user. */
+          g_assert (date_start != NULL);
+          new_recur->limit.until = g_date_time_ref (date_start);
+          break;
+
+        default:
+          g_assert_not_reached ();
+        }
+    }
+
+  return new_recur;
+}
+
 static GcalScheduleSectionValues *
 gcal_schedule_section_values_set_recur_frequency (const GcalScheduleSectionValues *values,
                                                   GcalRecurrenceFrequency frequency)
 {
   GcalScheduleSectionValues *copy = gcal_schedule_section_values_copy (values);
   GcalRecurrence *new_recur = recur_change_frequency (copy->curr.recur, frequency);
+  g_clear_pointer (&copy->curr.recur, gcal_recurrence_unref);
+  copy->curr.recur = new_recur;
+
+  return copy;
+}
+
+static GcalScheduleSectionValues *
+gcal_schedule_section_values_set_recur_limit_type (const GcalScheduleSectionValues *values,
+                                                   GcalRecurrenceLimitType limit_type)
+{
+  GcalScheduleSectionValues *copy = gcal_schedule_section_values_copy (values);
+  GcalRecurrence *new_recur = recur_change_limit_type (copy->curr.recur, limit_type, values->curr.date_start);
   g_clear_pointer (&copy->curr.recur, gcal_recurrence_unref);
   copy->curr.recur = new_recur;
 
@@ -666,9 +720,8 @@ on_repeat_duration_changed_cb (GtkWidget           *widget,
                                GcalScheduleSection *self)
 {
   GcalRecurrenceLimitType limit_type = get_recurence_limit_type (self);
-
-  gtk_widget_set_visible (self->number_of_occurrences_spin, limit_type == GCAL_RECURRENCE_COUNT);
-  gtk_widget_set_visible (self->until_date_selector, limit_type == GCAL_RECURRENCE_UNTIL);
+  GcalScheduleSectionValues *updated = gcal_schedule_section_values_set_recur_limit_type (self->values, limit_type);
+  update_from_section_values (self, updated);
 }
 
 static GcalRecurrenceFrequency
@@ -753,45 +806,28 @@ static void
 gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
                                       GcalEvent           *event)
 {
-  GcalRecurrenceFrequency freq;
-
   GCAL_ENTRY;
 
   gcal_event_set_all_day (event, self->values->curr.all_day);
   gcal_event_set_date_start (event, self->values->curr.date_start);
   gcal_event_set_date_end (event, self->values->curr.date_end);
 
-  /* Check Repeat popover and set recurrence-rules accordingly */
-
-  freq = get_recurrence_frequency (self);
-
-  if (freq != GCAL_RECURRENCE_NO_REPEAT)
+  /* Only apply the new recurrence if it's different from the old one.
+   * We don't unconditionally set the recurrence since remove_recurrence_properties()
+   * will actually remove all the rrules, not just *a* unique one.
+   *
+   * That is, here we allow for future support for more than one rrule
+   * in the event, given the current capabilities of gnome-calendar.
+   *
+   */
+  if (!gcal_recurrence_is_equal (self->values->curr.recur, gcal_event_get_recurrence (event)))
     {
-      g_autoptr (GcalRecurrence) recur = NULL;
-
-      recur = gcal_recurrence_new ();
-      recur->frequency = freq;
-      recur->limit_type = get_recurence_limit_type (self);
-
-      if (recur->limit_type == GCAL_RECURRENCE_UNTIL)
-        recur->limit.until = g_date_time_ref (gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector)));
-      else if (recur->limit_type == GCAL_RECURRENCE_COUNT)
-        recur->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
-
-      /* Only apply the new recurrence if it's different from the old one */
-      if (!gcal_recurrence_is_equal (self->values->curr.recur, recur))
-        {
-          /* Remove the previous recurrence... */
-          remove_recurrence_properties (event);
-
-          /* ... and set the new one */
-          gcal_event_set_recurrence (event, recur);
-        }
-    }
-  else
-    {
-      /* When NO_REPEAT is set, make sure to remove the old recurrent */
       remove_recurrence_properties (event);
+
+      if (self->values->curr.recur)
+        {
+          gcal_event_set_recurrence (event, self->values->curr.recur);
+        }
     }
 
   GCAL_EXIT;
@@ -1283,6 +1319,17 @@ test_recur_changes_to_no_repeat (void)
   g_assert_null (new_recur);
 }
 
+static void
+test_recur_changes_limit_type_to_count (void)
+{
+  g_autoptr (GcalRecurrence) old_recur = gcal_recurrence_new ();
+  old_recur->frequency = GCAL_RECURRENCE_WEEKLY;
+
+  g_autoptr (GcalRecurrence) new_recur = recur_change_limit_type (old_recur, GCAL_RECURRENCE_COUNT, NULL);
+  g_assert_cmpint (new_recur->limit_type, ==, GCAL_RECURRENCE_COUNT);
+  g_assert_cmpint (new_recur->limit.count, ==, 2);
+}
+
 void
 gcal_schedule_section_add_tests (void)
 {
@@ -1300,4 +1347,6 @@ gcal_schedule_section_add_tests (void)
                    test_43_switching_to_all_day_preserves_timezones);
   g_test_add_func ("/event_editor/schedule_section/recur_changes_to_no_repeat",
                    test_recur_changes_to_no_repeat);
+  g_test_add_func ("/event_editor/schedule_section/recur_changes_limit_type_to_count",
+                   test_recur_changes_limit_type_to_count);
 }
