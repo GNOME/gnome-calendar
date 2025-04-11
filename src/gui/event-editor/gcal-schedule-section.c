@@ -540,7 +540,7 @@ widget_state_free (WidgetState *state)
  * Auxiliary methods
  */
 
-static inline gboolean
+static gboolean
 all_day_selected (GcalScheduleSection *self)
 {
   const gchar *active = adw_toggle_group_get_active_name (self->schedule_type_toggle_group);
