@@ -1330,6 +1330,19 @@ test_recur_changes_limit_type_to_count (void)
   g_assert_cmpint (new_recur->limit.count, ==, 2);
 }
 
+static void
+test_recur_changes_limit_type_to_until (void)
+{
+  g_autoptr (GcalRecurrence) old_recur = gcal_recurrence_new ();
+  old_recur->frequency = GCAL_RECURRENCE_WEEKLY;
+
+  g_autoptr (GDateTime) date = g_date_time_new_from_iso8601 ("20250411T00:00:00-06:00", NULL);
+
+  g_autoptr (GcalRecurrence) new_recur = recur_change_limit_type (old_recur, GCAL_RECURRENCE_UNTIL, date);
+  g_assert_cmpint (new_recur->limit_type, ==, GCAL_RECURRENCE_UNTIL);
+  g_assert (g_date_time_equal (new_recur->limit.until, date));
+}
+
 void
 gcal_schedule_section_add_tests (void)
 {
@@ -1349,4 +1362,6 @@ gcal_schedule_section_add_tests (void)
                    test_recur_changes_to_no_repeat);
   g_test_add_func ("/event_editor/schedule_section/recur_changes_limit_type_to_count",
                    test_recur_changes_limit_type_to_count);
+  g_test_add_func ("/event_editor/schedule_section/recur_changes_limit_type_to_until",
+                   test_recur_changes_limit_type_to_until);
 }
