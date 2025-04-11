@@ -617,10 +617,10 @@ on_repeat_duration_changed_cb (GtkWidget           *widget,
                                GParamSpec          *pspec,
                                GcalScheduleSection *self)
 {
-  gint active = adw_combo_row_get_selected (ADW_COMBO_ROW (widget));
+  GcalRecurrenceLimitType limit_type = adw_combo_row_get_selected (ADW_COMBO_ROW (widget));
 
-  gtk_widget_set_visible (self->number_of_occurrences_spin, active == 1);
-  gtk_widget_set_visible (self->until_date_selector, active == 2);
+  gtk_widget_set_visible (self->number_of_occurrences_spin, limit_type == GCAL_RECURRENCE_COUNT);
+  gtk_widget_set_visible (self->until_date_selector, limit_type == GCAL_RECURRENCE_UNTIL);
 }
 
 static GcalRecurrenceFrequency
