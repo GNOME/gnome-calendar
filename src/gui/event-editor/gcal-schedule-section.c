@@ -347,6 +347,44 @@ gcal_schedule_section_values_set_end_date_time (const GcalScheduleSectionValues 
   return copy;
 }
 
+static GcalRecurrence *
+recur_change_frequency (GcalRecurrence *old_recur, GcalRecurrenceFrequency frequency)
+{
+  if (frequency == GCAL_RECURRENCE_NO_REPEAT)
+    {
+      return NULL;
+    }
+  else
+    {
+      GcalRecurrence *new_recur;
+
+      if (old_recur)
+        {
+          new_recur = gcal_recurrence_copy (old_recur);
+        }
+      else
+        {
+          new_recur = gcal_recurrence_new ();
+        }
+
+      new_recur->frequency = frequency;
+
+      return new_recur;
+    }
+}
+
+static GcalScheduleSectionValues *
+gcal_schedule_section_values_set_recur_frequency (const GcalScheduleSectionValues *values,
+                                                  GcalRecurrenceFrequency frequency)
+{
+  GcalScheduleSectionValues *copy = gcal_schedule_section_values_copy (values);
+  GcalRecurrence *new_recur = recur_change_frequency (copy->curr.recur, frequency);
+  g_clear_pointer (&copy->curr.recur, gcal_recurrence_unref);
+  copy->curr.recur = new_recur;
+
+  return copy;
+}
+
 static WidgetState *
 widget_state_from_values (const GcalScheduleSectionValues *values)
 {
@@ -649,11 +687,8 @@ on_repeat_type_changed_cb (GtkWidget           *widget,
                            GcalScheduleSection *self)
 {
   GcalRecurrenceFrequency frequency = get_recurrence_frequency (self);
-
-  if (frequency == GCAL_RECURRENCE_NO_REPEAT)
-    adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
-
-  gtk_widget_set_visible (self->repeat_duration_combo, frequency != GCAL_RECURRENCE_NO_REPEAT);
+  GcalScheduleSectionValues *updated = gcal_schedule_section_values_set_recur_frequency (self->values, frequency);
+  update_from_section_values (self, updated);
 }
 
 static void
@@ -1238,6 +1273,16 @@ test_43_switching_to_all_day_preserves_timezones (void)
   g_assert (g_date_time_equal (not_all_day_values->curr.date_end, expected_end_date2));
 }
 
+static void
+test_recur_changes_to_no_repeat (void)
+{
+  g_autoptr (GcalRecurrence) old_recur = gcal_recurrence_new ();
+  old_recur->frequency = GCAL_RECURRENCE_WEEKLY;
+
+  g_autoptr (GcalRecurrence) new_recur = recur_change_frequency (old_recur, GCAL_RECURRENCE_NO_REPEAT);
+  g_assert_null (new_recur);
+}
+
 void
 gcal_schedule_section_add_tests (void)
 {
@@ -1253,4 +1298,6 @@ gcal_schedule_section_add_tests (void)
                    test_all_day_displays_sensible_dates_and_roundtrips);
   g_test_add_func ("/event_editor/schedule_section/43_switching_to_all_day_preserves_timezones",
                    test_43_switching_to_all_day_preserves_timezones);
+  g_test_add_func ("/event_editor/schedule_section/recur_changes_to_no_repeat",
+                   test_recur_changes_to_no_repeat);
 }
