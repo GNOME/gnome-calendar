@@ -79,6 +79,8 @@ typedef struct
 
   struct {
     gboolean duration_combo_visible;
+    gboolean number_of_occurrences_visible;
+    gboolean until_date_visible;
     GcalRecurrenceFrequency frequency;
     GcalRecurrenceLimitType limit_type;
     guint limit_count;
@@ -496,9 +498,11 @@ widget_state_from_values (const GcalScheduleSectionValues *values)
         {
         case GCAL_RECURRENCE_COUNT:
           state->recurrence.limit_count = values->curr.recur->limit.count;
+          state->recurrence.number_of_occurrences_visible = TRUE;
           break;
 
         case GCAL_RECURRENCE_UNTIL:
+          state->recurrence.until_date_visible = TRUE;
           state->recurrence.limit_until = g_date_time_ref (values->curr.recur->limit.until);
           break;
 
@@ -513,6 +517,8 @@ widget_state_from_values (const GcalScheduleSectionValues *values)
   else
     {
       state->recurrence.duration_combo_visible = FALSE;
+      state->recurrence.number_of_occurrences_visible = FALSE;
+      state->recurrence.until_date_visible = FALSE;
       state->recurrence.frequency = GCAL_RECURRENCE_NO_REPEAT;
       state->recurrence.limit_type = GCAL_RECURRENCE_FOREVER;
       state->recurrence.limit_count = 0;
@@ -617,11 +623,16 @@ update_widgets (GcalScheduleSection *self,
   adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_combo), state->recurrence.frequency);
   adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_duration_combo), state->recurrence.limit_type);
 
-  gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), state->recurrence.limit_count);
-
-  if (state->recurrence.limit_until)
+  gtk_widget_set_visible (self->until_date_selector, state->recurrence.until_date_visible);
+  if (state->recurrence.until_date_visible)
     {
       gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->until_date_selector), state->recurrence.limit_until);
+    }
+
+  gtk_widget_set_visible (self->number_of_occurrences_spin, state->recurrence.number_of_occurrences_visible);
+  if (state->recurrence.number_of_occurrences_visible)
+    {
+      gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), state->recurrence.limit_count);
     }
 
   unblock_date_signals (self);
@@ -1343,6 +1354,50 @@ test_recur_changes_limit_type_to_until (void)
   g_assert (g_date_time_equal (new_recur->limit.until, date));
 }
 
+static void
+test_turning_on_recurrence_count_turns_on_its_widget (void)
+{
+  /* Start with some configuration */
+  g_autoptr (GcalScheduleSectionValues) values = section_values_with_date_times("20250411T10:00:00-06:00",
+                                                                                "20250411T11:30:00-06:00",
+                                                                                FALSE);
+
+  /* Turn on recurrence */
+  g_autoptr (GcalScheduleSectionValues) with_recur =
+    gcal_schedule_section_values_set_recur_frequency (values, GCAL_RECURRENCE_DAILY);
+
+  /* Set it to "count" */
+  g_autoptr (GcalScheduleSectionValues) with_count =
+    gcal_schedule_section_values_set_recur_limit_type (with_recur, GCAL_RECURRENCE_COUNT);
+
+  g_autoptr (WidgetState) state = widget_state_from_values (with_count);
+  g_assert_true (state->recurrence.duration_combo_visible);
+  g_assert_true (state->recurrence.number_of_occurrences_visible);
+  g_assert_false (state->recurrence.until_date_visible);
+}
+
+static void
+test_turning_on_recurrence_until_turns_on_its_widget (void)
+{
+  /* Start with some configuration */
+  g_autoptr (GcalScheduleSectionValues) values = section_values_with_date_times("20250411T10:00:00-06:00",
+                                                                                "20250411T11:30:00-06:00",
+                                                                                FALSE);
+
+  /* Turn on recurrence */
+  g_autoptr (GcalScheduleSectionValues) with_recur =
+    gcal_schedule_section_values_set_recur_frequency (values, GCAL_RECURRENCE_DAILY);
+
+  /* Set it to "count" */
+  g_autoptr (GcalScheduleSectionValues) with_until =
+    gcal_schedule_section_values_set_recur_limit_type (with_recur, GCAL_RECURRENCE_UNTIL);
+
+  g_autoptr (WidgetState) state = widget_state_from_values (with_until);
+  g_assert_true (state->recurrence.duration_combo_visible);
+  g_assert_false (state->recurrence.number_of_occurrences_visible);
+  g_assert_true (state->recurrence.until_date_visible);
+}
+
 void
 gcal_schedule_section_add_tests (void)
 {
@@ -1364,4 +1419,8 @@ gcal_schedule_section_add_tests (void)
                    test_recur_changes_limit_type_to_count);
   g_test_add_func ("/event_editor/schedule_section/recur_changes_limit_type_to_until",
                    test_recur_changes_limit_type_to_until);
+  g_test_add_func ("/event_editor/schedule_section/turning_on_recurrence_count_turns_on_its_widget",
+                   test_turning_on_recurrence_count_turns_on_its_widget);
+  g_test_add_func ("/event_editor/schedule_section/turning_on_recurrence_until_turns_on_its_widget",
+                   test_turning_on_recurrence_until_turns_on_its_widget);
 }
