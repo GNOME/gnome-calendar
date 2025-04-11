@@ -612,12 +612,22 @@ on_end_date_time_changed_cb (GtkWidget           *widget,
   update_from_section_values (self, updated);
 }
 
+static GcalRecurrenceLimitType
+get_recurence_limit_type (AdwComboRow *row)
+{
+  guint item = adw_combo_row_get_selected (row);
+
+  g_assert (item >= GCAL_RECURRENCE_FOREVER && item <= GCAL_RECURRENCE_UNTIL);
+
+  return (GcalRecurrenceLimitType) item;
+}
+
 static void
 on_repeat_duration_changed_cb (GtkWidget           *widget,
                                GParamSpec          *pspec,
                                GcalScheduleSection *self)
 {
-  GcalRecurrenceLimitType limit_type = adw_combo_row_get_selected (ADW_COMBO_ROW (widget));
+  GcalRecurrenceLimitType limit_type = get_recurence_limit_type (ADW_COMBO_ROW (widget));
 
   gtk_widget_set_visible (self->number_of_occurrences_spin, limit_type == GCAL_RECURRENCE_COUNT);
   gtk_widget_set_visible (self->until_date_selector, limit_type == GCAL_RECURRENCE_UNTIL);
