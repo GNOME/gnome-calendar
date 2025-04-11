@@ -623,14 +623,22 @@ on_repeat_duration_changed_cb (GtkWidget           *widget,
   gtk_widget_set_visible (self->until_date_selector, active == 2);
 }
 
+static GcalRecurrenceFrequency
+get_recurrence_frequency (AdwComboRow *row)
+{
+  guint item = adw_combo_row_get_selected (row);
+
+  g_assert (item >= GCAL_RECURRENCE_NO_REPEAT && item <= GCAL_RECURRENCE_OTHER);
+
+  return (GcalRecurrenceFrequency) item;
+}
+
 static void
 on_repeat_type_changed_cb (GtkWidget           *widget,
                            GParamSpec          *pspec,
                            GcalScheduleSection *self)
 {
-  GcalRecurrenceFrequency frequency;
-
-  frequency = adw_combo_row_get_selected (ADW_COMBO_ROW (widget));
+  GcalRecurrenceFrequency frequency = get_recurrence_frequency (ADW_COMBO_ROW (widget));
 
   if (frequency == GCAL_RECURRENCE_NO_REPEAT)
     adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
