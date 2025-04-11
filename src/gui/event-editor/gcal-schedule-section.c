@@ -613,9 +613,9 @@ on_end_date_time_changed_cb (GtkWidget           *widget,
 }
 
 static GcalRecurrenceLimitType
-get_recurence_limit_type (AdwComboRow *row)
+get_recurence_limit_type (GcalScheduleSection *self)
 {
-  guint item = adw_combo_row_get_selected (row);
+  guint item = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_duration_combo));
 
   g_assert (item >= GCAL_RECURRENCE_FOREVER && item <= GCAL_RECURRENCE_UNTIL);
 
@@ -627,7 +627,7 @@ on_repeat_duration_changed_cb (GtkWidget           *widget,
                                GParamSpec          *pspec,
                                GcalScheduleSection *self)
 {
-  GcalRecurrenceLimitType limit_type = get_recurence_limit_type (ADW_COMBO_ROW (widget));
+  GcalRecurrenceLimitType limit_type = get_recurence_limit_type (self);
 
   gtk_widget_set_visible (self->number_of_occurrences_spin, limit_type == GCAL_RECURRENCE_COUNT);
   gtk_widget_set_visible (self->until_date_selector, limit_type == GCAL_RECURRENCE_UNTIL);
@@ -736,7 +736,7 @@ gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
 
       recur = gcal_recurrence_new ();
       recur->frequency = freq;
-      recur->limit_type = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_duration_combo));
+      recur->limit_type = get_recurence_limit_type (self);
 
       if (recur->limit_type == GCAL_RECURRENCE_UNTIL)
         recur->limit.until = g_date_time_ref (gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector)));
