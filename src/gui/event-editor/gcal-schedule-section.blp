@@ -106,6 +106,7 @@ template $GcalScheduleSection: Box {
       $GcalDateSelector until_date_selector {
         visible: false;
         valign: center;
+        notify::date => $on_until_date_changed_cb() swapped;
       }
     }
   }
