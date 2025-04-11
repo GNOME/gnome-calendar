@@ -634,9 +634,9 @@ on_repeat_duration_changed_cb (GtkWidget           *widget,
 }
 
 static GcalRecurrenceFrequency
-get_recurrence_frequency (AdwComboRow *row)
+get_recurrence_frequency (GcalScheduleSection *self)
 {
-  guint item = adw_combo_row_get_selected (row);
+  guint item = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_combo));
 
   g_assert (item >= GCAL_RECURRENCE_NO_REPEAT && item <= GCAL_RECURRENCE_OTHER);
 
@@ -648,7 +648,7 @@ on_repeat_type_changed_cb (GtkWidget           *widget,
                            GParamSpec          *pspec,
                            GcalScheduleSection *self)
 {
-  GcalRecurrenceFrequency frequency = get_recurrence_frequency (ADW_COMBO_ROW (widget));
+  GcalRecurrenceFrequency frequency = get_recurrence_frequency (self);
 
   if (frequency == GCAL_RECURRENCE_NO_REPEAT)
     adw_combo_row_set_selected (ADW_COMBO_ROW (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
@@ -728,7 +728,7 @@ gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
 
   /* Check Repeat popover and set recurrence-rules accordingly */
 
-  freq = adw_combo_row_get_selected (ADW_COMBO_ROW (self->repeat_combo));
+  freq = get_recurrence_frequency (self);
 
   if (freq != GCAL_RECURRENCE_NO_REPEAT)
     {
