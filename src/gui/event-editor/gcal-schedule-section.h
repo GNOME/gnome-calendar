@@ -57,17 +57,17 @@ typedef struct
 
   /* copied from GcalContext to avoid a dependency on it */
   GcalTimeFormat time_format;
-} GcalScheduleSectionValues;
+} GcalEventSchedule;
 
 gboolean             gcal_schedule_section_recurrence_changed    (GcalScheduleSection *self);
 
 gboolean             gcal_schedule_section_day_changed           (GcalScheduleSection *self);
 
-GcalScheduleSectionValues *gcal_schedule_section_values_from_event     (GcalEvent                 *event,
-                                                                        GcalTimeFormat             time_format);
-void                       gcal_schedule_section_values_free           (GcalScheduleSectionValues *values);
+GcalEventSchedule   *gcal_event_schedule_from_event              (GcalEvent           *event,
+                                                                  GcalTimeFormat       time_format);
+void                 gcal_event_schedule_free                    (GcalEventSchedule   *values);
 
-G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalScheduleSectionValues, gcal_schedule_section_values_free);
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalEventSchedule, gcal_event_schedule_free);
 
 /* Tests */
 
