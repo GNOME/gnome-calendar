@@ -39,6 +39,7 @@ sources += files(
   'gcal-date-chooser-row.c',
   'gcal-date-time-chooser.c',
   'gcal-date-selector.c',
+  'gcal-event-schedule.c',
   'gcal-event-editor-dialog.c',
   'gcal-event-editor-section.c',
   'gcal-multi-choice.c',

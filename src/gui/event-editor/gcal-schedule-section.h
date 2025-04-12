@@ -32,42 +32,10 @@ G_BEGIN_DECLS
 #define GCAL_TYPE_SCHEDULE_SECTION (gcal_schedule_section_get_type())
 G_DECLARE_FINAL_TYPE (GcalScheduleSection, gcal_schedule_section, GCAL, SCHEDULE_SECTION, GtkBox)
 
-/* Values from a GcalEvent that this widget can manipulate.
- *
- * We keep an immutable copy of the original event's values, and later generate
- * a new GcalScheduleValues with the updated data from the widgetry.
- */
-typedef struct
-{
-  gboolean all_day;
-
-  GDateTime *date_start;
-  GDateTime *date_end;
-
-  GcalRecurrence *recur;
-} GcalScheduleValues;
-
-typedef struct
-{
-  /* original values from event */
-  GcalScheduleValues orig;
-
-  /* current values, as modified by actions from widgets */
-  GcalScheduleValues curr;
-
-  /* copied from GcalContext to avoid a dependency on it */
-  GcalTimeFormat time_format;
-} GcalEventSchedule;
-
 gboolean             gcal_schedule_section_recurrence_changed    (GcalScheduleSection *self);
 
 gboolean             gcal_schedule_section_day_changed           (GcalScheduleSection *self);
 
-GcalEventSchedule   *gcal_event_schedule_from_event              (GcalEvent           *event,
-                                                                  GcalTimeFormat       time_format);
-void                 gcal_event_schedule_free                    (GcalEventSchedule   *values);
-
-G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalEventSchedule, gcal_event_schedule_free);
 
 /* Tests */
 

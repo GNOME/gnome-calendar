@@ -1,6 +1,7 @@
 #include <glib.h>
 
 #include "gcal-tests.h"
+#include "event-editor/gcal-event-schedule.h"
 #include "event-editor/gcal-schedule-section.h"
 
 /* Adds all the tests for the internals of the GUI.
@@ -11,5 +12,6 @@
 void
 gcal_tests_add_internals (void)
 {
+  gcal_event_schedule_add_tests ();
   gcal_schedule_section_add_tests ();
 }
