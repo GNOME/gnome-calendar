@@ -38,7 +38,6 @@ struct _GcalQuickAddPopover
   /* Internal data */
   GcalRange          *range;
 
-  GtkWidget          *selected_calendar_row;
   GListModel         *read_write_calendars_model;
 
   GcalContext        *context;
@@ -66,27 +65,18 @@ static guint signals[NUM_SIGNALS] = { 0, };
  */
 
 static void
-row_activated_cb (GtkListBox          *list_box,
-                  GtkListBoxRow       *row,
-                  GcalQuickAddPopover *self)
+row_selected_cb (GtkListBox          *list_box,
+                 GtkListBoxRow       *row,
+                 GcalQuickAddPopover *self)
 {
   GtkWidget *check_button;
 
-  if (GTK_WIDGET (row) == self->selected_calendar_row)
+  if (!row)
     return;
 
   check_button = gcal_calendar_row_get_first_suffix_child (GCAL_CALENDAR_ROW (row));
 
   gtk_check_button_set_active (GTK_CHECK_BUTTON (check_button), TRUE);
-
-  g_set_weak_pointer (&self->selected_calendar_row, GTK_WIDGET (row));
-}
-
-static void
-check_button_activated_cb (GtkCheckButton *check_button,
-                           GtkListBoxRow  *row)
-{
-  g_signal_emit_by_name (row, "activate");
 }
 
 static void
@@ -118,6 +108,8 @@ create_row_func (gpointer data,
   /* The check button */
   check_button = gtk_check_button_new ();
   gtk_widget_set_valign (check_button, GTK_ALIGN_CENTER);
+  gtk_widget_set_can_focus (check_button, FALSE);
+  gtk_widget_set_can_target (check_button, FALSE);
 
   /* Turn these check buttons into radio buttons */
   first_row = gtk_widget_get_first_child (self->calendars_list_box);
@@ -134,11 +126,10 @@ create_row_func (gpointer data,
   gcal_calendar_row_add_suffix (GCAL_CALENDAR_ROW (row), check_button);
 
   if (calendar == default_calendar)
-    g_signal_emit_by_name (self->calendars_list_box, "row-activated", row, self);
+    gtk_list_box_select_row (GTK_LIST_BOX (self->calendars_list_box), GTK_LIST_BOX_ROW (row));
 
   g_signal_connect_object (calendar, "notify::visible", G_CALLBACK (emit_changed), self, G_CONNECT_SWAPPED);
   g_signal_connect_object (calendar, "notify::read-only", G_CALLBACK (emit_changed), self, G_CONNECT_SWAPPED);
-  g_signal_connect_object (check_button, "toggled", G_CALLBACK (check_button_activated_cb), row, G_CONNECT_DEFAULT);
 
   return row;
 }
@@ -462,6 +453,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
   g_autoptr (GDateTime) range_end = NULL;
   ECalComponent *component;
   GcalCalendar *calendar;
+  GtkListBoxRow *selected_row;
   GcalManager *manager;
   GDateTime *date_start, *date_end;
   GTimeZone *tz;
@@ -469,14 +461,12 @@ edit_or_create_event (GcalQuickAddPopover *self,
   const gchar *summary;
   gboolean all_day, single_day;
 
-  if (!self->selected_calendar_row)
-    return;
-
   range_start = gcal_range_get_start (self->range);
   range_end = gcal_range_get_end (self->range);
 
   manager = gcal_context_get_manager (self->context);
-  calendar = gcal_calendar_row_get_calendar (GCAL_CALENDAR_ROW (self->selected_calendar_row));
+  selected_row = gtk_list_box_get_selected_row (GTK_LIST_BOX (self->calendars_list_box));
+  calendar = gcal_calendar_row_get_calendar (GCAL_CALENDAR_ROW (selected_row));
 
   single_day = gcal_date_time_compare_date (range_end, range_start) == 0;
   all_day = gcal_date_time_compare_date (range_end, range_start) > 1 ||
@@ -721,7 +711,7 @@ gcal_quick_add_popover_class_init (GcalQuickAddPopoverClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalQuickAddPopover, title_label);
 
   gtk_widget_class_bind_template_callback (widget_class, edit_or_create_event);
-  gtk_widget_class_bind_template_callback (widget_class, row_activated_cb);
+  gtk_widget_class_bind_template_callback (widget_class, row_selected_cb);
   gtk_widget_class_bind_template_callback (widget_class, summary_entry_activated);
   gtk_widget_class_bind_template_callback (widget_class, summary_entry_text_changed);
 }

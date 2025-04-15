@@ -57,12 +57,12 @@ template $GcalQuickAddPopover: Popover {
       ]
 
       child: ListBox calendars_list_box {
-        selection-mode: none;
+        tab-behavior: item;
         margin-start: 12;
         margin-end: 12;
         margin-top: 12;
         margin-bottom: 12;
-        row-activated => $row_activated_cb(template) not-swapped;
+        row-selected => $row_selected_cb(template);
 
         styles [
           "boxed-list",

@@ -76,6 +76,19 @@ entry.compact > text {
   border-radius: 12px;
 }
 
+/* values copied from libadwaita */
+.calendars-list > row:selected {
+  background-color: transparent;
+}
+
+.calendars-list > row:selected:hover {
+  background-image: image(color-mix(in srgb, currentColor 3%, transparent));
+}
+
+.calendars-list > row:selected:active {
+  background-image: image(color-mix(in srgb, currentColor 8%, transparent));
+}
+
 /* Date chooser */
 
 /* month/year controls */
