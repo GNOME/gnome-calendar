@@ -119,12 +119,6 @@ datechooser button.day dot {
   min-width: 3px;
 }
 
-datechooser button.day:selected {
-  background-color: var(--accent-bg-color);
-  color: var(--accent-fg-color);
-  font-weight: bold;
-}
-
 datechooser button.day:selected dot {
   background-color: var(--accent-fg-color);
 }
@@ -133,8 +127,10 @@ datechooser button.day.non-workday {
   color: var(--insensitive-fg-color);
 }
 
-datechooser button.day.non-workday:selected {
+datechooser button.day:selected {
+  background-color: var(--accent-bg-color);
   color: var(--accent-fg-color);
+  font-weight: bold;
 }
 
 datechooser button.day.today {
