@@ -2,11 +2,6 @@
   --month-border-color: white;
 }
 
-.sources-button > button:hover,
-.sources-button > button:active,
-.sources-button > button:checked {
-    box-shadow: inset 1px 0 var(--borders), inset -1px 0 var(--borders);
-}
 datechooser .weeknum {
     color: var(--window-fg-color);
     background-color: rgb(from var(--window-fg-color) r g b / 5%);

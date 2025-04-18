@@ -57,10 +57,6 @@ popover.event-popover > contents {
   padding: 0;
 }
 
-.search-viewport {
-  background-color: var(--view-bg-color);
-}
-
 /* calendar popover */
 .calendar-list {
     background-color: transparent;
@@ -69,32 +65,6 @@ popover.event-popover > contents {
 .calendar-list > list {
     border-radius: 4px;
 }
-
-/* Edit dialog's header button */
-.sources-button {
-    margin-top: -6px;
-    margin-bottom: -6px;
-}
-
-.sources-button > button {
-    border-radius: 0;
-}
-
-/* defeats the ugly hover effect of the calendar color dot on buttons */
-.calendar-color-image {
-    -gtk-icon-filter: none;
-}
-
-/* adds a subtle shadow to the calendar color dot when it makes sense */
-image.calendar-color-image,
-button:active:not(:backdrop) .calendar-color-image,
-button:checked:not(:backdrop) .calendar-color-image,
-.calendars-list .calendar-color-image:not(:backdrop):not(:disabled),
-.calendar-list .calendar-color-image:not(:backdrop):not(:disabled),
-.sources-button:not(:backdrop):not(:disabled) .calendar-color-image {
-    -gtk-icon-shadow: 0 1px rgb(from black r g b / 10%);
-}
-
 
 /* Date chooser */
 
@@ -210,19 +180,6 @@ label.month-name {
 }
 
 /* Week View CSS */
-
-.week-header .week-number {
-    font-size: 16pt;
-    font-weight: bold;
-    padding: 12px 12px 18px 12px;
-    color: rgb(from var(--window-fg-color) r g b / 25%);
-}
-
-.week-header.week-temperature {
-    font-size: 10pt;
-    font-weight: bold;
-    color: rgb(from var(--window-fg-color) r g b / 55%);
-}
 
 .week-header.lines {
     color: rgb(from var(--window-fg-color) r g b / 15%);
