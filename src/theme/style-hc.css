@@ -1,13 +1,15 @@
-@define-color month_border_color black;
+:root {
+  --month-border-color: white;
+}
 
 .sources-button > button:hover,
 .sources-button > button:active,
 .sources-button > button:checked {
-    box-shadow: inset 1px 0 @borders, inset -1px 0 @borders;
+    box-shadow: inset 1px 0 var(--borders), inset -1px 0 var(--borders);
 }
 datechooser .weeknum {
-    color: @theme_fg_color;
-    background-color: alpha(@theme_fg_color, 0.05);
-    border: 1px solid alpha(currentColor, 0.5);
+    color: var(--window-fg-color);
+    background-color: rgb(from var(--window-fg-color) r g b / 5%);
+    border: 1px solid rgb(from currentColor r g b / 50%);
 }
 

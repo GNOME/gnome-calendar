@@ -46,13 +46,13 @@ event.slanted-start:dir(rtl) {
 
 event:not(.timed).color-dark {
     /* Keep in symc with the dark style's event.timed colors */
-    color: @light_1;
+    color: var(--light-1);
     outline-color: rgba(0, 0, 0, 0.3);
 }
 
 event.timed,
 event:not(.timed).color-light {
-    color: alpha(@dark_5, 0.8);
+    color: rgb(from var(--dark-5) r g b / 80%);
     outline-color: rgba(255, 255, 255, 0.5);
 }
 

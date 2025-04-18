@@ -1,1 +1,3 @@
-@define-color month_border_color white;
+:root {
+  --month-border-color: white;
+}

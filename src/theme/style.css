@@ -1,19 +1,24 @@
 @import 'events.css';
 
-@define-color month_separator_color mix(@borders, @dark_5, 0.09);
-@define-color month_today_color alpha(@accent_bg_color, 0.15);
-@define-color month_today_hover_color alpha(@accent_bg_color, 0.25);
-@define-color month_selected_today_color alpha(@accent_bg_color, 0.33);
-@define-color month_selected_today_hover_color alpha(@accent_bg_color, 0.4);
-@define-color month_selected_border_color alpha(@accent_bg_color, 0.2);
-@define-color month_selected_background_color alpha(@accent_bg_color, 0.1);
-@define-color month_selected_background_hover_color alpha(@accent_bg_color, 0.17);
+:root {
+  --borders: color-mix(in srgb, currentColor 15%, transparent);
+  --insensitive-fg-color: color-mix(in srgb, var(--window-fg-color) 50%, transparent);
+
+  --month-separator-color: color-mix(in srgb, var(--borders), var(--dark-5) 9%);
+  --month-today-color: rgb(from var(--accent-bg-color) r g b / 15%);
+  --month-today-hover-color: rgb(from var(--accent-bg-color) r g b / 25%);
+  --month-selected-today-color: rgb(from var(--accent-bg-color) r g b / 33%);
+  --month-selected-today-hover-color: rgb(from var(--accent-bg-color) r g b / 40%);
+  --month-selected-border-color: rgb(from var(--accent-bg-color) r g b / 20%);
+  --month-selected-bg-color: rgb(from var(--accent-bg-color) r g b / 10%);
+  --month-selected-bg-hover-color: rgb(from var(--accent-bg-color) r g b / 17%);
+}
 
 /* Header labels */
 label.primary-label {
     font-size: 16pt;
     font-weight: bold;
-    color: @accent_color;
+    color: var(--accent-color);
     padding: 12px;
 }
 
@@ -21,7 +26,7 @@ label.secondary-label {
     font-size: 16pt;
     font-weight: bold;
     padding: 12px;
-    color: alpha(@theme_fg_color, 0.55);
+    color: rgb(from var(--window-fg-color) r g b / 55%);
 }
 
 calendar-view {
@@ -32,16 +37,16 @@ calendar-view.header,
 label.header {
     font-size: 10pt;
     font-weight: bold;
-    color: alpha(@theme_fg_color, 0.55);
+    color: rgb(from var(--window-fg-color) r g b / 55%);
 }
 
 calendar-view.current,
 weekgrid.current {
-    background-color: alpha(@accent_bg_color, 0.3);
+    background-color: rgb(from var(--accent-bg-color) r g b / 30%);
 }
 
 calendar-view:selected {
-    color: @accent_color;
+    color: var(--accent-color);
     font-weight: bold;
 }
 
@@ -53,7 +58,7 @@ popover.event-popover > contents {
 }
 
 .search-viewport {
-  background-color: @theme_base_color;
+  background-color: var(--view-bg-color);
 }
 
 /* calendar popover */
@@ -87,7 +92,7 @@ button:checked:not(:backdrop) .calendar-color-image,
 .calendars-list .calendar-color-image:not(:backdrop):not(:disabled),
 .calendar-list .calendar-color-image:not(:backdrop):not(:disabled),
 .sources-button:not(:backdrop):not(:disabled) .calendar-color-image {
-    -gtk-icon-shadow: 0 1px alpha(black, 0.1);
+    -gtk-icon-shadow: 0 1px rgb(from black r g b / 10%);
 }
 
 
@@ -115,13 +120,13 @@ datechooser .weeknum{
     margin: 6px;
     padding: 4px;
     border-radius: 5px;
-    background-color: alpha(@insensitive_fg_color, 0.2);
-    color: @insensitive_fg_color;
+    background-color: rgb(from var(--insensitive-fg-color) r g b / 10%);
+    color: var(--insensitive-fg-color);
 }
 
 /* day names */
 datechooser .weekday {
-  color: @insensitive_fg_color;
+  color: var(--insensitive-fg-color);
   font-size: smaller;
   font-weight: bold;
 }
@@ -138,69 +143,69 @@ datechooser button.day {
 }
 
 datechooser button.day dot {
-  background-color: @theme_fg_color;
+  background-color: var(--window-fg-color);
   border-radius: 50%;
   min-height: 3px;
   min-width: 3px;
 }
 
 datechooser button.day:selected {
-  background-color: @accent_bg_color;
-  color: @accent_fg_color;
+  background-color: var(--accent-bg-color);
+  color: var(--accent-fg-color);
   font-weight: bold;
 }
 
 datechooser button.day:selected dot {
-  background-color: @accent_fg_color;
+  background-color: var(--accent-fg-color);
 }
 
 datechooser button.day.non-workday {
-  color: @insensitive_fg_color;
+  color: var(--insensitive-fg-color);
 }
 
 datechooser button.day.non-workday:selected {
-  color: @accent_fg_color;
+  color: var(--accent-fg-color);
 }
 
 datechooser button.day.today {
-  color: @accent_color;
+  color: var(--accent-color);
 }
 
 datechooser button.day.today dot {
-  background-color: @accent_color;
+  background-color: var(--accent-color);
 }
 
 datechooser button.day.today:selected {
-  background-color: @accent_bg_color;
-  color: @accent_fg_color;
+  background-color: var(--accent-bg-color);
+  color: var(--accent-fg-color);
 }
 
 datechooser button.day.today:selected dot {
-  background-color: @accent_fg_color;
+  background-color: var(--accent-fg-color);
 }
 
 datechooser button.day.other-month:not(:hover),
 datechooser button.day.other-month:backdrop {
-  color: alpha(currentColor, 0.5);
+  color: rgb(from currentColor r g b / 50%);
 }
 
 datechooser button.day.other-month:not(:hover) dot,
 datechooser button.day.other-month:backdrop dot {
-  background-color: alpha(currentColor, 0.5);
+  background-color: rgb(from currentColor r g b / 50%);
 }
 
 datechooser button.day.other-month:hover:not(:backdrop) {
-  color: @insensitive_fg_color;
+  color: var(--insensitive-fg-color);
 }
 
 datechooser button.day.other-month:hover:not(:backdrop) dot {
-  background-color: @insensitive_fg_color;
+  background-color: var(--insensitive-fg-color);
 }
 
 label.month-name {
     font-size: 16pt;
     font-weight: bold;
-    color: @accent_color;
+    color: var(--accent-color);
     padding: 12px;
 }
 
@@ -210,17 +215,17 @@ label.month-name {
     font-size: 16pt;
     font-weight: bold;
     padding: 12px 12px 18px 12px;
-    color: alpha(@theme_fg_color, 0.25);
+    color: rgb(from var(--window-fg-color) r g b / 25%);
 }
 
 .week-header.week-temperature {
     font-size: 10pt;
     font-weight: bold;
-    color: alpha(@theme_fg_color, 0.55);
+    color: rgb(from var(--window-fg-color) r g b / 55%);
 }
 
 .week-header.lines {
-    color: alpha(@window_fg_color, 0.15);
+    color: rgb(from var(--window-fg-color) r g b / 15%);
 }
 
 weekhourbar > label {
@@ -229,24 +234,24 @@ weekhourbar > label {
 }
 
 .week-view .lines {
-    color: alpha(@window_fg_color, 0.15);
+    color: rgb(from var(--window-fg-color) r g b / 15%);
 }
 
 weekgrid > widget.now-strip {
-    background-color: alpha(@accent_bg_color, 0.8);
+    background-color: rgb(from var(--accent-bg-color) r g b / 80%);
     margin: 0 0 0 1px;
     min-height: 2px;
 }
 
 weekgrid.dnd, .week-header.dnd {
-    background-color: alpha(@accent_bg_color, 0.25);
+    background-color: rgb(from var(--accent-bg-color) r g b / 25%);
 }
 
 weekheader > selection,
 weekgrid > selection,
 weekheader > droptarget,
 weekgrid > droptarget {
-    background-color: alpha(@accent_bg_color, 0.25);
+    background-color: rgb(from var(--accent-bg-color) r g b / 25%);
     border-radius: 6px;
     margin: 2px 0 1px 2px;
 }
@@ -261,70 +266,70 @@ button.week-header-expander:checked image {
  */
 
 monthcell {
-    border: solid 1px alpha(@borders, 0.5);
+    border: solid 1px rgb(from var(--borders) r g b / 7.5%);
     border-width: 1px 0 0 1px;
     background-color: transparent;
     transition: background-color 200ms;
 }
 
 monthcell:hover {
-    background-color: @theme_bg_color;
+    background-color: var(--window-bg-color);
     transition: background-color 200ms;
 }
 
 /* Today */
-monthcell.today { background-color: @month_today_color; }
-monthcell.today:hover { background-color: @month_today_hover_color; }
+monthcell.today { background-color: var(--month-today-color); }
+monthcell.today:hover { background-color: var(--month-today-hover-color); }
 
-monthcell:selected.today { background-color: @month_selected_today_color; }
-monthcell:selected.today:hover { background-color: @month_selected_today_hover_color; }
+monthcell:selected.today { background-color: var(--month-selected-today-color); }
+monthcell:selected.today:hover { background-color: var(--month-selected-today-hover-color); }
 
 monthcell.today label.day-label {
-    background-color: alpha(@accent_bg_color, 0.8);
-    color: @accent_fg_color;
+    background-color: rgb(from var(--accent-bg-color) r g b / 80%);
+    color: var(--accent-fg-color);
     border-radius: 99px;
     padding: 0 6px;
 }
 
 /* Out of Month */
 monthcell.out-of-month {
-    background-color: alpha(@theme_fg_color, 0.03);
+    background-color: rgb(from var(--window-fg-color) r g b / 3%);
 }
 
 monthcell.out-of-month:not(.today) {
-    background-color: alpha(@theme_fg_color, 0.01);
+    background-color: rgb(from var(--window-fg-color) r g b / 1%);
 }
 
 monthcell.out-of-month:hover,
 monthcell.out-of-month:not(.today):hover {
-    background-color: alpha(@theme_fg_color, 0.05);
+    background-color: rgb(from var(--window-fg-color) r g b / 5%);
     transition: background-color 200ms;
 }
 
-monthcell.out-of-month label { color: alpha(@theme_fg_color, 0.4); }
+monthcell.out-of-month label { color: rgb(from var(--window-fg-color) r g b / 40%); }
 
 monthcell:not(.workday) {
-    background-color: alpha(@theme_fg_color, 0.01);
+    background-color: rgb(from var(--window-fg-color) r g b / 1%);
 }
 monthcell:not(.workday):hover {
-    background-color: alpha(@theme_fg_color, 0.03);
+    background-color: rgb(from var(--window-fg-color) r g b / 3%);
 }
 monthcell.today:not(.workday) {
-    background-color: alpha(@accent_bg_color, 0.15);
+    background-color: rgb(from var(--accent-bg-color) r g b / 15%);
 }
 
 /* Selected */
 monthcell:selected,
 monthcell.out-of-month:selected,
 monthcell:not(.workday):selected {
-    border-color: @month_selected_border_color;
-    background-color: @month_selected_background_color;
+    border-color: var(--month-selected-border-color);
+    background-color: var(--month-selected-bg-color);
 }
 
 monthcell:selected:hover,
 monthcell.out-of-month:selected:hover,
 monthcell:not(.workday):selected:hover {
-    background-color: @month_selected_background_hover_color;
+    background-color: var(--month-selected-bg-hover-color);
     transition: background-color 200ms;
 }
 
@@ -346,12 +351,12 @@ monthcell button {
 /* Separators */
 monthcell.separator-top,
 monthcell.separator-top:selected {
-    border-top: 1px solid @month_separator_color;
+    border-top: 1px solid var(--month-separator-color);
 }
 
 monthcell.separator-side:dir(ltr),
 monthcell.separator-side:selected:dir(ltr) {
-    border-left: 1px solid @month_separator_color;
+    border-left: 1px solid var(--month-separator-color);
 }
 
 monthcell:nth-child(7n + 1):dir(ltr),
@@ -361,7 +366,7 @@ monthcell:nth-child(7n + 1):selected:dir(ltr) {
 
 monthcell.separator-side:dir(rtl),
 monthcell.separator-side:selected:dir(rtl) {
-    border-right: 1px solid @month_separator_color;
+    border-right: 1px solid var(--month-separator-color);
 }
 
 monthcell:nth-child(7n + 1):dir(rtl),
@@ -375,7 +380,7 @@ monthcell:nth-child(7n + 1):selected:dir(rtl) {
 
 calendar-view.scrolling > box {
   background-color: transparent;
-  box-shadow: @headerbar_shade_color 0 2px 4px;
+  box-shadow: var(--headerbar-shade-color) 0 2px 4px;
   transition: box-shadow 200ms;
 }
 
@@ -391,7 +396,7 @@ calendar-view:not(.scrolling) > box {
 monthpopover > box {
   margin: 4px;
   padding: 12px;
-  background-color: @popover_bg_color;
+  background-color: var(--popover-bg-color);
 }
 
 .notes-section box > textview {
@@ -432,7 +437,7 @@ searchbutton > popover > arrow {
 }
 
 searchbutton > popover listview > row:selected {
-  background-color: alpha(@accent_bg_color, 0.11);
+  background-color: rgb(from var(--accent-bg-color) r g b / 11%);
 }
 
 /*
@@ -444,8 +449,8 @@ datechooser {
 }
 
 datechooser .current-week {
-  background: alpha(currentColor, 0.1);
-  color: @headerbar_fg_color;
+  background: rgb(from currentColor r g b / 10%);
+  color: var(--headerbar-fg-color);
   border-radius: 9px;
 }
 
@@ -475,7 +480,7 @@ syncindicator {
 .drop-overlay-area {
   padding: 32px;
   color: var(--accent-fg-color);
-  background-color: alpha(var(--accent-bg-color), 0.5);
+  background-color: rgb(from var(--accent-bg-color) r g b / 50%);
 }
 
 .blurred {
