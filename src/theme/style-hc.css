@@ -3,8 +3,8 @@
 }
 
 datechooser .weeknum {
-    color: var(--window-fg-color);
-    background-color: rgb(from var(--window-fg-color) r g b / 5%);
-    border: 1px solid rgb(from currentColor r g b / 50%);
+  color: var(--window-fg-color);
+  background-color: rgb(from var(--window-fg-color) r g b / 5%);
+  border: 1px solid rgb(from currentColor r g b / 50%);
 }
 

@@ -16,38 +16,38 @@
 
 /* Header labels */
 label.primary-label {
-    font-size: 16pt;
-    font-weight: bold;
-    color: var(--accent-color);
-    padding: 12px;
+  font-size: 16pt;
+  font-weight: bold;
+  color: var(--accent-color);
+  padding: 12px;
 }
 
 label.secondary-label {
-    font-size: 16pt;
-    font-weight: bold;
-    padding: 12px;
-    color: rgb(from var(--window-fg-color) r g b / 55%);
+  font-size: 16pt;
+  font-weight: bold;
+  padding: 12px;
+  color: rgb(from var(--window-fg-color) r g b / 55%);
 }
 
 calendar-view {
-    font-size: 10pt;
+  font-size: 10pt;
 }
 
 calendar-view.header,
 label.header {
-    font-size: 10pt;
-    font-weight: bold;
-    color: rgb(from var(--window-fg-color) r g b / 55%);
+  font-size: 10pt;
+  font-weight: bold;
+  color: rgb(from var(--window-fg-color) r g b / 55%);
 }
 
 calendar-view.current,
 weekgrid.current {
-    background-color: rgb(from var(--accent-bg-color) r g b / 30%);
+  background-color: rgb(from var(--accent-bg-color) r g b / 30%);
 }
 
 calendar-view:selected {
-    color: var(--accent-color);
-    font-weight: bold;
+  color: var(--accent-color);
+  font-weight: bold;
 }
 
 
@@ -59,11 +59,11 @@ popover.event-popover > contents {
 
 /* calendar popover */
 .calendar-list {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .calendar-list > list {
-    border-radius: 4px;
+  border-radius: 4px;
 }
 
 /* Date chooser */
@@ -84,14 +84,14 @@ datechooser navigator button {
 }
 
 /* week numbers, with a style resembling GNOME Shell's */
-datechooser .weeknum{
-    font-size: smaller;
-    font-weight: bold;
-    margin: 6px;
-    padding: 4px;
-    border-radius: 5px;
-    background-color: rgb(from var(--insensitive-fg-color) r g b / 10%);
-    color: var(--insensitive-fg-color);
+datechooser .weeknum {
+  font-size: smaller;
+  font-weight: bold;
+  margin: 6px;
+  padding: 4px;
+  border-radius: 5px;
+  background-color: rgb(from var(--insensitive-fg-color) r g b / 10%);
+  color: var(--insensitive-fg-color);
 }
 
 /* day names */
@@ -169,49 +169,49 @@ datechooser button.day.other-month:hover:not(:backdrop) dot {
 }
 
 label.month-name {
-    font-size: 16pt;
-    font-weight: bold;
-    color: var(--accent-color);
-    padding: 12px;
+  font-size: 16pt;
+  font-weight: bold;
+  color: var(--accent-color);
+  padding: 12px;
 }
 
 /* Week View CSS */
 
 .week-header.lines {
-    color: rgb(from var(--window-fg-color) r g b / 15%);
+  color: rgb(from var(--window-fg-color) r g b / 15%);
 }
 
 weekhourbar > label {
-    font-size: 10pt;
-    padding: 4px 6px;
+  font-size: 10pt;
+  padding: 4px 6px;
 }
 
 .week-view .lines {
-    color: rgb(from var(--window-fg-color) r g b / 15%);
+  color: rgb(from var(--window-fg-color) r g b / 15%);
 }
 
 weekgrid > widget.now-strip {
-    background-color: rgb(from var(--accent-bg-color) r g b / 80%);
-    margin: 0 0 0 1px;
-    min-height: 2px;
+  background-color: rgb(from var(--accent-bg-color) r g b / 80%);
+  margin: 0 0 0 1px;
+  min-height: 2px;
 }
 
 weekgrid.dnd, .week-header.dnd {
-    background-color: rgb(from var(--accent-bg-color) r g b / 25%);
+  background-color: rgb(from var(--accent-bg-color) r g b / 25%);
 }
 
 weekheader > selection,
 weekgrid > selection,
 weekheader > droptarget,
 weekgrid > droptarget {
-    background-color: rgb(from var(--accent-bg-color) r g b / 25%);
-    border-radius: 6px;
-    margin: 2px 0 1px 2px;
+  background-color: rgb(from var(--accent-bg-color) r g b / 25%);
+  border-radius: 6px;
+  margin: 2px 0 1px 2px;
 }
 
 button.week-header-expander:checked image {
-    transform: rotateZ(180deg);
-    transition: 200ms;
+  transform: rotateZ(180deg);
+  transition: 200ms;
 }
 
 /*
@@ -219,15 +219,15 @@ button.week-header-expander:checked image {
  */
 
 monthcell {
-    border: solid 1px rgb(from var(--borders) r g b / 7.5%);
-    border-width: 1px 0 0 1px;
-    background-color: transparent;
-    transition: background-color 200ms;
+  border: solid 1px rgb(from var(--borders) r g b / 7.5%);
+  border-width: 1px 0 0 1px;
+  background-color: transparent;
+  transition: background-color 200ms;
 }
 
 monthcell:hover {
-    background-color: var(--window-bg-color);
-    transition: background-color 200ms;
+  background-color: var(--window-bg-color);
+  transition: background-color 200ms;
 }
 
 /* Today */
@@ -238,93 +238,93 @@ monthcell:selected.today { background-color: var(--month-selected-today-color); 
 monthcell:selected.today:hover { background-color: var(--month-selected-today-hover-color); }
 
 monthcell.today label.day-label {
-    background-color: rgb(from var(--accent-bg-color) r g b / 80%);
-    color: var(--accent-fg-color);
-    border-radius: 99px;
-    padding: 0 6px;
+  background-color: rgb(from var(--accent-bg-color) r g b / 80%);
+  color: var(--accent-fg-color);
+  border-radius: 99px;
+  padding: 0 6px;
 }
 
 /* Out of Month */
 monthcell.out-of-month {
-    background-color: rgb(from var(--window-fg-color) r g b / 3%);
+  background-color: rgb(from var(--window-fg-color) r g b / 3%);
 }
 
 monthcell.out-of-month:not(.today) {
-    background-color: rgb(from var(--window-fg-color) r g b / 1%);
+  background-color: rgb(from var(--window-fg-color) r g b / 1%);
 }
 
 monthcell.out-of-month:hover,
 monthcell.out-of-month:not(.today):hover {
-    background-color: rgb(from var(--window-fg-color) r g b / 5%);
-    transition: background-color 200ms;
+  background-color: rgb(from var(--window-fg-color) r g b / 5%);
+  transition: background-color 200ms;
 }
 
 monthcell.out-of-month label { color: rgb(from var(--window-fg-color) r g b / 40%); }
 
 monthcell:not(.workday) {
-    background-color: rgb(from var(--window-fg-color) r g b / 1%);
+  background-color: rgb(from var(--window-fg-color) r g b / 1%);
 }
 monthcell:not(.workday):hover {
-    background-color: rgb(from var(--window-fg-color) r g b / 3%);
+  background-color: rgb(from var(--window-fg-color) r g b / 3%);
 }
 monthcell.today:not(.workday) {
-    background-color: rgb(from var(--accent-bg-color) r g b / 15%);
+  background-color: rgb(from var(--accent-bg-color) r g b / 15%);
 }
 
 /* Selected */
 monthcell:selected,
 monthcell.out-of-month:selected,
 monthcell:not(.workday):selected {
-    border-color: var(--month-selected-border-color);
-    background-color: var(--month-selected-bg-color);
+  border-color: var(--month-selected-border-color);
+  background-color: var(--month-selected-bg-color);
 }
 
 monthcell:selected:hover,
 monthcell.out-of-month:selected:hover,
 monthcell:not(.workday):selected:hover {
-    background-color: var(--month-selected-bg-hover-color);
-    transition: background-color 200ms;
+  background-color: var(--month-selected-bg-hover-color);
+  transition: background-color 200ms;
 }
 
 monthcell:selected label.day-label,
 monthcell.out-of-month:selected label.day-label,
 monthcell:not(.workday):selected label.day-label {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 /* Button */
 monthcell button {
-    font-weight: normal;
-    padding: 0 4px;
-    border-radius: 0;
-    border-bottom: none;
-    border-right: none;
+  font-weight: normal;
+  padding: 0 4px;
+  border-radius: 0;
+  border-bottom: none;
+  border-right: none;
 }
 
 /* Separators */
 monthcell.separator-top,
 monthcell.separator-top:selected {
-    border-top: 1px solid var(--month-separator-color);
+  border-top: 1px solid var(--month-separator-color);
 }
 
 monthcell.separator-side:dir(ltr),
 monthcell.separator-side:selected:dir(ltr) {
-    border-left: 1px solid var(--month-separator-color);
+  border-left: 1px solid var(--month-separator-color);
 }
 
 monthcell:nth-child(7n + 1):dir(ltr),
 monthcell:nth-child(7n + 1):selected:dir(ltr) {
-    border-left-width: 0;
+  border-left-width: 0;
 }
 
 monthcell.separator-side:dir(rtl),
 monthcell.separator-side:selected:dir(rtl) {
-    border-right: 1px solid var(--month-separator-color);
+  border-right: 1px solid var(--month-separator-color);
 }
 
 monthcell:nth-child(7n + 1):dir(rtl),
 monthcell:nth-child(7n + 1):selected:dir(rtl) {
-    border-right-width: 0;
+  border-right-width: 0;
 }
 
 /*

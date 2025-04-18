@@ -3,9 +3,9 @@
 }
 
 event {
-    margin: 1px;
-    font-size: 0.9rem;
-    background-color: var(--event-bg-color);
+  margin: 1px;
+  font-size: 0.9rem;
+  background-color: var(--event-bg-color);
 }
 
 event.timed {
@@ -13,7 +13,7 @@ event.timed {
 }
 
 event widget.content {
-    margin: 4px;
+  margin: 4px;
 }
 
 event.timed widget.edge {
@@ -22,38 +22,38 @@ event.timed widget.edge {
 
 event.timed,
 event:not(.slanted):not(.slanted-start):not(.slanted-end) {
-    border-radius: var(--event-border-radius);
+  border-radius: var(--event-border-radius);
 }
 
 event.timed widget.edge {
-    border-radius: var(--event-border-radius);
-    min-width: 5px;
+  border-radius: var(--event-border-radius);
+  min-width: 5px;
 }
 
 event.slanted,
 event.slanted-start,
 event.slanted-end:dir(rtl) {
-    padding-left: 16px;
-    border-radius: 0 var(--event-border-radius) var(--event-border-radius) 0;
+  padding-left: 16px;
+  border-radius: 0 var(--event-border-radius) var(--event-border-radius) 0;
 }
 
 event.slanted,
 event.slanted-end,
 event.slanted-start:dir(rtl) {
-    padding-right: 16px;
-    border-radius: var(--event-border-radius) 0 0 var(--event-border-radius);
+  padding-right: 16px;
+  border-radius: var(--event-border-radius) 0 0 var(--event-border-radius);
 }
 
 event:not(.timed).color-dark {
-    /* Keep in symc with the dark style's event.timed colors */
-    color: var(--light-1);
-    outline-color: rgba(0, 0, 0, 0.3);
+  /* Keep in symc with the dark style's event.timed colors */
+  color: var(--light-1);
+  outline-color: rgba(0, 0, 0, 0.3);
 }
 
 event.timed,
 event:not(.timed).color-light {
-    color: rgb(from var(--dark-5) r g b / 80%);
-    outline-color: rgba(255, 255, 255, 0.5);
+  color: rgb(from var(--dark-5) r g b / 80%);
+  outline-color: rgba(255, 255, 255, 0.5);
 }
 
 event.slanted {
