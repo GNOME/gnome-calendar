@@ -841,12 +841,37 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 
   signals[ACTIVATE] = g_signal_new ("activate",
                                      GCAL_TYPE_EVENT_WIDGET,
-                                     G_SIGNAL_RUN_LAST,
+                                     G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
                                      0,
                                      NULL, NULL,
                                      g_cclosure_marshal_VOID__VOID,
                                      G_TYPE_NONE,
                                      0);
+
+  gtk_widget_class_set_activate_signal (widget_class, signals[ACTIVATE]);
+
+  {
+    g_autoptr (GtkShortcutAction) activate_action = NULL;
+    const guint activate_keyvals[] = {
+      GDK_KEY_space,
+      GDK_KEY_KP_Space,
+      GDK_KEY_Return,
+      GDK_KEY_ISO_Enter,
+      GDK_KEY_KP_Enter,
+    };
+
+    activate_action = gtk_signal_action_new ("activate");
+
+    for (size_t i = 0; i < G_N_ELEMENTS (activate_keyvals); i++)
+      {
+        g_autoptr (GtkShortcut) activate_shortcut = NULL;
+
+        activate_shortcut = gtk_shortcut_new (gtk_keyval_trigger_new (activate_keyvals[i], 0),
+                                              g_object_ref (activate_action));
+
+        gtk_widget_class_add_shortcut (widget_class, activate_shortcut);
+      }
+  }
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-event-widget.ui");
 
@@ -865,6 +890,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_drag_source_prepare_cb);
 
   gtk_widget_class_set_css_name (widget_class, "event");
+  gtk_widget_class_set_accessible_role (widget_class, GTK_ACCESSIBLE_ROLE_BUTTON);
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
 }

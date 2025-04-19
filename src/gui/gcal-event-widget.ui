@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GcalEventWidget" parent="GtkWidget">
+    <property name="focusable">True</property>
     <property name="overflow">hidden</property>
+    <property name="receives-default">True</property>
 
     <!-- Drag Source -->
     <child>
