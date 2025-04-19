@@ -546,6 +546,18 @@ on_event_widget_activated_cb (GcalEventWidget *event_widget,
   gcal_view_event_activated (GCAL_VIEW (self), event_widget);
 }
 
+static void
+on_list_box_row_activated_cb (GtkListBox     *list_box,
+                              GtkListBoxRow  *row,
+                              GcalAgendaView *self)
+{
+  GtkWidget *child = gtk_list_box_row_get_child (row);
+
+  g_assert (GCAL_IS_EVENT_WIDGET (child));
+
+  gcal_view_event_activated (GCAL_VIEW (self), GCAL_EVENT_WIDGET (child));
+}
+
 static GcalRange*
 gcal_agenda_view_get_range (GcalTimelineSubscriber *subscriber)
 {
@@ -587,10 +599,10 @@ gcal_agenda_view_add_event (GcalTimelineSubscriber *subscriber,
                          "event", event,
                          "orientation", GTK_ORIENTATION_VERTICAL,
                          "timestamp-policy", timestamp_policy,
+                         "focusable", FALSE,
                          NULL);
 
   row = g_object_new (GTK_TYPE_LIST_BOX_ROW,
-                      "activatable", FALSE,
                       "child", widget,
                       NULL);
 
@@ -776,6 +788,8 @@ gcal_agenda_view_class_init (GcalAgendaViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, list_box);
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, no_events_row);
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, scrolled_window);
+
+  gtk_widget_class_bind_template_callback (widget_class, on_list_box_row_activated_cb);
 
   gtk_widget_class_set_css_name (widget_class, "agenda-view");
 }

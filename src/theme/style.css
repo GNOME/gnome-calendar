@@ -327,7 +327,11 @@ monthpopover > box {
 /* Agenda View CSS */
 
 agenda-view list > row {
-  padding: 2px 12px;
+  padding: 3px;
+  margin-left: 9px;
+  margin-right: 9px;
+  border-radius: 6px;
+  background: none;
 }
 
 agenda-view list > label {

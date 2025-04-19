@@ -11,6 +11,7 @@
             <property name="hexpand">True</property>
             <property name="selection-mode">none</property>
             <property name="vexpand">True</property>
+            <signal name="row-activated" handler="on_list_box_row_activated_cb" object="GcalAgendaView" swapped="no" />
             <style>
               <class name="background" />
             </style>
