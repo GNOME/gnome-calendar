@@ -1,7 +1,3 @@
-:root {
-  --month-border-color: white;
-}
-
 datechooser .weeknum {
   color: var(--window-fg-color);
   background-color: rgb(from var(--window-fg-color) r g b / 5%);

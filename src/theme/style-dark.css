@@ -1,14 +1,3 @@
-:root {
-  --month-separator-color: color-mix(in srgb, var(--borders), var(--light-5) 14%);
-  --month-today-color: rgb(from var(--accent-bg-color) r g b / 18%);
-  --month-today-hover-color: rgb(from var(--accent-bg-color) r g b / 28%);
-  --month-selected-today-color: rgb(from var(--accent-bg-color) r g b / 37%);
-  --month-selected-today-hover-color: rgb(from var(--accent-bg-color) r g b / 44%);
-  --month-selected-border-color: rgb(from var(--accent-bg-color) r g b / 25%);
-  --month-selected-bg-color: rgb(from var(--accent-bg-color) r g b / 17%);
-  --month-selected-bg-hover-color: rgb(from var(--accent-bg-color) r g b / 20%);
-}
-
 /*
  * Event widget
  */

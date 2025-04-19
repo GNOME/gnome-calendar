@@ -1,17 +1,7 @@
 @import 'events.css';
 
 :root {
-  --borders: color-mix(in srgb, currentColor 15%, transparent);
   --insensitive-fg-color: color-mix(in srgb, var(--window-fg-color) 50%, transparent);
-
-  --month-separator-color: color-mix(in srgb, var(--borders), var(--dark-5) 9%);
-  --month-today-color: rgb(from var(--accent-bg-color) r g b / 15%);
-  --month-today-hover-color: rgb(from var(--accent-bg-color) r g b / 25%);
-  --month-selected-today-color: rgb(from var(--accent-bg-color) r g b / 33%);
-  --month-selected-today-hover-color: rgb(from var(--accent-bg-color) r g b / 40%);
-  --month-selected-border-color: rgb(from var(--accent-bg-color) r g b / 20%);
-  --month-selected-bg-color: rgb(from var(--accent-bg-color) r g b / 10%);
-  --month-selected-bg-hover-color: rgb(from var(--accent-bg-color) r g b / 17%);
 }
 
 /* Header labels */
@@ -219,76 +209,48 @@ button.week-header-expander:checked image {
  */
 
 monthcell {
-  border: solid 1px rgb(from var(--borders) r g b / 7.5%);
-  border-width: 1px 0 0 1px;
-  background-color: transparent;
-  transition: background-color 200ms;
-}
+  --bg-color: rgb(from var(--window-fg-color) r g b / 0);
+  --separator-color: rgb(from var(--window-fg-color) r g b / calc(var(--border-opacity) + 12.5%));
 
-monthcell:hover {
-  background-color: var(--window-bg-color);
+  border: solid 1px rgb(from var(--border-color) r g b / calc(var(--border-opacity) / 1.5));
+  border-width: 1px 0 0 1px;
   transition: background-color 200ms;
+  background-color: var(--bg-color);
 }
 
 /* Today */
-monthcell.today { background-color: var(--month-today-color); }
-monthcell.today:hover { background-color: var(--month-today-hover-color); }
-
-monthcell:selected.today { background-color: var(--month-selected-today-color); }
-monthcell:selected.today:hover { background-color: var(--month-selected-today-hover-color); }
+monthcell.today {
+  --bg-color: rgb(from var(--accent-bg-color) r g b / 15%);
+}
 
 monthcell.today label.day-label {
-  background-color: rgb(from var(--accent-bg-color) r g b / 80%);
   color: var(--accent-fg-color);
+  background-color: var(--accent-bg-color);
   border-radius: 99px;
   padding: 0 6px;
 }
 
-/* Out of Month */
-monthcell.out-of-month {
-  background-color: rgb(from var(--window-fg-color) r g b / 3%);
-}
-
-monthcell.out-of-month:not(.today) {
-  background-color: rgb(from var(--window-fg-color) r g b / 1%);
-}
-
-monthcell.out-of-month:hover,
-monthcell.out-of-month:not(.today):hover {
-  background-color: rgb(from var(--window-fg-color) r g b / 5%);
-  transition: background-color 200ms;
-}
-
-monthcell.out-of-month label { color: rgb(from var(--window-fg-color) r g b / 40%); }
-
-monthcell:not(.workday) {
-  background-color: rgb(from var(--window-fg-color) r g b / 1%);
-}
-monthcell:not(.workday):hover {
-  background-color: rgb(from var(--window-fg-color) r g b / 3%);
-}
-monthcell.today:not(.workday) {
-  background-color: rgb(from var(--accent-bg-color) r g b / 15%);
+monthcell:hover {
+  background-color: rgb(from var(--bg-color) r g b / calc(alpha + 3.75%));
 }
 
 /* Selected */
-monthcell:selected,
-monthcell.out-of-month:selected,
-monthcell:not(.workday):selected {
-  border-color: var(--month-selected-border-color);
-  background-color: var(--month-selected-bg-color);
+monthcell:selected {
+  background-color:
+    color-mix(in srgb-linear, var(--bg-color) 82.5%, var(--accent-bg-color));
 }
 
-monthcell:selected:hover,
-monthcell.out-of-month:selected:hover,
-monthcell:not(.workday):selected:hover {
-  background-color: var(--month-selected-bg-hover-color);
-  transition: background-color 200ms;
+monthcell:hover:selected {
+  background-color:
+    color-mix(in srgb-linear, var(--bg-color) 77.5%, var(--accent-bg-color));
 }
 
-monthcell:selected label.day-label,
-monthcell.out-of-month:selected label.day-label,
-monthcell:not(.workday):selected label.day-label {
+/* Out of Month */
+monthcell.out-of-month > * {
+  opacity: calc(var(--dim-opacity) - 17.5%);
+}
+
+monthcell:selected label.day-label {
   font-weight: bold;
 }
 
@@ -302,28 +264,23 @@ monthcell button {
 }
 
 /* Separators */
-monthcell.separator-top,
-monthcell.separator-top:selected {
-  border-top: 1px solid var(--month-separator-color);
+monthcell.separator-top {
+  border-top: 1px solid var(--separator-color);
 }
 
-monthcell.separator-side:dir(ltr),
-monthcell.separator-side:selected:dir(ltr) {
-  border-left: 1px solid var(--month-separator-color);
+monthcell.separator-side:dir(ltr) {
+  border-left: 1px solid var(--separator-color);
 }
 
-monthcell:nth-child(7n + 1):dir(ltr),
-monthcell:nth-child(7n + 1):selected:dir(ltr) {
+monthcell.separator-side:dir(rtl) {
+  border-right: 1px solid var(--separator-color);
+}
+
+monthcell:nth-child(7n + 1):dir(ltr) {
   border-left-width: 0;
 }
 
-monthcell.separator-side:dir(rtl),
-monthcell.separator-side:selected:dir(rtl) {
-  border-right: 1px solid var(--month-separator-color);
-}
-
-monthcell:nth-child(7n + 1):dir(rtl),
-monthcell:nth-child(7n + 1):selected:dir(rtl) {
+monthcell:nth-child(7n + 1):dir(rtl) {
   border-right-width: 0;
 }
 
