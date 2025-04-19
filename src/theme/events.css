@@ -55,169 +55,69 @@ event:not(.timed).color-light {
   color: rgb(from var(--dark-5) r g b / 80%);
   outline-color: rgba(255, 255, 255, 0.5);
 }
+event.slanted,
+event.slanted-start,
+event.slanted-end {
+  --rotation: 0deg;
+  --linear-gradient-100deg: linear-gradient(calc(var(--rotation) + 100deg), /* left edge */
+                                            transparent 5px,
+                                            var(--event-bg-color) 6px,
+                                            var(--event-bg-color) 9px,
+                                            transparent 10px,
+                                            transparent 16px,
+                                            var(--event-bg-color) 17px);
+
+  --linear-gradient-280deg: linear-gradient(calc(var(--rotation) + 280deg), /* right edge */
+                                            transparent  5px,
+                                            var(--event-bg-color) 6px,
+                                            var(--event-bg-color) 9px,
+                                            transparent 10px,
+                                            transparent 16px,
+                                            var(--event-bg-color) 17px);
+}
+
+event.slanted:dir(rtl),
+event.slanted-start:dir(rtl),
+event.slanted-end:dir(rtl) {
+  --rotation: -20deg;
+}
 
 event.slanted {
   background-color: transparent;
-  background-image: linear-gradient(100deg, /* left edge */
-                                    transparent 5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px),
-                    linear-gradient(280deg, /* right edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px);
-  background-size: 50% 100%, 50% 100%, 50% 100%, 50% 100%;
-  background-position: left bottom, right bottom, left bottom, right bottom;
+  background-image:
+    var(--linear-gradient-100deg),
+    var(--linear-gradient-280deg);
+  background-size: 50% 100%;
+  background-position: left bottom, right bottom;
   background-repeat: no-repeat;
-  background-origin: padding-box, padding-box, border-box, border-box;
-  background-clip: padding-box, padding-box, border-box, border-box;
-}
-
-event.slanted:backdrop {
-  background-image: linear-gradient(100deg, /* left edge */
-                                    transparent 5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color) 17px),
-                    linear-gradient(280deg, /* right edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px);
-}
-
-event.slanted:dir(rtl) {
-  background-image: linear-gradient(80deg, /* left edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color) 9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px),
-                    linear-gradient(260deg, /* right edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px);
-}
-
-event.slanted:dir(rtl):backdrop {
-  background-image: linear-gradient(80deg, /* left edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px),
-                    linear-gradient(260deg, /* right edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px);
 }
 
 event.slanted-start {
   background-color: transparent;
-  background-image: linear-gradient(100deg, /* left edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color) 9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px);
-  background-position: left bottom, left bottom;
-  background-size: 100% 100%, 100% 100%;
-  background-origin: padding-box, border-box;
-  background-clip: padding-box, border-box;
+  background-size: 100%;
 }
 
-event.slanted-start:backdrop {
-  background-image: linear-gradient(100deg, /* left edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px);
+event.slanted-start:dir(ltr) {
+  background-image: var(--linear-gradient-100deg);
+  background-position: left bottom;
 }
 
 event.slanted-start:dir(rtl) {
-  background-image: linear-gradient(260deg, /* right edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color) 17px);
-  background-position: right bottom, right bottom;
-}
-
-event.slanted-start:dir(rtl):backdrop {
-  background-image: linear-gradient(260deg, /* right edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px);
+  background-image: var(--linear-gradient-280deg);
+  background-position: right bottom;
 }
 
 event.slanted-end {
   background-color: transparent;
-  background-image: linear-gradient(280deg, /* right edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px);
-  background-position: right bottom, right bottom;
-  background-size: 100% 100%, 100% 100%;
-  background-origin: padding-box, border-box;
-  background-clip: padding-box, border-box;
+  background-size: 100%;
 }
 
-event.slanted-end:backdrop {
-  background-image: linear-gradient(280deg, /* right edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px);
+event.slanted-end:dir(ltr) {
+  background-image: var(--linear-gradient-280deg);
+  background-position: right bottom;
 }
 
 event.slanted-end:dir(rtl) {
-  background-image: linear-gradient(80deg, /* left edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px);
-  background-position: left bottom, left bottom;
-}
-
-event.slanted-end:dir(rtl):backdrop {
-  background-image: linear-gradient(80deg, /* left edge */
-                                    transparent  5px,
-                                    var(--event-bg-color) 6px,
-                                    var(--event-bg-color)	9px,
-                                    transparent 10px,
-                                    transparent 16px,
-                                    var(--event-bg-color)	17px);
+  background-image: var(--linear-gradient-100deg);
+  background-position: left bottom;
 }
