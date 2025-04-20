@@ -47,8 +47,17 @@ calendar-view:selected {
 }
 
 popover.alarms modelbutton {
+  outline: 0 solid transparent;
+  outline-offset: 3px;
+  transition: var(--focus-ring-transition);
   padding-top: 2px;
   padding-bottom: 2px;
+}
+
+popover.alarms modelbutton:focus:focus-visible {
+  outline-color: var(--focus-ring-color);
+  outline-width: 2px;
+  outline-offset: -2px;
 }
 
 /* Event Popover */
