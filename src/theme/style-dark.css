@@ -4,7 +4,6 @@
 
 event.timed {
   color: var(--light-1);
-  outline-color: rgba(0, 0, 0, 0.3);
 }
 
 /*

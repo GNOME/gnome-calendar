@@ -3,9 +3,18 @@
 }
 
 event {
+  outline: 0 solid transparent;
+  outline-offset: 6px;
+  transition: var(--focus-ring-transition);
   margin: 1px;
   font-size: 0.9rem;
   background-color: var(--event-bg-color);
+}
+
+event:focus:focus-visible {
+  outline-color: rgb(from var(--accent-color) r g b / var(--dim-opacity));
+  outline-width: 2px;
+  outline-offset: 1px;
 }
 
 event.timed {
@@ -47,13 +56,11 @@ event.slanted-start:dir(rtl) {
 event:not(.timed).color-dark {
   /* Keep in symc with the dark style's event.timed colors */
   color: var(--light-1);
-  outline-color: rgba(0, 0, 0, 0.3);
 }
 
 event.timed,
 event:not(.timed).color-light {
   color: rgb(from var(--dark-5) r g b / 80%);
-  outline-color: rgba(255, 255, 255, 0.5);
 }
 event.slanted,
 event.slanted-start,
