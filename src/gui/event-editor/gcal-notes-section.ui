@@ -14,6 +14,7 @@
 
         <child>
           <object class="GtkTextView" id="notes_text">
+            <property name="height-request">250</property>
             <property name="hexpand">True</property>
             <property name="top_margin">6</property>
             <property name="bottom_margin">6</property>
