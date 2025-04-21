@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="GcalNotesSection" parent="AdwBin">
+  <template class="GcalNotesSection" parent="AdwPreferencesRow">
+    <property name="activatable">False</property>
+    <property name="focusable">False</property>
+
     <style>
+      <class name="entry" />
       <class name="notes-section" />
-      <class name="card" />
     </style>
 
     <child>

@@ -27,7 +27,7 @@
 
 struct _GcalNotesSection
 {
-  AdwBin              parent;
+  AdwPreferencesRow   parent;
 
   GtkTextView        *notes_text;
 
@@ -37,7 +37,7 @@ struct _GcalNotesSection
 
 static void          gcal_event_editor_section_iface_init        (GcalEventEditorSectionInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GcalNotesSection, gcal_notes_section, ADW_TYPE_BIN,
+G_DEFINE_TYPE_WITH_CODE (GcalNotesSection, gcal_notes_section, ADW_TYPE_PREFERENCES_ROW,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_iface_init))
 
 enum
