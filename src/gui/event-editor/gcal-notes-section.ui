@@ -22,6 +22,7 @@
             <property name="sensitive">True</property>
             <property name="wrap_mode">word-char</property>
             <property name="accepts-tab">False</property>
+            <signal name="state-flags-changed" handler="on_notes_text_state_flags_changed_cb" object="GcalNotesSection" swapped="no" />
           </object>
         </child>
       </object>

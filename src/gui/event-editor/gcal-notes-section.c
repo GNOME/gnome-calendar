@@ -48,6 +48,24 @@ enum
 };
 
 /*
+ * Callbacks
+ */
+
+static void
+on_notes_text_state_flags_changed_cb (GtkTextView      *text_view,
+                                      GtkStateFlags     previous_flags,
+                                      GcalNotesSection *self)
+{
+  GtkStateFlags flags = gtk_widget_get_state_flags (GTK_WIDGET (text_view));
+
+  if (flags & GTK_STATE_FLAG_FOCUS_WITHIN)
+    gtk_widget_add_css_class (GTK_WIDGET (self), "focused");
+  else
+    gtk_widget_remove_css_class (GTK_WIDGET (self), "focused");
+}
+
+
+/*
  * GcalEventEditorSection interface
  */
 
@@ -190,6 +208,8 @@ gcal_notes_section_class_init (GcalNotesSectionClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-notes-section.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalNotesSection, notes_text);
+
+  gtk_widget_class_bind_template_callback (widget_class, on_notes_text_state_flags_changed_cb);
 }
 
 static void
