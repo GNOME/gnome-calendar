@@ -13,9 +13,11 @@ src/gui/calendar-management/gcal-edit-calendar-page.c
 src/gui/calendar-management/gcal-edit-calendar-page.ui
 src/gui/calendar-management/gcal-new-calendar-page.c
 src/gui/calendar-management/gcal-new-calendar-page.ui
+src/gui/common/gcal-calendar-combo-row-item.c
+src/gui/common/gcal-calendar-combo-row.ui
+src/gui/common/gcal-date-chooser.c
 src/gui/event-editor/gcal-alarm-row.c
 src/gui/event-editor/gcal-alarm-row.ui
-src/gui/event-editor/gcal-date-chooser.c
 src/gui/event-editor/gcal-date-chooser-row.ui
 src/gui/event-editor/gcal-date-time-chooser.c
 src/gui/event-editor/gcal-date-time-chooser.ui
@@ -31,8 +33,6 @@ src/gui/event-editor/gcal-time-zone-dialog.c
 src/gui/event-editor/gcal-time-zone-dialog.ui
 src/gui/gcal-application.c
 src/gui/gcal-calendar-button.ui
-src/gui/gcal-calendar-combo-row.ui
-src/gui/gcal-calendar-combo-row-item.c
 src/gui/gcal-event-popover.c
 src/gui/gcal-event-popover.ui
 src/gui/gcal-event-widget.c
