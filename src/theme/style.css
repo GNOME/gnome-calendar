@@ -271,9 +271,12 @@ monthcell {
   box-shadow:
     0 -1px var(--border-color),
     var(--offset) 0 var(--border-color);
-
-  transition: background-color 200ms;
+  transition:
+    background-color 200ms,
+    var(--focus-ring-transition);
   background-color: var(--bg-color);
+  outline: 0 solid transparent;
+  outline-offset: 4px;
 }
 
 monthcell .overflow {
@@ -308,6 +311,12 @@ monthcell.today label.day-label {
 
 monthcell:hover {
   background-color: rgb(from var(--bg-color) r g b / calc(alpha + 3.75%));
+}
+
+monthcell:focus:focus-visible {
+  outline-color: var(--focus-ring-color);
+  outline-width: 2px;
+  outline-offset: -2px;
 }
 
 /* Selected */
