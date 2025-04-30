@@ -1694,6 +1694,11 @@ gcal_month_view_init (GcalMonthView *self)
   gtk_widget_init_template (GTK_WIDGET (self));
   update_weekday_labels (self);
 
+  gtk_accessible_update_relation (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_RELATION_COL_COUNT, 7,
+                                  GTK_ACCESSIBLE_RELATION_ROW_COUNT, N_ROWS_PER_PAGE,
+                                  -1);
+
   self->week_rows = g_ptr_array_new_full (N_TOTAL_ROWS, (GDestroyNotify) gtk_widget_unparent);
   for (gint i = 0; i < N_TOTAL_ROWS; i++)
     {

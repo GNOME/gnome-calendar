@@ -624,6 +624,9 @@ gcal_month_cell_set_selected (GcalMonthCell *self,
     return;
 
   self->selected = selected;
+  gtk_accessible_update_state (GTK_ACCESSIBLE (self),
+                               GTK_ACCESSIBLE_STATE_SELECTED, selected,
+                               -1);
 
   /* Update style context state */
   flags = gtk_widget_get_state_flags (GTK_WIDGET (self));

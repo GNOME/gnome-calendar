@@ -1111,6 +1111,9 @@ gcal_month_view_row_init (GcalMonthViewRow *self)
       gcal_month_cell_set_overflow (GCAL_MONTH_CELL (self->day_cells[i]), 0);
       gtk_widget_set_parent (self->day_cells[i], GTK_WIDGET (self));
       g_signal_connect (self->day_cells[i], "show-overflow", G_CALLBACK (on_month_cell_show_overflow_cb), self);
+      gtk_accessible_update_relation (GTK_ACCESSIBLE (self->day_cells[i]),
+                                      GTK_ACCESSIBLE_RELATION_COL_INDEX, i + 1,
+                                      -1);
     }
 }
 

@@ -13,6 +13,13 @@ template $GcalMonthCell: Adw.BreakpointBin {
     }
   }
 
+  accessibility {
+    labelled-by: day_label;
+    has-popup: true;
+    selected: false;
+  }
+
+  accessible-role: grid_cell;
   width-request: 50;
   height-request: 50;
   hexpand: true;
