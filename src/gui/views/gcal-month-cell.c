@@ -486,7 +486,7 @@ gcal_month_cell_set_date (GcalMonthCell *self,
   /* Month name */
   day_of_month = g_date_time_get_day_of_month (date);
   gtk_widget_set_visible (GTK_WIDGET (self->month_name_label), day_of_month == 1);
-  if (g_date_time_get_day_of_month (date) == 1)
+  if (day_of_month == 1)
     {
       g_autofree gchar *month_name = g_date_time_format (date, "%b");
       gtk_label_set_text (self->month_name_label, month_name);
