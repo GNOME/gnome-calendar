@@ -125,6 +125,8 @@ struct _GcalWindow
   GcalEventEditorDialog *event_editor;
   GtkWidget             *import_dialog;
 
+  GtkWidget          *last_focused_widget;
+
   /* new event popover widgets */
   GtkWidget          *quick_add_popover;
 
@@ -756,6 +758,12 @@ event_preview_cb (GcalEventWidget        *event_widget,
     default:
       break;
     }
+
+  if (self->last_focused_widget)
+    {
+      gtk_root_set_focus (GTK_ROOT (self), self->last_focused_widget);
+      g_clear_weak_pointer (&self->last_focused_widget);
+    }
 }
 
 static void
@@ -769,6 +777,10 @@ event_activated (GcalView        *view,
                  GcalEventWidget *event_widget,
                  gpointer         user_data)
 {
+  GcalWindow *self = GCAL_WINDOW (user_data);
+
+  g_set_weak_pointer (&self->last_focused_widget, gtk_root_get_focus (GTK_ROOT (self)));
+
   gcal_event_widget_show_preview (event_widget, event_preview_cb, user_data);
 }
 
@@ -1010,6 +1022,8 @@ gcal_window_dispose (GObject *object)
 
   g_clear_pointer (&self->quick_add_popover, gtk_widget_unparent);
   g_clear_pointer (&self->import_dialog, gtk_widget_unparent);
+
+  g_clear_weak_pointer (&self->last_focused_widget);
 
   if (self->delete_event_toast)
     adw_toast_dismiss (self->delete_event_toast);
