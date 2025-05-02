@@ -9,9 +9,9 @@
 msgid ""
 msgstr "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-02-12 20:31+0000\n"
-"PO-Revision-Date: 2025-02-27 19:41+0200\n"
-"Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
+"POT-Creation-Date: 2025-03-06 16:00+0000\n"
+"PO-Revision-Date: 2025-05-02 19:41+0200\n"
+"Last-Translator: Asier Saratsua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <Librezale>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
@@ -439,7 +439,7 @@ msgstr "A"
 #: src/gui/event-editor/gcal-date-chooser.c:292
 msgctxt "grid thursday"
 msgid "T"
-msgstr "A"
+msgstr "O"
 
 #. Translators: Calendar grid abbreviation for Friday
 #: src/gui/event-editor/gcal-date-chooser.c:297
@@ -451,7 +451,7 @@ msgstr "O"
 #: src/gui/event-editor/gcal-date-chooser.c:302
 msgctxt "grid saturday"
 msgid "S"
-msgstr "I"
+msgstr "L"
 
 #: src/gui/event-editor/gcal-date-chooser-row.ui:15
 msgid "Edit Date"
@@ -490,6 +490,11 @@ msgstr "Data"
 msgid "Time"
 msgstr "Ordua"
 
+#: src/gui/event-editor/gcal-date-time-chooser.ui:26
+#: src/gui/event-editor/gcal-time-chooser-row.ui:15
+msgid "Edit Time"
+msgstr "Editatu ordua"
+
 #: src/gui/event-editor/gcal-date-time-chooser.ui:65
 msgid ":"
 msgstr ":"
@@ -502,10 +507,6 @@ msgstr "Aldatu ordu-zona"
 #: src/gui/event-editor/gcal-date-time-chooser.ui:133
 #: src/gui/event-editor/gcal-time-chooser-row.ui:35
 msgid "Edit time"
-msgstr "Editatu ordua"
-
-#: src/gui/event-editor/gcal-time-chooser-row.ui:15
-msgid "Edit Time"
 msgstr "Editatu ordua"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:120
@@ -952,7 +953,7 @@ msgstr "\n"
 "%s helbidean"
 
 #.
-#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * Translators: %a is the abbreviated day name, %B is the month name
 #. * and %d is the day of the month as a number between 0 and 31.
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
@@ -1456,7 +1457,7 @@ msgid "Description"
 msgstr "Azalpena"
 
 #.
-#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * Translators: %A is the full day name, %B is the month name
 #. * and %d is the day of the month as a number between 0 and 31.
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
