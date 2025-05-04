@@ -622,8 +622,6 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
   gboolean ltr;
   gdouble minutes_height;
   gdouble column_width;
-  guint x, y;
-  guint i;
   gint today_column;
 
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
@@ -639,6 +637,7 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
       gint column;
       gint start;
       gint end;
+      gint x;
       gint y;
 
       g_assert (self->selection.start != -1);
@@ -706,7 +705,7 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
    * Iterate through weekdays; we don't have to worry about events that
    * jump between days because they're already handled by GcalWeekHeader.
    */
-  for (i = 0; i < 7; i++)
+  for (size_t i = 0; i < 7; i++)
     {
       g_autoptr (GcalRange) day_range = NULL;
       GPtrArray *widgets_data;
@@ -733,6 +732,8 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
           gint offset;
           gint event_height;
           gint event_width;
+          gint x;
+          gint y;
 
           data =  g_ptr_array_index (widgets_data, j);
           event_widget = data->widget;
@@ -801,6 +802,7 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
       GtkAllocation allocation;
       guint minutes_from_midnight;
       gint now_strip_height;
+      gint x;
 
       now = g_date_time_new_now_local ();
       minutes_from_midnight = g_date_time_get_hour (now) * 60 + g_date_time_get_minute (now);
