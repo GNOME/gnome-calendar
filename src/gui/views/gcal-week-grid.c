@@ -634,6 +634,8 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
   if (gtk_widget_should_layout (self->selection.widget))
     {
       gint selection_height;
+      gint start_row;
+      gint end_row;
       gint column;
       gint start;
       gint end;
@@ -654,13 +656,16 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
           start = start - end;
         }
 
-      column = start * 30 / MINUTES_PER_DAY;
+      column = (int) floor (start * 30 / (double) MINUTES_PER_DAY);
 
-#define Y_POSITION(cell_) (round (((cell_) * 30 % MINUTES_PER_DAY) * minutes_height))
+#define Y_POSITION(row_) ((gint) round (((row_) * 30) * minutes_height))
+
+      start_row = start - column * 48;
+      end_row = (end + 1) - column * 48;
 
       x = column * column_width;
-      y = Y_POSITION (start);
-      selection_height = Y_POSITION (end + 1) - y;
+      y = Y_POSITION (start_row);
+      selection_height = Y_POSITION (end_row) - y;
 
 #undef Y_POSITION
 
