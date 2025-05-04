@@ -772,6 +772,18 @@ day_selected (GcalWindow *self)
   update_active_date (self, gcal_view_get_date (GCAL_VIEW (self->date_chooser)));
 }
 
+static GtkWidget*
+find_first_focusable_widget (GtkWidget *widget)
+{
+  GtkWidget *aux = widget;
+
+  while (aux && !gtk_widget_get_focusable (aux))
+    aux = gtk_widget_get_parent (aux);
+
+  g_assert (GTK_IS_WIDGET (aux));
+  return aux;
+}
+
 static void
 event_activated (GcalView        *view,
                  GcalEventWidget *event_widget,
@@ -779,7 +791,7 @@ event_activated (GcalView        *view,
 {
   GcalWindow *self = GCAL_WINDOW (user_data);
 
-  g_set_weak_pointer (&self->last_focused_widget, gtk_root_get_focus (GTK_ROOT (self)));
+  g_set_weak_pointer (&self->last_focused_widget, find_first_focusable_widget (GTK_WIDGET (event_widget)));
 
   gcal_event_widget_show_preview (event_widget, event_preview_cb, user_data);
 }
