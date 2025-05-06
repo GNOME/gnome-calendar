@@ -219,6 +219,7 @@ gcal_application_show_about (GSimpleAction *simple,
   const gchar *designers[] = {
     "Jakub Steiner <jimmac@gmail.com>",
     "Lapo Calamandrei <calamandrei@gmail.com>",
+    "Philipp Sauberzweig",
     "Reda Lazri <the.red.shortcut@gmail.com>",
     "William Jon McCann <jmccann@redhat.com>",
     NULL
