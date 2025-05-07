@@ -108,7 +108,7 @@ gcal_week_hour_bar_init (GcalWeekHourBar *self)
       gtk_widget_add_css_class (label, "line");
       gtk_widget_add_css_class (label, "dim-label");
       gtk_widget_set_vexpand (label, TRUE);
-      gtk_label_set_yalign (GTK_LABEL (label), 0.20);
+      gtk_label_set_yalign (GTK_LABEL (label), 0.0);
       gtk_box_append (GTK_BOX (self), label);
 
       self->labels[i] = GTK_LABEL (label);
