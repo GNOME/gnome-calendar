@@ -12,3 +12,4 @@ Categories=GNOME;GTK;Office;Calendar;Core;
 Keywords=Calendar;Event;Reminder;
 MimeType=text/calendar;
 DBusActivatable=true
+X-Purism-FormFactor=Workstation;Mobile;
