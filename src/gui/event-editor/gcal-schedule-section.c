@@ -51,6 +51,7 @@ struct _GcalScheduleSection
 
   GcalContext        *context;
   GcalEvent          *event;
+  gboolean            is_valid;
 
   GcalEventEditorFlags flags;
 };
@@ -64,6 +65,7 @@ enum
 {
   PROP_0,
   PROP_CONTEXT,
+  PROP_IS_VALID,
   N_PROPS
 };
 
@@ -357,6 +359,8 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   if (!event)
     GCAL_RETURN ();
 
+  self->is_valid = TRUE;
+
   all_day = gcal_event_get_all_day (event);
   new_event = flags & GCAL_EVENT_EDITOR_FLAG_NEW_EVENT;
 
@@ -643,6 +647,9 @@ gcal_schedule_section_get_property (GObject    *object,
     case PROP_CONTEXT:
       g_value_set_object (value, self->context);
       break;
+    case PROP_IS_VALID:
+      g_value_set_boolean (value, self->is_valid);
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -669,6 +676,9 @@ gcal_schedule_section_set_property (GObject      *object,
                                G_CONNECT_SWAPPED);
       on_time_format_changed_cb (self);
       break;
+    case PROP_IS_VALID:
+      self->is_valid = g_value_get_boolean (value);
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -688,6 +698,7 @@ gcal_schedule_section_class_init (GcalScheduleSectionClass *klass)
   object_class->set_property = gcal_schedule_section_set_property;
 
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
+  g_object_class_override_property (object_class, PROP_IS_VALID, "is-valid");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-schedule-section.ui");
 

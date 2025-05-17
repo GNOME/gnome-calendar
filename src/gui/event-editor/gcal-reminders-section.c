@@ -50,6 +50,7 @@ struct _GcalRemindersSection
   GcalContext        *context;
   GcalEvent          *event;
   GPtrArray          *alarms;
+  gboolean            is_valid;
 };
 
 
@@ -68,6 +69,7 @@ enum
 {
   PROP_0,
   PROP_CONTEXT,
+  PROP_IS_VALID,
   N_PROPS
 };
 
@@ -395,6 +397,7 @@ gcal_reminders_section_set_event (GcalEventEditorSection *section,
 
   g_set_object (&self->event, event);
   setup_alarms (self);
+  self->is_valid = TRUE;
 
   GCAL_EXIT;
 }
@@ -511,6 +514,9 @@ gcal_reminders_section_get_property (GObject    *object,
     case PROP_CONTEXT:
       g_value_set_object (value, self->context);
       break;
+    case PROP_IS_VALID:
+      g_value_set_boolean (value, self->is_valid);
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -531,6 +537,9 @@ gcal_reminders_section_set_property (GObject      *object,
       g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
       break;
+    case PROP_IS_VALID:
+      self->is_valid = g_value_get_boolean (value);
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -549,6 +558,7 @@ gcal_reminders_section_class_init (GcalRemindersSectionClass *klass)
   object_class->set_property = gcal_reminders_section_set_property;
 
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
+  g_object_class_override_property (object_class, PROP_IS_VALID, "is-valid");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-reminders-section.ui");
 
