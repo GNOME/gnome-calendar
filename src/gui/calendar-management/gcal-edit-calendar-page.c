@@ -122,9 +122,7 @@ setup_calendar (GcalEditCalendarPage *self,
                 GcalCalendar         *calendar)
 {
   g_autofree gchar *parent_name = NULL;
-  GcalCalendar *default_calendar;
   GcalManager *manager;
-  ESource *default_source;
   ESource *source;
   gboolean is_remote;
   gboolean is_file;
@@ -133,8 +131,6 @@ setup_calendar (GcalEditCalendarPage *self,
   self->calendar = g_object_ref (calendar);
 
   manager = gcal_context_get_manager (self->context);
-  default_calendar = gcal_manager_get_default_calendar (manager);
-  default_source = gcal_calendar_get_source (default_calendar);
   is_goa = is_goa_calendar (self, calendar);
   source = gcal_calendar_get_source (calendar);
   is_file = e_source_has_extension (source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
@@ -218,14 +214,12 @@ setup_calendar (GcalEditCalendarPage *self,
 static void
 update_calendar (GcalEditCalendarPage *self)
 {
-  GcalManager *manager;
   const GdkRGBA *color;
 
   GCAL_ENTRY;
 
   g_assert (self->calendar != NULL);
 
-  manager = gcal_context_get_manager (self->context);
   color = gtk_color_dialog_button_get_rgba (self->calendar_color_button);
 
   gcal_calendar_set_visible (self->calendar, adw_switch_row_get_active (self->calendar_visible_row));
