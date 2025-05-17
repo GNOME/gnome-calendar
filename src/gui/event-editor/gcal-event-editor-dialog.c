@@ -322,6 +322,35 @@ out:
  */
 
 static void
+check_is_valid_changed (GcalEventEditorDialog *self)
+{
+  gboolean is_valid;
+  GSimpleAction *action;
+
+  if (self->writable)
+    {
+      gint i = 0, valid_amount = 0;
+
+      while (i < G_N_ELEMENTS (self->sections))
+        {
+          gboolean is_section_valid;
+
+          g_object_get (self->sections[i], "is-valid", &is_section_valid, NULL);
+          valid_amount += is_section_valid;
+          i++;
+        }
+      is_valid = valid_amount == G_N_ELEMENTS (self->sections);
+    }
+  else
+    {
+      is_valid = TRUE;
+    }
+
+  action = G_SIMPLE_ACTION (g_action_map_lookup_action (G_ACTION_MAP (self->action_group), "save"));
+  g_simple_action_set_enabled (action, is_valid);
+}
+
+static void
 on_event_editor_save_action_activated_cb (GSimpleAction *action,
                                           GVariant      *param,
                                           gpointer       user_data)
@@ -629,7 +658,10 @@ gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
   self->sections[i++] = self->summary_section;
 
   for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
-    g_object_bind_property (self, "context", self->sections[i], "context", G_BINDING_DEFAULT);
+    {
+      g_object_bind_property (self, "context", self->sections[i], "context", G_BINDING_DEFAULT);
+      g_signal_connect_swapped (self->sections[i], "notify::is-valid", G_CALLBACK (check_is_valid_changed), self);
+    }
 }
 
 /**
@@ -718,6 +750,8 @@ out:
     gcal_event_editor_section_set_event (self->sections[i], cloned_event, flags);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
+
+  check_is_valid_changed (self);
 
   GCAL_EXIT;
 }

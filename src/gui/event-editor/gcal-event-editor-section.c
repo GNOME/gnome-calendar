@@ -32,6 +32,13 @@ gcal_event_editor_section_default_init (GcalEventEditorSectionInterface *iface)
                                                             "Context",
                                                             GCAL_TYPE_CONTEXT,
                                                             G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  g_object_interface_install_property (iface,
+                                       g_param_spec_boolean ("is-valid",
+                                                             "Is valid",
+                                                             "Whether the section is valid",
+                                                             FALSE,
+                                                             G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_CONSTRUCT | G_PARAM_EXPLICIT_NOTIFY));
 }
 
 /**
