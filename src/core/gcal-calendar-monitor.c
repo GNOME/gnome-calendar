@@ -1329,16 +1329,11 @@ gcal_calendar_monitor_class_init (GcalCalendarMonitorClass *klass)
   object_class->get_property = gcal_calendar_monitor_get_property;
   object_class->set_property = gcal_calendar_monitor_set_property;
 
-  properties[PROP_CALENDAR] = g_param_spec_object ("calendar",
-                                                   "Calendar",
-                                                   "Calendar to be monitored",
+  properties[PROP_CALENDAR] = g_param_spec_object ("calendar", NULL, NULL,
                                                    GCAL_TYPE_CALENDAR,
                                                    G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
-
-  properties[PROP_COMPLETE] = g_param_spec_boolean ("complete",
-                                                    "Complete",
-                                                    "Whether",
+  properties[PROP_COMPLETE] = g_param_spec_boolean ("complete", NULL, NULL,
                                                     FALSE,
                                                     G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
