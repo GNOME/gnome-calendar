@@ -214,6 +214,7 @@ gcal_application_show_about (GSimpleAction *simple,
     "Erick Pérez Castellanos <erickpc@gnome.org>",
     "Georges Basile Stavracas Neto <georges.stavracas@gmail.com>",
     "Isaque Galdino <igaldino@gmail.com>",
+    "Titouan Real <titouan.real@gmail.com>",
     NULL
   };
   const gchar *designers[] = {
