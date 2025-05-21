@@ -39,6 +39,8 @@
 #define N_ROWS_PER_PAGE 5
 #define N_PAGES 5
 #define N_TOTAL_ROWS (N_ROWS_PER_PAGE * N_PAGES)
+#define FIRST_VISIBLE_ROW_INDEX (N_ROWS_PER_PAGE * (N_PAGES - 1) / 2)
+#define LAST_VISIBLE_ROW_INDEX (FIRST_VISIBLE_ROW_INDEX + N_ROWS_PER_PAGE - 1)
 
 // N_PAGES must be an odd number
 G_STATIC_ASSERT (N_PAGES % 2 != 0);
@@ -194,14 +196,12 @@ update_header_labels (GcalMonthView *self)
   g_autofree gchar *year_string = NULL;
   GtkWidget *first_visible_row;
   GtkWidget *last_visible_row;
-  gint first_visible_row_index;
 
-  first_visible_row_index = N_ROWS_PER_PAGE * (N_PAGES - 1) / 2;
-  first_visible_row = g_ptr_array_index (self->week_rows, first_visible_row_index);
+  first_visible_row = g_ptr_array_index (self->week_rows, FIRST_VISIBLE_ROW_INDEX);
   first_visible_row_range = gcal_month_view_row_get_range (GCAL_MONTH_VIEW_ROW (first_visible_row));
   first_visible_date = gcal_range_get_start (first_visible_row_range);
 
-  last_visible_row = g_ptr_array_index (self->week_rows, first_visible_row_index + N_ROWS_PER_PAGE - 1);
+  last_visible_row = g_ptr_array_index (self->week_rows, LAST_VISIBLE_ROW_INDEX);
   last_visible_row_range = gcal_month_view_row_get_range (GCAL_MONTH_VIEW_ROW (last_visible_row));
   last_visible_date_exclusive = gcal_range_get_end (last_visible_row_range);
   last_visible_date = g_date_time_add_seconds (last_visible_date_exclusive, -1);
@@ -273,7 +273,7 @@ update_active_date (GcalMonthView *self)
   g_autoptr (GcalRange) top_row_range = NULL;
   GtkWidget *top_row;
 
-  top_row = g_ptr_array_index (self->week_rows, N_ROWS_PER_PAGE * (N_PAGES - 1) / 2);
+  top_row = g_ptr_array_index (self->week_rows, FIRST_VISIBLE_ROW_INDEX);
   top_row_range = gcal_month_view_row_get_range (GCAL_MONTH_VIEW_ROW (top_row));
   g_assert (top_row_range != NULL);
 
@@ -484,15 +484,11 @@ update_row_visuals (GcalMonthView *self)
   g_autoptr (GDateTime) end = NULL;
   GcalMonthViewRow *first_visible_row;
   GcalMonthViewRow *last_visible_row;
-  gint first_visible_row_index;
-  gint last_visible_row_index;
 
-  first_visible_row_index = N_ROWS_PER_PAGE * (N_PAGES - 1) / 2;
-  first_visible_row = g_ptr_array_index (self->week_rows, first_visible_row_index);
+  first_visible_row = g_ptr_array_index (self->week_rows, FIRST_VISIBLE_ROW_INDEX);
   first_visible_row_range = gcal_month_view_row_get_range (first_visible_row);
 
-  last_visible_row_index = first_visible_row_index + N_ROWS_PER_PAGE - 1;
-  last_visible_row = g_ptr_array_index (self->week_rows, last_visible_row_index);
+  last_visible_row = g_ptr_array_index (self->week_rows, LAST_VISIBLE_ROW_INDEX);
   last_visible_row_range = gcal_month_view_row_get_range (last_visible_row);
 
   union_range = gcal_range_union (first_visible_row_range, last_visible_row_range);
