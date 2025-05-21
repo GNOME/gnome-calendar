@@ -313,10 +313,11 @@ on_button_released (GtkGestureClick *click_gesture,
   g_autoptr (GDateTime) selection_end = NULL;
   g_autoptr (GDateTime) week_start = NULL;
   g_autoptr (GcalRange) range = NULL;
+  graphene_point_t out;
   GtkWidget *weekview;
   gboolean ltr;
   gdouble column_width;
-  gdouble out_x, out_y;
+  gdouble local_x;
   gint column;
   gint width;
   gint start;
@@ -347,21 +348,16 @@ on_button_released (GtkGestureClick *click_gesture,
   selection_start = g_date_time_add_days (week_start, start);
   selection_end = end == start ? g_date_time_ref (selection_start) : g_date_time_add_days (week_start, end + 1);
 
-  out_x = ltr ? (column_width * (column + 0.5)) : (width - column_width * (column + 0.5));
+  local_x = ltr ? (column_width * (column + 0.5)) : (width - column_width * (column + 0.5));
 
-  /* Translate X... */
-  gtk_widget_translate_coordinates (self->scrolledwindow, weekview, out_x, 0, &out_x, NULL);
-
-  /* And Y */
-  gtk_widget_translate_coordinates (GTK_WIDGET (self),
-                                    weekview,
-                                    0,
-                                    gtk_widget_get_height (GTK_WIDGET (self)),
-                                    NULL,
-                                    &out_y);
+  if (!gtk_widget_compute_point (GTK_WIDGET (self),
+                                 weekview,
+                                 &GRAPHENE_POINT_INIT (local_x, gtk_widget_get_height (GTK_WIDGET (self))),
+                                 &out))
+    g_assert_not_reached ();
 
   range = gcal_range_new (selection_start, selection_end, GCAL_RANGE_DATE_ONLY);
-  gcal_view_create_event (GCAL_VIEW (weekview), range, out_x, out_y);
+  gcal_view_create_event (GCAL_VIEW (weekview), range, out.x, out.y);
 
   gtk_event_controller_set_propagation_phase (self->motion_controller, GTK_PHASE_NONE);
 }
