@@ -1368,6 +1368,19 @@ gtk_buildable_interface_init (GtkBuildableIface *iface)
  * GtkWidget overrides
  */
 
+static gboolean
+gcal_month_view_focus (GtkWidget        *widget,
+                       GtkDirectionType  direction)
+{
+  if (gtk_widget_get_focus_child (widget) &&
+      (direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD))
+    {
+      return FALSE;
+    }
+
+  return GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction);
+}
+
 static void
 gcal_month_view_measure (GtkWidget      *widget,
                          GtkOrientation  orientation,
@@ -1625,6 +1638,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   object_class->get_property = gcal_month_view_get_property;
   object_class->set_property = gcal_month_view_set_property;
 
+  widget_class->focus = gcal_month_view_focus;
   widget_class->measure = gcal_month_view_measure;
   widget_class->size_allocate = gcal_month_view_size_allocate;
   widget_class->snapshot = gcal_month_view_snapshot;
