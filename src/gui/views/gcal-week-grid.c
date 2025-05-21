@@ -261,13 +261,12 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
   g_autoptr (GcalRange) range = NULL;
   g_autoptr (GDateTime) start = NULL;
   g_autoptr (GDateTime) end = NULL;
+  graphene_point_t out;
   GtkWidget *weekview;
   gboolean ltr;
   gdouble minute_height;
   gdouble local_x;
   gdouble local_y;
-  gdouble out_x;
-  gdouble out_y;
   gint column;
   gint minute;
   gint start_cell;
@@ -319,15 +318,14 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
   local_x = round ((column + 0.5) * (gtk_widget_get_width (GTK_WIDGET (self)) / 7.0));
   local_y = (minute + 15) * minute_height;
 
-  gtk_widget_translate_coordinates (GTK_WIDGET (self),
-                                    weekview,
-                                    local_x,
-                                    local_y,
-                                    &out_x,
-                                    &out_y);
+  if (!gtk_widget_compute_point (GTK_WIDGET (self),
+                                 weekview,
+                                 &GRAPHENE_POINT_INIT (local_x, local_y),
+                                 &out))
+    g_assert_not_reached ();
 
   range = gcal_range_new (start, end, GCAL_RANGE_DEFAULT);
-  gcal_view_create_event (GCAL_VIEW (weekview), range, out_x, out_y);
+  gcal_view_create_event (GCAL_VIEW (weekview), range, out.x, out.y);
 
   gtk_event_controller_set_propagation_phase (self->motion_controller, GTK_PHASE_NONE);
 }
