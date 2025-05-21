@@ -1372,13 +1372,17 @@ static gboolean
 gcal_month_view_focus (GtkWidget        *widget,
                        GtkDirectionType  direction)
 {
-  if (gtk_widget_get_focus_child (widget) &&
-      (direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD))
-    {
-      return FALSE;
-    }
+  GtkWidget *focus_child;
+  gboolean forward_or_backward;
 
-  return GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction);
+  focus_child = gtk_widget_get_focus_child (widget);
+  forward_or_backward = direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD;
+
+  if ((focus_child && forward_or_backward) || (!focus_child && !forward_or_backward))
+    return FALSE;
+
+  GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction);
+  return TRUE;
 }
 
 static void
