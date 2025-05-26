@@ -18,6 +18,7 @@ variables:
 stages:
   - check
   - build
+  - analysis
   - deploy
 
 style-check-diff:
@@ -48,3 +49,42 @@ nightly-aarch64:
   extends: '.publish_nightly'
   needs: ['build-flatpak-aarch64']
   when: manual
+
+coverage:
+  stage: analysis
+  image: quay.io/gnome_infrastructure/gnome-build-meta:core-nightly
+  needs:
+    - job: build-flatpak
+      artifacts: false
+  script:
+    - .gitlab-ci/install-grcov.sh
+    - .gitlab-ci/build-with-coverage.sh
+    - .gitlab-ci/gen-coverage.sh
+  coverage: '/Coverage: \d+\.\d+/'
+  artifacts:
+    name: "gnome-calendar-${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}"
+    expire_in: 2 days
+    when: always
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: public/coverage.xml
+    paths:
+      - "_build/meson-logs"
+      - public
+  
+pages:
+  stage: deploy
+  needs: [ coverage ]
+  script:
+    # No-op, just to gitlab thinks there's something to do.
+    # The jobs that this job depends on have already populated public/
+    - echo
+  artifacts:
+    paths:
+      - public
+  rules:
+    # Restrict to the main branch so not every branch tries to deploy the web site
+    - if: ($CI_DEFAULT_BRANCH == $CI_COMMIT_BRANCH)
+    # Alternatively, restrict it to the GNOME namespace to avoid every fork pushing a set of pages by default
+    # - if: ($CI_DEFAULT_BRANCH == $CI_COMMIT_BRANCH && $CI_PROJECT_NAMESPACE == "GNOME")
