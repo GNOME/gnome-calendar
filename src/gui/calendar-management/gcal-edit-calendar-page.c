@@ -232,19 +232,6 @@ on_calendar_visibility_changed_cb (AdwSwitchRow         *row,
 }
 
 static void
-on_default_calendar_changed_cb (AdwSwitchRow         *row,
-                                GParamSpec           *pspec,
-                                GcalEditCalendarPage *self)
-{
-  GcalManager *manager;
-
-  manager = gcal_context_get_manager (self->context);
-
-  if (adw_switch_row_get_active (row))
-    gcal_manager_set_default_calendar (manager, self->calendar);
-}
-
-static void
 on_remove_button_row_activated_cb (GtkButton            *button,
                                    GcalEditCalendarPage *self)
 {
@@ -417,7 +404,6 @@ gcal_edit_calendar_page_class_init (GcalEditCalendarPageClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, on_calendar_color_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_calendar_visibility_changed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_default_calendar_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_remove_button_row_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_settings_button_clicked_cb);
 }
