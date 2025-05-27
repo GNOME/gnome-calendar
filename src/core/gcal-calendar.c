@@ -217,11 +217,10 @@ on_client_readonly_changed_cb (EClient      *client,
                                GParamSpec   *pspec,
                                GcalCalendar *self)
 {
-  g_autoptr (GMutexLocker) locker = NULL;
   GcalCalendarPrivate *priv;
 
   priv = gcal_calendar_get_instance_private (self);
-  locker = g_mutex_locker_new (&priv->shared.mutex);
+  G_MUTEX_AUTO_LOCK (&priv->shared.mutex, locker);
 
   priv->shared.readonly_changed = TRUE;
   schedule_idle_update_unlocked (self);
