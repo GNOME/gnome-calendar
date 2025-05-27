@@ -233,11 +233,10 @@ on_source_visible_changed_cb (ESourceSelectable *source,
                               GParamSpec        *pspec,
                               GcalCalendar      *self)
 {
-  g_autoptr (GMutexLocker) locker = NULL;
   GcalCalendarPrivate *priv;
 
   priv = gcal_calendar_get_instance_private (self);
-  locker = g_mutex_locker_new (&priv->shared.mutex);
+  G_MUTEX_AUTO_LOCK (&priv->shared.mutex, locker);
 
   priv->shared.visibility_changed = TRUE;
   schedule_idle_update_unlocked (self);
