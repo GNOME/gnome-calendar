@@ -1388,7 +1388,6 @@ static void
 gcal_week_header_snapshot (GtkWidget   *widget,
                            GtkSnapshot *snapshot)
 {
-  g_autoptr (GDateTime) week_start = NULL;
   GcalWeekHeader *self;
   gboolean ltr;
   gint height;
@@ -1398,7 +1397,6 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   /* Fonts and colour selection */
   self = GCAL_WEEK_HEADER (widget);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
-  week_start = gcal_date_time_get_start_of_week (self->active_date);
 
   width = gtk_widget_get_width (widget);
   height = gtk_widget_get_height (widget);
