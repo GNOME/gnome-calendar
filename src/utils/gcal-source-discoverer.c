@@ -261,7 +261,6 @@ discover_file_in_thread (DiscovererData  *data,
   g_autoptr (SoupSession) session = NULL;
   g_autoptr (GPtrArray) source = NULL;
   g_autoptr (GUri) guri = NULL;
-  g_autofree gchar *uri_str = NULL;
   g_autofree gchar *header_string = NULL;
   gsize header_string_read_len;
   gboolean is_calendar_header;
@@ -278,8 +277,10 @@ discover_file_in_thread (DiscovererData  *data,
   if (g_strcmp0 (g_uri_get_scheme (guri), "webcal") == 0)
     e_util_change_uri_component (&guri, SOUP_URI_SCHEME, "https");
 
-  uri_str = g_uri_to_string_partial (guri, G_URI_HIDE_PASSWORD);
+#ifdef GCAL_ENABLE_TRACE
+  g_autofree gchar *uri_str = g_uri_to_string_partial (guri, G_URI_HIDE_PASSWORD);
   GCAL_TRACE_MSG ("Creating request for %s", uri_str);
+#endif
 
   session = gcal_create_soup_session ();
 
