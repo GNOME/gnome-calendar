@@ -364,7 +364,7 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
   if (location && location[0] != '\0')
     {
       g_autofree gchar *escaped_location = NULL;
-      g_autoptr (GUri) guri = NULL;
+      g_autoptr (GUri) G_GNUC_UNUSED guri = NULL; /* we just check for a parse error; don't care about the URI */
       g_autoptr (GString) string = NULL;
       g_autoptr (GError) error = NULL;
 
