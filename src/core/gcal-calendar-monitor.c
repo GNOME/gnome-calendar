@@ -1095,7 +1095,6 @@ add_events_to_timeline_in_idle_cb (gpointer user_data)
 static gboolean
 update_events_in_idle_cb (gpointer user_data)
 {
-  g_autoptr (GRWLockWriterLocker) writer_locker = NULL;
   g_autoptr (GPtrArray) old_events = NULL;
   g_autoptr (GPtrArray) new_events = NULL;
   g_autoptr (GPtrArray) events = NULL;
@@ -1114,7 +1113,7 @@ update_events_in_idle_cb (gpointer user_data)
   old_events = g_ptr_array_new_full (events->len, g_object_unref);
   new_events = g_ptr_array_sized_new (events->len);
 
-  writer_locker = g_rw_lock_writer_locker_new (&self->shared.lock);
+  G_RW_LOCK_WRITER_AUTO_LOCK (&self->shared.lock, writer_locker);
   for (guint i = 0; i < events->len; i++)
     {
       g_autoptr (GcalEvent) old_event = NULL;
