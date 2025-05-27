@@ -1148,7 +1148,6 @@ update_events_in_idle_cb (gpointer user_data)
 static gboolean
 remove_events_from_timeline_in_idle_cb (gpointer user_data)
 {
-  g_autoptr (GRWLockWriterLocker) writer_locker = NULL;
   g_autoptr (GPtrArray) events_to_remove = NULL;
   g_autoptr (GPtrArray) event_ids = NULL;
   GcalCalendarMonitor *self;
@@ -1165,7 +1164,7 @@ remove_events_from_timeline_in_idle_cb (gpointer user_data)
 
   events_to_remove = g_ptr_array_new_full (event_ids->len, g_object_unref);
 
-  writer_locker = g_rw_lock_writer_locker_new (&self->shared.lock);
+  G_RW_LOCK_WRITER_AUTO_LOCK (&self->shared.lock, writer_locker);
 
   for (guint i = 0; i < event_ids->len; i++)
     {
