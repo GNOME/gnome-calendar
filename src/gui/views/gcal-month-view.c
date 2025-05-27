@@ -1141,7 +1141,7 @@ static void
 gcal_month_view_remove_event (GcalTimelineSubscriber *subscriber,
                               GcalEvent              *event)
 {
-  g_autoptr (GcalEvent) owned_event = NULL;
+  g_autoptr (GcalEvent) G_GNUC_UNUSED owned_event = NULL;
   GcalMonthView *self;
 
   GCAL_ENTRY;
