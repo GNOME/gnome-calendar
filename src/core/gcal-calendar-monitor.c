@@ -677,7 +677,6 @@ on_client_view_objects_removed_cb (ECalClientView      *view,
         }
       else
         {
-          g_autoptr (GRWLockReaderLocker) reader_locker = NULL;
           GHashTableIter iter;
           const gchar *aux;
 
@@ -689,7 +688,7 @@ on_client_view_objects_removed_cb (ECalClientView      *view,
            * If this is the main component, remove the expanded recurrency instances
            * as well.
            */
-          reader_locker = g_rw_lock_reader_locker_new (&self->shared.lock);
+          G_RW_LOCK_READER_AUTO_LOCK (&self->shared.lock, reader_locker);
 
           g_hash_table_iter_init (&iter, self->shared.events);
           while (g_hash_table_iter_next (&iter, (gpointer*) &aux, NULL))
