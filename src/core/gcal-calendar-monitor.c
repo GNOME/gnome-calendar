@@ -1017,14 +1017,13 @@ remove_events_outside_range (GcalCalendarMonitor *self,
 static void
 remove_all_events (GcalCalendarMonitor *self)
 {
-  g_autoptr (GRWLockWriterLocker) writer_locker = NULL;
   g_autoptr (GPtrArray) events_to_remove = NULL;
 
   g_assert (GCAL_IS_MAIN_THREAD ());
 
   GCAL_TRACE_MSG ("Removing all events from view");
 
-  writer_locker = g_rw_lock_writer_locker_new (&self->shared.lock);
+  G_RW_LOCK_WRITER_AUTO_LOCK (&self->shared.lock, writer_locker);
 
   events_to_remove = g_hash_table_steal_all_values (self->shared.events);
 
