@@ -1054,7 +1054,6 @@ set_complete (GcalCalendarMonitor *self,
 static gboolean
 add_events_to_timeline_in_idle_cb (gpointer user_data)
 {
-  g_autoptr (GRWLockWriterLocker) writer_locker = NULL;
   g_autoptr (GPtrArray) events_to_add = NULL;
   GcalCalendarMonitor *self;
   GPtrArray *events;
@@ -1071,7 +1070,7 @@ add_events_to_timeline_in_idle_cb (gpointer user_data)
 
   events_to_add = g_ptr_array_sized_new (events->len);
 
-  writer_locker = g_rw_lock_writer_locker_new (&self->shared.lock);
+  G_RW_LOCK_WRITER_AUTO_LOCK (&self->shared.lock, writer_locker);
   for (guint i = 0; i < events->len; i++)
     {
       GcalEvent *event;
