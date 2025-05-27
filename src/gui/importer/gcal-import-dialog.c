@@ -98,12 +98,10 @@ import_data_free (gpointer data)
 static void
 update_default_calendar (GcalImportDialog *self)
 {
-  g_autoptr (GListModel) calendars = NULL;
   GcalCalendar *default_calendar;
   GcalManager *manager;
 
   manager = gcal_context_get_manager (self->context);
-  calendars = gcal_create_writable_calendars_model (manager);
   default_calendar = gcal_manager_get_default_calendar (manager);
 
   if (default_calendar)
