@@ -1391,7 +1391,6 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   g_autoptr (GDateTime) week_start = NULL;
   GcalWeekHeader *self;
   gboolean ltr;
-  gint current_cell;
   gint height;
   gint width;
   gint x;
@@ -1400,8 +1399,6 @@ gcal_week_header_snapshot (GtkWidget   *widget,
   self = GCAL_WEEK_HEADER (widget);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
   week_start = gcal_date_time_get_start_of_week (self->active_date);
-  current_cell = g_date_time_get_day_of_week (self->active_date) - 1;
-  current_cell = (7 + current_cell - self->first_weekday) % 7;
 
   width = gtk_widget_get_width (widget);
   height = gtk_widget_get_height (widget);
