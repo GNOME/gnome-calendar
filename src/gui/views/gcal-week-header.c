@@ -592,7 +592,6 @@ check_mergeable_events (GcalWeekHeader *self)
             }
 
           /* We found events to merge. Lets merge them */
-          i = 0;
 
           for (i = 0; i < events_to_merge; i++)
             {
