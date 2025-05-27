@@ -984,7 +984,6 @@ static void
 remove_events_outside_range (GcalCalendarMonitor *self,
                              GcalRange           *range)
 {
-  g_autoptr (GRWLockWriterLocker) writer_locker = NULL;
   g_autoptr (GPtrArray) events_to_remove = NULL;
   GHashTableIter iter;
   GcalEvent *event;
@@ -994,7 +993,7 @@ remove_events_outside_range (GcalCalendarMonitor *self,
 
   GCAL_TRACE_MSG ("Removing events outside range from monitor");
 
-  writer_locker = g_rw_lock_writer_locker_new (&self->shared.lock);
+  G_RW_LOCK_WRITER_AUTO_LOCK (&self->shared.lock, writer_locker);
 
   events_to_remove = g_ptr_array_new_full (g_hash_table_size (self->shared.events),
                                            g_object_unref);
