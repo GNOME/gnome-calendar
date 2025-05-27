@@ -135,7 +135,7 @@ get_event_index (GcalRangeTree *tree,
   g_autoptr (GPtrArray) array = NULL;
   gint idx, i;
 
-  i = idx = 0;
+  idx = 0;
   array = gcal_range_tree_get_data_at_range (tree, range);
 
   if (!array)
