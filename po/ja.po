@@ -1,63 +1,34 @@
 # Japanese translation for gnome-calendar.
-# Copyright (C) 2015-2016, 2018-2020, 2022 gnome-calendar's COPYRIGHT HOLDER
+# Copyright (C) 2015-2016, 2018-2020, 2022, 2023, 2025 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Hajime Taira <htaira@redhat.com>, 2015.
 # Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2015-2016, 2018.
 # sicklylife <translation@sicklylife.jp>, 2019-2020, 2022.
+# TSUJI Kento <tuziemon@pclives.org>, 2023.
+# Kusano Takayuki <https://bsky.app/profile/tkusano.jp>, 2025.
+# Seiji Iizuka <seiji@iizuka.dev>, 2025.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-calendar master\n"
+"Project-Id-Version: gnome-calendar gnome-48\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2021-10-13 17:01+0000\n"
-"PO-Revision-Date: 2022-03-12 17:40+0900\n"
-"Last-Translator: sicklylife <translation@sicklylife.jp>\n"
-"Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
+"POT-Creation-Date: 2025-05-10 15:00+0000\n"
+"PO-Revision-Date: 2025-05-27 19:30+0900\n"
+"Last-Translator: Seiji Iizuka <seiji@iizuka.dev>\n"
+"Language-Team: Japanese <https://l10n.gnome.org/teams/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Gtranslator 48.0\n"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
-#: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
-#: src/gui/gcal-application.c:206 src/gui/gcal-quick-add-popover.ui:187
-#: src/gui/gcal-window.ui:173
+#: data/org.gnome.Calendar.desktop.in.in:3
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
+#: src/gui/gcal-calendar-combo-row.ui:5 src/gui/gcal-quick-add-popover.ui:135
+#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "カレンダー"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
-msgid "Calendar for GNOME"
-msgstr "GNOME のカレンダー"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
-msgid ""
-"GNOME Calendar is a simple and beautiful calendar application designed to "
-"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
-msgstr ""
-"GNOME カレンダーは、GNOME デスクトップ環境のために設計されたシンプルで美しい"
-"カレンダーアプリケーションです。GNOME デスクトップ環境を構築するコンポーネン"
-"トを再利用することで、カレンダーが GNOME のエコシステムとシームレスに統合され"
-"ています。"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
-msgid ""
-"We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, nothing missing. You’ll feel comfortable using "
-"Calendar, like you’ve been using it for ages!"
-msgstr ""
-"私たちは、洗練された機能とユーザー中心のユーザビリティの間の絶妙なバランスを"
-"取ることを目指しています。機能としては過不足なく、長年愛用してきたカレンダー"
-"のように心地よく感じることでしょう。"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
-msgid "Week view"
-msgstr "週表示"
-
-#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
-msgid "Year view"
-msgstr "年表示"
 
 #: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
@@ -85,44 +56,91 @@ msgid "Window size (width and height)."
 msgstr "ウィンドウのサイズ (幅と高さ) です。"
 
 #: data/org.gnome.calendar.gschema.xml.in:16
-msgid "Window position"
-msgstr "ウィンドウの位置"
-
-#: data/org.gnome.calendar.gschema.xml.in:17
-msgid "Window position (x and y)."
-msgstr "ウィンドウの位置 (X 軸と Y 軸) です。"
-
-#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "アクティブなビューのタイプ"
 
-#: data/org.gnome.calendar.gschema.xml.in:22
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "アクティブなビューのタイプ、デフォルト値: 月表示"
 
-#: data/org.gnome.calendar.gschema.xml.in:26
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
 msgstr "天気予報の設定"
 
-#: data/org.gnome.calendar.gschema.xml.in:27
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
 "天気予報を表示するかどうか。自動検出した位置情報と地域名が使用されます。"
 
-#: data/org.gnome.calendar.gschema.xml.in:31
-msgid "Follow system night light"
-msgstr "システムの夜間モードに従う"
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "週グリッドの拡大レベル"
 
-#: data/org.gnome.calendar.gschema.xml.in:32
-msgid "Use GNOME night light setting to activate night-mode."
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "週グリッドの現在の拡大レベル"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
+msgid "Manage your schedule"
+msgstr "スケジュールを管理する"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:17
+msgid ""
+"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
+"schedule for upcoming days and weeks, whether your months are filled with "
+"meetings and appointments, public events, travel logistics, or other "
+"commitments in your life."
 msgstr ""
-"夜間モードをアクティブにするには GNOME の夜間モード設定を使用してください。"
+"GNOMEカレンダーは、会議、予定、公開イベント、旅行計画、その他生活上での約束で"
+"いっぱいの月であっても、これからの日々や週のスケジュールを計画し、把握するの"
+"に役立つ優れたツールです。"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:22
+msgid ""
+"Easily create and manage unlimited calendars and events with GNOME "
+"Calendar's infinite scrolling month view, week timetable, and scheduling "
+"list view."
+msgstr ""
+"GNOMEカレンダーの無限スクロールする月表示や週単位のタイムテーブル、スケジュー"
+"ルのリスト表示によって、カレンダーやイベントを上限なく作成、管理できます。"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
+msgid ""
+"Integrating the latest GNOME technologies and design best practices, GNOME "
+"Calendar builds on top of the mature Evolution data server to manage large "
+"quantities of events and to provide integration with other applications. You "
+"can add calendars from various online calendaring services (like NextCloud, "
+"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
+"your events across multiple devices and platforms. GNOME Calendar also "
+"supports local and offline calendaring, so you can use it anywhere and "
+"anytime while travelling (or after civilization's collapse.)"
+msgstr ""
+"最新のGNOMEテクノロジーと設計のベストプラクティスを統合したGNOMEカレンダー"
+"は、成熟したEvolutionデータサーバーの上に作られており、大量のイベントを管理"
+"し、他のアプリケーションとの統合を可能としています。様々なオンラインのカレン"
+"ダーサービス (NextCloud、Googleカレンダー、CalDAV / WebDAVサーバーなど) から"
+"カレンダーを追加できるため、複数のデバイスやプラットフォーム間でイベントを同"
+"期できます。GNOMEカレンダーはローカルおよびオフラインのカレンダー管理もサポー"
+"トしているため、旅行中（あるいは文明崩壊後）でもいつでもどこでも使用できま"
+"す。"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "Week view"
+msgstr "週表示"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "Month view"
+msgstr "月表示"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "Event editor"
+msgstr "イベントエディタ"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1899 src/gui/gcal-event-popover.c:381
+#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:422
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s 〜 %2$s"
@@ -131,115 +149,150 @@ msgstr "%1$s 〜 %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1907
+#: src/core/gcal-event.c:1910
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s 〜 %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1923 src/gui/gcal-quick-add-popover.c:475
+#: src/core/gcal-event.c:1926 src/gui/gcal-quick-add-popover.c:471
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s〜%3$s"
 
-#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:26
+#: src/gui/calendar-management/calendar-row.ui:19
+msgid "Read-Only Calendar"
+msgstr "読み取り専用カレンダー"
+
+#: src/gui/calendar-management/calendar-row.ui:29
+msgid "Display Calendar"
+msgstr "カレンダーを表示"
+
+#: src/gui/calendar-management/calendar-row.ui:39
+msgid "Edit calendar"
+msgstr "カレンダーを編集"
+
+#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
 msgstr "カレンダー設定"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:359
-msgid "Manage Calendars"
-msgstr "カレンダーの管理"
-
-#. Update notification label
-#: src/gui/calendar-management/gcal-calendars-page.c:389
+#. Create the new toast
+#. TRANSLATORS: %s is a calendar name.
+#: src/gui/calendar-management/gcal-calendars-page.c:358
 #, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "カレンダー <b>%s</b> を削除しました"
+msgid "Calendar “%s” removed"
+msgstr "カレンダー “%s” を削除しました"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:771 src/gui/gcal-window.c:775
-msgid "Undo"
-msgstr "元に戻す"
+#: src/gui/calendar-management/gcal-calendars-page.c:363
+#: src/gui/gcal-window.c:823
+msgid "_Undo"
+msgstr "元に戻す(_U)"
 
-#: src/gui/calendar-management/gcal-calendars-page.ui:91
-msgid "Add Calendar…"
-msgstr "カレンダーを追加…"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:18
-msgid "Account"
-msgstr "アカウント"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:43
-msgid "Settings"
-msgstr "設定"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
-#: src/gui/event-editor/gcal-summary-section.ui:42
-#: src/gui/gcal-event-popover.ui:104
-#: src/gui/importer/gcal-import-file-row.c:151
-msgid "Location"
-msgstr "場所"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
-msgid "Calendar name"
-msgstr "カレンダー名"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:121
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:65
-msgid "Color"
-msgstr "色"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:155
-msgid "Display calendar"
-msgstr "カレンダーを表示する"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:175
-msgid "Add new events to this calendar by default"
-msgstr "新規作成したイベントをデフォルトでこのカレンダーに追加する"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:190
-msgid "Remove Calendar"
-msgstr "カレンダーを削除"
-
-#: src/gui/calendar-management/gcal-file-chooser-button.c:49
-msgid "Select a file"
-msgstr "ファイルを選択"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:513
-msgid "New Calendar"
-msgstr "新しいカレンダー"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:676
-msgid "Calendar files"
-msgstr "カレンダーファイル"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:41
-msgid "Calendar Name"
-msgstr "カレンダー名"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:87
-msgid "Import a Calendar"
-msgstr "カレンダーのインポート"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:106
-msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
-msgstr ""
-"インポートしたいオンラインカレンダーのウェブアドレスを入力するか、サポートし"
-"ているカレンダーファイルを選択してください。"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:138
-msgid "Open a File"
-msgstr "ファイルを開く"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:159
+#: src/gui/calendar-management/gcal-calendars-page.ui:4
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:111
 msgid "Calendars"
 msgstr "カレンダー"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:205
+#: src/gui/calendar-management/gcal-calendars-page.ui:67
+msgid "_Add Calendar"
+msgstr "カレンダーを追加(_A)…"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:190
+msgid "Calendar URL"
+msgstr "カレンダーURL"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:208
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
+#: src/gui/event-editor/gcal-summary-section.ui:24
+#: src/gui/gcal-event-popover.ui:165
+#: src/gui/importer/gcal-import-file-row.c:177
+msgid "Location"
+msgstr "場所"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:209
+msgid "On This Computer"
+msgstr "このコンピューター上"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:4
+msgid "Edit Calendar"
+msgstr "カレンダーの編集"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:34
+msgid "Account"
+msgstr "アカウント"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:42
+msgid "Open in Settings"
+msgstr "設定で開く"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:28
+msgid "Calendar Name"
+msgstr "カレンダー名"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:36
+msgid "Color"
+msgstr "色"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:110
+msgid "_Display Calendar"
+msgstr "カレンダーを表示(_D)"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:117
+msgid "Default _Calendar"
+msgstr "デフォルトのカレンダー(_C)"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:118
+msgid "Add new events to this calendar by default"
+msgstr "新規作成したイベントをデフォルトでこのカレンダーに追加する"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:132
+msgid "_Remove Calendar"
+msgstr "カレンダーを削除(_R)"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:117
+#, c-format
+msgid "Add Calendar"
+msgid_plural "Add %1$u Calendars"
+msgstr[0] "カレンダーを %1$u 個追加…"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:124
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:160
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "カレンダーを追加"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:332
+msgid "The URL you have entered appears to be invalid."
+msgstr "入力した URL は無効なようです。"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:385
+msgid "A valid user and password are required to connect to this calendar."
+msgstr "このカレンダーに接続するには有効なユーザー名とパスワードが必要です。"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:4
+msgid "New Calendar"
+msgstr "新しいカレンダー"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:23
+msgid "Create a Local Calendar"
+msgstr "ローカルカレンダーを作成"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:60
+msgid "Connect to an Online Calendar"
+msgstr "オンラインのカレンダーに接続"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:70
+msgid ""
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
+msgstr ""
+"HTTPS、CalDAV、あるいは Webcal URL をサポートしています。プロバイダーによって"
+"更新されるオンラインカレンダーは読み取り専用としてのみとして追加されます。"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:135
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -247,28 +300,27 @@ msgstr ""
 "オンラインアカウントのカレンダーであれば、<a href=\"GOA\">オンラインアカウン"
 "ト設定</a>から追加できます。"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:241
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:183
+msgid "Credentials"
+msgstr "資格情報"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:191
 msgid "User"
 msgstr "ユーザー"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:255
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:196
 msgid "Password"
 msgstr "パスワード"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:303
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:342
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:17
-msgid "Cancel"
-msgstr "キャンセル"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:207
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:16
+#: src/gui/importer/gcal-import-dialog.ui:19 src/utils/gcal-utils.c:1162
+msgid "_Cancel"
+msgstr "キャンセル(_C)"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:312
-msgid "Connect"
-msgstr "接続"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.ui:349
-#: src/gui/gcal-quick-add-popover.ui:130
-msgid "Add"
-msgstr "追加"
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:208
+msgid "_Connect"
+msgstr "接続(_C)"
 
 #: src/gui/event-editor/gcal-alarm-row.c:85
 #, c-format
@@ -352,315 +404,421 @@ msgstr[0] "%1$u 分前"
 msgid "Event start time"
 msgstr "イベント開始時刻"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:18
-msgid "Toggles the sound of the alarm"
-msgstr "アラーム音を切り換え"
+#: src/gui/event-editor/gcal-alarm-row.ui:8
+msgid "Toggle Alarm Sound"
+msgstr "アラーム音のオン・オフ"
 
-#: src/gui/event-editor/gcal-alarm-row.ui:35
-msgid "Remove the alarm"
+#: src/gui/event-editor/gcal-alarm-row.ui:20
+msgid "Remove Alarm"
 msgstr "アラームを削除"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:201
-msgid "Save"
-msgstr "保存"
+#. Translators: Calendar grid abbreviation for Sunday.
+#. *
+#. * NOTE: These grid abbreviations are always shown together
+#. * and in order, e.g. "S M T W T F S".
+#. *
+#. * Please make sure these abbreviations match GNOME Shell's
+#. * abbreviations for your language.
+#.
+#: src/gui/event-editor/gcal-date-chooser.c:272
+msgctxt "grid sunday"
+msgid "S"
+msgstr "日"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:201
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:108
-msgid "Done"
-msgstr "完了"
+#. Translators: Calendar grid abbreviation for Monday
+#: src/gui/event-editor/gcal-date-chooser.c:277
+msgctxt "grid monday"
+msgid "M"
+msgstr "月"
+
+#. Translators: Calendar grid abbreviation for Tuesday
+#: src/gui/event-editor/gcal-date-chooser.c:282
+msgctxt "grid tuesday"
+msgid "T"
+msgstr "火"
+
+#. Translators: Calendar grid abbreviation for Wednesday
+#: src/gui/event-editor/gcal-date-chooser.c:287
+msgctxt "grid wednesday"
+msgid "W"
+msgstr "水"
+
+#. Translators: Calendar grid abbreviation for Thursday
+#: src/gui/event-editor/gcal-date-chooser.c:292
+msgctxt "grid thursday"
+msgid "T"
+msgstr "木"
+
+#. Translators: Calendar grid abbreviation for Friday
+#: src/gui/event-editor/gcal-date-chooser.c:297
+msgctxt "grid friday"
+msgid "F"
+msgstr "金"
+
+#. Translators: Calendar grid abbreviation for Saturday
+#: src/gui/event-editor/gcal-date-chooser.c:302
+msgctxt "grid saturday"
+msgid "S"
+msgstr "土"
+
+#: src/gui/event-editor/gcal-date-chooser-row.ui:15
+msgid "Edit Date"
+msgstr "日付を編集"
+
+#: src/gui/event-editor/gcal-date-chooser-row.ui:38
+msgid "Edit date"
+msgstr "日付を編集"
+
+#. Translators: "%1$s" is the timezone identifier (e.g. UTC, America/Sao_Paulo)
+#. * and "%2$s" is the timezone offset (e.g. UTC-3).
+#.
+#: src/gui/event-editor/gcal-date-time-chooser.c:141
+#, c-format
+msgid "%1$s (%2$s)"
+msgstr "%1$s (%2$s)"
+
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.c:270
+#: src/gui/event-editor/gcal-date-time-chooser.ui:90
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "AM"
+msgstr "午前"
+
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.ui:96
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "PM"
+msgstr "午後"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:7
+msgid "Date"
+msgstr "日付"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:14
+msgid "Time"
+msgstr "時刻"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:26
+#: src/gui/event-editor/gcal-time-chooser-row.ui:15
+msgid "Edit Time"
+msgstr "時刻を編集"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:65
+msgid ":"
+msgstr ":"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:109
+#: src/gui/event-editor/gcal-date-time-chooser.ui:120
+msgid "Change Timezone"
+msgstr "タイムゾーンを変更"
+
+#: src/gui/event-editor/gcal-date-time-chooser.ui:133
+#: src/gui/event-editor/gcal-time-chooser-row.ui:35
+msgid "Edit time"
+msgstr "時刻を編集"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+msgid "_Save"
+msgstr "保存(_S)"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:23
+msgid "_Done"
+msgstr "完了(_D)"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:688
+msgid "New Event"
+msgstr "新しいイベント"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:690
+msgid "Event Details"
+msgstr "イベントの詳細…"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:692
+msgid "Edit Event"
+msgstr "イベントを編集"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.ui:37
-msgid "Click to select the calendar"
-msgstr "クリックして予定を選択する"
+msgid "This event is in a read-only calendar. It cannot be edited or deleted."
+msgstr ""
+"このイベントは読み取り専用のカレンダーに記録されています。編集や削除はできま"
+"せん。"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:157
-msgid "Schedule"
-msgstr "予定"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:178
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:81
 msgid "Reminders"
 msgstr "リマインダー"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:201
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:93
 msgid "Notes"
 msgstr "メモ"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.ui:226
+#: src/gui/event-editor/gcal-event-editor-dialog.ui:110
 msgid "Delete Event"
 msgstr "イベントを削除"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:28
-msgid "Add a Reminder…"
-msgstr "リマインダーを追加…"
+#: src/gui/event-editor/gcal-reminders-section.ui:17
+msgid "Add Reminder"
+msgstr "リマインダーを追加"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:55
-msgid "5 minutes"
+#: src/gui/event-editor/gcal-reminders-section.ui:41
+msgid "Event start"
+msgstr "イベント開始時刻"
+
+#: src/gui/event-editor/gcal-reminders-section.ui:47
+msgid "5 Minutes"
 msgstr "5 分"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:64
-msgid "10 minutes"
+#: src/gui/event-editor/gcal-reminders-section.ui:53
+msgid "10 Minutes"
 msgstr "10 分"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:73
-msgid "15 minutes"
+#: src/gui/event-editor/gcal-reminders-section.ui:59
+msgid "15 Minutes"
 msgstr "15 分"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:82
-msgid "30 minutes"
+#: src/gui/event-editor/gcal-reminders-section.ui:65
+msgid "30 Minutes"
 msgstr "30 分"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:91
-msgid "1 hour"
+#: src/gui/event-editor/gcal-reminders-section.ui:71
+msgid "1 Hour"
 msgstr "1 時間"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:99
-msgid "1 day"
+#: src/gui/event-editor/gcal-reminders-section.ui:77
+msgid "1 Day"
 msgstr "1 日"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:108
-msgid "2 days"
+#: src/gui/event-editor/gcal-reminders-section.ui:83
+msgid "2 Days"
 msgstr "2 日"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:117
-msgid "3 days"
+#: src/gui/event-editor/gcal-reminders-section.ui:89
+msgid "3 Days"
 msgstr "3 日"
 
-#: src/gui/event-editor/gcal-reminders-section.ui:126
-msgid "1 week"
+#: src/gui/event-editor/gcal-reminders-section.ui:95
+msgid "1 Week"
 msgstr "1 週間"
 
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:241
-#, c-format
-msgid "Last %A"
-msgstr "先週の%A"
+#: src/gui/event-editor/gcal-schedule-section.ui:13
+msgid "_All Day"
+msgstr "終日(_A)"
 
-#: src/gui/event-editor/gcal-schedule-section.c:245
-#: src/gui/gcal-event-popover.c:208 src/gui/gcal-event-popover.c:322
-msgid "Yesterday"
-msgstr "昨日"
+#: src/gui/event-editor/gcal-schedule-section.ui:20
+msgid "_Time Slot"
+msgstr "時間枠(_T)"
 
-#: src/gui/event-editor/gcal-schedule-section.c:249
-#: src/gui/gcal-event-popover.c:200 src/gui/gcal-event-popover.c:314
-#: src/gui/gcal-window.ui:190 src/gui/views/gcal-year-view.c:282
-#: src/gui/views/gcal-year-view.c:560 src/gui/views/gcal-year-view.ui:88
-msgid "Today"
-msgstr "今日"
+#: src/gui/event-editor/gcal-schedule-section.ui:33
+#: src/gui/event-editor/gcal-schedule-section.ui:54
+msgid "Start Date"
+msgstr "開始日"
 
-#: src/gui/event-editor/gcal-schedule-section.c:253
-#: src/gui/gcal-event-popover.c:204 src/gui/gcal-event-popover.c:318
-msgid "Tomorrow"
-msgstr "明日"
+#: src/gui/event-editor/gcal-schedule-section.ui:45
+#: src/gui/event-editor/gcal-schedule-section.ui:62
+msgid "End Date"
+msgstr "終了日"
 
-#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
-#: src/gui/event-editor/gcal-schedule-section.c:263
-#, c-format
-msgid "This %A"
-msgstr "今週の%A"
+#: src/gui/event-editor/gcal-schedule-section.ui:55
+msgid "Start Time"
+msgstr "開始時刻"
 
+#: src/gui/event-editor/gcal-schedule-section.ui:63
+msgid "End Time"
+msgstr "終了時刻"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:75
+msgid "Repeat"
+msgstr "繰り返し"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:80
+msgid "No Repeat"
+msgstr "なし"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:81
+msgid "Daily"
+msgstr "毎日"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:82
+msgid "Monday – Friday"
+msgstr "月曜日〜金曜日"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:83
+msgid "Weekly"
+msgstr "毎週"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:84
+msgid "Monthly"
+msgstr "毎月"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:85
+msgid "Yearly"
+msgstr "毎年"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:96
+msgid "End Repeat"
+msgstr "繰り返しの終了"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:101
+msgid "Forever"
+msgstr "期限なし"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:102
+#: src/gui/event-editor/gcal-schedule-section.ui:115
+msgid "Number of Occurrences"
+msgstr "回数"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:103
+msgid "Until Date"
+msgstr "終了日"
+
+#: src/gui/event-editor/gcal-schedule-section.ui:134
+msgid "End Repeat Date"
+msgstr "繰り返し終了日"
+
+#: src/gui/event-editor/gcal-summary-section.ui:16
+#: src/gui/importer/gcal-import-file-row.c:176
+msgid "Title"
+msgstr "タイトル"
+
+#. Translators: "%1$s" is the city / region name, and
+#. * "%2$s" is the country name (already localized).
 #.
-#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
-#. * formatted time (e.g. 03:14 PM, or 21:29)
-#.
-#: src/gui/event-editor/gcal-schedule-section.c:293
+#: src/gui/event-editor/gcal-time-zone-dialog.c:84
 #, c-format
 msgid "%1$s, %2$s"
 msgstr "%1$sの%2$s"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:20
-msgid "All Day"
-msgstr "終日"
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:4
+msgid "Select Timezone"
+msgstr "タイムゾーンを選択"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:40
-#: src/gui/importer/gcal-import-file-row.c:152
-msgid "Starts"
-msgstr "開始"
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:16
+msgid "Search Locations"
+msgstr "場所を検索"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:90
-#: src/gui/importer/gcal-import-file-row.c:153
-msgid "Ends"
-msgstr "終了"
+#: src/gui/event-editor/gcal-time-zone-dialog.ui:31
+msgid "Search for a Timezone"
+msgstr "タイムゾーンを検索"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:140
-msgid "Repeat"
-msgstr "繰り返し"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:150
-msgid "No Repeat"
-msgstr "なし"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:151
-msgid "Daily"
-msgstr "毎日"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:152
-msgid "Monday – Friday"
-msgstr "月曜日〜金曜日"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:153
-msgid "Weekly"
-msgstr "毎週"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:154
-msgid "Monthly"
-msgstr "毎月"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:155
-msgid "Yearly"
-msgstr "毎年"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:168
-msgid "End Repeat"
-msgstr "繰り返しの終了"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:178
-msgid "Forever"
-msgstr "期限なし"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:179
-msgid "No. of occurrences"
-msgstr "発生回数"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:180
-msgid "Until Date"
-msgstr "次の日付まで"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:193
-msgid "Number of Occurrences"
-msgstr "発生回数"
-
-#: src/gui/event-editor/gcal-schedule-section.ui:213
-msgid "End Repeat Date"
-msgstr "繰り返し終了日"
-
-#: src/gui/event-editor/gcal-summary-section.c:79
-#: src/gui/gcal-quick-add-popover.c:692
-msgid "Unnamed event"
-msgstr "イベント名称未設定"
-
-#: src/gui/event-editor/gcal-summary-section.ui:19
-#: src/gui/importer/gcal-import-file-row.c:150
-msgid "Title"
-msgstr "タイトル"
-
-#: src/gui/event-editor/gcal-time-selector.ui:22
-msgid ":"
-msgstr ":"
-
-#: src/gui/event-editor/gcal-time-selector.ui:47
-#: src/gui/views/gcal-week-view.c:440
-msgid "AM"
-msgstr "午前"
-
-#: src/gui/event-editor/gcal-time-selector.ui:48
-#: src/gui/views/gcal-week-view.c:440
-msgid "PM"
-msgstr "午後"
-
-#: src/gui/gcal-application.c:59
+#: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
 msgstr "GNOME カレンダーを終了"
 
-#: src/gui/gcal-application.c:64
+#: src/gui/gcal-application.c:63
 msgid "Display version number"
 msgstr "バージョン番号を表示"
 
-#: src/gui/gcal-application.c:69
+#: src/gui/gcal-application.c:68
 msgid "Enable debug messages"
 msgstr "デバッグメッセージを有効にする"
 
-#: src/gui/gcal-application.c:74
+#: src/gui/gcal-application.c:73
 msgid "Open calendar on the passed date"
 msgstr "指定された日のカレンダーを開く"
 
-#: src/gui/gcal-application.c:79
+#: src/gui/gcal-application.c:78
 msgid "Open calendar showing the passed event"
 msgstr "指定されたイベントのカレンダーを開く"
 
-#: src/gui/gcal-application.c:163
+#: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d The Calendar authors"
 
-#: src/gui/gcal-application.c:217
+#: src/gui/gcal-application.c:239
 msgid "translator-credits"
 msgstr ""
 "松澤 二郎 <jmatsuzawa@gnome.org>\n"
 "Hajime Taira <htaira@redhat.com>\n"
-"sicklylife <translation@sicklylife.jp>"
+"sicklylife <translation@sicklylife.jp>\n"
+"TSUJI Kento <tuziemon@pclives.org>\n"
+"Kusano Takayuki https://bsky.app/profile/tkusano.jp\n"
+"Japanese Translation Team https://l10n.gnome.org/teams/ja/\n"
+"Seiji Iizuka <seiji@iizuka.dev>"
 
-#: src/gui/gcal-calendar-popover.ui:43
+#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+msgid "Weather"
+msgstr "天気"
+
+#: src/gui/gcal-calendar-button.ui:6
+msgid "Manage Calendars"
+msgstr "カレンダーを管理"
+
+#: src/gui/gcal-calendar-button.ui:8
+msgid "_Calendars"
+msgstr "カレンダー(_C)"
+
+#: src/gui/gcal-calendar-button.ui:37
 msgid "_Synchronize Calendars"
 msgstr "カレンダーを同期(_S)"
 
-#: src/gui/gcal-calendar-popover.ui:51
-msgid "Manage Calendars…"
-msgstr "カレンダーを管理…"
+#: src/gui/gcal-calendar-button.ui:41
+msgid "_Manage Calendars…"
+msgstr "カレンダーを管理(_M)…"
 
-#: src/gui/gcal-calendar-popover.ui:75
-msgctxt "tooltip"
-msgid "Synchronizing remote calendars…"
-msgstr "リモートのカレンダーと同期中…"
+#: src/gui/gcal-calendar-combo-row-item.c:70
+msgid "This calendar is hidden"
+msgstr "このカレンダーは非表示です"
 
-#: src/gui/gcal-event-popover.c:123 src/gui/gcal-quick-add-popover.c:269
+#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
 msgstr "1月"
 
-#: src/gui/gcal-event-popover.c:124 src/gui/gcal-quick-add-popover.c:270
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:254
 msgid "February"
 msgstr "2月"
 
-#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:271
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:255
 msgid "March"
 msgstr "3月"
 
-#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:272
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:256
 msgid "April"
 msgstr "4月"
 
-#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:273
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:257
 msgid "May"
 msgstr "5月"
 
-#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:274
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:258
 msgid "June"
 msgstr "6月"
 
-#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:275
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:259
 msgid "July"
 msgstr "7月"
 
-#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:276
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:260
 msgid "August"
 msgstr "8月"
 
-#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:277
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:261
 msgid "September"
 msgstr "9月"
 
-#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:278
+#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:262
 msgid "October"
 msgstr "10月"
 
-#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:279
+#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:263
 msgid "November"
 msgstr "11月"
 
-#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:280
+#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:264
 msgid "December"
 msgstr "12月"
 
-#: src/gui/gcal-event-popover.c:159
+#: src/gui/gcal-event-popover.c:161
 #, c-format
 msgid "Today %s"
 msgstr "今日 %s"
 
-#: src/gui/gcal-event-popover.c:163
+#: src/gui/gcal-event-popover.c:165
 #, c-format
 msgid "Tomorrow %s"
 msgstr "明日 %s"
 
-#: src/gui/gcal-event-popover.c:167
+#: src/gui/gcal-event-popover.c:169
 #, c-format
 msgid "Yesterday %s"
 msgstr "昨日 %s"
@@ -670,7 +828,7 @@ msgstr "昨日 %s"
 #. * of month, and %3$ is the hour. This format string results in dates
 #. * like "November 21, 22:00".
 #.
-#: src/gui/gcal-event-popover.c:176
+#: src/gui/gcal-event-popover.c:178
 #, c-format
 msgid "%1$s %2$d, %3$s"
 msgstr "%1$s%2$d日 %3$s"
@@ -680,17 +838,32 @@ msgstr "%1$s%2$d日 %3$s"
 #. * of month, %3$d is the year, and %4$s is the hour. This format string
 #. * results in dates like "November 21, 2020, 22:00".
 #.
-#: src/gui/gcal-event-popover.c:188
+#: src/gui/gcal-event-popover.c:190
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%3$d年%1$s%2$d日 %4$s"
+
+#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
+#: src/gui/views/gcal-agenda-view.c:197
+msgid "Today"
+msgstr "今日"
+
+#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
+#: src/gui/views/gcal-agenda-view.c:199
+msgid "Tomorrow"
+msgstr "明日"
+
+#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
+#: src/gui/views/gcal-agenda-view.c:201
+msgid "Yesterday"
+msgstr "昨日"
 
 #.
 #. * Translators: %1$s is a month name (e.g. November), and %2$d is
 #. * the day of month. This format string results in dates like
 #. * "November 21".
 #.
-#: src/gui/gcal-event-popover.c:217 src/gui/gcal-event-popover.c:331
+#: src/gui/gcal-event-popover.c:219 src/gui/gcal-event-popover.c:333
 #, c-format
 msgid "%1$s %2$d"
 msgstr "%1$s%2$d日"
@@ -700,7 +873,7 @@ msgstr "%1$s%2$d日"
 #. * of month, and %3$d is the year. This format string results in dates
 #. * like "November 21, 2020".
 #.
-#: src/gui/gcal-event-popover.c:228 src/gui/gcal-event-popover.c:342
+#: src/gui/gcal-event-popover.c:230 src/gui/gcal-event-popover.c:344
 #, c-format
 msgid "%1$s %2$d, %3$d"
 msgstr "%3$d年%1$s%2$d日"
@@ -709,7 +882,7 @@ msgstr "%3$d年%1$s%2$d日"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Today, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:262
+#: src/gui/gcal-event-popover.c:264
 #, c-format
 msgid "Today, %1$s — %2$s"
 msgstr "今日 %1$s — %2$s"
@@ -718,7 +891,7 @@ msgstr "今日 %1$s — %2$s"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:270
+#: src/gui/gcal-event-popover.c:272
 #, c-format
 msgid "Tomorrow, %1$s – %2$s"
 msgstr "明日 %1$s — %2$s"
@@ -727,7 +900,7 @@ msgstr "明日 %1$s — %2$s"
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
 #. * example: "Tomorrow, 19:00 — 22:00"
 #.
-#: src/gui/gcal-event-popover.c:278
+#: src/gui/gcal-event-popover.c:280
 #, c-format
 msgid "Yesterday, %1$s – %2$s"
 msgstr "昨日 %1$s — %2$s"
@@ -737,7 +910,7 @@ msgstr "昨日 %1$s — %2$s"
 #. * of month, %3$s is the start hour, and %4$s is the end hour. This
 #. * format string results in dates like "November 21, 19:00 — 22:00".
 #.
-#: src/gui/gcal-event-popover.c:287
+#: src/gui/gcal-event-popover.c:289
 #, c-format
 msgid "%1$s %2$d, %3$s – %4$s"
 msgstr "%1$s%2$d日 %3$s — %4$s"
@@ -749,122 +922,147 @@ msgstr "%1$s%2$d日 %3$s — %4$s"
 #. *
 #. * "November 21, 2021, 19:00 — 22:00".
 #.
-#: src/gui/gcal-event-popover.c:302
+#: src/gui/gcal-event-popover.c:304
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%3$d年%1$s%2$d日 %4$s — %5$s"
 
-#: src/gui/gcal-event-popover.ui:70
-msgid "No event information"
-msgstr "イベント情報なし"
+#: src/gui/gcal-event-popover.c:369
+msgid "View Additional Details"
+msgstr "追加の詳細を表示"
 
-#: src/gui/gcal-event-popover.ui:160
-msgid "Edit…"
-msgstr "編集…"
+#: src/gui/gcal-event-popover.c:374
+msgid "Edit Additional Details"
+msgstr "追加の詳細を編集"
 
-#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:437
+#: src/gui/gcal-event-popover.ui:66
+msgid ""
+"<b>This event is part of a read-only calendar</b>\n"
+"    You cannot delete or change this event."
+msgstr ""
+"<b>このイベントは読み取り専用のカレンダーにあります</b>\n"
+"    このイベントの削除や変更はできません。"
+
+#: src/gui/gcal-event-popover.ui:107
+msgid "No event notes"
+msgstr "イベントのメモなし"
+
+#. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
+#: src/gui/gcal-event-widget.c:381
 #, c-format
-msgid "At %s"
-msgstr "場所: %s"
+msgid ""
+"\n"
+"\n"
+"On %s"
+msgstr ""
+"\n"
+"\n"
+"%s で"
 
-#: src/gui/gcal-meeting-row.c:68
-msgid "Google Meet"
-msgstr "Google Meet"
+#. Translators: %s is a URL informed as the location of the event
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:394 src/gui/gcal-event-widget.c:400
+#, c-format
+msgid ""
+"\n"
+"\n"
+"At %s"
+msgstr ""
+"\n"
+"\n"
+"場所: %s"
 
-#: src/gui/gcal-meeting-row.c:69
-msgid "Jitsi"
-msgstr "Jitsi"
+#.
+#. * Translators: %a is the abbreviated day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/gcal-event-widget.c:459
+msgid "%a %B %d"
+msgstr "%B%d日(%a)"
 
-#: src/gui/gcal-meeting-row.c:70
-msgid "Whereby"
-msgstr "Whereby"
-
-#: src/gui/gcal-meeting-row.c:71
-msgid "Zoom"
-msgstr "Zoom"
-
-#: src/gui/gcal-meeting-row.c:81
+#: src/gui/gcal-meeting-row.c:72
 msgid "Unknown Service"
 msgstr "不明なサービス"
 
 #. Translators: "Join" as in "Join meeting"
-#: src/gui/gcal-meeting-row.ui:62
-msgid "Join"
-msgstr "参加"
+#: src/gui/gcal-meeting-row.ui:41
+msgid "_Join"
+msgstr "参加(_J)"
 
-#: src/gui/gcal-quick-add-popover.c:117
+#: src/gui/gcal-quick-add-popover.c:116
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (このカレンダーは読み取り専用です)"
 
-#: src/gui/gcal-quick-add-popover.c:247
+#: src/gui/gcal-quick-add-popover.c:231
 msgid "from next Monday"
 msgstr "次の月曜日から"
 
-#: src/gui/gcal-quick-add-popover.c:248
+#: src/gui/gcal-quick-add-popover.c:232
 msgid "from next Tuesday"
 msgstr "次の火曜日から"
 
-#: src/gui/gcal-quick-add-popover.c:249
+#: src/gui/gcal-quick-add-popover.c:233
 msgid "from next Wednesday"
 msgstr "次の水曜日から"
 
-#: src/gui/gcal-quick-add-popover.c:250
+#: src/gui/gcal-quick-add-popover.c:234
 msgid "from next Thursday"
 msgstr "次の木曜日から"
 
-#: src/gui/gcal-quick-add-popover.c:251
+#: src/gui/gcal-quick-add-popover.c:235
 msgid "from next Friday"
 msgstr "次の金曜日から"
 
-#: src/gui/gcal-quick-add-popover.c:252
+#: src/gui/gcal-quick-add-popover.c:236
 msgid "from next Saturday"
 msgstr "次の土曜日から"
 
-#: src/gui/gcal-quick-add-popover.c:253
+#: src/gui/gcal-quick-add-popover.c:237
 msgid "from next Sunday"
 msgstr "次の日曜日から"
 
-#: src/gui/gcal-quick-add-popover.c:258
+#: src/gui/gcal-quick-add-popover.c:242
 msgid "to next Monday"
 msgstr "次の月曜日まで"
 
-#: src/gui/gcal-quick-add-popover.c:259
+#: src/gui/gcal-quick-add-popover.c:243
 msgid "to next Tuesday"
 msgstr "次の火曜日まで"
 
-#: src/gui/gcal-quick-add-popover.c:260
+#: src/gui/gcal-quick-add-popover.c:244
 msgid "to next Wednesday"
 msgstr "次の水曜日まで"
 
-#: src/gui/gcal-quick-add-popover.c:261
+#: src/gui/gcal-quick-add-popover.c:245
 msgid "to next Thursday"
 msgstr "次の木曜日まで"
 
-#: src/gui/gcal-quick-add-popover.c:262
+#: src/gui/gcal-quick-add-popover.c:246
 msgid "to next Friday"
 msgstr "次の金曜日まで"
 
-#: src/gui/gcal-quick-add-popover.c:263
+#: src/gui/gcal-quick-add-popover.c:247
 msgid "to next Saturday"
 msgstr "次の土曜日まで"
 
-#: src/gui/gcal-quick-add-popover.c:264
+#: src/gui/gcal-quick-add-popover.c:248
 msgid "to next Sunday"
 msgstr "次の日曜日まで"
 
-#: src/gui/gcal-quick-add-popover.c:289
+#: src/gui/gcal-quick-add-popover.c:273
 #, c-format
 msgid "from Today"
 msgstr "今日から"
 
-#: src/gui/gcal-quick-add-popover.c:293
+#: src/gui/gcal-quick-add-popover.c:277
 #, c-format
 msgid "from Tomorrow"
 msgstr "明日から"
 
-#: src/gui/gcal-quick-add-popover.c:297
+#: src/gui/gcal-quick-add-popover.c:281
 #, c-format
 msgid "from Yesterday"
 msgstr "昨日から"
@@ -873,22 +1071,22 @@ msgstr "昨日から"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:315
+#: src/gui/gcal-quick-add-popover.c:299
 #, c-format
 msgid "from %1$s %2$s"
 msgstr "%1$s%2$s日から"
 
-#: src/gui/gcal-quick-add-popover.c:326
+#: src/gui/gcal-quick-add-popover.c:310
 #, c-format
 msgid "to Today"
 msgstr "今日まで"
 
-#: src/gui/gcal-quick-add-popover.c:330
+#: src/gui/gcal-quick-add-popover.c:314
 #, c-format
 msgid "to Tomorrow"
 msgstr "明日まで"
 
-#: src/gui/gcal-quick-add-popover.c:334
+#: src/gui/gcal-quick-add-popover.c:318
 #, c-format
 msgid "to Yesterday"
 msgstr "昨日まで"
@@ -897,378 +1095,428 @@ msgstr "昨日まで"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:352
+#: src/gui/gcal-quick-add-popover.c:336
 #, c-format
 msgid "to %1$s %2$s"
 msgstr "%1$s%2$s日まで"
 
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
-#: src/gui/gcal-quick-add-popover.c:359
+#: src/gui/gcal-quick-add-popover.c:343
 #, c-format
 msgid "New Event %1$s %2$s"
 msgstr "%1$s%2$sの新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:376
+#: src/gui/gcal-quick-add-popover.c:360
 #, c-format
 msgid "New Event Today"
 msgstr "今日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:380
+#: src/gui/gcal-quick-add-popover.c:364
 #, c-format
 msgid "New Event Tomorrow"
 msgstr "明日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:384
+#: src/gui/gcal-quick-add-popover.c:368
 #, c-format
 msgid "New Event Yesterday"
 msgstr "昨日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:390
+#: src/gui/gcal-quick-add-popover.c:374
 msgid "New Event next Monday"
 msgstr "次の月曜日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:391
+#: src/gui/gcal-quick-add-popover.c:375
 msgid "New Event next Tuesday"
 msgstr "次の火曜日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:392
+#: src/gui/gcal-quick-add-popover.c:376
 msgid "New Event next Wednesday"
 msgstr "次の水曜日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:393
+#: src/gui/gcal-quick-add-popover.c:377
 msgid "New Event next Thursday"
 msgstr "次の木曜日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:394
+#: src/gui/gcal-quick-add-popover.c:378
 msgid "New Event next Friday"
 msgstr "次の金曜日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:395
+#: src/gui/gcal-quick-add-popover.c:379
 msgid "New Event next Saturday"
 msgstr "次の土曜日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:396
+#: src/gui/gcal-quick-add-popover.c:380
 msgid "New Event next Sunday"
 msgstr "次の日曜日の新規イベント"
 
 #. Translators: %d is the numeric day of month
-#: src/gui/gcal-quick-add-popover.c:408
+#: src/gui/gcal-quick-add-popover.c:392
 #, c-format
 msgid "New Event on January %d"
 msgstr "1月%-d日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:409
+#: src/gui/gcal-quick-add-popover.c:393
 #, c-format
 msgid "New Event on February %d"
 msgstr "2月%-d日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:410
+#: src/gui/gcal-quick-add-popover.c:394
 #, c-format
 msgid "New Event on March %d"
 msgstr "3月%-d日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:411
+#: src/gui/gcal-quick-add-popover.c:395
 #, c-format
 msgid "New Event on April %d"
 msgstr "4月%-d日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:412
+#: src/gui/gcal-quick-add-popover.c:396
 #, c-format
 msgid "New Event on May %d"
 msgstr "5月%-d日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:413
+#: src/gui/gcal-quick-add-popover.c:397
 #, c-format
 msgid "New Event on June %d"
 msgstr "6月%-d日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:414
+#: src/gui/gcal-quick-add-popover.c:398
 #, c-format
 msgid "New Event on July %d"
 msgstr "7月%-d日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:415
+#: src/gui/gcal-quick-add-popover.c:399
 #, c-format
 msgid "New Event on August %d"
 msgstr "8月%-d日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:416
+#: src/gui/gcal-quick-add-popover.c:400
 #, c-format
 msgid "New Event on September %d"
 msgstr "9月%-d日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:417
+#: src/gui/gcal-quick-add-popover.c:401
 #, c-format
 msgid "New Event on October %d"
 msgstr "10月%-d日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:418
+#: src/gui/gcal-quick-add-popover.c:402
 #, c-format
 msgid "New Event on November %d"
 msgstr "11月%-d日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.c:419
+#: src/gui/gcal-quick-add-popover.c:403
 #, c-format
 msgid "New Event on December %d"
 msgstr "12月%-d日の新規イベント"
 
-#: src/gui/gcal-quick-add-popover.ui:117
+#: src/gui/gcal-quick-add-popover.ui:87
 msgid "Edit Details…"
 msgstr "詳細を編集…"
 
-#: src/gui/gcal-weather-settings.ui:12 src/gui/gcal-window.ui:331
-msgid "_Weather"
-msgstr "天気(_W)"
+#: src/gui/gcal-quick-add-popover.ui:98
+msgid "Add"
+msgstr "追加"
 
-#: src/gui/gcal-weather-settings.ui:30
+#: src/gui/gcal-search-button.ui:29
+msgid "Search Events"
+msgstr "イベントを検索"
+
+#: src/gui/gcal-search-button.ui:54
+msgid "Search events"
+msgstr "イベントを検索"
+
+#: src/gui/gcal-sync-indicator.ui:21
+msgctxt "tooltip"
+msgid "Synchronizing Remote Calendars"
+msgstr "リモートのカレンダーと同期中"
+
+#: src/gui/gcal-toolbar-end.ui:9
+msgctxt "tooltip"
+msgid "Search"
+msgstr "検索"
+
+#: src/gui/gcal-toolbar-end.ui:16
+msgctxt "tooltip"
+msgid "Add Event"
+msgstr "イベントを追加"
+
+#: src/gui/gcal-weather-settings.ui:17
 msgid "Show Weather"
-msgstr "天気を表示する"
+msgstr "天気を表示"
 
-#: src/gui/gcal-weather-settings.ui:53
+#: src/gui/gcal-weather-settings.ui:34
 msgid "Automatic Location"
 msgstr "場所を自動で選択する"
 
-# 表示方法: "Event deleted"通知表示中にイベントをもうひとつ削除する
-#: src/gui/gcal-window.c:771
-msgid "Another event deleted"
-msgstr "他のイベントも削除しました"
+#: src/gui/gcal-weather-settings.ui:46
+msgid "Search locations"
+msgstr "場所を検索"
 
-#: src/gui/gcal-window.c:775
-msgid "Event deleted"
-msgstr "イベントを削除しました"
-
-#: src/gui/gcal-window.c:715
-msgid "_Undo"
-msgstr "元に戻す(_U)"
-
-#: src/gui/gcal-window.ui:47
+#: src/gui/gcal-window.c:337
 msgid "Week"
 msgstr "週"
 
-#: src/gui/gcal-window.ui:63
+#: src/gui/gcal-window.c:339
 msgid "Month"
 msgstr "月"
 
-#: src/gui/gcal-window.ui:78
-msgid "Year"
-msgstr "年"
+# 表示方法: "Event deleted"通知表示中にイベントをもうひとつ削除する
+#: src/gui/gcal-window.c:821
+msgid "Another event deleted"
+msgstr "他のイベントも削除しました"
 
-#: src/gui/gcal-window.ui:179
-msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "新しいイベントを登録する"
+#: src/gui/gcal-window.c:821
+msgid "Event deleted"
+msgstr "イベントを削除しました"
 
-#: src/gui/gcal-window.ui:269
-msgid "Manage your calendars"
-msgstr "カレンダーを管理する"
+#: src/gui/gcal-window.c:886
+msgid "Could not import some files: Not ICS files"
+msgstr ""
+"いくつかのファイルをインポートできませんでした: ICS ファイルではありません"
 
-#: src/gui/gcal-window.ui:280
-msgctxt "tooltip"
-msgid "Search for events"
-msgstr "イベントの検索"
+#: src/gui/gcal-window.c:891
+#, c-format
+msgid "Could not import “%s”: Not an ICS file"
+msgstr "“%s” をインポートできませんでした: ICSファイルではありません"
 
-#: src/gui/gcal-window.ui:322
+#: src/gui/gcal-window.ui:123
+msgid "Drop Event Files to Import"
+msgstr "イベントファイルをドロップしてインポート"
+
+#: src/gui/gcal-window.ui:166
+msgid "Main Menu"
+msgstr "メインメニュー"
+
+#: src/gui/gcal-window.ui:203 src/gui/gcal-window.ui:243
+msgid "_Today"
+msgstr "今日(_T)"
+
+#: src/gui/gcal-window.ui:207 src/gui/gcal-window.ui:247
+msgid "Go to Today"
+msgstr "今日へ移動"
+
+#: src/gui/gcal-window.ui:281
+msgid "_Week"
+msgstr "週(_W)"
+
+#: src/gui/gcal-window.ui:296
+msgid "_Month"
+msgstr "月(_M)"
+
+#: src/gui/gcal-window.ui:347
+msgid "_Date & Time Settings…"
+msgstr "日付と時刻の設定(_D)…"
+
+#: src/gui/gcal-window.ui:351
 msgid "_Online Accounts…"
 msgstr "オンラインアカウント(_O)…"
 
-#: src/gui/gcal-window.ui:256
-msgid "Weather"
-msgstr "天気"
-
-#: src/gui/gcal-window.ui:346
+#: src/gui/gcal-window.ui:363
 msgid "_Keyboard Shortcuts"
 msgstr "キーボードショートカット(_K)"
 
-#: src/gui/gcal-window.ui:355
+#: src/gui/gcal-window.ui:367
 msgid "_About Calendar"
 msgstr "カレンダーについて(_A)"
 
-#: src/gui/gtk/help-overlay.ui:13
+#: src/gui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
 msgstr "全般"
 
-#: src/gui/gtk/help-overlay.ui:17
+#: src/gui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
-msgid "New event"
-msgstr "新しいイベントを登録する"
+msgid "Open Main Menu"
+msgstr "メインメニューを開く"
 
-#: src/gui/gtk/help-overlay.ui:24
+#: src/gui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
-msgid "Close window"
-msgstr "ウィンドウを閉じる"
+msgid "Open Calendars Menu"
+msgstr "カレンダーメニューを開く"
 
-#: src/gui/gtk/help-overlay.ui:31
+#: src/gui/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
-msgid "Search"
-msgstr "検索する"
+msgid "New Event"
+msgstr "新しいイベントを登録"
+
+#: src/gui/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Manage Calendars"
+msgstr "カレンダーを管理"
 
 #: src/gui/gtk/help-overlay.ui:38
 msgctxt "shortcut window"
-msgid "Show help"
-msgstr "ヘルプを表示する"
+msgid "Synchronize Calendars"
+msgstr "カレンダーを同期"
 
-#: src/gui/gtk/help-overlay.ui:45
+#: src/gui/gtk/help-overlay.ui:44
+msgctxt "shortcut window"
+msgid "Close Window"
+msgstr "ウィンドウを閉じる"
+
+#: src/gui/gtk/help-overlay.ui:50
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "検索"
+
+#: src/gui/gtk/help-overlay.ui:56
+msgctxt "shortcut window"
+msgid "Show Help"
+msgstr "ヘルプを表示"
+
+#: src/gui/gtk/help-overlay.ui:62
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "ショートカット"
 
-#: src/gui/gtk/help-overlay.ui:54
+#: src/gui/gtk/help-overlay.ui:70
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "移動"
 
-#: src/gui/gtk/help-overlay.ui:58
+#: src/gui/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
-msgid "Go back"
+msgid "Go Back"
 msgstr "戻る"
-
-#: src/gui/gtk/help-overlay.ui:65
-msgctxt "shortcut window"
-msgid "Go forward"
-msgstr "進む"
-
-#: src/gui/gtk/help-overlay.ui:72
-msgctxt "shortcut window"
-msgid "Show today"
-msgstr "今日のカレンダーを表示する"
 
 #: src/gui/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
-msgid "Next view"
-msgstr "次の表示モードへ切り替える"
+msgid "Go Forward"
+msgstr "進む"
 
-#: src/gui/gtk/help-overlay.ui:86
+#: src/gui/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
-msgid "Previous view"
-msgstr "前の表示モードへ切り替える"
+msgid "Show Today"
+msgstr "今日を表示"
 
-#: src/gui/gtk/help-overlay.ui:95
+#: src/gui/gtk/help-overlay.ui:91
+msgctxt "shortcut window"
+msgid "Next View"
+msgstr "次を表示"
+
+#: src/gui/gtk/help-overlay.ui:97
+msgctxt "shortcut window"
+msgid "Previous View"
+msgstr "前を表示"
+
+#: src/gui/gtk/help-overlay.ui:105
 msgctxt "shortcut window"
 msgid "View"
 msgstr "表示"
 
-#: src/gui/gtk/help-overlay.ui:99
+#: src/gui/gtk/help-overlay.ui:108
 msgctxt "shortcut window"
-msgid "Week view"
+msgid "Week View"
 msgstr "週表示"
 
-#: src/gui/gtk/help-overlay.ui:106
+#: src/gui/gtk/help-overlay.ui:114
 msgctxt "shortcut window"
-msgid "Month view"
+msgid "Month View"
 msgstr "月表示"
 
-#: src/gui/gtk/help-overlay.ui:113
-msgctxt "shortcut window"
-msgid "Year view"
-msgstr "年表示"
-
-#: src/gui/importer/gcal-import-dialog.c:345
+#: src/gui/importer/gcal-import-dialog.c:341
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
 msgstr[0] "%d 個のイベントをインポート"
 
-#: src/gui/importer/gcal-import-dialog.ui:24
+#: src/gui/importer/gcal-import-dialog.ui:4
 msgid "Import Files…"
 msgstr "ファイルをインポート…"
 
-#: src/gui/importer/gcal-import-dialog.ui:31 src/utils/gcal-utils.c:961
-msgid "_Cancel"
-msgstr "キャンセル(_C)"
-
-#: src/gui/importer/gcal-import-dialog.ui:41
+#: src/gui/importer/gcal-import-dialog.ui:28
 msgid "_Import"
 msgstr "インポート(_I)"
 
-#: src/gui/importer/gcal-import-dialog.ui:91
+#: src/gui/importer/gcal-import-dialog.ui:60
 msgid "C_alendar"
 msgstr "カレンダー(_A)"
 
-#: src/gui/importer/gcal-importer.c:33
+#: src/gui/importer/gcal-importer.c:34
 msgid "No error"
 msgstr "エラーなし"
 
-#: src/gui/importer/gcal-importer.c:36
+#: src/gui/importer/gcal-importer.c:37
 msgid "Bad argument to function"
 msgstr "関数の引数が不正です"
 
-#: src/gui/importer/gcal-importer.c:40
+#: src/gui/importer/gcal-importer.c:41
 msgid "Failed to allocate a new object in memory"
 msgstr "新しいオブジェクトのためのメモリ確保に失敗しました"
 
-#: src/gui/importer/gcal-importer.c:43
+#: src/gui/importer/gcal-importer.c:44
 msgid "File is malformed, invalid, or corrupted"
 msgstr ""
-"問題のあるファイルです (未対応のファイルまたは破損したファイルの可能性が"
-"あります)"
+"問題のあるファイルです (未対応のファイルまたは破損したファイルの可能性があり"
+"ます)"
 
-#: src/gui/importer/gcal-importer.c:46
+#: src/gui/importer/gcal-importer.c:47
 msgid "Failed to parse the calendar contents"
 msgstr "カレンダーの内容の解析に失敗しました"
 
-#: src/gui/importer/gcal-importer.c:49
+#: src/gui/importer/gcal-importer.c:50
 msgid "Failed to read file"
 msgstr "ファイルの読み取りに失敗しました"
 
-#: src/gui/importer/gcal-importer.c:56
+#: src/gui/importer/gcal-importer.c:57
 msgid "Internal error"
 msgstr "内部エラー"
 
-#: src/gui/importer/gcal-importer.c:94
+#: src/gui/importer/gcal-importer.c:112
 msgid "File is not an iCalendar (.ics) file"
 msgstr "iCalendar (.ics) ファイルではありません"
 
-#: src/gui/importer/gcal-import-file-row.c:154
+#: src/gui/importer/gcal-import-file-row.c:178
+msgid "Starts"
+msgstr "開始"
+
+#: src/gui/importer/gcal-import-file-row.c:179
+msgid "Ends"
+msgstr "終了"
+
+#: src/gui/importer/gcal-import-file-row.c:180
 msgid "Description"
 msgstr "説明"
 
-#: src/gui/views/gcal-month-popover.ui:91
+#.
+#. * Translators: %A is the full day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#. * More formats can be found on the doc:
+#. * https://docs.gtk.org/glib/method.DateTime.format.html
+#.
+#: src/gui/views/gcal-agenda-view.c:209
+msgid "%A %B %d"
+msgstr "%B%e日 %A"
+
+#: src/gui/views/gcal-agenda-view.c:414
+msgid "On-going"
+msgstr "進行中"
+
+#: src/gui/views/gcal-agenda-view.ui:22
+msgid "No events"
+msgstr "イベントなし"
+
+#: src/gui/views/gcal-month-popover.ui:69
 msgid "New Event…"
 msgstr "新しいイベント…"
 
-#: src/gui/views/gcal-week-grid.c:681 src/gui/views/gcal-week-view.c:293
-msgid "00 AM"
-msgstr "午前0時"
-
-#: src/gui/views/gcal-week-grid.c:684 src/gui/views/gcal-week-view.c:296
-msgid "00:00"
-msgstr "00:00"
-
-#: src/gui/views/gcal-week-header.c:465
+#: src/gui/views/gcal-week-header.c:474
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "その他%d個のイベント"
 
-#: src/gui/views/gcal-week-header.c:1004
+#: src/gui/views/gcal-week-header.c:1006
 #, c-format
-msgid "week %d"
+msgid "Week %d"
 msgstr "%d週"
 
-#. Translators: This is a date format in the sidebar of the year
-#. * view when the selection starts at the specified day and the
-#. * end is unspecified.
-#: src/gui/views/gcal-year-view.c:291
-msgid "%B %d…"
-msgstr "%-m月%-d日…"
+#: src/utils/gcal-utils.c:1158
+msgid "Modify Multiple Events?"
+msgstr "複数のイベントを変更しますか?"
 
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/gui/views/gcal-year-view.c:297 src/gui/views/gcal-year-view.c:563
-msgid "%B %d"
-msgstr "%-m月%-d日"
-
-#: src/gui/views/gcal-year-view.ui:133
-msgid "No events"
-msgstr "イベントなし"
-
-#: src/gui/views/gcal-year-view.ui:155
-msgid "Add Event…"
-msgstr "新規イベント…"
-
-#: src/utils/gcal-utils.c:958
+#: src/utils/gcal-utils.c:1159
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1276,20 +1524,210 @@ msgstr ""
 "変更しようとしているイベントが繰り返し発生しています。 選択した変更は、次の項"
 "目に適用する必要があります:"
 
-#: src/utils/gcal-utils.c:963
+#: src/utils/gcal-utils.c:1163
 msgid "_Only This Event"
 msgstr "このイベントのみ(_O)"
 
-#: src/utils/gcal-utils.c:970
-msgid "_Subsequent events"
-msgstr "このイベント以降(_S)"
+#: src/utils/gcal-utils.c:1169
+msgid "_Subsequent Events"
+msgstr "その後のイベント(_S)"
 
-#: src/utils/gcal-utils.c:972
-msgid "_All events"
+#: src/utils/gcal-utils.c:1172
+msgid "_All Events"
 msgstr "すべてのイベント(_A)"
 
+#: src/utils/gcal-utils.c:1274
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#: src/utils/gcal-utils.c:1275
+msgid "Jitsi"
+msgstr "Jitsi"
+
+#: src/utils/gcal-utils.c:1276
+msgid "Whereby"
+msgstr "Whereby"
+
+#: src/utils/gcal-utils.c:1277
+msgid "Zoom"
+msgstr "Zoom"
+
+#: src/utils/gcal-utils.c:1278
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#, fuzzy
+#~| msgid "Number of Occurrences"
+#~ msgid "Uber Conference"
+#~ msgstr "発生回数"
+
+#, fuzzy
+#~| msgctxt "shortcut window"
+#~| msgid "View"
+#~ msgid "View Map"
+#~ msgstr "表示"
+
+#, fuzzy
+#~| msgid "Google Meet"
+#~ msgid "Google Maps"
+#~ msgstr "Google Meet"
+
+#~ msgid "Calendar for GNOME"
+#~ msgstr "GNOME のカレンダー"
+
+#~ msgid ""
+#~ "GNOME Calendar is a simple and beautiful calendar application designed to "
+#~ "perfectly fit the GNOME desktop. By reusing the components which the "
+#~ "GNOME desktop is built on, Calendar nicely integrates with the GNOME "
+#~ "ecosystem."
+#~ msgstr ""
+#~ "GNOME カレンダーは、GNOME デスクトップ環境のために設計されたシンプルで美し"
+#~ "いカレンダーアプリケーションです。GNOME デスクトップ環境を構築するコンポー"
+#~ "ネントを再利用することで、カレンダーが GNOME のエコシステムとシームレスに"
+#~ "統合されています。"
+
+#~ msgid ""
+#~ "We aim to find the perfect balance between nicely crafted features and "
+#~ "user-centred usability. No excess, nothing missing. You’ll feel "
+#~ "comfortable using Calendar, like you’ve been using it for ages!"
+#~ msgstr ""
+#~ "私たちは、洗練された機能とユーザー中心のユーザビリティの間の絶妙なバランス"
+#~ "を取ることを目指しています。機能としては過不足なく、長年愛用してきたカレン"
+#~ "ダーのように心地よく感じることでしょう。"
+
+#~ msgid "Undo"
+#~ msgstr "元に戻す"
+
+#~ msgid "Settings"
+#~ msgstr "設定"
+
+#~ msgid "Calendar name"
+#~ msgstr "カレンダー名"
+
+#~ msgid "Import a Calendar"
+#~ msgstr "カレンダーのインポート"
+
+#~ msgid ""
+#~ "Alternatively, enter the web address of an online calendar you want to "
+#~ "import, or open a supported calendar file."
+#~ msgstr ""
+#~ "インポートしたいオンラインカレンダーのウェブアドレスを入力するか、サポート"
+#~ "しているカレンダーファイルを選択してください。"
+
+#~ msgid "Open a File"
+#~ msgstr "ファイルを開く"
+
+#~ msgid "Calendar files"
+#~ msgstr "カレンダーファイル"
+
+#~ msgid "Cancel"
+#~ msgstr "キャンセル"
+
+#~ msgid "Toggles the sound of the alarm"
+#~ msgstr "アラーム音を切り換え"
+
+#~ msgid "Click to select the calendar"
+#~ msgstr "クリックして予定を選択する"
+
+#~ msgid "Schedule"
+#~ msgstr "予定"
+
+#~ msgid "1 hour"
+#~ msgstr "1 時間"
+
+#~ msgid "1 day"
+#~ msgstr "1 日"
+
+#~ msgid "2 days"
+#~ msgstr "2 日"
+
+#~ msgid "3 days"
+#~ msgstr "3 日"
+
+#~ msgid "1 week"
+#~ msgstr "1 週間"
+
+#, c-format
+#~ msgid "Last %A"
+#~ msgstr "先週の%A"
+
+#, c-format
+#~ msgid "This %A"
+#~ msgstr "今週の%A"
+
+#~ msgid "No. of occurrences"
+#~ msgstr "発生回数"
+
+#~ msgid "Unnamed event"
+#~ msgstr "イベント名称未設定"
+
+#~ msgid "The GNOME Project"
+#~ msgstr "The GNOME Project"
+
+#~ msgid "No event information"
+#~ msgstr "イベント情報なし"
+
+#~ msgid "Edit…"
+#~ msgstr "編集…"
+
+#~ msgctxt "tooltip"
 #~ msgid "Search for events"
 #~ msgstr "イベントの検索"
+
+#~ msgctxt "tooltip"
+#~ msgid "Add a new event"
+#~ msgstr "新しいイベントを登録する"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Go back"
+#~ msgstr "戻る"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Week view"
+#~ msgstr "週表示"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Month view"
+#~ msgstr "月表示"
+
+#~ msgid "00 AM"
+#~ msgstr "午前0時"
+
+#~ msgid "00:00"
+#~ msgstr "00:00"
+
+#~ msgid "Year view"
+#~ msgstr "年表示"
+
+#~ msgid "Window position"
+#~ msgstr "ウィンドウの位置"
+
+#~ msgid "Window position (x and y)."
+#~ msgstr "ウィンドウの位置 (X 軸と Y 軸) です。"
+
+#~ msgid "Follow system night light"
+#~ msgstr "システムの夜間モードに従う"
+
+#~ msgid "Use GNOME night light setting to activate night-mode."
+#~ msgstr ""
+#~ "夜間モードをアクティブにするには GNOME の夜間モード設定を使用してくださ"
+#~ "い。"
+
+#~ msgid "_Weather"
+#~ msgstr "天気(_W)"
+
+#~ msgid "Year"
+#~ msgstr "年"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Year view"
+#~ msgstr "年表示"
+
+#~ msgid "%B %d…"
+#~ msgstr "%-m月%-d日…"
+
+#~ msgid "Add Event…"
+#~ msgstr "新規イベント…"
 
 #~ msgid "Calendar management"
 #~ msgstr "カレンダー管理"
@@ -1297,17 +1735,8 @@ msgstr "すべてのイベント(_A)"
 #~ msgid "Check this out!"
 #~ msgstr "日時を確認してください!"
 
-#~ msgid "Date"
-#~ msgstr "日付"
-
-#~ msgid "Time"
-#~ msgstr "時刻"
-
 #~ msgid "From Web…"
 #~ msgstr "Web から…"
-
-#~ msgid "New Local Calendar…"
-#~ msgstr "新しいローカルカレンダー…"
 
 #~ msgid "No results found"
 #~ msgstr "見つかりませんでした"
@@ -1328,29 +1757,17 @@ msgstr "すべてのイベント(_A)"
 #~ msgid "org.gnome.Calendar"
 #~ msgstr "org.gnome.Calendar"
 
-#~ msgid "Open online account settings"
-#~ msgstr "オンラインアカウント設定を開く"
-
 #~ msgid "Click to set up"
 #~ msgstr "クリックしてセットアップする"
 
 #~ msgid "Nextcloud"
 #~ msgstr "Nextcloud"
 
-#~ msgid "Microsoft Exchange"
-#~ msgstr "Microsoft Exchange"
-
 #~ msgid "Overview"
 #~ msgstr "概要"
 
-#~ msgid "Edit Calendar"
-#~ msgstr "カレンダーの編集"
-
 #~ msgid "Calendar Address"
 #~ msgstr "カレンダーのアドレス"
-
-#~ msgid "Enter your credentials"
-#~ msgstr "資格情報を入力してください"
 
 #~ msgid "All day"
 #~ msgstr "終日"
@@ -1376,17 +1793,11 @@ msgstr "すべてのイベント(_A)"
 #~ msgid "Add Eve_nt…"
 #~ msgstr "イベントを追加(_N)…"
 
-#~ msgid "_Calendars"
-#~ msgstr "カレンダー(_C)"
-
 #~ msgid "_About"
 #~ msgstr "このアプリケーションについて(_A)"
 
 #~ msgid "_Quit"
 #~ msgstr "終了(_Q)"
-
-#~ msgid "Add Eve_nt"
-#~ msgstr "イベントを追加(_N)"
 
 #~ msgid "List of the disabled sources"
 #~ msgstr "無効なソースの一覧"
