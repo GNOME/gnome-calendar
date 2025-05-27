@@ -447,7 +447,6 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
                                     const GSList        *objects,
                                     GcalCalendarMonitor *self)
 {
-  g_autoptr (GRWLockReaderLocker) reader_locker = NULL;
   g_autoptr (GHashTable) events_to_remove = NULL;
   g_autoptr (GPtrArray) components_to_expand = NULL;
   g_autoptr (GPtrArray) event_ids_to_remove = NULL;
@@ -465,7 +464,7 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
       return;
     }
 
-  reader_locker = g_rw_lock_reader_locker_new (&self->shared.lock);
+  G_RW_LOCK_READER_AUTO_LOCK (&self->shared.lock, reader_locker);
   components_to_expand = g_ptr_array_new ();
   events_to_remove = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
   events_to_update = g_ptr_array_new_with_free_func (g_object_unref);
