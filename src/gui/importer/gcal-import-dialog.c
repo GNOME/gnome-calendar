@@ -183,7 +183,6 @@ setup_files_list (GcalImportDialog *self,
 
   GCAL_ENTRY;
 
-  has_multiple = list->next != NULL;
   for (GList *iter = list; iter != NULL; iter = iter->next)
     {
       n_files++;
