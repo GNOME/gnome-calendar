@@ -1397,8 +1397,8 @@ gcal_month_view_measure (GtkWidget      *widget,
   GcalMonthView *self;
   gint natural_header_size;
   gint minimum_header_size;
-  gint minimum_row_size;
-  gint natural_row_size;
+  gint minimum_row_size = 0;
+  gint natural_row_size = 0;
 
   self = GCAL_MONTH_VIEW (widget);
 
