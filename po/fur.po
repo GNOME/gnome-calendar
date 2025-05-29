@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-05-10 15:00+0000\n"
-"PO-Revision-Date: 2025-05-29 11:33+0200\n"
+"POT-Creation-Date: 2025-05-28 18:13+0000\n"
+"PO-Revision-Date: 2025-05-29 11:38+0200\n"
 "Last-Translator: Fabio T. <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <f.t.public@gmail.com>\n"
 "Language: fur\n"
@@ -21,8 +21,9 @@ msgstr ""
 
 #: data/org.gnome.Calendar.desktop.in.in:3
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
-#: src/gui/gcal-calendar-combo-row.ui:5 src/gui/gcal-quick-add-popover.ui:135
-#: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:147
+#: src/gui/common/gcal-calendar-combo-row.ui:5
+#: src/gui/gcal-quick-add-popover.ui:135 src/gui/gcal-window.ui:4
+#: src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "Calendari"
 
@@ -186,7 +187,7 @@ msgid "Calendar “%s” removed"
 msgstr "Calendari “%s” gjavât"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:363
-#: src/gui/gcal-window.c:823
+#: src/gui/gcal-window.c:847
 msgid "_Undo"
 msgstr "_Disfe"
 
@@ -199,19 +200,19 @@ msgstr "Calendaris"
 msgid "_Add Calendar"
 msgstr "_Zonte calendari"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.c:190
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:185
 msgid "Calendar URL"
 msgstr "URL Calendari"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.c:208
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:65
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:203
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:63
 #: src/gui/event-editor/gcal-summary-section.ui:24
 #: src/gui/gcal-event-popover.ui:165
 #: src/gui/importer/gcal-import-file-row.c:177
 msgid "Location"
 msgstr "Posizion"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.c:209
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:204
 msgid "On This Computer"
 msgstr "Su chest computer"
 
@@ -219,37 +220,29 @@ msgstr "Su chest computer"
 msgid "Edit Calendar"
 msgstr "Modifiche calendari"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:34
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:32
 msgid "Account"
 msgstr "Account"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:42
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:40
 msgid "Open in Settings"
 msgstr "Vierç in Impostazions"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:80
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:28
 msgid "Calendar Name"
 msgstr "Non calendari"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:89
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:87
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:36
 msgid "Color"
 msgstr "Colôr"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:110
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:109
 msgid "_Display Calendar"
 msgstr "_Visualize calendari"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:117
-msgid "Default _Calendar"
-msgstr "_Calendari predefinît"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:118
-msgid "Add new events to this calendar by default"
-msgstr "Come impostazion predefinide, zonte gnûfs events a chest calendari"
-
-#: src/gui/calendar-management/gcal-edit-calendar-page.ui:132
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:124
 msgid "_Remove Calendar"
 msgstr "_Gjave calendari"
 
@@ -324,6 +317,59 @@ msgstr "_Anule"
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:208
 msgid "_Connect"
 msgstr "_Conet"
+
+#: src/gui/common/gcal-calendar-combo-row-item.c:70
+msgid "This calendar is hidden"
+msgstr "Chest calendari al è platât"
+
+#. Translators: Calendar grid abbreviation for Sunday.
+#. *
+#. * NOTE: These grid abbreviations are always shown together
+#. * and in order, e.g. "S M T W T F S".
+#. *
+#. * Please make sure these abbreviations match GNOME Shell's
+#. * abbreviations for your language.
+#.
+#: src/gui/common/gcal-date-chooser.c:272
+msgctxt "grid sunday"
+msgid "S"
+msgstr "D"
+
+#. Translators: Calendar grid abbreviation for Monday
+#: src/gui/common/gcal-date-chooser.c:277
+msgctxt "grid monday"
+msgid "M"
+msgstr "L"
+
+#. Translators: Calendar grid abbreviation for Tuesday
+#: src/gui/common/gcal-date-chooser.c:282
+msgctxt "grid tuesday"
+msgid "T"
+msgstr "M"
+
+#. Translators: Calendar grid abbreviation for Wednesday
+#: src/gui/common/gcal-date-chooser.c:287
+msgctxt "grid wednesday"
+msgid "W"
+msgstr "M"
+
+#. Translators: Calendar grid abbreviation for Thursday
+#: src/gui/common/gcal-date-chooser.c:292
+msgctxt "grid thursday"
+msgid "T"
+msgstr "J"
+
+#. Translators: Calendar grid abbreviation for Friday
+#: src/gui/common/gcal-date-chooser.c:297
+msgctxt "grid friday"
+msgid "F"
+msgstr "V"
+
+#. Translators: Calendar grid abbreviation for Saturday
+#: src/gui/common/gcal-date-chooser.c:302
+msgctxt "grid saturday"
+msgid "S"
+msgstr "S"
 
 #: src/gui/event-editor/gcal-alarm-row.c:85
 #, c-format
@@ -427,55 +473,6 @@ msgstr "Comute sun alarme"
 #: src/gui/event-editor/gcal-alarm-row.ui:20
 msgid "Remove Alarm"
 msgstr "Gjave alarme"
-
-#. Translators: Calendar grid abbreviation for Sunday.
-#. *
-#. * NOTE: These grid abbreviations are always shown together
-#. * and in order, e.g. "S M T W T F S".
-#. *
-#. * Please make sure these abbreviations match GNOME Shell's
-#. * abbreviations for your language.
-#.
-#: src/gui/event-editor/gcal-date-chooser.c:272
-msgctxt "grid sunday"
-msgid "S"
-msgstr "D"
-
-#. Translators: Calendar grid abbreviation for Monday
-#: src/gui/event-editor/gcal-date-chooser.c:277
-msgctxt "grid monday"
-msgid "M"
-msgstr "L"
-
-#. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/event-editor/gcal-date-chooser.c:282
-msgctxt "grid tuesday"
-msgid "T"
-msgstr "M"
-
-#. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/event-editor/gcal-date-chooser.c:287
-msgctxt "grid wednesday"
-msgid "W"
-msgstr "M"
-
-#. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/event-editor/gcal-date-chooser.c:292
-msgctxt "grid thursday"
-msgid "T"
-msgstr "J"
-
-#. Translators: Calendar grid abbreviation for Friday
-#: src/gui/event-editor/gcal-date-chooser.c:297
-msgctxt "grid friday"
-msgid "F"
-msgstr "V"
-
-#. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/event-editor/gcal-date-chooser.c:302
-msgctxt "grid saturday"
-msgid "S"
-msgstr "S"
 
 #: src/gui/event-editor/gcal-date-chooser-row.ui:15
 msgid "Edit Date"
@@ -742,11 +739,11 @@ msgstr "Vierç il calendari mostrant l'event dât"
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d i autôrs di Calendari"
 
-#: src/gui/gcal-application.c:239
+#: src/gui/gcal-application.c:241
 msgid "translator-credits"
 msgstr "Fabio Tomat <f.t.public@gmail.com>"
 
-#: src/gui/gcal-application.c:243 src/gui/gcal-window.ui:355
+#: src/gui/gcal-application.c:245 src/gui/gcal-window.ui:355
 msgid "Weather"
 msgstr "Timp"
 
@@ -765,10 +762,6 @@ msgstr "_Sincronize calendaris"
 #: src/gui/gcal-calendar-button.ui:41
 msgid "_Manage Calendars…"
 msgstr "_Gjestìs calendaris…"
-
-#: src/gui/gcal-calendar-combo-row-item.c:70
-msgid "This calendar is hidden"
-msgstr "Chest calendari al è platât"
 
 #: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
@@ -1263,27 +1256,27 @@ msgstr "Posizion automatiche"
 msgid "Search locations"
 msgstr "Cîr posizions"
 
-#: src/gui/gcal-window.c:337
+#: src/gui/gcal-window.c:339
 msgid "Week"
 msgstr "Setemane"
 
-#: src/gui/gcal-window.c:339
+#: src/gui/gcal-window.c:341
 msgid "Month"
 msgstr "Mês"
 
-#: src/gui/gcal-window.c:821
+#: src/gui/gcal-window.c:845
 msgid "Another event deleted"
 msgstr "Un altri event eliminât"
 
-#: src/gui/gcal-window.c:821
+#: src/gui/gcal-window.c:845
 msgid "Event deleted"
 msgstr "Event eliminât"
 
-#: src/gui/gcal-window.c:886
+#: src/gui/gcal-window.c:910
 msgid "Could not import some files: Not ICS files"
 msgstr "Nol è stât pussibil impuartâ cualchi file: no files ICS"
 
-#: src/gui/gcal-window.c:891
+#: src/gui/gcal-window.c:915
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Impussibil impuartâ “%s”: nol è un file ICS"
@@ -1423,7 +1416,7 @@ msgctxt "shortcut window"
 msgid "Month View"
 msgstr "Viodude mensîl"
 
-#: src/gui/importer/gcal-import-dialog.c:341
+#: src/gui/importer/gcal-import-dialog.c:338
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
@@ -1500,7 +1493,7 @@ msgstr "%A, al/ai %d di %B"
 msgid "On-going"
 msgstr "In cors"
 
-#: src/gui/views/gcal-agenda-view.ui:22
+#: src/gui/views/gcal-agenda-view.ui:23
 msgid "No events"
 msgstr "Nissun event"
 
@@ -1508,14 +1501,14 @@ msgstr "Nissun event"
 msgid "New Event…"
 msgstr "Gnûf event…"
 
-#: src/gui/views/gcal-week-header.c:474
+#: src/gui/views/gcal-week-header.c:480
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Altri event"
 msgstr[1] "Altris %d events"
 
-#: src/gui/views/gcal-week-header.c:1006
+#: src/gui/views/gcal-week-view.c:136
 #, c-format
 msgid "Week %d"
 msgstr "Setemane %d"
@@ -1544,28 +1537,74 @@ msgstr "_Events seguitîfs"
 msgid "_All Events"
 msgstr "_Ducj i events"
 
-#: src/utils/gcal-utils.c:1274
+#. Conferencing
+#: src/utils/gcal-utils.c:1275
+msgid "BlueJeans"
+msgstr "BlueJeans"
+
+#: src/utils/gcal-utils.c:1276 src/utils/gcal-utils.c:1277
+msgid "BigBlueButton"
+msgstr "BigBlueButton"
+
+#: src/utils/gcal-utils.c:1278
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1275
+#: src/utils/gcal-utils.c:1279 src/utils/gcal-utils.c:1280
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1276
-msgid "Whereby"
-msgstr "Whereby"
+#: src/utils/gcal-utils.c:1281
+#| msgid "Number of Occurrences"
+msgid "Uber Conference"
+msgstr "Uber Conference"
 
-#: src/utils/gcal-utils.c:1277
-msgid "Zoom"
-msgstr "Zoom"
+#: src/utils/gcal-utils.c:1282
+msgid "GNOME Meet"
+msgstr "GNOME Meet"
 
-#: src/utils/gcal-utils.c:1278
+#: src/utils/gcal-utils.c:1283
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
+#: src/utils/gcal-utils.c:1284
+msgid "Whereby"
+msgstr "Whereby"
+
+#: src/utils/gcal-utils.c:1285
+msgid "Webex"
+msgstr "Webex"
+
+#: src/utils/gcal-utils.c:1286
+msgid "Zoom"
+msgstr "Zoom"
+
+#. Map
+#: src/utils/gcal-utils.c:1289
+msgid "View Map"
+msgstr "Viôt mape"
+
+#: src/utils/gcal-utils.c:1290
+msgid "OpenStreetMap"
+msgstr "OpenStreetMap"
+
+#: src/utils/gcal-utils.c:1291 src/utils/gcal-utils.c:1292
+#| msgid "Google Meet"
+msgid "Google Maps"
+msgstr "Google Maps"
+
+#: src/utils/gcal-utils.c:1293
+msgid "Bing Maps"
+msgstr "Bing Maps"
+
 #~ msgid "The GNOME Project"
 #~ msgstr "Il Progjet GNOME"
+
+#~ msgid "Default _Calendar"
+#~ msgstr "_Calendari predefinît"
+
+#~ msgid "Add new events to this calendar by default"
+#~ msgstr "Come impostazion predefinide, zonte gnûfs events a chest calendari"
 
 #~ msgid "Done"
 #~ msgstr "Fat"
