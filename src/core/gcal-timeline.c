@@ -109,6 +109,26 @@ format_subscriber_event_id (GcalTimelineSubscriber *subscriber,
   return g_strdup_printf ("%s:%s", G_OBJECT_TYPE_NAME (subscriber), gcal_event_get_uid (event));
 }
 
+static QueueData *
+queue_data_new (GcalTimeline           *timeline,
+                QueueEvent              queue_event,
+                GcalTimelineSubscriber *subscriber,
+                GcalEvent              *event,
+                GcalEvent              *old_event,
+                gboolean                update_range_tree)
+{
+  QueueData *queue_data = g_new0 (QueueData, 1);
+
+  queue_data->timeline = timeline;
+  queue_data->queue_event = queue_event;
+  queue_data->subscriber = subscriber ? g_object_ref (subscriber) : NULL;
+  queue_data->event = event ? g_object_ref (event) : NULL;
+  queue_data->old_event = old_event ? g_object_ref (old_event) : NULL;
+  queue_data->update_range_tree = update_range_tree;
+
+  return queue_data;
+}
+
 static void
 queue_data_free (QueueData *queue_data)
 {
@@ -127,15 +147,6 @@ queue_event_data (GcalTimeline           *self,
                   gboolean                update_range_tree)
 {
   g_autofree gchar *subscriber_event_id = NULL;
-  QueueData *queue_data;
-
-  queue_data = g_new0 (QueueData, 1);
-  queue_data->timeline = self;
-  queue_data->queue_event = queue_event;
-  queue_data->subscriber = subscriber ? g_object_ref (subscriber) : NULL;
-  queue_data->event = event ? g_object_ref (event) : NULL;
-  queue_data->old_event = old_event ? g_object_ref (old_event) : NULL;
-  queue_data->update_range_tree = update_range_tree;
 
   if (subscriber)
     {
@@ -169,7 +180,8 @@ queue_event_data (GcalTimeline           *self,
         }
     }
 
-  g_queue_push_tail (self->event_queue, queue_data);
+  g_queue_push_tail (self->event_queue,
+                     queue_data_new (self, queue_event, subscriber, event, old_event, update_range_tree));
 
   if (subscriber)
     {
