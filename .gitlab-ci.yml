@@ -7,6 +7,12 @@ include:
     inputs:
       dist-job-name: "build-flatpak"
       tarball-artifact-path: "${TARBALL_ARTIFACT_PATH}"
+  - component: "gitlab.gnome.org/gnome/citemplates/gnomeos-basic-ci@master"
+    inputs:
+      meson-options: "-Dtracing=true -Dprofile=development"
+      asan: "disabled"
+      ubsan: "disabled"
+      lsan: "disabled"
 
 variables:
   APP_ID: "org.gnome.Calendar.Devel"
@@ -61,49 +67,15 @@ nightly-aarch64:
   needs: ['build-flatpak-aarch64']
   when: manual
 
-coverage:
-  stage: analysis
-  image: quay.io/gnome_infrastructure/gnome-build-meta:core-nightly
-  needs:
-    - job: build-flatpak
-      artifacts: false
-  script:
-    - .gitlab-ci/install-grcov.sh
-    - .gitlab-ci/build-with-coverage.sh
-    - .gitlab-ci/gen-coverage.sh
-  coverage: '/Coverage: \d+\.\d+/'
-  artifacts:
-    name: "gnome-calendar-${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}"
-    expire_in: 2 days
-    when: always
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        path: public/coverage.xml
-    paths:
-      - "_build/meson-logs"
-      - public
-
-static-scan:
-  stage: analysis
-  image: quay.io/gnome_infrastructure/gnome-build-meta:core-nightly
-  needs:
-    - job: build-flatpak
-      artifacts: false
-  script:
-    - .gitlab-ci/build-static-scan.sh
-  artifacts:
-    name: "gnome-calendar-${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}"
-    when: always
-    paths:
-      - "_build/meson-logs"
-      - public
-
 pages:
   stage: deploy
-  needs: [ coverage, static-scan ]
+  needs: [ "build-gnomeos-grcov-c", "build-gnomeos-scan-build" ]
   script:
+    - mkdir -p public
     - cp .gitlab-ci/landing-page.html public/index.html
+    - mv public_scanbuild/ public/scanbuild
+    - mv public_grcov/coverage.xml public/
+    - mv public_grcov/coverage public/coverage
   artifacts:
     paths:
       - public
