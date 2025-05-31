@@ -7,6 +7,9 @@ include:
     inputs:
       dist-job-name: "build-flatpak"
       tarball-artifact-path: "${TARBALL_ARTIFACT_PATH}"
+  - component: "gitlab.gnome.org/alatiera/citemplates/gnomeos-basic-ci@alatiera/sanitizers"
+    inputs:
+      meson-options: "-Dtracing=true -Dprofile=development"
 
 variables:
   APP_ID: "org.gnome.Calendar.Devel"
