@@ -37,6 +37,50 @@ build-flatpak:
   stage: build
   before_script: []
 
+build-flatpak-asan:
+  extends: '.flatpak@x86_64'
+  stage: build
+  before_script: []
+  # Run only if the main job is green
+  needs:
+    - job: "build-flatpak"
+      artifacts: false
+  # ASAN requires debugging capabilities
+  tags: ["asan"]
+  variables:
+    CONFIG_OPTS: >-
+      -Dtracing=true
+      -Dprofile=development
+      -Db_sanitize=address
+
+build-flatpak-ubsan:
+  extends: '.flatpak@x86_64'
+  stage: build
+  before_script: []
+  # Run only if the main job is green
+  needs:
+    - job: "build-flatpak"
+      artifacts: false
+  variables:
+    CONFIG_OPTS: >-
+      -Dtracing=true
+      -Dprofile=development
+      -Db_sanitize=undefined
+
+build-flatpak-tsan:
+  extends: '.flatpak@x86_64'
+  stage: build
+  before_script: []
+  # Run only if the main job is green
+  needs:
+    - job: "build-flatpak"
+      artifacts: false
+  variables:
+    CONFIG_OPTS: >-
+      -Dtracing=true
+      -Dprofile=development
+      -Db_sanitize=thread
+
 build-flatpak-aarch64:
   extends: '.flatpak@aarch64'
   stage: build
