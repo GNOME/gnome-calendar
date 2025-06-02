@@ -10,8 +10,6 @@ include:
   - component: "gitlab.gnome.org/gnome/citemplates/gnomeos-basic-ci@master"
     inputs:
       meson-options: "-Dtracing=true -Dprofile=development"
-      asan: "disabled"
-      ubsan: "disabled"
       lsan: "disabled"
 
 variables:
