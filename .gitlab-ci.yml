@@ -10,9 +10,6 @@ include:
   - component: "gitlab.gnome.org/gnome/citemplates/gnomeos-basic-ci@master"
     inputs:
       meson-options: "-Dtracing=true -Dprofile=development"
-      asan: "disabled"
-      tsan: "disabled"
-      ubsan: "disabled"
 
 variables:
   APP_ID: "org.gnome.Calendar.Devel"
