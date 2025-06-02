@@ -6,7 +6,6 @@ include:
   - component: gitlab.gnome.org/GNOME/citemplates/release-service@master
     inputs:
       dist-job-name: "build-flatpak"
-      tarball-artifact-path: "${TARBALL_ARTIFACT_PATH}"
   - component: "gitlab.gnome.org/gnome/citemplates/gnomeos-basic-ci@master"
     inputs:
       meson-options: "-Dtracing=true -Dprofile=development"
@@ -19,7 +18,6 @@ variables:
   GIT_SUBMODULE_STRATEGY: 'normal'
   MANIFEST_PATH: "build-aux/org.gnome.Calendar.json"
   RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
-  TARBALL_ARTIFACT_PATH: ".flatpak-builder/build/${FLATPAK_MODULE}/_flatpak_build/meson-dist/${CI_PROJECT_NAME}-${CI_COMMIT_TAG}.tar.xz"
 
 stages:
   - check
