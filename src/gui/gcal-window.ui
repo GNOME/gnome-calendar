@@ -235,7 +235,7 @@
                     </child>
 
 
-                    <property name="content">
+                <property name="content">
                       <object class="AdwViewStack" id="views_stack">
                         <property name="hexpand">True</property>
                         <property name="vexpand">True</property>
@@ -243,21 +243,6 @@
                         <style>
                           <class name="view" />
                         </style>
-                        <child>
-                          <object class="AdwViewStackPage" id="week_page">
-                            <property name="name">week</property>
-                            <property name="title" translatable="yes">_Week</property>
-                            <property name="use-underline">True</property>
-                            <property name="icon-name">calendar-week-symbolic</property>
-                            <property name="child">
-                              <object class="GcalWeekView" id="week_view">
-                                <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional" />
-                                <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no" />
-                                <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no" />
-                              </object>
-                            </property>
-                          </object>
-                        </child>
                         <child>
                           <object class="AdwViewStackPage" id="month_page">
                             <property name="name">month</property>
@@ -269,6 +254,21 @@
                                 <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional" />
                                 <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no" />
                                 <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no" />
+                                <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no" />
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwViewStackPage" id="week_page">
+                            <property name="name">week</property>
+                            <property name="title" translatable="yes">_Week</property>
+                            <property name="use-underline">True</property>
+                            <property name="icon-name">calendar-week-symbolic</property>
+                            <property name="child">
+                              <object class="GcalWeekView" id="week_view">
+                                <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional" />
+                                <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no" />
                                 <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no" />
                               </object>
                             </property>
