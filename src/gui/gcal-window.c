@@ -261,7 +261,7 @@ update_active_date (GcalWindow *window,
 
   gcal_set_date_time (&window->active_date, new_date);
 
-  for (i = GCAL_WINDOW_VIEW_WEEK; i <= GCAL_WINDOW_VIEW_MONTH; i++)
+  for (i = 0; i < GCAL_WINDOW_VIEW_N_VIEWS; i++)
     gcal_view_set_date (GCAL_VIEW (window->views[i]), new_date);
   gcal_view_set_date (GCAL_VIEW (window->agenda_view), new_date);
   gcal_view_set_date (GCAL_VIEW (window->date_chooser), new_date);
@@ -452,7 +452,7 @@ on_view_action_activated (GSimpleAction *action,
   else if (view == -2)
     view = --(window->active_view);
 
-  window->active_view = CLAMP (view, GCAL_WINDOW_VIEW_WEEK, GCAL_WINDOW_VIEW_MONTH);
+  window->active_view = CLAMP (view, 0, GCAL_WINDOW_VIEW_N_VIEWS - 1);
   adw_view_stack_set_visible_child (window->views_stack, window->views[window->active_view]);
 
   g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
