@@ -56,7 +56,6 @@ struct _GcalEventWidget
   GtkWidget          *timestamp_label;
   GtkWidget          *edge;
   GtkWidget          *overflow_bin;
-  GtkWidget          *squeezer;
   GtkWidget          *summary_inscription;
   GtkWidget          *vertical_box;
   GtkEventController *drag_source;
@@ -886,7 +885,6 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, edge);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, overflow_bin);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, timestamp_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, squeezer);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_inscription);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, vertical_box);
 

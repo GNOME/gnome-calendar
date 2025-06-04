@@ -35,12 +35,10 @@ template $GcalEventWidget: Widget {
       "content",
     ]
 
-    Adw.Squeezer squeezer {
-      hexpand: false;
-      homogeneous: false;
+    Adw.Clamp clamp {
       orientation: vertical;
 
-      Box vertical_box {
+      child: Box vertical_box {
         visible: bind $get_vertical_enabled(template.event, template.orientation) as <bool>;
         orientation: vertical;
 
@@ -66,7 +64,7 @@ template $GcalEventWidget: Widget {
           min-lines: 1;
           text-overflow: ellipsize_end;
         }
-      }
+      };
 
       Box horizontal_box {
         spacing: 4;
