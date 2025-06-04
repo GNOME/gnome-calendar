@@ -6,6 +6,10 @@ template $GcalEventWidget: Widget {
   overflow: hidden;
   receives-default: true;
 
+  accessibility {
+    has-popup: true;
+  }
+
   DragSource drag_source {
     prepare => $on_drag_source_prepare_cb(template) not-swapped;
     begin => $on_drag_source_begin_cb(template) not-swapped;
