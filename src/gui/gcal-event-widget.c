@@ -542,6 +542,9 @@ reply_preview_callback (GtkWidget              *event_popover,
 
   gtk_popover_popdown (GTK_POPOVER (event_popover));
   gtk_widget_unparent (event_popover);
+  gtk_accessible_update_state (GTK_ACCESSIBLE (data->event_widget),
+                               GTK_ACCESSIBLE_STATE_PRESSED, FALSE,
+                               -1);
 
   g_clear_pointer (&data, g_free);
 }
@@ -911,6 +914,10 @@ gcal_event_widget_init (GcalEventWidget *self)
   /* Starts with horizontal */
   self->orientation = GTK_ORIENTATION_HORIZONTAL;
   gtk_widget_add_css_class (GTK_WIDGET (self), "horizontal");
+
+  gtk_accessible_update_state (GTK_ACCESSIBLE (self),
+                               GTK_ACCESSIBLE_STATE_PRESSED, FALSE,
+                               -1);
 }
 
 GtkWidget*
@@ -1079,6 +1086,9 @@ gcal_event_widget_show_preview (GcalEventWidget          *self,
   g_signal_connect (self->preview_popover, "closed", G_CALLBACK (on_event_popover_closed_cb), data);
   g_signal_connect (self->preview_popover, "edit", G_CALLBACK (on_event_popover_edit_cb), data);
   gtk_popover_popup (GTK_POPOVER (self->preview_popover));
+  gtk_accessible_update_state (GTK_ACCESSIBLE (self),
+                               GTK_ACCESSIBLE_STATE_PRESSED, TRUE,
+                               -1);
 
   GCAL_EXIT;
 }
