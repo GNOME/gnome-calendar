@@ -102,8 +102,6 @@ struct _GcalWindow
   AdwApplicationWindow parent;
 
   /* upper level widgets */
-  GtkWidget              *main_box;
-
   GtkWidget              *header_bar;
   AdwToastOverlay        *overlay;
   AdwViewStack           *views_stack;
@@ -1267,7 +1265,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, date_chooser);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, event_editor);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, main_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, menu_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, action_bar);

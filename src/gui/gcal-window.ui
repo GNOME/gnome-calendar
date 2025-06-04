@@ -263,49 +263,42 @@
 
 
                         <property name="content">
-                          <object class="GtkBox" id="main_box">
+                          <object class="AdwViewStack" id="views_stack">
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
-                            <property name="orientation">vertical</property>
+                            <signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no"/>
+                            <style>
+                              <class name="view"/>
+                            </style>
                             <child>
-                              <object class="AdwViewStack" id="views_stack">
-                                <property name="hexpand">True</property>
-                                <property name="vexpand">True</property>
-                                <signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no"/>
-                                <style>
-                                  <class name="view"/>
-                                </style>
-                                <child>
-                                  <object class="AdwViewStackPage">
-                                    <property name="name">week</property>
-                                    <property name="title" translatable="yes">_Week</property>
-                                    <property name="use-underline">True</property>
-                                    <property name="icon_name">calendar-week-symbolic</property>
-                                    <property name="child">
-                                      <object class="GcalWeekView" id="week_view">
-                                        <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
-                                        <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
-                                        <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
-                                      </object>
-                                    </property>
+                              <object class="AdwViewStackPage">
+                                <property name="name">week</property>
+                                <property name="title" translatable="yes">_Week</property>
+                                <property name="use-underline">True</property>
+                                <property name="icon-name">calendar-week-symbolic</property>
+                                <property name="child">
+                                  <object class="GcalWeekView" id="week_view">
+                                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
+                                    <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
+                                    <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
                                   </object>
-                                </child>
-                                <child>
-                                  <object class="AdwViewStackPage">
-                                    <property name="name">month</property>
-                                    <property name="title" translatable="yes">_Month</property>
-                                    <property name="use-underline">True</property>
-                                    <property name="icon_name">calendar-month-symbolic</property>
-                                    <property name="child">
-                                      <object class="GcalMonthView" id="month_view">
-                                        <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
-                                        <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
-                                        <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
-                                        <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
-                                      </object>
-                                    </property>
+                                </property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwViewStackPage">
+                                <property name="name">month</property>
+                                <property name="title" translatable="yes">_Month</property>
+                                <property name="use-underline">True</property>
+                                <property name="icon-name">calendar-month-symbolic</property>
+                                <property name="child">
+                                  <object class="GcalMonthView" id="month_view">
+                                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
+                                    <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
+                                    <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
+                                    <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
                                   </object>
-                                </child>
+                                </property>
                               </object>
                             </child>
                           </object>
