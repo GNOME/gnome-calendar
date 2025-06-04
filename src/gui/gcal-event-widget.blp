@@ -17,71 +17,67 @@ template $GcalEventWidget: Widget {
     released => $on_click_gesture_release_cb(template) not-swapped;
   }
 
-  Box main_widget {
-    hexpand: false;
+  Adw.Bin edge {
+    styles [
+      "edge",
+    ]
+  }
 
-    Adw.Bin edge {
-      styles [
-        "edge",
-      ]
-    }
+  $GcalOverflowBin overflow_bin {
+    hexpand: true;
+    request-mode: width-for-height;
 
-    $GcalOverflowBin {
-      hexpand: true;
-      request-mode: width-for-height;
+    styles [
+      "content",
+    ]
 
-      styles [
-        "content",
-      ]
+    Adw.Squeezer squeezer {
+      hexpand: false;
+      homogeneous: false;
+      orientation: vertical;
 
-      Adw.Squeezer squeezer {
-        hexpand: false;
-        homogeneous: false;
+      Box vertical_box {
+        visible: bind $get_vertical_enabled(template.event, template.orientation) as <bool>;
         orientation: vertical;
 
-        Box vertical_box {
-          visible: bind $get_vertical_enabled(template.event, template.orientation) as <bool>;
-          orientation: vertical;
+        $GcalOverflowBin {
+          request-mode: width-for-height;
 
-          $GcalOverflowBin {
-            request-mode: width-for-height;
-
-            Label {
-              label: bind timestamp_label.label no-sync-create;
-              xalign: 0.0;
-
-              styles [
-                "dim-label",
-              ]
-            }
-          }
-
-          Inscription {
-            text: bind summary_inscription.text no-sync-create;
-            hexpand: true;
-            vexpand: true;
+          Label {
+            label: bind timestamp_label.label no-sync-create;
             xalign: 0.0;
-            yalign: 0.0;
-            min-lines: 1;
-            text-overflow: ellipsize_end;
-          }
-        }
 
-        Box horizontal_box {
-          spacing: 4;
-
-          Inscription summary_inscription {
-            hexpand: true;
-            xalign: 0.0;
-            min-lines: 1;
-            text-overflow: ellipsize_end;
-          }
-
-          Label timestamp_label {
             styles [
               "dim-label",
             ]
           }
+        }
+
+        Inscription {
+          text: bind summary_inscription.text no-sync-create;
+          hexpand: true;
+          vexpand: true;
+          xalign: 0.0;
+          yalign: 0.0;
+          min-lines: 1;
+          text-overflow: ellipsize_end;
+        }
+      }
+
+      Box horizontal_box {
+        spacing: 4;
+
+        Inscription summary_inscription {
+          hexpand: true;
+          xalign: 0.0;
+          min-lines: 1;
+          text-overflow: ellipsize_end;
+        }
+
+        Label timestamp_label {
+          styles [
+            "dim-label",
+          ]
         }
       }
     }

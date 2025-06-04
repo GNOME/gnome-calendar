@@ -53,8 +53,9 @@ struct _GcalEventWidget
 
   /* widgets */
   GtkWidget          *horizontal_box;
-  GtkWidget          *main_widget;
   GtkWidget          *timestamp_label;
+  GtkWidget          *edge;
+  GtkWidget          *overflow_bin;
   GtkWidget          *squeezer;
   GtkWidget          *summary_inscription;
   GtkWidget          *vertical_box;
@@ -723,7 +724,9 @@ gcal_event_widget_dispose (GObject *object)
   GcalEventWidget *self = GCAL_EVENT_WIDGET (object);
 
   g_clear_pointer (&self->preview_popover, gtk_widget_unparent);
-  g_clear_pointer (&self->main_widget, gtk_widget_unparent);
+  g_clear_pointer (&self->overflow_bin, gtk_widget_unparent);
+  g_clear_pointer (&self->horizontal_box, gtk_widget_unparent);
+  g_clear_pointer (&self->edge, gtk_widget_unparent);
 
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->dispose (object);
 }
@@ -877,7 +880,8 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, drag_source);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, horizontal_box);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, main_widget);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, edge);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, overflow_bin);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, timestamp_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, squeezer);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_inscription);
@@ -892,7 +896,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   gtk_widget_class_set_css_name (widget_class, "event");
   gtk_widget_class_set_accessible_role (widget_class, GTK_ACCESSIBLE_ROLE_BUTTON);
 
-  gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
+  gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BOX_LAYOUT);
 }
 
 static void
