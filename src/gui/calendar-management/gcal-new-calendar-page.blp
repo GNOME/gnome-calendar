@@ -1,0 +1,168 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalNewCalendarPage: Adw.NavigationPage {
+  title: _("New Calendar");
+  tag: "new-calendar";
+
+  child: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {
+      show-end-title-buttons: false;
+      show-start-title-buttons: false;
+    }
+
+    content: Adw.PreferencesPage {
+      Adw.PreferencesGroup {
+        title: _("Create a Local Calendar");
+
+        Adw.EntryRow local_calendar_name_row {
+          title: _("Calendar Name");
+          notify::text => $on_local_calendar_name_row_text_changed_cb(template) not-swapped;
+        }
+
+        Adw.ActionRow {
+          title: _("Color");
+          activatable-widget: local_calendar_color_button;
+
+          ColorDialogButton local_calendar_color_button {
+            valign: center;
+
+            dialog: ColorDialog {
+              modal: true;
+              with-alpha: false;
+            };
+
+            notify::rgba => $on_local_calendar_color_button_rgba_changed_cb(template) not-swapped;
+          }
+        }
+      }
+
+      Adw.PreferencesGroup {
+        title: _("Connect to an Online Calendar");
+
+        Grid {
+          row-spacing: 12;
+          column-spacing: 12;
+
+          Label {
+            label: _("HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only be updated by the provider will be added as read-only.");
+            wrap: true;
+            xalign: 0;
+
+            layout {
+              column: 0;
+              row: 0;
+              column-span: 2;
+            }
+          }
+
+          Entry calendar_address_entry {
+            hexpand: true;
+            placeholder-text: "https://example.com/calendar.ics";
+            input-purpose: url;
+            notify::text => $on_url_entry_text_changed_cb(template) not-swapped;
+            activate => $on_calendar_address_activated_cb(template) not-swapped;
+
+            layout {
+              column: 0;
+              row: 1;
+            }
+          }
+
+          Revealer web_sources_revealer {
+            transition-type: slide_down;
+            transition-duration: 200;
+
+            layout {
+              column: 0;
+              row: 2;
+              column-span: 2;
+            }
+
+            Box web_sources_listbox_box {
+              orientation: vertical;
+              spacing: 6;
+
+              Label web_sources_calendar_label {
+                label: _("Calendars");
+                xalign: 0;
+
+                styles [
+                  "heading",
+                ]
+              }
+
+              ListBox web_sources_listbox {
+                activate-on-single-click: false;
+                selection-mode: none;
+
+                styles [
+                  "calendar-list",
+                ]
+              }
+            }
+          }
+
+          Label web_description_label {
+            label: _("If the calendar belongs to one of your online accounts, you can add it through the <a href=\"GOA\">online account settings</a>.");
+            use-markup: true;
+            wrap: true;
+            xalign: 0;
+            activate-link => $on_web_description_label_link_activated_cb(template) not-swapped;
+
+            layout {
+              column: 0;
+              row: 3;
+              column-span: 2;
+            }
+          }
+        }
+      }
+
+      Adw.PreferencesGroup {
+        Button add_button {
+          halign: center;
+          label: C_("button", "Add Calendar");
+          sensitive: false;
+          clicked => $on_add_button_clicked_cb(template) not-swapped;
+
+          styles [
+            "pill",
+            "suggested-action",
+          ]
+        }
+      }
+    };
+  };
+}
+
+Adw.MessageDialog credentials_dialog {
+  heading: _("Credentials");
+  hide-on-close: true;
+
+  extra-child: Adw.Clamp {
+    ListBox {
+      Adw.EntryRow credentials_user_entry {
+        title: _("User");
+      }
+
+      Adw.PasswordEntryRow credentials_password_entry {
+        title: _("Password");
+      }
+
+      styles [
+        "boxed-list",
+      ]
+    }
+  };
+
+  responses [
+    cancel: _("_Cancel"),
+    connect: _("_Connect") suggested,
+  ]
+
+  default-response: "connect";
+  close-response: "cancel";
+  response => $on_credentials_dialog_response_cb(template) not-swapped;
+}

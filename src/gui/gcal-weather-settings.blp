@@ -1,0 +1,47 @@
+using Gtk 4.0;
+
+template $GcalWeatherSettings: Box {
+  orientation: vertical;
+  margin-top: 12;
+  margin-bottom: 12;
+  margin-start: 12;
+  margin-end: 12;
+  spacing: 6;
+
+  Box {
+    spacing: 18;
+
+    Label {
+      hexpand: true;
+      xalign: 0.0;
+      label: _("Show Weather");
+    }
+
+    Switch show_weather_switch {
+      notify::active => $on_show_weather_changed_cb(template) not-swapped;
+    }
+  }
+
+  Box weather_auto_location_box {
+    spacing: 18;
+
+    Label {
+      hexpand: true;
+      xalign: 0.0;
+      label: _("Automatic Location");
+    }
+
+    Switch weather_auto_location_switch {
+      notify::active => $on_weather_auto_location_changed_cb(template) not-swapped;
+    }
+  }
+
+  Entry weather_location_entry {
+    placeholder-text: _("Search locations");
+    primary-icon-name: "edit-find-symbolic";
+    primary-icon-activatable: false;
+    primary-icon-sensitive: false;
+    changed => $on_weather_location_searchbox_changed_cb(template) not-swapped;
+    activate => $on_weather_location_searchbox_changed_cb(template) not-swapped;
+  }
+}

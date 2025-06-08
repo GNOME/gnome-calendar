@@ -1,0 +1,13 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalCalendarComboRow: Adw.ComboRow {
+  title: _("Calendar");
+  title-lines: 1;
+
+  factory: SignalListItemFactory {
+    setup => $calendar_item_setup_cb();
+    bind => $calendar_item_bind_cb();
+    unbind => $calendar_item_unbind_cb();
+  };
+}

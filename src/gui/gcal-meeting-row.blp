@@ -1,0 +1,44 @@
+using Gtk 4.0;
+
+template $GcalMeetingRow: ListBoxRow {
+  activatable: false;
+  selectable: false;
+
+  child: Box {
+    spacing: 6;
+
+    Box {
+      orientation: vertical;
+      hexpand: true;
+
+      Label title {
+        halign: start;
+
+        styles [
+          "heading",
+        ]
+      }
+
+      Label subtitle {
+        halign: start;
+        single-line-mode: true;
+        ellipsize: end;
+        max-width-chars: 25;
+      }
+    }
+
+    Button join_button {
+      halign: end;
+      valign: center;
+      margin-start: 12;
+      use-underline: true;
+      label: _("_Join");
+
+      styles [
+        "suggested-action",
+      ]
+
+      clicked => $on_join_button_clicked_cb(template) not-swapped;
+    }
+  };
+}

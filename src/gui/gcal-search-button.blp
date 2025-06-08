@@ -1,0 +1,166 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalSearchButton: Adw.Bin {
+  EventControllerFocus {
+    leave => $on_focus_controller_leave_cb(template) not-swapped;
+  }
+
+  Stack stack {
+    hhomogeneous: false;
+    vhomogeneous: true;
+    interpolate-size: true;
+    transition-type: crossfade;
+    transition-duration: 200;
+
+    styles [
+      "suggestionbutton",
+    ]
+
+    StackPage {
+      name: "button";
+
+      child: Button button {
+        halign: start;
+        icon-name: "edit-find-symbolic";
+        tooltip-text: _("Search Events");
+        clicked => $on_button_clicked_cb(template) not-swapped;
+
+        ShortcutController {
+          scope: global;
+
+          Shortcut {
+            trigger: "<Control>f";
+            action: "activate";
+          }
+        }
+      };
+    }
+
+    StackPage {
+      name: "entry";
+
+      child: SearchEntry entry {
+        placeholder-text: _("Search events");
+        max-width-chars: 0;
+        width-chars: 0;
+        search-delay: 500;
+        activate => $on_entry_activate_cb(template) not-swapped;
+        next-match => $on_entry_next_match_cb(template) not-swapped;
+        previous-match => $on_entry_previous_match_cb(template) not-swapped;
+        search-changed => $on_entry_search_changed_cb(template) not-swapped;
+        stop-search => $on_entry_stop_search_cb(template) not-swapped;
+
+        accessibility {
+          labelled-by: [
+            entry,
+          ];
+        }
+
+        ShortcutController {
+          Shortcut {
+            trigger: "Up";
+            action: "signal(previous-match)";
+          }
+
+          Shortcut {
+            trigger: "Down";
+            action: "signal(next-match)";
+          }
+        }
+      };
+    }
+  }
+}
+
+Popover popover {
+  position: bottom;
+  autohide: false;
+  default-widget: results_listview;
+
+  styles [
+    "menu",
+  ]
+
+  Revealer results_revealer {
+    transition-type: slide_down;
+    notify::reveal-child => $on_results_revealer_child_reveal_state_changed_cb(template) not-swapped;
+    notify::child-revealed => $on_results_revealer_child_reveal_state_changed_cb(template) not-swapped;
+
+    ScrolledWindow {
+      max-content-width: 450;
+      max-content-height: 400;
+      propagate-natural-width: true;
+      propagate-natural-height: true;
+      hscrollbar-policy: never;
+
+      ListView results_listview {
+        hscroll-policy: natural;
+        vscroll-policy: natural;
+        single-click-activate: true;
+
+        model: SingleSelection results_selection_model {
+          autoselect: true;
+          can-unselect: false;
+        };
+
+        factory: BuilderListItemFactory {
+          template ListItem {
+            activatable: true;
+            selectable: true;
+
+            child: Box {
+              Image image {
+                valign: center;
+                hexpand: false;
+                icon-size: normal;
+                paintable: bind template.item as <$GcalSearchHit>.primary-icon;
+
+                accessibility {
+                  labelled-by: [
+                    title,
+                  ];
+                }
+
+                styles [
+                  "title",
+                ]
+              }
+
+              Label title {
+                use-markup: true;
+                ellipsize: end;
+                xalign: 0.0;
+                max-width-chars: 40;
+                label: bind $escape_markup_cb(template.item as <$GcalSearchHit>.title) as <string>;
+              }
+
+              Label separator {
+                label: "—";
+                visible: bind $string_is_not_empty_cb(template.item as <$GcalSearchHit>.subtitle) as <bool>;
+
+                styles [
+                  "dim-label",
+                ]
+              }
+
+              Label subtitle {
+                hexpand: true;
+                use-markup: true;
+                ellipsize: end;
+                xalign: 0.0;
+                label: bind $escape_markup_cb(template.item as <$GcalSearchHit>.subtitle) as <string>;
+
+                styles [
+                  "subtitle",
+                ]
+              }
+            };
+          }
+        };
+
+        activate => $on_results_listview_activated_cb(template) not-swapped;
+      }
+    }
+  }
+}

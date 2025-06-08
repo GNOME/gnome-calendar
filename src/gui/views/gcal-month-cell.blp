@@ -1,0 +1,75 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalMonthCell: Adw.BreakpointBin {
+  Adw.Breakpoint breakpoint_narrow {
+    condition ("max-width: 120sp")
+
+    setters {
+      weather_icon.halign: end;
+      weather_icon.hexpand: true;
+      weather_icon.margin-start: 6;
+      temp_label.visible: false;
+    }
+  }
+
+  width-request: 50;
+  height-request: 50;
+  hexpand: true;
+  vexpand: true;
+  focusable: true;
+
+  Overlay overlay {
+    [overlay]
+    Box header_box {
+      valign: start;
+      spacing: 6;
+      margin-top: 6;
+      margin-bottom: 6;
+      margin-start: 6;
+      margin-end: 6;
+
+      Label day_label {
+        styles [
+          "day-label",
+          "numeric",
+        ]
+      }
+
+      Label month_name_label {}
+
+      Image weather_icon {
+        pixel-size: 16;
+        margin-start: 12;
+
+        styles [
+          "dim-label",
+        ]
+      }
+
+      Label temp_label {
+        styles [
+          "dim-label",
+          "temp-label",
+        ]
+      }
+    }
+
+    [overlay]
+    Button overflow_button {
+      valign: end;
+      sensitive: false;
+      clicked => $overflow_button_clicked_cb(template) not-swapped;
+
+      styles [
+        "flat",
+      ]
+
+      Box {
+        Inscription overflow_inscription {
+          text-overflow: ellipsize_end;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalDateChooserDay: Button {
+  halign: center;
+  valign: center;
+  hexpand: true;
+  vexpand: true;
+
+  styles [
+    "circular",
+    "day",
+    "flat",
+    "text-button",
+  ]
+
+  Box {
+    orientation: vertical;
+    valign: center;
+
+    Label label {
+      halign: center;
+      label: "0";
+      valign: center;
+      width-chars: 2;
+
+      styles [
+        "day",
+        "numeric",
+      ]
+    }
+
+    Revealer dot_revealer {
+      halign: center;
+      transition-type: crossfade;
+      valign: end;
+      visible: false;
+
+      child: Adw.Bin dot {
+        css-name: "dot";
+        halign: center;
+        valign: center;
+      };
+    }
+  }
+}

@@ -1,0 +1,86 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalRemindersSection: Box {
+  orientation: vertical;
+
+  ListBox alarms_listbox {
+    selection-mode: none;
+    row-activated => $on_alarms_listbox_row_activated_cb(template) not-swapped;
+
+    styles [
+      "boxed-list",
+    ]
+
+    Adw.ButtonRow new_alarm_row {
+      title: _("Add Reminder");
+      start-icon-name: "add-reminder-symbolic";
+    }
+  }
+}
+
+Popover alarms_popover {
+  width-request: 175;
+
+  styles [
+    "menu",
+  ]
+
+  Box {
+    margin-top: 12;
+    margin-bottom: 12;
+    margin-start: 12;
+    margin-end: 12;
+    orientation: vertical;
+
+    $GtkModelButton event_start_button {
+      text: _("Event start");
+      clicked => $on_add_alarm_button_clicked_cb(template) not-swapped;
+    }
+
+    $GtkModelButton five_minutes_button {
+      text: _("5 Minutes");
+      clicked => $on_add_alarm_button_clicked_cb(template) not-swapped;
+    }
+
+    $GtkModelButton ten_minutes_button {
+      text: _("10 Minutes");
+      clicked => $on_add_alarm_button_clicked_cb(template) not-swapped;
+    }
+
+    $GtkModelButton fifteen_minutes_button {
+      text: _("15 Minutes");
+      clicked => $on_add_alarm_button_clicked_cb(template) not-swapped;
+    }
+
+    $GtkModelButton thirty_minutes_button {
+      text: _("30 Minutes");
+      clicked => $on_add_alarm_button_clicked_cb(template) not-swapped;
+    }
+
+    $GtkModelButton one_hour_button {
+      text: _("1 Hour");
+      clicked => $on_add_alarm_button_clicked_cb(template) not-swapped;
+    }
+
+    $GtkModelButton one_day_button {
+      text: _("1 Day");
+      clicked => $on_add_alarm_button_clicked_cb(template) not-swapped;
+    }
+
+    $GtkModelButton two_days_button {
+      text: _("2 Days");
+      clicked => $on_add_alarm_button_clicked_cb(template) not-swapped;
+    }
+
+    $GtkModelButton three_days_button {
+      text: _("3 Days");
+      clicked => $on_add_alarm_button_clicked_cb(template) not-swapped;
+    }
+
+    $GtkModelButton one_week_button {
+      text: _("1 Week");
+      clicked => $on_add_alarm_button_clicked_cb(template) not-swapped;
+    }
+  }
+}

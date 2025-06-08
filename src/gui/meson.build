@@ -8,10 +8,35 @@ subdir('views')
 
 calendar_incs +=  include_directories('.')
 
+blueprints = custom_target(
+  'blueprints',
+  input: files(
+    'gcal-calendar-list.blp',
+    'gcal-calendar-navigation-button.blp',
+    'gcal-event-popover.blp',
+    'gcal-event-widget.blp',
+    'gcal-meeting-row.blp',
+    'gcal-quick-add-popover.blp',
+    'gcal-search-button.blp',
+    'gcal-sync-indicator.blp',
+    'gcal-weather-settings.blp',
+    'gcal-window.blp',
+  ),
+  output: '.',
+  command: [
+    find_program('blueprint-compiler'),
+    'batch-compile',
+    '@OUTPUT@',
+    '@CURRENT_SOURCE_DIR@',
+    '@INPUT@',
+  ],
+)
+
 built_sources += gnome.compile_resources(
   'gui-resources',
   'gui.gresource.xml',
   c_name: 'gui',
+  dependencies: blueprints,
 )
 
 sources += files(

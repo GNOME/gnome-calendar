@@ -1,0 +1,28 @@
+using Gtk 4.0;
+
+template $GcalDateSelector: Entry {
+  width-chars: 11;
+  max-width-chars: 11;
+  secondary-icon-name: "pan-down-symbolic";
+  input-hints: no_emoji;
+  icon-press => $icon_pressed_cb(template) not-swapped;
+
+  EventControllerFocus {
+    notify::contains-focus => $on_contains_focus_changed_cb(template) not-swapped;
+  }
+
+  Popover date_selector_popover {
+    position: bottom;
+    margin-top: 12;
+    margin-bottom: 12;
+    margin-start: 12;
+    margin-end: 12;
+
+    $GcalDateChooser date_chooser {
+      show-events: false;
+      show-selected-week: false;
+      show-week-numbers: true;
+      day-selected => $calendar_day_selected(template);
+    }
+  }
+}

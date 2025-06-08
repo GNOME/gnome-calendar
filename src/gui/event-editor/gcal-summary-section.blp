@@ -1,0 +1,21 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalSummarySection: Adw.Bin {
+  ListBox {
+    selection-mode: none;
+
+    styles [
+      "boxed-list",
+    ]
+
+    Adw.EntryRow summary_entry {
+      title: _("Title");
+      changed => $on_summary_entry_text_changed_cb(template) not-swapped;
+    }
+
+    Adw.EntryRow location_entry {
+      title: _("Location");
+    }
+  }
+}

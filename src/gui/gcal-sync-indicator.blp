@@ -1,0 +1,31 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalSyncIndicator: Adw.Bin {
+  child: Stack stack {
+    transition-type: crossfade;
+    transition-duration: 250;
+
+    StackPage {
+      name: "empty";
+
+      child: Box {};
+    }
+
+    StackPage {
+      name: "spinner";
+
+      child: Adw.Spinner refreshing_spinner {
+        tooltip-text: C_("tooltip", "Synchronizing Remote Calendars");
+      };
+    }
+
+    StackPage {
+      name: "success";
+
+      child: Image success_image {
+        icon-name: "checkmark-small-symbolic";
+      };
+    }
+  };
+}

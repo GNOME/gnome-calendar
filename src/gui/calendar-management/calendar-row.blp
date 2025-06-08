@@ -1,0 +1,42 @@
+using Gtk 4.0;
+using Adw 1;
+
+Adw.ActionRow row {
+  use-markup: false;
+  activatable: true;
+
+  [prefix]
+  Image icon {
+    pixel-size: 24;
+    accessible-role: presentation;
+
+    styles [
+      "calendar-color-image",
+    ]
+  }
+
+  [suffix]
+  Image read_only_icon {
+    tooltip-text: _("Read-Only Calendar");
+    icon-name: "changes-prevent-symbolic";
+    pixel-size: 20;
+    valign: center;
+  }
+
+  [suffix]
+  Switch switch {
+    valign: center;
+    tooltip-text: _("Display Calendar");
+  }
+
+  [suffix]
+  Image {
+    halign: end;
+    valign: center;
+    icon-name: "go-next-symbolic";
+
+    accessibility {
+      label: _("Edit calendar");
+    }
+  }
+}

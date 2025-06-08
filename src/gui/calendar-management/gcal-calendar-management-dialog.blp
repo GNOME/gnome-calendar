@@ -1,0 +1,13 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalCalendarManagementDialog: Adw.Dialog {
+  title: _("Calendar Settings");
+  width-request: 360;
+  height-request: 500;
+  content-width: 500;
+
+  Adw.NavigationView navigation_view {
+    popped => $on_navigation_view_popped_cb(template) not-swapped;
+  }
+}

@@ -1,0 +1,27 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalCalendarComboRowItem: Adw.PreferencesRow {
+  Box {
+    orientation: horizontal;
+    spacing: 6;
+
+    Image color_image {
+      styles [
+        "calendar-color-image",
+      ]
+    }
+
+    Label title_label {
+      ellipsize: end;
+      xalign: 0.0;
+      label: bind template.title;
+    }
+
+    Image visibility_image {
+      halign: end;
+      hexpand: true;
+      icon-name: "eye-not-looking-symbolic";
+    }
+  }
+}

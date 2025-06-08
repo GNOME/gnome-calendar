@@ -1,0 +1,26 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalCalendarList: Adw.Bin {
+  child: ScrolledWindow {
+    hscrollbar-policy: never;
+    propagate-natural-height: true;
+    propagate-natural-width: true;
+
+    child: Adw.Clamp {
+      maximum-size: 800;
+      tightening-threshold: 800;
+
+      child: ListBox calendar_listbox {
+        hexpand: true;
+        selection-mode: none;
+        row-activated => $on_listbox_row_activated_cb(template) not-swapped;
+
+        styles [
+          "navigation-sidebar",
+          "calendar-list",
+        ]
+      };
+    };
+  };
+}

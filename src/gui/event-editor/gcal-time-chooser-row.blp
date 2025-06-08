@@ -1,0 +1,36 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalTimeChooserRow: Adw.EntryRow {
+  EventControllerFocus {
+    notify::contains-focus => $on_contains_focus_changed_cb(template) not-swapped;
+  }
+
+  MenuButton {
+    icon-name: "clock-alt-symbolic";
+    valign: center;
+    tooltip-text: _("Edit Time");
+
+    popover: Popover {
+      position: bottom;
+      margin-top: 12;
+      margin-bottom: 12;
+      margin-start: 12;
+      margin-end: 12;
+
+      $GcalTimeSelector time_selector {
+        notify::time => $on_time_selected_changed_cb(template) not-swapped;
+      }
+
+      show => $on_time_popover_shown_cb(template) not-swapped;
+    };
+
+    accessibility {
+      label: _("Edit time");
+    }
+
+    styles [
+      "flat",
+    ]
+  }
+}

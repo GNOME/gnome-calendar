@@ -1,0 +1,109 @@
+using Gtk 4.0;
+
+template $GcalMonthView: Widget {
+  overflow: hidden;
+
+  EventControllerScroll {
+    flags: vertical | kinetic;
+    scroll-begin => $on_scroll_controller_scroll_begin_cb(template) not-swapped;
+    scroll => $on_scroll_controller_scroll_cb(template) not-swapped;
+    scroll-end => $on_scroll_controller_scroll_end_cb(template) not-swapped;
+    decelerate => $on_scroll_controller_decelerate_cb(template) not-swapped;
+  }
+
+  EventControllerScroll {
+    flags: vertical | discrete;
+    scroll => $on_discrete_scroll_controller_scroll_cb(template) not-swapped;
+  }
+
+  GestureClick {
+    button: 1;
+    pressed => $on_click_gesture_pressed_cb(template) not-swapped;
+    released => $on_click_gesture_released_cb(template) not-swapped;
+  }
+
+  EventControllerMotion motion_controller {
+    propagation-phase: none;
+    motion => $on_motion_controller_motion_cb(template) not-swapped;
+  }
+
+  [header]
+  Box {
+    styles [
+      "month-header",
+      "view",
+    ]
+
+    homogeneous: true;
+
+    Label label_0 {
+      margin-start: 6;
+      hexpand: true;
+      xalign: 0.0;
+
+      styles [
+        "header",
+      ]
+    }
+
+    Label label_1 {
+      margin-start: 6;
+      hexpand: true;
+      xalign: 0.0;
+
+      styles [
+        "header",
+      ]
+    }
+
+    Label label_2 {
+      margin-start: 6;
+      hexpand: true;
+      xalign: 0.0;
+
+      styles [
+        "header",
+      ]
+    }
+
+    Label label_3 {
+      margin-start: 6;
+      hexpand: true;
+      xalign: 0.0;
+
+      styles [
+        "header",
+      ]
+    }
+
+    Label label_4 {
+      margin-start: 6;
+      hexpand: true;
+      xalign: 0.0;
+
+      styles [
+        "header",
+      ]
+    }
+
+    Label label_5 {
+      margin-start: 6;
+      hexpand: true;
+      xalign: 0.0;
+
+      styles [
+        "header",
+      ]
+    }
+
+    Label label_6 {
+      margin-start: 6;
+      hexpand: true;
+      xalign: 0.0;
+
+      styles [
+        "header",
+      ]
+    }
+  }
+}

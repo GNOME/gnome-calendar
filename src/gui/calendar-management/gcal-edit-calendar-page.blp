@@ -1,0 +1,93 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalEditCalendarPage: Adw.NavigationPage {
+  title: _("Edit Calendar");
+  tag: "edit-calendar";
+
+  child: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {
+      title-widget: Adw.WindowTitle {
+        title: bind name_entry.text;
+      };
+    }
+
+    content: Adw.PreferencesPage {
+      Adw.PreferencesGroup {
+        Adw.ActionRow account_row {
+          title: _("Account");
+          subtitle-selectable: true;
+
+          styles [
+            "property",
+          ]
+
+          Button settings_button {
+            tooltip-text: _("Open in Settings");
+            valign: center;
+            clicked => $on_settings_button_clicked_cb(template) not-swapped;
+
+            styles [
+              "flat",
+            ]
+
+            Image {
+              icon-name: "external-link-symbolic";
+              accessible-role: presentation;
+            }
+          }
+        }
+
+        Adw.ActionRow calendar_url_row {
+          title: _("Location");
+          subtitle-lines: 1;
+
+          styles [
+            "property",
+          ]
+        }
+      }
+
+      Adw.PreferencesGroup {
+        Adw.EntryRow name_entry {
+          title: _("Calendar Name");
+        }
+
+        Adw.ActionRow {
+          title: _("Color");
+          activatable-widget: calendar_color_button;
+
+          ColorDialogButton calendar_color_button {
+            valign: center;
+
+            dialog: ColorDialog {
+              modal: true;
+              with-alpha: false;
+            };
+
+            notify::rgba => $on_calendar_color_changed_cb(template) not-swapped;
+          }
+        }
+
+        Adw.SwitchRow calendar_visible_row {
+          title: _("_Display Calendar");
+          use-underline: true;
+          notify::active => $on_calendar_visibility_changed_cb(template) not-swapped;
+        }
+      }
+
+      Adw.PreferencesGroup remove_group {
+        Adw.ButtonRow remove_button_row {
+          title: _("_Remove Calendar");
+          use-underline: true;
+          activated => $on_remove_button_row_activated_cb(template) not-swapped;
+
+          styles [
+            "destructive-action",
+          ]
+        }
+      }
+    };
+  };
+}

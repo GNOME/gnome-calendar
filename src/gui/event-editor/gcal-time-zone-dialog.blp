@@ -1,0 +1,48 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalTimeZoneDialog: Adw.Dialog {
+  title: _("Select Timezone");
+  content-width: 400;
+  content-height: 540;
+
+  child: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar dialog-header-bar {}
+
+    [top]
+    Adw.Bin {
+      SearchEntry location_entry {
+        placeholder-text: _("Search Locations");
+        search-changed => $on_search_changed(template) not-swapped;
+        stop-search => $on_stop_search_cb(template) not-swapped;
+      }
+
+      styles [
+        "toolbar",
+      ]
+    }
+
+    content: Stack stack {
+      Adw.StatusPage empty_search {
+        icon-name: "loupe-large-symbolic";
+        title: _("Search for a Timezone");
+      }
+
+      Adw.PreferencesPage search_results {
+        Adw.PreferencesGroup {
+          ListBox listbox {
+            valign: start;
+            hexpand: true;
+            selection-mode: none;
+            row-activated => $on_row_activated_cb(template) not-swapped;
+
+            styles [
+              "boxed-list",
+            ]
+          }
+        }
+      }
+    };
+  };
+}

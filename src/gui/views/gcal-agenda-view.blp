@@ -1,0 +1,38 @@
+using Gtk 4.0;
+
+template $GcalAgendaView: Box {
+  orientation: vertical;
+
+  $GcalDateChooser date_chooser {
+    split-month-year: false;
+    vexpand: false;
+    valign: end;
+    active-date: bind template.active-date no-sync-create bidirectional;
+  }
+
+  ScrolledWindow scrolled_window {
+    hexpand: true;
+    vexpand: true;
+
+    ListBox list_box {
+      hexpand: true;
+      selection-mode: none;
+      vexpand: true;
+      row-activated => $on_list_box_row_activated_cb(template) not-swapped;
+
+      ListBoxRow no_events_row {
+        activatable: false;
+
+        child: Label {
+          label: _("No events");
+          xalign: 0;
+
+          styles [
+            "no-events",
+            "dim-label",
+          ]
+        };
+      }
+    }
+  }
+}

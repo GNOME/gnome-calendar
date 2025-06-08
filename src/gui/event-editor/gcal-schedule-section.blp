@@ -1,0 +1,120 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalScheduleSection: Box {
+  orientation: vertical;
+  spacing: 12;
+
+  Adw.ToggleGroup schedule_type_toggle_group {
+    active-name: "time-slot";
+    homogeneous: true;
+
+    Adw.Toggle {
+      label: _("_All Day");
+      use-underline: true;
+      name: "all-day";
+    }
+
+    Adw.Toggle {
+      label: _("_Time Slot");
+      use-underline: true;
+      name: "time-slot";
+    }
+  }
+
+  Adw.PreferencesGroup start_date_group {
+    $GcalDateChooserRow start_date_row {
+      title: _("Start Date");
+      notify::date => $on_start_date_changed_cb(template) not-swapped;
+    }
+  }
+
+  Adw.PreferencesGroup end_date_group {
+    $GcalDateChooserRow end_date_row {
+      title: _("End Date");
+      notify::date => $on_end_date_changed_cb(template) not-swapped;
+    }
+  }
+
+  $GcalDateTimeChooser start_date_time_chooser {
+    date-label: _("Start Date");
+    time-label: _("Start Time");
+    notify::date-time => $on_start_date_time_changed_cb(template) not-swapped;
+  }
+
+  $GcalDateTimeChooser end_date_time_chooser {
+    date-label: _("End Date");
+    time-label: _("End Time");
+    notify::date-time => $on_end_date_time_changed_cb(template) not-swapped;
+  }
+
+  Adw.PreferencesGroup {
+    margin-top: 12;
+
+    Adw.ComboRow repeat_combo {
+      title: _("Repeat");
+      valign: center;
+
+      model: StringList {
+        strings [
+          _("No Repeat"),
+          _("Daily"),
+          _("Monday – Friday"),
+          _("Weekly"),
+          _("Monthly"),
+          _("Yearly"),
+        ]
+      };
+
+      notify::selected-item => $on_repeat_type_changed_cb();
+    }
+
+    Adw.ComboRow repeat_duration_combo {
+      title: _("End Repeat");
+      valign: center;
+
+      model: StringList {
+        strings [
+          _("Forever"),
+          _("Number of Occurrences"),
+          _("Until Date"),
+        ]
+      };
+
+      notify::selected-item => $on_repeat_duration_changed_cb();
+    }
+
+    Adw.ActionRow {
+      visible: bind number_of_occurrences_spin.visible;
+      title: _("Number of Occurrences");
+      activatable-widget: number_of_occurrences_spin;
+
+      SpinButton number_of_occurrences_spin {
+        visible: false;
+        numeric: true;
+        adjustment: number_of_occurrences_adjustment;
+        valign: center;
+      }
+    }
+
+    Adw.ActionRow {
+      visible: bind until_date_selector.visible;
+      title: _("End Repeat Date");
+      activatable-widget: until_date_selector;
+
+      $GcalDateSelector until_date_selector {
+        visible: false;
+        valign: center;
+      }
+    }
+  }
+}
+
+Adjustment number_of_occurrences_adjustment {
+  lower: 2;
+  upper: 999999999;
+  step-increment: 1;
+  page-increment: 1;
+  page-size: 10;
+  value: 2;
+}

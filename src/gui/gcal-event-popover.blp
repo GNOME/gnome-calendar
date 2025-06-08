@@ -1,0 +1,165 @@
+using Gtk 4.0;
+
+template $GcalEventPopover: Popover {
+  default-widget: action_button;
+  position: top;
+  width-request: 250;
+
+  styles [
+    "event-popover",
+  ]
+
+  child: Box {
+    orientation: vertical;
+
+    Box {
+      spacing: 18;
+      margin-top: 18;
+      margin-bottom: 12;
+      margin-start: 18;
+      margin-end: 18;
+
+      Box {
+        hexpand: true;
+        orientation: vertical;
+        spacing: 6;
+
+        Label summary_label {
+          selectable: true;
+          wrap: true;
+          wrap-mode: word_char;
+          xalign: 0.0;
+          max-width-chars: 23;
+          lines: 6;
+          ellipsize: end;
+
+          styles [
+            "title-4",
+          ]
+        }
+
+        Label date_time_label {
+          xalign: 0.0;
+
+          styles [
+            "dim-label",
+          ]
+        }
+      }
+
+      Box {
+        spacing: 6;
+
+        Image read_only_icon {
+          tooltip-markup: _("<b>This event is part of a read-only calendar</b>\n    You cannot delete or change this event.");
+          icon-name: "changes-prevent-symbolic";
+          pixel-size: 18;
+          valign: start;
+          halign: end;
+          margin-top: 8;
+          margin-bottom: 8;
+
+          styles [
+            "dim-label",
+          ]
+        }
+
+        Button action_button {
+          can-focus: true;
+          valign: start;
+          halign: end;
+
+          styles [
+            "circular",
+          ]
+
+          clicked => $on_action_button_clicked_cb(template) not-swapped;
+        }
+      }
+    }
+
+    Separator {}
+
+    Label placeholder_label {
+      vexpand: true;
+      label: _("<i>No event notes</i>");
+      margin-top: 12;
+      margin-bottom: 12;
+      use-markup: true;
+
+      styles [
+        "dim-label",
+      ]
+    }
+
+    ScrolledWindow description_scrolled_window {
+      hscrollbar-policy: never;
+      propagate-natural-height: true;
+      propagate-natural-width: true;
+      max-content-height: 350;
+
+      child: Label description_label {
+        use-markup: true;
+        selectable: true;
+        halign: fill;
+        xalign: 0.0;
+        wrap: true;
+        max-width-chars: 35;
+        wrap-mode: word_char;
+        margin-top: 12;
+        margin-bottom: 18;
+        margin-start: 18;
+        margin-end: 18;
+      };
+    }
+
+    Box location_box {
+      orientation: vertical;
+
+      Separator {}
+
+      Box {
+        orientation: vertical;
+        margin-top: 12;
+        margin-bottom: 12;
+        margin-start: 18;
+        margin-end: 18;
+
+        Label {
+          halign: start;
+          label: _("Location");
+
+          styles [
+            "heading",
+          ]
+        }
+
+        Label location_label {
+          halign: start;
+          selectable: true;
+          ellipsize: end;
+          max-width-chars: 35;
+        }
+      }
+    }
+
+    Box meetings_box {
+      orientation: vertical;
+      visible: false;
+
+      Separator {}
+
+      ListBox meetings_listbox {
+        selection-mode: none;
+        margin-top: 12;
+        margin-bottom: 12;
+        margin-start: 18;
+        margin-end: 18;
+
+        styles [
+          "calendar-list",
+        ]
+      }
+    }
+  };
+}

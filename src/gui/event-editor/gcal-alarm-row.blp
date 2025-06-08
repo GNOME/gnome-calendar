@@ -1,0 +1,27 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalAlarmRow: Adw.ActionRow {
+  ToggleButton volume_button {
+    valign: center;
+    icon-name: "audio-volume-high-symbolic";
+    tooltip-text: _("Toggle Alarm Sound");
+    notify::active => $on_sound_toggle_changed_cb(template) not-swapped;
+    active: true;
+
+    styles [
+      "flat",
+    ]
+  }
+
+  Button remove_button {
+    valign: center;
+    icon-name: "edit-delete-symbolic";
+    tooltip-text: _("Remove Alarm");
+    clicked => $on_remove_button_clicked_cb(template) not-swapped;
+
+    styles [
+      "flat",
+    ]
+  }
+}

@@ -1,0 +1,78 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalImportDialog: Adw.Dialog {
+  title: _("Import Files…");
+  height-request: 294;
+  follows-content-size: true;
+
+  Adw.ToastOverlay toast_overlay {
+    Adw.ToolbarView {
+      [top]
+      Adw.HeaderBar headerbar {
+        show-end-title-buttons: false;
+        show-start-title-buttons: false;
+
+        [start]
+        Button cancel_button {
+          label: _("_Cancel");
+          use-underline: true;
+          action-name: "sheet.close";
+        }
+
+        [end]
+        Button import_button {
+          label: _("_Import");
+          use-underline: true;
+          clicked => $on_import_button_clicked_cb(template) not-swapped;
+
+          styles [
+            "suggested-action",
+          ]
+        }
+      }
+
+      content: ScrolledWindow {
+        propagate-natural-height: true;
+        propagate-natural-width: true;
+
+        Adw.Clamp {
+          margin-top: 24;
+          margin-bottom: 24;
+          margin-start: 12;
+          margin-end: 12;
+
+          Box calendars_box {
+            orientation: vertical;
+            spacing: 18;
+
+            Adw.PreferencesGroup {
+              $GcalCalendarComboRow calendar_combo_row {
+                title: _("C_alendar");
+                use-underline: true;
+              }
+            }
+
+            Adw.PreferencesGroup files_group {
+              Adw.Spinner placeholder_spinner {
+                halign: center;
+                valign: center;
+              }
+            }
+          }
+        }
+      };
+    }
+  }
+
+  ShortcutController {
+    Shortcut {
+      trigger: "Escape";
+      action: "action(sheet.close)";
+    }
+  }
+}
+
+SizeGroup title_sizegroup {
+  mode: horizontal;
+}

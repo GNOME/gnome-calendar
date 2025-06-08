@@ -1,0 +1,92 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalDateChooser: Adw.Bin {
+  Grid {
+    orientation: vertical;
+
+    $GcalMultiChoice month_choice {
+      halign: fill;
+      min-value: 0;
+      max-value: 11;
+      animate: false;
+      value: 0;
+      visible: bind $get_split_choice_visible(template.show-heading, template.split-month-year) as <bool>;
+      notify::value => $split_multi_choice_changed() swapped;
+
+      layout {
+        column: 0;
+        row: 0;
+      }
+    }
+
+    $GcalMultiChoice year_choice {
+      visible: bind $get_split_choice_visible(template.show-heading, template.split-month-year) as <bool>;
+      halign: fill;
+      min-value: 1;
+      max-value: 9999;
+      animate: false;
+      value: 0;
+      notify::value => $split_multi_choice_changed() swapped;
+
+      layout {
+        column: 1;
+        row: 0;
+      }
+    }
+
+    $GcalMultiChoice combined_choice {
+      visible: bind $get_combined_choice_visible(template.show-heading, template.split-month-year) as <bool>;
+      halign: fill;
+      min-value: 12;
+      max-value: 119999;
+      popover: popover;
+      animate: false;
+      value: 0;
+      notify::value => $combined_multi_choice_changed() swapped;
+
+      layout {
+        column: 0;
+        column-span: 2;
+        row: 0;
+      }
+    }
+
+    Grid grid {
+      row-homogeneous: true;
+      column-homogeneous: true;
+
+      layout {
+        column: 0;
+        column-span: 2;
+        row: 1;
+      }
+    }
+  }
+}
+
+Popover popover {
+  Box {
+    orientation: vertical;
+    spacing: 12;
+
+    $GcalMultiChoice popover_month_choice {
+      min-value: bind month_choice.min-value bidirectional;
+      max-value: bind month_choice.max-value bidirectional;
+      animate: bind month_choice.animate bidirectional;
+      value: bind month_choice.value bidirectional;
+    }
+
+    $GcalMultiChoice {
+      min-value: bind year_choice.min-value bidirectional;
+      max-value: bind year_choice.max-value bidirectional;
+      animate: bind year_choice.animate bidirectional;
+      value: bind year_choice.value bidirectional;
+    }
+
+    styles [
+      "activatable",
+      "month",
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalCalendarNavigationButton: Adw.Bin {
+  child: Stack stack {
+    hhomogeneous: false;
+
+    StackPage {
+      name: "active";
+
+      child: MenuButton button {
+        popover: popover_date_chooser;
+        label: _("_Choose Date");
+        use-underline: true;
+        can-shrink: true;
+        tooltip-text: _("Choose a Date");
+        always-show-arrow: true;
+      };
+    }
+
+    StackPage {
+      name: "inactive";
+
+      child: Label static_label {
+        styles [
+          "heading",
+        ]
+
+        label: bind button.label no-sync-create;
+        margin-start: 9;
+        margin-end: 9;
+      };
+    }
+
+    visible-child-name: "active";
+  };
+}
+
+Popover popover_date_chooser {
+  position: bottom;
+
+  child: $GcalDateChooser {
+    split-month-year: true;
+    vexpand: false;
+    valign: end;
+    active-date: bind template.active-date no-sync-create bidirectional;
+  };
+}

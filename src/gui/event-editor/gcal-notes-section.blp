@@ -1,0 +1,27 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalNotesSection: Adw.PreferencesRow {
+  activatable: false;
+  focusable: false;
+
+  styles [
+    "entry",
+    "notes-section",
+  ]
+
+  Box {
+    TextView notes_text {
+      height-request: 250;
+      hexpand: true;
+      top-margin: 6;
+      bottom-margin: 6;
+      left-margin: 6;
+      right-margin: 6;
+      sensitive: true;
+      wrap-mode: word_char;
+      accepts-tab: false;
+      state-flags-changed => $on_notes_text_state_flags_changed_cb(template) not-swapped;
+    }
+  }
+}

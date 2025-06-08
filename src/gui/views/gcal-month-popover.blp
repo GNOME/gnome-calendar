@@ -1,0 +1,64 @@
+using Gtk 4.0;
+
+template $GcalMonthPopover: Widget {
+  visible: false;
+
+  ShortcutController {
+    Shortcut {
+      trigger: "Escape";
+      action: "action(month-popover.popdown)";
+    }
+  }
+
+  Box main_box {
+    orientation: vertical;
+    spacing: 12;
+
+    styles [
+      "card",
+      "view",
+    ]
+
+    Box {
+      Label day_label {
+        label: "12";
+        xalign: 0.0;
+        hexpand: true;
+
+        styles [
+          "large-title",
+        ]
+      }
+
+      Button {
+        halign: end;
+        valign: start;
+        icon-name: "window-close-symbolic";
+        clicked => $close_button_clicked_cb(template);
+
+        styles [
+          "flat",
+          "circular",
+        ]
+      }
+    }
+
+    ListBox listbox {
+      vexpand: true;
+      selection-mode: none;
+
+      styles [
+        "calendar-list",
+      ]
+    }
+
+    Button new_event_button {
+      label: _("New Event…");
+      clicked => $new_event_button_clicked_cb(template) not-swapped;
+
+      styles [
+        "flat",
+      ]
+    }
+  }
+}

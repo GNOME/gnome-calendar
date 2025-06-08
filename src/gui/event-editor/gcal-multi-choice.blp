@@ -1,0 +1,64 @@
+using Gtk 4.0;
+
+template $GcalMultiChoice: Box {
+  spacing: 6;
+
+  Button down_button {
+    icon-name: "pan-start-symbolic";
+    clicked => $button_clicked_cb();
+
+    styles [
+      "back-button",
+      "circular",
+      "flat",
+    ]
+  }
+
+  ToggleButton button {
+    toggled => $button_toggled_cb() swapped;
+
+    styles [
+      "flat",
+      "pill",
+      "popup",
+    ]
+
+    accessibility {
+      labelled-by: [
+        template,
+      ];
+
+      described-by: [
+        template,
+      ];
+    }
+
+    Stack stack {
+      hexpand: true;
+      vexpand: true;
+
+      StackPage {
+        name: "label1";
+
+        child: Label label1 {};
+      }
+
+      StackPage {
+        name: "label2";
+
+        child: Label label2 {};
+      }
+    }
+  }
+
+  Button up_button {
+    icon-name: "pan-end-symbolic";
+    clicked => $button_clicked_cb();
+
+    styles [
+      "circular",
+      "flat",
+      "forward-button",
+    ]
+  }
+}

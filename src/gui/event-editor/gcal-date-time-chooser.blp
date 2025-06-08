@@ -1,0 +1,125 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalDateTimeChooser: Adw.PreferencesGroup {
+  $GcalDateChooserRow date_row {
+    title: _("Date");
+    notify::date => $on_date_changed_cb(template);
+  }
+
+  Adw.EntryRow time_row {
+    title: _("Time");
+
+    EventControllerFocus {
+      notify::contains-focus => $on_time_row_contains_focus_changed_cb(template) not-swapped;
+    }
+
+    MenuButton {
+      icon-name: "clock-alt-symbolic";
+      valign: center;
+      tooltip-text: _("Edit Time");
+
+      popover: Popover time_popover {
+        position: bottom;
+
+        Box {
+          spacing: 15;
+          margin-top: 6;
+          margin-bottom: 6;
+          margin-start: 6;
+          margin-end: 6;
+          orientation: vertical;
+
+          Box {
+            spacing: 12;
+            halign: center;
+            orientation: horizontal;
+
+            Box {
+              spacing: 6;
+              halign: center;
+
+              SpinButton {
+                xalign: 0.5;
+                orientation: vertical;
+                adjustment: hour_adjustment;
+                wrap: true;
+                output => $on_spin_button_output_cb(template) not-swapped;
+                wrapped => $on_hour_spin_button_wrapped_cb(template) not-swapped;
+              }
+
+              Label {
+                label: _(":");
+              }
+
+              SpinButton {
+                xalign: 0.5;
+                orientation: vertical;
+                adjustment: minute_adjustment;
+                wrap: true;
+                output => $on_spin_button_output_cb(template) not-swapped;
+              }
+            }
+
+            Adw.ToggleGroup period_toggle_group {
+              visible: false;
+              valign: center;
+              active-name: "am";
+
+              Adw.Toggle {
+                label: _("AM");
+                name: "am";
+              }
+
+              Adw.Toggle {
+                label: _("PM");
+                name: "pm";
+              }
+
+              notify::active => $on_period_toggle_group_active_changed_cb();
+            }
+          }
+
+          Button {
+            valign: center;
+            tooltip-text: _("Change Timezone");
+
+            Adw.ButtonContent time_zone_button_content {
+              icon-name: "globe-symbolic";
+            }
+
+            clicked => $on_time_zone_button_clicked_cb(template) not-swapped;
+
+            accessibility {
+              label: _("Change Timezone");
+            }
+          }
+        }
+
+        show => $on_time_popover_shown_cb(template) not-swapped;
+      };
+
+      accessibility {
+        label: _("Edit time");
+      }
+
+      styles [
+        "flat",
+      ]
+    }
+  }
+}
+
+Adjustment hour_adjustment {
+  upper: 23;
+  step-increment: 1;
+  page-increment: 5;
+  value-changed => $on_spin_buttons_value_changed_cb(template);
+}
+
+Adjustment minute_adjustment {
+  upper: 59;
+  step-increment: 1;
+  page-increment: 10;
+  value-changed => $on_spin_buttons_value_changed_cb(template);
+}

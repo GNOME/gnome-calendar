@@ -1,0 +1,166 @@
+using Gtk 4.0;
+
+template $GcalQuickAddPopover: Popover {
+  width-request: 350;
+  show => $gtk_widget_grab_focus(summary_entry);
+
+  Stack stack {
+    hexpand: true;
+    vexpand: true;
+    margin-top: 12;
+    margin-bottom: 12;
+    margin-start: 12;
+    margin-end: 12;
+    hhomogeneous: false;
+    vhomogeneous: true;
+    transition-type: slide_left_right;
+    interpolate-size: true;
+
+    StackPage {
+      name: "events";
+
+      child: Grid {
+        row-spacing: 12;
+        column-spacing: 12;
+
+        Label title_label {
+          hexpand: true;
+
+          styles [
+            "heading",
+          ]
+
+          layout {
+            column: 0;
+            row: 0;
+            column-span: 3;
+          }
+        }
+
+        Entry summary_entry {
+          hexpand: true;
+          notify::text => $summary_entry_text_changed(template) not-swapped;
+          activate => $summary_entry_activated(template) not-swapped;
+
+          layout {
+            column: 0;
+            row: 1;
+            column-span: 3;
+          }
+        }
+
+        Button select_calendar_button {
+          hexpand: true;
+          clicked => $select_calendar_button_clicked(template);
+
+          layout {
+            column: 0;
+            row: 2;
+            column-span: 3;
+          }
+
+          Box {
+            spacing: 12;
+
+            Image color_image {
+              styles [
+                "calendar-color-image",
+              ]
+            }
+
+            Label calendar_name_label {
+              hexpand: true;
+              xalign: 0;
+            }
+
+            Image {
+              icon-name: "go-next-symbolic";
+            }
+          }
+        }
+
+        Button edit_button {
+          label: _("Edit Details…");
+          margin-top: 6;
+          clicked => $edit_or_create_event(template);
+
+          layout {
+            column: 0;
+            row: 3;
+          }
+        }
+
+        Button add_button {
+          label: _("Add");
+          sensitive: false;
+          margin-top: 6;
+          clicked => $edit_or_create_event(template);
+
+          layout {
+            column: 2;
+            row: 3;
+          }
+
+          styles [
+            "suggested-action",
+          ]
+        }
+      };
+    }
+
+    StackPage {
+      name: "calendars";
+
+      child: Box {
+        orientation: vertical;
+        spacing: 6;
+
+        CenterBox {
+          [start]
+          Button back_button {
+            icon-name: "go-previous-symbolic";
+            clicked => $back_button_clicked(template);
+
+            styles [
+              "flat",
+            ]
+          }
+
+          [center]
+          Label {
+            label: _("Calendar");
+
+            styles [
+              "heading",
+            ]
+          }
+        }
+
+        ScrolledWindow {
+          hexpand: true;
+          vexpand: true;
+
+          Viewport {
+            scroll-to-focus: true;
+
+            ListBox calendars_listbox {
+              selection-mode: none;
+              row-activated => $select_row(template);
+
+              styles [
+                "calendars-list",
+              ]
+            }
+          }
+        }
+      };
+    }
+  }
+}
+
+SizeGroup {
+  widgets [
+    edit_button,
+    add_button,
+  ]
+}

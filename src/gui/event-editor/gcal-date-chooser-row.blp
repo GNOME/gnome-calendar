@@ -1,0 +1,39 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalDateChooserRow: Adw.EntryRow {
+  EventControllerFocus {
+    notify::contains-focus => $on_contains_focus_changed_cb(template) not-swapped;
+  }
+
+  MenuButton {
+    icon-name: "calendar-month-symbolic";
+    valign: center;
+    tooltip-text: _("Edit Date");
+
+    popover: Popover {
+      position: bottom;
+      margin-top: 12;
+      margin-bottom: 12;
+      margin-start: 12;
+      margin-end: 12;
+
+      $GcalDateChooser date_chooser {
+        show-events: false;
+        show-selected-week: false;
+        show-week-numbers: true;
+        day-selected => $on_date_selected_changed_cb(template) not-swapped;
+      }
+
+      show => $on_date_popover_shown_cb(template) not-swapped;
+    };
+
+    accessibility {
+      label: _("Edit date");
+    }
+
+    styles [
+      "flat",
+    ]
+  }
+}

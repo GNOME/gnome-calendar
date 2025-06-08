@@ -1,0 +1,89 @@
+using Gtk 4.0;
+
+template $GcalWeekView: Box {
+  orientation: vertical;
+
+  styles [
+    "week-view",
+  ]
+
+  Box {
+    orientation: horizontal;
+
+    Box expand_button_box {
+      hexpand: false;
+
+      ToggleButton {
+        visible: bind header.can-expand;
+        active: bind header.expanded bidirectional;
+        hexpand: true;
+        halign: center;
+        valign: end;
+        margin-bottom: 6;
+        icon-name: "go-down-symbolic";
+
+        styles [
+          "flat",
+          "circular",
+          "week-header-expander",
+        ]
+      }
+    }
+
+    $GcalWeekHeader header {
+      hexpand: true;
+      event-activated => $on_event_activated(template);
+    }
+  }
+
+  Separator {}
+
+  ScrolledWindow scrolled_window {
+    hexpand: true;
+    vexpand: true;
+
+    GestureZoom {
+      scale-changed => $on_zoom_gesture_scale_changed_cb(template) not-swapped;
+      begin => $on_zoom_gesture_begin_cb(template) not-swapped;
+      end => $on_zoom_gesture_end_cb(template) not-swapped;
+    }
+
+    EventControllerScroll {
+      propagation-phase: capture;
+      flags: vertical | kinetic;
+      scroll-begin => $on_scroll_controller_scroll_begin_cb(template) not-swapped;
+      scroll => $on_scroll_controller_scroll_cb(template) not-swapped;
+      scroll-end => $on_scroll_controller_scroll_end_cb(template) not-swapped;
+    }
+
+    EventControllerMotion {
+      propagation-phase: capture;
+      enter => $on_motion_controller_enter_cb(template) not-swapped;
+      motion => $on_motion_controller_motion_cb(template) not-swapped;
+      leave => $on_motion_controller_leave_cb(template) not-swapped;
+    }
+
+    Viewport {
+      Box content {
+        orientation: horizontal;
+
+        $GcalWeekHourBar hours_bar {}
+
+        $GcalWeekGrid week_grid {
+          hexpand: true;
+          vexpand: true;
+          event-activated => $on_event_activated(template);
+        }
+      }
+    }
+  }
+}
+
+SizeGroup sizegroup {
+  mode: horizontal;
+
+  widgets [
+    expand_button_box,
+    hours_bar,
+  ]
+}

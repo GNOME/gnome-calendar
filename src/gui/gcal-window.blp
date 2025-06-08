@@ -1,0 +1,398 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalWindow: Adw.ApplicationWindow {
+  title: _("Calendar");
+  default-width: 800;
+  default-height: 600;
+  width-request: 360;
+  height-request: 600;
+
+  ShortcutController {
+    Shortcut {
+      trigger: "<Control>t";
+      action: "action(win.today)";
+    }
+
+    Shortcut {
+      trigger: "<Alt>Down";
+      action: "action(win.today)";
+    }
+
+    Shortcut {
+      trigger: "Home";
+      action: "action(win.today)";
+    }
+
+    Shortcut {
+      trigger: "<Alt>Left";
+      action: "action(win.previous-date)";
+    }
+
+    Shortcut {
+      trigger: "Page_Up";
+      action: "action(win.previous-date)";
+    }
+
+    Shortcut {
+      trigger: "<Alt>Right";
+      action: "action(win.next-date)";
+    }
+
+    Shortcut {
+      trigger: "Page_Down";
+      action: "action(win.next-date)";
+    }
+
+    Shortcut {
+      trigger: "<Control>Page_Down";
+      action: "action(win.change-view)";
+      arguments: "-1";
+    }
+
+    Shortcut {
+      trigger: "<Control>Page_Up";
+      action: "action(win.change-view)";
+      arguments: "-2";
+    }
+
+    Shortcut {
+      trigger: "<Alt>1";
+      action: "action(win.change-view)";
+      arguments: "0";
+    }
+
+    Shortcut {
+      trigger: "<Alt>2";
+      action: "action(win.change-view)";
+      arguments: "1";
+    }
+
+    Shortcut {
+      trigger: "<Alt>3";
+      action: "action(win.change-view)";
+      arguments: "3";
+    }
+
+    Shortcut {
+      trigger: "<Ctrl>n";
+      action: "action(win.new-event)";
+    }
+
+    Shortcut {
+      trigger: "<Control>q";
+      action: "action(app.quit)";
+    }
+
+    Shortcut {
+      trigger: "<Ctrl><Alt>m";
+      action: "action(win.show-calendars)";
+    }
+
+    Shortcut {
+      trigger: "<Ctrl>r";
+      action: "action(app.sync)";
+    }
+
+    Shortcut {
+      trigger: "F5";
+      action: "action(app.sync)";
+    }
+
+    Shortcut {
+      trigger: "F8";
+      action: "action(win.show-calendars)";
+    }
+  }
+
+  Adw.ToastOverlay overlay {
+    $GcalDropOverlay drop_overlay {
+      overlayed: Adw.StatusPage drop_status_page {
+        title: _("Drop Event Files to Import");
+        icon-name: "calendar-month-symbolic";
+
+        styles [
+          "drop-overlay-area",
+          "compact",
+        ]
+      };
+
+      child: Adw.OverlaySplitView split_view {
+        pin-sidebar: true;
+        show-sidebar: false;
+
+        DropTarget drop_target {
+          actions: copy;
+          propagation-phase: capture;
+          accept => $on_drop_target_accept_cb(template) not-swapped;
+          drop => $on_drop_target_drop_cb(template) not-swapped;
+        }
+
+        styles [
+          "drop-target",
+        ]
+
+        sidebar: Adw.ToolbarView {
+          [top]
+          Adw.HeaderBar {}
+
+          content: Box {
+            orientation: vertical;
+
+            $GcalDateChooser date_chooser {
+              split-month-year: true;
+              vexpand: false;
+              active-date: bind template.active-date no-sync-create bidirectional;
+              day-selected => $day_selected(template);
+            }
+
+            $GcalCalendarList calendars_list {}
+          };
+        };
+
+        content: Adw.ToolbarView main_toolbar {
+          styles [
+            "view",
+          ]
+
+          [top]
+          Adw.HeaderBar header_bar {
+            [start]
+            ToggleButton sidebar_button {
+              icon-name: "sidebar-show-symbolic";
+              tooltip-text: _("Toggle Sidebar");
+              active: bind split_view.show-sidebar bidirectional;
+
+              ShortcutController {
+                scope: managed;
+
+                Shortcut {
+                  trigger: "F9";
+                  action: "activate";
+                }
+              }
+            }
+
+            [start]
+            $GcalSyncIndicator sync_indicator {}
+
+            title-widget: $GcalCalendarNavigationButton navigation_button_title {
+              active-date: bind template.active-date no-sync-create bidirectional;
+              active: bind split_view.show-sidebar inverted;
+            };
+
+            [end]
+            MenuButton menu_button {
+              icon-name: "open-menu-symbolic";
+              popover: win_menu;
+              tooltip-text: _("Main Menu");
+              primary: true;
+            }
+
+            [end]
+            $GcalSearchButton search_button {
+              tooltip-text: C_("tooltip", "Search");
+            }
+          }
+
+          content: Adw.ViewStack views_stack {
+            hexpand: true;
+            vexpand: true;
+            notify::visible-child => $view_changed(template) not-swapped;
+
+            styles [
+              "view",
+            ]
+
+            Adw.ViewStackPage month_page {
+              name: "month";
+              title: _("_Month");
+              use-underline: true;
+              icon-name: "calendar-month-symbolic";
+
+              child: $GcalMonthView month_view {
+                active-date: bind template.active-date no-sync-create bidirectional;
+                create-event => $show_new_event_widget(template) not-swapped;
+                create-event-detailed => $create_event_detailed_cb(template) not-swapped;
+                event-activated => $event_activated(template) not-swapped;
+              };
+            }
+
+            Adw.ViewStackPage week_page {
+              name: "week";
+              title: _("_Week");
+              use-underline: true;
+              icon-name: "calendar-week-symbolic";
+
+              child: $GcalWeekView week_view {
+                active-date: bind template.active-date no-sync-create bidirectional;
+                create-event => $show_new_event_widget(template) not-swapped;
+                event-activated => $event_activated(template) not-swapped;
+              };
+            }
+
+            Adw.ViewStackPage agenda_page {
+              name: "agenda";
+              title: _("_Agenda");
+              use-underline: true;
+              icon-name: "calendar-agenda-symbolic";
+              visible: false;
+
+              child: $GcalAgendaView agenda_view {
+                vexpand: true;
+                active-date: bind template.active-date no-sync-create bidirectional;
+                create-event => $show_new_event_widget(template) not-swapped;
+                event-activated => $event_activated(template) not-swapped;
+              };
+            }
+          };
+
+          [bottom]
+          ActionBar {
+            [start]
+            Button previous_date_button {
+              icon-name: "go-previous-symbolic";
+              action-name: "win.previous-date";
+            }
+
+            [start]
+            Button next_date_button {
+              icon-name: "go-next-symbolic";
+              action-name: "win.next-date";
+            }
+
+            [start]
+            Button {
+              action-name: "win.today";
+
+              child: Adw.ButtonContent {
+                label: _("_Today");
+                use-underline: true;
+                icon-name: "calendar-today-symbolic";
+                can-shrink: true;
+                tooltip-text: _("Go to Today");
+              };
+            }
+
+            [center]
+            Adw.Bin view_switcher_bin {
+              child: Adw.ViewSwitcher view_switcher_wide {
+                stack: views_stack;
+                policy: wide;
+              };
+            }
+
+            [end]
+            Button {
+              icon-name: "list-add-symbolic";
+              action-name: "win.new-event";
+              tooltip-text: C_("tooltip", "Add Event");
+            }
+
+            [end]
+            Button {
+              icon-name: "x-office-calendar-symbolic";
+              tooltip-text: _("Manage Calendars");
+              action-name: "win.show-calendars";
+            }
+          }
+        };
+      };
+    }
+  }
+
+  notify::current-breakpoint => $on_breakpoint_changed(template) not-swapped;
+
+  Adw.Breakpoint {
+    condition ("max-width: 1000sp")
+
+    setters {
+      split_view.collapsed: true;
+      view_switcher_bin.child: view_switcher_narrow;
+    }
+  }
+
+  Adw.Breakpoint {
+    condition ("max-width: 700sp")
+
+    setters {
+      split_view.collapsed: true;
+      view_switcher_bin.visible: false;
+      previous_date_button.visible: false;
+      next_date_button.visible: false;
+      split_view.show-sidebar: false;
+      sidebar_button.visible: false;
+      header_bar.title-widget: null;
+      navigation_button_title.active: false;
+      week_page.visible: false;
+      month_page.visible: false;
+      agenda_page.visible: true;
+    }
+  }
+}
+
+Adw.InlineViewSwitcher view_switcher_narrow {
+  styles [
+    "flat",
+  ]
+
+  stack: views_stack;
+  display-mode: icons;
+}
+
+$GcalQuickAddPopover quick_add_popover {
+  edit-event => $edit_event(template) not-swapped;
+  closed => $close_new_event_widget(template) not-swapped;
+}
+
+$GcalEventEditorDialog event_editor {
+  remove-event => $on_event_editor_dialog_remove_event_cb(template) not-swapped;
+}
+
+menu menu {
+  section {
+    item {
+      label: _("_Synchronize Calendars");
+      action: "app.sync";
+    }
+  }
+
+  section {
+    item {
+      label: _("_Date & Time Settings…");
+      action: "win.open-date-time-settings";
+    }
+
+    item {
+      label: _("_Online Accounts…");
+      action: "win.open-online-accounts";
+    }
+
+    submenu {
+      label: _("Weather");
+
+      item {
+        custom: "weather";
+      }
+    }
+  }
+
+  section {
+    item {
+      label: _("_Keyboard Shortcuts");
+      action: "win.show-help-overlay";
+    }
+
+    item {
+      label: _("_About Calendar");
+      action: "app.about";
+    }
+  }
+}
+
+PopoverMenu win_menu {
+  menu-model: menu;
+
+  [weather]
+  $GcalWeatherSettings weather_settings {}
+}
