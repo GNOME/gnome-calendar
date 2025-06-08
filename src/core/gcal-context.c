@@ -331,14 +331,6 @@ gcal_context_init (GcalContext *self)
 
   if (error)
     g_error ("Failed to load portals: %s. Aborting...", error->message);
-
-  if (read_time_format (self))
-    {
-      g_signal_connect (self->settings_portal,
-                        "g-signal",
-                        G_CALLBACK (on_portal_proxy_signal_cb),
-                        self);
-    }
 }
 
 /**
@@ -464,6 +456,14 @@ void
 gcal_context_startup (GcalContext *self)
 {
   g_return_if_fail (GCAL_IS_CONTEXT (self));
+
+  if (read_time_format (self))
+    {
+      g_signal_connect (self->settings_portal,
+                        "g-signal",
+                        G_CALLBACK (on_portal_proxy_signal_cb),
+                        self);
+    }
 
   gcal_manager_startup (self->manager);
 }
