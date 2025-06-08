@@ -104,12 +104,10 @@
         <child>
           <object class="GtkLabel" id="placeholder_label">
             <property name="vexpand">True</property>
-            <property name="label" translatable="yes">No event notes</property>
+            <property name="label" translatable="yes">&lt;i&gt;No event notes&lt;/i&gt;</property>
             <property name="margin-top">12</property>
             <property name="margin-bottom">12</property>
-            <attributes>
-              <attribute name="style" value="italic" />
-            </attributes>
+            <property name="use-markup">True</property>
             <style>
               <class name="dim-label" />
             </style>

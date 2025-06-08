@@ -15,9 +15,9 @@
             <child>
               <object class="GtkLabel" id="title">
                 <property name="halign">start</property>
-                <attributes>
-                  <attribute name="weight" value="bold" />
-                </attributes>
+                <style>
+                  <class name="heading" />
+                </style>
               </object>
             </child>
             <child>

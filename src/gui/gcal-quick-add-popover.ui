@@ -26,9 +26,9 @@
                 <child>
                   <object class="GtkLabel" id="title_label">
                     <property name="hexpand">True</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
+                    <style>
+                      <class name="heading" />
+                    </style>
                     <layout>
                       <property name="column">0</property>
                       <property name="row">0</property>
@@ -133,9 +133,9 @@
                     <child type="center">
                       <object class="GtkLabel">
                         <property name="label" translatable="yes">Calendar</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
+                        <style>
+                          <class name="heading" />
+                        </style>
                       </object>
                     </child>
                   </object>
