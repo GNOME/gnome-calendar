@@ -16,7 +16,6 @@ template $GcalEventWidget: Widget {
   }
 
   GestureClick {
-    button: 1;
     pressed => $on_click_gesture_pressed_cb(template) not-swapped;
     released => $on_click_gesture_release_cb(template) not-swapped;
   }
