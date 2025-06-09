@@ -67,7 +67,7 @@ create_row_func (gpointer data,
 {
   g_autoptr (GdkPaintable) paintable = NULL;
   GcalCalendar *calendar;
-  GtkWidget *label, *icon, *checkbox, *box, *row;
+  GtkWidget *label, *icon, *box, *row, *image;
 
   calendar = GCAL_CALENDAR (data);
 
@@ -97,20 +97,23 @@ create_row_func (gpointer data,
   gtk_widget_set_tooltip_text (label, gcal_calendar_get_name (calendar));
   gtk_widget_set_hexpand (label, TRUE);
 
-  /* checkbox */
-  checkbox = gtk_check_button_new ();
+  image = gtk_image_new_from_icon_name ("checkmark-small-symbolic");
   g_object_bind_property (calendar,
                           "visible",
-                          checkbox,
-                          "active",
-                          G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
+                          image,
+                          "visible",
+                          G_BINDING_SYNC_CREATE);
 
   gtk_box_append (GTK_BOX (box), icon);
   gtk_box_append (GTK_BOX (box), label);
-  gtk_box_append (GTK_BOX (box), checkbox);
+  gtk_box_append (GTK_BOX (box), image);
   gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), box);
 
-  g_object_set_data (G_OBJECT (row), "check", checkbox);
+  g_object_set (G_OBJECT (row), "accessible-role", GTK_ACCESSIBLE_ROLE_CHECKBOX, NULL);
+  gtk_accessible_update_state (GTK_ACCESSIBLE (row),
+                               GTK_ACCESSIBLE_STATE_CHECKED, gcal_calendar_get_visible (calendar),
+                               -1);
+
   g_object_set_data (G_OBJECT (row), "calendar", calendar);
 
   return row;
@@ -125,9 +128,13 @@ on_listbox_row_activated_cb (GtkListBox *listbox,
                              GtkListBoxRow *row,
                              GcalCalendarList *self)
 {
-  GtkCheckButton *check = g_object_get_data (G_OBJECT (row), "check");
+  GcalCalendar *calendar = g_object_get_data (G_OBJECT (row), "calendar");
 
-  gtk_check_button_set_active (check, !gtk_check_button_get_active (check));
+  gcal_calendar_set_visible (calendar, !gcal_calendar_get_visible (calendar));
+
+  gtk_accessible_update_state (GTK_ACCESSIBLE (row),
+                               GTK_ACCESSIBLE_STATE_CHECKED, gcal_calendar_get_visible (calendar),
+                               -1);
 }
 
 
