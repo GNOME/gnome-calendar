@@ -138,25 +138,43 @@ template $GcalEventPopover: Popover {
         Separator {}
 
         Box {
-          orientation: vertical;
           margin-top: 12;
           margin-bottom: 12;
           margin-start: 18;
           margin-end: 18;
+          spacing: 12;
 
-          Label {
-            halign: start;
-            label: _("Location");
+          Box {
+            orientation: vertical;
 
-            styles [
-              "heading",
-            ]
+            Label {
+              halign: start;
+              label: _("Location");
+
+              styles [
+                "heading",
+              ]
+            }
+
+            Label location_label {
+              halign: start;
+              selectable: true;
+              ellipsize: end;
+            }
           }
 
-          Label location_label {
-            halign: start;
-            selectable: true;
-            ellipsize: end;
+          Button {
+            halign: end;
+            hexpand: true;
+            valign: center;
+            tooltip-text: _("Open Location");
+            icon-name: "map-symbolic";
+
+            styles [
+              "circular",
+            ]
+
+            clicked => $on_map_button_clicked_cb(template) not-swapped;
           }
         }
       }

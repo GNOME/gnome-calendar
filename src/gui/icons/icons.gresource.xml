@@ -16,5 +16,6 @@
     <file compressed="true">info-outline-symbolic.svg</file>
     <file compressed="true">loupe-large-symbolic.svg</file>
     <file compressed="true">share-symbolic.svg</file>
+    <file compressed="true">map-symbolic.svg</file>
   </gresource>
 </gresources>

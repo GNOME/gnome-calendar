@@ -643,6 +643,31 @@ on_join_meeting_cb (GcalMeetingRow   *meeting_row,
 }
 
 static void
+on_map_button_clicked_cb (GtkButton        *action_button,
+                          GcalEventPopover *self)
+{
+  g_autoptr (GtkUriLauncher) uri_launcher = NULL;
+  g_autofree gchar *location = NULL;
+  g_autofree gchar *uri = NULL;
+  GtkWindow *window;
+
+  window = GTK_WINDOW (gtk_widget_get_root (GTK_WIDGET (self)));
+  g_assert (window != NULL);
+
+  location = g_strdup (gcal_event_get_location (self->event));
+  g_strstrip (location);
+
+  uri = g_strconcat ("maps:q=", location, NULL);
+  g_assert (g_uri_is_valid (uri, G_URI_FLAGS_NONE, NULL));
+  uri_launcher = gtk_uri_launcher_new (uri);
+  gtk_uri_launcher_launch (uri_launcher,
+                           window,
+                           NULL,
+                           on_uri_launched_cb,
+                           g_object_ref (self));
+}
+
+static void
 on_time_format_changed_cb (GcalEventPopover *self)
 {
   GCAL_ENTRY;
@@ -771,6 +796,7 @@ gcal_event_popover_class_init (GcalEventPopoverClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, on_action_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_ics_export_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_map_button_clicked_cb);
 }
 
 static void
