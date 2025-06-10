@@ -242,11 +242,11 @@ get_previous_date_tooltip (GcalWindow  *window,
                            const gchar *view_name)
 {
   if (g_str_equal (view_name, "week"))
-    return g_strdup (_("Go to previous week"));
+    return g_strdup (_("Previous Week"));
   else if (g_str_equal (view_name, "month"))
-    return g_strdup (_("Go to previous month"));
+    return g_strdup (_("Previous Month"));
   else if (g_str_equal (view_name, "agenda"))
-    return g_strdup (_("Go to previous day"));
+    return g_strdup (_("Yesterday"));
   else
     g_assert_not_reached ();
 }
@@ -273,11 +273,11 @@ get_next_date_tooltip (GcalWindow  *window,
                        const gchar *view_name)
 {
   if (g_str_equal (view_name, "week"))
-    return g_strdup (_("Go to next week"));
+    return g_strdup (_("Next Week"));
   else if (g_str_equal (view_name, "month"))
-    return g_strdup (_("Go to next month"));
+    return g_strdup (_("Next Month"));
   else if (g_str_equal (view_name, "agenda"))
-    return g_strdup (_("Go to next day"));
+    return g_strdup (_("Tomorrow"));
   else
     g_assert_not_reached ();
 }
