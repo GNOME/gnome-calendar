@@ -228,18 +228,6 @@ update_view_buttons (GcalWindow *window)
 {
   GCAL_ENTRY;
 
-  switch (gcal_view_get_time_direction (GCAL_VIEW (window->views[window->active_view])))
-    {
-    case GTK_ORIENTATION_VERTICAL:
-      gtk_button_set_icon_name (window->previous_date_button, "go-up-symbolic");
-      gtk_button_set_icon_name (window->next_date_button, "go-down-symbolic");
-      break;
-    case GTK_ORIENTATION_HORIZONTAL:
-      gtk_button_set_icon_name (window->previous_date_button, "go-previous-symbolic");
-      gtk_button_set_icon_name (window->next_date_button, "go-next-symbolic");
-      break;
-    }
-
   switch (window->active_view)
     {
     case GCAL_WINDOW_VIEW_WEEK:
@@ -260,6 +248,32 @@ update_view_buttons (GcalWindow *window)
     }
 
   GCAL_EXIT;
+}
+
+static gchar*
+get_previous_date_icon (GcalWindow     *window,
+                        GcalWindowView *view)
+{
+  switch (gcal_view_get_time_direction (GCAL_VIEW (view)))
+    {
+    case GTK_ORIENTATION_VERTICAL:
+      return g_strdup ("go-up-symbolic");
+    case GTK_ORIENTATION_HORIZONTAL:
+      return g_strdup ("go-previous-symbolic");
+    }
+}
+
+static gchar*
+get_next_date_icon (GcalWindow     *window,
+                    GcalWindowView *view)
+{
+  switch (gcal_view_get_time_direction (GCAL_VIEW (view)))
+    {
+    case GTK_ORIENTATION_VERTICAL:
+      return g_strdup ("go-down-symbolic");
+    case GTK_ORIENTATION_HORIZONTAL:
+      return g_strdup ("go-next-symbolic");
+    }
 }
 
 static void
@@ -1366,6 +1380,8 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, on_breakpoint_changed);
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
+  gtk_widget_class_bind_template_callback (widget_class, get_previous_date_icon);
+  gtk_widget_class_bind_template_callback (widget_class, get_next_date_icon);
 
   /* Event creation related */
   gtk_widget_class_bind_template_callback (widget_class, close_new_event_widget);

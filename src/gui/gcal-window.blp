@@ -251,13 +251,13 @@ template $GcalWindow: Adw.ApplicationWindow {
           ActionBar {
             [start]
             Button previous_date_button {
-              icon-name: "go-previous-symbolic";
+              icon-name: bind $get_previous_date_icon(views_stack.visible-child) as <string>;
               action-name: "win.previous-date";
             }
 
             [start]
             Button next_date_button {
-              icon-name: "go-next-symbolic";
+              icon-name: bind $get_next_date_icon(views_stack.visible-child) as <string>;
               action-name: "win.next-date";
             }
 
