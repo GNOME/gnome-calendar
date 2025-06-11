@@ -186,6 +186,11 @@ weekhourbar > label {
   color: rgb(from var(--window-fg-color) r g b / 15%);
 }
 
+.week-main-content {
+  border: 0 solid var(--border-color);
+  border-width: 1px 0;
+}
+
 weekgrid > widget.now-strip {
   background-color: rgb(from var(--accent-bg-color) r g b / 80%);
   margin: 0 0 0 1px;

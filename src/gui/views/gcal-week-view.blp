@@ -36,8 +36,6 @@ template $GcalWeekView: Box {
     }
   }
 
-  Separator {}
-
   ScrolledWindow scrolled_window {
     hexpand: true;
     vexpand: true;
@@ -74,6 +72,10 @@ template $GcalWeekView: Box {
           vexpand: true;
           event-activated => $on_event_activated(template);
         }
+
+        styles [
+          "week-main-content",
+        ]
       }
     }
   }
