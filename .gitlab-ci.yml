@@ -30,6 +30,15 @@ style-check-diff:
     - .gitlab-ci/run-style-check-diff.sh
   allow_failure: true
 
+blueprint-format:
+  image: fedora:latest
+  stage: check
+  before_script:
+    - dnf install -y blueprint-compiler
+    - shopt -s globstar
+  script:
+    - blueprint-compiler format **/*.blp
+
 build-flatpak:
   extends: '.flatpak@x86_64'
   stage: build
