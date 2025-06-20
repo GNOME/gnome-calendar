@@ -31,7 +31,7 @@ src/gui/event-editor/gcal-time-chooser-row.blp
 src/gui/event-editor/gcal-time-zone-dialog.blp
 src/gui/event-editor/gcal-time-zone-dialog.c
 src/gui/gcal-application.c
-src/gui/gcal-calendar-button.blp
+src/gui/gcal-calendar-navigation-button.c
 src/gui/gcal-event-popover.blp
 src/gui/gcal-event-popover.c
 src/gui/gcal-event-widget.c
