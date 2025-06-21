@@ -234,10 +234,12 @@ button.week-header-expander:checked image {
 
 monthcell {
   --bg-color: rgb(from var(--window-fg-color) r g b / 0);
-  --separator-color: rgb(from var(--window-fg-color) r g b / calc(var(--border-opacity) + 12.5%));
+  --separator-color: rgb(from var(--border-color) r g b / calc(alpha + 7.5%));
 
-  border: solid 1px rgb(from var(--border-color) r g b / calc(var(--border-opacity) / 1.5));
-  border-width: 1px 0 0 1px;
+  box-shadow:
+    0 -1px var(--border-color),
+    var(--offset) 0 var(--border-color);
+
   transition: background-color 200ms;
   background-color: var(--bg-color);
 }
@@ -288,24 +290,25 @@ monthcell button {
 }
 
 /* Separators */
+monthcell:dir(ltr) {
+  --offset: -1px;
+}
+
+monthcell:dir(rtl) {
+  --offset: 1px;
+}
+
 monthcell.separator-top {
-  border-top: 1px solid var(--separator-color);
+  box-shadow:
+    0 -1px rgb(from var(--separator-color) r g b / calc(alpha * 2)),
+    var(--offset) 0 var(--border-color);
 }
 
-monthcell.separator-side:dir(ltr) {
-  border-left: 1px solid var(--separator-color);
-}
-
-monthcell.separator-side:dir(rtl) {
-  border-right: 1px solid var(--separator-color);
-}
-
-monthcell:nth-child(7n + 1):dir(ltr) {
-  border-left-width: 0;
-}
-
-monthcell:nth-child(7n + 1):dir(rtl) {
-  border-right-width: 0;
+monthcell.separator-top.separator-side {
+  box-shadow:
+    0 -1px var(--separator-color),
+    var(--offset) 0 var(--separator-color),
+    var(--offset) -1px var(--separator-color);
 }
 
 /*
