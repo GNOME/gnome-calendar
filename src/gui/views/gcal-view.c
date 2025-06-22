@@ -43,7 +43,7 @@ static void
 gcal_view_default_init (GcalViewInterface *iface)
 {
   /**
-   * GcalView::active-date:
+   * GcalView:active-date:
    *
    * The active date of the view.
    */
@@ -67,7 +67,7 @@ gcal_view_default_init (GcalViewInterface *iface)
                                                             G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   /**
-   * GcalView::time-direction:
+   * GcalView:time-direction:
    *
    * Orientation determining in which direction time is going for the view
    */
