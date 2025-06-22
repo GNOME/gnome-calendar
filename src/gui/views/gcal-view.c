@@ -55,9 +55,9 @@ gcal_view_default_init (GcalViewInterface *iface)
                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * GcalView::manager:
+   * GcalView:context:
    *
-   * The #GcalManager of the view.
+   * The context of the view.
    */
   g_object_interface_install_property (iface,
                                        g_param_spec_object ("context",
