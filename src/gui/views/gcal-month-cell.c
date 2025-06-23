@@ -321,8 +321,6 @@ on_breakpoint_changed_cb (GcalMonthCell *self,
     }
   else
     {
-      g_assert (G_IS_BINDING (self->icon_tooltip_binding));
-
       g_clear_pointer (&self->icon_tooltip_binding, g_binding_unbind);
       gtk_widget_set_tooltip_text (GTK_WIDGET (self->weather_icon), NULL);
     }
