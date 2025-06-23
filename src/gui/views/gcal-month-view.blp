@@ -3,6 +3,10 @@ using Gtk 4.0;
 template $GcalMonthView: Widget {
   overflow: hidden;
 
+  styles [
+    "month-view",
+  ]
+
   EventControllerScroll {
     flags: vertical | kinetic;
     scroll-begin => $on_scroll_controller_scroll_begin_cb(template) not-swapped;

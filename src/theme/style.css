@@ -315,22 +315,20 @@ monthcell.separator-top.separator-side {
  * Month row
  */
 
-calendar-view.scrolling > box {
-  box-shadow: var(--headerbar-shade-color) 0 2px 4px;
+calendar-view.month-view {
+  --raised-shade-color-base:
+    color-mix(in srgb, var(--headerbar-shade-color) 50%, transparent);
+
+  box-shadow:
+    inset 0 -1px var(--raised-shade-color, var(--raised-shade-color-base)),
+    inset 0 -2px 4px var(--raised-shade-color-base);
 }
 
-calendar-view > box, calendar-view {
-  transition: box-shadow 200ms, background 200ms;
-}
-
-/* similar to https://gitlab.gnome.org/GNOME/libadwaita/-/blob/649967044e269a0118ae09a9ff0ecba90cc58300/src/stylesheet/_drawing.scss#L57 */
-calendar-view.scrolling {
-  box-shadow: inset 0px -1px color-mix(in srgb, var(--shade-color) 75%, transparent);
-  background: linear-gradient(to top, color-mix(in srgb, var(--shade-color) 75%, transparent), transparent 4px);
-}
-
-.month-header {
+calendar-view.month-view > box.month-header {
   padding-bottom: 6px;
+  box-shadow:
+    0 1px var(--raised-shade-color, var(--raised-shade-color-base)),
+    0 2px 4px var(--raised-shade-color-base);
 }
 
 /*

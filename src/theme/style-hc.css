@@ -4,3 +4,7 @@ datechooser .weeknum {
   border: 1px solid rgb(from currentColor r g b / 50%);
 }
 
+calendar-view.month-view {
+  --raised-shade-color: var(--border-color);
+  --raised-shade-color-base: transparent;
+}
