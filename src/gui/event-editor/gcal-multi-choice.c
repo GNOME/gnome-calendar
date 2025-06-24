@@ -75,8 +75,11 @@ static GParamSpec *properties[NUM_PROPERTIES] = { NULL, };
 
 static void gcal_multi_choice_accessible_init (GtkAccessibleInterface *iface);
 
+static void gcal_multi_choice_accessible_range_init (GtkAccessibleRangeInterface *iface);
+
 G_DEFINE_TYPE_WITH_CODE (GcalMultiChoice, gcal_multi_choice, GTK_TYPE_BOX,
-                         G_IMPLEMENT_INTERFACE (GTK_TYPE_ACCESSIBLE, gcal_multi_choice_accessible_init))
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_ACCESSIBLE, gcal_multi_choice_accessible_init)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_ACCESSIBLE_RANGE, gcal_multi_choice_accessible_range_init))
 
 /*
  * Auxiliary methods
@@ -115,6 +118,9 @@ apply_value (GcalMultiChoice        *self,
 
   text = get_value_string (self, self->value);
   gtk_label_set_text (GTK_LABEL (label), text);
+  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_PROPERTY_VALUE_TEXT, text,
+                                  -1);
   g_free (text);
 
   if (!self->animate)
@@ -141,6 +147,12 @@ set_value (GcalMultiChoice         *self,
   self->value = value;
 
   apply_value (self, transition);
+
+  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_PROPERTY_VALUE_MAX, (gdouble) self->max_value,
+                                  GTK_ACCESSIBLE_PROPERTY_VALUE_MIN, (gdouble) self->min_value,
+                                  GTK_ACCESSIBLE_PROPERTY_VALUE_NOW, (gdouble) self->value,
+                                  -1);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_VALUE]);
 }
@@ -483,6 +495,18 @@ gcal_multi_choice_accessible_get_platform_state (GtkAccessible              *acc
 }
 
 /*
+ * GtkAccessibleRange overrides
+ */
+
+static gboolean
+gcal_multi_choice_accessible_range_set_current_value (GtkAccessibleRange *accessible_range,
+                                                      gdouble             value)
+{
+  gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (accessible_range), value);
+  return TRUE;
+}
+
+/*
  * Init
  */
 
@@ -572,6 +596,12 @@ static void
 gcal_multi_choice_accessible_init (GtkAccessibleInterface *iface)
 {
   iface->get_platform_state = gcal_multi_choice_accessible_get_platform_state;
+}
+
+static void
+gcal_multi_choice_accessible_range_init (GtkAccessibleRangeInterface *iface)
+{
+  iface->set_current_value = gcal_multi_choice_accessible_range_set_current_value;
 }
 
 static void
