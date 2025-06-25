@@ -26,6 +26,10 @@ template $GcalMultiChoice: Box {
       "popup",
     ]
 
+    EventControllerKey {
+      key-pressed => $key_pressed_cb(template);
+    }
+
     Stack stack {
       hexpand: true;
       vexpand: true;

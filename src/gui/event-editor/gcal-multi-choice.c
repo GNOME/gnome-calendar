@@ -234,6 +234,51 @@ button_clicked_cb (GtkWidget       *button,
     g_assert_not_reached ();
 }
 
+static gboolean
+key_pressed_cb (GcalMultiChoice       *self,
+                guint                  keyval,
+                guint                  keycode,
+                GdkModifierType        state,
+                GtkEventControllerKey *event_controller)
+{
+  gboolean is_active;
+  gint old_value;
+
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+  g_assert (GTK_IS_EVENT_CONTROLLER_KEY (event_controller));
+
+  switch (keyval)
+    {
+    case GDK_KEY_space:
+    case GDK_KEY_KP_Space:
+    case GDK_KEY_Return:
+    case GDK_KEY_ISO_Enter:
+    case GDK_KEY_KP_Enter:
+      is_active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->button));
+      if (self->popover)
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->button), !is_active);
+      return TRUE;
+
+    case GDK_KEY_Up:
+    case GDK_KEY_KP_Up:
+      old_value = self->value;
+      go_up (self);
+      if (old_value == self->value)
+        gtk_widget_error_bell (GTK_WIDGET (self));
+      return TRUE;
+
+    case GDK_KEY_Down:
+    case GDK_KEY_KP_Down:
+      old_value = self->value;
+      go_down (self);
+      if (old_value == self->value)
+        gtk_widget_error_bell (GTK_WIDGET (self));
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
 static void
 button_toggled_cb (GcalMultiChoice *self)
 {
@@ -588,6 +633,7 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
 
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, button_toggled_cb);
+  gtk_widget_class_bind_template_callback (widget_class, key_pressed_cb);
 
   gtk_widget_class_set_css_name (widget_class, "navigator");
 }
