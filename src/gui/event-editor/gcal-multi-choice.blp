@@ -7,6 +7,7 @@ template $GcalMultiChoice: Box {
   Button down_button {
     icon-name: "pan-start-symbolic";
     clicked => $button_clicked_cb();
+    can-focus: false;
 
     styles [
       "back-button",
@@ -46,6 +47,7 @@ template $GcalMultiChoice: Box {
   Button up_button {
     icon-name: "pan-end-symbolic";
     clicked => $button_clicked_cb();
+    can-focus: false;
 
     styles [
       "circular",
