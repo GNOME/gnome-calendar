@@ -24,25 +24,29 @@
 
 struct _GcalMultiChoice
 {
-  GtkBox parent;
-  GtkWidget *down_button;
-  GtkWidget *button;
-  GtkStack *stack;
-  GtkWidget *up_button;
-  gint value;
-  gint min_value;
-  gint max_value;
-  gboolean wrap;
-  gboolean animate;
-  GtkWidget **choices;
-  gint n_choices;
-  GtkWidget *active;
-  GtkWidget *label1;
-  GtkWidget *label2;
-  GtkWidget *popover;
-  GcalMultiChoiceFormatCallback format_cb;
-  gpointer                      format_data;
-  GDestroyNotify                format_destroy;
+  GtkBox                          parent;
+
+  GtkWidget                      *down_button;
+  GtkWidget                      *button;
+  GtkStack                       *stack;
+  GtkWidget                      *up_button;
+  GtkWidget                      *label1;
+  GtkWidget                      *label2;
+
+  gint                            value;
+  gint                            min_value;
+  gint                            max_value;
+  gboolean                        wrap;
+  gboolean                        animate;
+
+  GtkWidget                     **choices;
+  gint                            n_choices;
+  GtkWidget                      *active;
+  GtkWidget                      *popover;
+
+  GcalMultiChoiceFormatCallback   format_cb;
+  gpointer                        format_data;
+  GDestroyNotify                  format_destroy;
 };
 
 enum
@@ -75,7 +79,7 @@ G_DEFINE_TYPE (GcalMultiChoice, gcal_multi_choice, GTK_TYPE_BOX)
 
 static gchar *
 get_value_string (GcalMultiChoice *self,
-                  gint            value)
+                  gint             value)
 {
   if (self->format_cb)
     return self->format_cb (self, value, self->format_data);
@@ -121,8 +125,8 @@ apply_value (GcalMultiChoice        *self,
 
 static void
 set_value (GcalMultiChoice         *self,
-           gint                    value,
-           GtkStackTransitionType  transition)
+           gint                     value,
+           GtkStackTransitionType   transition)
 {
   value = CLAMP (value, self->min_value, self->max_value);
 
@@ -202,7 +206,7 @@ update_sensitivity (GcalMultiChoice *self)
 }
 
 static void
-button_clicked_cb (GtkWidget      *button,
+button_clicked_cb (GtkWidget       *button,
                    GcalMultiChoice *self)
 {
   if (button == self->down_button)
@@ -285,9 +289,9 @@ gcal_multi_choice_dispose (GObject *object)
 
 static void
 gcal_multi_choice_get_property (GObject    *object,
-                               guint       property_id,
-                               GValue     *value,
-                               GParamSpec *pspec)
+                                guint       property_id,
+                                GValue     *value,
+                                GParamSpec *pspec)
 {
   GcalMultiChoice *self = GCAL_MULTI_CHOICE (object);
 
@@ -325,9 +329,9 @@ gcal_multi_choice_get_property (GObject    *object,
 
 static void
 gcal_multi_choice_set_property (GObject      *object,
-                               guint         property_id,
-                               const GValue *value,
-                               GParamSpec   *pspec)
+                                guint         property_id,
+                                const GValue *value,
+                                GParamSpec   *pspec)
 {
   GcalMultiChoice *self = GCAL_MULTI_CHOICE (object);
 
@@ -375,7 +379,7 @@ gcal_multi_choice_set_property (GObject      *object,
 
 static void
 gcal_multi_choice_notify (GObject    *object,
-                        GParamSpec *pspec)
+                          GParamSpec *pspec)
 {
   if (strcmp (pspec->name, "focus-on-click") == 0)
     {
@@ -395,7 +399,7 @@ gcal_multi_choice_notify (GObject    *object,
 
 static void
 gcal_multi_choice_state_flags_changed (GtkWidget    *widget,
-                                     GtkStateFlags previous_state_flags)
+                                       GtkStateFlags previous_state_flags)
 {
   GcalMultiChoice *self = GCAL_MULTI_CHOICE (widget);
 
@@ -408,12 +412,12 @@ gcal_multi_choice_state_flags_changed (GtkWidget    *widget,
 
 static void
 gcal_multi_choice_measure (GtkWidget      *widget,
-                         GtkOrientation  orientation,
-                         int             for_size,
-                         int            *minimum,
-                         int            *natural,
-                         int            *minimum_baseline,
-                         int            *natural_baseline)
+                           GtkOrientation  orientation,
+                           int             for_size,
+                           int            *minimum,
+                           int            *natural,
+                           int            *minimum_baseline,
+                           int            *natural_baseline)
 {
   GcalMultiChoice *self = GCAL_MULTI_CHOICE (widget);
 
@@ -427,9 +431,9 @@ gcal_multi_choice_measure (GtkWidget      *widget,
 
 static void
 gcal_multi_choice_size_allocate (GtkWidget *widget,
-                               int        width,
-                               int        height,
-                               int        baseline)
+                                 int        width,
+                                 int        height,
+                                 int        baseline)
 {
   GcalMultiChoice *self= GCAL_MULTI_CHOICE (widget);
 
@@ -442,7 +446,7 @@ gcal_multi_choice_size_allocate (GtkWidget *widget,
 
 static gboolean
 gcal_multi_choice_focus (GtkWidget        *widget,
-                       GtkDirectionType  direction)
+                         GtkDirectionType  direction)
 {
   GcalMultiChoice *self = GCAL_MULTI_CHOICE (widget);
 
@@ -566,7 +570,7 @@ gcal_multi_choice_new (void)
 
 void
 gcal_multi_choice_set_value (GcalMultiChoice *self,
-                            gint            value)
+                             gint             value)
 {
   set_value (self, value, GTK_STACK_TRANSITION_TYPE_NONE);
 }
