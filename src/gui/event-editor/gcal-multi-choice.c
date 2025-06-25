@@ -69,6 +69,10 @@ static GParamSpec *properties[NUM_PROPERTIES] = { NULL, };
 
 G_DEFINE_TYPE (GcalMultiChoice, gcal_multi_choice, GTK_TYPE_BOX)
 
+/*
+ * Auxiliary methods
+ */
+
 static gchar *
 get_value_string (GcalMultiChoice *self,
                   gint            value)
@@ -246,13 +250,9 @@ popover_destroy_cb (GcalMultiChoice *menu_button)
   gcal_multi_choice_set_popover (menu_button, NULL);
 }
 
-static void
-gcal_multi_choice_init (GcalMultiChoice *self)
-{
-  gtk_widget_init_template (GTK_WIDGET (self));
-
-  update_sensitivity (self);
-}
+/*
+ * GObject overrides
+ */
 
 static void
 gcal_multi_choice_dispose (GObject *object)
@@ -389,6 +389,10 @@ gcal_multi_choice_notify (GObject    *object,
     G_OBJECT_CLASS (gcal_multi_choice_parent_class)->notify (object, pspec);
 }
 
+/*
+ * GtkWidget overrides
+ */
+
 static void
 gcal_multi_choice_state_flags_changed (GtkWidget    *widget,
                                      GtkStateFlags previous_state_flags)
@@ -455,6 +459,10 @@ gcal_multi_choice_grab_focus (GtkWidget *widget)
 
   return gtk_widget_grab_focus (self->button);
 }
+
+/*
+ * Init
+ */
 
 static void
 gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
@@ -537,6 +545,18 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
 
   gtk_widget_class_set_css_name (widget_class, "navigator");
 }
+
+static void
+gcal_multi_choice_init (GcalMultiChoice *self)
+{
+  gtk_widget_init_template (GTK_WIDGET (self));
+
+  update_sensitivity (self);
+}
+
+/*
+ * Public methods
+ */
 
 GtkWidget *
 gcal_multi_choice_new (void)
