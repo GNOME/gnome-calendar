@@ -14,6 +14,10 @@ template $GcalDateChooser: Adw.Bin {
       visible: bind $get_split_choice_visible(template.show-heading, template.split-month-year) as <bool>;
       notify::value => $split_multi_choice_changed() swapped;
 
+      accessibility {
+        label: _("Month");
+      }
+
       layout {
         column: 0;
         row: 0;
@@ -28,6 +32,10 @@ template $GcalDateChooser: Adw.Bin {
       animate: false;
       value: 0;
       notify::value => $split_multi_choice_changed() swapped;
+
+      accessibility {
+        label: _("Year");
+      }
 
       layout {
         column: 1;
@@ -44,6 +52,10 @@ template $GcalDateChooser: Adw.Bin {
       animate: false;
       value: 0;
       notify::value => $combined_multi_choice_changed() swapped;
+
+      accessibility {
+        label: _("Month");
+      }
 
       layout {
         column: 0;
@@ -75,6 +87,10 @@ Popover popover {
       max-value: bind month_choice.max-value bidirectional;
       animate: bind month_choice.animate bidirectional;
       value: bind month_choice.value bidirectional;
+
+      accessibility {
+        label: _("Month");
+      }
     }
 
     $GcalMultiChoice {
@@ -82,6 +98,10 @@ Popover popover {
       max-value: bind year_choice.max-value bidirectional;
       animate: bind year_choice.animate bidirectional;
       value: bind year_choice.value bidirectional;
+
+      accessibility {
+        label: _("Year");
+      }
     }
 
     styles [
