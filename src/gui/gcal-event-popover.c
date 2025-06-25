@@ -20,6 +20,7 @@
 
 #define G_LOG_DOMAIN "GcalEventPopover"
 
+#include "gcal-calendar.h"
 #include "gcal-debug.h"
 #include "gcal-event-popover.h"
 #include "gcal-meeting-row.h"
@@ -538,6 +539,75 @@ on_action_button_clicked_cb (GtkButton        *action_button,
 }
 
 static void
+on_file_dialog_save_cb (GObject      *object,
+                        GAsyncResult *res,
+                        gpointer      user_data)
+{
+  g_autoptr (GcalEventPopover) self = user_data;
+  g_autofree gchar* contents = NULL;
+  g_autoptr (GError) error = NULL;
+  g_autoptr (GFile) file = NULL;
+  ECalComponent *component = NULL;
+  ICalComponent *icalcomp = NULL;
+  GcalCalendar *calendar = NULL;
+  ECalClient *client = NULL;
+
+  file = gtk_file_dialog_save_finish (GTK_FILE_DIALOG (object), res, &error);
+  if (error)
+    {
+      if (!g_error_matches (error, GTK_DIALOG_ERROR, GTK_DIALOG_ERROR_DISMISSED))
+        g_warning ("Error saving file: %s", error->message);
+      return;
+    }
+
+  component = gcal_event_get_component (self->event);
+  icalcomp = e_cal_component_get_icalcomponent (component);
+  calendar = gcal_event_get_calendar (self->event);
+  client = gcal_calendar_get_client (calendar);
+  contents = e_cal_client_get_component_as_string (client, icalcomp);
+
+  g_file_replace_contents (file,
+                           contents,
+                           strlen (contents),
+                           NULL,
+                           FALSE,
+                           G_FILE_CREATE_REPLACE_DESTINATION,
+                           NULL,
+                           NULL,
+                           NULL);
+}
+
+
+static void
+on_ics_export_button_clicked_cb (GtkButton        *button,
+                                 GcalEventPopover *self)
+{
+  g_autofree gchar *filename = NULL;
+  GtkFileDialog *file_dialog = NULL;
+  GtkWindow *window = NULL;
+
+  window = GTK_WINDOW (gtk_widget_get_root (GTK_WIDGET (self)));
+  file_dialog = gtk_file_dialog_new ();
+  filename = g_strconcat (gcal_event_get_summary (self->event), ".ics", NULL);
+
+  gtk_file_dialog_set_title (file_dialog, _("Export Event"));
+  gtk_file_dialog_set_initial_name (file_dialog, filename);
+
+  /*
+   * We need to close the popover before showing the dialog, as otherwise the
+   * popover will continue to capture the first click (i.e. first click will
+   * appear unresponsive as it closes the popover)
+   */
+  gtk_popover_popdown (GTK_POPOVER (self));
+
+  gtk_file_dialog_save (file_dialog,
+                        window,
+                        NULL,
+                        on_file_dialog_save_cb,
+                        g_object_ref (self));
+}
+
+static void
 on_uri_launched_cb (GObject      *source_object,
                     GAsyncResult *result,
                     gpointer      user_data)
@@ -732,6 +802,7 @@ gcal_event_popover_class_init (GcalEventPopoverClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventPopover, read_only_icon);
 
   gtk_widget_class_bind_template_callback (widget_class, on_action_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_ics_export_button_clicked_cb);
 }
 
 static void

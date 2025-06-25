@@ -64,6 +64,19 @@ template $GcalEventPopover: Popover {
           ]
         }
 
+        Button ics_export_button {
+          valign: start;
+          halign: end;
+          icon-name: "share-symbolic";
+          tooltip-text: _("Export Event");
+
+          styles [
+            "circular",
+          ]
+
+          clicked => $on_ics_export_button_clicked_cb(template) not-swapped;
+        }
+
         Button action_button {
           can-focus: true;
           valign: start;
