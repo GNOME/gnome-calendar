@@ -562,12 +562,26 @@ gcal_multi_choice_init (GcalMultiChoice *self)
  * Public methods
  */
 
+/**
+ * gcal_multi_choice_new:
+ *
+ * Creates a new #GcalMultiChoice.
+ *
+ * Returns: (transfer full): a newly created #GcalEventPopover
+ */
 GtkWidget *
 gcal_multi_choice_new (void)
 {
   return GTK_WIDGET (g_object_new (GCAL_TYPE_MULTI_CHOICE, NULL));
 }
 
+/**
+ * gcal_multi_choice_set_value:
+ * @self: a #GcalMultiChoice
+ * @value: the value
+ *
+ * Sets the value for @self.
+ */
 void
 gcal_multi_choice_set_value (GcalMultiChoice *self,
                              gint             value)
@@ -575,12 +589,27 @@ gcal_multi_choice_set_value (GcalMultiChoice *self,
   set_value (self, value, GTK_STACK_TRANSITION_TYPE_NONE);
 }
 
+/**
+ * gcal_multi_choice_get_value:
+ * @self: a #GcalMultiChoice
+ *
+ * Gets the value for @self.
+ *
+ * Returns: The value for @self.
+ */
 gint
 gcal_multi_choice_get_value (GcalMultiChoice *self)
 {
   return self->value;
 }
 
+/**
+ * gcal_multi_choice_set_choices:
+ * @self: a #GcalMultiChoice
+ * @choices: an array of strings
+ *
+ * Sets the available choices for @self.
+ */
 void
 gcal_multi_choice_set_choices (GcalMultiChoice  *self,
                                const gchar     **choices)
@@ -605,6 +634,15 @@ gcal_multi_choice_set_choices (GcalMultiChoice  *self,
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CHOICES]);
 }
 
+/**
+ * gcal_multi_choice_set_format_callback:
+ * @self: a #GcalMultiChoice
+ * @callback: (nullable) (scope notified) (closure user_data) (destroy destroy): callback
+ * @user_data: user data passed to @callback
+ * @destroy: destroy notifier for @user_data
+ *
+ * Sets the format callback.
+ */
 void
 gcal_multi_choice_set_format_callback (GcalMultiChoice               *self,
                                        GcalMultiChoiceFormatCallback  callback,
@@ -621,6 +659,13 @@ gcal_multi_choice_set_format_callback (GcalMultiChoice               *self,
   apply_value (self, GTK_STACK_TRANSITION_TYPE_NONE);
 }
 
+/**
+ * gcal_multi_choice_set_popover:
+ * @self: a #GcalMultiChoice
+ * @popover: a popover widget.
+ *
+ * Sets the popover for @self.
+ */
 void
 gcal_multi_choice_set_popover (GcalMultiChoice *self,
                                GtkWidget       *popover)
@@ -663,6 +708,14 @@ gcal_multi_choice_set_popover (GcalMultiChoice *self,
   g_object_thaw_notify (G_OBJECT (self));
 }
 
+/**
+ * gcal_multi_choice_get_popover:
+ * @self: a #GcalMultiChoice
+ *
+ * Gets the popover for @self.
+ *
+ * Returns: (transfer none): a #GtkPopover
+ */
 GtkPopover *
 gcal_multi_choice_get_popover (GcalMultiChoice *self)
 {
