@@ -465,6 +465,9 @@ gcal_multi_choice_state_flags_changed (GtkWidget    *widget,
 {
   GcalMultiChoice *self = GCAL_MULTI_CHOICE (widget);
 
+  if (gtk_widget_is_focus (self->button))
+    gtk_widget_set_state_flags (self->button, GTK_STATE_FLAG_FOCUS_VISIBLE, FALSE);
+
   if (!gtk_widget_is_sensitive (widget))
     {
       if (self->popover)
