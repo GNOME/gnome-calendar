@@ -1,4 +1,6 @@
-/* GTK - The GIMP Toolkit
+/* gcal-multi-choice.c
+ *
+ * GTK - The GIMP Toolkit
  *
  * Copyright (C) 2015 Red Hat, Inc.
  *
