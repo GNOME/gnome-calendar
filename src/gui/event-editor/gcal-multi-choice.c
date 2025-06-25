@@ -588,6 +588,8 @@ void
 gcal_multi_choice_set_value (GcalMultiChoice *self,
                              gint             value)
 {
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
   set_value (self, value, GTK_STACK_TRANSITION_TYPE_NONE);
 }
 
@@ -602,6 +604,8 @@ gcal_multi_choice_set_value (GcalMultiChoice *self,
 gint
 gcal_multi_choice_get_value (GcalMultiChoice *self)
 {
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
   return self->value;
 }
 
@@ -617,6 +621,8 @@ gcal_multi_choice_set_choices (GcalMultiChoice  *self,
                                const gchar     **choices)
 {
   gint i;
+
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
 
   for (i = 0; i < self->n_choices; i++)
     gtk_stack_remove (self->stack, self->choices[i]);
@@ -651,6 +657,8 @@ gcal_multi_choice_set_format_callback (GcalMultiChoice               *self,
                                        gpointer                       user_data,
                                        GDestroyNotify                 destroy)
 {
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
   if (self->format_destroy)
     self->format_destroy (self->format_data);
 
@@ -672,8 +680,8 @@ void
 gcal_multi_choice_set_popover (GcalMultiChoice *self,
                                GtkWidget       *popover)
 {
-  g_return_if_fail (GCAL_IS_MULTI_CHOICE (self));
-  g_return_if_fail (popover == NULL || GTK_IS_POPOVER (popover));
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+  g_assert (popover == NULL || GTK_IS_POPOVER (popover));
 
   g_object_freeze_notify (G_OBJECT (self));
 
@@ -721,7 +729,7 @@ gcal_multi_choice_set_popover (GcalMultiChoice *self,
 GtkPopover *
 gcal_multi_choice_get_popover (GcalMultiChoice *self)
 {
-  g_return_val_if_fail (GCAL_IS_MULTI_CHOICE (self), NULL);
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
 
   return GTK_POPOVER (self->popover);
 }
