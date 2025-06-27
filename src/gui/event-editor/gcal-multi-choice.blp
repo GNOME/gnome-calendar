@@ -2,6 +2,7 @@ using Gtk 4.0;
 
 template $GcalMultiChoice: Box {
   spacing: 6;
+  accessible-role: spin_button;
 
   Button down_button {
     icon-name: "pan-start-symbolic";
@@ -15,6 +16,7 @@ template $GcalMultiChoice: Box {
   }
 
   ToggleButton button {
+    accessible-role: none;
     toggled => $button_toggled_cb() swapped;
 
     styles [
@@ -22,16 +24,6 @@ template $GcalMultiChoice: Box {
       "pill",
       "popup",
     ]
-
-    accessibility {
-      labelled-by: [
-        template,
-      ];
-
-      described-by: [
-        template,
-      ];
-    }
 
     Stack stack {
       hexpand: true;

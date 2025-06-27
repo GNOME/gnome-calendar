@@ -73,7 +73,10 @@ enum
 static guint signals[LAST_SIGNAL] = { 0, };
 static GParamSpec *properties[NUM_PROPERTIES] = { NULL, };
 
-G_DEFINE_TYPE (GcalMultiChoice, gcal_multi_choice, GTK_TYPE_BOX)
+static void gcal_multi_choice_accessible_init (GtkAccessibleInterface *iface);
+
+G_DEFINE_TYPE_WITH_CODE (GcalMultiChoice, gcal_multi_choice, GTK_TYPE_BOX,
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_ACCESSIBLE, gcal_multi_choice_accessible_init))
 
 /*
  * Auxiliary methods
@@ -195,15 +198,15 @@ update_sensitivity (GcalMultiChoice *self)
 
   gtk_widget_set_can_target (self->button, has_popup);
 
-  gtk_accessible_update_property (GTK_ACCESSIBLE (self->button),
+  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
                                   GTK_ACCESSIBLE_PROPERTY_HAS_POPUP, has_popup,
                                   -1);
   if (self->popover != NULL)
-    gtk_accessible_update_relation (GTK_ACCESSIBLE (self->button),
+    gtk_accessible_update_relation (GTK_ACCESSIBLE (self),
                                     GTK_ACCESSIBLE_RELATION_CONTROLS, self->popover, NULL,
                                     -1);
   else
-    gtk_accessible_reset_relation (GTK_ACCESSIBLE (self->button),
+    gtk_accessible_reset_relation (GTK_ACCESSIBLE (self),
                                    GTK_ACCESSIBLE_RELATION_CONTROLS);
 }
 
@@ -467,6 +470,19 @@ gcal_multi_choice_grab_focus (GtkWidget *widget)
 }
 
 /*
+ * GtkAccessible overrides
+ */
+
+static gboolean
+gcal_multi_choice_accessible_get_platform_state (GtkAccessible              *accessible,
+                                                 GtkAccessiblePlatformState  state)
+{
+  GcalMultiChoice *self = GCAL_MULTI_CHOICE (accessible);
+
+  return gtk_accessible_get_platform_state (GTK_ACCESSIBLE (self->button), state);
+}
+
+/*
  * Init
  */
 
@@ -550,6 +566,12 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   gtk_widget_class_bind_template_callback (widget_class, button_toggled_cb);
 
   gtk_widget_class_set_css_name (widget_class, "navigator");
+}
+
+static void
+gcal_multi_choice_accessible_init (GtkAccessibleInterface *iface)
+{
+  iface->get_platform_state = gcal_multi_choice_accessible_get_platform_state;
 }
 
 static void
@@ -733,3 +755,4 @@ gcal_multi_choice_get_popover (GcalMultiChoice *self)
 
   return GTK_POPOVER (self->popover);
 }
+
