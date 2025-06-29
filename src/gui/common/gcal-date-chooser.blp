@@ -11,6 +11,7 @@ template $GcalDateChooser: Adw.Bin {
       max-value: 11;
       animate: false;
       value: 0;
+      wrap: true;
       visible: bind $get_split_choice_visible(template.show-heading, template.split-month-year) as <bool>;
       notify::value => $split_multi_choice_changed() swapped;
 
@@ -83,6 +84,7 @@ Popover popover {
     spacing: 12;
 
     $GcalMultiChoice popover_month_choice {
+      wrap: true;
       min-value: bind month_choice.min-value bidirectional;
       max-value: bind month_choice.max-value bidirectional;
       animate: bind month_choice.animate bidirectional;
