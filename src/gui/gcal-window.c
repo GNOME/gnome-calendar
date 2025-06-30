@@ -258,8 +258,12 @@ get_previous_date_icon (GcalWindow     *window,
     {
     case GTK_ORIENTATION_VERTICAL:
       return g_strdup ("go-up-symbolic");
+
     case GTK_ORIENTATION_HORIZONTAL:
       return g_strdup ("go-previous-symbolic");
+
+    default:
+      g_assert_not_reached ();
     }
 }
 
@@ -271,8 +275,12 @@ get_next_date_icon (GcalWindow     *window,
     {
     case GTK_ORIENTATION_VERTICAL:
       return g_strdup ("go-down-symbolic");
+
     case GTK_ORIENTATION_HORIZONTAL:
       return g_strdup ("go-next-symbolic");
+
+    default:
+      g_assert_not_reached ();
     }
 }
 
@@ -390,10 +398,13 @@ content_title (GcalWindow     *self,
     {
     case GCAL_WINDOW_VIEW_WEEK:
       return g_strdup (_("Week"));
+
     case GCAL_WINDOW_VIEW_MONTH:
       return g_strdup (_("Month"));
+
     case GCAL_WINDOW_VIEW_AGENDA:
       return g_strdup (_("Agenda"));
+
     default:
       return g_strdup (_("Calendar"));
     }
