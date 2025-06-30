@@ -611,6 +611,14 @@ gcal_agenda_view_add_event (GcalTimelineSubscriber *subscriber,
                              gcal_event_get_range (event),
                              child_data_new (row, event, self));
 
+  gtk_accessible_update_property (GTK_ACCESSIBLE (row),
+                                  GTK_ACCESSIBLE_PROPERTY_HAS_POPUP, TRUE,
+                                  -1);
+
+  gtk_accessible_update_relation (GTK_ACCESSIBLE (row),
+                                  GTK_ACCESSIBLE_RELATION_LABELLED_BY, widget, NULL,
+                                  -1);
+
   g_signal_connect (widget, "activate", G_CALLBACK (on_event_widget_activated_cb), self);
 
   gtk_list_box_append (GTK_LIST_BOX (self->list_box), row);
