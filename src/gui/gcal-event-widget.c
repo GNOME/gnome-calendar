@@ -115,12 +115,19 @@ G_DEFINE_TYPE_WITH_CODE (GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET,
  * Auxiliary methods
  */
 
-static gboolean
-get_vertical_enabled (gpointer        user_data,
-                      GcalEvent      *event,
-                      GtkOrientation  orientation)
+static void
+gcal_event_widget_update_orientation_widgets (GcalEventWidget *self)
 {
-  return orientation == GTK_ORIENTATION_VERTICAL && !gcal_event_get_all_day (event);
+  gboolean is_vertical;
+  gboolean is_all_day;
+
+  is_vertical = self->orientation == GTK_ORIENTATION_VERTICAL;
+  is_all_day = gcal_event_get_all_day (self->event);
+
+  if (is_vertical && !is_all_day)
+    gcal_overflow_bin_set_child (GCAL_OVERFLOW_BIN (self->overflow_bin), self->vertical_box);
+  else
+    gcal_overflow_bin_set_child (GCAL_OVERFLOW_BIN (self->overflow_bin), self->horizontal_box);
 }
 
 static void
@@ -670,7 +677,7 @@ gcal_event_widget_set_property (GObject      *object,
 
     case PROP_ORIENTATION:
       self->orientation = g_value_get_enum (value);
-      gtk_widget_set_visible (self->vertical_box, self->orientation == GTK_ORIENTATION_VERTICAL);
+      gcal_event_widget_update_orientation_widgets (self);
       gcal_event_widget_update_style (self);
       gcal_event_widget_update_timestamp (self);
       g_object_notify (object, "orientation");
@@ -727,7 +734,6 @@ gcal_event_widget_dispose (GObject *object)
 
   g_clear_pointer (&self->preview_popover, gtk_widget_unparent);
   g_clear_pointer (&self->overflow_bin, gtk_widget_unparent);
-  g_clear_pointer (&self->horizontal_box, gtk_widget_unparent);
   g_clear_pointer (&self->edge, gtk_widget_unparent);
 
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->dispose (object);
@@ -888,7 +894,6 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_inscription);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, vertical_box);
 
-  gtk_widget_class_bind_template_callback (widget_class, get_vertical_enabled);
   gtk_widget_class_bind_template_callback (widget_class, on_click_gesture_pressed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_click_gesture_release_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_drag_source_begin_cb);
