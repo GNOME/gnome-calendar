@@ -835,6 +835,36 @@ gcal_date_chooser_finalize (GObject *object)
   G_OBJECT_CLASS (gcal_date_chooser_parent_class)->finalize (object);
 }
 
+static gboolean
+gcal_date_chooser_child_focus (GtkWidget        *widget,
+                               GtkDirectionType  direction)
+{
+  GcalDateChooser *self = GCAL_DATE_CHOOSER (widget);
+  GtkRoot *root;
+  gboolean is_tab;
+
+  is_tab = direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD;
+
+  if (gtk_widget_get_focus_child (self->grid) && is_tab)
+    {
+      root = gtk_widget_get_root (self->grid);
+
+      while (gtk_widget_get_focus_child (self->grid))
+        {
+          GtkWidget *previous_widget = gtk_root_get_focus (root);
+
+          GTK_WIDGET_CLASS (gcal_date_chooser_parent_class)->focus (widget, direction);
+
+          if (previous_widget == gtk_root_get_focus (root))
+            return FALSE;
+        }
+
+      return TRUE;
+    }
+
+  return GTK_WIDGET_CLASS (gcal_date_chooser_parent_class)->focus (widget, direction);
+}
+
 static void
 gcal_date_chooser_dispose (GObject *object)
 {
@@ -853,6 +883,8 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
   object_class->finalize = gcal_date_chooser_finalize;
   object_class->set_property = calendar_set_property;
   object_class->get_property = calendar_get_property;
+
+  widget_class->focus = gcal_date_chooser_child_focus;
 
   properties[PROP_SHOW_HEADING] = g_param_spec_boolean ("show-heading",
                                                         "Show Heading",
