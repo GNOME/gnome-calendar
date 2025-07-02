@@ -296,6 +296,8 @@ static void
 load_source (GcalManager *self,
              ESource     *source)
 {
+  g_autoptr (ESource) parent = NULL;
+
   GCAL_ENTRY;
 
   if (g_hash_table_contains (self->clients, source))
@@ -306,7 +308,9 @@ load_source (GcalManager *self,
       return;
     }
 
-  gcal_calendar_new (source, self->async_ops, on_calendar_created_cb, self);
+  parent = e_source_registry_ref_source (self->source_registry, e_source_get_parent (source));
+
+  gcal_calendar_new (source, parent, self->async_ops, on_calendar_created_cb, self);
 
   GCAL_EXIT;
 }

@@ -29,6 +29,7 @@ typedef struct
 {
   GdkRGBA             color;
   ESource            *source;
+  ESource            *parent_source;
   ECalClient         *client;
 
   gboolean            read_only;
@@ -68,6 +69,7 @@ enum
   PROP_COLOR,
   PROP_ID,
   PROP_NAME,
+  PROP_PARENT_SOURCE,
   PROP_READ_ONLY,
   PROP_SOURCE,
   PROP_VISIBLE,
@@ -345,6 +347,7 @@ gcal_calendar_finalize (GObject *object)
 
   g_clear_object (&priv->client);
   g_clear_object (&priv->source);
+  g_clear_object (&priv->parent_source);
 
   g_mutex_clear (&priv->shared.mutex);
 
@@ -376,6 +379,10 @@ gcal_calendar_get_property (GObject    *object,
 
     case PROP_NAME:
       g_value_set_string (value, e_source_get_display_name (priv->source));
+      break;
+
+    case PROP_PARENT_SOURCE:
+      g_value_set_object (value, priv->parent_source);
       break;
 
     case PROP_READ_ONLY:
@@ -420,6 +427,11 @@ gcal_calendar_set_property (GObject      *object,
 
     case PROP_NAME:
       gcal_calendar_set_name (self, g_value_get_string (value));
+      break;
+
+    case PROP_PARENT_SOURCE:
+      g_assert (priv->parent_source == NULL);
+      priv->parent_source = g_value_dup_object (value);
       break;
 
     case PROP_READ_ONLY:
@@ -473,6 +485,10 @@ gcal_calendar_class_init (GcalCalendarClass *klass)
                                                NULL,
                                                G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
+  properties[PROP_PARENT_SOURCE] = g_param_spec_object ("parent-source", NULL, NULL,
+                                                        E_TYPE_SOURCE,
+                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
+
   properties[PROP_READ_ONLY] = g_param_spec_boolean ("read-only",
                                                      "Read-only",
                                                      "Whether the calendar is read-only or not",
@@ -516,6 +532,7 @@ gcal_calendar_init (GcalCalendar *self)
  */
 void
 gcal_calendar_new (ESource             *source,
+                   ESource             *parent_source,
                    GCancellable        *cancellable,
                    GAsyncReadyCallback  callback,
                    gpointer             user_data)
@@ -526,6 +543,7 @@ gcal_calendar_new (ESource             *source,
                                      callback,
                                      user_data,
                                      "source", source,
+                                     "parent-source", parent_source,
                                      NULL);
 }
 
@@ -662,6 +680,24 @@ gcal_calendar_set_name (GcalCalendar *self,
   save_calendar (self);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_NAME]);
+}
+
+/**
+ * gcal_calendar_get_parent_source:
+ * @self: a #GcalCalendar
+ *
+ * Retrieves the parent #ESource of @self.
+ *
+ * Returns: (transfer none): an #ESource
+ */
+ESource*
+gcal_calendar_get_parent_source (GcalCalendar *self)
+{
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
+
+  g_return_val_if_fail (GCAL_IS_CALENDAR (self), NULL);
+
+  return priv->parent_source;
 }
 
 /**

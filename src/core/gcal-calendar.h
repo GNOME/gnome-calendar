@@ -50,6 +50,7 @@ struct _GcalCalendarClass
 GQuark               gcal_calendar_error_quark                   (void);
 
 void                 gcal_calendar_new                           (ESource             *source,
+                                                                  ESource             *parent_source,
                                                                   GCancellable        *cancellable,
                                                                   GAsyncReadyCallback  callback,
                                                                   gpointer             user_data);
@@ -70,6 +71,8 @@ const gchar*         gcal_calendar_get_name                      (GcalCalendar  
 
 void                 gcal_calendar_set_name                      (GcalCalendar       *self,
                                                                   const gchar        *name);
+
+ESource*             gcal_calendar_get_parent_source             (GcalCalendar       *self);
 
 gboolean             gcal_calendar_is_read_only                  (GcalCalendar       *self);
 
