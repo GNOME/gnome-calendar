@@ -119,6 +119,27 @@ create_row_func (gpointer data,
   return row;
 }
 
+static GListModel*
+create_sorted_calendars_model (GcalCalendarList *self)
+{
+  g_autoptr (GtkSortListModel) sort_model = NULL;
+  g_autoptr (GtkStringSorter) sorter = NULL;
+  GcalManager *manager;
+
+  g_assert (GCAL_IS_CONTEXT (self->context));
+
+  manager = gcal_context_get_manager (self->context);
+
+  sorter = gtk_string_sorter_new (gtk_property_expression_new (E_TYPE_SOURCE,
+                                                               gtk_property_expression_new (GCAL_TYPE_CALENDAR, NULL, "parent-source"),
+                                                               "display-name"));
+  sort_model = gtk_sort_list_model_new (g_object_ref (gcal_manager_get_calendars_model (manager)),
+                                        GTK_SORTER (g_steal_pointer (&sorter)));
+
+  return G_LIST_MODEL (g_steal_pointer (&sort_model));
+}
+
+
 /*
  * Callbacks
  */
@@ -135,6 +156,55 @@ on_listbox_row_activated_cb (GtkListBox *listbox,
   gtk_accessible_update_state (GTK_ACCESSIBLE (row),
                                GTK_ACCESSIBLE_STATE_CHECKED, gcal_calendar_get_visible (calendar),
                                -1);
+}
+
+static void
+update_header_func (GtkListBoxRow *row,
+                    GtkListBoxRow *before,
+                    gpointer       user_data)
+{
+  GcalCalendar *calendar;
+  GtkWidget *header = NULL;
+  ESource *parent;
+
+  calendar = g_object_get_data (G_OBJECT (row), "calendar");
+  parent = gcal_calendar_get_parent_source (calendar);
+
+  if (before)
+    {
+      GcalCalendar *before_calendar;
+      ESource *before_parent;
+
+      before_calendar = g_object_get_data (G_OBJECT (before), "calendar");
+      before_parent = gcal_calendar_get_parent_source (before_calendar);
+
+      if (g_strcmp0 (e_source_get_display_name (parent), e_source_get_display_name (before_parent)) != 0)
+        {
+          header = g_object_new (GTK_TYPE_LABEL,
+                                 "label", e_source_get_display_name (parent),
+                                 "css-classes", (const gchar * const []) { "header", NULL },
+                                 "xalign", 0.0,
+                                 "margin-top", 18,
+                                 "margin-bottom", 6,
+                                 "margin-start", 18,
+                                 "margin-end", 18,
+                                 NULL);
+        }
+    }
+  else
+    {
+      header = g_object_new (GTK_TYPE_LABEL,
+                             "label", e_source_get_display_name (parent),
+                             "css-classes", (const gchar * const []) { "header", NULL },
+                             "xalign", 0.0,
+                             "margin-top", 18,
+                             "margin-bottom", 6,
+                             "margin-start", 18,
+                             "margin-end", 18,
+                             NULL);
+    }
+
+  gtk_list_box_row_set_header (row, header);
 }
 
 
@@ -183,17 +253,21 @@ gcal_calendar_list_set_property (GObject *object,
     {
     case PROP_CONTEXT:
       {
-        GcalManager *manager;
+        g_autoptr (GListModel) calendars_model = NULL;
 
         g_assert (self->context == NULL);
         self->context = g_value_dup_object (value);
 
-        manager = gcal_context_get_manager (self->context);
+        calendars_model = create_sorted_calendars_model (self);
+
         gtk_list_box_bind_model (GTK_LIST_BOX (self->calendar_listbox),
-                                 gcal_manager_get_calendars_model (manager),
+                                 calendars_model,
                                  create_row_func,
                                  NULL,
                                  NULL);
+        gtk_list_box_set_header_func (GTK_LIST_BOX (self->calendar_listbox),
+                                      update_header_func,
+                                      NULL, NULL);
       }
       break;
 
