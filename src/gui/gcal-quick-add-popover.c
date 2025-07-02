@@ -110,7 +110,7 @@ create_calendar_row (GcalManager  *manager,
   gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), box);
 
   /* Setup also a cool tooltip */
-  get_source_parent_name_color (manager, gcal_calendar_get_source (calendar), &parent_name, NULL);
+  parent_name = e_source_dup_display_name (gcal_calendar_get_parent_source (calendar));
 
   if (read_only)
     tooltip = g_strdup_printf (_("%s (this calendar is read-only)"), parent_name);

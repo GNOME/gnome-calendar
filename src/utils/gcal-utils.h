@@ -92,11 +92,6 @@ gsize                e_utf8_strftime_fix_am_pm                   (gchar         
                                                                   const gchar        *fmt,
                                                                   const struct tm    *tm);
 
-void                 get_source_parent_name_color                (GcalManager        *manager,
-                                                                  ESource            *source,
-                                                                  gchar             **name,
-                                                                  gchar             **color);
-
 gchar*               format_utc_offset                           (gint64              offset);
 
 gint                 get_alarm_trigger_minutes                   (GcalEvent          *event,

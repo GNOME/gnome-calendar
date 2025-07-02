@@ -197,16 +197,14 @@ sort_calendar_by_name_cb (gconstpointer a,
   GcalCalendar *calendar_b = GCAL_CALENDAR ((gpointer) b);
   g_autofree gchar *parent_name_a = NULL;
   g_autofree gchar *parent_name_b = NULL;
-  GcalManager *self;
   gint retval;
 
   retval = g_utf8_collate (gcal_calendar_get_name (calendar_a), gcal_calendar_get_name (calendar_b));
   if (retval != 0)
     return retval;
 
-  self = GCAL_MANAGER (user_data);
-  get_source_parent_name_color (self, gcal_calendar_get_source (calendar_a), &parent_name_a, NULL);
-  get_source_parent_name_color (self, gcal_calendar_get_source (calendar_b), &parent_name_b, NULL);
+  parent_name_a = e_source_dup_display_name (gcal_calendar_get_parent_source (calendar_a));
+  parent_name_b = e_source_dup_display_name (gcal_calendar_get_parent_source (calendar_b));
 
   return g_utf8_collate (parent_name_a, parent_name_b);
 }
@@ -216,7 +214,7 @@ on_calendar_name_changed_cb (GcalCalendar *calendar,
                              GParamSpec   *pspec,
                              GcalManager  *self)
 {
-  g_list_store_sort (self->calendars_model, sort_calendar_by_name_cb, self);
+  g_list_store_sort (self->calendars_model, sort_calendar_by_name_cb, NULL);
 }
 
 static void

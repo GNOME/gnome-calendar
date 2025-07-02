@@ -618,41 +618,6 @@ e_utf8_strftime_fix_am_pm (gchar *str,
 }
 
 /**
- * get_source_parent_name_color:
- * @manager: a #GcalManager
- * @source: an #ESource
- * @name: (nullable): return location for the name
- * @color: (nullable): return location for the color
- *
- * Retrieves the name and the color of the #ESource that is
- * parent of @source.
- */
-void
-get_source_parent_name_color (GcalManager  *manager,
-                              ESource      *source,
-                              gchar       **name,
-                              gchar       **color)
-{
-  ESource *parent_source;
-
-  g_assert (source && E_IS_SOURCE (source));
-
-  parent_source = gcal_manager_get_source (manager, e_source_get_parent (source));
-
-  if (name != NULL)
-    *name = e_source_dup_display_name (parent_source);
-
-  if (color != NULL)
-    {
-      GdkRGBA c;
-
-      get_color_name_from_source (parent_source, &c);
-
-      *color = gdk_rgba_to_string (&c);
-    }
-}
-
-/**
  * format_utc_offset:
  * @offset: an UTC offset
  *

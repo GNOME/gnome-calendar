@@ -72,13 +72,11 @@ make_calendar_row (GcalCalendarsPage *self,
   g_autoptr (GtkBuilder) builder = NULL;
   GtkWidget *read_only_icon;
   const GdkRGBA *color;
-  GcalManager *manager;
   GtkWidget *icon;
   GtkWidget *row;
   GtkWidget *sw;
 
-  manager = gcal_context_get_manager (self->context);
-  get_source_parent_name_color (manager, gcal_calendar_get_source (calendar), &parent_name, NULL);
+  parent_name = e_source_dup_display_name (gcal_calendar_get_parent_source (calendar));
 
   builder = gtk_builder_new_from_resource ("/org/gnome/calendar/ui/gui/calendar-management/calendar-row.ui");
 
@@ -206,28 +204,23 @@ listbox_sort_func (GtkListBoxRow *row1,
                    GtkListBoxRow *row2,
                    gpointer       user_data)
 {
-  g_autofree gchar *parent_name1 = NULL;
-  g_autofree gchar *parent_name2 = NULL;
-  GcalCalendarsPage *self;
-  GcalManager *manager;
-  ESource *source1;
-  ESource *source2;
+  GcalCalendar *calendar1;
+  GcalCalendar *calendar2;
+  const gchar *parent_name1;
+  const gchar *parent_name2;
   gint retval;
 
-  self = GCAL_CALENDARS_PAGE (user_data);
+  calendar1 = g_object_get_data (G_OBJECT (row1), "calendar");
+  calendar2 = g_object_get_data (G_OBJECT (row2), "calendar");
 
-  manager = gcal_context_get_manager (self->context);
-
-  source1 = g_object_get_data (G_OBJECT (row1), "source");
-  source2 = g_object_get_data (G_OBJECT (row2), "source");
-
-  retval = g_ascii_strcasecmp (e_source_get_display_name (source1), e_source_get_display_name (source2));
+  retval = g_ascii_strcasecmp (gcal_calendar_get_name (calendar1), gcal_calendar_get_name (calendar2));
 
   if (retval != 0)
     return retval;
 
-  get_source_parent_name_color (manager, source1, &parent_name1, NULL);
-  get_source_parent_name_color (manager, source2, &parent_name2, NULL);
+
+  parent_name1 = e_source_get_display_name (gcal_calendar_get_parent_source (calendar1));
+  parent_name2 = e_source_get_display_name (gcal_calendar_get_parent_source (calendar2));
 
   return g_strcmp0 (parent_name1, parent_name2);
 }
@@ -475,6 +468,6 @@ gcal_calendars_page_init (GcalCalendarsPage *self)
 
   gtk_list_box_set_sort_func (self->listbox,
                               (GtkListBoxSortFunc) listbox_sort_func,
-                              self,
+                              NULL,
                               NULL);
 }

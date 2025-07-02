@@ -121,8 +121,6 @@ static void
 setup_calendar (GcalEditCalendarPage *self,
                 GcalCalendar         *calendar)
 {
-  g_autofree gchar *parent_name = NULL;
-  GcalManager *manager;
   ESource *source;
   gboolean is_remote;
   gboolean is_file;
@@ -130,13 +128,10 @@ setup_calendar (GcalEditCalendarPage *self,
 
   self->calendar = g_object_ref (calendar);
 
-  manager = gcal_context_get_manager (self->context);
   is_goa = is_goa_calendar (self, calendar);
   source = gcal_calendar_get_source (calendar);
   is_file = e_source_has_extension (source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
   is_remote = is_remote_source (source);
-
-  get_source_parent_name_color (manager, source, &parent_name, NULL);
 
   GCAL_TRACE_MSG ("Calendar '%s' is GOA: %d; is file: %d; is remote: %d",
                   gcal_calendar_get_name (calendar),
@@ -192,10 +187,9 @@ setup_calendar (GcalEditCalendarPage *self,
 
   if (is_goa)
     {
-      g_autofree gchar *name = NULL;
+      const gchar *parent_name = e_source_get_display_name (gcal_calendar_get_parent_source (calendar));
 
-      get_source_parent_name_color (manager, source, &name, NULL);
-      adw_action_row_set_subtitle (self->account_row, name);
+      adw_action_row_set_subtitle (self->account_row, parent_name);
     }
 
   if (!is_goa && !is_remote && !is_file)
