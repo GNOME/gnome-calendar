@@ -1,7 +1,6 @@
 subdir('calendar-management')
 subdir('common')
 subdir('event-editor')
-subdir('gtk')
 subdir('icons')
 subdir('importer')
 subdir('views')
@@ -21,6 +20,7 @@ blueprints = custom_target(
     'gcal-sync-indicator.blp',
     'gcal-weather-settings.blp',
     'gcal-window.blp',
+    'shortcuts-dialog.blp',
   ),
   output: '.',
   command: [

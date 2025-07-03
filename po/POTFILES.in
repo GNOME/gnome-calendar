@@ -44,11 +44,11 @@ src/gui/gcal-sync-indicator.blp
 src/gui/gcal-weather-settings.blp
 src/gui/gcal-window.blp
 src/gui/gcal-window.c
-src/gui/gtk/help-overlay.blp
 src/gui/importer/gcal-import-dialog.blp
 src/gui/importer/gcal-import-dialog.c
 src/gui/importer/gcal-import-file-row.c
 src/gui/importer/gcal-importer.c
+src/gui/shortcuts-dialog.blp
 src/gui/views/gcal-agenda-view.blp
 src/gui/views/gcal-agenda-view.c
 src/gui/views/gcal-month-popover.blp

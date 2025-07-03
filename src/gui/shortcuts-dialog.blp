@@ -1,0 +1,96 @@
+using Gtk 4.0;
+using Adw 1;
+
+Adw.ShortcutsDialog shortcuts_dialog {
+  Adw.ShortcutsSection {
+    title: C_("shortcut dialog", "General");
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Open Main Menu");
+      accelerator: "F10";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Open Calendars Menu");
+      accelerator: "F8";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "New Event");
+      accelerator: "<Primary>N";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Manage Calendars");
+      accelerator: "<Ctrl><Alt>m";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Synchronize Calendars");
+      accelerator: "F5 <Ctrl>r";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Close Window");
+      accelerator: "<Primary>Q";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Search");
+      accelerator: "<Primary>F";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Show Help");
+      accelerator: "F1";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Shortcuts");
+      accelerator: "<Primary>question";
+    }
+  }
+
+  Adw.ShortcutsSection {
+    title: C_("shortcut dialog", "Navigation");
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Go Back");
+      accelerator: "<Alt>Left Page_Up";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Go Forward");
+      accelerator: "<Alt>Right Page_Down";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Show Today");
+      accelerator: "<Alt>Down <Primary>T Home";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Next View");
+      accelerator: "<Primary>Page_Down";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Previous View");
+      accelerator: "<Primary>Page_Up";
+    }
+  }
+
+  Adw.ShortcutsSection {
+    title: C_("shortcut dialog", "View");
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Week View");
+      accelerator: "<Alt>1";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut dialog", "Month View");
+      accelerator: "<Alt>2";
+    }
+  }
+}

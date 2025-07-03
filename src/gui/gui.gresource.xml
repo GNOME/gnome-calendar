@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
+  <gresource prefix="/org/gnome/calendar">
+    <file compressed="true">shortcuts-dialog.ui</file>
+  </gresource>
   <gresource prefix="/org/gnome/calendar/ui/gui">
     <file compressed="true">gcal-calendar-list.ui</file>
     <file compressed="true">gcal-calendar-navigation-button.ui</file>
