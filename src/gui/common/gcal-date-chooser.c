@@ -841,24 +841,53 @@ gcal_date_chooser_child_focus (GtkWidget        *widget,
 {
   GcalDateChooser *self = GCAL_DATE_CHOOSER (widget);
   GtkRoot *root;
-  gboolean is_tab;
+  GtkWidget *focus_widget, *new_focus;
+  gboolean is_tab, is_rtl, left_or_right;
 
   is_tab = direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD;
 
-  if (gtk_widget_get_focus_child (self->grid) && is_tab)
+  if (gtk_widget_get_focus_child (self->grid))
     {
-      root = gtk_widget_get_root (self->grid);
-
-      while (gtk_widget_get_focus_child (self->grid))
+      if (is_tab)
         {
-          GtkWidget *previous_widget = gtk_root_get_focus (root);
+          root = gtk_widget_get_root (self->grid);
 
-          GTK_WIDGET_CLASS (gcal_date_chooser_parent_class)->focus (widget, direction);
+          while (gtk_widget_get_focus_child (self->grid))
+            {
+              GtkWidget *previous_widget = gtk_root_get_focus (root);
 
-          if (previous_widget == gtk_root_get_focus (root))
-            return FALSE;
+              GTK_WIDGET_CLASS (gcal_date_chooser_parent_class)->focus (widget, direction);
+
+              if (previous_widget == gtk_root_get_focus (root))
+                return FALSE;
+            }
+
+          return TRUE;
         }
 
+      if (gtk_widget_child_focus (self->grid, direction))
+        return TRUE;
+
+      left_or_right = direction == GTK_DIR_LEFT || direction == GTK_DIR_RIGHT;
+
+      if (left_or_right)
+        {
+          is_rtl = gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL;
+          root = gtk_widget_get_root (self->grid);
+          focus_widget = gtk_root_get_focus (root);
+
+          g_assert (GCAL_IS_DATE_CHOOSER_DAY (focus_widget));
+
+          if (direction == (is_rtl ? GTK_DIR_LEFT : GTK_DIR_RIGHT))
+            new_focus = gtk_widget_get_next_sibling (focus_widget);
+          else
+            new_focus = gtk_widget_get_prev_sibling (focus_widget);
+
+          if (new_focus)
+            return gtk_widget_grab_focus (new_focus);
+        }
+
+      gtk_widget_error_bell (self->grid);
       return TRUE;
     }
 
