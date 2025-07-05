@@ -1,3 +1,29 @@
+Major changes in 49.alpha:
+* Remove default calendar row from the Calendar Management dialog
+* Various internal cleanups in the Week View
+* Add a style checker and commit rules to CI
+* Improve search error state in the weather settings entry
+* Various CSS style cleanups and enhancements
+* Fix the focus ring in the Notes section of the event editor dialog
+* When dragging events over the Week view, the preview height matches the event
+  duration now
+* Make event widgets act more like buttons, which fixes focus handling and
+  allows for activating using keyboard, and also add a focus ring
+* Implement keyboard navigation in the Month view
+* Add test coverage and static scan in CI
+* Fix a major memory leak
+* Redesign the main window to show the full calendar view, make the sidebar
+  hideable, move navigation buttons to the bottom, and make the main window
+  adaptative
+* Port all UI files to Blueprint
+* Make event widgets properly accessible, and report their accessibility states
+  correctly. This makes them readable by assistive technologies like screen
+  readers.
+* Fix accessibility and keyboard navigation of calendar toggle rows, the date
+  chooser widget, and other UI elements.
+* Port to Adwaita shortcuts dialog
+* Updated translations
+
 Major changes in 48.1:
 * Cleanup some deprecation warnings
 * Fix release notes

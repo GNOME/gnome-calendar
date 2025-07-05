@@ -86,6 +86,8 @@
 
   <releases>
 
+    <release date="2025-07-05" version="49~alpha" type="development" />
+
     <release date="2025-03-19" version="48.1" type="stable">
       <description>
         <ul>
