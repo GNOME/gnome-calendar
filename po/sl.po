@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-07-03 02:16+0000\n"
-"PO-Revision-Date: 2025-07-06 12:47+0200\n"
+"POT-Creation-Date: 2025-07-08 15:39+0000\n"
+"PO-Revision-Date: 2025-07-09 22:02+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -26,7 +26,7 @@ msgstr ""
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5
 #: src/gui/gcal-quick-add-popover.blp:131 src/gui/gcal-window.blp:5
-#: src/gui/gcal-window.c:409 src/main.c:35
+#: src/gui/gcal-window.c:407 src/main.c:35
 msgid "Calendar"
 msgstr "Koledar"
 
@@ -200,7 +200,7 @@ msgid "Calendar “%s” removed"
 msgstr "Koledar »%s« je odstranjen."
 
 #: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:956
+#: src/gui/gcal-window.c:953
 msgid "_Undo"
 msgstr "_Razveljavi"
 
@@ -784,7 +784,7 @@ msgstr "Avtorske pravice © 2012–%d Avtorji programa Koledar"
 msgid "translator-credits"
 msgstr "Matej Urbančič <mateju@src@gnome.org>"
 
-#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:372
+#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:374
 msgid "Weather"
 msgstr "Vreme"
 
@@ -898,12 +898,12 @@ msgid "Today"
 msgstr "danes"
 
 #: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/views/gcal-agenda-view.c:200
+#: src/gui/gcal-window.c:280 src/gui/views/gcal-agenda-view.c:200
 msgid "Tomorrow"
 msgstr "jutri"
 
 #: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/views/gcal-agenda-view.c:202
+#: src/gui/gcal-window.c:249 src/gui/views/gcal-agenda-view.c:202
 msgid "Yesterday"
 msgstr "včeraj"
 
@@ -1308,92 +1308,84 @@ msgstr "_Teden"
 msgid "_Agenda"
 msgstr "_Dnevni red"
 
-#: src/gui/gcal-window.blp:269
+#: src/gui/gcal-window.blp:271
 msgid "_Today"
 msgstr "_Danes"
 
-#: src/gui/gcal-window.blp:273
+#: src/gui/gcal-window.blp:275
 msgid "Go to Today"
 msgstr "Pojdi na današnji dan"
 
-#: src/gui/gcal-window.blp:289
+#: src/gui/gcal-window.blp:291
 msgctxt "tooltip"
 msgid "Add Event"
 msgstr "Dodaj dogodek"
 
-#: src/gui/gcal-window.blp:295
+#: src/gui/gcal-window.blp:297
 msgid "Manage Calendars"
 msgstr "Upravljanje s koledarji"
 
-#: src/gui/gcal-window.blp:355
+#: src/gui/gcal-window.blp:357
 msgid "_Synchronize Calendars"
 msgstr "_Uskladi koledarje"
 
-#: src/gui/gcal-window.blp:362
+#: src/gui/gcal-window.blp:364
 msgid "_Date & Time Settings…"
 msgstr "Nastavitve _datuma in časa …"
 
-#: src/gui/gcal-window.blp:367
+#: src/gui/gcal-window.blp:369
 msgid "_Online Accounts…"
 msgstr "_Spletni računi …"
 
-#: src/gui/gcal-window.blp:382
+#: src/gui/gcal-window.blp:384
 msgid "_Keyboard Shortcuts"
 msgstr "_Tipkovne bližnjice"
 
-#: src/gui/gcal-window.blp:387
+#: src/gui/gcal-window.blp:389
 msgid "_About Calendar"
 msgstr "_O programu"
 
-#: src/gui/gcal-window.c:234
-msgid "Go to previous week"
-msgstr "Pojdi na prejšnji teden"
+#: src/gui/gcal-window.c:245
+msgid "Previous Week"
+msgstr "Predhodni teden"
 
-#: src/gui/gcal-window.c:235
-msgid "Go to next week"
-msgstr "Pojdi na naslednji teden"
+#: src/gui/gcal-window.c:247
+msgid "Previous Month"
+msgstr "Predhodni mesec"
 
-#: src/gui/gcal-window.c:238
-msgid "Go to previous month"
-msgstr "Pojdi na prejšnji mesec"
+#: src/gui/gcal-window.c:276
+msgid "Next Week"
+msgstr "Naslednji teden"
 
-#: src/gui/gcal-window.c:239
-msgid "Go to next month"
-msgstr "Pojdi na naslednji mesec"
+#: src/gui/gcal-window.c:278
+msgid "Next Month"
+msgstr "Naslednji mesec"
 
-#: src/gui/gcal-window.c:242
-msgid "Go to previous day"
-msgstr "Pojdi na prejšnji dan"
-
-#: src/gui/gcal-window.c:243
-msgid "Go to next day"
-msgstr "Pojdi na naslednji dan"
-
-#: src/gui/gcal-window.c:400
+#: src/gui/gcal-window.c:398
 msgid "Week"
 msgstr "Teden"
 
-#: src/gui/gcal-window.c:403
+#: src/gui/gcal-window.c:401
 msgid "Month"
 msgstr "Mesec"
 
-#: src/gui/gcal-window.c:406
+#: src/gui/gcal-window.c:404
 msgid "Agenda"
 msgstr "Dnevni red"
 
-#: src/gui/gcal-window.c:954
+#: src/gui/gcal-window.c:951
 msgid "Another event deleted"
 msgstr "Izbrisan je drug dogodek"
 
-#: src/gui/gcal-window.c:954
+#: src/gui/gcal-window.c:951
 msgid "Event deleted"
 msgstr "Dogodek je izbrisan"
 
-#: src/gui/gcal-window.c:1019
+#: src/gui/gcal-window.c:1016
 msgid "Could not import some files: Not ICS files"
 msgstr "Nekaterih datotek ni bilo mogoče uvoziti: niso datoteke ICS"
 
-#: src/gui/gcal-window.c:1024
+#: src/gui/gcal-window.c:1021
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Datoteke »%s« ni bilo mogoče uvoziti: ni datoteka ICS"
@@ -1550,13 +1542,13 @@ msgstr "Pogled"
 
 #: src/gui/shortcuts-dialog.blp:87
 msgctxt "shortcut dialog"
-msgid "Week View"
-msgstr "Preklopi na tedenski pogled"
+msgid "Month View"
+msgstr "Preklopi na mesečni pogled"
 
 #: src/gui/shortcuts-dialog.blp:92
 msgctxt "shortcut dialog"
-msgid "Month View"
-msgstr "Preklopi na mesečni pogled"
+msgid "Week View"
+msgstr "Preklopi na tedenski pogled"
 
 #: src/gui/views/gcal-agenda-view.blp:27
 msgid "No events"
