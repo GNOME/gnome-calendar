@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-07-03 02:16+0000\n"
-"PO-Revision-Date: 2025-07-06 18:22+0200\n"
+"POT-Creation-Date: 2025-07-10 16:38+0000\n"
+"PO-Revision-Date: 2025-07-11 17:37+0200\n"
 "Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -26,7 +26,7 @@ msgstr ""
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5
 #: src/gui/gcal-quick-add-popover.blp:131 src/gui/gcal-window.blp:5
-#: src/gui/gcal-window.c:409 src/main.c:35
+#: src/gui/gcal-window.c:407 src/main.c:35
 msgid "Calendar"
 msgstr "Calendar"
 
@@ -200,7 +200,7 @@ msgid "Calendar “%s” removed"
 msgstr "Calendarul „%s” a fost eliminat"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:956
+#: src/gui/gcal-window.c:953
 msgid "_Undo"
 msgstr "An_ulează"
 
@@ -766,7 +766,7 @@ msgstr ""
 "Florentina Mușat <florentina.musat.28 [at] gmail [dot] com>, 2019\n"
 "Antonio Marin <gnmer [dot] 6qxyg [at] slmail [dot] me>, 2025"
 
-#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:372
+#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:374
 msgid "Weather"
 msgstr "Vremea"
 
@@ -880,12 +880,12 @@ msgid "Today"
 msgstr "Astăzi"
 
 #: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/views/gcal-agenda-view.c:200
+#: src/gui/gcal-window.c:280 src/gui/views/gcal-agenda-view.c:200
 msgid "Tomorrow"
 msgstr "Mâine"
 
 #: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/views/gcal-agenda-view.c:202
+#: src/gui/gcal-window.c:249 src/gui/views/gcal-agenda-view.c:202
 msgid "Yesterday"
 msgstr "Ieri"
 
@@ -1290,92 +1290,84 @@ msgstr "_Săptămâna"
 msgid "_Agenda"
 msgstr "_Agendă"
 
-#: src/gui/gcal-window.blp:269
+#: src/gui/gcal-window.blp:271
 msgid "_Today"
 msgstr "As_tăzi"
 
-#: src/gui/gcal-window.blp:273
+#: src/gui/gcal-window.blp:275
 msgid "Go to Today"
 msgstr "La Astăzi"
 
-#: src/gui/gcal-window.blp:289
+#: src/gui/gcal-window.blp:291
 msgctxt "tooltip"
 msgid "Add Event"
 msgstr "Adaugă un eveniment"
 
-#: src/gui/gcal-window.blp:295
+#: src/gui/gcal-window.blp:297
 msgid "Manage Calendars"
 msgstr "Gestionare calendare"
 
-#: src/gui/gcal-window.blp:355
+#: src/gui/gcal-window.blp:357
 msgid "_Synchronize Calendars"
 msgstr "_Sincronizare calendare"
 
-#: src/gui/gcal-window.blp:362
+#: src/gui/gcal-window.blp:364
 msgid "_Date & Time Settings…"
 msgstr "Configurare _dată și oră…"
 
-#: src/gui/gcal-window.blp:367
+#: src/gui/gcal-window.blp:369
 msgid "_Online Accounts…"
 msgstr "Conturi _online…"
 
-#: src/gui/gcal-window.blp:382
+#: src/gui/gcal-window.blp:384
 msgid "_Keyboard Shortcuts"
 msgstr "S_curtături"
 
-#: src/gui/gcal-window.blp:387
+#: src/gui/gcal-window.blp:389
 msgid "_About Calendar"
 msgstr "Despre Calend_ar"
 
-#: src/gui/gcal-window.c:234
-msgid "Go to previous week"
-msgstr "La săptămâna precedentă"
+#: src/gui/gcal-window.c:245
+msgid "Previous Week"
+msgstr "Săptămâna precedentă"
 
-#: src/gui/gcal-window.c:235
-msgid "Go to next week"
-msgstr "La săptămâna următoare"
+#: src/gui/gcal-window.c:247
+msgid "Previous Month"
+msgstr "Luna precedentă"
 
-#: src/gui/gcal-window.c:238
-msgid "Go to previous month"
-msgstr "La luna precedentă"
+#: src/gui/gcal-window.c:276
+msgid "Next Week"
+msgstr "Săptămână următoare"
 
-#: src/gui/gcal-window.c:239
-msgid "Go to next month"
-msgstr "La luna următoare"
+#: src/gui/gcal-window.c:278
+msgid "Next Month"
+msgstr "Luna următoare"
 
-#: src/gui/gcal-window.c:242
-msgid "Go to previous day"
-msgstr "La ziua precedentă"
-
-#: src/gui/gcal-window.c:243
-msgid "Go to next day"
-msgstr "La ziua următoare"
-
-#: src/gui/gcal-window.c:400
+#: src/gui/gcal-window.c:398
 msgid "Week"
 msgstr "Săptămâna"
 
-#: src/gui/gcal-window.c:403
+#: src/gui/gcal-window.c:401
 msgid "Month"
 msgstr "Luna"
 
-#: src/gui/gcal-window.c:406
+#: src/gui/gcal-window.c:404
 msgid "Agenda"
 msgstr "Agendă"
 
-#: src/gui/gcal-window.c:954
+#: src/gui/gcal-window.c:951
 msgid "Another event deleted"
 msgstr "Un alt eveniment șters"
 
-#: src/gui/gcal-window.c:954
+#: src/gui/gcal-window.c:951
 msgid "Event deleted"
 msgstr "Eveniment șters"
 
-#: src/gui/gcal-window.c:1019
+#: src/gui/gcal-window.c:1016
 msgid "Could not import some files: Not ICS files"
 msgstr "Nu s-au putut importa unele fișiere: Nu sunt fișiere ICS"
 
-#: src/gui/gcal-window.c:1024
+#: src/gui/gcal-window.c:1021
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Nu s-a putut importa „%s”: Nu este un fișier ICS"
@@ -1456,8 +1448,8 @@ msgstr "Arată opțiunile"
 
 #: src/gui/shortcuts-dialog.blp:14
 msgctxt "shortcut dialog"
-msgid "Open Calendars Menu"
-msgstr "Opțiuni Calendare"
+msgid "Toggle Sidebar"
+msgstr "Arată/Ascunde Panoul lateral"
 
 #: src/gui/shortcuts-dialog.blp:19
 msgctxt "shortcut dialog"
@@ -1531,13 +1523,13 @@ msgstr "Vizualizare"
 
 #: src/gui/shortcuts-dialog.blp:87
 msgctxt "shortcut dialog"
-msgid "Week View"
-msgstr "Săptămâna"
+msgid "Month View"
+msgstr "Luna"
 
 #: src/gui/shortcuts-dialog.blp:92
 msgctxt "shortcut dialog"
-msgid "Month View"
-msgstr "Luna"
+msgid "Week View"
+msgstr "Săptămâna"
 
 #: src/gui/views/gcal-agenda-view.blp:27
 msgid "No events"
