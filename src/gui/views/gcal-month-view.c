@@ -183,51 +183,6 @@ allocate_overflow_popover (GcalMonthView *self,
   gtk_widget_size_allocate (self->overflow.popover, &popover_allocation, baseline);
 }
 
-static void
-update_header_labels (GcalMonthView *self)
-{
-  g_autoptr (GcalRange) first_visible_row_range = NULL;
-  g_autoptr (GcalRange) last_visible_row_range = NULL;
-  g_autoptr (GDateTime) last_visible_date_exclusive = NULL;
-  g_autoptr (GDateTime) first_visible_date = NULL;
-  g_autoptr (GDateTime) last_visible_date = NULL;
-  g_autofree gchar *month_string = NULL;
-  g_autofree gchar *year_string = NULL;
-  GtkWidget *first_visible_row;
-  GtkWidget *last_visible_row;
-
-  first_visible_row = g_ptr_array_index (self->week_rows, FIRST_VISIBLE_ROW_INDEX);
-  first_visible_row_range = gcal_month_view_row_get_range (GCAL_MONTH_VIEW_ROW (first_visible_row));
-  first_visible_date = gcal_range_get_start (first_visible_row_range);
-
-  last_visible_row = g_ptr_array_index (self->week_rows, LAST_VISIBLE_ROW_INDEX);
-  last_visible_row_range = gcal_month_view_row_get_range (GCAL_MONTH_VIEW_ROW (last_visible_row));
-  last_visible_date_exclusive = gcal_range_get_end (last_visible_row_range);
-  last_visible_date = g_date_time_add_seconds (last_visible_date_exclusive, -1);
-
-  if (g_date_time_get_month (first_visible_date) == g_date_time_get_month (last_visible_date))
-    {
-      month_string = g_strdup_printf ("%s", gcal_get_month_name (g_date_time_get_month (first_visible_date) - 1));
-    }
-  else
-    {
-      month_string = g_strdup_printf("%s–%s",
-                                     gcal_get_month_name (g_date_time_get_month (first_visible_date) -1),
-                                     gcal_get_month_name (g_date_time_get_month (last_visible_date) - 1));
-    }
-
-  if (g_date_time_get_year (first_visible_date) == g_date_time_get_year (last_visible_date))
-    {
-      year_string = g_strdup_printf ("%d", g_date_time_get_year (first_visible_date));
-    }
-  else
-    {
-      year_string = g_strdup_printf ("%d–%d",
-                                    g_date_time_get_year (first_visible_date),
-                                    g_date_time_get_year (last_visible_date));
-    }
-}
-
 static inline void
 update_weekday_labels (GcalMonthView *self)
 {
@@ -1244,7 +1199,6 @@ gcal_month_view_set_date (GcalView  *view,
 #endif
 
   update_week_ranges (self, date);
-  update_header_labels (self);
   update_row_visuals (self);
 
   gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
