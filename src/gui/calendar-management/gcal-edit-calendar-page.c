@@ -37,7 +37,7 @@ struct _GcalEditCalendarPage
   AdwSwitchRow       *calendar_visible_row;
   AdwActionRow       *calendar_url_row;
   AdwEntryRow        *name_entry;
-  GtkWidget          *remove_group;
+  GtkWidget          *remove_button_row;
 
   GcalCalendar       *calendar;
 
@@ -202,7 +202,7 @@ setup_calendar (GcalEditCalendarPage *self,
   gtk_editable_set_text (GTK_EDITABLE (self->name_entry), gcal_calendar_get_name (calendar));
   adw_switch_row_set_active (self->calendar_visible_row, gcal_calendar_get_visible (calendar));
 
-  gtk_widget_set_visible (self->remove_group, e_source_get_removable (source));
+  gtk_widget_set_visible (self->remove_button_row, e_source_get_removable (source));
 }
 
 /*
@@ -223,6 +223,136 @@ on_calendar_visibility_changed_cb (AdwSwitchRow         *row,
                                    GcalEditCalendarPage *self)
 {
   gcal_calendar_set_visible (self->calendar, adw_switch_row_get_active (row));
+}
+
+typedef struct
+{
+  GHashTable *zones;
+  ECalClient *client;
+} TimeZoneData;
+
+static void
+insert_tz_comps (ICalParameter *param,
+                 gpointer       data)
+{
+  g_autoptr (GError) error = NULL;
+  TimeZoneData *tdata = data;
+  ICalTimezone *zone = NULL;
+  ICalComponent *tzcomp;
+  const gchar *tzid;
+
+  tzid = i_cal_parameter_get_tzid (param);
+
+  if (g_hash_table_lookup (tdata->zones, tzid))
+    return;
+
+  if (!e_cal_client_get_timezone_sync (tdata->client, tzid, &zone, NULL, &error))
+    zone = NULL;
+
+  if (error != NULL)
+    {
+      g_warning ("Could not get the timezone information for %s: %s", tzid, error->message);
+      return;
+    }
+
+  tzcomp = i_cal_component_clone (i_cal_timezone_get_component (zone));
+  g_hash_table_insert (tdata->zones, (gpointer) tzid, (gpointer) tzcomp);
+}
+
+static void
+append_tz_to_comp (gpointer       key,
+                   gpointer       value,
+                   ICalComponent *toplevel)
+{
+  i_cal_component_add_component (toplevel, (ICalComponent *) value);
+}
+
+static void
+on_file_dialog_save_cb (GObject      *object,
+                        GAsyncResult *res,
+                        gpointer      user_data)
+{
+  GcalEditCalendarPage *self = user_data;
+  g_autofree gchar *ics_str = NULL;
+  g_autoptr (GError) error = NULL;
+  g_autoptr (GSList) events = NULL;
+  g_autoptr (GFile) file = NULL;
+  ICalComponent *toplevel_component = NULL;
+  ECalClient *client = NULL;
+  TimeZoneData tz_data;
+
+  file = gtk_file_dialog_save_finish (GTK_FILE_DIALOG (object), res, &error);
+  if (error)
+    {
+      if (!g_error_matches (error, GTK_DIALOG_ERROR, GTK_DIALOG_ERROR_DISMISSED))
+        g_warning ("Error saving file: %s", error->message);
+      return;
+    }
+
+  client = gcal_calendar_get_client (self->calendar);
+  e_cal_client_get_object_list_sync (client, "#t", &events, NULL, NULL);
+
+  /* Avoid exporting empty calendars */
+  if (!events)
+    return;
+
+  toplevel_component = e_cal_util_new_top_level ();
+  tz_data.zones = g_hash_table_new (g_str_hash, g_str_equal);
+  tz_data.client = client;
+
+  for (GSList *l = events; l != NULL; l = l->next)
+   {
+      ICalComponent *component = i_cal_component_clone (l->data);
+
+      i_cal_component_foreach_tzid (component, insert_tz_comps, &tz_data);
+      i_cal_component_take_component (toplevel_component, g_steal_pointer (&component));
+    }
+
+  g_hash_table_foreach (tz_data.zones, (GHFunc) append_tz_to_comp, toplevel_component);
+  g_clear_pointer (&tz_data.zones, g_hash_table_destroy);
+  tz_data.zones = NULL;
+
+  i_cal_component_strip_errors (toplevel_component);
+  ics_str = i_cal_component_as_ical_string (toplevel_component);
+
+  g_clear_pointer (&toplevel_component, i_cal_component_free);
+
+  g_file_replace_contents (file,
+                           ics_str,
+                           strlen (ics_str),
+                           NULL,
+                           FALSE,
+                           G_FILE_CREATE_REPLACE_DESTINATION,
+                           NULL,
+                           NULL,
+                           NULL);
+}
+
+static void
+on_export_button_row_activated_cb (GtkButton            *button,
+                                   GcalEditCalendarPage *self)
+{
+  g_autofree gchar *filename = NULL;
+  GtkFileDialog *file_dialog = NULL;
+  GtkWindow *window = NULL;
+
+  GCAL_ENTRY;
+
+  window = GTK_WINDOW (gtk_widget_get_root (GTK_WIDGET (self)));
+  file_dialog = gtk_file_dialog_new ();
+  filename = g_strconcat (gcal_calendar_get_name (self->calendar), ".ics", NULL);
+
+  gtk_file_dialog_set_title (file_dialog, _("Export Calendar"));
+  gtk_file_dialog_set_initial_name (file_dialog, filename);
+
+  gtk_file_dialog_save (file_dialog,
+                        window,
+                        NULL,
+                        on_file_dialog_save_cb,
+                        self);
+
+
+  GCAL_EXIT;
 }
 
 static void
@@ -395,11 +525,12 @@ gcal_edit_calendar_page_class_init (GcalEditCalendarPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_url_row);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_visible_row);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, name_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, remove_group);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, remove_button_row);
 
   gtk_widget_class_bind_template_callback (widget_class, on_calendar_color_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_calendar_visibility_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_remove_button_row_activated_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_export_button_row_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_settings_button_clicked_cb);
 }
 

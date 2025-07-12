@@ -77,7 +77,14 @@ template $GcalEditCalendarPage: Adw.NavigationPage {
         }
       }
 
-      Adw.PreferencesGroup remove_group {
+      Adw.PreferencesGroup {
+        Adw.ButtonRow {
+          title: _("_Export Calendar");
+          end-icon-name: "go-next-symbolic";
+          use-underline: true;
+          activated => $on_export_button_row_activated_cb(template) not-swapped;
+        }
+
         Adw.ButtonRow remove_button_row {
           title: _("_Remove Calendar");
           use-underline: true;
