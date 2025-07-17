@@ -19,6 +19,7 @@ template $GcalMultiChoice: Box {
   ToggleButton button {
     accessible-role: none;
     toggled => $button_toggled_cb() swapped;
+    state-flags-changed => $button_state_flags_changed_cb() swapped;
 
     styles [
       "flat",

@@ -316,6 +316,19 @@ popover_destroy_cb (GcalMultiChoice *menu_button)
   gcal_multi_choice_set_popover (menu_button, NULL);
 }
 
+static void
+button_state_flags_changed_cb (GcalMultiChoice *self,
+                               GtkStateFlags    previous_state_flags)
+{
+  GtkStateFlags state_flags;
+
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
+  state_flags = gtk_widget_get_state_flags (self->button);
+
+  gtk_widget_set_state_flags (GTK_WIDGET (self), state_flags, TRUE);
+}
+
 /*
  * GObject overrides
  */
@@ -464,9 +477,11 @@ gcal_multi_choice_state_flags_changed (GtkWidget    *widget,
                                        GtkStateFlags previous_state_flags)
 {
   GcalMultiChoice *self = GCAL_MULTI_CHOICE (widget);
+  GtkStateFlags state_flags;
 
-  if (gtk_widget_is_focus (self->button))
-    gtk_widget_set_state_flags (self->button, GTK_STATE_FLAG_FOCUS_VISIBLE, FALSE);
+  state_flags = gtk_widget_get_state_flags (widget);
+  if (state_flags & GTK_STATE_FLAG_FOCUSED)
+    gtk_widget_set_state_flags (widget, GTK_STATE_FLAG_FOCUS_VISIBLE, FALSE);
 
   if (!gtk_widget_is_sensitive (widget))
     {
@@ -636,6 +651,7 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
 
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, button_toggled_cb);
+  gtk_widget_class_bind_template_callback (widget_class, button_state_flags_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, key_pressed_cb);
 
   gtk_widget_class_set_css_name (widget_class, "navigator");

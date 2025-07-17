@@ -78,10 +78,23 @@ popover.event-popover > contents {
 /* Date chooser */
 
 /* month/year controls */
-datechooser navigator { /* add some space between the two controls */
+
+datechooser navigator {
+  /* add some space between the two controls */
   margin-right: 6px;
   margin-left: 6px;
   margin-bottom: 6px;
+
+  outline: 0 solid transparent;
+  border-radius: 9px;
+  outline-offset: 6px;
+  transition: var(--focus-ring-transition);
+}
+
+datechooser navigator:focus:focus-visible {
+  outline-color: var(--focus-ring-color);
+  outline-width: 2px;
+  outline-offset: 0px;
 }
 
 datechooser navigator label {
@@ -90,6 +103,7 @@ datechooser navigator label {
 
 datechooser navigator button {
   padding: 0;
+  outline: unset;
 }
 
 /* week numbers, with a style resembling GNOME Shell's */
