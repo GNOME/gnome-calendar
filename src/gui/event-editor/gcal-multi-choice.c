@@ -226,12 +226,21 @@ static void
 button_clicked_cb (GtkWidget       *button,
                    GcalMultiChoice *self)
 {
+  GtkStateFlags state_flags;
+
+  state_flags = gtk_widget_get_state_flags (button);
+
   if (button == self->down_button)
     go_down (self);
   else if (button == self->up_button)
     go_up (self);
   else
     g_assert_not_reached ();
+
+  if (!gtk_widget_grab_focus (GTK_WIDGET (self)))
+    g_assert_not_reached ();
+
+  gtk_widget_set_state_flags (button, state_flags, TRUE);
 }
 
 static gboolean
