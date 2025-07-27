@@ -61,6 +61,22 @@ template $GcalWeekView: Box {
       leave => $on_motion_controller_leave_cb(template) not-swapped;
     }
 
+    // Make the behaviour of Page-Up/Page-Down consistent regardless of
+    // whether an event is selected in the week view.
+    ShortcutController {
+      propagation-phase: capture;
+
+      Shortcut {
+        trigger: "Page_Up";
+        action: "action(win.previous-date)";
+      }
+
+      Shortcut {
+        trigger: "Page_Down";
+        action: "action(win.next-date)";
+      }
+    }
+
     Viewport {
       Box content {
         orientation: horizontal;
