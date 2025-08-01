@@ -1,130 +1,48 @@
 :root {
-  --event-border-radius: 2.5px;
+  --event-border-radius: 6px;
 }
 
 event {
+  background-color: color-mix(in srgb, var(--event-bg-color) 17%, var(--view-bg-color));
+  border-radius: var(--event-border-radius);
+  color: color-mix(in srgb, var(--event-bg-color) 20%, var(--view-fg-color));
+  font-size: 0.9rem;
+  margin: 1px;
   outline: 0 solid transparent;
   outline-offset: 6px;
   transition: var(--focus-ring-transition);
-  margin: 1px;
-  font-size: 0.9rem;
-  background-color: var(--event-bg-color);
 }
 
 event:focus:focus-visible {
   outline-color: rgb(from var(--accent-color) r g b / var(--dim-opacity));
-  outline-width: 2px;
   outline-offset: 1px;
+  outline-width: 2px;
 }
 
-event.timed {
-  background-color: color-mix(in srgb, var(--event-bg-color) 17%, transparent);
+event.slanted {
+  border-radius: 0 0 0 0;
+}
+
+event.slanted-start,
+event.slanted-end:dir(rtl) {
+  border-radius: 0 var(--event-border-radius) var(--event-border-radius) 0;
+}
+
+event.slanted-end,
+event.slanted-start:dir(rtl) {
+  border-radius: var(--event-border-radius) 0 0 var(--event-border-radius);
 }
 
 event widget.content {
   margin: 4px;
 }
 
-event.timed widget.edge {
+event widget.edge {
   background-color: var(--event-bg-color);
+  min-width: 6px;
 }
 
-event.timed,
-event:not(.slanted):not(.slanted-start):not(.slanted-end) {
-  border-radius: var(--event-border-radius);
-}
-
-event.timed widget.edge {
-  border-radius: var(--event-border-radius);
-  min-width: 5px;
-}
-
-event.slanted,
-event.slanted-start,
-event.slanted-end:dir(rtl) {
-  padding-left: 16px;
-  border-radius: 0 var(--event-border-radius) var(--event-border-radius) 0;
-}
-
-event.slanted,
-event.slanted-end,
-event.slanted-start:dir(rtl) {
-  padding-right: 16px;
-  border-radius: var(--event-border-radius) 0 0 var(--event-border-radius);
-}
-
-event:not(.timed).color-dark {
-  /* Keep in symc with the dark style's event.timed colors */
-  color: var(--light-1);
-}
-
-event.timed,
-event:not(.timed).color-light {
-  color: rgb(from var(--dark-5) r g b / 80%);
-}
-event.slanted,
-event.slanted-start,
-event.slanted-end {
-  --rotation: 0deg;
-  --linear-gradient-100deg: linear-gradient(calc(var(--rotation) + 100deg), /* left edge */
-                                            transparent 5px,
-                                            var(--event-bg-color) 6px,
-                                            var(--event-bg-color) 9px,
-                                            transparent 10px,
-                                            transparent 16px,
-                                            var(--event-bg-color) 17px);
-
-  --linear-gradient-280deg: linear-gradient(calc(var(--rotation) + 280deg), /* right edge */
-                                            transparent  5px,
-                                            var(--event-bg-color) 6px,
-                                            var(--event-bg-color) 9px,
-                                            transparent 10px,
-                                            transparent 16px,
-                                            var(--event-bg-color) 17px);
-}
-
-event.slanted:dir(rtl),
-event.slanted-start:dir(rtl),
-event.slanted-end:dir(rtl) {
-  --rotation: -20deg;
-}
-
-event.slanted {
+event.slanted widget.edge,
+event.slanted-start widget.edge {
   background-color: transparent;
-  background-image:
-    var(--linear-gradient-100deg),
-    var(--linear-gradient-280deg);
-  background-size: 50% 100%;
-  background-position: left bottom, right bottom;
-  background-repeat: no-repeat;
-}
-
-event.slanted-start {
-  background-color: transparent;
-  background-size: 100%;
-}
-
-event.slanted-start:dir(ltr) {
-  background-image: var(--linear-gradient-100deg);
-  background-position: left bottom;
-}
-
-event.slanted-start:dir(rtl) {
-  background-image: var(--linear-gradient-280deg);
-  background-position: right bottom;
-}
-
-event.slanted-end {
-  background-color: transparent;
-  background-size: 100%;
-}
-
-event.slanted-end:dir(ltr) {
-  background-image: var(--linear-gradient-280deg);
-  background-position: right bottom;
-}
-
-event.slanted-end:dir(rtl) {
-  background-image: var(--linear-gradient-100deg);
-  background-position: left bottom;
 }
