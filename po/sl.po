@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-07-12 03:42+0000\n"
-"PO-Revision-Date: 2025-07-16 09:56+0200\n"
+"POT-Creation-Date: 2025-08-03 04:41+0000\n"
+"PO-Revision-Date: 2025-08-03 16:58+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -22,7 +22,7 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 2.2.1\n"
 
-#: data/org.gnome.Calendar.desktop.in.in:3
+#: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5
 #: src/gui/gcal-quick-add-popover.blp:131 src/gui/gcal-window.blp:5
@@ -30,15 +30,14 @@ msgstr ""
 msgid "Calendar"
 msgstr "Koledar"
 
-#: data/org.gnome.Calendar.desktop.in.in:4
+#: data/org.gnome.Calendar.desktop.in.in:3
 msgid "Access and manage your calendars"
 msgstr "Upravljanje in urejanje koledarjev"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.Calendar.desktop.in.in:13
+#: data/org.gnome.Calendar.desktop.in.in:12
 msgid "Calendar;Event;Reminder;"
-msgstr ""
-"koledar;dogodki;dogodek;opomnik;opomniki;datum;calendar;task;reminder;date;"
+msgstr "koledar;dogodki;dogodek;opomnik;opomniki;datum;calendar;task;reminder;date;"
 
 #: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
@@ -62,8 +61,7 @@ msgstr "Vrsta dejavnega pogleda"
 
 #: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
-msgstr ""
-"Vrsta dejavnega pogleda v oknu. Privzeto je nastavljen pogled po mesecih."
+msgstr "Vrsta dejavnega pogleda v oknu. Privzeto je nastavljen pogled po mesecih."
 
 #: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
@@ -71,11 +69,11 @@ msgstr "Nastavitve storitev vremena"
 
 #: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
-"Whether weather reports are shown, automatic locations are used and a "
-"location-name"
+"Whether weather reports are shown, automatic locations are used and a location-"
+"name"
 msgstr ""
-"Ali so poročila o vremenu pokazana in ali je uporabljeno samodejno "
-"določevanje mesta"
+"Ali so poročila o vremenu pokazana in ali je uporabljeno samodejno določevanje "
+"mesta"
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Zoom level of the week grid"
@@ -93,44 +91,41 @@ msgstr "Upravljanje urnika"
 msgid ""
 "GNOME Calendar is an elegant tool to help you plan and stay on top of your "
 "schedule for upcoming days and weeks, whether your months are filled with "
-"meetings and appointments, public events, travel logistics, or other "
-"commitments in your life."
+"meetings and appointments, public events, travel logistics, or other commitments "
+"in your life."
 msgstr ""
-"Koledar GNOME je orodje za načrtovanje in spremljanje dogodkov v "
-"prihajajočih dneh in tednih, ne glede na to, ali so meseci polni sestankov "
-"in srečanj, javnih dogodkov, načrtov potovanj ali drugih življenjskih "
-"obveznosti."
+"Koledar GNOME je orodje za načrtovanje in spremljanje dogodkov v prihajajočih "
+"dneh in tednih, ne glede na to, ali so meseci polni sestankov in srečanj, javnih "
+"dogodkov, načrtov potovanj ali drugih življenjskih obveznosti."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:22
 msgid ""
-"Easily create and manage unlimited calendars and events with GNOME "
-"Calendar's infinite scrolling month view, week timetable, and scheduling "
-"list view."
+"Easily create and manage unlimited calendars and events with GNOME Calendar's "
+"infinite scrolling month view, week timetable, and scheduling list view."
 msgstr ""
 "Program omogoča enostavno ustvarjanje in upravljanje neomejenega števila "
-"koledarjev in dogodkov z neskončnim pomikanjem pogleda meseca, tedenskega "
-"urnika in pogleda načrtovalnega seznama."
+"koledarjev in dogodkov z neskončnim pomikanjem pogleda meseca, tedenskega urnika "
+"in pogleda načrtovalnega seznama."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
 msgid ""
 "Integrating the latest GNOME technologies and design best practices, GNOME "
 "Calendar builds on top of the mature Evolution data server to manage large "
-"quantities of events and to provide integration with other applications. You "
-"can add calendars from various online calendaring services (like NextCloud, "
-"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
-"your events across multiple devices and platforms. GNOME Calendar also "
-"supports local and offline calendaring, so you can use it anywhere and "
-"anytime while travelling (or after civilization's collapse.)"
+"quantities of events and to provide integration with other applications. You can "
+"add calendars from various online calendaring services (like NextCloud, Google "
+"Calendar, and CalDAV / WebDAV servers), enabling you to synchronize your events "
+"across multiple devices and platforms. GNOME Calendar also supports local and "
+"offline calendaring, so you can use it anywhere and anytime while travelling (or "
+"after civilization's collapse.)"
 msgstr ""
-"Koledar združuje najnovejše tehnologije, ki jih omogoča okolje GNOME, "
-"upoštevajoč zahteve kakovostno oblikovanega vmesnika in zmožnosti "
-"podatkovnega strežnika Evolution za upravljanje velikega števila dogodkov in "
-"povezljivosti z drugimi programi. Dodati je mogoče koledarje iz različnih "
-"spletnih storitev (na primer: NextCloud, Google Calendar in strežniki "
-"CalDAV / WebDAV), kar omogoča usklajevanje podatkov z različnimi napravami v "
-"različnih okoljih. Koledar GNOME podpira tudi krajevne koledarje brez "
-"povezave, zato je nepogrešljiv v vsakem trenutku (tudi po propadu "
-"civilizacije.).anslated with DeepL.com (free version)"
+"Koledar združuje najnovejše tehnologije, ki jih omogoča okolje GNOME, upoštevajoč "
+"zahteve kakovostno oblikovanega vmesnika in zmožnosti podatkovnega strežnika "
+"Evolution za upravljanje velikega števila dogodkov in povezljivosti z drugimi "
+"programi. Dodati je mogoče koledarje iz različnih spletnih storitev (na primer: "
+"NextCloud, Google Calendar in strežniki CalDAV / WebDAV), kar omogoča "
+"usklajevanje podatkov z različnimi napravami v različnih okoljih. Koledar GNOME "
+"podpira tudi krajevne koledarje brez povezave, zato je nepogrešljiv v vsakem "
+"trenutku (tudi po propadu civilizacije.).anslated with DeepL.com (free version)"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
 msgid "Week view"
@@ -199,8 +194,7 @@ msgstr "_Dodaj koledar"
 msgid "Calendar “%s” removed"
 msgstr "Koledar »%s« je odstranjen."
 
-#: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:953
+#: src/gui/calendar-management/gcal-calendars-page.c:356 src/gui/gcal-window.c:953
 msgid "_Undo"
 msgstr "_Razveljavi"
 
@@ -219,8 +213,7 @@ msgstr "Odpri nastavitve"
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:43
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:197
 #: src/gui/event-editor/gcal-summary-section.blp:18
-#: src/gui/gcal-event-popover.blp:143
-#: src/gui/importer/gcal-import-file-row.c:177
+#: src/gui/gcal-event-popover.blp:144 src/gui/importer/gcal-import-file-row.c:177
 msgid "Location"
 msgstr "Mesto dogodka"
 
@@ -264,19 +257,19 @@ msgstr "Poveži se s spletnim koledarjem"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:49
 msgid ""
-"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
-"be updated by the provider will be added as read-only."
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only be "
+"updated by the provider will be added as read-only."
 msgstr ""
 "Podprti so URL-ji HTTPS, CalDAV ali Webcal. Spletni koledarji, ki jih lahko "
 "posodobi samo ponudnik, bodo dodani samo za branje."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:108
 msgid ""
-"If the calendar belongs to one of your online accounts, you can add it "
-"through the <a href=\"GOA\">online account settings</a>."
+"If the calendar belongs to one of your online accounts, you can add it through "
+"the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"Koledarje, ki so dostopni prek storitev in zahtevajo prijavo, je mogoče "
-"dodati med nastavitvami <a href=\"GOA\">spletnih računov</a>."
+"Koledarje, ki so dostopni prek storitev in zahtevajo prijavo, je mogoče dodati "
+"med nastavitvami <a href=\"GOA\">spletnih računov</a>."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:126
 #: src/gui/calendar-management/gcal-new-calendar-page.c:124
@@ -321,8 +314,7 @@ msgstr "Zdi se, da je URL, ki ste ga vnesli, neveljaven."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:385
 msgid "A valid user and password are required to connect to this calendar."
-msgstr ""
-"Za povezavo s tem koledarjem potrebujete veljavnega uporabnika in geslo."
+msgstr "Za povezavo s tem koledarjem potrebujete veljavnega uporabnika in geslo."
 
 #: src/gui/common/gcal-calendar-combo-row-item.c:70
 msgid "This calendar is hidden"
@@ -580,8 +572,7 @@ msgstr "_Končano"
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:36
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr ""
-"Ta dogodek je del koledarja samo za branje. Ne morete ga izbrisati ali "
-"spremeniti."
+"Ta dogodek je del koledarja samo za branje. Ne morete ga izbrisati ali spremeniti."
 
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:62
 msgid "Reminders"
@@ -810,8 +801,8 @@ msgid "Export Event"
 msgstr "Izvozi dogodek"
 
 #: src/gui/gcal-event-popover.blp:98
-msgid "<i>No event notes</i>"
-msgstr "<i>Ni opomb dogodka</i>"
+msgid "No event notes"
+msgstr "Ni opomb dogodka"
 
 #: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
@@ -1591,8 +1582,8 @@ msgstr "Ali želite spremeniti več dogodkov?"
 
 #: src/utils/gcal-utils.c:1124
 msgid ""
-"The event you are trying to modify is recurring. The changes you have "
-"selected should be applied to:"
+"The event you are trying to modify is recurring. The changes you have selected "
+"should be applied to:"
 msgstr ""
 "Dogodek, ki ga nameravate spremeniti, se ponavlja. Spremembe, ki jih boste "
 "naredili se bodo odražale na:"
