@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-07-11 16:35+0000\n"
-"PO-Revision-Date: 2025-07-12 05:08+0900\n"
+"POT-Creation-Date: 2025-08-04 13:34+0000\n"
+"PO-Revision-Date: 2025-08-05 06:12+0900\n"
 "Last-Translator: Makoto Sakaguchi <ycco34vx@gmail.com>\n"
 "Language-Team: Japanese <https://l10n.gnome.org/teams/ja/>\n"
 "Language: ja\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.6\n"
 
-#: data/org.gnome.Calendar.desktop.in.in:3
+#: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5
 #: src/gui/gcal-quick-add-popover.blp:131 src/gui/gcal-window.blp:5
@@ -32,12 +32,12 @@ msgstr ""
 msgid "Calendar"
 msgstr "カレンダー"
 
-#: data/org.gnome.Calendar.desktop.in.in:4
+#: data/org.gnome.Calendar.desktop.in.in:3
 msgid "Access and manage your calendars"
 msgstr "カレンダーへのアクセスと管理"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.Calendar.desktop.in.in:13
+#: data/org.gnome.Calendar.desktop.in.in:12
 msgid "Calendar;Event;Reminder;"
 msgstr "Calendar;Event;Reminder;カレンダー;イベント;リマインダー;"
 
@@ -215,7 +215,7 @@ msgstr "設定で開く"
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:43
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:197
 #: src/gui/event-editor/gcal-summary-section.blp:18
-#: src/gui/gcal-event-popover.blp:143
+#: src/gui/gcal-event-popover.blp:144
 #: src/gui/importer/gcal-import-file-row.c:177
 msgid "Location"
 msgstr "場所"
@@ -534,7 +534,7 @@ msgstr "リマインダー"
 msgid "Notes"
 msgstr "メモ"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:82
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:81
 msgid "Delete Event"
 msgstr "イベントを削除"
 
@@ -761,8 +761,8 @@ msgid "Export Event"
 msgstr "イベントをエクスポート"
 
 #: src/gui/gcal-event-popover.blp:98
-msgid "<i>No event notes</i>"
-msgstr "<i>イベントのメモなし</i>"
+msgid "No event notes"
+msgstr "イベントのメモなし"
 
 #: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
