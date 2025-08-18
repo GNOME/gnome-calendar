@@ -91,7 +91,7 @@ add_grid_row (GcalImportFileRow *self,
                               "ellipsize", PANGO_ELLIPSIZE_END,
                               "max-width-chars", 40,
                               NULL);
-  gtk_widget_add_css_class (title_label, "dim-label");
+  gtk_widget_add_css_class (title_label, "dimmed");
   gtk_grid_attach (grid, title_label, 0, row, 1, 1);
 
   gtk_size_group_add_widget (self->title_sizegroup, title_label);

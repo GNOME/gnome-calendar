@@ -1008,15 +1008,15 @@ update_title (GcalWeekHeader *self)
         {
           gtk_widget_add_css_class (header->weekday_name_label, "accent");
           gtk_widget_add_css_class (header->day_number_label, "accent");
-          gtk_widget_remove_css_class (header->weekday_name_label, "dim-label");
-          gtk_widget_remove_css_class (header->day_number_label, "dim-label");
+          gtk_widget_remove_css_class (header->weekday_name_label, "dimmed");
+          gtk_widget_remove_css_class (header->day_number_label, "dimmed");
         }
       else
         {
           gtk_widget_remove_css_class (header->weekday_name_label, "accent");
           gtk_widget_remove_css_class (header->day_number_label, "accent");
-          gtk_widget_add_css_class (header->weekday_name_label, "dim-label");
-          gtk_widget_add_css_class (header->day_number_label, "dim-label");
+          gtk_widget_add_css_class (header->weekday_name_label, "dimmed");
+          gtk_widget_add_css_class (header->day_number_label, "dimmed");
         }
 
       weekday_date = g_strdup_printf ("%d", n_day);
@@ -1574,14 +1574,14 @@ gcal_week_header_init (GcalWeekHeader *self)
       header->weekday_name_label = gtk_label_new ("");
       gtk_widget_set_hexpand (header->weekday_name_label, TRUE);
       gtk_widget_add_css_class (header->weekday_name_label, "heading");
-      gtk_widget_add_css_class (header->weekday_name_label, "dim-label");
+      gtk_widget_add_css_class (header->weekday_name_label, "dimmed");
       gtk_label_set_xalign (GTK_LABEL (header->weekday_name_label), 0.0);
       gtk_box_append (GTK_BOX (box), header->weekday_name_label);
 
       header->day_number_label = gtk_label_new ("");
       gtk_widget_set_hexpand (header->day_number_label, TRUE);
       gtk_widget_add_css_class (header->day_number_label, "title-2");
-      gtk_widget_add_css_class (header->day_number_label, "dim-label");
+      gtk_widget_add_css_class (header->day_number_label, "dimmed");
       gtk_label_set_xalign (GTK_LABEL (header->day_number_label), 0.0);
       gtk_box_append (GTK_BOX (box), header->day_number_label);
 
