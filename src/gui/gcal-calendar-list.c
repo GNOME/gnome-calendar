@@ -182,7 +182,7 @@ update_header_func (GtkListBoxRow *row,
         {
           header = g_object_new (GTK_TYPE_LABEL,
                                  "label", e_source_get_display_name (parent),
-                                 "css-classes", (const gchar * const []) { "header", NULL },
+                                 "css-classes", (const gchar * const []) { "heading", "dimmed", NULL },
                                  "xalign", 0.0,
                                  "margin-top", 18,
                                  "margin-bottom", 6,
@@ -195,7 +195,7 @@ update_header_func (GtkListBoxRow *row,
     {
       header = g_object_new (GTK_TYPE_LABEL,
                              "label", e_source_get_display_name (parent),
-                             "css-classes", (const gchar * const []) { "header", NULL },
+                             "css-classes", (const gchar * const []) { "heading", "dimmed", NULL },
                              "xalign", 0.0,
                              "margin-top", 18,
                              "margin-bottom", 6,
@@ -311,3 +311,4 @@ gcal_calendar_list_init (GcalCalendarList *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
 }
+

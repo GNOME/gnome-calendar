@@ -15,10 +15,7 @@ calendar-view {
   font-size: 10pt;
 }
 
-calendar-view.header,
-label.header {
-  font-size: 10pt;
-  font-weight: bold;
+calendar-view box.header label {
   opacity: var(--dim-opacity);
 }
 
