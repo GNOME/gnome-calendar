@@ -207,7 +207,7 @@ update_weather (GcalMonthCell *self)
   if (weather_info)
     {
       const gchar *icon_name; /* unowned */
-      const gchar *temp_str;  /* unwoned */
+      const gchar *temp_str;  /* unowned */
 
       icon_name = gcal_weather_info_get_icon_name (weather_info);
       temp_str = gcal_weather_info_get_temperature (weather_info);
