@@ -33,7 +33,7 @@ calendar-view.header,
 label.header {
   font-size: 10pt;
   font-weight: bold;
-  color: rgb(from var(--window-fg-color) r g b / 55%);
+  opacity: var(--dim-opacity);
 }
 
 calendar-view.current,
