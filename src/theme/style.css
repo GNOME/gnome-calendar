@@ -91,10 +91,16 @@ datechooser navigator button {
 
 /* week numbers, with a style resembling GNOME Shell's */
 datechooser .weeknum {
+  --padding: 4px;
+
+  --_border-width: var(--border-width, 0px);
+  --_padding: calc(var(--padding) - var(--_border-width));
+
   font-size: smaller;
   font-weight: bold;
   margin: 6px;
-  padding: 4px;
+  padding: var(--_padding);
+  border: var(--_border-width) solid rgb(from currentColor r g b / 50%);
   border-radius: 5px;
   background-color: rgb(from var(--insensitive-fg-color) r g b / 10%);
   color: var(--insensitive-fg-color);

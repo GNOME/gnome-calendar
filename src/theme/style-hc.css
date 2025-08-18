@@ -1,7 +1,8 @@
 datechooser .weeknum {
+  --border-width: 1px;
+
   color: var(--window-fg-color);
   background-color: rgb(from var(--window-fg-color) r g b / 5%);
-  border: 1px solid rgb(from currentColor r g b / 50%);
 }
 
 calendar-view.month-view {
