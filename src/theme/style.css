@@ -92,6 +92,7 @@ datechooser navigator button {
 /* week numbers, with a style resembling GNOME Shell's */
 datechooser .weeknum {
   --padding: 4px;
+  --base-color: var(--insensitive-fg-color);
 
   --_border-width: var(--border-width, 0px);
   --_padding: calc(var(--padding) - var(--_border-width));
@@ -102,8 +103,8 @@ datechooser .weeknum {
   padding: var(--_padding);
   border: var(--_border-width) solid rgb(from currentColor r g b / 50%);
   border-radius: 5px;
-  background-color: rgb(from var(--insensitive-fg-color) r g b / 10%);
-  color: var(--insensitive-fg-color);
+  background-color: rgb(from var(--base-color) r g b / 5%);
+  color: var(--base-color);
 }
 
 /* day names */
