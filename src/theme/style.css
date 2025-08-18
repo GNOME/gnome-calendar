@@ -11,20 +11,6 @@
 }
 
 /* Header labels */
-label.primary-label {
-  font-size: 16pt;
-  font-weight: bold;
-  color: var(--accent-color);
-  padding: 12px;
-}
-
-label.secondary-label {
-  font-size: 16pt;
-  font-weight: bold;
-  padding: 12px;
-  color: rgb(from var(--window-fg-color) r g b / 55%);
-}
-
 calendar-view {
   font-size: 10pt;
 }
