@@ -512,6 +512,13 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
                            self,
                            G_CONNECT_SWAPPED);
 
+  g_signal_connect_object (self->context,
+                           "notify::time-format",
+                           G_CALLBACK (gcal_event_widget_update_timestamp),
+                           self,
+                           G_CONNECT_SWAPPED);
+
+
   /* Tooltip */
   gcal_event_widget_set_event_tooltip (self, event);
 
