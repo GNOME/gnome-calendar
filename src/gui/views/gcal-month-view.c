@@ -1322,13 +1322,19 @@ static gboolean
 gcal_month_view_focus (GtkWidget        *widget,
                        GtkDirectionType  direction)
 {
-  GtkWidget *focus_child;
-  gboolean forward_or_backward;
+  GtkRoot *root;
+  GtkWidget *focused;
+  gboolean forward_or_backward, is_event_widget, is_ancestor;
 
-  focus_child = gtk_widget_get_focus_child (widget);
+  root = gtk_widget_get_root (widget);
+  focused = gtk_root_get_focus (root);
+
+  is_event_widget = GCAL_IS_EVENT_WIDGET (focused);
+  is_ancestor = !!gtk_widget_is_ancestor (focused, widget);
+
   forward_or_backward = direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD;
 
-  if ((focus_child && forward_or_backward) || (!focus_child && !forward_or_backward))
+  if ((is_event_widget && forward_or_backward) || !(is_ancestor || forward_or_backward))
     return FALSE;
 
   GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction);
