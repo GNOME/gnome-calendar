@@ -662,16 +662,10 @@ static void
 gcal_event_popover_map (GtkWidget *widget)
 {
   GcalEventPopover *self = (GcalEventPopover *) widget;
-  GtkListBoxRow *first_meeting_row;
 
   GTK_WIDGET_CLASS (gcal_event_popover_parent_class)->map (widget);
 
-  first_meeting_row = gtk_list_box_get_row_at_index (self->meetings_listbox, 0);
-
-  if (first_meeting_row)
-    gtk_widget_grab_focus (GTK_WIDGET (first_meeting_row));
-  else
-    gtk_widget_grab_focus (self->action_button);
+  gtk_widget_grab_focus (self->action_button);
 }
 
 
