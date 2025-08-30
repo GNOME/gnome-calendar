@@ -862,13 +862,12 @@ event_preview_cb (GcalEventWidget        *event_widget,
 
     case GCAL_EVENT_PREVIEW_ACTION_NONE:
     default:
+      if (self->last_focused_widget)
+        {
+          gtk_root_set_focus (GTK_ROOT (self), self->last_focused_widget);
+          g_clear_weak_pointer (&self->last_focused_widget);
+        }
       break;
-    }
-
-  if (self->last_focused_widget)
-    {
-      gtk_root_set_focus (GTK_ROOT (self), self->last_focused_widget);
-      g_clear_weak_pointer (&self->last_focused_widget);
     }
 }
 
