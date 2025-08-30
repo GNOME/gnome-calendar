@@ -1,3 +1,10 @@
+Major changes in 49.rc:
+* Further improvements to keyboard navigation
+* Introduce a new testing framework for GUI and backend interactions
+* Make month names more prominent
+* Visual tweaks to the views and the preview popover
+* Updated translations
+
 Major changes in 49.alpha:
 * Remove default calendar row from the Calendar Management dialog
 * Various internal cleanups in the Week View
