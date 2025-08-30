@@ -137,7 +137,6 @@ on_contains_focus_changed_cb (GtkEventControllerFocus *focus_controller,
 
 static void
 on_date_selected_changed_cb (GcalDateChooser    *selector,
-                             GParamSpec         *pspec,
                              GcalDateChooserRow *self)
 {
   update_entry (self);
