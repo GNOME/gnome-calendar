@@ -75,7 +75,7 @@ gcal_reminders_section_set_event (GcalEventEditorSection *section,
   gtk_editable_set_text (GTK_EDITABLE (self->summary_entry), gcal_event_get_summary (event));
   gtk_editable_set_text (GTK_EDITABLE (self->location_entry), gcal_event_get_location (event));
 
-  adw_entry_row_grab_focus_without_selecting (self->summary_entry);
+  gtk_widget_grab_focus (GTK_WIDGET (self->summary_entry));
 
   gtk_widget_remove_css_class (GTK_WIDGET (self->summary_entry), "error");
 
