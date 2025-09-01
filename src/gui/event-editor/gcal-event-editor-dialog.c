@@ -140,16 +140,12 @@ apply_event_properties_to_template_event (GcalEvent *template_event,
   g_autoptr (GList) alarms =  gcal_event_get_alarms (event);
   GDateTime *template_start_date;
   GDateTime *event_start_date;
-  GDateTime *template_end_date;
   GDateTime *event_end_date;
-  gboolean was_all_day;
   gboolean is_all_day;
 
   is_all_day = gcal_event_get_all_day (event);
-  was_all_day = gcal_event_get_all_day (template_event);
 
   template_start_date = gcal_event_get_date_start (template_event);
-  template_end_date = gcal_event_get_date_end (template_event);
   event_start_date = gcal_event_get_date_start (event);
   event_end_date = gcal_event_get_date_end (event);
 
@@ -157,29 +153,14 @@ apply_event_properties_to_template_event (GcalEvent *template_event,
                                 g_date_time_get_year (template_start_date),
                                 g_date_time_get_month (template_start_date),
                                 g_date_time_get_day_of_month (template_start_date),
-                                g_date_time_get_hour (event_start_date),
-                                g_date_time_get_minute (event_start_date),
-                                g_date_time_get_second (event_start_date));
+                                is_all_day ? 0 : g_date_time_get_hour (event_start_date),
+                                is_all_day ? 0 : g_date_time_get_minute (event_start_date),
+                                is_all_day ? 0 : g_date_time_get_second (event_start_date));
 
-  end_date = g_date_time_new (g_date_time_get_timezone (event_end_date),
-                              g_date_time_get_year (template_end_date),
-                              g_date_time_get_month (template_end_date),
-                              g_date_time_get_day_of_month (template_end_date),
-                              g_date_time_get_hour (event_end_date),
-                              g_date_time_get_minute (event_end_date),
-                              g_date_time_get_second (event_end_date));
-
-  if (was_all_day != is_all_day)
-    {
-      g_autoptr (GDateTime) fake_end_date = NULL;
-
-      if (is_all_day)
-        fake_end_date = g_date_time_add_days (end_date, -1);
-      else
-        fake_end_date = g_date_time_add_days (end_date, 1);
-
-      gcal_set_date_time (&end_date, fake_end_date);
-    }
+  if (is_all_day)
+    end_date = g_date_time_add_days (start_date, 1);
+  else
+    end_date = g_date_time_add (start_date, g_date_time_difference (event_end_date, event_start_date));
 
   gcal_event_set_summary (template_event, gcal_event_get_summary (event));
   gcal_event_set_location (template_event, gcal_event_get_location (event));
