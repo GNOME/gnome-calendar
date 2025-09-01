@@ -433,16 +433,6 @@ get_recurence_limit_type (GcalScheduleSection *self)
   return (GcalRecurrenceLimitType) item;
 }
 
-static void
-on_repeat_duration_changed_cb (GtkWidget           *widget,
-                               GParamSpec          *pspec,
-                               GcalScheduleSection *self)
-{
-  GcalRecurrenceLimitType limit_type = get_recurence_limit_type (self);
-  GcalEventSchedule *updated = gcal_event_schedule_set_recur_limit_type (self->values, limit_type);
-  update_from_event_schedule (self, updated);
-}
-
 static GcalRecurrenceFrequency
 get_recurrence_frequency (GcalScheduleSection *self)
 {
@@ -451,6 +441,19 @@ get_recurrence_frequency (GcalScheduleSection *self)
   g_assert (item >= GCAL_RECURRENCE_NO_REPEAT && item <= GCAL_RECURRENCE_OTHER);
 
   return (GcalRecurrenceFrequency) item;
+}
+
+static void
+on_repeat_duration_changed_cb (GtkWidget           *widget,
+                               GParamSpec          *pspec,
+                               GcalScheduleSection *self)
+{
+  if (get_recurrence_frequency (self) != GCAL_RECURRENCE_NO_REPEAT)
+    {
+      GcalRecurrenceLimitType limit_type = get_recurence_limit_type (self);
+      GcalEventSchedule *updated = gcal_event_schedule_set_recur_limit_type (self->values, limit_type);
+      update_from_event_schedule (self, updated);
+    }
 }
 
 static void
