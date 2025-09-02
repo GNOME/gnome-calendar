@@ -233,6 +233,16 @@ restore_zoom_level (GcalWeekView *self)
 
 
 /* Callbacks */
+static gchar*
+get_header_state_tooltip (GcalWeekView *self,
+                          gboolean      expanded)
+{
+  if (expanded)
+    return g_strdup (_("Hide Additional Events"));
+  else
+    return g_strdup (_("Show Additional Events"));
+}
+
 static void
 on_event_activated (GcalWeekView *self,
                     GtkWidget    *widget)
@@ -652,6 +662,7 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, scrolled_window);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, week_grid);
 
+  gtk_widget_class_bind_template_callback (widget_class, get_header_state_tooltip);
   gtk_widget_class_bind_template_callback (widget_class, on_event_activated);
   gtk_widget_class_bind_template_callback (widget_class, on_motion_controller_enter_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_motion_controller_motion_cb);

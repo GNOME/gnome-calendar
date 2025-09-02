@@ -16,6 +16,7 @@ template $GcalWeekView: Box {
       ToggleButton {
         visible: bind header.can-expand;
         active: bind header.expanded bidirectional;
+        tooltip-text: bind $get_header_state_tooltip(header.expanded) as <string>;
         hexpand: true;
         halign: center;
         valign: end;
