@@ -1330,7 +1330,7 @@ gcal_month_view_focus (GtkWidget        *widget,
   focused = gtk_root_get_focus (root);
 
   is_event_widget = GCAL_IS_EVENT_WIDGET (focused);
-  is_ancestor = !!gtk_widget_is_ancestor (focused, widget);
+  is_ancestor = (focused && gtk_widget_is_ancestor (focused, widget));
 
   forward_or_backward = direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD;
 
