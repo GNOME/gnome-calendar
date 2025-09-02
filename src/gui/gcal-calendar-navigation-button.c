@@ -96,7 +96,8 @@ gcal_calendar_navigation_button_set_property (GObject *object,
   switch (prop_id)
     {
     case PROP_ACTIVE_DATE:
-      self->active_date = g_value_get_boxed (value);
+      gcal_clear_date_time (&self->active_date);
+      self->active_date = g_date_time_ref (g_value_get_boxed (value));
       /*
        * Translators: %B is the month name and %Y is the year.
        * More formats can be found on the doc:
