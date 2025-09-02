@@ -319,7 +319,8 @@ gcal_edit_calendar_page_dispose (GObject *object)
 {
   GcalEditCalendarPage *self = GCAL_EDIT_CALENDAR_PAGE (object);
 
-  gcal_calendar_set_name (self->calendar, gtk_editable_get_text (GTK_EDITABLE (self->name_entry)));
+  if (self->calendar)
+    gcal_calendar_set_name (self->calendar, gtk_editable_get_text (GTK_EDITABLE (self->name_entry)));
 
   G_OBJECT_CLASS (gcal_edit_calendar_page_parent_class)->dispose (object);
 }
