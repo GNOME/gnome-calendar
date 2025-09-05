@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2025-09-04 15:32+0000\n"
-"PO-Revision-Date: 2025-09-04 23:20+0200\n"
+"PO-Revision-Date: 2025-09-05 23:20+0200\n"
 "Last-Translator: Jordi Mas i Hernàndez <jmas@softcatala.org>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -544,8 +544,8 @@ msgstr "_Fet"
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:36
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr ""
-"Aquesta cita forma part d'un calendari de només lectura.No es pot suprimir o "
-"canviar aquest cita."
+"Aquesta cita forma part d'un calendari de només lectura. No es pot suprimir o "
+"canviar aquesta cita."
 
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:62
 msgid "Reminders"
@@ -573,7 +573,7 @@ msgstr "Detalls de la cita"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:692
 msgid "Edit Event"
-msgstr "Afegeix una cita"
+msgstr "Edita una cita"
 
 #: src/gui/event-editor/gcal-reminders-section.blp:16
 msgid "Add Reminder"
