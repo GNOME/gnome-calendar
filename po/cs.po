@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-02-12 20:31+0000\n"
-"PO-Revision-Date: 2025-02-21 21:58+0100\n"
+"POT-Creation-Date: 2025-09-03 04:03+0000\n"
+"PO-Revision-Date: 2025-09-09 16:50+0200\n"
 "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -18,21 +18,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.7\n"
 
-#: data/org.gnome.Calendar.desktop.in.in:3
+#: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
 #: src/gui/gcal-calendar-combo-row.ui:5 src/gui/gcal-quick-add-popover.ui:135
 #: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "Kalendář"
 
-#: data/org.gnome.Calendar.desktop.in.in:4
+#: data/org.gnome.Calendar.desktop.in.in:3
 msgid "Access and manage your calendars"
 msgstr "Zobrazte si a spravujte své kalendáře"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.Calendar.desktop.in.in:13
+#: data/org.gnome.Calendar.desktop.in.in:12
 msgid "Calendar;Event;Reminder;"
 msgstr "kalendář;událost;upomínka;připomenutí;"
 
@@ -504,7 +504,6 @@ msgstr "Upravit datum"
 #.
 #: src/gui/event-editor/gcal-date-time-chooser.c:141
 #, c-format
-#| msgid "%1$s, %2$s"
 msgid "%1$s (%2$s)"
 msgstr "%1$s (%2$s)"
 
@@ -529,6 +528,11 @@ msgstr "Datum"
 msgid "Time"
 msgstr "Čas"
 
+#: src/gui/event-editor/gcal-date-time-chooser.ui:26
+#: src/gui/event-editor/gcal-time-chooser-row.ui:15
+msgid "Edit Time"
+msgstr "Upravit čas"
+
 #: src/gui/event-editor/gcal-date-time-chooser.ui:65
 msgid ":"
 msgstr "∶"
@@ -541,10 +545,6 @@ msgstr "Změnit časové pásmo"
 #: src/gui/event-editor/gcal-date-time-chooser.ui:133
 #: src/gui/event-editor/gcal-time-chooser-row.ui:35
 msgid "Edit time"
-msgstr "Upravit čas"
-
-#: src/gui/event-editor/gcal-time-chooser-row.ui:15
-msgid "Edit Time"
 msgstr "Upravit čas"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:120
@@ -629,78 +629,78 @@ msgstr "3 dny"
 msgid "1 Week"
 msgstr "1 týden"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:12
+#: src/gui/event-editor/gcal-schedule-section.ui:13
 msgid "_All Day"
 msgstr "_Celý den"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:19
+#: src/gui/event-editor/gcal-schedule-section.ui:20
 msgid "_Time Slot"
 msgstr "Č_asové okno"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:32
-#: src/gui/event-editor/gcal-schedule-section.ui:53
+#: src/gui/event-editor/gcal-schedule-section.ui:33
+#: src/gui/event-editor/gcal-schedule-section.ui:54
 msgid "Start Date"
 msgstr "Datum zahájení"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:44
-#: src/gui/event-editor/gcal-schedule-section.ui:61
+#: src/gui/event-editor/gcal-schedule-section.ui:45
+#: src/gui/event-editor/gcal-schedule-section.ui:62
 msgid "End Date"
 msgstr "Datum ukončení"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:54
+#: src/gui/event-editor/gcal-schedule-section.ui:55
 msgid "Start Time"
 msgstr "Čas zahájení"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:62
+#: src/gui/event-editor/gcal-schedule-section.ui:63
 msgid "End Time"
 msgstr "Čas ukončení"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:74
+#: src/gui/event-editor/gcal-schedule-section.ui:75
 msgid "Repeat"
 msgstr "Opakovat"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:79
+#: src/gui/event-editor/gcal-schedule-section.ui:80
 msgid "No Repeat"
 msgstr "Bez opakování"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:80
+#: src/gui/event-editor/gcal-schedule-section.ui:81
 msgid "Daily"
 msgstr "Denně"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:81
+#: src/gui/event-editor/gcal-schedule-section.ui:82
 msgid "Monday – Friday"
 msgstr "Pondělí až pátek"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:82
+#: src/gui/event-editor/gcal-schedule-section.ui:83
 msgid "Weekly"
 msgstr "Týdně"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:83
+#: src/gui/event-editor/gcal-schedule-section.ui:84
 msgid "Monthly"
 msgstr "Měsíčně"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:84
+#: src/gui/event-editor/gcal-schedule-section.ui:85
 msgid "Yearly"
 msgstr "Ročně"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:95
+#: src/gui/event-editor/gcal-schedule-section.ui:96
 msgid "End Repeat"
 msgstr "Konec opakování"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:100
+#: src/gui/event-editor/gcal-schedule-section.ui:101
 msgid "Forever"
 msgstr "Na pořád"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:101
-#: src/gui/event-editor/gcal-schedule-section.ui:114
+#: src/gui/event-editor/gcal-schedule-section.ui:102
+#: src/gui/event-editor/gcal-schedule-section.ui:115
 msgid "Number of Occurrences"
 msgstr "Počet opakování"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:102
+#: src/gui/event-editor/gcal-schedule-section.ui:103
 msgid "Until Date"
 msgstr "Do data"
 
-#: src/gui/event-editor/gcal-schedule-section.ui:133
+#: src/gui/event-editor/gcal-schedule-section.ui:134
 msgid "End Repeat Date"
 msgstr "Datum konce opakování"
 
@@ -972,7 +972,7 @@ msgid "No event notes"
 msgstr "Žádné poznámky k události"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:369
+#: src/gui/gcal-event-widget.c:381
 #, c-format
 msgid ""
 "\n"
@@ -985,7 +985,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:382 src/gui/gcal-event-widget.c:388
+#: src/gui/gcal-event-widget.c:394 src/gui/gcal-event-widget.c:400
 #, c-format
 msgid ""
 "\n"
@@ -997,12 +997,12 @@ msgstr ""
 "v místě %s"
 
 #.
-#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * Translators: %a is the abbreviated day name, %B is the month name
 #. * and %d is the day of the month as a number between 0 and 31.
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:447
+#: src/gui/gcal-event-widget.c:459
 msgid "%a %B %d"
 msgstr "%a, %d. %B"
 
@@ -1248,7 +1248,7 @@ msgstr "Hledat události"
 
 #: src/gui/gcal-search-button.ui:54
 msgid "Search events"
-msgstr "Hledat události"
+msgstr "hledat události"
 
 #: src/gui/gcal-sync-indicator.ui:21
 msgctxt "tooltip"
@@ -1502,7 +1502,7 @@ msgid "Description"
 msgstr "Popis"
 
 #.
-#. * Translators: %A is the abbreviated day name, %B is the month name
+#. * Translators: %A is the full day name, %B is the month name
 #. * and %d is the day of the month as a number between 0 and 31.
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
@@ -1522,14 +1522,6 @@ msgstr "Žádné události"
 #: src/gui/views/gcal-month-popover.ui:69
 msgid "New Event…"
 msgstr "Nová událost…"
-
-#: src/gui/views/gcal-week-grid.c:569
-msgid "00 AM"
-msgstr "00 dop."
-
-#: src/gui/views/gcal-week-grid.c:572
-msgid "00:00"
-msgstr "00∶00"
 
 #: src/gui/views/gcal-week-header.c:474
 #, c-format
@@ -1587,6 +1579,12 @@ msgstr "Zoom"
 #: src/utils/gcal-utils.c:1278
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
+
+#~ msgid "00 AM"
+#~ msgstr "00 dop."
+
+#~ msgid "00:00"
+#~ msgstr "00∶00"
 
 #~ msgid "The GNOME Project"
 #~ msgstr "Projekt GNOME"
