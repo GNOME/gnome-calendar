@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-08-19 14:03+0000\n"
-"PO-Revision-Date: 2025-08-20 14:24+0200\n"
+"POT-Creation-Date: 2025-09-08 12:13+0000\n"
+"PO-Revision-Date: 2025-09-09 16:46+0200\n"
 "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.7\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -143,7 +143,7 @@ msgstr "Úprava události"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1749 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -152,14 +152,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1910
+#: src/core/gcal-event.c:1757
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1926 src/gui/gcal-quick-add-popover.c:471
+#: src/core/gcal-event.c:1773 src/gui/gcal-quick-add-popover.c:471
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -197,7 +197,7 @@ msgid "Calendar “%s” removed"
 msgstr "Kalendář „%s“ byl odstraněn"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:953
+#: src/gui/gcal-window.c:952
 msgid "_Undo"
 msgstr "_Zpět"
 
@@ -697,7 +697,7 @@ msgstr "Počet opakování"
 msgid "Until Date"
 msgstr "Do data"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:102
+#: src/gui/event-editor/gcal-schedule-section.blp:103
 msgid "End Repeat Date"
 msgstr "Datum konce opakování"
 
@@ -766,7 +766,7 @@ msgstr "Počasí"
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-calendar-navigation-button.c:105
+#: src/gui/gcal-calendar-navigation-button.c:106
 msgid "%B %Y"
 msgstr "%B %Y"
 
@@ -962,7 +962,7 @@ msgid "Edit Additional Details"
 msgstr "Upravit další údaje"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:388
+#: src/gui/gcal-event-widget.c:386
 #, c-format
 msgid ""
 "\n"
@@ -975,7 +975,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:401 src/gui/gcal-event-widget.c:407
+#: src/gui/gcal-event-widget.c:399 src/gui/gcal-event-widget.c:405
 #, c-format
 msgid ""
 "\n"
@@ -992,7 +992,7 @@ msgstr ""
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:466
+#: src/gui/gcal-event-widget.c:464
 msgid "%a %B %d"
 msgstr "%a, %d. %B"
 
@@ -1237,7 +1237,7 @@ msgstr "Hledat události"
 
 #: src/gui/gcal-search-button.blp:44
 msgid "Search events"
-msgstr "Hledat události"
+msgstr "hledat události"
 
 #: src/gui/gcal-sync-indicator.blp:19
 msgctxt "tooltip"
@@ -1254,7 +1254,7 @@ msgstr "Místo automaticky"
 
 #: src/gui/gcal-weather-settings.blp:40
 msgid "Search locations"
-msgstr "Hledat umístění"
+msgstr "hledat umístění"
 
 #: src/gui/gcal-window.blp:111
 msgid "Drop Event Files to Import"
@@ -1350,19 +1350,19 @@ msgstr "Měsíc"
 msgid "Agenda"
 msgstr "Agenda"
 
-#: src/gui/gcal-window.c:951
+#: src/gui/gcal-window.c:950
 msgid "Another event deleted"
 msgstr "Smazána ještě jedna událost"
 
-#: src/gui/gcal-window.c:951
+#: src/gui/gcal-window.c:950
 msgid "Event deleted"
 msgstr "Událost smazána"
 
-#: src/gui/gcal-window.c:1016
+#: src/gui/gcal-window.c:1015
 msgid "Could not import some files: Not ICS files"
 msgstr "Nelze importovat některé soubory: Nejedná se o soubory ICS"
 
-#: src/gui/gcal-window.c:1021
+#: src/gui/gcal-window.c:1020
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Nelze importovat „%s“: Nejedná se o soubor ICS"
