@@ -14,19 +14,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-07-12 03:42+0000\n"
-"PO-Revision-Date: 2025-07-13 08:00+0300\n"
-"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
+"POT-Creation-Date: 2025-08-30 04:09+0000\n"
+"PO-Revision-Date: 2025-09-01 22:45+0300\n"
+"Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
 "Language-Team: Türkçe <takim@gnome.org.tr>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.7\n"
 "X-POOTLE-MTIME: 1433367259.000000\n"
 
-#: data/org.gnome.Calendar.desktop.in.in:3
+#: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5
 #: src/gui/gcal-quick-add-popover.blp:131 src/gui/gcal-window.blp:5
@@ -34,13 +34,13 @@ msgstr ""
 msgid "Calendar"
 msgstr "Takvim"
 
-#: data/org.gnome.Calendar.desktop.in.in:4
+#: data/org.gnome.Calendar.desktop.in.in:3
 msgid "Access and manage your calendars"
 msgstr "Takvimlerinize erişin ve yönetin"
 
 # https://gitlab.gnome.org/GNOME/glib/-/issues/443 hatası sebebiyle uygulama adı dahil ingilizce hallerini de koruyalım.
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.Calendar.desktop.in.in:13
+#: data/org.gnome.Calendar.desktop.in.in:12
 msgid "Calendar;Event;Reminder;"
 msgstr "Calendar;Event;Reminder;Takvim;Olay;Etkinlik;Anımsatıcı;Hatırlatıcı;"
 
@@ -62,11 +62,11 @@ msgstr "Pencere boyutu (genişlik ve yükseklik)."
 
 #: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Type of the active view"
-msgstr "Aktif görünümün türü"
+msgstr "Etkin görünümün türü"
 
 #: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
-msgstr "Aktif pencere görünümü türü, öntanımlı değer: aylık görünüm"
+msgstr "Etkin pencere görünümü türü, öntanımlı değer: aylık görünüm"
 
 #: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
@@ -147,7 +147,7 @@ msgstr "Olay düzenleyici"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1749 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -156,14 +156,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1910
+#: src/core/gcal-event.c:1757
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1926 src/gui/gcal-quick-add-popover.c:471
+#: src/core/gcal-event.c:1773 src/gui/gcal-quick-add-popover.c:471
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -201,7 +201,7 @@ msgid "Calendar “%s” removed"
 msgstr "“%s” takvimi silindi"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:953
+#: src/gui/gcal-window.c:952
 msgid "_Undo"
 msgstr "_Geri Al"
 
@@ -220,7 +220,7 @@ msgstr "Ayarlarda Aç"
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:43
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:197
 #: src/gui/event-editor/gcal-summary-section.blp:18
-#: src/gui/gcal-event-popover.blp:143
+#: src/gui/gcal-event-popover.blp:144
 #: src/gui/importer/gcal-import-file-row.c:177
 msgid "Location"
 msgstr "Konum"
@@ -672,7 +672,7 @@ msgstr "Oluş Sayısı"
 msgid "Until Date"
 msgstr "Belirli Tarihe Dek"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:102
+#: src/gui/event-editor/gcal-schedule-section.blp:103
 msgid "End Repeat Date"
 msgstr "Yineleme Bitiş Tarihi"
 
@@ -758,8 +758,8 @@ msgid "Export Event"
 msgstr "Olayı Dışa Aktar"
 
 #: src/gui/gcal-event-popover.blp:98
-msgid "<i>No event notes</i>"
-msgstr "<i>Olay notu yok</i>"
+msgid "No event notes"
+msgstr "Olay notu yok"
 
 #: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:253
 msgid "January"
@@ -937,7 +937,7 @@ msgid "Edit Additional Details"
 msgstr "Ek Ayrıntıları Düzenle"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:388
+#: src/gui/gcal-event-widget.c:386
 #, c-format
 msgid ""
 "\n"
@@ -950,7 +950,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:401 src/gui/gcal-event-widget.c:407
+#: src/gui/gcal-event-widget.c:399 src/gui/gcal-event-widget.c:405
 #, c-format
 msgid ""
 "\n"
@@ -967,7 +967,7 @@ msgstr ""
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:466
+#: src/gui/gcal-event-widget.c:464
 msgid "%a %B %d"
 msgstr "%d %B %a"
 
@@ -1325,19 +1325,19 @@ msgstr "Ay"
 msgid "Agenda"
 msgstr "Ajanda"
 
-#: src/gui/gcal-window.c:951
+#: src/gui/gcal-window.c:950
 msgid "Another event deleted"
 msgstr "Başka bir olay silindi"
 
-#: src/gui/gcal-window.c:951
+#: src/gui/gcal-window.c:950
 msgid "Event deleted"
 msgstr "Olay silindi"
 
-#: src/gui/gcal-window.c:1016
+#: src/gui/gcal-window.c:1015
 msgid "Could not import some files: Not ICS files"
 msgstr "Kimi dosyalar içe aktarılamadı: ICS dosyası değil"
 
-#: src/gui/gcal-window.c:1021
+#: src/gui/gcal-window.c:1020
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "“%s” içe aktarılamadı: ICS dosyası değil"
