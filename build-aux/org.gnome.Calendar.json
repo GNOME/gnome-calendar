@@ -85,6 +85,19 @@
                     "url" : "https://gitlab.gnome.org/GNOME/libgweather.git",
                     "branch" : "main"
                 }
+            ],
+            "modules" : [
+                {
+                    "name" : "gweather-locations",
+                    "buildsystem" : "meson",
+                    "sources" : [
+                        {
+                            "type" : "git",
+                            "url" : "https://gitlab.gnome.org/GNOME/gweather-locations.git",
+                            "branch" : "main"
+                        }
+                    ]
+                }
             ]
         },
         {
