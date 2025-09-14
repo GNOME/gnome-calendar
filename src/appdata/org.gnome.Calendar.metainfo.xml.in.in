@@ -86,6 +86,27 @@
 
   <releases>
 
+    <release date="2025-09-14" version="49.0" type="stable">
+      <description>
+        <ul>
+          <li>Redesign the main window to show the full calendar view, make the sidebar hideable, move navigation buttons to the bottom, and make the main window adaptative</li>
+          <li>Make event widgets properly accessible, and report their accessibility states correctly. This makes them readable by assistive technologies like screen readers.</li>
+          <li>Remove default calendar row from the Calendar Management dialog</li>
+          <li>Various internal cleanups in the Week View</li>
+          <li>Lots of visual cleanups and enhancements</li>
+          <li>Fix the focus ring in the Notes section of the event editor dialog</li>
+          <li>Implement keyboard navigation in the Month view</li>
+          <li>Fix a major memory leak</li>
+          <li>Fix accessibility and keyboard navigation of calendar toggle rows, the date chooser widget, and other UI elements.</li>
+          <li>Use more modern widgetry provided by Adwaita</li>
+          <li>Introduce a new testing framework for GUI and backend interactions</li>
+          <li>Visual tweaks to the views and the preview popover</li>
+          <li>Make month names more prominent</li>
+          <li>New and updated translations</li>
+        </ul>
+      </description>
+    </release>
+
     <release date="2025-08-30" version="49~rc" type="development" />
     <release date="2025-07-05" version="49~alpha" type="development" />
 

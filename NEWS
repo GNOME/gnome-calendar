@@ -1,3 +1,8 @@
+Major changes in 49.0:
+* Remove outdated event style class
+* Various fixes to the calendar editor dialog
+* Updated translations
+
 Major changes in 49.rc:
 * Further improvements to keyboard navigation
 * Introduce a new testing framework for GUI and backend interactions
