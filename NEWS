@@ -1,3 +1,6 @@
+Major changes in 49.0.1:
+* Fix Flatpak build
+
 Major changes in 49.0:
 * Remove outdated event style class
 * Various fixes to the calendar editor dialog
