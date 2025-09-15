@@ -86,7 +86,8 @@
 
   <releases>
 
-    <release date="2025-09-14" version="49.0.1" type="stable">
+    <release date="2025-09-14" version="49.0.1" type="stable" />
+    <release date="2025-09-14" version="49.0" type="stable">
       <description>
         <ul>
           <li>Redesign the main window to show the full calendar view, make the sidebar hideable, move navigation buttons to the bottom, and make the main window adaptative</li>
