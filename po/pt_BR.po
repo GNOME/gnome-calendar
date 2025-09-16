@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-09-04 15:32+0000\n"
-"PO-Revision-Date: 2025-09-07 18:22-0300\n"
+"POT-Creation-Date: 2025-09-14 14:48+0000\n"
+"PO-Revision-Date: 2025-09-16 16:35-0300\n"
 "Last-Translator: Juliano de Souza Camargo <julianosc@pm.me>\n"
 "Language-Team: Brazilian Portuguese <https://br.gnome.org/traducao>\n"
 "Language: pt_BR\n"
@@ -636,7 +636,7 @@ msgstr "_Todo o dia"
 
 #: src/gui/event-editor/gcal-schedule-section.blp:19
 msgid "_Time Slot"
-msgstr "_Slot de tempo"
+msgstr "_Intervalo de tempo"
 
 #: src/gui/event-editor/gcal-schedule-section.blp:27
 #: src/gui/event-editor/gcal-schedule-section.blp:40
