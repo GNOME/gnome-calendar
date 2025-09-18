@@ -1,3 +1,8 @@
+Major changes in 49.1:
+* Fix timezones for new events are always UTC
+* Don't update recurrence limit if no repeat is set
+* Update Flatpak manifest
+
 Major changes in 49.0.1:
 * Fix Flatpak build
 
