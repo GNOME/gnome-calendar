@@ -123,30 +123,58 @@ gcal_event_schedule_set_all_day (const GcalEventSchedule *values, gboolean all_d
   else
     {
       /* We are switching from an all-day event to a time-slot one.  In this case,
-       * we want to preserve the current dates, but restore the times of the original
-       * event.
+       * we want to preserve the current dates but if the original event was
+       * time-slot, restore the times of the latter.
        */
 
       GDateTime *start = values->curr.date_start;
       GDateTime *end = values->curr.date_end;
 
-      g_autoptr (GDateTime) new_start = g_date_time_new (g_date_time_get_timezone (start),
-                                                         g_date_time_get_year (start),
-                                                         g_date_time_get_month (start),
-                                                         g_date_time_get_day_of_month (start),
-                                                         g_date_time_get_hour (values->orig.date_start),
-                                                         g_date_time_get_minute (values->orig.date_start),
-                                                         g_date_time_get_seconds (values->orig.date_start));
+      g_autoptr (GDateTime) new_start = NULL;
+      g_autoptr (GDateTime) new_end = NULL;
+      g_autoptr (GDateTime) tmp_end = g_date_time_add_days (end, -1);
 
-      g_autoptr (GDateTime) tmp = g_date_time_new (g_date_time_get_timezone (end),
-                                                   g_date_time_get_year (end),
-                                                   g_date_time_get_month (end),
-                                                   g_date_time_get_day_of_month (end),
-                                                   g_date_time_get_hour (values->orig.date_end),
-                                                   g_date_time_get_minute (values->orig.date_end),
-                                                   g_date_time_get_seconds (values->orig.date_end));
+      if (values->orig.all_day)
+        {
+          gint end_hour = 0;
 
-      g_autoptr (GDateTime) new_end = g_date_time_add_days (tmp, -1);
+          new_start = g_date_time_new_local (g_date_time_get_year (start),
+                                             g_date_time_get_month (start),
+                                             g_date_time_get_day_of_month (start),
+                                             0,
+                                             0,
+                                             0.0);
+
+          if (g_date_time_get_year (start) == g_date_time_get_year (tmp_end) &&
+              g_date_time_get_month (start) == g_date_time_get_month (tmp_end) &&
+              g_date_time_get_day_of_month (start) == g_date_time_get_day_of_month (tmp_end))
+            end_hour = 1;
+
+          new_end = g_date_time_new_local (g_date_time_get_year (tmp_end),
+                                           g_date_time_get_month (tmp_end),
+                                           g_date_time_get_day_of_month (tmp_end),
+                                           end_hour,
+                                           0,
+                                           0.0);
+        }
+      else
+        {
+          new_start = g_date_time_new (g_date_time_get_timezone (start),
+                                       g_date_time_get_year (start),
+                                       g_date_time_get_month (start),
+                                       g_date_time_get_day_of_month (start),
+                                       g_date_time_get_hour (values->orig.date_start),
+                                       g_date_time_get_minute (values->orig.date_start),
+                                       g_date_time_get_seconds (values->orig.date_start));
+
+          new_end = g_date_time_new (g_date_time_get_timezone (tmp_end),
+                                     g_date_time_get_year (tmp_end),
+                                     g_date_time_get_month (tmp_end),
+                                     g_date_time_get_day_of_month (tmp_end),
+                                     g_date_time_get_hour (values->orig.date_end),
+                                     g_date_time_get_minute (values->orig.date_end),
+                                     g_date_time_get_seconds (values->orig.date_end));
+        }
 
       gcal_set_date_time (&copy->curr.date_start, new_start);
       gcal_set_date_time (&copy->curr.date_end, new_end);
