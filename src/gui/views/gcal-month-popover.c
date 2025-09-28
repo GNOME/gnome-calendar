@@ -137,14 +137,6 @@ update_event_list (GcalMonthPopover *self)
     }
 }
 
-static inline gdouble
-lerp (gdouble from,
-      gdouble to,
-      gdouble progress)
-{
-  return from * (1.0 - progress) + to * progress;
-}
-
 static GskTransform*
 create_transform (GcalMonthPopover *self,
                   gint              width,
@@ -162,7 +154,7 @@ create_transform (GcalMonthPopover *self,
   graphene_point_init (&offset, width / 2.0, height / 2.0);
   transform = gsk_transform_translate (transform, &offset);
 
-  scale = lerp (0.75, 1.0, progress);
+  scale = adw_lerp (0.75, 1.0, progress);
   transform = gsk_transform_scale (transform, scale, scale);
 
   graphene_point_init (&offset, -width / 2.0, -height / 2.0);
