@@ -76,8 +76,7 @@
             "buildsystem" : "meson",
             "config-opts" : [
                 "-Denable_vala=false",
-                "-Dgtk_doc=false",
-                "-Dsoup2=false"
+                "-Dgtk_doc=false"
             ],
             "sources" : [
                 {
