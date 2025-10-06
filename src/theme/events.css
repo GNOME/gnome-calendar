@@ -5,7 +5,7 @@
 event {
   background-color: color-mix(in srgb, var(--event-bg-color) 17%, var(--view-bg-color));
   border-radius: var(--event-border-radius);
-  color: color-mix(in srgb, var(--event-bg-color) 20%, var(--view-fg-color));
+  color: var(--view-fg-color);
   font-size: 0.9rem;
   margin: 1px;
   outline: 0 solid transparent;
