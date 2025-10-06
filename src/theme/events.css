@@ -3,7 +3,7 @@
 }
 
 event {
-  background-color: color-mix(in srgb, var(--event-bg-color) 17%, var(--view-bg-color));
+  background-color: color-mix(in srgb, var(--event-bg-color) 25%, var(--view-bg-color));
   border-radius: var(--event-border-radius);
   color: var(--view-fg-color);
   font-size: 0.9rem;
