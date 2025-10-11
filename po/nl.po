@@ -5,13 +5,13 @@
 # Nathan Follens <nfollens@gnome.org>, 2015-2025.
 # Justin van Steijn <jvs@fsfe.org>, 2017.
 # Hannie Dumoleyn <hannie@ubuntu-nl.org>, 2015, 2016, 2017, 2018, 2019.
-# Dick Groskamp <digro@yahoo.co.uk>, 2025.
+# Dick Groskamp <dikgro@yahoo.co.uk>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-09-09 14:49+0000\n"
-"PO-Revision-Date: 2025-09-09 21:49+0200\n"
+"POT-Creation-Date: 2025-10-10 20:21+0000\n"
+"PO-Revision-Date: 2025-10-11 20:53+0200\n"
 "Last-Translator: Nathan Follens <nfollens@gnome.org>\n"
 "Language-Team: GNOME-NL https://matrix.to/#/#nl:gnome.org\n"
 "Language: nl\n"
@@ -514,7 +514,6 @@ msgstr "Tijd bewerken"
 #.
 #: src/gui/event-editor/gcal-date-time-chooser.c:141
 #, c-format
-#| msgid "%1$s, %2$s"
 msgid "%1$s (%2$s)"
 msgstr "%1$s (%2$s)"
 
@@ -666,7 +665,7 @@ msgstr "Voor altijd"
 #: src/gui/event-editor/gcal-schedule-section.blp:79
 #: src/gui/event-editor/gcal-schedule-section.blp:89
 msgid "Number of Occurrences"
-msgstr "Aantal herhalingen"
+msgstr "Vast aantal keer"
 
 #: src/gui/event-editor/gcal-schedule-section.blp:80
 msgid "Until Date"
@@ -732,7 +731,7 @@ msgstr ""
 "Nathan Follens <nfollens@gnome.org>\n"
 "Hannie Dumoleyn\n"
 "Justin van Steijn\n"
-"Dick Groskamp <digro@yahoo.co.uk>\n"
+"Dick Groskamp <dikgro@yahoo.co.uk>\n"
 "Meer info over GNOME-NL https://nl.gnome.org"
 
 #: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:374
@@ -745,7 +744,6 @@ msgstr "Weer"
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
 #: src/gui/gcal-calendar-navigation-button.c:106
-#| msgid "%B %d"
 msgid "%B %Y"
 msgstr "%B %Y"
 
@@ -1515,7 +1513,6 @@ msgstr "Geen afspraken"
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
 #: src/gui/views/gcal-agenda-view.c:210
-#| msgid "%B %d"
 msgid "%A %B %d"
 msgstr "%A %B %d"
 
@@ -1576,7 +1573,6 @@ msgid "Jitsi"
 msgstr "Jitsi"
 
 #: src/utils/gcal-utils.c:1246
-#| msgid "Number of Occurrences"
 msgid "Uber Conference"
 msgstr "Uber Conference"
 
@@ -1610,7 +1606,6 @@ msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
 #: src/utils/gcal-utils.c:1256 src/utils/gcal-utils.c:1257
-#| msgid "Google Meet"
 msgid "Google Maps"
 msgstr "Google Maps"
 
