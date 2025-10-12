@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-08-04 13:34+0000\n"
-"PO-Revision-Date: 2025-08-05 06:12+0900\n"
+"POT-Creation-Date: 2025-10-11 18:55+0000\n"
+"PO-Revision-Date: 2025-10-12 05:25+0900\n"
 "Last-Translator: Makoto Sakaguchi <ycco34vx@gmail.com>\n"
 "Language-Team: Japanese <https://l10n.gnome.org/teams/ja/>\n"
 "Language: ja\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.7\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -142,7 +142,7 @@ msgstr "イベントエディタ"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1749 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s 〜 %2$s"
@@ -151,14 +151,14 @@ msgstr "%1$s 〜 %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1910
+#: src/core/gcal-event.c:1757
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s 〜 %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1926 src/gui/gcal-quick-add-popover.c:471
+#: src/core/gcal-event.c:1773 src/gui/gcal-quick-add-popover.c:471
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s〜%3$s"
@@ -196,7 +196,7 @@ msgid "Calendar “%s” removed"
 msgstr "カレンダー “%s” を削除しました"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:953
+#: src/gui/gcal-window.c:952
 msgid "_Undo"
 msgstr "元に戻す(_U)"
 
@@ -535,8 +535,8 @@ msgid "Notes"
 msgstr "メモ"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:81
-msgid "Delete Event"
-msgstr "イベントを削除"
+msgid "_Delete Event"
+msgstr "イベントを削除(_D)"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:120
 msgid "_Save"
@@ -669,7 +669,7 @@ msgstr "回数"
 msgid "Until Date"
 msgstr "終了日"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:102
+#: src/gui/event-editor/gcal-schedule-section.blp:103
 msgid "End Repeat Date"
 msgstr "繰り返し終了日"
 
@@ -744,7 +744,7 @@ msgstr "天気"
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-calendar-navigation-button.c:105
+#: src/gui/gcal-calendar-navigation-button.c:106
 msgid "%B %Y"
 msgstr "%Y年%B"
 
@@ -940,7 +940,7 @@ msgid "Edit Additional Details"
 msgstr "追加の詳細を編集"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:388
+#: src/gui/gcal-event-widget.c:386
 #, c-format
 msgid ""
 "\n"
@@ -953,7 +953,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:401 src/gui/gcal-event-widget.c:407
+#: src/gui/gcal-event-widget.c:399 src/gui/gcal-event-widget.c:405
 #, c-format
 msgid ""
 "\n"
@@ -970,7 +970,7 @@ msgstr ""
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:466
+#: src/gui/gcal-event-widget.c:464
 msgid "%a %B %d"
 msgstr "%B%d日(%a)"
 
@@ -1329,20 +1329,20 @@ msgid "Agenda"
 msgstr "予定表"
 
 # 表示方法: "Event deleted"通知表示中にイベントをもうひとつ削除する
-#: src/gui/gcal-window.c:951
+#: src/gui/gcal-window.c:950
 msgid "Another event deleted"
 msgstr "他のイベントも削除しました"
 
-#: src/gui/gcal-window.c:951
+#: src/gui/gcal-window.c:950
 msgid "Event deleted"
 msgstr "イベントを削除しました"
 
-#: src/gui/gcal-window.c:1016
+#: src/gui/gcal-window.c:1015
 msgid "Could not import some files: Not ICS files"
 msgstr ""
 "いくつかのファイルをインポートできませんでした: ICS ファイルではありません"
 
-#: src/gui/gcal-window.c:1021
+#: src/gui/gcal-window.c:1020
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "“%s” をインポートできませんでした: ICSファイルではありません"
