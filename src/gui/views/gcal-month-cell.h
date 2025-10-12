@@ -36,11 +36,6 @@ GDateTime*           gcal_month_cell_get_date                    (GcalMonthCell 
 void                 gcal_month_cell_set_date                    (GcalMonthCell      *self,
                                                                   GDateTime          *date);
 
-gboolean             gcal_month_cell_get_different_month         (GcalMonthCell      *self);
-
-void                 gcal_month_cell_set_different_month         (GcalMonthCell      *self,
-                                                                  gboolean            out);
-
 GcalContext*         gcal_month_cell_get_context                 (GcalMonthCell      *self);
 
 void                 gcal_month_cell_set_context                 (GcalMonthCell      *self,

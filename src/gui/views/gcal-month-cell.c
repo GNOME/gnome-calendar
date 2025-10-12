@@ -517,31 +517,6 @@ gcal_month_cell_set_date (GcalMonthCell *self,
   update_weather (self);
 }
 
-gboolean
-gcal_month_cell_get_different_month (GcalMonthCell *self)
-{
-  g_return_val_if_fail (GCAL_IS_MONTH_CELL (self), FALSE);
-
-  return self->different_month;
-}
-
-void
-gcal_month_cell_set_different_month (GcalMonthCell *self,
-                                     gboolean       different)
-{
-  g_return_if_fail (GCAL_IS_MONTH_CELL (self));
-
-  if (self->different_month == different)
-    return;
-
-  self->different_month = different;
-
-  if (different)
-    gtk_widget_add_css_class (GTK_WIDGET (self), "out-of-month");
-  else
-    gtk_widget_remove_css_class (GTK_WIDGET (self), "out-of-month");
-}
-
 GcalContext*
 gcal_month_cell_get_context (GcalMonthCell *self)
 {

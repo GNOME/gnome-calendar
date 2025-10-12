@@ -456,7 +456,6 @@ update_row_visuals (GcalMonthView *self)
       can_focus = i >= FIRST_VISIBLE_ROW_INDEX && i <= LAST_VISIBLE_ROW_INDEX;
 
       gtk_widget_set_can_focus (GTK_WIDGET (row), can_focus);
-      gcal_month_view_row_update_style_for_date (row, middle);
     }
 }
 

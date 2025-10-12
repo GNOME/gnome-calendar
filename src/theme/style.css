@@ -275,11 +275,6 @@ monthcell:hover:selected {
     color-mix(in srgb-linear, var(--bg-color) 77.5%, var(--accent-bg-color));
 }
 
-/* Out of Month */
-monthcell.out-of-month > * {
-  opacity: calc(var(--dim-opacity) - 17.5%);
-}
-
 monthcell:selected label.day-label {
   font-weight: bold;
 }
