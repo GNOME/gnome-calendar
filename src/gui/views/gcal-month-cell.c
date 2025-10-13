@@ -496,13 +496,13 @@ gcal_month_cell_set_date (GcalMonthCell *self,
     {
       g_autofree gchar *month_name = g_date_time_format (date, "%B");
       gtk_label_set_text (self->day_label, month_name);
-      gtk_widget_add_css_class (GTK_WIDGET (self->day_label), "heading");
+      gtk_widget_add_css_class (GTK_WIDGET (self->day_label), "first-day");
     }
   else
     {
       g_autofree gchar *date_number = g_strdup_printf ("%d", day_of_month);
       gtk_label_set_text (self->day_label, date_number);
-      gtk_widget_remove_css_class (GTK_WIDGET (self->day_label), "heading");
+      gtk_widget_remove_css_class (GTK_WIDGET (self->day_label), "first-day");
     }
 
   update_weather (self);

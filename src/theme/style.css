@@ -248,12 +248,30 @@ monthcell {
   background-color: var(--bg-color);
 }
 
+monthcell .day-label {
+  border-radius: 6px;
+  padding: 0px 6px 0px 6px;
+}
+
+/* First day of month */
+monthcell label.first-day {
+  font-weight: 700;
+  color: white;
+  background-color: var(--dark-2);
+}
+
+@media (prefers-color-scheme: dark) {
+  monthcell label.first-day {
+    color: black;
+    background-color: var(--light-3);
+  }
+}
+
 /* Today */
 monthcell.today label.day-label {
+  font-weight: 700;
   color: var(--accent-fg-color);
   background-color: var(--accent-bg-color);
-  border-radius: 99px;
-  padding: 0 6px;
 }
 
 monthcell:hover {
