@@ -39,7 +39,6 @@ struct _GcalMonthCell
 
   GtkLabel           *day_label;
   GtkWidget          *header_box;
-  GtkLabel           *month_name_label;
   GtkImage           *weather_icon;
   GtkLabel           *temp_label;
 
@@ -219,7 +218,7 @@ update_weather (GcalMonthCell *self)
       if (day_of_month == 1)
         {
           g_autofree gchar *month_name = g_date_time_format (self->date, "%b");
-          gtk_label_set_text (self->month_name_label, month_name);
+          gtk_label_set_text (self->day_label, month_name);
         }
     }
   else
@@ -231,7 +230,7 @@ update_weather (GcalMonthCell *self)
       if (day_of_month == 1)
         {
           g_autofree gchar *month_name = g_date_time_format (self->date, "%B");
-          gtk_label_set_text (self->month_name_label, month_name);
+          gtk_label_set_text (self->day_label, month_name);
         }
     }
 }
@@ -434,7 +433,6 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, breakpoint_narrow);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, day_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, header_box);
-  gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, month_name_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overflow_button);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overflow_inscription);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overlay);
@@ -480,7 +478,6 @@ void
 gcal_month_cell_set_date (GcalMonthCell *self,
                           GDateTime     *date)
 {
-  g_autofree gchar *text = NULL;
   gint day_of_month;
 
   g_return_if_fail (GCAL_IS_MONTH_CELL (self));
@@ -492,25 +489,19 @@ gcal_month_cell_set_date (GcalMonthCell *self,
   self->date = g_date_time_ref (date);
   day_of_month = g_date_time_get_day_of_month (date);
 
-  /* Day label */
-  text = g_strdup_printf ("%d", day_of_month);
-
-  gtk_label_set_text (self->day_label, text);
   update_style_flags (self);
   add_month_separators (self);
 
-  /* Month name */
-  gtk_widget_set_visible (GTK_WIDGET (self->month_name_label), day_of_month == 1);
   if (day_of_month == 1)
     {
       g_autofree gchar *month_name = g_date_time_format (date, "%B");
-      gtk_label_set_text (self->month_name_label, month_name);
-      gtk_widget_add_css_class (GTK_WIDGET (self->month_name_label), "heading");
+      gtk_label_set_text (self->day_label, month_name);
       gtk_widget_add_css_class (GTK_WIDGET (self->day_label), "heading");
     }
   else
     {
-      gtk_widget_remove_css_class (GTK_WIDGET (self->month_name_label), "heading");
+      g_autofree gchar *date_number = g_strdup_printf ("%d", day_of_month);
+      gtk_label_set_text (self->day_label, date_number);
       gtk_widget_remove_css_class (GTK_WIDGET (self->day_label), "heading");
     }
 
