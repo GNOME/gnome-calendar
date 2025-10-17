@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-10-12 14:23+0000\n"
-"PO-Revision-Date: 2025-10-13 10:56+0200\n"
+"POT-Creation-Date: 2025-10-17 18:03+0000\n"
+"PO-Revision-Date: 2025-10-17 20:50+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -1567,7 +1567,7 @@ msgstr "Še trajajoče"
 msgid "New Event…"
 msgstr "Nov dogodek …"
 
-#: src/gui/views/gcal-week-header.c:480
+#: src/gui/views/gcal-week-header.c:479
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1575,6 +1575,14 @@ msgstr[0] "Drugih %d dogodkov"
 msgstr[1] "Drug %d dogodek"
 msgstr[2] "Druga %d dogodka"
 msgstr[3] "Drugi %d dogodki"
+
+#: src/gui/views/gcal-week-view.c:241
+msgid "Hide Additional Events"
+msgstr "Skrij dodatne dogodke"
+
+#: src/gui/views/gcal-week-view.c:243
+msgid "Show Additional Events"
+msgstr "Pokaži dodatne dogodke"
 
 #: src/utils/gcal-utils.c:1123
 msgid "Modify Multiple Events?"
