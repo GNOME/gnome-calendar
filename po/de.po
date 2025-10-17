@@ -17,16 +17,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-10-14 08:59+0000\n"
-"PO-Revision-Date: 2025-10-15 19:09+0200\n"
-"Last-Translator: George <gk_coder@icloud.com>\n"
+"POT-Creation-Date: 2025-10-16 22:12+0000\n"
+"PO-Revision-Date: 2025-10-17 12:51+0200\n"
+"Last-Translator: Christian Kirbach <christian.kirbach@gmail.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 49.0\n"
+"X-Generator: Poedit 3.6\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -772,10 +772,8 @@ msgstr "Wetter"
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
 #: src/gui/gcal-calendar-navigation-button.c:106
-#, fuzzy
-#| msgid "%a %B %d"
 msgid "%B %Y"
-msgstr "%a, %d. %B"
+msgstr "%B %Y"
 
 #: src/gui/gcal-event-popover.blp:54
 msgid ""
@@ -786,10 +784,8 @@ msgstr ""
 "    Sie können diesen Termin nicht löschen oder ändern."
 
 #: src/gui/gcal-event-popover.blp:71 src/gui/gcal-event-popover.c:593
-#, fuzzy
-#| msgid "Edit Event"
 msgid "Export Event"
-msgstr "Termin bearbeiten"
+msgstr "Termin exportieren"
 
 #: src/gui/gcal-event-popover.blp:98
 msgid "No event notes"
@@ -1292,10 +1288,9 @@ msgid "_Week"
 msgstr "_Woche"
 
 #: src/gui/gcal-window.blp:236
-#, fuzzy
 #| msgid "C_alendar"
 msgid "_Agenda"
-msgstr "Ka_lender"
+msgstr "_Agenda"
 
 #: src/gui/gcal-window.blp:271
 msgid "_Today"
@@ -1335,30 +1330,20 @@ msgid "_About Calendar"
 msgstr "_Info zu Kalender"
 
 #: src/gui/gcal-window.c:245
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Previous View"
 msgid "Previous Week"
-msgstr "Vorherige Ansicht"
+msgstr "Vorherige Woche"
 
 #: src/gui/gcal-window.c:247
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Previous View"
 msgid "Previous Month"
-msgstr "Vorherige Ansicht"
+msgstr "Vorheriger Monat"
 
 #: src/gui/gcal-window.c:276
-#, fuzzy
-#| msgid "1 Week"
 msgid "Next Week"
-msgstr "1 Woche"
+msgstr "Nächste Woche"
 
 #: src/gui/gcal-window.c:278
-#, fuzzy
-#| msgid "Month"
 msgid "Next Month"
-msgstr "Monat"
+msgstr "Nächster Monat"
 
 #: src/gui/gcal-window.c:398
 msgid "Week"
@@ -1453,20 +1438,14 @@ msgid "File is not an iCalendar (.ics) file"
 msgstr "Datei ist keine iCalendar-Datei (*.ics)"
 
 #: src/gui/shortcuts-dialog.blp:6
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "General"
 msgctxt "shortcut dialog"
 msgid "General"
 msgstr "Allgemein"
 
 #: src/gui/shortcuts-dialog.blp:9
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Open Main Menu"
 msgctxt "shortcut dialog"
 msgid "Open Main Menu"
-msgstr "Hauptmenü öffnen"
+msgstr "Das Hauptmenü öffnen"
 
 #: src/gui/shortcuts-dialog.blp:14
 msgctxt "shortcut dialog"
@@ -1474,127 +1453,81 @@ msgid "Toggle Sidebar"
 msgstr "Seitenleiste umschalten"
 
 #: src/gui/shortcuts-dialog.blp:19
-#, fuzzy
-#| msgid "New Event"
 msgctxt "shortcut dialog"
 msgid "New Event"
 msgstr "Neuer Termin"
 
 #: src/gui/shortcuts-dialog.blp:24
-#, fuzzy
-#| msgid "Manage Calendars"
 msgctxt "shortcut dialog"
 msgid "Manage Calendars"
 msgstr "Kalender verwalten"
 
 #: src/gui/shortcuts-dialog.blp:29
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Synchronize Calendars"
 msgctxt "shortcut dialog"
 msgid "Synchronize Calendars"
 msgstr "Kalender abgleichen"
 
 #: src/gui/shortcuts-dialog.blp:34
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Close Window"
 msgctxt "shortcut dialog"
 msgid "Close Window"
 msgstr "Fenster schließen"
 
 #: src/gui/shortcuts-dialog.blp:39
-#, fuzzy
-#| msgctxt "tooltip"
-#| msgid "Search"
 msgctxt "shortcut dialog"
 msgid "Search"
 msgstr "Suchen"
 
 #: src/gui/shortcuts-dialog.blp:44
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Show Help"
 msgctxt "shortcut dialog"
 msgid "Show Help"
 msgstr "Hilfe anzeigen"
 
 #: src/gui/shortcuts-dialog.blp:49
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Shortcuts"
 msgctxt "shortcut dialog"
 msgid "Shortcuts"
 msgstr "Tastenkürzel"
 
 #: src/gui/shortcuts-dialog.blp:55
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Navigation"
 msgctxt "shortcut dialog"
 msgid "Navigation"
 msgstr "Navigation"
 
 #: src/gui/shortcuts-dialog.blp:58
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Go Back"
 msgctxt "shortcut dialog"
 msgid "Go Back"
-msgstr "Zurück"
+msgstr "Zurück gehen"
 
 #: src/gui/shortcuts-dialog.blp:63
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Go Forward"
 msgctxt "shortcut dialog"
 msgid "Go Forward"
 msgstr "Vorwärts gehen"
 
 #: src/gui/shortcuts-dialog.blp:68
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Show Today"
 msgctxt "shortcut dialog"
 msgid "Show Today"
-msgstr "Heute anzeigen"
+msgstr "Heutigen Tag anzeigen"
 
 #: src/gui/shortcuts-dialog.blp:73
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Next View"
 msgctxt "shortcut dialog"
 msgid "Next View"
 msgstr "Nächste Ansicht"
 
 #: src/gui/shortcuts-dialog.blp:78
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Previous View"
 msgctxt "shortcut dialog"
 msgid "Previous View"
 msgstr "Vorherige Ansicht"
 
 #: src/gui/shortcuts-dialog.blp:84
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "View"
 msgctxt "shortcut dialog"
 msgid "View"
 msgstr "Ansicht"
 
 #: src/gui/shortcuts-dialog.blp:87
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Month View"
 msgctxt "shortcut dialog"
 msgid "Month View"
 msgstr "Monatsansicht"
 
 #: src/gui/shortcuts-dialog.blp:92
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Week View"
 msgctxt "shortcut dialog"
 msgid "Week View"
 msgstr "Wochenansicht"
@@ -1669,11 +1602,11 @@ msgstr "Google Meet"
 msgid "Jitsi"
 msgstr "Jitsi"
 
+# Name eines Tools
 #: src/utils/gcal-utils.c:1246
-#, fuzzy
 #| msgid "Number of Occurrences"
 msgid "Uber Conference"
-msgstr "Anzahl Wiederholungen"
+msgstr "Uber Conference"
 
 #: src/utils/gcal-utils.c:1247
 msgid "GNOME Meet"
@@ -1699,21 +1632,17 @@ msgstr "Zoom"
 
 #. Map
 #: src/utils/gcal-utils.c:1254
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "View"
 msgid "View Map"
-msgstr "Ansicht"
+msgstr "Karte ansehen"
 
 #: src/utils/gcal-utils.c:1255
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
 #: src/utils/gcal-utils.c:1256 src/utils/gcal-utils.c:1257
-#, fuzzy
 #| msgid "Google Meet"
 msgid "Google Maps"
-msgstr "Google Meet"
+msgstr "Google Maps"
 
 #: src/utils/gcal-utils.c:1258
 msgid "Bing Maps"
