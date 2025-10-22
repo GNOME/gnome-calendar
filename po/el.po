@@ -628,10 +628,9 @@ msgid "1 Week"
 msgstr "1 εβδομάδα"
 
 #: src/gui/event-editor/gcal-schedule-section.blp:13
-#, fuzzy
 #| msgid "All Day"
 msgid "_All Day"
-msgstr "Ολοήμερο"
+msgstr "_Ολοήμερο"
 
 #: src/gui/event-editor/gcal-schedule-section.blp:19
 msgid "_Time Slot"
@@ -775,10 +774,9 @@ msgstr "Καιρός"
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
 #: src/gui/gcal-calendar-navigation-button.c:106
-#, fuzzy
 #| msgid "%B %d"
 msgid "%B %Y"
-msgstr "%B %d"
+msgstr "%B %Y"
 
 #: src/gui/gcal-event-popover.blp:54
 msgid ""
@@ -1295,10 +1293,9 @@ msgid "_Week"
 msgstr "_Εβδομάδα"
 
 #: src/gui/gcal-window.blp:236
-#, fuzzy
 #| msgid "C_alendar"
 msgid "_Agenda"
-msgstr "_Ημερολόγιο"
+msgstr "_Ατζέντα"
 
 #: src/gui/gcal-window.blp:271
 msgid "_Today"
@@ -1652,14 +1649,13 @@ msgid "Jitsi"
 msgstr "Jitsi"
 
 #: src/utils/gcal-utils.c:1246
-#, fuzzy
 #| msgid "Number of Occurrences"
 msgid "Uber Conference"
-msgstr "Αριθμός εμφανίσεων"
+msgstr "Uber Conference"
 
 #: src/utils/gcal-utils.c:1247
 msgid "GNOME Meet"
-msgstr ""
+msgstr "GNOME Meet"
 
 #: src/utils/gcal-utils.c:1248
 msgid "Microsoft Teams"
