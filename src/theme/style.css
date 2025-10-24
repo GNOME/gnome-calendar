@@ -249,10 +249,6 @@ monthcell {
 }
 
 /* Today */
-monthcell.today {
-  --bg-color: rgb(from var(--accent-bg-color) r g b / 15%);
-}
-
 monthcell.today label.day-label {
   color: var(--accent-fg-color);
   background-color: var(--accent-bg-color);
