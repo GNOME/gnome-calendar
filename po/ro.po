@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-09-05 13:16+0000\n"
-"PO-Revision-Date: 2025-09-05 15:46+0200\n"
+"POT-Creation-Date: 2025-10-23 16:47+0000\n"
+"PO-Revision-Date: 2025-10-27 11:39+0100\n"
 "Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -62,12 +62,11 @@ msgstr "Tipul vederii active"
 #: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
-"Tipul de vizualizare a ferestrei active, valoarea prestabilită este: "
-"vizualizare lunară"
+"Cum să se prezinte fereastra activă; afișarea prestabilită este: lunară"
 
 #: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
-msgstr "Configurare serviciu vreme"
+msgstr "Preferințe Serviciu vreme"
 
 #: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
@@ -108,8 +107,8 @@ msgid ""
 "list view."
 msgstr ""
 "Creează și gestionează cu ușurință calendare și evenimente nelimitate cu "
-"vizualizarea lunară cu derulare infinită, orarul săptămânal și vizualizarea "
-"listei de planificări din calendarul GNOME."
+"afișare lunară și derulare infinită, orarul săptămânal și prezentarea listei "
+"de planificări din calendarul GNOME."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
 msgid ""
@@ -134,11 +133,11 @@ msgstr ""
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
 msgid "Week view"
-msgstr "Vizualizare săptămânală"
+msgstr "Afișare săptămânală"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
 msgid "Month view"
-msgstr "Vizualizare lunară"
+msgstr "Afișare lunară"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
 msgid "Event editor"
@@ -181,7 +180,7 @@ msgstr "Modifică calendarul"
 
 #: src/gui/calendar-management/gcal-calendar-management-dialog.blp:5
 msgid "Calendar Settings"
-msgstr "Configurări calendar"
+msgstr "Preferințe Calendar"
 
 #: src/gui/calendar-management/gcal-calendars-page.blp:5
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:88
@@ -214,7 +213,7 @@ msgstr "Cont"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:27
 msgid "Open in Settings"
-msgstr "Deschide în configurări"
+msgstr "Deschide în Preferințe"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:43
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:197
@@ -277,7 +276,7 @@ msgid ""
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
 "În cazul în care calendarul aparține unuia dintre propriile conturi online, "
-"poate fi adăugat prin <a href=\"GOA\">configurările contului online</a>."
+"poate fi adăugat prin <a href=\"GOA\">opțiunile contului online</a>."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:126
 #: src/gui/calendar-management/gcal-new-calendar-page.c:124
@@ -577,15 +576,15 @@ msgstr "Șterge evenimentul"
 msgid "_Save"
 msgstr "_Salvează"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:688
+#: src/gui/event-editor/gcal-event-editor-dialog.c:669
 msgid "New Event"
 msgstr "Eveniment nou"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:690
+#: src/gui/event-editor/gcal-event-editor-dialog.c:671
 msgid "Event Details"
 msgstr "Detaliile evenimentului"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:692
+#: src/gui/event-editor/gcal-event-editor-dialog.c:673
 msgid "Edit Event"
 msgstr "Modifică evenimentul"
 
@@ -1251,7 +1250,7 @@ msgstr "Caută evenimente"
 #: src/gui/gcal-sync-indicator.blp:19
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars"
-msgstr "Se sincronizează calendarele la distanță"
+msgstr "Se sincronizează calendarele de la distanță"
 
 #: src/gui/gcal-weather-settings.blp:17
 msgid "Show Weather"
@@ -1317,7 +1316,7 @@ msgstr "_Sincronizare calendare"
 
 #: src/gui/gcal-window.blp:364
 msgid "_Date & Time Settings…"
-msgstr "Configurare _dată și oră…"
+msgstr "Preferințe _dată și oră…"
 
 #: src/gui/gcal-window.blp:369
 msgid "_Online Accounts…"
@@ -1523,17 +1522,17 @@ msgstr "Precedenta"
 #: src/gui/shortcuts-dialog.blp:84
 msgctxt "shortcut dialog"
 msgid "View"
-msgstr "Vizualizare"
+msgstr "Afișare"
 
 #: src/gui/shortcuts-dialog.blp:87
 msgctxt "shortcut dialog"
 msgid "Month View"
-msgstr "Luna"
+msgstr "Lunară"
 
 #: src/gui/shortcuts-dialog.blp:92
 msgctxt "shortcut dialog"
 msgid "Week View"
-msgstr "Săptămâna"
+msgstr "Săptămânală"
 
 #: src/gui/views/gcal-agenda-view.blp:27
 msgid "No events"
