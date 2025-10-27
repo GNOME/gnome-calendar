@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-04-25 20:33+0000\n"
-"PO-Revision-Date: 2025-04-26 11:01+0200\n"
+"POT-Creation-Date: 2025-10-10 20:20+0000\n"
+"PO-Revision-Date: 2025-10-27 11:39+0100\n"
 "Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -22,19 +22,19 @@ msgstr ""
 "X-Generator: Gtranslator 48.0\n"
 "X-Project-Style: gnome\n"
 
-#: data/org.gnome.Calendar.desktop.in.in:3
+#: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/main.c:35
 #: src/gui/gcal-calendar-combo-row.ui:5 src/gui/gcal-quick-add-popover.ui:135
 #: src/gui/gcal-window.ui:4 src/gui/gcal-window.ui:147
 msgid "Calendar"
 msgstr "Calendar"
 
-#: data/org.gnome.Calendar.desktop.in.in:4
+#: data/org.gnome.Calendar.desktop.in.in:3
 msgid "Access and manage your calendars"
 msgstr "Accesează și administrează calendare"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.Calendar.desktop.in.in:13
+#: data/org.gnome.Calendar.desktop.in.in:12
 msgid "Calendar;Event;Reminder;"
 msgstr "Calendar;Event;Reminder;Eveniment;Memento;Amintire;Reamintire;"
 
@@ -61,12 +61,11 @@ msgstr "Tipul vederii active"
 #: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
-"Tipul de vizualizare a ferestrei active, valoarea prestabilită este: "
-"vizualizare lunară"
+"Cum să se prezinte fereastra activă; afișarea prestabilită este: lunară"
 
 #: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Weather Service Configuration"
-msgstr "Configurare serviciu vreme"
+msgstr "Preferințe Serviciu vreme"
 
 #: data/org.gnome.calendar.gschema.xml.in:22
 msgid ""
@@ -107,7 +106,7 @@ msgid ""
 "list view."
 msgstr ""
 "Creează și gestionează cu ușurință calendare și evenimente nelimitate cu "
-"vizualizarea lunară cu derulare infinită, orarul săptămânal și vizualizarea "
+"afișarea lunară și derulare infinită, orarul săptămânal și prezentarea "
 "listei de planificări din calendarul GNOME."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
@@ -133,11 +132,11 @@ msgstr ""
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
 msgid "Week view"
-msgstr "Vizualizare săptămânală"
+msgstr "Afișare săptămânală"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
 msgid "Month view"
-msgstr "Vizualizare lunară"
+msgstr "Afișare lunară"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
 msgid "Event editor"
@@ -180,7 +179,7 @@ msgstr "Modifică calendarul"
 
 #: src/gui/calendar-management/gcal-calendar-management-dialog.ui:4
 msgid "Calendar Settings"
-msgstr "Configurări calendar"
+msgstr "Preferințe Calendar"
 
 #. Create the new toast
 #. TRANSLATORS: %s is a calendar name.
@@ -229,7 +228,7 @@ msgstr "Cont"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:42
 msgid "Open in Settings"
-msgstr "Deschide în configurări"
+msgstr "Deschide în Preferințe"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.ui:82
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:28
@@ -308,7 +307,7 @@ msgid ""
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
 "În cazul în care calendarul aparține unuia dintre propriile conturi online, "
-"poate fi adăugat prin <a href=\"GOA\">configurările contului online</a>."
+"poate fi adăugat prin <a href=\"GOA\">opțiunile contului online</a>."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.ui:183
 msgid "Credentials"
@@ -1262,7 +1261,7 @@ msgstr "Caută evenimente"
 #: src/gui/gcal-sync-indicator.ui:21
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars"
-msgstr "Se sincronizează calendarele la distanță"
+msgstr "Se sincronizează calendarele de la distanță"
 
 #: src/gui/gcal-toolbar-end.ui:9
 msgctxt "tooltip"
@@ -1337,7 +1336,7 @@ msgstr "_Luna"
 
 #: src/gui/gcal-window.ui:347
 msgid "_Date & Time Settings…"
-msgstr "Configurare _dată și oră…"
+msgstr "Preferințe _dată și oră…"
 
 #: src/gui/gcal-window.ui:351
 msgid "_Online Accounts…"
@@ -1434,17 +1433,17 @@ msgstr "Precedenta"
 #: src/gui/gtk/help-overlay.ui:105
 msgctxt "shortcut window"
 msgid "View"
-msgstr "Vizualizare"
+msgstr "Afișare"
 
 #: src/gui/gtk/help-overlay.ui:108
 msgctxt "shortcut window"
 msgid "Week View"
-msgstr "Săptămâna"
+msgstr "Săptămânală"
 
 #: src/gui/gtk/help-overlay.ui:114
 msgctxt "shortcut window"
 msgid "Month View"
-msgstr "Luna"
+msgstr "Lunară"
 
 #: src/gui/importer/gcal-import-dialog.c:341
 #, c-format
