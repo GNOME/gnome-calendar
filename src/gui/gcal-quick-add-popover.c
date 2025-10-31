@@ -365,7 +365,7 @@ get_date_string_for_day (GDateTime *day)
     }
   else if (n_days < -1 && n_days > -8)
     {
-       gchar *event_weekday;
+       const gchar *event_weekday;
        const gchar *event_weekday_names[] = {
          N_("New Event next Monday"),
          N_("New Event next Tuesday"),
@@ -443,7 +443,7 @@ update_header (GcalQuickAddPopover *self)
           g_autofree gchar *start_hour = NULL;
           g_autofree gchar *end_hour = NULL;
           GcalTimeFormat time_format;
-          gchar *hour_format;
+          const gchar *hour_format;
 
           time_format = gcal_context_get_time_format (self->context);
 
