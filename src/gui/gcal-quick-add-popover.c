@@ -69,10 +69,11 @@ create_calendar_row (GcalManager  *manager,
                      GcalCalendar *calendar)
 {
   g_autoptr (GdkPaintable) paintable = NULL;
+  g_autofree gchar *parent_name = NULL;
+  g_autofree gchar *tooltip = NULL;
   const GdkRGBA *color;
   GtkWidget *row, *box, *icon, *label, *selected_icon;
   gboolean read_only;
-  gchar *tooltip, *parent_name;
 
   /* The main box */
   box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
@@ -128,9 +129,6 @@ create_calendar_row (GcalManager  *manager,
   g_object_set_data (G_OBJECT (row), "selected-icon", selected_icon);
   g_object_set_data (G_OBJECT (row), "color-icon", icon);
   g_object_set_data (G_OBJECT (row), "name-label", label);
-
-  g_free (parent_name);
-  g_free (tooltip);
 
   return row;
 }
@@ -290,7 +288,7 @@ get_date_string_for_multiday (GDateTime *start,
     }
   else
     {
-      gchar *day_number_str;
+      g_autofree gchar *day_number_str = NULL;
 
       day_number_str = g_strdup_printf ("%u", g_date_time_get_day_of_month (start));
       /* Translators:
@@ -300,7 +298,6 @@ get_date_string_for_multiday (GDateTime *start,
       start_date_str = g_strdup_printf (_("from %1$s %2$s"),
                                         gettext (month_names[g_date_time_get_month (start) - 1]),
                                         day_number_str);
-      g_free (day_number_str);
     }
 
   n_days = get_number_of_days_from_today (end);
@@ -326,7 +323,7 @@ get_date_string_for_multiday (GDateTime *start,
     }
   else
     {
-      gchar *day_number_str;
+      g_autofree gchar *day_number_str = NULL;
 
       day_number_str = g_strdup_printf ("%u", g_date_time_get_day_of_month (end));
       /* Translators:
@@ -336,7 +333,6 @@ get_date_string_for_multiday (GDateTime *start,
       end_date_str = g_strdup_printf (_("to %1$s %2$s"),
                                       gettext (month_names[g_date_time_get_month (end) - 1]),
                                       day_number_str);
-      g_free (day_number_str);
     }
 
   /* Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow") */
@@ -416,8 +412,8 @@ update_header (GcalQuickAddPopover *self)
 {
   g_autoptr (GDateTime) range_start = NULL;
   g_autoptr (GDateTime) range_end = NULL;
+  g_autofree gchar *title_date = NULL;
   gboolean multiday_or_timed;
-  gchar *title_date;
 
 
   if (!self->range)
@@ -484,7 +480,6 @@ update_header (GcalQuickAddPopover *self)
     }
 
   gtk_label_set_label (GTK_LABEL (self->title_label), title_date);
-  g_free (title_date);
 }
 
 static void
@@ -603,7 +598,8 @@ sort_func (GtkListBoxRow *row1,
            gpointer       user_data)
 {
   GcalCalendar *calendar1, *calendar2;
-  gchar *name1, *name2;
+  g_autofree gchar *name1 = NULL;
+  g_autofree gchar *name2 = NULL;
   gint retval;
 
   calendar1 = g_object_get_data (G_OBJECT (row1), "calendar");
@@ -613,9 +609,6 @@ sort_func (GtkListBoxRow *row1,
   name2 = g_utf8_casefold (gcal_calendar_get_name (calendar2), -1);
 
   retval = g_strcmp0 (name1, name2);
-
-  g_free (name1);
-  g_free (name2);
 
   return retval;
 }
