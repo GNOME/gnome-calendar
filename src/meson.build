@@ -8,6 +8,7 @@ gcal_deps = [
   libecal_dep,
   libsoup_dep,
   libical_dep,
+  fribidi_dep,
   glib_dep,
   gtk_dep,
   gio_dep,

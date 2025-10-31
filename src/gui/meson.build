@@ -41,11 +41,13 @@ built_sources += gnome.compile_resources(
 
 sources += files(
   'gcal-application.c',
+  'gcal-bidi.c',
   'gcal-calendar-list.c',
   'gcal-calendar-navigation-button.c',
   'gcal-drop-overlay.c',
   'gcal-event-popover.c',
   'gcal-event-widget.c',
+  'gcal-fading-label.c',
   'gcal-meeting-row.c',
   'gcal-overflow-bin.c',
   'gcal-overflow-bin-layout.c',
