@@ -224,8 +224,10 @@ static gchar*
 get_date_string_for_multiday (GDateTime *start,
                               GDateTime *end)
 {
+  g_autofree gchar *start_date_str = NULL;
+  g_autofree gchar *end_date_str = NULL;
+  gchar *date_string;
   gint n_days;
-  gchar *start_date_str, *end_date_str, *date_string;
 
   const gchar *start_date_weekdays_strings[] = {
     N_("from next Monday"),
@@ -265,7 +267,6 @@ get_date_string_for_multiday (GDateTime *start,
     NULL
   };
 
-  start_date_str = NULL;
   n_days = get_number_of_days_from_today (start);
 
   if (n_days == 0)
@@ -302,7 +303,6 @@ get_date_string_for_multiday (GDateTime *start,
       g_free (day_number_str);
     }
 
-  end_date_str = NULL;
   n_days = get_number_of_days_from_today (end);
 
   if (n_days == 0)
