@@ -51,7 +51,7 @@ template $GcalEventWidget: Widget {
       }
 
       Inscription {
-        text: bind summary_inscription.text no-sync-create;
+        text: bind summary_label.label;
         hexpand: true;
         vexpand: true;
         xalign: 0.0;
@@ -64,14 +64,13 @@ template $GcalEventWidget: Widget {
     Box horizontal_box {
       spacing: 4;
 
-      Inscription summary_inscription {
-        hexpand: true;
-        xalign: 0.0;
-        min-lines: 1;
-        text-overflow: ellipsize_end;
-      }
+      $GcalFadingLabel summary_label {}
 
       Label timestamp_label {
+        halign: end;
+        hexpand: true;
+        vexpand: true;
+
         styles [
           "dimmed",
         ]

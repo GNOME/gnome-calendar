@@ -22,6 +22,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
+#include "gcal-fading-label.h"
 #include "gcal-application.h"
 #include "gcal-context.h"
 #include "gcal-clock.h"
@@ -56,7 +57,7 @@ struct _GcalEventWidget
   GtkWidget          *timestamp_label;
   GtkWidget          *edge;
   GtkWidget          *overflow_bin;
-  GtkWidget          *summary_inscription;
+  GtkWidget          *summary_label;
   GtkWidget          *vertical_box;
   GtkEventController *drag_source;
   GtkWidget          *preview_popover;
@@ -523,8 +524,8 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
   /* Summary label */
   g_object_bind_property (event,
                           "summary",
-                          self->summary_inscription,
-                          "text",
+                          self->summary_label,
+                          "label",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   g_object_bind_property_full (gcal_event_get_calendar (event),
@@ -753,6 +754,8 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
+  g_type_ensure (GCAL_TYPE_FADING_LABEL);
+
   object_class->set_property = gcal_event_widget_set_property;
   object_class->get_property = gcal_event_widget_get_property;
   object_class->dispose = gcal_event_widget_dispose;
@@ -849,7 +852,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, edge);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, overflow_bin);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, timestamp_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_inscription);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, vertical_box);
 
   gtk_widget_class_bind_template_callback (widget_class, on_click_gesture_pressed_cb);
