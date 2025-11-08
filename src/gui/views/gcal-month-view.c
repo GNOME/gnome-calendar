@@ -1445,6 +1445,7 @@ gcal_month_view_size_allocate (GtkWidget *widget,
     {
       GtkAllocation row_allocation;
       GtkWidget *row;
+      gboolean child_visible;
 
       row = g_ptr_array_index (self->week_rows, i);
 
@@ -1456,6 +1457,9 @@ gcal_month_view_size_allocate (GtkWidget *widget,
       row_allocation.height = round (ROW_Y (i + 1)) - row_allocation.y;
 
 #undef ROW_Y
+
+      child_visible = (row_allocation.y + row_allocation.height > header_height) && row_allocation.y < height;
+      gtk_widget_set_child_visible (row, child_visible);
 
       gtk_widget_size_allocate (row, &row_allocation, baseline);
     }
