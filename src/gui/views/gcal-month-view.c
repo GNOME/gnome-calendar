@@ -424,41 +424,6 @@ update_week_ranges (GcalMonthView *self,
   dump_row_ranges (self);
 }
 
-static void
-update_row_visuals (GcalMonthView *self)
-{
-  g_autoptr (GcalRange) first_visible_row_range = NULL;
-  g_autoptr (GcalRange) last_visible_row_range = NULL;
-  g_autoptr (GcalRange) union_range = NULL;
-  g_autoptr (GDateTime) start = NULL;
-  g_autoptr (GDateTime) middle = NULL;
-  g_autoptr (GDateTime) end = NULL;
-  GcalMonthViewRow *first_visible_row;
-  GcalMonthViewRow *last_visible_row;
-
-  first_visible_row = g_ptr_array_index (self->week_rows, FIRST_VISIBLE_ROW_INDEX);
-  first_visible_row_range = gcal_month_view_row_get_range (first_visible_row);
-
-  last_visible_row = g_ptr_array_index (self->week_rows, LAST_VISIBLE_ROW_INDEX);
-  last_visible_row_range = gcal_month_view_row_get_range (last_visible_row);
-
-  union_range = gcal_range_union (first_visible_row_range, last_visible_row_range);
-  start = gcal_range_get_start (union_range);
-  end = gcal_range_get_end (union_range);
-  middle = g_date_time_add_days (start, gcal_date_time_compare_date (end, start) / 2);
-
-  for (gint i = 0; i < self->week_rows->len; i++)
-    {
-      GcalMonthViewRow *row;
-      gboolean can_focus;
-
-      row = g_ptr_array_index (self->week_rows, i);
-      can_focus = i >= FIRST_VISIBLE_ROW_INDEX && i <= LAST_VISIBLE_ROW_INDEX;
-
-      gtk_widget_set_can_focus (GTK_WIDGET (row), can_focus);
-    }
-}
-
 static inline gint
 get_grid_height (GcalMonthView *self)
 {
@@ -1198,7 +1163,6 @@ gcal_month_view_set_date (GcalView  *view,
 #endif
 
   update_week_ranges (self, date);
-  update_row_visuals (self);
 
   gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
 
