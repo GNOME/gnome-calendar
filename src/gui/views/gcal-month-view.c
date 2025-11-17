@@ -1400,7 +1400,7 @@ gcal_month_view_size_allocate (GtkWidget *widget,
   gtk_widget_measure (self->header, GTK_ORIENTATION_VERTICAL, width, &header_height, NULL, NULL, NULL);
   gtk_widget_allocate (self->header, width, header_height, baseline, NULL);
 
-  grid_height = height - header_height + 1;
+  grid_height = height - header_height;
   row_height = grid_height / (gdouble) N_ROWS_PER_PAGE;
   row_scroll_offset = self->row_offset * row_height;
   y_offset = header_height - row_scroll_offset - (grid_height * ((N_PAGES - 1) / 2.0));
