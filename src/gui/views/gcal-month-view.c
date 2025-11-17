@@ -51,7 +51,7 @@ struct _GcalMonthView
   GtkWidget          parent;
 
   GtkWidget          *header;
-  GtkWidget          *weekday_label[7];
+  GtkWidget          *weekday_label[N_WEEKDAYS];
 
   GtkEventController *motion_controller;
 
@@ -193,11 +193,11 @@ update_weekday_labels (GcalMonthView *self)
 {
   const gint first_weekday = get_first_weekday ();
 
-  for (gint i = 0; i < 7; i++)
+  for (gint i = 0; i < N_WEEKDAYS; i++)
     {
       g_autofree gchar *weekday_name = NULL;
 
-      weekday_name = g_utf8_strup (gcal_get_weekday ((i + first_weekday) % 7), -1);
+      weekday_name = g_utf8_strup (gcal_get_weekday ((i + first_weekday) % N_WEEKDAYS), -1);
 
       gtk_label_set_label (GTK_LABEL (self->weekday_label[i]), weekday_name);
     }
@@ -1955,7 +1955,7 @@ gcal_month_view_init (GcalMonthView *self)
   update_weekday_labels (self);
 
   gtk_accessible_update_relation (GTK_ACCESSIBLE (self),
-                                  GTK_ACCESSIBLE_RELATION_COL_COUNT, 7,
+                                  GTK_ACCESSIBLE_RELATION_COL_COUNT, N_WEEKDAYS,
                                   GTK_ACCESSIBLE_RELATION_ROW_COUNT, N_ROWS_PER_PAGE,
                                   -1);
 

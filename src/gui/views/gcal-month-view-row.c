@@ -47,7 +47,7 @@ struct _GcalMonthViewRow
 {
   GtkWidget           parent;
 
-  GtkWidget          *day_cells[7];
+  GtkWidget          *day_cells[N_WEEKDAYS];
 
   GcalRange          *range;
 
@@ -424,7 +424,7 @@ focus_vertical_cell (GcalMonthViewRow *self,
   if (gtk_widget_is_ancestor (focused_cell, GTK_WIDGET (self)))
     return FALSE;
 
-  cell_width = (gdouble) gtk_widget_get_width (GTK_WIDGET (self)) / 7.0;
+  cell_width = (gdouble) gtk_widget_get_width (GTK_WIDGET (self)) / (float) N_WEEKDAYS;
   row = gtk_widget_get_ancestor (focused_cell, GCAL_TYPE_MONTH_VIEW_ROW);
 
   g_assert (GTK_WIDGET (self) != row);
@@ -482,7 +482,7 @@ static void
 setup_child_widget (GcalMonthViewRow *self,
                     GtkWidget        *widget)
 {
-  gtk_widget_insert_after (widget, GTK_WIDGET (self), self->day_cells[6]);
+  gtk_widget_insert_after (widget, GTK_WIDGET (self), self->day_cells[N_WEEKDAYS - 1]);
 
   g_signal_connect_object (widget, "activate", G_CALLBACK (on_event_widget_activated_cb), self, 0);
 }
@@ -518,7 +518,7 @@ calculate_event_cells (GcalMonthViewRow *self,
     {
       g_autoptr (GDateTime) range_start = NULL;
       g_autoptr (GDateTime) end_date = NULL;
-      gint last_cell = 6;
+      gint last_cell = N_WEEKDAYS - 1;
 
       range_start = gcal_range_get_start (self->range);
       end_date = gcal_event_get_date_end (event);
@@ -538,26 +538,26 @@ calculate_event_cells (GcalMonthViewRow *self,
       if (all_day)
         last_cell--;
 
-      *out_last_cell = CLAMP (last_cell, first_cell, 6);
+      *out_last_cell = CLAMP (last_cell, first_cell, N_WEEKDAYS - 1);
     }
 }
 
 static void
 prepare_layout_blocks (GcalMonthViewRow *self,
-                       guint             overflows[7])
+                       guint             overflows[N_WEEKDAYS])
 {
-  GPtrArray *blocks_per_day[7];
-  gboolean cell_will_overflow[7] = { FALSE, };
-  guint available_height_without_overflow[7] = { 0, };
-  guint available_height_with_overflow[7] = { 0, };
-  guint weekday_heights[7] = { 0, };
+  GPtrArray *blocks_per_day[N_WEEKDAYS];
+  gboolean cell_will_overflow[N_WEEKDAYS] = { FALSE, };
+  guint available_height_without_overflow[N_WEEKDAYS] = { 0, };
+  guint available_height_with_overflow[N_WEEKDAYS] = { 0, };
+  guint weekday_heights[N_WEEKDAYS] = { 0, };
   guint n_events;
 
   g_assert (self->layout_blocks_valid);
 
   n_events = g_list_model_get_n_items (G_LIST_MODEL (self->events));
 
-  for (guint i = 0; i < 7; i++)
+  for (guint i = 0; i < N_WEEKDAYS; i++)
     {
       gint overflow_height;
       gint content_space;
@@ -606,7 +606,7 @@ prepare_layout_blocks (GcalMonthViewRow *self,
     }
 
   /* Figure out which blocks will be visible */
-  for (guint cell = 0; cell < 7; cell++)
+  for (guint cell = 0; cell < N_WEEKDAYS; cell++)
     {
       for (guint block_index = 0;
            block_index < blocks_per_day[cell]->len;
@@ -645,7 +645,7 @@ prepare_layout_blocks (GcalMonthViewRow *self,
         }
     }
 
-  for (guint i = 0; i < 7; i++)
+  for (guint i = 0; i < N_WEEKDAYS; i++)
     g_clear_pointer (&blocks_per_day[i], g_ptr_array_unref);
 }
 
@@ -653,7 +653,7 @@ static void
 recalculate_layout_blocks (GcalMonthViewRow *self)
 {
   g_autoptr (GDateTime) range_start = NULL;
-  guint events_at_weekday[7] = { 0, };
+  guint events_at_weekday[N_WEEKDAYS] = { 0, };
   guint n_events;
 
   GCAL_ENTRY;
@@ -944,7 +944,7 @@ gcal_month_view_row_measure (GtkWidget      *widget,
   gint minimum = 0;
   gint natural = 0;
 
-  for (guint i = 0; i < 7; i++)
+  for (guint i = 0; i < N_WEEKDAYS; i++)
     {
       gint child_minimum;
       gint child_natural;
@@ -994,10 +994,10 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
   gdouble cell_width;
 
   is_ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
-  cell_width = width / 7.0;
+  cell_width = width / (float) N_WEEKDAYS;
 
   /* Month cells */
-  for (guint i = 0; i < 7; i++)
+  for (guint i = 0; i < N_WEEKDAYS; i++)
     {
       GtkAllocation allocation;
       GtkWidget *cell;
@@ -1007,20 +1007,20 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
       allocation.width = round (cell_width * (i + 1)) - allocation.x;
       allocation.height = height;
 
-      cell = is_ltr ? self->day_cells[i] : self->day_cells[7 - i - 1];
+      cell = is_ltr ? self->day_cells[i] : self->day_cells[N_WEEKDAYS - i - 1];
       gtk_widget_size_allocate (cell, &allocation, baseline);
     }
 
   /* Event widgets */
   if (self->layout_blocks_valid)
     {
-      gdouble cell_y[7];
-      guint overflows[7] = { 0, };
+      gdouble cell_y[N_WEEKDAYS];
+      guint overflows[N_WEEKDAYS] = { 0, };
       guint n_events;
 
       prepare_layout_blocks (self, overflows);
 
-      for (guint i = 0; i < 7; i++)
+      for (guint i = 0; i < N_WEEKDAYS; i++)
         cell_y[i] = gcal_month_cell_get_header_height (GCAL_MONTH_CELL (self->day_cells[i]));
 
       n_events = g_list_model_get_n_items (G_LIST_MODEL (self->events));
@@ -1044,7 +1044,7 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
 
               block = g_ptr_array_index (blocks, block_index);
 
-              start_cell = is_ltr ? block->cell : 7 - block->cell - block->length;
+              start_cell = is_ltr ? block->cell : N_WEEKDAYS - block->cell - block->length;
               end_cell = start_cell + block->length;
 
               allocation.x = round (start_cell * cell_width - (is_ltr ? 0 : SEPARATOR_OFFSET));
@@ -1060,7 +1060,7 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
             }
         }
 
-      for (guint i = 0; i < 7; i++)
+      for (guint i = 0; i < N_WEEKDAYS; i++)
         gcal_month_cell_set_overflow (GCAL_MONTH_CELL (self->day_cells[i]), overflows[i]);
     }
 }
@@ -1075,7 +1075,7 @@ gcal_month_view_row_dispose (GObject *object)
 {
   GcalMonthViewRow *self = (GcalMonthViewRow *)object;
 
-  for (guint i = 0; i < 7; i++)
+  for (guint i = 0; i < N_WEEKDAYS; i++)
     g_clear_pointer (&self->day_cells[i], gtk_widget_unparent);
 
   g_clear_pointer (&self->layout_blocks, g_hash_table_destroy);
@@ -1190,7 +1190,7 @@ gcal_month_view_row_init (GcalMonthViewRow *self)
   self->layout_blocks = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_ptr_array_unref);
   self->layout_blocks_valid = TRUE;
 
-  for (guint i = 0; i < 7; i++)
+  for (guint i = 0; i < N_WEEKDAYS; i++)
     {
       self->day_cells[i] = gcal_month_cell_new ();
       gcal_month_cell_set_overflow (GCAL_MONTH_CELL (self->day_cells[i]), 0);
@@ -1225,7 +1225,7 @@ gcal_month_view_row_set_context (GcalMonthViewRow *self,
 
   if (g_set_object (&self->context, context))
     {
-      for (guint i = 0; i < 7; i++)
+      for (guint i = 0; i < N_WEEKDAYS; i++)
         gcal_month_cell_set_context (GCAL_MONTH_CELL (self->day_cells[i]), context);
 
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CONTEXT]);
@@ -1263,7 +1263,7 @@ gcal_month_view_row_set_range (GcalMonthViewRow *self,
   invalidate_layout_blocks (self);
 
   start = gcal_range_get_start (range);
-  for (guint i = 0; i < 7; i++)
+  for (guint i = 0; i < N_WEEKDAYS; i++)
     {
       g_autoptr (GDateTime) day = g_date_time_add_days (start, i);
       gcal_month_cell_set_date (GCAL_MONTH_CELL (self->day_cells[i]), day);
@@ -1332,12 +1332,12 @@ gcal_month_view_row_get_cell_at_x (GcalMonthViewRow *self,
   if (x < 0.0 || x > width)
     return NULL;
 
-  column = floor (7.0 * x / (gdouble) width);
+  column = floor ((float) N_WEEKDAYS * x / (gdouble) width);
 
   if (gtk_widget_get_direction (GTK_WIDGET (self)) != GTK_TEXT_DIR_RTL)
     return self->day_cells[column];
   else
-    return self->day_cells[7 - column - 1];
+    return self->day_cells[N_WEEKDAYS - column - 1];
 }
 
 void
@@ -1346,7 +1346,7 @@ gcal_month_view_row_update_selection (GcalMonthViewRow *self,
 {
   g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
 
-  for (guint i = 0; i < 7; i++)
+  for (guint i = 0; i < N_WEEKDAYS; i++)
     {
       GcalMonthCell *month_cell;
       GDateTime *cell_date;

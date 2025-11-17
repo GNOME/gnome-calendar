@@ -111,7 +111,7 @@ add_month_separators (GcalMonthCell *self)
   gtk_widget_remove_css_class (GTK_WIDGET (self), "separator-side");
 
   day_of_month = g_date_time_get_day_of_month (self->date);
-  if (day_of_month > 1 && day_of_month <= 7)
+  if (day_of_month > 1 && day_of_month <= N_WEEKDAYS)
     {
       gtk_widget_add_css_class (GTK_WIDGET (self), "separator-top");
     }

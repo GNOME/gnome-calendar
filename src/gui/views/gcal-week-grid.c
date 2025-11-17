@@ -210,7 +210,7 @@ on_click_gesture_pressed_cb (GtkGestureClick *click_gesture,
   g_assert (self->selection.end == -1);
 
   minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / MINUTES_PER_DAY;
-  column_width = floor (gtk_widget_get_width (GTK_WIDGET (self)) / 7);
+  column_width = floor (gtk_widget_get_width (GTK_WIDGET (self)) / N_WEEKDAYS);
   column = (gint) x / column_width;
   minute = y / minute_height;
   minute = minute - (minute % 30);
@@ -307,7 +307,7 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
       guint rtl_start_cell, rtl_end_cell, rtl_column;
 
       /* Fix the minute */
-      rtl_column = 6 - column;
+      rtl_column = N_WEEKDAYS - 1 - column;
       rtl_start_cell = start_cell + (rtl_column - column) * 48;
       rtl_end_cell = (rtl_column * MINUTES_PER_DAY + minute) / 30;
 
@@ -315,7 +315,7 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
       end = gcal_date_time_add_floating_minutes (week_start, (rtl_end_cell + 1) * 30);
     }
 
-  local_x = round ((column + 0.5) * (gtk_widget_get_width (GTK_WIDGET (self)) / 7.0));
+  local_x = round ((column + 0.5) * (gtk_widget_get_width (GTK_WIDGET (self)) / (float) N_WEEKDAYS));
   local_y = (minute + 15) * minute_height;
 
   if (!gtk_widget_compute_point (GTK_WIDGET (self),
@@ -338,7 +338,7 @@ get_dnd_cell (GcalWeekGrid *self,
   gdouble column_width, cell_height;
   gint column, row;
 
-  column_width = gtk_widget_get_width (GTK_WIDGET (self)) / 7.0;
+  column_width = gtk_widget_get_width (GTK_WIDGET (self)) / (float) N_WEEKDAYS;
   cell_height = gtk_widget_get_height (GTK_WIDGET (self)) / 48.0;
   column = floor (x / column_width);
   row = y / cell_height;
@@ -367,7 +367,7 @@ move_event_to_cell (GcalWeekGrid          *self,
       column = cell / (MINUTES_PER_DAY / 30);
       row = cell - column * 48;
 
-      cell = (6 - column) * 48 + row;
+      cell = (N_WEEKDAYS - 1 - column) * 48 + row;
     }
 
   changed_event = gcal_event_new_from_event (event);
@@ -557,7 +557,7 @@ get_today_column (GcalWeekGrid *self)
   days_diff = g_date_time_difference (today, week_start) / G_TIME_SPAN_DAY;
 
   /* Today is out of range */
-  if (g_date_time_compare (today, week_start) < 0 || days_diff > 7)
+  if (g_date_time_compare (today, week_start) < 0 || days_diff > N_WEEKDAYS)
     return -1;
 
   return days_diff;
@@ -626,7 +626,7 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
 
   /* Preliminary calculations */
   minutes_height = (gdouble) height / MINUTES_PER_DAY;
-  column_width = (gdouble) width / 7.0;
+  column_width = (gdouble) width / (float) N_WEEKDAYS;
 
   /* Selection */
   if (gtk_widget_should_layout (self->selection.widget))
@@ -708,7 +708,7 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
    * Iterate through weekdays; we don't have to worry about events that
    * jump between days because they're already handled by GcalWeekHeader.
    */
-  for (size_t i = 0; i < 7; i++)
+  for (size_t i = 0; i < N_WEEKDAYS; i++)
     {
       g_autoptr (GcalRange) day_range = NULL;
       GPtrArray *widgets_data;

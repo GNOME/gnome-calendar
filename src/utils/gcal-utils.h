@@ -26,9 +26,10 @@
 #include <libecal/libecal.h>
 #include <libgweather/gweather.h>
 
+#define N_WEEKDAYS 7
 #define ALIGNED(x)      (round (x) + 0.5)
 #define MINUTES_PER_DAY 1440
-#define MAX_MINUTES     (7 * MINUTES_PER_DAY)
+#define MAX_MINUTES     (N_WEEKDAYS * MINUTES_PER_DAY)
 
 #define gcal_clear_timeout(pp) { if (pp && *pp) { g_source_remove (*pp); *pp = 0; } }
 #define gcal_clear_signal_handler(pp,instance) { if (pp && *pp > 0) { g_signal_handler_disconnect (instance, *pp); *pp = 0; } }

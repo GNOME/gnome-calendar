@@ -40,12 +40,12 @@ gcal_week_view_common_snapshot_hour_lines (GtkWidget      *widget,
   color.alpha = 0.15;
   gtk_snapshot_restore (snapshot);
 
-  column_width = width / 7.0;
+  column_width = width / (float) N_WEEKDAYS;
 
   switch (orientation)
     {
     case GTK_ORIENTATION_HORIZONTAL:
-      for (i = 0; i < 7; i++)
+      for (i = 0; i < N_WEEKDAYS; i++)
         {
           gdouble x;
 

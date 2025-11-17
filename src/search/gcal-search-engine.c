@@ -27,6 +27,7 @@
 #include "gcal-search-model.h"
 #include "gcal-timeline.h"
 #include "gcal-timeline-subscriber.h"
+#include "gcal-utils.h"
 
 struct _GcalSearchEngine
 {
@@ -225,8 +226,8 @@ gcal_search_engine_search (GcalSearchEngine    *self,
 
   timezone = gcal_context_get_timezone (self->context);
   now = g_date_time_new_now (timezone);
-  range_start = g_date_time_add_months (now, -6);
-  range_end = g_date_time_add_months (now, 6);
+  range_start = g_date_time_add_months (now, -N_WEEKDAYS - 1);
+  range_end = g_date_time_add_months (now, N_WEEKDAYS - 1);
   model = gcal_search_model_new (cancellable, range_start, range_end);
 
   gcal_timeline_set_filter (self->timeline, search_query);

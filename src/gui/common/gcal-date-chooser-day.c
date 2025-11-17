@@ -199,7 +199,7 @@ gcal_date_chooser_day_set_date (GcalDateChooserDay *self,
 
   now = g_date_time_new_now (g_date_time_get_timezone (date));
   today = gcal_date_time_compare_date (date, now) == 0;
-  weekday = g_date_time_get_day_of_week (date) % 7;
+  weekday = g_date_time_get_day_of_week (date) % N_WEEKDAYS;
 
   if (G_UNLIKELY (today))
     gtk_widget_add_css_class (widget, "today");

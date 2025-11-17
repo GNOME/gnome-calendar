@@ -25,6 +25,7 @@
 #include <glib/gi18n.h>
 
 #include "gcal-alarm-row.h"
+#include "gcal-utils.h"
 
 struct _GcalAlarmRow
 {
@@ -63,7 +64,7 @@ format_alarm_duration (ICalDuration *duration)
   guint hours;
   guint days;
 
-  days = i_cal_duration_get_weeks (duration) * 7 + i_cal_duration_get_days (duration);
+  days = i_cal_duration_get_weeks (duration) * N_WEEKDAYS + i_cal_duration_get_days (duration);
   hours = i_cal_duration_get_hours (duration);
   minutes = i_cal_duration_get_minutes (duration);
 

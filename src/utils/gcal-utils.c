@@ -50,7 +50,7 @@
  */
 
 static const gint
-ab_day[7] =
+ab_day[N_WEEKDAYS] =
 {
   ABDAY_1,
   ABDAY_2,
@@ -402,7 +402,7 @@ get_first_weekday (void)
   else
     g_warning ("Unknown value of _NL_TIME_WEEK_1STDAY.\n");
 
-  week_start = (week_1stday + first_weekday - 1) % 7;
+  week_start = (week_1stday + first_weekday - 1) % N_WEEKDAYS;
 
 #else
 
@@ -418,7 +418,7 @@ get_first_weekday (void)
   else
     week_start = -1;
 
-  if (week_start < 0 || week_start > 6)
+  if (week_start < 0 || week_start > N_WEEKDAYS - 1)
     {
       g_warning ("Whoever translated calendar:week_start:0 for GTK+ "
                  "did so wrongly.\n");
@@ -771,7 +771,7 @@ get_alarm_trigger_minutes (GcalEvent          *event,
   alarm_dt = g_date_time_add_full (gcal_event_get_date_start (event),
                                    0,
                                    0,
-                                   - (i_cal_duration_get_days (duration) + i_cal_duration_get_weeks (duration) * 7),
+                                   - (i_cal_duration_get_days (duration) + i_cal_duration_get_weeks (duration) * N_WEEKDAYS),
                                    - i_cal_duration_get_hours (duration),
                                    - i_cal_duration_get_minutes (duration),
                                    - i_cal_duration_get_seconds (duration));
@@ -903,7 +903,7 @@ is_workday (guint day)
   gchar territory[3] = { 0, };
   guint i;
 
-  if (day > 6)
+  if (day > N_WEEKDAYS - 1)
     return FALSE;
 
   no_work_days = GCAL_WEEK_DAY_SATURDAY | GCAL_WEEK_DAY_SUNDAY;
