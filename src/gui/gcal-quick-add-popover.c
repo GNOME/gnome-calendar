@@ -421,8 +421,9 @@ update_header (GcalQuickAddPopover *self)
             }
           else
             {
-              /* Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour */
-              title_date = g_strdup_printf (_("%1$s, %2$s – %3$s"),
+              /* Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour.
+               * To avoid spurious line wrapping, use non-breaking space characters around the en dash. */
+              title_date = g_strdup_printf (_("%1$s, %2$s – %3$s"),
                                             event_date_name,
                                             start_hour,
                                             end_hour);
