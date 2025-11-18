@@ -308,13 +308,13 @@ setup_component (GcalEvent  *self,
                  GError    **error)
 {
   g_autoptr (GTimeZone) zone_start = NULL;
+  g_autoptr (GDateTime) date_start = NULL;
   g_autoptr (GTimeZone) zone_end = NULL;
+  g_autoptr (GDateTime) date_end = NULL;
   ECalComponentDateTime *start;
   ECalComponentDateTime *end;
   ECalComponentText *text;
   ICalTime *date;
-  GDateTime *date_start;
-  GDateTime *date_end;
   gboolean start_is_all_day, end_is_all_day;
   gchar *description, *location;
 
@@ -353,7 +353,7 @@ setup_component (GcalEvent  *self,
                                 i_cal_time_is_date (date) ? 0 : i_cal_time_get_second (date));
   start_is_all_day = gcal_date_time_is_date (date_start);
 
-  self->dt_start = date_start;
+  self->dt_start = g_steal_pointer (&date_start);
 
   g_clear_object (&date);
 
@@ -380,7 +380,7 @@ setup_component (GcalEvent  *self,
                                   i_cal_time_is_date (date) ? 0 : i_cal_time_get_second (date));
       end_is_all_day = gcal_date_time_is_date (date_end);
 
-      self->dt_end = g_date_time_ref (date_end);
+      self->dt_end = g_steal_pointer (&date_end);
 
       /* Setup all day */
       self->all_day = start_is_all_day && end_is_all_day;
