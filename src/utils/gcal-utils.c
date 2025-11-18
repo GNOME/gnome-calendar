@@ -1306,18 +1306,20 @@ gcal_create_soup_session (void)
 GListModel*
 gcal_create_writable_calendars_model (GcalManager *manager)
 {
+  g_autoptr (GtkFilterListModel) filter_model = NULL;
   GtkBoolFilter *bool_filter;
-  GtkExpression *expression;
   GListModel *calendars;
 
   g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
 
-  expression = gtk_property_expression_new (GCAL_TYPE_CALENDAR, NULL, "read-only");
+  calendars = gcal_manager_get_calendars_model (manager);
 
-  bool_filter = gtk_bool_filter_new (expression);
+  bool_filter = gtk_bool_filter_new (gtk_property_expression_new (GCAL_TYPE_CALENDAR, NULL, "read-only"));
   gtk_bool_filter_set_invert (bool_filter, TRUE);
 
-  calendars = gcal_manager_get_calendars_model (manager);
-  return G_LIST_MODEL (gtk_filter_list_model_new (g_object_ref (calendars), GTK_FILTER (bool_filter)));
+  filter_model = gtk_filter_list_model_new (g_object_ref (calendars), GTK_FILTER (bool_filter));
+  gtk_filter_list_model_set_watch_items (filter_model, TRUE);
+
+  return G_LIST_MODEL (g_steal_pointer (&filter_model));
 }
 
