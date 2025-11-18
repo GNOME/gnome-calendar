@@ -310,7 +310,6 @@ on_file_dialog_save_cb (GObject      *object,
 
   g_hash_table_foreach (tz_data.zones, (GHFunc) append_tz_to_comp, toplevel_component);
   g_clear_pointer (&tz_data.zones, g_hash_table_destroy);
-  tz_data.zones = NULL;
 
   i_cal_component_strip_errors (toplevel_component);
   ics_str = i_cal_component_as_ical_string (toplevel_component);
