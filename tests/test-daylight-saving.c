@@ -28,6 +28,7 @@ floating_minutes (void)
   g_autoptr (GDateTime) start = NULL;
   g_autoptr (GDateTime) end = NULL;
   g_autoptr (GTimeZone) cest = NULL;
+  g_autofree gchar *formatted = NULL;
 
   int start_cell = 3 * 2; // three hours (daylight time starts at 3:00 AM)
   int end_cell = start_cell;
@@ -38,8 +39,10 @@ floating_minutes (void)
 
   // Without daylight saving change
   week_start = g_date_time_new (cest, 2023, 11, 5, 0, 0, 0);
-  g_assert_cmpstr (g_date_time_format_iso8601 (week_start), ==, "2023-11-05T00:00:00+01");
+  formatted = g_date_time_format_iso8601 (week_start);
+  g_assert_cmpstr (formatted, ==, "2023-11-05T00:00:00+01");
   g_assert_false (g_date_time_is_daylight_savings (week_start));
+  g_clear_pointer (&formatted, g_free);
 
   start = gcal_date_time_add_floating_minutes (week_start, start_cell * 30);
   end = gcal_date_time_add_floating_minutes (week_start, (end_cell + 1) * 30);
@@ -47,8 +50,13 @@ floating_minutes (void)
   g_assert_false (g_date_time_is_daylight_savings (start));
   g_assert_false (g_date_time_is_daylight_savings (end));
 
-  g_assert_cmpstr (g_date_time_format_iso8601 (start), ==, "2023-11-05T03:00:00+01");
-  g_assert_cmpstr (g_date_time_format_iso8601 (end), ==, "2023-11-05T03:30:00+01");
+  formatted = g_date_time_format_iso8601 (start);
+  g_assert_cmpstr (formatted, ==, "2023-11-05T03:00:00+01");
+  g_clear_pointer (&formatted, g_free);
+
+  formatted = g_date_time_format_iso8601 (end);
+  g_assert_cmpstr (formatted, ==, "2023-11-05T03:30:00+01");
+  g_clear_pointer (&formatted, g_free);
 }
 
 
@@ -59,6 +67,7 @@ floating_minutes_october (void)
   g_autoptr (GDateTime) start = NULL;
   g_autoptr (GDateTime) end = NULL;
   g_autoptr (GTimeZone) cest = NULL;
+  g_autofree gchar *formatted = NULL;
 
   int start_cell = 3 * 2; // three hours (daylight time starts at 3:00 AM)
   int end_cell = start_cell;
@@ -69,14 +78,21 @@ floating_minutes_october (void)
 
   // With daylight saving change
   week_start = g_date_time_new (cest, 2023, 10, 29, 0, 0, 0);
-  g_assert_cmpstr (g_date_time_format_iso8601 (week_start), ==, "2023-10-29T00:00:00+02");
+  formatted = g_date_time_format_iso8601 (week_start);
+  g_assert_cmpstr (formatted, ==, "2023-10-29T00:00:00+02");
   g_assert_true (g_date_time_is_daylight_savings (week_start));
+  g_clear_pointer (&formatted, g_free);
 
   start = gcal_date_time_add_floating_minutes (week_start, start_cell * 30);
   end = gcal_date_time_add_floating_minutes (week_start, (end_cell + 1) * 30);
 
-  g_assert_cmpstr (g_date_time_format_iso8601 (start), ==, "2023-10-29T03:00:00+01");
-  g_assert_cmpstr (g_date_time_format_iso8601 (end), ==, "2023-10-29T03:30:00+01");
+  formatted = g_date_time_format_iso8601 (start);
+  g_assert_cmpstr (formatted, ==, "2023-10-29T03:00:00+01");
+  g_clear_pointer (&formatted, g_free);
+
+  formatted = g_date_time_format_iso8601 (end);
+  g_assert_cmpstr (formatted, ==, "2023-10-29T03:30:00+01");
+  g_clear_pointer (&formatted, g_free);
 }
 
 static void
@@ -86,6 +102,7 @@ floating_minutes_march (void)
   g_autoptr (GDateTime) start = NULL;
   g_autoptr (GDateTime) end = NULL;
   g_autoptr (GTimeZone) cest = NULL;
+  g_autofree gchar *formatted = NULL;
 
   int start_cell = 3 * 2; // three hours (daylight time starts at 3:00 AM)
   int end_cell = start_cell;
@@ -96,14 +113,21 @@ floating_minutes_march (void)
 
   // With daylight saving change
   week_start = g_date_time_new (cest, 2023, 3, 26, 0, 0, 0);
-  g_assert_cmpstr (g_date_time_format_iso8601 (week_start), ==, "2023-03-26T00:00:00+01");
+  formatted = g_date_time_format_iso8601 (week_start);
+  g_assert_cmpstr (formatted, ==, "2023-03-26T00:00:00+01");
   g_assert_false (g_date_time_is_daylight_savings (week_start));
+  g_clear_pointer (&formatted, g_free);
 
   start = gcal_date_time_add_floating_minutes (week_start, start_cell * 30);
   end = gcal_date_time_add_floating_minutes (week_start, (end_cell + 1) * 30);
 
-  g_assert_cmpstr (g_date_time_format_iso8601 (start), ==, "2023-03-26T03:00:00+02");
-  g_assert_cmpstr (g_date_time_format_iso8601 (end), ==, "2023-03-26T03:30:00+02");
+  formatted = g_date_time_format_iso8601 (start);
+  g_assert_cmpstr (formatted, ==, "2023-03-26T03:00:00+02");
+  g_clear_pointer (&formatted, g_free);
+
+  formatted = g_date_time_format_iso8601 (end);
+  g_assert_cmpstr (formatted, ==, "2023-03-26T03:30:00+02");
+  g_clear_pointer (&formatted, g_free);
 }
 
 /*********************************************************************************************************************/
