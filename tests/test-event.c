@@ -317,6 +317,7 @@ event_date_create_tzid (void)
   ical_string = i_cal_component_as_ical_string (ical_comp);
   g_assert_true (strstr (ical_string, "DTSTART;TZID=Europe/London:20170818T010000\r\n") != NULL);
   g_assert_true (strstr (ical_string, "DTEND;TZID=Europe/London:20170818T020000\r\n") != NULL);
+  g_clear_pointer (&ical_string, g_free);
 
   // Edit the event to check that the modification is stored correctly
   g_setenv ("TZ", "Europe/London", TRUE);
@@ -328,6 +329,7 @@ event_date_create_tzid (void)
   ical_string = i_cal_component_as_ical_string (ical_comp);
   g_assert_true (strstr (ical_string, "DTSTART;TZID=Europe/London:20170818T010000\r\n") != NULL);
   g_assert_true (strstr (ical_string, "DTEND;TZID=/freeassociation.sourceforge.net/Europe/London:\r\n 20170818T030000\r\n") != NULL);
+  g_clear_pointer (&ical_string, g_free);
 
   g_setenv ("TZ", "UTC", TRUE);
 }
