@@ -102,11 +102,11 @@ date_time_from_icaltime (void)
 
       g_autoptr (GDateTime) gdt_start = NULL;
       g_autoptr (GDateTime) gdt_end = NULL;
+      g_autoptr (ICalTime) dt_start = NULL;
+      g_autoptr (ICalTime) dt_end = NULL;
       g_autofree gchar *start_str = NULL;
       g_autofree gchar *end_str = NULL;
       ICalComponent *comp = NULL;
-      ICalTime *dt_start = NULL;
-      ICalTime *dt_end = NULL;
 
       comp = i_cal_component_new_from_string (events[i].string);
       g_assert_nonnull (comp);
