@@ -64,22 +64,6 @@ struct _GcalRangeTree
 G_DEFINE_BOXED_TYPE (GcalRangeTree, gcal_range_tree, gcal_range_tree_ref, gcal_range_tree_unref)
 
 /* Auxiliary methods */
-static void
-destroy_tree (Node *n)
-{
-  if (!n)
-    return;
-
-  destroy_tree (n->left);
-  destroy_tree (n->right);
-
-  g_clear_pointer (&n->range, gcal_range_unref);
-  gcal_clear_date_time (&n->max);
-
-  g_ptr_array_unref (n->data_array);
-  g_free (n);
-}
-
 static inline gint32
 height (Node *n)
 {
@@ -115,6 +99,30 @@ node_new (GcalRange      *range,
   g_ptr_array_add (n->data_array, data);
 
   return n;
+}
+
+static inline void
+node_free (Node *n)
+{
+  if (n)
+    {
+      g_clear_pointer (&n->range, gcal_range_unref);
+      gcal_clear_date_time (&n->max);
+      g_ptr_array_unref (n->data_array);
+      g_free (n);
+    }
+}
+
+static void
+destroy_tree (Node *n)
+{
+  if (!n)
+    return;
+
+  destroy_tree (n->left);
+  destroy_tree (n->right);
+
+  node_free (n);
 }
 
 /* AVL rotations */
@@ -254,9 +262,7 @@ delete_node (Node     *n,
   left = n->left;
   right = n->right;
 
-  g_clear_pointer (&n->range, gcal_range_unref);
-  g_ptr_array_unref (n->data_array);
-  g_free (n);
+  node_free (n);
 
   if (!right)
     return left;
