@@ -309,8 +309,6 @@ setup_component (GcalEvent  *self,
 {
   g_autoptr (GTimeZone) zone_start = NULL;
   g_autoptr (GDateTime) date_start = NULL;
-  g_autoptr (GTimeZone) zone_end = NULL;
-  g_autoptr (GDateTime) date_end = NULL;
   ECalComponentDateTime *start;
   ECalComponentDateTime *end;
   ECalComponentText *text;
@@ -360,13 +358,11 @@ setup_component (GcalEvent  *self,
   /* Setup end date */
   end = e_cal_component_get_dtend (self->component);
 
-  if (!end || !e_cal_component_datetime_get_value (end))
+  if (end && e_cal_component_datetime_get_value (end))
     {
-      self->all_day = TRUE;
-      self->dt_end = g_date_time_add_days (self->dt_start, 1);
-    }
-  else
-    {
+      g_autoptr (GTimeZone) zone_end = NULL;
+      g_autoptr (GDateTime) date_end = NULL;
+
       GCAL_TRACE_MSG ("Retrieving end timezone");
 
       date = i_cal_time_normalize (e_cal_component_datetime_get_value (end));
@@ -386,6 +382,11 @@ setup_component (GcalEvent  *self,
       self->all_day = start_is_all_day && end_is_all_day;
 
       g_clear_object (&date);
+    }
+  else
+    {
+      self->all_day = TRUE;
+      self->dt_end = g_date_time_add_days (self->dt_start, 1);
     }
 
   /* Summary */
