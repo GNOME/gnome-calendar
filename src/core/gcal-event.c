@@ -231,8 +231,8 @@ build_component_from_datetime (GcalEvent *self,
     }
   else
     {
-      g_autoptr (GTimeZone) zone = NULL;
       ICalTimezone *tz;
+      GTimeZone *zone;
 
       zone = g_date_time_get_timezone (dt);
       tz = gcal_timezone_to_icaltimezone (zone);
