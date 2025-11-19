@@ -254,6 +254,7 @@ delete_node (Node     *n,
   left = n->left;
   right = n->right;
 
+  g_clear_pointer (&n->range, gcal_range_unref);
   g_ptr_array_unref (n->data_array);
   g_free (n);
 
