@@ -126,6 +126,8 @@ date_time_from_icaltime (void)
 
       g_assert_cmpstr (start_str, ==, events[i].start);
       g_assert_cmpstr (end_str, ==, events[i].end);
+
+      g_clear_object (&comp);
     }
 }
 
