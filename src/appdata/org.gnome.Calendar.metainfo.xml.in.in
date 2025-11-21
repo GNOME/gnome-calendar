@@ -34,6 +34,29 @@
     </p>
   </description>
 
+  <!-- These allow us to be found in GNOME Software, as it ignores the description for searching: -->
+  <keywords>
+    <keyword>calendars</keyword>
+    <keyword>calendaring</keyword>
+    <keyword>events</keyword>
+    <keyword>meetings</keyword>
+    <keyword>appointments</keyword>
+    <keyword>scheduling</keyword>
+    <keyword>planning</keyword>
+    <keyword>agenda</keyword>
+    <keyword>reminders</keyword>
+    <keyword>alarms</keyword>
+    <keyword>weather</keyword>
+    <keyword>forecasting</keyword>
+    <keyword translate="no">iCalendar</keyword>
+    <keyword translate="no">ics</keyword>
+    <keyword translate="no">CalDAV</keyword>
+    <keyword translate="no">WebDAV</keyword>
+    <keyword translate="no">Evolution</keyword>
+    <keyword translate="no">Nextcloud</keyword>
+    <keyword>Google Calendar</keyword>
+  </keywords>
+
   <screenshots>
     <screenshot type="default">
       <caption>Week view</caption>
