@@ -22,6 +22,7 @@
 #include <libedataserver/libedataserver.h>
 
 #include "gcal-simple-server.h"
+#include "gcal-utils.h"
 
 static GcalSimpleServer*
 init_server (void)
