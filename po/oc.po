@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-11-21 22:05+0000\n"
-"PO-Revision-Date: 2025-11-22 18:29+0100\n"
+"POT-Creation-Date: 2025-11-24 18:08+0000\n"
+"PO-Revision-Date: 2025-11-27 10:06+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -234,7 +234,7 @@ msgstr "_Afichar l'agenda"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:82
 msgid "_Export Calendar"
-msgstr "_Importar l’agenda"
+msgstr "_Exportar l’agenda"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:89
 msgid "_Remove Calendar"
@@ -250,7 +250,7 @@ msgstr "Sus aqueste ordenador"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:344
 msgid "Export Calendar"
-msgstr "Importar l’agenda"
+msgstr "Exportar l’agenda"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:5
 msgid "New Calendar"
