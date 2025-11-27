@@ -526,7 +526,7 @@ snap_to_top_row (GcalMonthView *self)
                                                         200, // ms
                                                         g_steal_pointer (&animation_target));
   adw_timed_animation_set_easing (ADW_TIMED_ANIMATION (self->row_offset_animation),
-                                  ADW_EASE_OUT_QUAD);
+                                  ADW_EASE_OUT_SINE);
   g_signal_connect (self->row_offset_animation,
                     "done",
                     G_CALLBACK (on_row_offset_animation_done),
