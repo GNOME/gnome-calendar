@@ -593,10 +593,10 @@ animate_row_scroll (GcalMonthView *self,
       self->row_offset_animation = adw_timed_animation_new (GTK_WIDGET (self),
                                                             self->row_offset,
                                                             n_rows,
-                                                            increase_duration ? 150 : 100, // ms
+                                                            increase_duration ? 500 : 200, // ms
                                                             g_steal_pointer (&animation_target));
       adw_timed_animation_set_easing (ADW_TIMED_ANIMATION (self->row_offset_animation),
-                                      ADW_EASE_OUT_QUAD);
+                                      ADW_EASE_OUT_QUART);
       adw_animation_set_follow_enable_animations_setting (self->row_offset_animation, FALSE);
 
       g_signal_connect (self->row_offset_animation,
