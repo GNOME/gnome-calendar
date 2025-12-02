@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-11-12 09:32+0000\n"
-"PO-Revision-Date: 2025-11-16 20:00+0300\n"
+"POT-Creation-Date: 2025-11-21 22:05+0000\n"
+"PO-Revision-Date: 2025-11-22 16:22+0300\n"
 "Last-Translator: Artur So <arturios2005@mail.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -25,8 +25,7 @@ msgstr ""
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
-#: src/gui/common/gcal-calendar-combo-row.blp:5
-#: src/gui/gcal-quick-add-popover.blp:131 src/gui/gcal-window.blp:5
+#: src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5
 #: src/gui/gcal-window.c:407 src/main.c:35
 msgid "Calendar"
 msgstr "Календарь"
@@ -145,7 +144,7 @@ msgstr "Редактор событий"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1749 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1750 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -154,14 +153,13 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1757
+#: src/core/gcal-event.c:1758
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
-#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1773 src/gui/gcal-quick-add-popover.c:467
+#: src/core/gcal-event.c:1774
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s — %3$s"
@@ -238,6 +236,10 @@ msgid "_Display Calendar"
 msgstr "_Показать календарь"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:82
+msgid "_Export Calendar"
+msgstr "_Экспортировать календарь"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:89
 msgid "_Remove Calendar"
 msgstr "_Удалить календарь"
 
@@ -248,6 +250,10 @@ msgstr "URL календаря"
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:198
 msgid "On This Computer"
 msgstr "На этом компьютере"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:344
+msgid "Export Calendar"
+msgstr "Экспортирование календаря"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:5
 msgid "New Calendar"
@@ -324,7 +330,7 @@ msgstr ""
 "Для подключения к этому календарю требуется действительный пользователь и "
 "пароль."
 
-#: src/gui/common/gcal-calendar-combo-row-item.c:70
+#: src/gui/common/gcal-calendar-row.c:72
 msgid "This calendar is hidden"
 msgstr "Этот календарь скрыт"
 
@@ -708,6 +714,7 @@ msgid "End Repeat Date"
 msgstr "Дата окончания повтора"
 
 #: src/gui/event-editor/gcal-summary-section.blp:13
+#: src/gui/gcal-quick-add-popover.blp:44
 #: src/gui/importer/gcal-import-file-row.c:176
 msgid "Title"
 msgstr "Заголовок"
@@ -794,51 +801,51 @@ msgstr "Экспортировать событие"
 msgid "No event notes"
 msgstr "Нет заметок о событиях"
 
-#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:253
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:211
 msgid "January"
 msgstr "Январь"
 
-#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:254
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:212
 msgid "February"
 msgstr "Февраль"
 
-#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:255
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:213
 msgid "March"
 msgstr "Март"
 
-#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:256
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:214
 msgid "April"
 msgstr "Апрель"
 
-#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:257
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:215
 msgid "May"
 msgstr "Май"
 
-#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:258
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:216
 msgid "June"
 msgstr "Июнь"
 
-#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:259
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:217
 msgid "July"
 msgstr "Июль"
 
-#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:260
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:218
 msgid "August"
 msgstr "Август"
 
-#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:261
+#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:219
 msgid "September"
 msgstr "Сентябрь"
 
-#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:262
+#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:220
 msgid "October"
 msgstr "Октябрь"
 
-#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:263
+#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:221
 msgid "November"
 msgstr "Ноябрь"
 
-#: src/gui/gcal-event-popover.c:137 src/gui/gcal-quick-add-popover.c:264
+#: src/gui/gcal-event-popover.c:137 src/gui/gcal-quick-add-popover.c:222
 msgid "December"
 msgstr "Декабрь"
 
@@ -1012,86 +1019,81 @@ msgstr "_Присоединиться"
 msgid "Unknown Service"
 msgstr "Неизвестный сервис"
 
-#: src/gui/gcal-quick-add-popover.blp:83
-msgid "Edit Details…"
-msgstr "Редактировать сведения…"
+#: src/gui/gcal-quick-add-popover.blp:86
+msgid "_Edit Details"
+msgstr "_Редактировать сведения"
 
-#: src/gui/gcal-quick-add-popover.blp:94
-msgid "Add"
-msgstr "Добавить"
+#: src/gui/gcal-quick-add-popover.blp:98
+msgid "_Save Event"
+msgstr "_Сохранить событие"
 
-#: src/gui/gcal-quick-add-popover.c:117
-#, c-format
-msgid "%s (this calendar is read-only)"
-msgstr "%s (данный календарь в режиме «только для чтения»)"
-
-#: src/gui/gcal-quick-add-popover.c:231
+#: src/gui/gcal-quick-add-popover.c:189
 msgid "from next Monday"
 msgstr "со следующего понедельника"
 
-#: src/gui/gcal-quick-add-popover.c:232
+#: src/gui/gcal-quick-add-popover.c:190
 msgid "from next Tuesday"
 msgstr "со следующего вторника"
 
-#: src/gui/gcal-quick-add-popover.c:233
+#: src/gui/gcal-quick-add-popover.c:191
 msgid "from next Wednesday"
 msgstr "со следующей среды"
 
-#: src/gui/gcal-quick-add-popover.c:234
+#: src/gui/gcal-quick-add-popover.c:192
 msgid "from next Thursday"
 msgstr "со следующего четверга"
 
-#: src/gui/gcal-quick-add-popover.c:235
+#: src/gui/gcal-quick-add-popover.c:193
 msgid "from next Friday"
 msgstr "со следующей пятницы"
 
-#: src/gui/gcal-quick-add-popover.c:236
+#: src/gui/gcal-quick-add-popover.c:194
 msgid "from next Saturday"
 msgstr "со следующей субботы"
 
-#: src/gui/gcal-quick-add-popover.c:237
+#: src/gui/gcal-quick-add-popover.c:195
 msgid "from next Sunday"
 msgstr "со следующего воскресенья"
 
-#: src/gui/gcal-quick-add-popover.c:242
+#: src/gui/gcal-quick-add-popover.c:200
 msgid "to next Monday"
 msgstr "до следующего понедельника"
 
-#: src/gui/gcal-quick-add-popover.c:243
+#: src/gui/gcal-quick-add-popover.c:201
 msgid "to next Tuesday"
 msgstr "до следующего вторника"
 
-#: src/gui/gcal-quick-add-popover.c:244
+#: src/gui/gcal-quick-add-popover.c:202
 msgid "to next Wednesday"
 msgstr "до следующей среды"
 
-#: src/gui/gcal-quick-add-popover.c:245
+#: src/gui/gcal-quick-add-popover.c:203
 msgid "to next Thursday"
 msgstr "до следующего четверга"
 
-#: src/gui/gcal-quick-add-popover.c:246
+#: src/gui/gcal-quick-add-popover.c:204
 msgid "to next Friday"
 msgstr "до следующей пятницы"
 
-#: src/gui/gcal-quick-add-popover.c:247
+#: src/gui/gcal-quick-add-popover.c:205
 msgid "to next Saturday"
 msgstr "до следующей субботы"
 
-#: src/gui/gcal-quick-add-popover.c:248
+#: src/gui/gcal-quick-add-popover.c:206
 msgid "to next Sunday"
 msgstr "до следующего воскресенья"
 
-#: src/gui/gcal-quick-add-popover.c:272
+#: src/gui/gcal-quick-add-popover.c:230
 #, c-format
 msgid "from Today"
 msgstr "с сегодняшнего дня"
 
-#: src/gui/gcal-quick-add-popover.c:276
+#: src/gui/gcal-quick-add-popover.c:234
 #, c-format
 msgid "from Tomorrow"
 msgstr "с завтрашнего дня"
 
-#: src/gui/gcal-quick-add-popover.c:280
+#: src/gui/gcal-quick-add-popover.c:238
 #, c-format
 msgid "from Yesterday"
 msgstr "со вчерашнего дня"
@@ -1100,22 +1102,22 @@ msgstr "со вчерашнего дня"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:298
+#: src/gui/gcal-quick-add-popover.c:256
 #, c-format
 msgid "from %1$s %2$s"
 msgstr "от %1$s %2$s"
 
-#: src/gui/gcal-quick-add-popover.c:307
+#: src/gui/gcal-quick-add-popover.c:265
 #, c-format
 msgid "to Today"
 msgstr "к сегодняшнему дню"
 
-#: src/gui/gcal-quick-add-popover.c:311
+#: src/gui/gcal-quick-add-popover.c:269
 #, c-format
 msgid "to Tomorrow"
 msgstr "к завтрашнему дню"
 
-#: src/gui/gcal-quick-add-popover.c:315
+#: src/gui/gcal-quick-add-popover.c:273
 #, c-format
 msgid "to Yesterday"
 msgstr "к вчерашнему дню"
@@ -1124,120 +1126,127 @@ msgstr "к вчерашнему дню"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:333
+#: src/gui/gcal-quick-add-popover.c:291
 #, c-format
 msgid "to %1$s %2$s"
 msgstr "до %1$s %2$s"
 
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
-#: src/gui/gcal-quick-add-popover.c:339
+#: src/gui/gcal-quick-add-popover.c:297
 #, c-format
 msgid "New Event %1$s %2$s"
 msgstr "Создать событие %1$s %2$s"
 
-#: src/gui/gcal-quick-add-popover.c:356
+#: src/gui/gcal-quick-add-popover.c:314
 #, c-format
 msgid "New Event Today"
 msgstr "Создать событие сегодня"
 
-#: src/gui/gcal-quick-add-popover.c:360
+#: src/gui/gcal-quick-add-popover.c:318
 #, c-format
 msgid "New Event Tomorrow"
 msgstr "Создать событие завтра"
 
-#: src/gui/gcal-quick-add-popover.c:364
+#: src/gui/gcal-quick-add-popover.c:322
 #, c-format
 msgid "New Event Yesterday"
 msgstr "Создать событие вчера"
 
-#: src/gui/gcal-quick-add-popover.c:370
+#: src/gui/gcal-quick-add-popover.c:328
 msgid "New Event next Monday"
 msgstr "Создать событие в следующий понедельник"
 
-#: src/gui/gcal-quick-add-popover.c:371
+#: src/gui/gcal-quick-add-popover.c:329
 msgid "New Event next Tuesday"
 msgstr "Создать событие в следующий вторник"
 
-#: src/gui/gcal-quick-add-popover.c:372
+#: src/gui/gcal-quick-add-popover.c:330
 msgid "New Event next Wednesday"
 msgstr "Создать событие в следующую среду"
 
-#: src/gui/gcal-quick-add-popover.c:373
+#: src/gui/gcal-quick-add-popover.c:331
 msgid "New Event next Thursday"
 msgstr "Создать событие в следующий четверг"
 
-#: src/gui/gcal-quick-add-popover.c:374
+#: src/gui/gcal-quick-add-popover.c:332
 msgid "New Event next Friday"
 msgstr "Создать событие в следующую пятницу"
 
-#: src/gui/gcal-quick-add-popover.c:375
+#: src/gui/gcal-quick-add-popover.c:333
 msgid "New Event next Saturday"
 msgstr "Создать событие в следующую субботу"
 
-#: src/gui/gcal-quick-add-popover.c:376
+#: src/gui/gcal-quick-add-popover.c:334
 msgid "New Event next Sunday"
 msgstr "Создать событие в следующее воскресенье"
 
 #. Translators: %d is the numeric day of month
-#: src/gui/gcal-quick-add-popover.c:388
+#: src/gui/gcal-quick-add-popover.c:346
 #, c-format
 msgid "New Event on January %d"
 msgstr "Создать событие на  %d Января"
 
-#: src/gui/gcal-quick-add-popover.c:389
+#: src/gui/gcal-quick-add-popover.c:347
 #, c-format
 msgid "New Event on February %d"
 msgstr "Создать событие на %d Февраля"
 
-#: src/gui/gcal-quick-add-popover.c:390
+#: src/gui/gcal-quick-add-popover.c:348
 #, c-format
 msgid "New Event on March %d"
 msgstr "Создать событие на %d Марта"
 
-#: src/gui/gcal-quick-add-popover.c:391
+#: src/gui/gcal-quick-add-popover.c:349
 #, c-format
 msgid "New Event on April %d"
 msgstr "Создать событие на %d Апреля"
 
-#: src/gui/gcal-quick-add-popover.c:392
+#: src/gui/gcal-quick-add-popover.c:350
 #, c-format
 msgid "New Event on May %d"
 msgstr "Создать событие на %d Мая"
 
-#: src/gui/gcal-quick-add-popover.c:393
+#: src/gui/gcal-quick-add-popover.c:351
 #, c-format
 msgid "New Event on June %d"
 msgstr "Создать событие на %d Июня"
 
-#: src/gui/gcal-quick-add-popover.c:394
+#: src/gui/gcal-quick-add-popover.c:352
 #, c-format
 msgid "New Event on July %d"
 msgstr "Создать событие на %d Июля"
 
-#: src/gui/gcal-quick-add-popover.c:395
+#: src/gui/gcal-quick-add-popover.c:353
 #, c-format
 msgid "New Event on August %d"
 msgstr "Создать событие на %d Августа"
 
-#: src/gui/gcal-quick-add-popover.c:396
+#: src/gui/gcal-quick-add-popover.c:354
 #, c-format
 msgid "New Event on September %d"
 msgstr "Создать событие на %d Сентября"
 
-#: src/gui/gcal-quick-add-popover.c:397
+#: src/gui/gcal-quick-add-popover.c:355
 #, c-format
 msgid "New Event on October %d"
 msgstr "Создать событие на %d Октября"
 
-#: src/gui/gcal-quick-add-popover.c:398
+#: src/gui/gcal-quick-add-popover.c:356
 #, c-format
 msgid "New Event on November %d"
 msgstr "Создать событие на %d Ноября"
 
-#: src/gui/gcal-quick-add-popover.c:399
+#: src/gui/gcal-quick-add-popover.c:357
 #, c-format
 msgid "New Event on December %d"
 msgstr "Создать событие на %d Декабря"
+
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour.
+#. * To avoid spurious line wrapping, use non-breaking space characters around the en dash.
+#: src/gui/gcal-quick-add-popover.c:426
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s, %2$s – %3$s"
 
 #: src/gui/gcal-search-button.blp:26
 msgid "Search Events"
@@ -1653,6 +1662,13 @@ msgstr "Карты Google"
 #: src/utils/gcal-utils.c:1258
 msgid "Bing Maps"
 msgstr "Карты Bing"
+
+#~ msgid "Add"
+#~ msgstr "Добавить"
+
+#, c-format
+#~ msgid "%s (this calendar is read-only)"
+#~ msgstr "%s (данный календарь в режиме «только для чтения»)"
 
 #~ msgid "Default _Calendar"
 #~ msgstr "_Календарь по умолчанию"
