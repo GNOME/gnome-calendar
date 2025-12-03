@@ -1681,7 +1681,7 @@ gcal_week_header_add_event (GcalWeekHeader *self,
     start = 0;
 
   /* End position */
-  if (g_date_time_compare (event_end, week_end) <= 0)
+  if (g_date_time_compare (event_end, week_end) < 0)
     end = floor (g_date_time_difference (event_end, week_start) / G_TIME_SPAN_DAY) - all_day;
   else
     end = 6;
