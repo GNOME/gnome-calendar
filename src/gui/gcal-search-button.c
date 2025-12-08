@@ -25,6 +25,7 @@
 #include "gcal-search-button.h"
 #include "gcal-search-hit.h"
 
+#include <glib/gi18n.h>
 #include <math.h>
 
 #define MIN_WIDTH 450
@@ -164,6 +165,8 @@ on_search_finished_cb (GObject      *source_object,
   g_autoptr (GListModel) model = NULL;
   g_autoptr (GError) error = NULL;
   GcalSearchButton *self;
+  const gchar *message;
+  guint n_results;
 
   GCAL_ENTRY;
 
@@ -171,6 +174,14 @@ on_search_finished_cb (GObject      *source_object,
   model = gcal_search_engine_search_finish (GCAL_SEARCH_ENGINE (source_object), result, &error);
 
   set_model (self, model);
+
+  n_results = model ? g_list_model_get_n_items (model) : 0;
+  message = n_results == 0 ? _("No results found") : g_strdup_printf (ngettext ("One result found",
+                                                                                "%u results found",
+                                                                                n_results),
+                                                                      n_results),
+
+  gtk_accessible_announce (GTK_ACCESSIBLE (self), message, GTK_ACCESSIBLE_ANNOUNCEMENT_PRIORITY_MEDIUM);
 
   GCAL_EXIT;
 }
