@@ -574,12 +574,17 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
             {
               GcalEventBlock *block;
               GtkAllocation allocation;
+              gint start_cell;
+              gint end_cell;
 
               block = g_ptr_array_index (blocks, block_index);
 
-              allocation.x = (is_ltr ? block->cell : 7 - block->cell - block->length) * cell_width;
+              start_cell = is_ltr ? block->cell : 7 - block->cell - block->length;
+              end_cell = start_cell + block->length;
+
+              allocation.x = round (start_cell * cell_width);
               allocation.y = cell_y[block->cell];
-              allocation.width = block->length * cell_width;
+              allocation.width = round (end_cell * cell_width);
               allocation.height = block->height;
 
               gtk_widget_set_child_visible (block->event_widget, block->visible);
