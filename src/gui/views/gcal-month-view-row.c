@@ -141,17 +141,14 @@ swap_focus_event_data (FocusEventData **dest,
  */
 
 static FocusEventData *
-create_focus_event_data_candidate (GcalMonthViewRow *self,
-                                   GtkWidget        *child)
+create_focus_event_data (GcalMonthViewRow *self,
+                         GtkWidget        *child)
 {
   graphene_rect_t rect;
   gboolean is_rtl;
   gint focal_x;
 
   g_assert (GTK_IS_WIDGET (child));
-
-  if (!GCAL_IS_EVENT_WIDGET (child) || !gtk_widget_get_child_visible (child))
-    return NULL;
 
   if (!gtk_widget_compute_bounds (child, GTK_WIDGET (self), &rect))
     g_assert_not_reached ();
@@ -160,6 +157,18 @@ create_focus_event_data_candidate (GcalMonthViewRow *self,
   focal_x = rect.origin.x + (is_rtl ? rect.size.width : 0);
 
   return focus_event_data_new (child, &rect, focal_x);
+}
+
+static FocusEventData *
+create_focus_event_data_candidate (GcalMonthViewRow *self,
+                                   GtkWidget        *child)
+{
+  g_assert (GTK_IS_WIDGET (child));
+
+  if (!GCAL_IS_EVENT_WIDGET (child) || !gtk_widget_get_child_visible (child))
+    return NULL;
+
+  return create_focus_event_data (self, child);
 }
 
 static GtkWidget *
@@ -230,6 +239,90 @@ find_last_event_widget (GcalMonthViewRow *self)
     }
 
   g_assert (nearest == NULL || GTK_IS_WIDGET (nearest->widget));
+
+  GCAL_RETURN (nearest ? g_steal_pointer (&nearest->widget) : NULL);
+}
+
+static GtkWidget *
+find_nearest_horizontal_event_widget (GcalMonthViewRow  *self,
+                                      FocusEventData    *focused,
+                                      GtkDirectionType   direction)
+{
+  g_autoptr (FocusEventData) candidate = NULL;
+  g_autoptr (FocusEventData) nearest = NULL;
+  GtkWidget *child;
+  gboolean forward_or_backward;
+  GtkDirectionType lateral;
+  gboolean is_rtl;
+
+  GCAL_ENTRY;
+
+  g_assert (focused != NULL);
+
+  is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
+  forward_or_backward = direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD;
+
+  switch (direction)
+    {
+    case GTK_DIR_TAB_FORWARD:
+      lateral = is_rtl ? GTK_DIR_LEFT : GTK_DIR_RIGHT;
+      break;
+
+    case GTK_DIR_TAB_BACKWARD:
+      lateral = is_rtl ? GTK_DIR_RIGHT : GTK_DIR_LEFT;
+      break;
+
+    default:
+      g_assert (direction == GTK_DIR_LEFT || direction == GTK_DIR_RIGHT);
+      lateral = direction;
+      break;
+    }
+
+  for (child = gtk_widget_get_first_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      g_autoptr (FocusEventData) aux = NULL;
+      gboolean candidate_intersects_vertically;
+      gboolean candidate_in_opposite_direction;
+
+      if (!(aux = create_focus_event_data_candidate (self, child)))
+        continue;
+
+      swap_focus_event_data (&candidate, g_steal_pointer (&aux));
+      g_assert (candidate != NULL);
+
+      if (candidate->widget == focused->widget)
+        continue;
+
+      if (forward_or_backward &&
+          ((lateral == GTK_DIR_LEFT && candidate->focal_x >= focused->focal_x) ||
+           (lateral == GTK_DIR_RIGHT && candidate->focal_x <= focused->focal_x)))
+        continue;
+
+      candidate_in_opposite_direction = ((lateral == GTK_DIR_LEFT && candidate->focal_x > focused->focal_x) ||
+                                         (lateral == GTK_DIR_RIGHT && candidate->focal_x < focused->focal_x));
+
+      candidate_intersects_vertically =
+          graphene_rect_intersection (&GRAPHENE_RECT_INIT (0, focused->rect.origin.y, 1, focused->rect.size.height),
+                                      &GRAPHENE_RECT_INIT (0, candidate->rect.origin.y, 1, candidate->rect.size.height),
+                                      NULL);
+
+      if (!forward_or_backward && (!candidate_intersects_vertically || candidate_in_opposite_direction))
+        continue;
+
+      if (nearest == NULL)
+        swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
+      else if ((lateral == GTK_DIR_LEFT && candidate->focal_x > nearest->focal_x) ||
+               (lateral == GTK_DIR_RIGHT && candidate->focal_x < nearest->focal_x))
+        swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
+      else if (candidate->focal_x == nearest->focal_x &&
+               ((direction == GTK_DIR_TAB_FORWARD && candidate->rect.origin.y < nearest->rect.origin.y) ||
+                (direction == GTK_DIR_TAB_BACKWARD && candidate->rect.origin.y > nearest->rect.origin.y)))
+        swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
+    }
+
+  g_assert (nearest == NULL || nearest->widget != focused->widget);
 
   GCAL_RETURN (nearest ? g_steal_pointer (&nearest->widget) : NULL);
 }
@@ -639,6 +732,32 @@ gcal_month_view_row_focus (GtkWidget        *widget,
 
     default:
       break;
+    }
+
+  if (GCAL_IS_EVENT_WIDGET (focused))
+    {
+      g_autoptr (FocusEventData) focus_event_data = create_focus_event_data (self, focused);
+
+      switch (direction)
+        {
+        case GTK_DIR_TAB_FORWARD:
+        case GTK_DIR_TAB_BACKWARD:
+          if ((new_focus = find_nearest_horizontal_event_widget (self, focus_event_data, direction)))
+            return gtk_widget_grab_focus (new_focus);
+
+          return FALSE;
+
+        case GTK_DIR_UP:
+        case GTK_DIR_DOWN:
+          return FALSE;
+
+        case GTK_DIR_LEFT:
+        case GTK_DIR_RIGHT:
+          if ((new_focus = find_nearest_horizontal_event_widget (self, focus_event_data, direction)))
+            return gtk_widget_grab_focus (new_focus);
+          else
+            return FALSE;
+        }
     }
 
   return GTK_WIDGET_CLASS (gcal_month_view_row_parent_class)->focus (widget, direction);
