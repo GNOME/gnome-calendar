@@ -77,6 +77,8 @@ struct _GcalMonthView
 
   GDateTime          *date;
   GcalContext        *context;
+
+  GdkModifierType     state;
 };
 
 static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
@@ -790,6 +792,18 @@ on_event_widget_activated_cb (GcalMonthViewRow *row,
   gcal_view_event_activated (GCAL_VIEW (self), event_widget);
 }
 
+static gboolean
+on_key_controller_key_pressed_cb (GtkEventControllerKey *event_controller,
+                                  guint                  keyval,
+                                  guint                  keycode,
+                                  GdkModifierType        state,
+                                  GcalMonthView         *self)
+{
+  self->state = state;
+
+  return GDK_EVENT_PROPAGATE;
+}
+
 static void
 on_scroll_controller_scroll_begin_cb (GtkEventControllerScroll *scroll_controller,
                                       GcalMonthView            *self)
@@ -1306,6 +1320,8 @@ static gboolean
 gcal_month_view_focus (GtkWidget        *widget,
                        GtkDirectionType  direction)
 {
+  GcalMonthView *self = GCAL_MONTH_VIEW (widget);
+  GtkWidget *candidate = NULL;
   GtkWidget *focused;
   GtkRoot *root;
 
@@ -1313,12 +1329,35 @@ gcal_month_view_focus (GtkWidget        *widget,
   focused = gtk_root_get_focus (root);
 
   if (direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD)
-    return GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction);
+    {
+      g_assert (focused == NULL || GTK_IS_WIDGET (focused));
+
+      if (self->state & GDK_CONTROL_MASK && gtk_widget_is_ancestor (focused, widget))
+        {
+          g_assert_nonnull (focused);
+
+          gcal_month_popover_popdown (GCAL_MONTH_POPOVER (self->overflow.popover));
+          return FALSE;
+        }
+
+      return GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction);
+    }
 
   if (focused && !gtk_widget_is_ancestor (focused, widget))
     return FALSE;
 
-  if (!GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction))
+  do
+    {
+      if (!GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction))
+        break;
+
+      candidate = gtk_root_get_focus (root);
+    }
+  while (self->state & GDK_CONTROL_MASK);
+
+  g_assert (candidate == NULL || GTK_IS_WIDGET (candidate));
+
+  if (candidate == NULL)
     return gtk_widget_keynav_failed (widget, direction);
 
   return TRUE;
@@ -1618,6 +1657,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_scroll_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_scroll_end_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_decelerate_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_key_controller_key_pressed_cb);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }

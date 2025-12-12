@@ -7,6 +7,10 @@ template $GcalMonthView: Widget {
     "month-view",
   ]
 
+  EventControllerKey {
+    key-pressed => $on_key_controller_key_pressed_cb(template) not-swapped;
+  }
+
   EventControllerScroll {
     flags: vertical | kinetic;
     scroll-begin => $on_scroll_controller_scroll_begin_cb(template) not-swapped;
