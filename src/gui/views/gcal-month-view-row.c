@@ -90,8 +90,149 @@ static GParamSpec *properties [N_PROPS];
 
 
 /*
+ * FocusEventData
+ */
+
+typedef struct
+{
+  GtkWidget *widget;
+  graphene_rect_t rect;
+  gint focal_x;
+} FocusEventData;
+
+static void
+focus_event_data_free (gpointer data)
+{
+  FocusEventData *focus_event_data = data;
+
+  g_free (focus_event_data);
+}
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (FocusEventData, focus_event_data_free)
+
+static FocusEventData *
+focus_event_data_new (GtkWidget             *widget,
+                      const graphene_rect_t *rect,
+                      gint                   focal_x)
+{
+  g_autoptr (FocusEventData) focus_event_data = NULL;
+
+  focus_event_data = g_new0 (FocusEventData, 1);
+  focus_event_data->widget = widget;
+  focus_event_data->focal_x = focal_x;
+  graphene_rect_init_from_rect (&focus_event_data->rect, rect);
+
+  return g_steal_pointer (&focus_event_data);
+}
+
+static inline void
+swap_focus_event_data (FocusEventData **dest,
+                       FocusEventData  *src)
+{
+  g_assert (dest != NULL);
+
+  g_clear_pointer (dest, focus_event_data_free);
+  *dest = g_steal_pointer (&src);
+}
+
+
+/*
  * Auxiliary methods
  */
+
+static FocusEventData *
+create_focus_event_data_candidate (GcalMonthViewRow *self,
+                                   GtkWidget        *child)
+{
+  graphene_rect_t rect;
+  gboolean is_rtl;
+  gint focal_x;
+
+  g_assert (GTK_IS_WIDGET (child));
+
+  if (!GCAL_IS_EVENT_WIDGET (child) || !gtk_widget_get_child_visible (child))
+    return NULL;
+
+  if (!gtk_widget_compute_bounds (child, GTK_WIDGET (self), &rect))
+    g_assert_not_reached ();
+
+  is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
+  focal_x = rect.origin.x + (is_rtl ? rect.size.width : 0);
+
+  return focus_event_data_new (child, &rect, focal_x);
+}
+
+static GtkWidget *
+find_first_event_widget (GcalMonthViewRow *self)
+{
+  g_autoptr (FocusEventData) candidate = NULL;
+  g_autoptr (FocusEventData) nearest = NULL;
+  GtkWidget *child;
+  gboolean is_rtl;
+
+  is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
+
+  for (child = gtk_widget_get_first_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      g_autoptr (FocusEventData) aux = NULL;
+
+      if (!(aux = create_focus_event_data_candidate (self, child)))
+        continue;
+
+      swap_focus_event_data (&candidate, g_steal_pointer (&aux));
+      g_assert (candidate != NULL);
+
+      if (nearest == NULL)
+        swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
+      else if ((is_rtl && candidate->focal_x > nearest->focal_x) ||
+               (!is_rtl && candidate->focal_x < nearest->focal_x))
+        swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
+      else if (candidate->focal_x == nearest->focal_x && candidate->rect.origin.y < nearest->rect.origin.y)
+        swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
+    }
+
+  g_assert (nearest == NULL || GTK_IS_WIDGET (nearest->widget));
+
+  GCAL_RETURN (nearest ? g_steal_pointer (&nearest->widget) : NULL);
+}
+
+static GtkWidget *
+find_last_event_widget (GcalMonthViewRow *self)
+{
+  g_autoptr (FocusEventData) candidate = NULL;
+  g_autoptr (FocusEventData) nearest = NULL;
+  GtkWidget *child;
+  gboolean is_rtl;
+
+  is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
+
+  for (child = gtk_widget_get_first_child (GTK_WIDGET (self));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    {
+      g_autoptr (FocusEventData) aux = NULL;
+
+      if (!(aux = create_focus_event_data_candidate (self, child)))
+        continue;
+
+      swap_focus_event_data (&candidate, g_steal_pointer (&aux));
+      g_assert (candidate != NULL);
+
+      if (nearest == NULL)
+        swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
+      else if ((is_rtl && candidate->focal_x < nearest->focal_x) ||
+               (!is_rtl && candidate->focal_x > nearest->focal_x))
+        swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
+      else if (candidate->focal_x == nearest->focal_x && candidate->rect.origin.y > nearest->rect.origin.y)
+        swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
+    }
+
+  g_assert (nearest == NULL || GTK_IS_WIDGET (nearest->widget));
+
+  GCAL_RETURN (nearest ? g_steal_pointer (&nearest->widget) : NULL);
+}
 
 static void
 layout_block_free (gpointer data)
@@ -468,6 +609,41 @@ gcal_month_view_row_map (GtkWidget *widget)
     recalculate_layout_blocks (self);
 }
 
+static gboolean
+gcal_month_view_row_focus (GtkWidget        *widget,
+                           GtkDirectionType  direction)
+{
+  GcalMonthViewRow *self = GCAL_MONTH_VIEW_ROW (widget);
+  GtkWidget *focused, *new_focus;
+  GtkRoot *root;
+
+  root = gtk_widget_get_root (widget);
+  focused = gtk_root_get_focus (root);
+
+  if (!focused || gtk_widget_is_ancestor (focused, widget))
+    return GTK_WIDGET_CLASS (gcal_month_view_row_parent_class)->focus (widget, direction);
+
+  switch (direction)
+    {
+    case GTK_DIR_TAB_FORWARD:
+      if ((new_focus = find_first_event_widget (self)))
+        return gtk_widget_grab_focus (new_focus);
+      else
+        return FALSE;
+
+    case GTK_DIR_TAB_BACKWARD:
+      if ((new_focus = find_last_event_widget (self)))
+        return gtk_widget_grab_focus (new_focus);
+      else
+        return FALSE;
+
+    default:
+      break;
+    }
+
+  return GTK_WIDGET_CLASS (gcal_month_view_row_parent_class)->focus (widget, direction);
+}
+
 static void
 gcal_month_view_row_measure (GtkWidget      *widget,
                              GtkOrientation  orientation,
@@ -681,6 +857,7 @@ gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
   object_class->set_property = gcal_month_view_row_set_property;
 
   widget_class->map = gcal_month_view_row_map;
+  widget_class->focus = gcal_month_view_row_focus;
   widget_class->measure = gcal_month_view_row_measure;
   widget_class->size_allocate = gcal_month_view_row_size_allocate;
 
