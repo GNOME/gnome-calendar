@@ -9,13 +9,13 @@ event {
   font-size: 0.9rem;
   margin: 1px;
   outline: 0 solid transparent;
-  outline-offset: 6px;
+  outline-offset: 5px;
   transition: var(--focus-ring-transition);
 }
 
 event:focus:focus-visible {
   outline-color: rgb(from var(--accent-color) r g b / var(--dim-opacity));
-  outline-offset: 1px;
+  outline-offset: 0;
   outline-width: 2px;
 }
 
