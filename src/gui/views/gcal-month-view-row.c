@@ -163,12 +163,21 @@ static FocusEventData *
 create_focus_event_data_candidate (GcalMonthViewRow *self,
                                    GtkWidget        *child)
 {
+  g_autoptr (FocusEventData) candidate = NULL;
+
   g_assert (GTK_IS_WIDGET (child));
 
-  if (!GCAL_IS_EVENT_WIDGET (child) || !gtk_widget_get_child_visible (child))
+  if (GCAL_IS_EVENT_WIDGET (child))
+    candidate = create_focus_event_data (self, child);
+  else if (GCAL_IS_MONTH_CELL (child) && gcal_month_cell_get_overflow (GCAL_MONTH_CELL (child)))
+    candidate = create_focus_event_data (self, gcal_month_cell_get_overflow_button (GCAL_MONTH_CELL (child)));
+  else
+    return FALSE;
+
+  if (!gtk_widget_get_child_visible (candidate->widget))
     return NULL;
 
-  return create_focus_event_data (self, child);
+  return g_steal_pointer (&candidate);
 }
 
 static GtkWidget *
@@ -385,6 +394,19 @@ find_nearest_horizontal_event_widget (GcalMonthViewRow  *self,
   g_assert (nearest == NULL || nearest->widget != focused->widget);
 
   GCAL_RETURN (nearest ? g_steal_pointer (&nearest->widget) : NULL);
+}
+
+static inline gboolean
+is_overflow_focused (GtkWidget *focused)
+{
+  GtkWidget *cell, *overflow;
+
+  if ((cell = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_CELL)))
+    overflow = gcal_month_cell_get_overflow_button (GCAL_MONTH_CELL (cell));
+  else
+    return FALSE;
+
+  return gtk_widget_is_focus (overflow);
 }
 
 static void
@@ -797,7 +819,7 @@ gcal_month_view_row_focus (GtkWidget        *widget,
         }
     }
 
-  if (GCAL_IS_EVENT_WIDGET (focused))
+  if (GCAL_IS_EVENT_WIDGET (focused) || is_overflow_focused (focused))
     {
       g_autoptr (FocusEventData) focus_event_data = create_focus_event_data (self, focused);
 
