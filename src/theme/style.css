@@ -271,6 +271,10 @@ monthcell {
   background-color: var(--bg-color);
 }
 
+monthcell .overflow {
+  border-radius: 6px;
+}
+
 monthcell .day-label {
   border-radius: 6px;
   padding: 0px 6px 0px 6px;
