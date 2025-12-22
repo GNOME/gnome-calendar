@@ -40,6 +40,7 @@ src/gui/gcal-meeting-row.c
 src/gui/gcal-quick-add-popover.blp
 src/gui/gcal-quick-add-popover.c
 src/gui/gcal-search-button.blp
+src/gui/gcal-search-button.c
 src/gui/gcal-sync-indicator.blp
 src/gui/gcal-weather-settings.blp
 src/gui/gcal-window.blp
