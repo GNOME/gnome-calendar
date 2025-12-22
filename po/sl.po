@@ -9,18 +9,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-11-20 17:04+0000\n"
-"PO-Revision-Date: 2025-11-20 18:25+0100\n"
+"POT-Creation-Date: 2025-12-22 16:05+0000\n"
+"PO-Revision-Date: 2025-12-22 23:55+0100\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
-"n%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -1264,6 +1264,19 @@ msgstr "Iskanje dogodkov"
 #: src/gui/gcal-search-button.blp:44
 msgid "Search events"
 msgstr "Iskanje dogodkov"
+
+#: src/gui/gcal-search-button.c:179
+msgid "No results found"
+msgstr "Ni zadetkov"
+
+#: src/gui/gcal-search-button.c:179
+#, c-format
+msgid "One result found"
+msgid_plural "%u results found"
+msgstr[0] "Najdenih je %u zadetkov"
+msgstr[1] "Najden je %u zadetek"
+msgstr[2] "Najdena sta %u zadetka"
+msgstr[3] "Najdeni so %u zadetki"
 
 #: src/gui/gcal-sync-indicator.blp:19
 msgctxt "tooltip"
