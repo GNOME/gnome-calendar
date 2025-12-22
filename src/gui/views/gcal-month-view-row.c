@@ -30,6 +30,8 @@
 #include "gcal-range-tree.h"
 #include "gcal-utils.h"
 
+#define SEPARATOR_OFFSET -1
+
 typedef struct
 {
   GtkWidget          *event_widget;
@@ -582,9 +584,9 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
               start_cell = is_ltr ? block->cell : 7 - block->cell - block->length;
               end_cell = start_cell + block->length;
 
-              allocation.x = round (start_cell * cell_width);
+              allocation.x = round (start_cell * cell_width - (is_ltr ? 0 : SEPARATOR_OFFSET));
               allocation.y = cell_y[block->cell];
-              allocation.width = round (end_cell * cell_width);
+              allocation.width = round (end_cell * cell_width) - allocation.x + (is_ltr ? SEPARATOR_OFFSET : 0);
               allocation.height = block->height;
 
               gtk_widget_set_child_visible (block->event_widget, block->visible);
