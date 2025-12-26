@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-11-24 18:08+0000\n"
-"PO-Revision-Date: 2025-11-27 10:06+0100\n"
+"POT-Creation-Date: 2025-12-22 16:05+0000\n"
+"PO-Revision-Date: 2025-12-26 10:14+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -1237,6 +1237,17 @@ msgstr "Recercar los eveniments"
 msgid "Search events"
 msgstr "Recercar los eveniments"
 
+#: src/gui/gcal-search-button.c:179
+msgid "No results found"
+msgstr "Cap de resultat pas trobat"
+
+#: src/gui/gcal-search-button.c:179
+#, c-format
+msgid "One result found"
+msgid_plural "%u results found"
+msgstr[0] "Un resultat trobat"
+msgstr[1] "%u resultat trobat"
+
 #: src/gui/gcal-sync-indicator.blp:19
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars"
@@ -1864,9 +1875,6 @@ msgstr "Bing Maps"
 
 #~ msgid "From Web…"
 #~ msgstr "Dempuèi internet..."
-
-#~ msgid "No results found"
-#~ msgstr "Cap de resultat pas trobat"
 
 #~ msgid "Try a different search"
 #~ msgstr "Ensajatz una recèrca diferenta"
