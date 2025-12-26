@@ -285,6 +285,89 @@ get_uuid_from_component (ESource       *source,
   return uuid;
 }
 
+static gboolean
+read_first_weekday_from_portal (gint *out_first_weekday)
+{
+  static gsize first_weekday_init = FALSE;
+  static gsize first_weekday = G_MAXSIZE;
+
+  if (g_once_init_enter (&first_weekday_init))
+    {
+      g_autoptr (GDBusProxy) settings_portal = NULL;
+      g_autoptr (GVariant) result = NULL;
+      g_autoptr (GVariant) aux2 = NULL;
+      g_autoptr (GVariant) aux = NULL;
+      g_autoptr (GError) error = NULL;
+      const gchar *day;
+
+      /*
+       * If the value is not "default" then there is a user preference
+       * override, in that case skip the autodetection dance.
+       */
+      static const gchar *portal_weekdays[] = {
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+      };
+
+      settings_portal = g_dbus_proxy_new_for_bus_sync (G_BUS_TYPE_SESSION,
+                                                       G_DBUS_PROXY_FLAGS_NONE,
+                                                       NULL,
+                                                       "org.freedesktop.portal.Desktop",
+                                                       "/org/freedesktop/portal/desktop",
+                                                       "org.freedesktop.portal.Settings",
+                                                       NULL,
+                                                       &error);
+
+      if (error)
+        {
+          g_warning ("Failed to load portals: %s. Aborting...", error->message);
+          goto out;
+        }
+
+      result = g_dbus_proxy_call_sync (settings_portal,
+                                       "ReadOne",
+                                       g_variant_new ("(ss)", "org.gnome.desktop.calendar", "week-start-day"),
+                                       G_DBUS_CALL_FLAGS_NONE,
+                                       G_MAXINT,
+                                       NULL,
+                                       &error);
+
+      if (error)
+        {
+          g_warning ("Failed to load first weekday settings: %s", error->message);
+          goto out;
+        }
+
+      aux = g_variant_get_child_value (result, 0);
+      aux2 = g_variant_get_variant (aux);
+      day = g_variant_get_string (aux2, NULL);
+
+      g_debug ("Setting 'week-start-day' is currently: %s", day);
+
+      for (int i = 0; i < G_N_ELEMENTS (portal_weekdays); i++)
+        {
+          if (g_strcmp0 (day, portal_weekdays[i]) == 0)
+            {
+              first_weekday = i;
+              break;
+            }
+        }
+
+out:
+      g_once_init_leave (&first_weekday_init, TRUE);
+    }
+
+  if (first_weekday != G_MAXSIZE && out_first_weekday)
+    *out_first_weekday = first_weekday;
+
+  return first_weekday != G_MAXSIZE;
+}
+
 /**
  * get_first_weekday:
  *
@@ -296,7 +379,10 @@ get_uuid_from_component (ESource       *source,
 gint
 get_first_weekday (void)
 {
-  int week_start;
+  gint week_start;
+
+  if (read_first_weekday_from_portal (&week_start))
+    return week_start;
 
 #ifdef HAVE__NL_TIME_FIRST_WEEKDAY
 
