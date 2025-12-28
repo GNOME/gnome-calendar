@@ -40,6 +40,7 @@ tests = [
   'range-tree',
   'server',
   'utils',
+  'event-attendee',
 ]
 
 foreach test : tests
