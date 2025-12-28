@@ -491,3 +491,10 @@ syncindicator {
 .blurred {
   filter: blur(6px);
 }
+
+/* Participants section of the event editor dialog */
+.participants-count-label {
+   border-radius: 12px;
+   background-color: color-mix(in srgb, currentColor 10%, transparent);
+   padding: 6px 9px;
+}

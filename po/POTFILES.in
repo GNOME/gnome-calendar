@@ -17,6 +17,12 @@ src/gui/common/gcal-calendar-row.c
 src/gui/common/gcal-date-chooser.c
 src/gui/event-editor/gcal-alarm-row.blp
 src/gui/event-editor/gcal-alarm-row.c
+src/gui/event-editor/gcal-attendee-row.blp
+src/gui/event-editor/gcal-attendee-row.c
+src/gui/event-editor/gcal-attendee-details-page.blp
+src/gui/event-editor/gcal-attendee-details-page.c
+src/gui/event-editor/gcal-attendees-section.blp
+src/gui/event-editor/gcal-attendees-section.c
 src/gui/event-editor/gcal-date-chooser-row.blp
 src/gui/event-editor/gcal-date-time-chooser.blp
 src/gui/event-editor/gcal-date-time-chooser.c

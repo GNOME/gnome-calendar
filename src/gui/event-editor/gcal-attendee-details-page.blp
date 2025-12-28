@@ -1,0 +1,81 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalAttendeeDetailsPage: Adw.NavigationPage {
+  title: _("Participants");
+
+  child: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {
+      show-end-title-buttons: false;
+      show-start-title-buttons: true;
+    }
+
+    content: Adw.PreferencesPage {
+      Adw.PreferencesGroup {
+        title: _("Accepted");
+        visible: bind template.model-accepted as <Gtk.FilterListModel>.n-items;
+
+        ListBox list_accepted {
+          selection-mode: none;
+
+          styles [
+            "boxed-list",
+          ]
+        }
+      }
+
+      Adw.PreferencesGroup {
+        title: _("Tentative");
+        visible: bind template.model-tentative as <Gtk.FilterListModel>.n-items;
+
+        ListBox list_tentative {
+          selection-mode: none;
+
+          styles [
+            "boxed-list",
+          ]
+        }
+      }
+
+      Adw.PreferencesGroup {
+        title: _("Declined");
+        visible: bind template.model-declined as <Gtk.FilterListModel>.n-items;
+
+        ListBox list_declined {
+          selection-mode: none;
+
+          styles [
+            "boxed-list",
+          ]
+        }
+      }
+
+      Adw.PreferencesGroup {
+        title: _("Delegated");
+        visible: bind template.model-delegated as <Gtk.FilterListModel>.n-items;
+
+        ListBox list_delegated {
+          selection-mode: none;
+
+          styles [
+            "boxed-list",
+          ]
+        }
+      }
+
+      Adw.PreferencesGroup {
+        title: _("Not responded");
+        visible: bind template.model-not-responded as <Gtk.FilterListModel>.n-items;
+
+        ListBox list_not_responded {
+          selection-mode: none;
+
+          styles [
+            "boxed-list",
+          ]
+        }
+      }
+    };
+  };
+}

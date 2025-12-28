@@ -1,0 +1,32 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalAttendeeRow: Adw.ActionRow {
+  GestureClick gesture_click {
+    button: 3;
+  }
+
+  [suffix]
+  Box suffixes {
+    orientation: horizontal;
+
+    Label role {
+      styles [
+        "dimmed",
+      ]
+    }
+  }
+}
+
+PopoverMenu context_menu {
+  menu-model: context_menu_model;
+  has-arrow: false;
+  halign: start;
+}
+
+menu context_menu_model {
+  item {
+    label: _("Copy email");
+    action: "attendee-row.copy-email";
+  }
+}

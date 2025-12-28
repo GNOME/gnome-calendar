@@ -1,0 +1,52 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalAttendeesSection: Gtk.Box {
+  orientation: vertical;
+  hexpand: true;
+  valign: start;
+
+  ListBox listbox {
+    halign: fill;
+    valign: fill;
+    selection-mode: none;
+
+    styles [
+      "boxed-list",
+    ]
+
+    Adw.ActionRow organizer_row {
+      title: _("Organizer");
+
+      styles [
+        "property",
+      ]
+    }
+
+    Adw.ActionRow summary_row {
+      title: _("Participants");
+      activatable-widget: open_details;
+      activated => $on_participant_summary_row_activated_cb(template) not-swapped;
+
+      styles [
+        "property",
+      ]
+
+      [suffix]
+      Label {
+        valign: center;
+        label: bind template.num-participants as <string>;
+        tooltip-text: _("Number of participants");
+
+        styles [
+          "participants-count-label",
+        ]
+      }
+
+      [suffix]
+      Image open_details {
+        icon-name: "go-next-symbolic";
+      }
+    }
+  }
+}

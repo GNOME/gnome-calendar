@@ -19,22 +19,24 @@
 
 #define G_LOG_DOMAIN "GcalEventEditorDialog"
 
-#include "gcal-alarm-row.h"
+#include "gcal-attendee-details-page.h"
+#include "gcal-attendees-section.h"
 #include "gcal-calendar-combo-row.h"
 #include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-event-editor-dialog.h"
 #include "gcal-event-editor-section.h"
-#include "gcal-utils.h"
 #include "gcal-event.h"
 #include "gcal-notes-section.h"
 #include "gcal-reminders-section.h"
 #include "gcal-schedule-section.h"
 #include "gcal-summary-section.h"
+#include "gcal-utils.h"
 
-#include <libecal/libecal.h>
+#include <adwaita.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <libecal/libecal.h>
 
 /**
  * SECTION:gcal-event-editor-dialog
@@ -60,9 +62,14 @@ struct _GcalEventEditorDialog
   GcalEventEditorSection   *schedule_section;
   GtkWidget                *source_label;
   GcalEventEditorSection   *summary_section;
+  GcalEventEditorSection   *attendees_section;
+  GtkWidget                *participants_group;
+  GtkWidget                *nav_view;
+  GtkWidget                *main_page;
+  GtkWidget                *attendee_details_page;
 
 
-  GcalEventEditorSection *sections[4];
+  GcalEventEditorSection *sections[5];
 
 
   GMenu              *sources_menu;
@@ -303,6 +310,19 @@ out:
  */
 
 static void
+on_attendees_summary_activated_cb (GcalAttendeesSection  *section,
+                                   GcalEventEditorDialog *self)
+{
+  g_return_if_fail (GCAL_IS_EVENT_EDITOR_DIALOG (self));
+
+  gcal_attendee_details_page_set_event (GCAL_ATTENDEE_DETAILS_PAGE (self->attendee_details_page),
+                                        self->event);
+
+  adw_navigation_view_push (ADW_NAVIGATION_VIEW (self->nav_view),
+                            ADW_NAVIGATION_PAGE (self->attendee_details_page));
+}
+
+static void
 on_event_editor_save_action_activated_cb (GSimpleAction *action,
                                           GVariant      *param,
                                           gpointer       user_data)
@@ -522,6 +542,8 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   g_type_ensure (GCAL_TYPE_REMINDERS_SECTION);
   g_type_ensure (GCAL_TYPE_SCHEDULE_SECTION);
   g_type_ensure (GCAL_TYPE_SUMMARY_SECTION);
+  g_type_ensure (GCAL_TYPE_ATTENDEES_SECTION);
+  g_type_ensure (GCAL_TYPE_ATTENDEE_DETAILS_PAGE);
 
   object_class->finalize = gcal_event_editor_dialog_finalize;
   object_class->get_property = gcal_event_editor_dialog_get_property;
@@ -581,11 +603,16 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, reminders_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, schedule_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, summary_section);
-
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, attendees_section);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, participants_group);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, nav_view);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, main_page);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, attendee_details_page);
 
   /* callbacks */
   gtk_widget_class_bind_template_callback (widget_class, on_cancel_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_delete_row_activated_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_attendees_summary_activated_cb);
 }
 
 static void
@@ -608,6 +635,7 @@ gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
   self->sections[i++] = self->reminders_section;
   self->sections[i++] = self->schedule_section;
   self->sections[i++] = self->summary_section;
+  self->sections[i++] = self->attendees_section;
 
   for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
     g_object_bind_property (self, "context", self->sections[i], "context", G_BINDING_DEFAULT);
@@ -666,11 +694,11 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
 
   /* dialog's title */
   if (new_event)
-    adw_dialog_set_title (ADW_DIALOG (self), _("New Event"));
+    adw_navigation_page_set_title (ADW_NAVIGATION_PAGE (self->main_page), _("New Event"));
   else if (gcal_calendar_is_read_only (calendar))
-    adw_dialog_set_title (ADW_DIALOG (self), _("Event Details"));
+    adw_navigation_page_set_title (ADW_NAVIGATION_PAGE (self->main_page), _("Event Details"));
   else
-    adw_dialog_set_title (ADW_DIALOG (self), _("Edit Event"));
+    adw_navigation_page_set_title (ADW_NAVIGATION_PAGE (self->main_page), _("Edit Event"));
 
   g_list_store_remove_all (self->read_only_calendar_model);
   if (gcal_calendar_is_read_only (calendar))
@@ -682,6 +710,8 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   self->recurrence_changed = FALSE;
 
   set_writable (self, !gcal_calendar_is_read_only (calendar));
+  gboolean has_participants = gcal_event_get_organizer (self->event) != NULL;
+  gtk_widget_set_visible (GTK_WIDGET (self->participants_group), has_participants);
 
   gtk_widget_set_visible (self->cancel_button, self->writable);
 

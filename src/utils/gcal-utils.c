@@ -1409,3 +1409,43 @@ gcal_create_writable_calendars_model (GcalManager *manager)
   return G_LIST_MODEL (g_steal_pointer (&filter_model));
 }
 
+/**
+ * gcal_get_email_from_mailto_uri:
+ * @mailto_uri: the original mailto string.
+ *
+ * Tries to strip the "mailto:" part of the incoming string.
+ * The incoming original URI should be in the form: "mailto:email.address@host.org"
+ * if it is coming from a valid iCal event.
+ *
+ * If the incoming string is malformed, i.e. contains more than one occurrence
+ * of the ":" (colon) character, the original string is returned.
+ * This may or may not be desirable.
+ *
+ * Returns: (transfer full) (nullable): The URI without the "mailto:" part.
+ */
+const gchar *
+gcal_get_email_from_mailto_uri (const gchar *mailto_uri)
+{
+  if (mailto_uri == NULL)
+    return NULL;
+
+  GStrv uri_pieces = g_strsplit (mailto_uri, ":", 0);
+
+  if (g_strv_length (uri_pieces) != 2)
+    {
+      g_strfreev (uri_pieces);
+      g_warning ("Malformed organizer URI (value): %s", mailto_uri);
+
+      /* note: There was a crash here! Copying is important
+       * because the original string may be owned by someone else.
+       * (The "mailto_uri" from GcalEventAttendee and GcalEventOrganizer are not transfered) */
+
+      /* return original string */
+      return g_strdup (mailto_uri);
+    }
+
+  gchar *address = g_strdup (uri_pieces[1]);
+  g_strfreev (uri_pieces);
+
+  return address;
+}

@@ -16,6 +16,9 @@ blueprints = custom_target(
     'gcal-time-chooser-row.blp',
     'gcal-time-zone-dialog-row.blp',
     'gcal-time-zone-dialog.blp',
+    'gcal-attendees-section.blp',
+    'gcal-attendee-row.blp',
+    'gcal-attendee-details-page.blp',
   ),
   output: '.',
   command: [
@@ -49,4 +52,7 @@ sources += files(
   'gcal-summary-section.c',
   'gcal-time-zone-dialog.c',
   'gcal-time-zone-dialog-row.c',
+  'gcal-attendees-section.c',
+  'gcal-attendee-row.c',
+  'gcal-attendee-details-page.c',
 )

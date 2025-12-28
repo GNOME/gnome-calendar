@@ -13,5 +13,8 @@
     <file compressed="true">gcal-summary-section.ui</file>
     <file compressed="true">gcal-time-zone-dialog.ui</file>
     <file compressed="true">gcal-time-zone-dialog-row.ui</file>
+    <file compressed="true">gcal-attendees-section.ui</file>
+    <file compressed="true">gcal-attendee-row.ui</file>
+    <file compressed="true">gcal-attendee-details-page.ui</file>
   </gresource>
 </gresources>
