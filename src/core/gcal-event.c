@@ -18,13 +18,14 @@
 
 #define G_LOG_DOMAIN "GcalEvent"
 
-#include "gconstructor.h"
+#include "gcal-event.h"
 #include "gcal-application.h"
 #include "gcal-context.h"
 #include "gcal-debug.h"
-#include "gcal-event.h"
-#include "gcal-utils.h"
+#include "gcal-event-attendee.h"
+#include "gcal-event-organizer.h"
 #include "gcal-recurrence.h"
+#include "gcal-utils.h"
 
 #include <glib/gi18n.h>
 
@@ -98,6 +99,8 @@ struct _GcalEvent
 
   /* A map of GcalAlarmType */
   GHashTable         *alarms;
+  GSList             *attendees;
+  GcalEventOrganizer *organizer;
 
   ECalComponent      *component;
   GcalCalendar       *calendar;
@@ -303,6 +306,24 @@ load_alarms (GcalEvent *self)
   g_slist_free_full (alarm_uids, g_free);
 }
 
+static void
+load_attendees (GcalEvent *self)
+{
+  GSList *ecal_attendees = NULL, *c = NULL;
+
+  ecal_attendees = e_cal_component_get_attendees (self->component);
+
+  for (c = ecal_attendees; c != NULL; c = c->next)
+    {
+      GcalEventAttendee *attendee;
+      attendee = gcal_event_attendee_new (c->data);
+      /* we don't care about the order so no need to reverse */
+      self->attendees = g_slist_prepend (self->attendees, attendee);
+    }
+
+  g_slist_free_full (ecal_attendees, e_cal_component_attendee_free);
+}
+
 static gboolean
 setup_component (GcalEvent  *self,
                  GError    **error)
@@ -315,6 +336,7 @@ setup_component (GcalEvent  *self,
   ICalTime *date;
   gboolean start_is_all_day, end_is_all_day;
   gchar *description, *location;
+  ECalComponentOrganizer *organizer = NULL;
 
   g_assert (self->component != NULL);
 
@@ -416,6 +438,15 @@ setup_component (GcalEvent  *self,
   /* Load and setup the alarms */
   load_alarms (self);
 
+  /* Load and setup organizer */
+  organizer = e_cal_component_get_organizer (self->component);
+  if (organizer)
+    self->organizer = gcal_event_organizer_new (organizer);
+
+  /* load and setup attendees */
+  if (e_cal_component_has_attendees (self->component))
+    load_attendees (self);
+
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_HAS_RECURRENCE]);
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_RECURRENCE]);
 
@@ -425,10 +456,10 @@ setup_component (GcalEvent  *self,
   e_cal_component_text_free (text);
   e_cal_component_datetime_free (start);
   e_cal_component_datetime_free (end);
+  e_cal_component_organizer_free (organizer);
 
   return TRUE;
 }
-
 
 static void
 gcal_event_set_component_internal (GcalEvent     *self,
@@ -476,6 +507,8 @@ gcal_event_finalize (GObject *object)
   g_clear_object (&self->component);
   g_clear_object (&self->calendar);
   g_clear_pointer (&self->recurrence, gcal_recurrence_unref);
+  g_slist_free_full (self->attendees, g_object_unref);
+  g_clear_object (&self->organizer);
 
   G_OBJECT_CLASS (gcal_event_parent_class)->finalize (object);
 }
@@ -1794,4 +1827,42 @@ gcal_event_overlaps (GcalEvent *self,
   g_return_val_if_fail (GCAL_IS_EVENT (self), FALSE);
   overlap = gcal_range_calculate_overlap (gcal_event_get_range (self), range, NULL);
   return overlap != GCAL_RANGE_NO_OVERLAP;
+}
+
+/**
+ * gcal_event_get_attendees:
+ * @self: a #GcalEvent
+ *
+ * Returns: (transfer full) (nullable): a copy list of attendees.
+ */
+GSList *
+gcal_event_get_attendees (GcalEvent *self)
+{
+  g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
+
+  if (self->attendees == NULL)
+    return NULL;
+
+  GSList *ret = NULL, *c = NULL;
+  for (c = self->attendees; c != NULL; c = c->next)
+    {
+      ret = g_slist_prepend (ret, g_object_ref (c->data));
+    }
+
+  /* reverse here so the returned list order matches the internal one */
+  return g_slist_reverse (ret);
+}
+
+/**
+ * gcal_event_get_organizer:
+ * @self: a #GcalEvent
+ *
+ * Returns: (transfer none) (nullable): the event organizer.
+ */
+GcalEventOrganizer *
+gcal_event_get_organizer (GcalEvent *self)
+{
+  g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
+
+  return self->organizer;
 }

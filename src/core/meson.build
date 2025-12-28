@@ -18,4 +18,5 @@ sources += files(
   'gcal-timer.c',
   'gcal-time-zone-monitor.c',
   'gcal-event-attendee.c',
+  'gcal-event-organizer.c',
 )

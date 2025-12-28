@@ -18,6 +18,8 @@
 
 #include <glib.h>
 
+#include "gcal-event-attendee.h"
+#include "gcal-event-organizer.h"
 #include "gcal-event.h"
 #include "gcal-stub-calendar.h"
 #include "gcal-utils.h"
@@ -59,6 +61,17 @@
                    EVENT_STRING_FOR_DATE(":19970101T170000Z", dtend)
 
 
+#define STUB_EVENT_WITH_ATTENDEES "BEGIN:VEVENT\n"                                                                           \
+                                  "UID:123456789@example.com\n"                                                              \
+                                  "DTSTAMP:20240210T120000Z\n"                                                               \
+                                  "DTSTART:20240215T150000Z\n"                                                               \
+                                  "DTEND:20240215T160000Z\n"                                                                 \
+                                  "SUMMARY:Project Meeting\n"                                                                \
+                                  "DESCRIPTION:Discuss project updates and next steps.\n"                                    \
+                                  "ORGANIZER;CN=Alice Smith;SENT-BY=\"MAILTO:jane_doe@host.com\":mailto:alice@example.com\n" \
+                                  "ATTENDEE;CN=Bob Johnson;RSVP=TRUE;ROLE=REQ-PARTICIPANT:mailto:bob@example.com\n"          \
+                                  "ATTENDEE;CN=Carol Lee;RSVP=FALSE;ROLE=OPT-PARTICIPANT:mailto:carol@example.com\n"         \
+                                  "END:VEVENT\n"
 
 /*
  * Auxiliary methods
@@ -391,6 +404,46 @@ event_date_check_tz (void)
 
 /*********************************************************************************************************************/
 
+static void
+event_get_attendees (void)
+{
+  /* "ATTENDEE;CN=Bob Johnson;RSVP=TRUE;ROLE=REQ-PARTICIPANT:mailto:bob@example.com\n" \ */
+  /* "ATTENDEE;CN=Carol Lee;RSVP=FALSE;ROLE=OPT-PARTICIPANT:mailto:carol@example.com\n" \ */
+  g_autoptr (GcalEvent) event = NULL;
+  g_autoptr (GError) error = NULL;
+  GSList *attendees = NULL, *l = NULL;
+
+  event = create_event_for_string (STUB_EVENT_WITH_ATTENDEES, &error);
+
+  attendees = gcal_event_get_attendees (event);
+
+  g_assert_nonnull (attendees);
+
+  for (l = attendees; l != NULL; l = l->next)
+    {
+      GcalEventAttendee *at = (GcalEventAttendee *) l->data;
+
+      g_assert_cmpstr (NULL, !=, gcal_event_attendee_get_name (at));
+      g_assert_cmpstr (NULL, !=, gcal_event_attendee_get_uri (at));
+      g_assert_cmpuint (GCAL_EVENT_ATTENDEE_TYPE_NONE, !=, gcal_event_attendee_get_attendee_type (at));
+    }
+
+  /* organizer should be set */
+  /* "ORGANIZER;CN=Alice Smith;SENT-BY=\"MAILTO:jane_doe@host.com\":mailto:alice@example.com\n" \ */
+  GcalEventOrganizer *organizer = gcal_event_get_organizer (event);
+  g_assert_nonnull (organizer);
+  g_assert_cmpstr ("Alice Smith", ==, gcal_event_organizer_get_name (organizer));
+  g_assert_cmpstr ("MAILTO:jane_doe@host.com", ==, gcal_event_organizer_get_sent_by (organizer));
+  g_assert_cmpstr ("mailto:alice@example.com", ==, gcal_event_organizer_get_uri (organizer));
+
+  g_autofree const gchar *uri_trimmed = gcal_get_email_from_mailto_uri (gcal_event_organizer_get_uri (organizer));
+  g_assert_cmpstr ("alice@example.com", ==, uri_trimmed);
+
+  g_slist_free_full (attendees, g_object_unref);
+}
+
+/*********************************************************************************************************************/
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -411,6 +464,7 @@ main (gint   argc,
   g_test_add_func ("/event/date/multiday", event_date_multiday);
   g_test_add_func ("/event/date/create-tzid", event_date_create_tzid);
   g_test_add_func ("/event/date/check-tz", event_date_check_tz);
+  g_test_add_func ("/event/date/get-attendees", event_get_attendees);
 
   return g_test_run ();
 }

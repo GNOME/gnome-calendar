@@ -20,6 +20,7 @@
 #define GCAL_EVENT_H
 
 #include "gcal-calendar.h"
+#include "gcal-event-organizer.h"
 #include "gcal-range.h"
 #include "gcal-recurrence.h"
 
@@ -132,6 +133,10 @@ gchar*               gcal_event_format_date                      (GcalEvent     
 
 gboolean             gcal_event_overlaps                         (GcalEvent          *self,
                                                                   GcalRange          *range);
+
+GSList *             gcal_event_get_attendees                    (GcalEvent          *self);
+
+GcalEventOrganizer * gcal_event_get_organizer                    (GcalEvent          *self);
 
 G_END_DECLS
 
