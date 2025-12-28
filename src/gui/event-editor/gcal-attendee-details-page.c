@@ -70,7 +70,7 @@ G_DEFINE_FINAL_TYPE (GcalAttendeeDetailsPage, gcal_attendee_details_page, ADW_TY
 static void
 gcal_attendee_details_page_clear_list (GcalAttendeeDetailsPage *self)
 {
-  g_return_if_fail (GCAL_IS_ATTENDEE_DETAILS_PAGE (self));
+  g_assert (GCAL_IS_ATTENDEE_DETAILS_PAGE (self));
 
   g_list_store_remove_all (self->attendees);
 }
@@ -212,7 +212,7 @@ gcal_attendee_details_page_get_property (GObject    *object,
 static void
 gcal_attendee_details_page_init (GcalAttendeeDetailsPage *instance)
 {
-  g_return_if_fail (GCAL_IS_ATTENDEE_DETAILS_PAGE (instance));
+  g_assert (GCAL_IS_ATTENDEE_DETAILS_PAGE (instance));
 
   instance->attendees = g_list_store_new (GCAL_TYPE_EVENT_ATTENDEE);
   gcal_attendee_details_page_init_filters (instance);
@@ -330,7 +330,7 @@ void
 gcal_attendee_details_page_set_event (GcalAttendeeDetailsPage *self,
                                       GcalEvent               *event)
 {
-  g_return_if_fail (GCAL_IS_ATTENDEE_DETAILS_PAGE (self));
+  g_assert (GCAL_IS_ATTENDEE_DETAILS_PAGE (self));
 
   if (self->event == event)
     return;

@@ -202,9 +202,7 @@ gcal_event_attendee_get_property (GObject *object,
 static void
 gcal_event_attendee_dispose (GObject *instance)
 {
-  GcalEventAttendee *self = NULL;
-
-  g_return_if_fail ((self = GCAL_EVENT_ATTENDEE (instance)));
+  GcalEventAttendee *self = GCAL_EVENT_ATTENDEE (instance);
 
   g_clear_pointer (&self->ecal_attendee, e_cal_component_attendee_free);
 }
@@ -360,7 +358,7 @@ gcal_event_attendee_init (GcalEventAttendee *self)
 GcalEventAttendee *
 gcal_event_attendee_new (ECalComponentAttendee *ecal_attendee)
 {
-  g_return_val_if_fail (ecal_attendee != NULL, NULL);
+  g_assert (ecal_attendee != NULL);
 
   GcalEventAttendee *instance = g_object_new (GCAL_TYPE_EVENT_ATTENDEE,
                                               NULL);
@@ -379,7 +377,7 @@ gcal_event_attendee_new (ECalComponentAttendee *ecal_attendee)
 const gchar *
 gcal_event_attendee_get_name (GcalEventAttendee *self)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ATTENDEE (self), NULL);
+  g_assert (GCAL_IS_EVENT_ATTENDEE (self));
 
   return e_cal_component_attendee_get_cn (self->ecal_attendee);
 }
@@ -395,7 +393,7 @@ gcal_event_attendee_get_attendee_type (GcalEventAttendee *self)
 {
   ICalParameterCutype ical_type;
 
-  g_return_val_if_fail (GCAL_IS_EVENT_ATTENDEE (self), GCAL_EVENT_ATTENDEE_TYPE_NONE);
+  g_assert (GCAL_IS_EVENT_ATTENDEE (self));
 
   ical_type = e_cal_component_attendee_get_cutype (self->ecal_attendee);
 
@@ -411,7 +409,7 @@ gcal_event_attendee_get_attendee_type (GcalEventAttendee *self)
 const gchar *
 gcal_event_attendee_get_delegated_from (GcalEventAttendee *self)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ATTENDEE (self), NULL);
+  g_assert (GCAL_IS_EVENT_ATTENDEE (self));
 
   return e_cal_component_attendee_get_delegatedfrom (self->ecal_attendee);
 }
@@ -425,7 +423,7 @@ gcal_event_attendee_get_delegated_from (GcalEventAttendee *self)
 const gchar *
 gcal_event_attendee_get_delegated_to (GcalEventAttendee *self)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ATTENDEE (self), NULL);
+  g_assert (GCAL_IS_EVENT_ATTENDEE (self));
 
   return e_cal_component_attendee_get_delegatedto (self->ecal_attendee);
 }
@@ -439,7 +437,7 @@ gcal_event_attendee_get_delegated_to (GcalEventAttendee *self)
 const gchar *
 gcal_event_attendee_get_language (GcalEventAttendee *self)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ATTENDEE (self), NULL);
+  g_assert (GCAL_IS_EVENT_ATTENDEE (self));
 
   return e_cal_component_attendee_get_language (self->ecal_attendee);
 }
@@ -453,7 +451,7 @@ gcal_event_attendee_get_language (GcalEventAttendee *self)
 const gchar *
 gcal_event_attendee_get_member (GcalEventAttendee *self)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ATTENDEE (self), NULL);
+  g_assert (GCAL_IS_EVENT_ATTENDEE (self));
 
   return e_cal_component_attendee_get_member (self->ecal_attendee);
 }
@@ -471,7 +469,7 @@ gcal_event_attendee_get_part_status (GcalEventAttendee *self)
 {
   ICalParameterPartstat ical_partstat;
 
-  g_return_val_if_fail (GCAL_IS_EVENT_ATTENDEE (self), GCAL_EVENT_ATTENDEE_PART_NONE);
+  g_assert (GCAL_IS_EVENT_ATTENDEE (self));
 
   ical_partstat = e_cal_component_attendee_get_partstat (self->ecal_attendee);
 
@@ -493,7 +491,7 @@ gcal_event_attendee_get_role (GcalEventAttendee *self)
 {
   ICalParameterRole ical_role;
 
-  g_return_val_if_fail (GCAL_IS_EVENT_ATTENDEE (self), GCAL_EVENT_ATTENDEE_ROLE_NONE);
+  g_assert (GCAL_IS_EVENT_ATTENDEE (self));
 
   ical_role = e_cal_component_attendee_get_role (self->ecal_attendee);
 
@@ -509,7 +507,7 @@ gcal_event_attendee_get_role (GcalEventAttendee *self)
 gboolean
 gcal_event_attendee_get_requires_rsvp (GcalEventAttendee *self)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ATTENDEE (self), FALSE);
+  g_assert (GCAL_IS_EVENT_ATTENDEE (self));
 
   return e_cal_component_attendee_get_rsvp (self->ecal_attendee);
 }
@@ -523,7 +521,7 @@ gcal_event_attendee_get_requires_rsvp (GcalEventAttendee *self)
 const gchar *
 gcal_event_attendee_get_sent_by (GcalEventAttendee *self)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ATTENDEE (self), NULL);
+  g_assert (GCAL_IS_EVENT_ATTENDEE (self));
 
   return e_cal_component_attendee_get_sentby (self->ecal_attendee);
 }
@@ -541,7 +539,7 @@ gcal_event_attendee_get_sent_by (GcalEventAttendee *self)
 const gchar *
 gcal_event_attendee_get_uri (GcalEventAttendee *self)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ATTENDEE (self), NULL);
+  g_assert (GCAL_IS_EVENT_ATTENDEE (self));
 
   return e_cal_component_attendee_get_value (self->ecal_attendee);
 }

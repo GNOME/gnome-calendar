@@ -75,7 +75,7 @@ show_context_menu (GcalAttendeeRow *self,
                    double           x,
                    double           y)
 {
-  g_return_if_fail (GCAL_IS_ATTENDEE_ROW (self));
+  g_assert (GCAL_IS_ATTENDEE_ROW (self));
 
   const GdkRectangle position = { .x = x, .y = y };
   gtk_popover_set_pointing_to (GTK_POPOVER (self->context_menu), &position);
@@ -254,8 +254,6 @@ gcal_attendee_row_init (GcalAttendeeRow *instance)
 GtkWidget *
 gcal_attendee_row_new (GcalEventAttendee *attendee)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ATTENDEE (attendee), NULL);
-
   return g_object_new (GCAL_TYPE_ATTENDEE_ROW,
                        "attendee", attendee,
                        NULL);
@@ -272,7 +270,7 @@ gcal_attendee_row_new (GcalEventAttendee *attendee)
 GcalEventAttendee *
 gcal_attendee_row_get_attendee (GcalAttendeeRow *self)
 {
-  g_return_val_if_fail (GCAL_IS_ATTENDEE_ROW (self), NULL);
+  g_assert (GCAL_IS_ATTENDEE_ROW (self));
 
   return self->attendee;
 }

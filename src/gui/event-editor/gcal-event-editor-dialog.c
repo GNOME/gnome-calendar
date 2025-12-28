@@ -313,7 +313,7 @@ static void
 on_attendees_summary_activated_cb (GcalAttendeesSection  *section,
                                    GcalEventEditorDialog *self)
 {
-  g_return_if_fail (GCAL_IS_EVENT_EDITOR_DIALOG (self));
+  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (self));
 
   gcal_attendee_details_page_set_event (GCAL_ATTENDEE_DETAILS_PAGE (self->attendee_details_page),
                                         self->event);

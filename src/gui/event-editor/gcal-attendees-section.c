@@ -214,7 +214,7 @@ gcal_event_editor_section_init_iface (GcalEventEditorSectionInterface *iface)
 static guint
 gcal_attendees_section_get_num_participants (GcalAttendeesSection *self)
 {
-  g_return_val_if_fail (GCAL_IS_ATTENDEES_SECTION (self), 0);
+  g_assert (GCAL_IS_ATTENDEES_SECTION (self));
 
   return self->num_accepted + self->num_declined + self->num_tentative + self->num_delegated + self->num_not_responded;
 }

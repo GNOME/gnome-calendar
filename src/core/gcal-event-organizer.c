@@ -152,7 +152,7 @@ gcal_event_organizer_new (ECalComponentOrganizer *ecal_organizer)
 {
   g_autoptr (GcalEventOrganizer) self = NULL;
 
-  g_return_val_if_fail (ecal_organizer != NULL, NULL);
+  g_assert (ecal_organizer != NULL);
 
   self = g_object_new (GCAL_TYPE_EVENT_ORGANIZER, NULL);
   self->ecal_organizer = e_cal_component_organizer_copy (ecal_organizer);
@@ -169,7 +169,7 @@ gcal_event_organizer_new (ECalComponentOrganizer *ecal_organizer)
 const gchar *
 gcal_event_organizer_get_name (GcalEventOrganizer *self)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ORGANIZER (self), NULL);
+  g_assert (GCAL_IS_EVENT_ORGANIZER (self));
 
   return e_cal_component_organizer_get_cn (self->ecal_organizer);
 }
@@ -186,7 +186,7 @@ gcal_event_organizer_get_name (GcalEventOrganizer *self)
 const gchar *
 gcal_event_organizer_get_uri (GcalEventOrganizer *self)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ORGANIZER (self), NULL);
+  g_assert (GCAL_IS_EVENT_ORGANIZER (self));
 
   return e_cal_component_organizer_get_value (self->ecal_organizer);
 }
@@ -200,7 +200,7 @@ gcal_event_organizer_get_uri (GcalEventOrganizer *self)
 const gchar *
 gcal_event_organizer_get_sent_by (GcalEventOrganizer *self)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ORGANIZER (self), NULL);
+  g_assert (GCAL_IS_EVENT_ORGANIZER (self));
 
   return e_cal_component_organizer_get_sentby (self->ecal_organizer);
 }
@@ -214,7 +214,7 @@ gcal_event_organizer_get_sent_by (GcalEventOrganizer *self)
 const gchar *
 gcal_event_organizer_get_language (GcalEventOrganizer *self)
 {
-  g_return_val_if_fail (GCAL_IS_EVENT_ORGANIZER (self), NULL);
+  g_assert (GCAL_IS_EVENT_ORGANIZER (self));
 
   return e_cal_component_organizer_get_language (self->ecal_organizer);
 }
