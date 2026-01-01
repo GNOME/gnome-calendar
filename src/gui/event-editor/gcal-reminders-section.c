@@ -128,7 +128,12 @@ create_alarm (guint minutes)
 
   alarm = e_cal_component_alarm_new ();
   e_cal_component_alarm_take_trigger (alarm, trigger);
-  e_cal_component_alarm_set_action (alarm, E_CAL_COMPONENT_ALARM_AUDIO);
+
+  /* ONLY create "DISPLAY" alarm types. Don't expose "AUDIO" as an alarm type possibility for users to create;
+   * they're mutually independent from "DISPLAY" in RFC5545, and audio-only alarms are useless for users in practice.
+   * Furthermore, some other applications don't even allow creating/viewing/editing audio-only alarms on events!
+   * We should instead expect alarm notification systems to automatically play sounds when displaying notifications. */
+  e_cal_component_alarm_set_action (alarm, E_CAL_COMPONENT_ALARM_DISPLAY);
 
   return alarm;
 }

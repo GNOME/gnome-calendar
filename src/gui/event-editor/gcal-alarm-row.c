@@ -207,7 +207,6 @@ setup_alarm (GcalAlarmRow *self)
 {
   g_autofree gchar *formatted_duration = NULL;
   ECalComponentAlarmTrigger *trigger;
-  ECalComponentAlarmAction action;
   ICalDuration *duration;
 
   trigger = e_cal_component_alarm_get_trigger (self->alarm);
@@ -215,9 +214,6 @@ setup_alarm (GcalAlarmRow *self)
   formatted_duration = format_alarm_duration (duration);
 
   adw_preferences_row_set_title (ADW_PREFERENCES_ROW (self), formatted_duration);
-
-  action = e_cal_component_alarm_get_action (self->alarm);
-  gtk_toggle_button_set_active (self->volume_button, action == E_CAL_COMPONENT_ALARM_AUDIO);
 }
 
 
@@ -230,28 +226,6 @@ on_remove_button_clicked_cb (GtkButton    *button,
                              GcalAlarmRow *self)
 {
   g_signal_emit (self, signals[REMOVE_ALARM], 0);
-}
-
-static void
-on_sound_toggle_changed_cb (GtkToggleButton *button,
-                            GParamSpec      *pspec,
-                            GcalAlarmRow    *self)
-{
-  ECalComponentAlarmAction action;
-  gboolean has_sound;
-
-  has_sound = gtk_toggle_button_get_active (button);
-
-  /* Setup the alarm action */
-  action = has_sound ? E_CAL_COMPONENT_ALARM_AUDIO : E_CAL_COMPONENT_ALARM_DISPLAY;
-
-  e_cal_component_alarm_set_action (self->alarm, action);
-
-  /* Update the volume icon */
-  gtk_button_set_icon_name (GTK_BUTTON (self->volume_button),
-                            has_sound ? "audio-volume-high-symbolic" : "audio-volume-muted-symbolic");
-
-  g_signal_emit (self, signals[UPDATE_ALARM], 0);
 }
 
 
@@ -348,7 +322,6 @@ gcal_alarm_row_class_init (GcalAlarmRowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalAlarmRow, volume_button);
 
   gtk_widget_class_bind_template_callback (widget_class, on_remove_button_clicked_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_sound_toggle_changed_cb);
 }
 
 static void
