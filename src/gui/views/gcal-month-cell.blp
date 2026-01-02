@@ -39,6 +39,7 @@ template $GcalMonthCell: Adw.BreakpointBin {
       Image weather_icon {
         pixel-size: 16;
         margin-start: 12;
+        accessible-role: presentation;
 
         styles [
           "dimmed",
@@ -58,6 +59,7 @@ template $GcalMonthCell: Adw.BreakpointBin {
       valign: end;
       sensitive: false;
       clicked => $overflow_button_clicked_cb(template) not-swapped;
+      tooltip-text: _("All Events");
 
       styles [
         "flat",
