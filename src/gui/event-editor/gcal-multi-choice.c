@@ -24,6 +24,8 @@
 
 #include "gcal-multi-choice.h"
 
+#include <glib/gi18n.h>
+
 struct _GcalMultiChoice
 {
   GtkBox                          parent;
@@ -159,6 +161,26 @@ set_value (GcalMultiChoice         *self,
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_VALUE]);
 }
 
+static gchar *
+get_down_button_tooltip (GcalMultiChoice    *self,
+                         gchar              *category)
+{
+  g_autofree gchar *formatted_tooltip = NULL;
+
+  formatted_tooltip =  g_strdup_printf (_("Previous %1$s"), category);
+  return g_steal_pointer (&formatted_tooltip);
+}
+
+static gchar *
+get_up_button_tooltip (GcalMultiChoice    *self,
+                         gchar              *category)
+{
+  g_autofree gchar *formatted_tooltip = NULL;
+
+  formatted_tooltip =  g_strdup_printf (_("Next %1$s"), category);
+  return g_steal_pointer (&formatted_tooltip);
+}
+
 static void
 go_up (GcalMultiChoice *self)
 {
@@ -222,6 +244,14 @@ update_sensitivity (GcalMultiChoice *self)
   else
     gtk_accessible_reset_relation (GTK_ACCESSIBLE (self),
                                    GTK_ACCESSIBLE_RELATION_CONTROLS);
+}
+
+static void
+set_accessibility_label (GcalMultiChoice *self)
+{
+  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_PROPERTY_LABEL,
+                                  gcal_multi_choice_get_category (self), -1);
 }
 
 static void
@@ -672,10 +702,13 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, label1);
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, label2);
 
+  gtk_widget_class_bind_template_callback (widget_class, set_accessibility_label);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, button_toggled_cb);
   gtk_widget_class_bind_template_callback (widget_class, button_state_flags_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, key_pressed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, get_down_button_tooltip);
+  gtk_widget_class_bind_template_callback (widget_class, get_up_button_tooltip);
 
   gtk_widget_class_set_css_name (widget_class, "navigator");
 }

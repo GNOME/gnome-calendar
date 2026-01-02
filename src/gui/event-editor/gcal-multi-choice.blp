@@ -3,11 +3,13 @@ using Gtk 4.0;
 template $GcalMultiChoice: Box {
   spacing: 6;
   accessible-role: spin_button;
+  notify::category => $set_accessibility_label() swapped;
 
   Button down_button {
     icon-name: "pan-start-symbolic";
     clicked => $button_clicked_cb();
     can-focus: false;
+    tooltip-text: bind $get_down_button_tooltip(template.category) as <string>;
 
     styles [
       "back-button",
@@ -53,6 +55,7 @@ template $GcalMultiChoice: Box {
     icon-name: "pan-end-symbolic";
     clicked => $button_clicked_cb();
     can-focus: false;
+    tooltip-text: bind $get_up_button_tooltip(template.category) as <string>;
 
     styles [
       "circular",
