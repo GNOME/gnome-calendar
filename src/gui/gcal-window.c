@@ -488,6 +488,30 @@ filter_ics_files (GcalWindow          *self,
   g_task_run_in_thread (task, filter_ics_files_thread);
 }
 
+static void
+switch_next_view (GcalWindow *self)
+{
+  g_autoptr (GDateTime) next_date = NULL;
+  GcalView *current_view;
+
+  current_view = GCAL_VIEW (self->views[self->active_view]);
+  next_date = gcal_view_get_next_date (current_view);
+
+  update_active_date (self, next_date);
+}
+
+static void
+switch_prev_view (GcalWindow *self)
+{
+  g_autoptr (GDateTime) previous_date = NULL;
+  GcalView *current_view;
+
+  current_view = GCAL_VIEW (self->views[self->active_view]);
+  previous_date = gcal_view_get_previous_date (current_view);
+
+  update_active_date (self, previous_date);
+}
+
 /*
  * Callbacks
  */
@@ -535,19 +559,32 @@ on_view_action_activated (GSimpleAction *action,
 }
 
 static void
+on_back_button_pressed_cb (GtkGestureClick *gesture_click,
+                           gint             n_press,
+                           gdouble          x,
+                           gdouble          y,
+                           gpointer        *user_data)
+{
+  switch_prev_view (GCAL_WINDOW (user_data));
+}
+
+static void
+on_forward_button_pressed_cb (GtkGestureClick *gesture_click,
+                              gint             n_press,
+                              gdouble          x,
+                              gdouble          y,
+                              gpointer        *user_data)
+{
+
+  switch_next_view (GCAL_WINDOW (user_data));
+}
+
+static void
 on_window_next_date_activated_cb (GSimpleAction *action,
                                   GVariant      *param,
                                   gpointer       user_data)
 {
-  g_autoptr (GDateTime) next_date = NULL;
-  GcalWindow *self;
-  GcalView *current_view;
-
-  self = GCAL_WINDOW (user_data);
-  current_view = GCAL_VIEW (self->views[self->active_view]);
-  next_date = gcal_view_get_next_date (current_view);
-
-  update_active_date (self, next_date);
+  switch_next_view (GCAL_WINDOW (user_data));
 }
 
 static void
@@ -604,15 +641,7 @@ on_window_previous_date_activated_cb (GSimpleAction *action,
                                       GVariant      *param,
                                       gpointer       user_data)
 {
-  g_autoptr (GDateTime) previous_date = NULL;
-  GcalWindow *self;
-  GcalView *current_view;
-
-  self = GCAL_WINDOW (user_data);
-  current_view = GCAL_VIEW (self->views[self->active_view]);
-  previous_date = gcal_view_get_previous_date (current_view);
-
-  update_active_date (self, previous_date);
+  switch_prev_view (GCAL_WINDOW (user_data));
 }
 
 static void
@@ -1405,6 +1434,10 @@ gcal_window_class_init (GcalWindowClass *klass)
   /* Drop Target related */
   gtk_widget_class_bind_template_callback (widget_class, on_drop_target_accept_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_drop_target_drop_cb);
+
+  /* Change date related*/
+  gtk_widget_class_bind_template_callback (widget_class, on_back_button_pressed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_forward_button_pressed_cb);
 }
 
 static void

@@ -105,6 +105,16 @@ template $GcalWindow: Adw.ApplicationWindow {
     }
   }
 
+  GestureClick {
+    button: 8; // Hardware back button.
+    pressed => $on_back_button_pressed_cb(template) not-swapped;
+  }
+
+  GestureClick {
+    button: 9; // Hardware forward button.
+    pressed => $on_forward_button_pressed_cb(template) not-swapped;
+  }
+
   Adw.ToastOverlay overlay {
     $GcalDropOverlay drop_overlay {
       overlayed: Adw.StatusPage drop_status_page {
