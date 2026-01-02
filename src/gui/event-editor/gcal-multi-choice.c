@@ -40,6 +40,7 @@ struct _GcalMultiChoice
   gint                            max_value;
   gboolean                        wrap;
   gboolean                        animate;
+  gchar                          *category;
 
   GtkWidget                     **choices;
   gint                            n_choices;
@@ -60,6 +61,7 @@ enum
   PROP_ANIMATE,
   PROP_CHOICES,
   PROP_POPOVER,
+  PROP_CATEGORY,
   NUM_PROPERTIES
 };
 
@@ -405,6 +407,10 @@ gcal_multi_choice_get_property (GObject    *object,
       g_value_set_object (value, self->popover);
       break;
 
+    case PROP_CATEGORY:
+      g_value_set_string (value, gcal_multi_choice_get_category (self));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -453,6 +459,10 @@ gcal_multi_choice_set_property (GObject      *object,
 
     case PROP_POPOVER:
       gcal_multi_choice_set_popover (self, g_value_get_object (value));
+      break;
+
+    case PROP_CATEGORY:
+      gcal_multi_choice_set_category (self, g_value_get_string (value));
       break;
 
     default:
@@ -627,6 +637,10 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
       g_param_spec_object ("popover", "Popover", "Popover",
                            GTK_TYPE_POPOVER,
                            G_PARAM_READWRITE);
+  properties[PROP_CATEGORY] =
+      g_param_spec_string ("category", "Category", "Category",
+                           "",
+                           G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
 
   g_object_class_install_properties (object_class, NUM_PROPERTIES, properties);
 
@@ -860,3 +874,39 @@ gcal_multi_choice_get_popover (GcalMultiChoice *self)
   return GTK_POPOVER (self->popover);
 }
 
+/**
+ * gcal_multi_choice_set_category:
+ * @self: a #GcalMultiChoice
+ * @category: The category name
+ *
+ * Set the value of the category name
+ */
+void
+gcal_multi_choice_set_category (GcalMultiChoice *self,
+                                const gchar     *category)
+{
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
+  if (g_strcmp0 (self->category, category) != 0)
+    {
+      self->category = g_strdup (category ? category : "");
+
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CATEGORY]);
+    }
+}
+
+/**
+ * gcal_multi_choice_get_category:
+ * @self: a #GcalMultiChoice
+ *
+ * Get the name of the category
+ *
+ * Returns: (transfer none): the category for the multi-choice.
+ */
+const gchar*
+gcal_multi_choice_get_category (GcalMultiChoice *self)
+{
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
+  return self->category ? self->category : "";
+}
