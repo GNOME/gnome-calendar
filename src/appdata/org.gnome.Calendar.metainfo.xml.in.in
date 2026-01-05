@@ -108,6 +108,7 @@
   <update_contact>gbsneto@gnome.org</update_contact>
 
   <releases>
+    <release date="2026-01-05" version="50~alpha" type="development" />
 
     <release date="2025-09-14" version="49.0" type="stable">
       <description>

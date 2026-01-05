@@ -1,3 +1,18 @@
+Major changes in 50.alpha:
+* Various updates to the Flatpak manifest
+* Minor tweaks to the coloring of event widgets
+* Various accessibility fixes all around
+* Performance improvements in the Month view
+* More prominent month name in the Month view
+* Improved scrolling animations in the Month view
+* Improved alignment of event widgets in the Month view
+* Plug a bunch of memory leaks in the Quick Add popover
+* Update the design of the Quick Add popover
+* Plug dozens of memory leaks in tests and in the app
+* Announce the number of search results to the screen reader
+* Respect the new GSetting for first weekday
+* Updated translations
+
 Major changes in 49.0:
 * Remove outdated event style class
 * Various fixes to the calendar editor dialog
