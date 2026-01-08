@@ -98,3 +98,19 @@ typedef enum
   GCAL_EVENT_ATTENDEE_ROLE_NONPARTICIPANT,
   GCAL_EVENT_ATTENDEE_ROLE_NONE,
 } GcalEventAttendeeRole;
+
+/**
+ * GcalEventAttendeeTypeFilterFlags:
+ *
+ * @GCAL_EVENT_ATTENDEE_TYPE_FILTER_NONE:     filter disabled (show all)
+ * @GCAL_EVENT_ATTENDEE_TYPE_FILTER_PERSON:   filter INDIVIDUAL | GROUP
+ * @GCAL_EVENT_ATTENDEE_TYPE_FILTER_RESOURCE: filter RESOURCE | ROOM
+ *
+ * glib-mkenums: flags
+ */
+typedef enum
+{
+  GCAL_EVENT_ATTENDEE_TYPE_FILTER_NONE     = 0,
+  GCAL_EVENT_ATTENDEE_TYPE_FILTER_PERSON   = 1 << 0,
+  GCAL_EVENT_ATTENDEE_TYPE_FILTER_RESOURCE = 1 << 1,
+} GcalEventAttendeeTypeFilterFlags;

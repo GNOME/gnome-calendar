@@ -18,9 +18,9 @@
 
 #include "gcal-attendee-details-page.h"
 #include "gcal-attendee-row.h"
+#include "gcal-enum-types.h"
 #include "gcal-enums.h"
 #include "gcal-event-attendee.h"
-#include "gcal-event.h"
 
 #include <adwaita.h>
 #include <gio/gio.h>
@@ -33,12 +33,14 @@ struct _GcalAttendeeDetailsPage
 
   GListStore               *attendees;
 
+  GtkFilterListModel       *base_filtered_list;
   GtkFilterListModel       *filter_list_accepted;
   GtkFilterListModel       *filter_list_tentative;
   GtkFilterListModel       *filter_list_declined;
   GtkFilterListModel       *filter_list_delegated;
   GtkFilterListModel       *filter_list_not_responded;
 
+  GtkCustomFilter          *base_filter;
   GtkCustomFilter          *accepted_filter;
   GtkCustomFilter          *tentative_filter;
   GtkCustomFilter          *declined_filter;
@@ -50,6 +52,8 @@ struct _GcalAttendeeDetailsPage
   GtkWidget                *list_declined;
   GtkWidget                *list_delegated;
   GtkWidget                *list_not_responded;
+
+  GcalEventAttendeeTypeFilterFlags attendee_type_filter_flags;
 };
 
 enum
@@ -59,12 +63,21 @@ enum
   PROP_MODEL_DECLINED,
   PROP_MODEL_DELEGATED,
   PROP_MODEL_NOT_RESPONDED,
+  PROP_ATTENDEE_TYPE,
   N_PROPS
 };
 
 static GParamSpec *properties[N_PROPS] = { NULL, };
 
 G_DEFINE_FINAL_TYPE (GcalAttendeeDetailsPage, gcal_attendee_details_page, ADW_TYPE_NAVIGATION_PAGE)
+
+static void
+set_type_filter_flags (GcalAttendeeDetailsPage         *self,
+                       GcalEventAttendeeTypeFilterFlags flags)
+{
+  self->attendee_type_filter_flags = flags;
+  gtk_filter_changed (GTK_FILTER (self->base_filter), GTK_FILTER_CHANGE_DIFFERENT);
+}
 
 static void
 gcal_attendee_details_page_clear_list (GcalAttendeeDetailsPage *self)
@@ -88,6 +101,7 @@ gcal_attendee_details_page_finalize (GObject *object)
 
   g_clear_pointer (&page->attendees, g_list_store_remove_all);
 
+  g_clear_object (&page->base_filter);
   g_clear_object (&page->accepted_filter);
   g_clear_object (&page->tentative_filter);
   g_clear_object (&page->declined_filter);
@@ -95,11 +109,31 @@ gcal_attendee_details_page_finalize (GObject *object)
   g_clear_object (&page->not_responded_filter);
 
   /* g_clear_pointer on these would try to free self->attendees again */
+  page->base_filtered_list = NULL;
   page->filter_list_accepted = NULL;
   page->filter_list_tentative = NULL;
   page->filter_list_declined = NULL;
   page->filter_list_delegated = NULL;
   page->filter_list_not_responded = NULL;
+}
+
+static gboolean
+base_filter_cb (GcalEventAttendee *attendee,
+                gpointer           data)
+{
+  GcalAttendeeDetailsPage *self = GCAL_ATTENDEE_DETAILS_PAGE (data);
+  GcalEventAttendeeType type = gcal_event_attendee_get_attendee_type (attendee);
+
+  switch (self->attendee_type_filter_flags)
+  {
+    case GCAL_EVENT_ATTENDEE_TYPE_FILTER_PERSON:
+      return type == GCAL_EVENT_ATTENDEE_TYPE_INDIVIDUAL || type == GCAL_EVENT_ATTENDEE_TYPE_GROUP;
+    case GCAL_EVENT_ATTENDEE_TYPE_FILTER_RESOURCE:
+      return type == GCAL_EVENT_ATTENDEE_TYPE_RESOURCE || type == GCAL_EVENT_ATTENDEE_TYPE_ROOM;
+    case GCAL_EVENT_ATTENDEE_TYPE_FILTER_NONE:
+    default:
+      return TRUE;
+  }
 }
 
 static gboolean
@@ -147,6 +181,7 @@ custom_not_responded_filter_cb (GcalEventAttendee *attendee,
 static void
 gcal_attendee_details_page_init_filters (GcalAttendeeDetailsPage *self)
 {
+  self->base_filter = gtk_custom_filter_new ((GtkCustomFilterFunc) base_filter_cb, self, NULL);
   self->accepted_filter = gtk_custom_filter_new ((GtkCustomFilterFunc) custom_accepted_filter_cb, NULL, NULL);
   self->tentative_filter = gtk_custom_filter_new ((GtkCustomFilterFunc) custom_tentative_filter_cb, NULL, NULL);
   self->declined_filter = gtk_custom_filter_new ((GtkCustomFilterFunc) custom_declined_filter_cb, NULL, NULL);
@@ -157,24 +192,28 @@ gcal_attendee_details_page_init_filters (GcalAttendeeDetailsPage *self)
 static void
 gcal_attendee_details_page_init_filter_models (GcalAttendeeDetailsPage *self)
 {
-  self->filter_list_accepted =
+  self->base_filtered_list =
     gtk_filter_list_model_new (G_LIST_MODEL (self->attendees),
+                               GTK_FILTER (self->base_filter));
+
+  self->filter_list_accepted =
+    gtk_filter_list_model_new (G_LIST_MODEL (self->base_filtered_list),
                                GTK_FILTER (self->accepted_filter));
 
   self->filter_list_tentative =
-    gtk_filter_list_model_new (G_LIST_MODEL (self->attendees),
+    gtk_filter_list_model_new (G_LIST_MODEL (self->base_filtered_list),
                                GTK_FILTER (self->tentative_filter));
 
   self->filter_list_declined =
-    gtk_filter_list_model_new (G_LIST_MODEL (self->attendees),
+    gtk_filter_list_model_new (G_LIST_MODEL (self->base_filtered_list),
                                GTK_FILTER (self->declined_filter));
 
   self->filter_list_delegated =
-    gtk_filter_list_model_new (G_LIST_MODEL (self->attendees),
+    gtk_filter_list_model_new (G_LIST_MODEL (self->base_filtered_list),
                                GTK_FILTER (self->delegated_filter));
 
   self->filter_list_not_responded =
-    gtk_filter_list_model_new (G_LIST_MODEL (self->attendees),
+    gtk_filter_list_model_new (G_LIST_MODEL (self->base_filtered_list),
                                GTK_FILTER (self->not_responded_filter));
 }
 
@@ -203,6 +242,27 @@ gcal_attendee_details_page_get_property (GObject    *object,
     case PROP_MODEL_NOT_RESPONDED:
       g_value_set_object (value, self->filter_list_not_responded);
       break;
+    case PROP_ATTENDEE_TYPE:
+      g_value_set_flags (value, self->attendee_type_filter_flags);
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    }
+}
+
+static void
+gcal_attendee_details_page_set_property (GObject      *object,
+                                         guint         property_id,
+                                         const GValue *value,
+                                         GParamSpec   *pspec)
+{
+  GcalAttendeeDetailsPage *self = GCAL_ATTENDEE_DETAILS_PAGE (object);
+
+  switch (property_id)
+    {
+    case PROP_ATTENDEE_TYPE:
+      set_type_filter_flags (self, g_value_get_flags (value));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -213,7 +273,7 @@ gcal_attendee_details_page_init (GcalAttendeeDetailsPage *instance)
 {
   g_assert (GCAL_IS_ATTENDEE_DETAILS_PAGE (instance));
 
-  instance->attendee_type = GCAL_EVENT_ATTENDEE_TYPE_NONE;
+  instance->attendee_type_filter_flags = GCAL_EVENT_ATTENDEE_TYPE_FILTER_NONE;
 
   instance->attendees = g_list_store_new (GCAL_TYPE_EVENT_ATTENDEE);
   gcal_attendee_details_page_init_filters (instance);
@@ -257,6 +317,7 @@ gcal_attendee_details_page_class_init (GcalAttendeeDetailsPageClass *klass)
 
   object_class->finalize = gcal_attendee_details_page_finalize;
   object_class->get_property = gcal_attendee_details_page_get_property;
+  object_class->set_property = gcal_attendee_details_page_set_property;
 
   /**
    * GcalAttendeeDetailsPage:model-accepted:
@@ -305,6 +366,19 @@ gcal_attendee_details_page_class_init (GcalAttendeeDetailsPageClass *klass)
     g_param_spec_object ("model-not-responded", NULL, NULL,
                          GTK_TYPE_FILTER_LIST_MODEL, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
+  /**
+   * GcalAttendeeDetailsPage:attendee-type:
+   *
+   * Used for the base filter to filter the attendees based on
+   * attendee type (aka CUTYPE).
+   * GCAL_EVENT_ATTENDEE_TYPE_NONE is used to clear the filter.
+   */
+  properties[PROP_ATTENDEE_TYPE] =
+    g_param_spec_flags ("attendee-type-filter-flags", NULL, NULL,
+                       GCAL_TYPE_EVENT_ATTENDEE_TYPE_FILTER_FLAGS,
+                       GCAL_EVENT_ATTENDEE_TYPE_FILTER_NONE,
+                       G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   /* widget */
@@ -339,4 +413,12 @@ gcal_attendee_details_page_set_attendees (GcalAttendeeDetailsPage *self,
     {
       g_list_store_append (self->attendees, iter->data);
     }
+}
+
+void
+gcal_attendee_details_page_set_type_filter (GcalAttendeeDetailsPage         *self,
+                                            GcalEventAttendeeTypeFilterFlags flags)
+{
+  g_assert (GCAL_IS_ATTENDEE_DETAILS_PAGE (self));
+  set_type_filter_flags (self, flags);
 }

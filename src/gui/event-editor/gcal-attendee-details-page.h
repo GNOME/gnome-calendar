@@ -19,6 +19,7 @@
 #ifndef GCAL_ATTENDEE_DETAILS_PAGE_H
 #define GCAL_ATTENDEE_DETAILS_PAGE_H
 
+#include "gcal-enums.h"
 #include <adwaita.h>
 
 G_BEGIN_DECLS
@@ -28,6 +29,9 @@ G_DECLARE_FINAL_TYPE (GcalAttendeeDetailsPage, gcal_attendee_details_page, GCAL,
 
 void                 gcal_attendee_details_page_set_attendees          (GcalAttendeeDetailsPage *self,
                                                                         GSList                  *attendees);
+
+void                 gcal_attendee_details_page_set_type_filter        (GcalAttendeeDetailsPage         *self,
+                                                                        GcalEventAttendeeTypeFilterFlags flags);
 
 G_END_DECLS
 
