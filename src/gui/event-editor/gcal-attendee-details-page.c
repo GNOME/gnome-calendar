@@ -31,7 +31,6 @@ struct _GcalAttendeeDetailsPage
 {
   AdwNavigationPage parent_instance;
 
-  GcalEvent                *event;
   GListStore               *attendees;
 
   GtkFilterListModel       *filter_list_accepted;
@@ -214,6 +213,8 @@ gcal_attendee_details_page_init (GcalAttendeeDetailsPage *instance)
 {
   g_assert (GCAL_IS_ATTENDEE_DETAILS_PAGE (instance));
 
+  instance->attendee_type = GCAL_EVENT_ATTENDEE_TYPE_NONE;
+
   instance->attendees = g_list_store_new (GCAL_TYPE_EVENT_ATTENDEE);
   gcal_attendee_details_page_init_filters (instance);
   gcal_attendee_details_page_init_filter_models (instance);
@@ -318,34 +319,22 @@ gcal_attendee_details_page_class_init (GcalAttendeeDetailsPageClass *klass)
 }
 
 /**
- * gcal_attendee_details_page_set_event:
+ * gcal_attendee_details_page_set_attendees:
  * @self: a #GcalAttendeeDetailsPage instance.
- * @event: a #GcalEvent to use for this page.
+ * @attendees: a list of #GcalEventAttendee to display.
  *
- * Sets the event for this page in a similar fashion to the #GcalEventEditorSection.
- * Because this page is a reusable widget, the old event reference is replaced and
- * the contents of this widget are reset while properly cleaning up resources.
+ * Sets the attendees for display.
  */
 void
-gcal_attendee_details_page_set_event (GcalAttendeeDetailsPage *self,
-                                      GcalEvent               *event)
+gcal_attendee_details_page_set_attendees (GcalAttendeeDetailsPage *self,
+                                          GSList                  *attendees)
 {
   g_assert (GCAL_IS_ATTENDEE_DETAILS_PAGE (self));
 
-  if (self->event == event)
-    return;
-
   gcal_attendee_details_page_clear_list (self);
 
-  g_set_object (&self->event, event);
-
-  if (self->event == NULL)
-    return;
-
-  g_autoptr (GSList) attendees = NULL;
   g_autoptr (GSList) iter = NULL;
 
-  attendees = gcal_event_get_attendees (self->event);
   for (iter = attendees; iter != NULL; iter = iter->next)
     {
       g_list_store_append (self->attendees, iter->data);

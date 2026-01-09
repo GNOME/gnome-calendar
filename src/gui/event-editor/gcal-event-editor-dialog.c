@@ -313,10 +313,14 @@ static void
 on_attendees_summary_activated_cb (GcalAttendeesSection  *section,
                                    GcalEventEditorDialog *self)
 {
+  g_autoptr (GSList) attendees = NULL;
+
   g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (self));
 
-  gcal_attendee_details_page_set_event (GCAL_ATTENDEE_DETAILS_PAGE (self->attendee_details_page),
-                                        self->event);
+  attendees = gcal_event_get_attendees (self->event);
+
+  gcal_attendee_details_page_set_attendees (GCAL_ATTENDEE_DETAILS_PAGE (self->attendee_details_page),
+                                            attendees);
 
   adw_navigation_view_push (ADW_NAVIGATION_VIEW (self->nav_view),
                             ADW_NAVIGATION_PAGE (self->attendee_details_page));
