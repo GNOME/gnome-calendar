@@ -80,6 +80,11 @@ template $GcalWindow: Adw.ApplicationWindow {
     }
 
     Shortcut {
+      trigger: "<Control>w";
+      action: "action(window.close)";
+    }
+
+    Shortcut {
       trigger: "<Control>q";
       action: "action(app.quit)";
     }
