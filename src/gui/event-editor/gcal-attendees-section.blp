@@ -23,30 +23,16 @@ template $GcalAttendeesSection: Gtk.Box {
       ]
     }
 
-    Adw.ActionRow summary_row {
+    $GcalAttendeeSummaryRow summary_row {
       title: _("Participants");
-      activatable-widget: open_details;
-      activated => $on_participant_summary_row_activated_cb(template) not-swapped;
+      attendees: bind template.attendees;
+      filter-flags: GCAL_EVENT_ATTENDEE_TYPE_FILTER_PERSON;
+    }
 
-      styles [
-        "property",
-      ]
-
-      [suffix]
-      Label {
-        valign: center;
-        label: bind template.num-participants as <string>;
-        tooltip-text: _("Number of participants");
-
-        styles [
-          "participants-count-label",
-        ]
-      }
-
-      [suffix]
-      Image open_details {
-        icon-name: "go-next-symbolic";
-      }
+    $GcalAttendeeSummaryRow {
+      title: _("Resources");
+      attendees: bind template.attendees;
+      filter-flags: GCAL_EVENT_ATTENDEE_TYPE_FILTER_RESOURCE;
     }
   }
 }

@@ -16,5 +16,6 @@
     <file compressed="true">gcal-attendees-section.ui</file>
     <file compressed="true">gcal-attendee-row.ui</file>
     <file compressed="true">gcal-attendee-details-page.ui</file>
+    <file compressed="true">gcal-attendee-summary-row.ui</file>
   </gresource>
 </gresources>

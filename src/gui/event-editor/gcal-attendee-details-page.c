@@ -415,6 +415,15 @@ gcal_attendee_details_page_set_attendees (GcalAttendeeDetailsPage *self,
     }
 }
 
+/**
+ * gcal_attendee_details_page_set_type_filter:
+ * @self: a #GcalAttendeeDetailsPage instance.
+ * @flags: flags of type #GcalEventAttendeeTypeFilterFlags.
+ *
+ * Sets the type of attendees to use as the base filter on the
+ * list of attendees. E.g. only people or only resources, or both
+ * are filtered before grouping by response is performed.
+ */
 void
 gcal_attendee_details_page_set_type_filter (GcalAttendeeDetailsPage         *self,
                                             GcalEventAttendeeTypeFilterFlags flags)

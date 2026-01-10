@@ -310,23 +310,6 @@ out:
  */
 
 static void
-on_attendees_summary_activated_cb (GcalAttendeesSection  *section,
-                                   GcalEventEditorDialog *self)
-{
-  g_autoptr (GSList) attendees = NULL;
-
-  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (self));
-
-  attendees = gcal_event_get_attendees (self->event);
-
-  gcal_attendee_details_page_set_attendees (GCAL_ATTENDEE_DETAILS_PAGE (self->attendee_details_page),
-                                            attendees);
-
-  adw_navigation_view_push (ADW_NAVIGATION_VIEW (self->nav_view),
-                            ADW_NAVIGATION_PAGE (self->attendee_details_page));
-}
-
-static void
 on_event_editor_save_action_activated_cb (GSimpleAction *action,
                                           GVariant      *param,
                                           gpointer       user_data)
@@ -635,7 +618,6 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   /* callbacks */
   gtk_widget_class_bind_template_callback (widget_class, on_cancel_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_delete_row_activated_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_attendees_summary_activated_cb);
 }
 
 static void
@@ -643,7 +625,7 @@ gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
 {
   static const GActionEntry actions[] = {
     {"save", on_event_editor_save_action_activated_cb },
-    {"show-attendees-detail-page", on_show_attendees_detail_page_action_activated_cb },
+    {"show-attendees-detail-page", on_show_attendees_detail_page_action_activated_cb, "u" },
   };
 
   gint i = 0;

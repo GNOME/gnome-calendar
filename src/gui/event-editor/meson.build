@@ -19,6 +19,7 @@ blueprints = custom_target(
     'gcal-attendees-section.blp',
     'gcal-attendee-row.blp',
     'gcal-attendee-details-page.blp',
+    'gcal-attendee-summary-row.blp',
   ),
   output: '.',
   command: [
@@ -55,4 +56,5 @@ sources += files(
   'gcal-attendees-section.c',
   'gcal-attendee-row.c',
   'gcal-attendee-details-page.c',
+  'gcal-attendee-summary-row.c',
 )

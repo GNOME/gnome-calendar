@@ -1,0 +1,26 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalAttendeeSummaryRow: Adw.ActionRow {
+  visible: bind template.filtered-list as <Gtk.FilterListModel>.n-items;
+  activatable-widget: open_details;
+
+  styles [
+    "property",
+  ]
+
+  [suffix]
+  Label {
+    valign: center;
+    label: bind template.filtered-list as <Gtk.FilterListModel>.n-items;
+
+    styles [
+      "participants-count-label",
+    ]
+  }
+
+  [suffix]
+  Image open_details {
+    icon-name: "go-next-symbolic";
+  }
+}

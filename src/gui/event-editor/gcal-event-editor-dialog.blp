@@ -63,7 +63,6 @@ template $GcalEventEditorDialog: Adw.Dialog {
             Adw.PreferencesGroup participants_group {
               $GcalAttendeesSection attendees_section {
                 sensitive: bind template.writable;
-                summary-row-activated => $on_attendees_summary_activated_cb(template) not-swapped;
               }
             }
 
