@@ -31,7 +31,7 @@ struct _GcalAttendeeDetailsPage
 {
   AdwNavigationPage parent_instance;
 
-  GListStore               *attendees;
+  GListModel               *attendees;
 
   GtkFilterListModel       *base_filtered_list;
   GtkFilterListModel       *filter_list_accepted;
@@ -79,14 +79,6 @@ set_type_filter_flags (GcalAttendeeDetailsPage         *self,
   gtk_filter_changed (GTK_FILTER (self->base_filter), GTK_FILTER_CHANGE_DIFFERENT);
 }
 
-static void
-gcal_attendee_details_page_clear_list (GcalAttendeeDetailsPage *self)
-{
-  g_assert (GCAL_IS_ATTENDEE_DETAILS_PAGE (self));
-
-  g_list_store_remove_all (self->attendees);
-}
-
 static GtkWidget *
 create_attendee_row_widget (void *attendee,
                             void *user_data)
@@ -98,8 +90,6 @@ static void
 gcal_attendee_details_page_finalize (GObject *object)
 {
   GcalAttendeeDetailsPage *page = (GcalAttendeeDetailsPage *) object;
-
-  g_clear_pointer (&page->attendees, g_list_store_remove_all);
 
   g_clear_object (&page->base_filter);
   g_clear_object (&page->accepted_filter);
@@ -125,7 +115,7 @@ base_filter_cb (GcalEventAttendee *attendee,
   GcalEventAttendeeType type = gcal_event_attendee_get_attendee_type (attendee);
 
   switch (self->attendee_type_filter_flags)
-  {
+    {
     case GCAL_EVENT_ATTENDEE_TYPE_FILTER_PERSON:
       return type == GCAL_EVENT_ATTENDEE_TYPE_INDIVIDUAL || type == GCAL_EVENT_ATTENDEE_TYPE_GROUP;
     case GCAL_EVENT_ATTENDEE_TYPE_FILTER_RESOURCE:
@@ -133,7 +123,7 @@ base_filter_cb (GcalEventAttendee *attendee,
     case GCAL_EVENT_ATTENDEE_TYPE_FILTER_NONE:
     default:
       return TRUE;
-  }
+    }
 }
 
 static gboolean
@@ -193,7 +183,7 @@ static void
 gcal_attendee_details_page_init_filter_models (GcalAttendeeDetailsPage *self)
 {
   self->base_filtered_list =
-    gtk_filter_list_model_new (G_LIST_MODEL (self->attendees),
+    gtk_filter_list_model_new (self->attendees,
                                GTK_FILTER (self->base_filter));
 
   self->filter_list_accepted =
@@ -275,7 +265,6 @@ gcal_attendee_details_page_init (GcalAttendeeDetailsPage *instance)
 
   instance->attendee_type_filter_flags = GCAL_EVENT_ATTENDEE_TYPE_FILTER_NONE;
 
-  instance->attendees = g_list_store_new (GCAL_TYPE_EVENT_ATTENDEE);
   gcal_attendee_details_page_init_filters (instance);
   gcal_attendee_details_page_init_filter_models (instance);
 
@@ -375,9 +364,9 @@ gcal_attendee_details_page_class_init (GcalAttendeeDetailsPageClass *klass)
    */
   properties[PROP_ATTENDEE_TYPE] =
     g_param_spec_flags ("attendee-type-filter-flags", NULL, NULL,
-                       GCAL_TYPE_EVENT_ATTENDEE_TYPE_FILTER_FLAGS,
-                       GCAL_EVENT_ATTENDEE_TYPE_FILTER_NONE,
-                       G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                        GCAL_TYPE_EVENT_ATTENDEE_TYPE_FILTER_FLAGS,
+                        GCAL_EVENT_ATTENDEE_TYPE_FILTER_NONE,
+                        G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
@@ -395,24 +384,22 @@ gcal_attendee_details_page_class_init (GcalAttendeeDetailsPageClass *klass)
 /**
  * gcal_attendee_details_page_set_attendees:
  * @self: a #GcalAttendeeDetailsPage instance.
- * @attendees: a list of #GcalEventAttendee to display.
+ * @attendees: a borrowed list of #GcalEventAttendee to display.
  *
- * Sets the attendees for display.
+ * Sets the attendees for display. This list is owned by the
+ * event editor dialog. Do not free here.
  */
 void
 gcal_attendee_details_page_set_attendees (GcalAttendeeDetailsPage *self,
-                                          GSList                  *attendees)
+                                          GListModel              *attendees)
 {
   g_assert (GCAL_IS_ATTENDEE_DETAILS_PAGE (self));
 
-  gcal_attendee_details_page_clear_list (self);
+  if (self->attendees == attendees)
+    return;
 
-  g_autoptr (GSList) iter = NULL;
-
-  for (iter = attendees; iter != NULL; iter = iter->next)
-    {
-      g_list_store_append (self->attendees, iter->data);
-    }
+  self->attendees = attendees;
+  gtk_filter_list_model_set_model (self->base_filtered_list, self->attendees);
 }
 
 /**

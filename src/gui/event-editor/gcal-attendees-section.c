@@ -63,9 +63,6 @@ static void
 reset_section (GcalAttendeesSection *self,
                GcalEvent            *event)
 {
-  if (event == self->event)
-    return;
-
   g_set_object (&self->event, event);
 
   g_list_store_remove_all (self->attendees);
@@ -80,6 +77,9 @@ gcal_attendees_section_set_event (GcalEventEditorSection *section,
   GcalAttendeesSection *self = GCAL_ATTENDEES_SECTION (section);
   GcalEventOrganizer *organizer;
   g_autoptr (GSList) attendees = NULL;
+
+  if (event == self->event)
+    return;
 
   reset_section (self, event);
 

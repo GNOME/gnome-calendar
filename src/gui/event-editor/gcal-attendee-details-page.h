@@ -21,6 +21,7 @@
 
 #include "gcal-enums.h"
 #include <adwaita.h>
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
 
@@ -28,7 +29,7 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (GcalAttendeeDetailsPage, gcal_attendee_details_page, GCAL, ATTENDEE_DETAILS_PAGE, AdwNavigationPage)
 
 void                 gcal_attendee_details_page_set_attendees          (GcalAttendeeDetailsPage *self,
-                                                                        GSList                  *attendees);
+                                                                        GListModel              *attendees);
 
 void                 gcal_attendee_details_page_set_type_filter        (GcalAttendeeDetailsPage         *self,
                                                                         GcalEventAttendeeTypeFilterFlags flags);
