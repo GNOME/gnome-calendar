@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-11-21 22:05+0000\n"
-"PO-Revision-Date: 2025-11-22 16:22+0300\n"
+"POT-Creation-Date: 2025-12-31 19:49+0000\n"
+"PO-Revision-Date: 2026-01-05 16:35+0300\n"
 "Last-Translator: Artur So <arturios2005@mail.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -130,15 +130,15 @@ msgstr ""
 "что позволяет использовать его в любом месте и в любое время во время "
 "путешествий (или после краха цивилизации)"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
 msgid "Week view"
 msgstr "Просмотр недели"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:66
 msgid "Month view"
 msgstr "Просмотр месяца"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:70
 msgid "Event editor"
 msgstr "Редактор событий"
 
@@ -304,7 +304,7 @@ msgstr "Пароль"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:161
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:16
-#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1127
+#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1213
 msgid "_Cancel"
 msgstr "_Отмена"
 
@@ -1256,6 +1256,18 @@ msgstr "Поиск событий"
 msgid "Search events"
 msgstr "Поиск событий"
 
+#: src/gui/gcal-search-button.c:179
+msgid "No results found"
+msgstr "Результатов не найдено"
+
+#: src/gui/gcal-search-button.c:179
+#, c-format
+msgid "One result found"
+msgid_plural "%u results found"
+msgstr[0] "Найден %u результат"
+msgstr[1] "Найдено %u результата"
+msgstr[2] "Найдено %u результатов"
+
 #: src/gui/gcal-sync-indicator.blp:19
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars"
@@ -1581,11 +1593,11 @@ msgstr "Скрыть дополнительные события"
 msgid "Show Additional Events"
 msgstr "Показать дополнительные события"
 
-#: src/utils/gcal-utils.c:1123
+#: src/utils/gcal-utils.c:1209
 msgid "Modify Multiple Events?"
 msgstr "Изменить несколько событий?"
 
-#: src/utils/gcal-utils.c:1124
+#: src/utils/gcal-utils.c:1210
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1593,73 +1605,73 @@ msgstr ""
 "Событие, которое вы пытаетесь изменить, повторяется. Выбранные вами "
 "изменения должны применяться к:"
 
-#: src/utils/gcal-utils.c:1128
+#: src/utils/gcal-utils.c:1214
 msgid "_Only This Event"
 msgstr "_Только это событие"
 
-#: src/utils/gcal-utils.c:1134
+#: src/utils/gcal-utils.c:1220
 msgid "_Subsequent Events"
 msgstr "_Последующие события"
 
-#: src/utils/gcal-utils.c:1137
+#: src/utils/gcal-utils.c:1223
 msgid "_All Events"
 msgstr "_Все события"
 
 #. Conferencing
-#: src/utils/gcal-utils.c:1240
+#: src/utils/gcal-utils.c:1326
 msgid "BlueJeans"
 msgstr "BlueJeans"
 
-#: src/utils/gcal-utils.c:1241 src/utils/gcal-utils.c:1242
+#: src/utils/gcal-utils.c:1327 src/utils/gcal-utils.c:1328
 msgid "BigBlueButton"
 msgstr "BigBlueButton"
 
-#: src/utils/gcal-utils.c:1243
+#: src/utils/gcal-utils.c:1329
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1244 src/utils/gcal-utils.c:1245
+#: src/utils/gcal-utils.c:1330 src/utils/gcal-utils.c:1331
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1246
+#: src/utils/gcal-utils.c:1332
 msgid "Uber Conference"
 msgstr "Конференция Uber"
 
-#: src/utils/gcal-utils.c:1247
+#: src/utils/gcal-utils.c:1333
 msgid "GNOME Meet"
 msgstr "GNOME Meet"
 
-#: src/utils/gcal-utils.c:1248
+#: src/utils/gcal-utils.c:1334
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
-#: src/utils/gcal-utils.c:1249
+#: src/utils/gcal-utils.c:1335
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1250
+#: src/utils/gcal-utils.c:1336
 msgid "Webex"
 msgstr "Webex"
 
-#: src/utils/gcal-utils.c:1251
+#: src/utils/gcal-utils.c:1337
 msgid "Zoom"
 msgstr "Zoom"
 
 #. Map
-#: src/utils/gcal-utils.c:1254
+#: src/utils/gcal-utils.c:1340
 msgid "View Map"
 msgstr "Посмотреть на карте"
 
-#: src/utils/gcal-utils.c:1255
+#: src/utils/gcal-utils.c:1341
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: src/utils/gcal-utils.c:1256 src/utils/gcal-utils.c:1257
+#: src/utils/gcal-utils.c:1342 src/utils/gcal-utils.c:1343
 msgid "Google Maps"
 msgstr "Карты Google"
 
-#: src/utils/gcal-utils.c:1258
+#: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Карты Bing"
 
