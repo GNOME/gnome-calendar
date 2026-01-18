@@ -28,7 +28,7 @@
 #include "gcal-event-editor-section.h"
 #include "gcal-event-organizer.h"
 #include "gcal-event.h"
-#include "gcal-utils.h"
+#include "gcal-organizer-row.h"
 #include "glib-object.h"
 
 struct _GcalAttendeesSection
@@ -37,8 +37,8 @@ struct _GcalAttendeesSection
 
   GcalContext         *context;
   GcalEvent           *event;
+  GcalEventOrganizer  *organizer;
 
-  AdwActionRow        *organizer_row;
   AdwActionRow        *summary_row;
 
   GListStore          *attendees;
@@ -54,6 +54,7 @@ enum
   PROP_0,
   PROP_CONTEXT,
   PROP_ATTENDEES,
+  PROP_ORGANIZER,
   N_PROPS
 };
 
@@ -66,7 +67,6 @@ reset_section (GcalAttendeesSection *self,
   g_set_object (&self->event, event);
 
   g_list_store_remove_all (self->attendees);
-  adw_action_row_set_subtitle (self->organizer_row, NULL);
 }
 
 static void
@@ -75,7 +75,6 @@ gcal_attendees_section_set_event (GcalEventEditorSection *section,
                                   GcalEventEditorFlags    flags)
 {
   GcalAttendeesSection *self = GCAL_ATTENDEES_SECTION (section);
-  GcalEventOrganizer *organizer;
   g_autoptr (GSList) attendees = NULL;
 
   if (event == self->event)
@@ -87,14 +86,7 @@ gcal_attendees_section_set_event (GcalEventEditorSection *section,
     return;
 
   /* set organizer */
-  organizer = gcal_event_get_organizer (self->event);
-  if (organizer)
-    {
-      g_autofree const gchar *email = gcal_get_email_from_mailto_uri (gcal_event_organizer_get_uri (organizer));
-      g_autofree const gchar *name_with_email = g_strdup_printf ("%s (%s)", gcal_event_organizer_get_name (organizer), email);
-
-      adw_action_row_set_subtitle (self->organizer_row, name_with_email);
-    }
+  self->organizer = gcal_event_get_organizer (self->event);
 
   /* set attendees and summarize attendance status */
   attendees = gcal_event_get_attendees (self->event);
@@ -102,6 +94,7 @@ gcal_attendees_section_set_event (GcalEventEditorSection *section,
     g_list_store_append (self->attendees, GCAL_EVENT_ATTENDEE (l->data));
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ATTENDEES]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ORGANIZER]);
 }
 
 static void
@@ -143,6 +136,10 @@ gcal_attendees_section_get_property (GObject *object,
       g_value_set_object (value, self->attendees);
       break;
 
+    case PROP_ORGANIZER:
+      g_value_set_object (value, self->organizer);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -161,6 +158,10 @@ gcal_attendees_section_set_property (GObject *object,
     case PROP_CONTEXT:
       g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
+      break;
+
+    case PROP_ORGANIZER:
+      self->organizer = g_value_get_object (value);
       break;
 
     default:
@@ -193,6 +194,7 @@ gcal_attendees_section_class_init (GcalAttendeesSectionClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
+  g_type_ensure (GCAL_TYPE_ORGANIZER_ROW);
   g_type_ensure (GCAL_TYPE_ATTENDEE_SUMMARY_ROW);
 
   object_class->finalize = gcal_attendees_section_finalize;
@@ -209,15 +211,31 @@ gcal_attendees_section_class_init (GcalAttendeesSectionClass *klass)
                          GCAL_TYPE_CONTEXT,
                          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
+  /**
+   * GcalAttendeesSection:attendees:
+   *
+   * ListStore of #GcalEventAttendee.
+   * Passed to the summary rows #GcalAttendeeSummaryRow.
+   */
   properties[PROP_ATTENDEES] =
     g_param_spec_object ("attendees", NULL, NULL,
                          G_TYPE_LIST_STORE,
                          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
+  /**
+   * GcalAttendeesSection:organizer:
+   *
+   * Organizer of the event.
+   * #GcalOrganizerRow binds to this property.
+   */
+  properties[PROP_ORGANIZER] =
+    g_param_spec_object ("organizer", NULL, NULL,
+                         GCAL_TYPE_EVENT_ORGANIZER,
+                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-attendees-section.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalAttendeesSection, organizer_row);
   gtk_widget_class_bind_template_child (widget_class, GcalAttendeesSection, summary_row);
 }

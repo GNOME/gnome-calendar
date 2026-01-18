@@ -1,5 +1,4 @@
 using Gtk 4.0;
-using Adw 1;
 
 template $GcalAttendeesSection: Gtk.Box {
   orientation: vertical;
@@ -15,12 +14,8 @@ template $GcalAttendeesSection: Gtk.Box {
       "boxed-list",
     ]
 
-    Adw.ActionRow organizer_row {
-      title: _("Organizer");
-
-      styles [
-        "property",
-      ]
+    $GcalOrganizerRow organizer_row {
+      organizer: bind template.organizer;
     }
 
     $GcalAttendeeSummaryRow summary_row {

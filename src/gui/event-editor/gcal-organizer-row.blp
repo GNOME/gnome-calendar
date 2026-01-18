@@ -1,0 +1,28 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalOrganizerRow: Adw.ActionRow {
+  title: _("Organizer");
+  subtitle: bind $generate_subtitle(template.organizer) as <string>;
+
+  styles [
+    "property",
+  ]
+
+  GestureClick gesture_click {
+    button: 3;
+  }
+}
+
+PopoverMenu context_menu {
+  menu-model: context_menu_model;
+  has-arrow: false;
+  halign: start;
+}
+
+menu context_menu_model {
+  item {
+    label: _("Copy email");
+    action: "organizer-row.copy-email";
+  }
+}
