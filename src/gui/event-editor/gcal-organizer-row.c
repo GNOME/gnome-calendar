@@ -82,13 +82,14 @@ static gchar*
 generate_subtitle (GcalOrganizerRow   *self,
                    GcalEventOrganizer *organizer)
 {
+  g_autofree const gchar *name_with_email = NULL;
   g_autofree const gchar *email = NULL;
-  g_autofree const gchar *name_with_email = g_strdup_printf ("%s (%s)", gcal_event_organizer_get_name (organizer), email);
 
   if (organizer == NULL)
     return NULL;
 
   email = gcal_get_email_from_mailto_uri (gcal_event_organizer_get_uri (organizer));
+  name_with_email = g_strdup_printf ("%s (%s)", gcal_event_organizer_get_name (organizer), email);
 
   return g_strdup (name_with_email);
 }
