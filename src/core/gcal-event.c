@@ -27,6 +27,7 @@
 #include "gcal-recurrence.h"
 #include "gcal-utils.h"
 
+#include <gio/gio.h>
 #include <glib/gi18n.h>
 
 #define LIBICAL_TZID_PREFIX "/freeassociation.sourceforge.net/"
@@ -99,7 +100,7 @@ struct _GcalEvent
 
   /* A map of GcalAlarmType */
   GHashTable         *alarms;
-  GSList             *attendees;
+  GListStore         *attendees;
   GcalEventOrganizer *organizer;
 
   ECalComponent      *component;
@@ -315,10 +316,9 @@ load_attendees (GcalEvent *self)
 
   for (c = ecal_attendees; c != NULL; c = c->next)
     {
-      GcalEventAttendee *attendee;
+      g_autoptr (GcalEventAttendee) attendee = NULL;
       attendee = gcal_event_attendee_new (c->data);
-      /* we don't care about the order so no need to reverse */
-      self->attendees = g_slist_prepend (self->attendees, attendee);
+      g_list_store_append (self->attendees, attendee);
     }
 
   g_slist_free_full (ecal_attendees, e_cal_component_attendee_free);
@@ -504,10 +504,10 @@ gcal_event_finalize (GObject *object)
   g_clear_pointer (&self->alarms, g_hash_table_unref);
   g_clear_pointer (&self->uid, g_free);
   g_clear_pointer (&self->color, gdk_rgba_free);
+  g_clear_pointer (&self->recurrence, gcal_recurrence_unref);
   g_clear_object (&self->component);
   g_clear_object (&self->calendar);
-  g_clear_pointer (&self->recurrence, gcal_recurrence_unref);
-  g_slist_free_full (self->attendees, g_object_unref);
+  g_clear_object (&self->attendees);
   g_clear_object (&self->organizer);
 
   G_OBJECT_CLASS (gcal_event_parent_class)->finalize (object);
@@ -813,6 +813,9 @@ gcal_event_init (GcalEvent *self)
 
   /* Alarms */
   self->alarms = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, g_free);
+
+  /* Attendees */
+  self->attendees = g_list_store_new (GCAL_TYPE_EVENT_ATTENDEE);
 }
 
 /**
@@ -1833,9 +1836,12 @@ gcal_event_overlaps (GcalEvent *self,
  * gcal_event_get_attendees:
  * @self: a #GcalEvent
  *
- * Returns: (transfer full) (nullable): a copy list of attendees.
+ * Remember that g_list_model_get_item() increases the ref count on
+ * the returned object.
+ *
+ * Returns: (transfer none) (nullable): the attendees belonging to @self
  */
-GSList *
+GListModel *
 gcal_event_get_attendees (GcalEvent *self)
 {
   g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
@@ -1843,14 +1849,7 @@ gcal_event_get_attendees (GcalEvent *self)
   if (self->attendees == NULL)
     return NULL;
 
-  GSList *ret = NULL, *c = NULL;
-  for (c = self->attendees; c != NULL; c = c->next)
-    {
-      ret = g_slist_prepend (ret, g_object_ref (c->data));
-    }
-
-  /* reverse here so the returned list order matches the internal one */
-  return g_slist_reverse (ret);
+  return G_LIST_MODEL (self->attendees);
 }
 
 /**

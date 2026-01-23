@@ -24,6 +24,7 @@
 #include "gcal-range.h"
 #include "gcal-recurrence.h"
 
+#include <gio/gio.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <libecal/libecal.h>
@@ -134,7 +135,7 @@ gchar*               gcal_event_format_date                      (GcalEvent     
 gboolean             gcal_event_overlaps                         (GcalEvent          *self,
                                                                   GcalRange          *range);
 
-GSList *             gcal_event_get_attendees                    (GcalEvent          *self);
+GListModel *         gcal_event_get_attendees                    (GcalEvent          *self);
 
 GcalEventOrganizer * gcal_event_get_organizer                    (GcalEvent          *self);
 

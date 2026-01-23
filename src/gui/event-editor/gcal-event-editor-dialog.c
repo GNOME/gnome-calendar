@@ -81,7 +81,7 @@ struct _GcalEventEditorDialog
   GBinding           *event_title_binding;
 
   GListStore         *read_only_calendar_model;
-  GListStore         *attendees_model;
+  GListModel         *attendees_model;
   GSimpleActionGroup *action_group;
 
   /* flags */
@@ -205,7 +205,6 @@ setup_context (GcalEventEditorDialog *self)
   writable_calendars = gcal_create_writable_calendars_model (manager);
 
   self->read_only_calendar_model = g_list_store_new (GCAL_TYPE_CALENDAR);
-  self->attendees_model = g_list_store_new (GCAL_TYPE_EVENT_ATTENDEE);
 
   all_calendars = g_list_store_new (G_TYPE_LIST_MODEL);
   g_list_store_append (all_calendars, self->read_only_calendar_model);
@@ -330,7 +329,7 @@ on_show_attendees_detail_page_action_activated_cb (GSimpleAction *action,
   GcalEventEditorDialog *self = GCAL_EVENT_EDITOR_DIALOG (user_data);
 
   gcal_attendee_details_page_set_attendees (GCAL_ATTENDEE_DETAILS_PAGE (self->attendee_details_page),
-                                            G_LIST_MODEL (self->attendees_model));
+                                            self->attendees_model);
 
   gcal_attendee_details_page_set_type_filter (GCAL_ATTENDEE_DETAILS_PAGE (self->attendee_details_page),
                                               g_variant_get_uint32 (param));
@@ -479,7 +478,8 @@ gcal_event_editor_dialog_finalize (GObject *object)
   g_clear_object (&self->action_group);
   g_clear_object (&self->context);
   g_clear_object (&self->event);
-  g_clear_pointer (&self->attendees_model, g_list_store_remove_all);
+
+  self->attendees_model = NULL; /* not owned */
 
   G_OBJECT_CLASS (gcal_event_editor_dialog_parent_class)->finalize (object);
 
@@ -677,7 +677,6 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
 {
   g_autoptr (GdkPaintable) paintable = NULL;
   g_autoptr (GcalEvent) cloned_event = NULL;
-  g_autoptr (GSList) attendees = NULL;
   GcalEventEditorFlags flags;
   GcalCalendar *calendar;
   gint i;
@@ -687,7 +686,6 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   g_return_if_fail (GCAL_IS_EVENT_EDITOR_DIALOG (self));
 
   g_clear_object (&self->event);
-  g_list_store_remove_all (self->attendees_model);
 
   /* If we just set the event to NULL, simply send a property notify */
   if (!event)
@@ -732,9 +730,7 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
     gtk_widget_grab_focus (self->done_button);
 
   /* fill attendees list */
-  attendees = gcal_event_get_attendees (self->event);
-  for (GSList *it = attendees; it != NULL; it = it->next)
-    g_list_store_append (self->attendees_model, GCAL_EVENT_ATTENDEE (it->data));
+  self->attendees_model = gcal_event_get_attendees (self->event);
 
 out:
   flags = GCAL_EVENT_EDITOR_FLAG_NONE;

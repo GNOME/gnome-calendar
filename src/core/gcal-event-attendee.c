@@ -200,11 +200,13 @@ gcal_event_attendee_get_property (GObject *object,
 }
 
 static void
-gcal_event_attendee_dispose (GObject *instance)
+gcal_event_attendee_dispose (GObject *object)
 {
-  GcalEventAttendee *self = GCAL_EVENT_ATTENDEE (instance);
+  GcalEventAttendee *self = GCAL_EVENT_ATTENDEE (object);
 
   g_clear_pointer (&self->ecal_attendee, e_cal_component_attendee_free);
+
+  G_OBJECT_CLASS (gcal_event_attendee_parent_class)->dispose (object);
 }
 
 static void

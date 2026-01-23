@@ -411,7 +411,7 @@ event_get_attendees (void)
   /* "ATTENDEE;CN=Carol Lee;RSVP=FALSE;ROLE=OPT-PARTICIPANT:mailto:carol@example.com\n" \ */
   g_autoptr (GcalEvent) event = NULL;
   g_autoptr (GError) error = NULL;
-  GSList *attendees = NULL, *l = NULL;
+  GListModel *attendees = NULL;
 
   event = create_event_for_string (STUB_EVENT_WITH_ATTENDEES, &error);
 
@@ -419,9 +419,9 @@ event_get_attendees (void)
 
   g_assert_nonnull (attendees);
 
-  for (l = attendees; l != NULL; l = l->next)
+  for (guint i = 0; i < g_list_model_get_n_items (attendees); ++i)
     {
-      GcalEventAttendee *at = (GcalEventAttendee *) l->data;
+      g_autoptr (GcalEventAttendee) at = (GcalEventAttendee *) g_list_model_get_item (attendees, i);
 
       g_assert_cmpstr (NULL, !=, gcal_event_attendee_get_name (at));
       g_assert_cmpstr (NULL, !=, gcal_event_attendee_get_uri (at));
@@ -438,8 +438,6 @@ event_get_attendees (void)
 
   g_autofree const gchar *uri_trimmed = gcal_get_email_from_mailto_uri (gcal_event_organizer_get_uri (organizer));
   g_assert_cmpstr ("alice@example.com", ==, uri_trimmed);
-
-  g_slist_free_full (attendees, g_object_unref);
 }
 
 /*********************************************************************************************************************/

@@ -41,7 +41,7 @@ struct _GcalAttendeesSection
 
   AdwActionRow        *summary_row;
 
-  GListStore          *attendees;
+  GListModel          *attendees;
 };
 
 static void          gcal_event_editor_section_init_iface        (GcalEventEditorSectionInterface *iface);
@@ -61,26 +61,16 @@ enum
 static GParamSpec *properties[N_PROPS] = { NULL, };
 
 static void
-reset_section (GcalAttendeesSection *self,
-               GcalEvent            *event)
-{
-  g_set_object (&self->event, event);
-
-  g_list_store_remove_all (self->attendees);
-}
-
-static void
 gcal_attendees_section_set_event (GcalEventEditorSection *section,
                                   GcalEvent              *event,
                                   GcalEventEditorFlags    flags)
 {
   GcalAttendeesSection *self = GCAL_ATTENDEES_SECTION (section);
-  g_autoptr (GSList) attendees = NULL;
 
   if (event == self->event)
     return;
 
-  reset_section (self, event);
+  g_set_object (&self->event, event);
 
   if (self->event == NULL)
     return;
@@ -89,9 +79,7 @@ gcal_attendees_section_set_event (GcalEventEditorSection *section,
   self->organizer = gcal_event_get_organizer (self->event);
 
   /* set attendees and summarize attendance status */
-  attendees = gcal_event_get_attendees (self->event);
-  for (GSList *l = attendees; l != NULL; l = l->next)
-    g_list_store_append (self->attendees, GCAL_EVENT_ATTENDEE (l->data));
+  self->attendees = gcal_event_get_attendees (self->event);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ATTENDEES]);
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ORGANIZER]);
@@ -176,7 +164,8 @@ gcal_attendees_section_finalize (GObject *object)
 
   g_clear_object (&self->context);
   g_clear_object (&self->event);
-  g_clear_pointer (&self->attendees, g_list_store_remove_all);
+
+  self->attendees = NULL; /* not owned */
 
   G_OBJECT_CLASS (gcal_attendees_section_parent_class)->finalize (object);
 }
@@ -184,7 +173,6 @@ gcal_attendees_section_finalize (GObject *object)
 static void
 gcal_attendees_section_init (GcalAttendeesSection *instance)
 {
-  instance->attendees = g_list_store_new (GCAL_TYPE_EVENT_ATTENDEE);
   gtk_widget_init_template (GTK_WIDGET (instance));
 }
 
@@ -219,7 +207,7 @@ gcal_attendees_section_class_init (GcalAttendeesSectionClass *klass)
    */
   properties[PROP_ATTENDEES] =
     g_param_spec_object ("attendees", NULL, NULL,
-                         G_TYPE_LIST_STORE,
+                         G_TYPE_LIST_MODEL,
                          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
   /**
