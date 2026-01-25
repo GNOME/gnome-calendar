@@ -13,14 +13,14 @@
 # Daniel Coelho <dpcsoftware@gmail.com>, 2024.
 # Rafael Fontenelle <rafaelff@gnome.org>, 2012-2025.
 # Nilton Perim Neto <niltonperimneto@gmail.com>, 2025.
-# Juliano de Souza Camargo <julianosc@pm.me>, 2024-2025.
+# Juliano de Souza Camargo <julianosc@pm.me>, 2024-2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-12-12 17:51+0000\n"
-"PO-Revision-Date: 2025-12-15 10:15-0400\n"
+"POT-Creation-Date: 2026-01-21 19:37+0000\n"
+"PO-Revision-Date: 2026-01-25 18:21-0300\n"
 "Last-Translator: Juliano de Souza Camargo <julianosc@pm.me>\n"
 "Language-Team: Brazilian Portuguese <https://br.gnome.org/traducao/>\n"
 "Language: pt_BR\n"
@@ -146,21 +146,21 @@ msgstr ""
 "lugar e a qualquer momento enquanto viaja (ou depois do colapso da "
 "civilização.)"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
 msgid "Week view"
 msgstr "Visão de semana"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:66
 msgid "Month view"
 msgstr "Visão por mês"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:70
 msgid "Event editor"
 msgstr "Editor de eventos"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1750 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1783 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -169,13 +169,13 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1758
+#: src/core/gcal-event.c:1791
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1774
+#: src/core/gcal-event.c:1807
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -213,7 +213,7 @@ msgid "Calendar “%s” removed"
 msgstr "Calendário “%s” removido"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:952
+#: src/gui/gcal-window.c:981
 msgid "_Undo"
 msgstr "_Desfazer"
 
@@ -318,8 +318,8 @@ msgid "Password"
 msgstr "Senha"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:161
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:16
-#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1127
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:18
+#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1213
 msgid "_Cancel"
 msgstr "_Cancelar"
 
@@ -397,10 +397,6 @@ msgid "S"
 msgstr "S"
 
 #: src/gui/event-editor/gcal-alarm-row.blp:8
-msgid "Toggle Alarm Sound"
-msgstr "Habilitar/Desabilitar som do Alarme"
-
-#: src/gui/event-editor/gcal-alarm-row.blp:20
 msgid "Remove Alarm"
 msgstr "Remover alarme"
 
@@ -499,6 +495,77 @@ msgstr[1] "%1$u minutos antes"
 msgid "Event start time"
 msgstr "Horário de início do evento"
 
+#: src/gui/event-editor/gcal-attendee-row.blp:29
+msgid "Copy email"
+msgstr "Copiar e-mail"
+
+#: src/gui/event-editor/gcal-attendee-row.c:108
+msgid "Delegated to: "
+msgstr "Delegado para:"
+
+#: src/gui/event-editor/gcal-attendee-row.c:124
+msgid "optional"
+msgstr "opcional"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:5
+#: src/gui/event-editor/gcal-attendees-section.blp:22
+msgid "Participants"
+msgstr "Participantes"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:16
+msgid "Accepted"
+msgstr "Aceito"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:29
+msgid "Tentative"
+msgstr "Tentativa"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:42
+msgid "Declined"
+msgstr "Recusado"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:55
+msgid "Delegated"
+msgstr "Delegado"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:68
+msgid "Not responded"
+msgstr "Não respondido"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:111
+msgid "accepted"
+msgid_plural "accepted"
+msgstr[0] "aceito"
+msgstr[1] "aceitos"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:112
+msgid "maybe"
+msgid_plural "maybe"
+msgstr[0] "talvez"
+msgstr[1] "talvez"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:113
+msgid "declined"
+msgid_plural "declined"
+msgstr[0] "rejeitado"
+msgstr[1] "rejeitados"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:114
+msgid "delegated"
+msgid_plural "delegated"
+msgstr[0] "delegado"
+msgstr[1] "delegados"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:115
+msgid "not responded"
+msgid_plural "not responded"
+msgstr[0] "não respondido"
+msgstr[1] "não respondidos"
+
+#: src/gui/event-editor/gcal-attendees-section.blp:28
+msgid "Resources"
+msgstr "Recursos"
+
 #: src/gui/event-editor/gcal-date-chooser-row.blp:12
 msgid "Edit Date"
 msgstr "Edita data"
@@ -555,42 +622,42 @@ msgstr "Editar hora"
 msgid "%1$s (%2$s)"
 msgstr "%1$s (%2$s)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:23
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:25
+#: src/gui/event-editor/gcal-event-editor-dialog.c:129
 msgid "_Done"
 msgstr "_Feito"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:36
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:38
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr ""
 "Este evento está em um calendário somente leitura. Ele não pode ser editado "
 "ou excluído."
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:62
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:70
 msgid "Reminders"
 msgstr "Lembretes"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:70
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:78
 msgid "Notes"
 msgstr "Notas"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:81
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:89
 msgid "_Delete Event"
 msgstr "_Excluir evento"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.c:129
 msgid "_Save"
 msgstr "_Salvar"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:669
+#: src/gui/event-editor/gcal-event-editor-dialog.c:707
 msgid "New Event"
 msgstr "Novo evento"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:671
+#: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Event Details"
 msgstr "Mais detalhes"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:673
+#: src/gui/event-editor/gcal-event-editor-dialog.c:711
 msgid "Edit Event"
 msgstr "Editar evento"
 
@@ -775,7 +842,7 @@ msgstr ""
 "Leônidas Araújo <leorusvellt@hotmail.com>\n"
 "Daniel Coelho <dpcsoftware@gmail.com>"
 
-#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:374
+#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:389
 msgid "Weather"
 msgstr "Meteorologia"
 
@@ -1263,6 +1330,17 @@ msgstr "Pesquisa por eventos"
 msgid "Search events"
 msgstr "Pesquisa por eventos"
 
+#: src/gui/gcal-search-button.c:179
+msgid "No results found"
+msgstr "Nenhum resultado localizado"
+
+#: src/gui/gcal-search-button.c:179
+#, c-format
+msgid "One result found"
+msgid_plural "%u results found"
+msgstr[0] "Um resultado localizado"
+msgstr[1] "%u resultados localizados"
+
 #: src/gui/gcal-sync-indicator.blp:19
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars"
@@ -1280,69 +1358,69 @@ msgstr "Localização automática"
 msgid "Search locations"
 msgstr "Pesquisa por localizações"
 
-#: src/gui/gcal-window.blp:111
+#: src/gui/gcal-window.blp:126
 msgid "Drop Event Files to Import"
 msgstr "Arraste arquivos de evento para importar"
 
-#: src/gui/gcal-window.blp:163
+#: src/gui/gcal-window.blp:178
 msgid "Toggle Sidebar"
 msgstr "Alternar barra lateral"
 
-#: src/gui/gcal-window.blp:188
+#: src/gui/gcal-window.blp:203
 msgid "Main Menu"
 msgstr "Menu principal"
 
-#: src/gui/gcal-window.blp:194
+#: src/gui/gcal-window.blp:209
 msgctxt "tooltip"
 msgid "Search"
 msgstr "Pesquisa"
 
-#: src/gui/gcal-window.blp:209
+#: src/gui/gcal-window.blp:224
 msgid "_Month"
 msgstr "_Mês"
 
-#: src/gui/gcal-window.blp:223
+#: src/gui/gcal-window.blp:238
 msgid "_Week"
 msgstr "_Semana"
 
-#: src/gui/gcal-window.blp:236
+#: src/gui/gcal-window.blp:251
 msgid "_Agenda"
 msgstr "_Agenda"
 
-#: src/gui/gcal-window.blp:271
+#: src/gui/gcal-window.blp:286
 msgid "_Today"
 msgstr "_Hoje"
 
-#: src/gui/gcal-window.blp:275
+#: src/gui/gcal-window.blp:290
 msgid "Go to Today"
 msgstr "Ir para hoje"
 
-#: src/gui/gcal-window.blp:291
+#: src/gui/gcal-window.blp:306
 msgctxt "tooltip"
 msgid "Add Event"
 msgstr "Adicionar evento"
 
-#: src/gui/gcal-window.blp:297
+#: src/gui/gcal-window.blp:312
 msgid "Manage Calendars"
 msgstr "Gerenciar calendários"
 
-#: src/gui/gcal-window.blp:357
+#: src/gui/gcal-window.blp:372
 msgid "_Synchronize Calendars"
 msgstr "_Sincronizar calendários"
 
-#: src/gui/gcal-window.blp:364
+#: src/gui/gcal-window.blp:379
 msgid "_Date & Time Settings…"
 msgstr "Configurações de _data & hora…"
 
-#: src/gui/gcal-window.blp:369
+#: src/gui/gcal-window.blp:384
 msgid "_Online Accounts…"
 msgstr "Contas _online…"
 
-#: src/gui/gcal-window.blp:384
+#: src/gui/gcal-window.blp:399
 msgid "_Keyboard Shortcuts"
 msgstr "Atalhos do _teclado"
 
-#: src/gui/gcal-window.blp:389
+#: src/gui/gcal-window.blp:404
 msgid "_About Calendar"
 msgstr "_Sobre o Calendário"
 
@@ -1374,19 +1452,19 @@ msgstr "Mês"
 msgid "Agenda"
 msgstr "Agenda"
 
-#: src/gui/gcal-window.c:950
+#: src/gui/gcal-window.c:979
 msgid "Another event deleted"
 msgstr "Outro evento excluído"
 
-#: src/gui/gcal-window.c:950
+#: src/gui/gcal-window.c:979
 msgid "Event deleted"
 msgstr "Evento excluído"
 
-#: src/gui/gcal-window.c:1015
+#: src/gui/gcal-window.c:1044
 msgid "Could not import some files: Not ICS files"
 msgstr "Não foi possível importar alguns arquivos: Não são arquivos ICS"
 
-#: src/gui/gcal-window.c:1020
+#: src/gui/gcal-window.c:1049
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Não foi possível importar “%s”: não é um arquivo ICS"
@@ -1586,11 +1664,11 @@ msgstr "Esconder eventos adicionais"
 msgid "Show Additional Events"
 msgstr "Ver eventos adicionais"
 
-#: src/utils/gcal-utils.c:1123
+#: src/utils/gcal-utils.c:1209
 msgid "Modify Multiple Events?"
 msgstr "Modificar vários eventos?"
 
-#: src/utils/gcal-utils.c:1124
+#: src/utils/gcal-utils.c:1210
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1598,75 +1676,78 @@ msgstr ""
 "O evento que você está tentando modificar é recorrente. As alterações "
 "selecionadas devem ser aplicadas em:"
 
-#: src/utils/gcal-utils.c:1128
+#: src/utils/gcal-utils.c:1214
 msgid "_Only This Event"
 msgstr "_Somente este evento"
 
-#: src/utils/gcal-utils.c:1134
+#: src/utils/gcal-utils.c:1220
 msgid "_Subsequent Events"
 msgstr "Eventos _subsequentes"
 
-#: src/utils/gcal-utils.c:1137
+#: src/utils/gcal-utils.c:1223
 msgid "_All Events"
 msgstr "_Todos eventos"
 
 #. Conferencing
-#: src/utils/gcal-utils.c:1240
+#: src/utils/gcal-utils.c:1326
 msgid "BlueJeans"
 msgstr "BlueJeans"
 
-#: src/utils/gcal-utils.c:1241 src/utils/gcal-utils.c:1242
+#: src/utils/gcal-utils.c:1327 src/utils/gcal-utils.c:1328
 msgid "BigBlueButton"
 msgstr "BigBlueButton"
 
-#: src/utils/gcal-utils.c:1243
+#: src/utils/gcal-utils.c:1329
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1244 src/utils/gcal-utils.c:1245
+#: src/utils/gcal-utils.c:1330 src/utils/gcal-utils.c:1331
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1246
+#: src/utils/gcal-utils.c:1332
 msgid "Uber Conference"
 msgstr "Uber Conference"
 
-#: src/utils/gcal-utils.c:1247
+#: src/utils/gcal-utils.c:1333
 msgid "GNOME Meet"
 msgstr "GNOME Meet"
 
-#: src/utils/gcal-utils.c:1248
+#: src/utils/gcal-utils.c:1334
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
-#: src/utils/gcal-utils.c:1249
+#: src/utils/gcal-utils.c:1335
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1250
+#: src/utils/gcal-utils.c:1336
 msgid "Webex"
 msgstr "Webex"
 
-#: src/utils/gcal-utils.c:1251
+#: src/utils/gcal-utils.c:1337
 msgid "Zoom"
 msgstr "Zoom"
 
 #. Map
-#: src/utils/gcal-utils.c:1254
+#: src/utils/gcal-utils.c:1340
 msgid "View Map"
 msgstr "Visualização de mapa"
 
-#: src/utils/gcal-utils.c:1255
+#: src/utils/gcal-utils.c:1341
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: src/utils/gcal-utils.c:1256 src/utils/gcal-utils.c:1257
+#: src/utils/gcal-utils.c:1342 src/utils/gcal-utils.c:1343
 msgid "Google Maps"
 msgstr "Google Maps"
 
-#: src/utils/gcal-utils.c:1258
+#: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Bing Maps"
+
+#~ msgid "Toggle Alarm Sound"
+#~ msgstr "Habilitar/Desabilitar som do Alarme"
 
 #~ msgid "Add"
 #~ msgstr "Adicionar"
@@ -1878,9 +1959,6 @@ msgstr "Bing Maps"
 
 #~ msgid "From Web…"
 #~ msgstr "Da Web…"
-
-#~ msgid "No results found"
-#~ msgstr "Nenhum resultado localizado"
 
 #~ msgid "Try a different search"
 #~ msgstr "Tente uma pesquisa diferente"
