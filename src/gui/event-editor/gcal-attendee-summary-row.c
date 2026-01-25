@@ -16,17 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "gcal-attendee-summary-row.h"
 #include "gcal-enum-types.h"
 #include "gcal-enums.h"
 #include "gcal-event-attendee.h"
-#include "gio/gio.h"
-#include "glib.h"
 
 #include <adwaita.h>
+#include <gio/gio.h>
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include <libintl.h>
 
 struct _GcalAttendeeSummaryRow
 {
@@ -94,12 +95,12 @@ custom_filter_func (GcalEventAttendee      *attendee,
 static inline void
 concat_subtitle_part (GStrvBuilder *builder,
                       guint         value,
-                      const gchar  *text)
+                      const gchar  *format)
 {
   if (value <= 0)
     return;
 
-  g_strv_builder_take (builder, g_strdup_printf ("%d %s", value, text));
+  g_strv_builder_take (builder, g_strdup_printf (format, value));
 }
 
 static const gchar*
@@ -108,11 +109,11 @@ build_summary_subtitle (GcalAttendeeSummaryRow *self)
   g_autoptr (GStrvBuilder) builder = g_strv_builder_new ();
   g_auto (GStrv) parts = NULL;
 
-  concat_subtitle_part (builder, self->num_accepted, ngettext ("accepted", "accepted", self->num_accepted));
-  concat_subtitle_part (builder, self->num_tentative, ngettext ("maybe", "maybe", self->num_tentative));
-  concat_subtitle_part (builder, self->num_declined, ngettext ("declined", "declined", self->num_declined));
-  concat_subtitle_part (builder, self->num_delegated, ngettext ("delegated", "delegated", self->num_delegated));
-  concat_subtitle_part (builder, self->num_not_responded, ngettext ("not responded", "not responded", self->num_not_responded));
+  concat_subtitle_part (builder, self->num_accepted, g_dngettext (GETTEXT_PACKAGE, "%1$u accepted", "%1$u accepted", self->num_accepted));
+  concat_subtitle_part (builder, self->num_tentative, g_dngettext (GETTEXT_PACKAGE, "%1$u maybe", "%1$u maybe", self->num_tentative));
+  concat_subtitle_part (builder, self->num_declined, g_dngettext (GETTEXT_PACKAGE, "%1$u declined", "%1$u declined", self->num_declined));
+  concat_subtitle_part (builder, self->num_delegated, g_dngettext (GETTEXT_PACKAGE, "%1$u delegated", "%1$u delegated", self->num_delegated));
+  concat_subtitle_part (builder, self->num_not_responded, g_dngettext (GETTEXT_PACKAGE, "%1$u not responded", "%1$u not responded", self->num_not_responded));
 
   parts = g_strv_builder_end (builder);
 
