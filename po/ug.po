@@ -4,10 +4,11 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
-msgstr "Project-Id-Version: \n"
+msgstr ""
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-09-10 17:47+0000\n"
-"PO-Revision-Date: 2025-09-11 00:30-0400\n"
+"POT-Creation-Date: 2026-01-21 19:37+0000\n"
+"PO-Revision-Date: 2026-01-27 11:36-0500\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: \n"
 "Language: ug\n"
@@ -15,13 +16,9 @@ msgstr "Project-Id-Version: \n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Poedit 3.8\n"
 
-#: data/org.gnome.Calendar.desktop.in.in:2
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
-#: src/gui/common/gcal-calendar-combo-row.blp:5
-#: src/gui/gcal-quick-add-popover.blp:131 src/gui/gcal-window.blp:5
-#: src/gui/gcal-window.c:407 src/main.c:35
+#: data/org.gnome.Calendar.desktop.in.in:2 src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13 src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5 src/gui/gcal-window.c:407 src/main.c:35
 msgid "Calendar"
 msgstr "يىلنامە"
 
@@ -32,7 +29,7 @@ msgstr "يىلنامىڭىزنى زىيارەت قىلىپ ۋە باشقۇرىد
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in.in:12
 msgid "Calendar;Event;Reminder;"
-msgstr "يىلنامە;پائالىيەت;ئەسكەرتىش;"
+msgstr "Calendar;Event;Reminder;يىلنامە;پائالىيەت;ئەسكەرتىش;"
 
 #: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
@@ -63,9 +60,7 @@ msgid "Weather Service Configuration"
 msgstr "ھاۋا رايى مۇلازىمەت سەپلىمىسى"
 
 #: data/org.gnome.calendar.gschema.xml.in:22
-msgid ""
-"Whether weather reports are shown, automatic locations are used and a "
-"location-name"
+msgid "Whether weather reports are shown, automatic locations are used and a location-name"
 msgstr "ھاۋا رايى دوكلاتى كۆرسىتىلەمدۇ يوق، ئاپتوماتىك ئورۇن ئىشلىتىلىدۇ ۋە ئورۇن ئىسمى"
 
 #: data/org.gnome.calendar.gschema.xml.in:26
@@ -81,47 +76,32 @@ msgid "Manage your schedule"
 msgstr "كۈنتەرتىپىڭىزنى باشقۇرۇڭ"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:17
-msgid ""
-"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
-"schedule for upcoming days and weeks, whether your months are filled with "
-"meetings and appointments, public events, travel logistics, or other "
-"commitments in your life."
+msgid "GNOME Calendar is an elegant tool to help you plan and stay on top of your schedule for upcoming days and weeks, whether your months are filled with meetings and appointments, public events, travel logistics, or other commitments in your life."
 msgstr "GNOME يىلنامە كەلگۈسى بىر قانچە كۈن ۋە بىر قانچە ھەپتىدىكى كۈنتەرتىپىڭىزنى پىلانلىشىڭىزغا ياردەم قىلىدىغان نەپىس قورال، مەيلى ئايلىق پىلانىڭىز يىغىن ۋە ئۇچرىشىش، ئاممىۋى پائالىيەت، ساياھەت ئورۇنلاشتۇرۇلۇشى ياكى تۇرمۇشتىكى باشقا ۋەدىلەر بىلەن لىق تولغان بولسىمۇ."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:22
-msgid ""
-"Easily create and manage unlimited calendars and events with GNOME "
-"Calendar's infinite scrolling month view, week timetable, and scheduling "
-"list view."
+msgid "Easily create and manage unlimited calendars and events with GNOME Calendar's infinite scrolling month view, week timetable, and scheduling list view."
 msgstr "GNOME يىلنامە ئارقىلىق ئاي كۆرۈنۈش، ھەپتە ۋاقىت جەدۋىلى ۋە كۈنتەرتىپ تىزىم كۆرۈنۈشىنى چەكسىز دومىلىتىپ چەكلىمىسىز ھالدا يىلنامە ۋە پائالىيەت كۈنتەرتىپىنى قۇرۇپ باشقۇرۇش ئاسان."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
-msgid ""
-"Integrating the latest GNOME technologies and design best practices, GNOME "
-"Calendar builds on top of the mature Evolution data server to manage large "
-"quantities of events and to provide integration with other applications. You "
-"can add calendars from various online calendaring services (like NextCloud, "
-"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
-"your events across multiple devices and platforms. GNOME Calendar also "
-"supports local and offline calendaring, so you can use it anywhere and "
-"anytime while travelling (or after civilization's collapse.)"
+msgid "Integrating the latest GNOME technologies and design best practices, GNOME Calendar builds on top of the mature Evolution data server to manage large quantities of events and to provide integration with other applications. You can add calendars from various online calendaring services (like NextCloud, Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize your events across multiple devices and platforms. GNOME Calendar also supports local and offline calendaring, so you can use it anywhere and anytime while travelling (or after civilization's collapse.)"
 msgstr "ئەڭ يېڭى GNOME تېخنىكىسى ۋە ئەڭ ياخشى ئەمەلىي لايىھە توپلاشتۇرۇلغان بولۇپ، GNOME يىلنامە پىشقان Evolution سانلىق مەلۇمات مۇلازىمېتىرى ئۈستىگە قۇرۇلۇپ زور مىقداردىكى پائالىيەتنى باشقۇرۇش ۋە باشقا پىروگراممىلار بىلەن توپلاشتۇرۇشنى تەمىنلىگەن.سىز كۆپلىگەن توردىكى يىلنامە مۇلازىمىتى (مەسىلەن، NextCloud، Google يىلنامە ۋەCalDAV/WebDAV مۇلازىمېتىرغا ئوخشاش) دىن يىلنامە قوشۇپ، كۆپ ئۈسكۈنە ۋە سۇپا ھالقىپ پائالىيەتنى قەدەمداشلىيالايسىز. GNOME يىلنامە يەرلىك ۋە تورسىز يىلنامىنى قوللايدۇ، شۇڭلاشقا ساياھەت قىلىۋاتقان ھەر قانداق ئورۇن ھەر قانداق ۋاقىتتا ئۇنى ئىشلىتەلەيسىز(ياكى مەدەنىيەت يىمىرىلگەندىن كېيىنمۇ)."
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
 msgid "Week view"
 msgstr "ھەپتە كۆرۈنۈشى"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:66
 msgid "Month view"
 msgstr "ئاي كۆرۈنۈشى"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:70
 msgid "Event editor"
 msgstr "پائالىيەت تەھرىرلىگۈچ"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1749 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1783 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -130,14 +110,13 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1757
+#: src/core/gcal-event.c:1791
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
-#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1773 src/gui/gcal-quick-add-popover.c:471
+#: src/core/gcal-event.c:1807
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -158,8 +137,7 @@ msgstr "يىلنامە تەھرىر"
 msgid "Calendar Settings"
 msgstr "يىلنامە تەڭشىكى"
 
-#: src/gui/calendar-management/gcal-calendars-page.blp:5
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:88
+#: src/gui/calendar-management/gcal-calendars-page.blp:5 src/gui/calendar-management/gcal-new-calendar-page.blp:88
 msgid "Calendars"
 msgstr "يىلنامە"
 
@@ -174,8 +152,7 @@ msgstr "يىلنامە قوش(_A)"
 msgid "Calendar “%s” removed"
 msgstr "«%s» يىلنامە چىقىرىۋېتىلدى"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:952
+#: src/gui/calendar-management/gcal-calendars-page.c:356 src/gui/gcal-window.c:981
 msgid "_Undo"
 msgstr "يېنىۋال(_U)"
 
@@ -191,21 +168,15 @@ msgstr "ھېسابات"
 msgid "Open in Settings"
 msgstr "تەڭشەكتە ئاچ"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.blp:43
-#: src/gui/calendar-management/gcal-edit-calendar-page.c:197
-#: src/gui/event-editor/gcal-summary-section.blp:18
-#: src/gui/gcal-event-popover.blp:144
-#: src/gui/importer/gcal-import-file-row.c:177
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:43 src/gui/calendar-management/gcal-edit-calendar-page.c:197 src/gui/event-editor/gcal-summary-section.blp:18 src/gui/gcal-event-popover.blp:144 src/gui/importer/gcal-import-file-row.c:177
 msgid "Location"
 msgstr "ئورنى"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.blp:54
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:20
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:54 src/gui/calendar-management/gcal-new-calendar-page.blp:20
 msgid "Calendar Name"
 msgstr "يىلنامە ئاتى"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.blp:58
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:25
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:58 src/gui/calendar-management/gcal-new-calendar-page.blp:25
 msgid "Color"
 msgstr "رەڭ"
 
@@ -214,6 +185,10 @@ msgid "_Display Calendar"
 msgstr "يىلنامە كۆرسەت(_D)"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:82
+msgid "_Export Calendar"
+msgstr "يىلنامە چىقار(_E)"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:89
 msgid "_Remove Calendar"
 msgstr "يىلنامە چىقىرىۋەت(_R)"
 
@@ -224,6 +199,10 @@ msgstr "يىلنامە تور ئادرېسى"
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:198
 msgid "On This Computer"
 msgstr "بۇ كومپيۇتېردا"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:344
+msgid "Export Calendar"
+msgstr "يىلنامە چىقار"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:5
 msgid "New Calendar"
@@ -238,19 +217,14 @@ msgid "Connect to an Online Calendar"
 msgstr "توردىكى يىلنامەگە باغلىنىدۇ"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:49
-msgid ""
-"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
-"be updated by the provider will be added as read-only."
+msgid "HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only be updated by the provider will be added as read-only."
 msgstr "تور ئادرېسىدىن HTTPS، CalDAV ياكى Webcal تور ئادرېسىنى قوللايدۇ. تەمىنلىگۈچى يېڭىلىغان توردىكى يىلنامە ئوقۇشقىلا بولىدىغان يىلنامە سۈپىتىدە قوشۇلۇپ تەمىنلىنىدۇ."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:108
-msgid ""
-"If the calendar belongs to one of your online accounts, you can add it "
-"through the <a href=\"GOA\">online account settings</a>."
+msgid "If the calendar belongs to one of your online accounts, you can add it through the <a href=\"GOA\">online account settings</a>."
 msgstr "ئەگەر يىلنامە توردىكى بىر ھېساباتىڭىزغا تەۋە بولسا، ئۇنى <a href=\"GOA\">توردىكى ھېسابات تەڭشىكى</a> ئارقىلىق قوشالايسىز."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:126
-#: src/gui/calendar-management/gcal-new-calendar-page.c:124
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:126 src/gui/calendar-management/gcal-new-calendar-page.c:124
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "يىلنامە قوش"
@@ -267,9 +241,7 @@ msgstr "ئىشلەتكۈچى"
 msgid "Password"
 msgstr "ئىم"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:161
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:16
-#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1127
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:161 src/gui/event-editor/gcal-event-editor-dialog.blp:18 src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1213
 msgid "_Cancel"
 msgstr "ۋاز كەچ(_C)"
 
@@ -292,7 +264,7 @@ msgstr "سىز كىرگۈزگەن تور ئادرېسى ئىناۋەتسىزدە
 msgid "A valid user and password are required to connect to this calendar."
 msgstr "بۇ يىلنامىگە باغلىنىش ئۈچۈن ئىناۋەتلىك ئىشلەتكۈچى ۋە ئىم تەلەپ قىلىنىدۇ."
 
-#: src/gui/common/gcal-calendar-combo-row-item.c:70
+#: src/gui/common/gcal-calendar-row.c:72
 msgid "This calendar is hidden"
 msgstr "بۇ يىلنامە يوشۇرۇن"
 
@@ -331,7 +303,7 @@ msgstr "چ"
 #: src/gui/common/gcal-date-chooser.c:293
 msgctxt "grid thursday"
 msgid "T"
-msgstr "س"
+msgstr "پ"
 
 #. Translators: Calendar grid abbreviation for Friday
 #: src/gui/common/gcal-date-chooser.c:298
@@ -343,13 +315,9 @@ msgstr "ج"
 #: src/gui/common/gcal-date-chooser.c:303
 msgctxt "grid saturday"
 msgid "S"
-msgstr "ي"
+msgstr "ش"
 
 #: src/gui/event-editor/gcal-alarm-row.blp:8
-msgid "Toggle Alarm Sound"
-msgstr "قوڭغۇراق ئاۋازىنى ئالماشتۇر"
-
-#: src/gui/event-editor/gcal-alarm-row.blp:20
 msgid "Remove Alarm"
 msgstr "قوڭغۇراقنى چىقىرىۋەت"
 
@@ -448,6 +416,76 @@ msgstr[1] "%1$u سائەت ئىلگىرى"
 msgid "Event start time"
 msgstr "پائالىيەت باشلىنىش ۋاقتى"
 
+#: src/gui/event-editor/gcal-attendee-row.blp:29
+msgid "Copy email"
+msgstr "ئېلخەتنى كۆچۈر"
+
+#: src/gui/event-editor/gcal-attendee-row.c:108
+msgid "Delegated to: "
+msgstr "ۋاكالىتەن "
+
+#: src/gui/event-editor/gcal-attendee-row.c:124
+msgid "optional"
+msgstr "تاللاشچان"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:5 src/gui/event-editor/gcal-attendees-section.blp:22
+msgid "Participants"
+msgstr "قاتناشقۇچى"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:16
+msgid "Accepted"
+msgstr "قوشۇلغان"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:29
+msgid "Tentative"
+msgstr "سىناق"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:42
+msgid "Declined"
+msgstr "رەت قىلىنغان"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:55
+msgid "Delegated"
+msgstr "ھاۋالە قىلىندى"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:68
+msgid "Not responded"
+msgstr "ئىنكاس يوق"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:111
+msgid "accepted"
+msgid_plural "accepted"
+msgstr[0] "قوشۇلغان"
+msgstr[1] "قوشۇلغان"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:112
+msgid "maybe"
+msgid_plural "maybe"
+msgstr[0] "بەلكىم"
+msgstr[1] "بەلكىم"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:113
+msgid "declined"
+msgid_plural "declined"
+msgstr[0] "رەت قىلىنغان"
+msgstr[1] "رەت قىلىنغان"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:114
+msgid "delegated"
+msgid_plural "delegated"
+msgstr[0] "پائالىيەت ئۆچۈرۈلدى"
+msgstr[1] "پائالىيەت ئۆچۈرۈلدى"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:115
+msgid "not responded"
+msgid_plural "not responded"
+msgstr[0] "ئىنكاس يوق"
+msgstr[1] "ئىنكاس يوق"
+
+#: src/gui/event-editor/gcal-attendees-section.blp:28
+msgid "Resources"
+msgstr "مەنبە"
+
 #: src/gui/event-editor/gcal-date-chooser-row.blp:12
 msgid "Edit Date"
 msgstr "چېسلا تەھرىر"
@@ -464,8 +502,7 @@ msgstr "چېسلا"
 msgid "Time"
 msgstr "ۋاقىت"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:20
-#: src/gui/event-editor/gcal-time-chooser-row.blp:12
+#: src/gui/event-editor/gcal-date-time-chooser.blp:20 src/gui/event-editor/gcal-time-chooser-row.blp:12
 msgid "Edit Time"
 msgstr "ۋاقىت تەھرىر"
 
@@ -473,26 +510,19 @@ msgstr "ۋاقىت تەھرىر"
 msgid ":"
 msgstr ":"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:70
-#: src/gui/event-editor/gcal-date-time-chooser.c:205
-#: src/gui/event-editor/gcal-date-time-chooser.c:270
-#: src/gui/views/gcal-week-hour-bar.c:57
+#: src/gui/event-editor/gcal-date-time-chooser.blp:70 src/gui/event-editor/gcal-date-time-chooser.c:205 src/gui/event-editor/gcal-date-time-chooser.c:270 src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "چ ب"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:75
-#: src/gui/event-editor/gcal-date-time-chooser.c:205
-#: src/gui/views/gcal-week-hour-bar.c:57
+#: src/gui/event-editor/gcal-date-time-chooser.blp:75 src/gui/event-editor/gcal-date-time-chooser.c:205 src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "چ ك"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:85
-#: src/gui/event-editor/gcal-date-time-chooser.blp:94
+#: src/gui/event-editor/gcal-date-time-chooser.blp:85 src/gui/event-editor/gcal-date-time-chooser.blp:94
 msgid "Change Timezone"
 msgstr "ۋاقىت رايونى ئۆزگەرت"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:103
-#: src/gui/event-editor/gcal-time-chooser-row.blp:29
+#: src/gui/event-editor/gcal-date-time-chooser.blp:103 src/gui/event-editor/gcal-time-chooser-row.blp:29
 msgid "Edit time"
 msgstr "ۋاقىت تەھرىر"
 
@@ -504,40 +534,39 @@ msgstr "ۋاقىت تەھرىر"
 msgid "%1$s (%2$s)"
 msgstr "%1$s (%2$s)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:23
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:25 src/gui/event-editor/gcal-event-editor-dialog.c:129
 msgid "_Done"
 msgstr "تامام(_D)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:36
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:38
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr "بۇ پەقەت ئوقۇشقىلا بولىدىغان پائالىيەت. ئۇنى تەھرىرلىگىلى ياكى ئۆچۈرگىلى بولمايدۇ."
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:62
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:70
 msgid "Reminders"
 msgstr "ئەسكەرتكۈچ"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:70
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:78
 msgid "Notes"
 msgstr "ئىزاھ"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:81
-msgid "Delete Event"
-msgstr "پائالىيەتنى ئۆچۈر"
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:89
+msgid "_Delete Event"
+msgstr "پائالىيەتنى ئۆچۈر(_D)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.c:129
 msgid "_Save"
 msgstr "ساقلا(_S)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:688
+#: src/gui/event-editor/gcal-event-editor-dialog.c:707
 msgid "New Event"
 msgstr "يېڭى پائالىيەت"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:690
+#: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Event Details"
 msgstr "پائالىيەت تەپسىلاتى"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:692
+#: src/gui/event-editor/gcal-event-editor-dialog.c:711
 msgid "Edit Event"
 msgstr "پائالىيەت تەھرىر"
 
@@ -593,13 +622,11 @@ msgstr "پۈتۈن كۈن(_A)"
 msgid "_Time Slot"
 msgstr "ۋاقىت بۆلىكى(_T)"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:27
-#: src/gui/event-editor/gcal-schedule-section.blp:40
+#: src/gui/event-editor/gcal-schedule-section.blp:27 src/gui/event-editor/gcal-schedule-section.blp:40
 msgid "Start Date"
 msgstr "باشلاش چېسلاسى"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:34
-#: src/gui/event-editor/gcal-schedule-section.blp:46
+#: src/gui/event-editor/gcal-schedule-section.blp:34 src/gui/event-editor/gcal-schedule-section.blp:46
 msgid "End Date"
 msgstr "ئاخىرلىشىش چېسلاسى"
 
@@ -647,8 +674,7 @@ msgstr "تەكرارلاشنى ئاخىرلاشتۇر"
 msgid "Forever"
 msgstr "مەڭگۈ"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:79
-#: src/gui/event-editor/gcal-schedule-section.blp:89
+#: src/gui/event-editor/gcal-schedule-section.blp:79 src/gui/event-editor/gcal-schedule-section.blp:89
 msgid "Number of Occurrences"
 msgstr "قېتىم سانى"
 
@@ -660,8 +686,7 @@ msgstr "تاكى چېسلاغىچە"
 msgid "End Repeat Date"
 msgstr "تەكرارلاشنى ئاخىرلاشتۇرىدىغان چېسلا"
 
-#: src/gui/event-editor/gcal-summary-section.blp:13
-#: src/gui/importer/gcal-import-file-row.c:176
+#: src/gui/event-editor/gcal-summary-section.blp:13 src/gui/gcal-quick-add-popover.blp:44 src/gui/importer/gcal-import-file-row.c:176
 msgid "Title"
 msgstr "ماۋزۇ"
 
@@ -695,7 +720,7 @@ msgstr "نەشر ئۇچۇرىنى كۆرسەت"
 
 #: src/gui/gcal-application.c:68
 msgid "Enable debug messages"
-msgstr "ئۇچۇر سازلاشنى قوزغات"
+msgstr "سازلاش ئۇچۇرىنى قوزغات"
 
 #: src/gui/gcal-application.c:73
 msgid "Open calendar on the passed date"
@@ -712,16 +737,11 @@ msgstr "نەشر ھوقۇقى © 2012–%d يىلنامە يازغۇچى"
 
 #: src/gui/gcal-application.c:241
 msgid "translator-credits"
-msgstr "تەرجىمان تۆھپىسى\n"
-"GNOME Uighur Translation Project <gnome-uighur@yahoogroups.comAbduxukur Abdurixit <abduxukur.abdurixit@t-systems.ch>, 2005\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Burkut https://launchpad.net/~burkut\n"
-"  Gheyret T.Kenji https://launchpad.net/~gheyretkenji\n"
-"  Sebastien Bacher https://launchpad.net/~seb128\n"
+msgstr ""
+"غەيرەت ت.كەنجى <gheyret@gmail.com>\n"
 "ئابدۇقادىر ئابلىز <sahranbay@gmail.com>"
 
-#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:374
+#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:389
 msgid "Weather"
 msgstr "ھاۋا رايى"
 
@@ -748,51 +768,51 @@ msgstr "پائالىيەت چىقار"
 msgid "No event notes"
 msgstr "پائالىيەت ئىزاھاتى يوق"
 
-#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:253
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:211
 msgid "January"
 msgstr "يانۋار"
 
-#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:254
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:212
 msgid "February"
 msgstr "فېۋرال"
 
-#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:255
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:213
 msgid "March"
 msgstr "مارت"
 
-#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:256
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:214
 msgid "April"
 msgstr "ئاپرېل"
 
-#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:257
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:215
 msgid "May"
 msgstr "ماي"
 
-#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:258
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:216
 msgid "June"
 msgstr "ئىيۇن"
 
-#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:259
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:217
 msgid "July"
 msgstr "ئىيۇل"
 
-#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:260
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:218
 msgid "August"
 msgstr "ئاۋغۇست"
 
-#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:261
+#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:219
 msgid "September"
 msgstr "سېنتەبىر"
 
-#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:262
+#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:220
 msgid "October"
 msgstr "ئۆكتەبىر"
 
-#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:263
+#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:221
 msgid "November"
 msgstr "نويابىر"
 
-#: src/gui/gcal-event-popover.c:137 src/gui/gcal-quick-add-popover.c:264
+#: src/gui/gcal-event-popover.c:137 src/gui/gcal-quick-add-popover.c:222
 msgid "December"
 msgstr "دېكابىر"
 
@@ -831,18 +851,15 @@ msgstr "%2$d-%1$s، %3$s"
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%3$d-يىلى %2$d-%1$s، %4$s"
 
-#: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
-#: src/gui/views/gcal-agenda-view.c:198
+#: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317 src/gui/views/gcal-agenda-view.c:198
 msgid "Today"
 msgstr "بۈگۈن"
 
-#: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
-#: src/gui/gcal-window.c:280 src/gui/views/gcal-agenda-view.c:200
+#: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321 src/gui/gcal-window.c:280 src/gui/views/gcal-agenda-view.c:200
 msgid "Tomorrow"
 msgstr "ئەتە"
 
-#: src/gui/gcal-event-popover.c:211 src/gui/gcal-event-popover.c:325
-#: src/gui/gcal-window.c:249 src/gui/views/gcal-agenda-view.c:202
+#: src/gui/gcal-event-popover.c:211 src/gui/gcal-event-popover.c:325 src/gui/gcal-window.c:249 src/gui/views/gcal-agenda-view.c:202
 msgid "Yesterday"
 msgstr "تۈنۈگۈن"
 
@@ -930,7 +947,8 @@ msgid ""
 "\n"
 "\n"
 "On %s"
-msgstr "\n"
+msgstr ""
+"\n"
 "\n"
 "%s دا"
 
@@ -942,7 +960,8 @@ msgid ""
 "\n"
 "\n"
 "At %s"
-msgstr "\n"
+msgstr ""
+"\n"
 "\n"
 "%s دا"
 
@@ -964,86 +983,81 @@ msgstr "قاتناش(_J)"
 msgid "Unknown Service"
 msgstr "يوچۇن مۇلازىمەت"
 
-#: src/gui/gcal-quick-add-popover.blp:83
-msgid "Edit Details…"
-msgstr "تەپسىلات تەھرىر…"
+#: src/gui/gcal-quick-add-popover.blp:86
+msgid "_Edit Details"
+msgstr "تەپسىلات تەھرىر(_E)"
 
-#: src/gui/gcal-quick-add-popover.blp:94
-msgid "Add"
-msgstr "قوش"
+#: src/gui/gcal-quick-add-popover.blp:98
+msgid "_Save Event"
+msgstr "پائالىيەت ساقلا(_S)"
 
-#: src/gui/gcal-quick-add-popover.c:116
-#, c-format
-msgid "%s (this calendar is read-only)"
-msgstr "%s (بۇ يىلنامەنى ئوقۇشقىلا بولىدۇ)"
-
-#: src/gui/gcal-quick-add-popover.c:231
+#: src/gui/gcal-quick-add-popover.c:189
 msgid "from next Monday"
 msgstr "كېلەر دۈشەنبەدىن باشلاپ"
 
-#: src/gui/gcal-quick-add-popover.c:232
+#: src/gui/gcal-quick-add-popover.c:190
 msgid "from next Tuesday"
 msgstr "كېلەر سەيشەنبەدىن باشلاپ"
 
-#: src/gui/gcal-quick-add-popover.c:233
+#: src/gui/gcal-quick-add-popover.c:191
 msgid "from next Wednesday"
 msgstr "كېلەر چارشەنبەدىن باشلاپ"
 
-#: src/gui/gcal-quick-add-popover.c:234
+#: src/gui/gcal-quick-add-popover.c:192
 msgid "from next Thursday"
 msgstr "كېلەر پەيشەنبەدىن باشلاپ"
 
-#: src/gui/gcal-quick-add-popover.c:235
+#: src/gui/gcal-quick-add-popover.c:193
 msgid "from next Friday"
 msgstr "كېلەر جۈمەدىن باشلاپ"
 
-#: src/gui/gcal-quick-add-popover.c:236
+#: src/gui/gcal-quick-add-popover.c:194
 msgid "from next Saturday"
 msgstr "كېلەر شەنبەدىن باشلاپ"
 
-#: src/gui/gcal-quick-add-popover.c:237
+#: src/gui/gcal-quick-add-popover.c:195
 msgid "from next Sunday"
 msgstr "كېلەر يەكشەنبەدىن باشلاپ"
 
-#: src/gui/gcal-quick-add-popover.c:242
+#: src/gui/gcal-quick-add-popover.c:200
 msgid "to next Monday"
 msgstr "كېلەر دۈشەنبەگىچە"
 
-#: src/gui/gcal-quick-add-popover.c:243
+#: src/gui/gcal-quick-add-popover.c:201
 msgid "to next Tuesday"
 msgstr "كېلەر سەيشەنبەگىچە"
 
-#: src/gui/gcal-quick-add-popover.c:244
+#: src/gui/gcal-quick-add-popover.c:202
 msgid "to next Wednesday"
 msgstr "كېلەر چارشەنبەگىچە"
 
-#: src/gui/gcal-quick-add-popover.c:245
+#: src/gui/gcal-quick-add-popover.c:203
 msgid "to next Thursday"
 msgstr "كېلەر پەيشەنبەگىچە"
 
-#: src/gui/gcal-quick-add-popover.c:246
+#: src/gui/gcal-quick-add-popover.c:204
 msgid "to next Friday"
 msgstr "كېلەر جۈمەگىچە"
 
-#: src/gui/gcal-quick-add-popover.c:247
+#: src/gui/gcal-quick-add-popover.c:205
 msgid "to next Saturday"
 msgstr "كېلەر شەنبەگىچە"
 
-#: src/gui/gcal-quick-add-popover.c:248
+#: src/gui/gcal-quick-add-popover.c:206
 msgid "to next Sunday"
 msgstr "كېلەر يەكشەنبەگىچە"
 
-#: src/gui/gcal-quick-add-popover.c:273
+#: src/gui/gcal-quick-add-popover.c:230
 #, c-format
 msgid "from Today"
 msgstr "بۈگۈندىن"
 
-#: src/gui/gcal-quick-add-popover.c:277
+#: src/gui/gcal-quick-add-popover.c:234
 #, c-format
 msgid "from Tomorrow"
 msgstr "ئەتىدىن"
 
-#: src/gui/gcal-quick-add-popover.c:281
+#: src/gui/gcal-quick-add-popover.c:238
 #, c-format
 msgid "from Yesterday"
 msgstr "تۈنۈگۈندىن"
@@ -1052,22 +1066,22 @@ msgstr "تۈنۈگۈندىن"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:299
+#: src/gui/gcal-quick-add-popover.c:256
 #, c-format
 msgid "from %1$s %2$s"
 msgstr "%1$s %2$s دىن"
 
-#: src/gui/gcal-quick-add-popover.c:310
+#: src/gui/gcal-quick-add-popover.c:265
 #, c-format
 msgid "to Today"
 msgstr "بۈگۈنگىچە"
 
-#: src/gui/gcal-quick-add-popover.c:314
+#: src/gui/gcal-quick-add-popover.c:269
 #, c-format
 msgid "to Tomorrow"
 msgstr "ئەتەگىچە"
 
-#: src/gui/gcal-quick-add-popover.c:318
+#: src/gui/gcal-quick-add-popover.c:273
 #, c-format
 msgid "to Yesterday"
 msgstr "تۈنۈگۈنگىچە"
@@ -1076,120 +1090,127 @@ msgstr "تۈنۈگۈنگىچە"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:336
+#: src/gui/gcal-quick-add-popover.c:291
 #, c-format
 msgid "to %1$s %2$s"
 msgstr "%1$s %2$s غىچە"
 
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
-#: src/gui/gcal-quick-add-popover.c:343
+#: src/gui/gcal-quick-add-popover.c:297
 #, c-format
 msgid "New Event %1$s %2$s"
 msgstr "يېڭى پائالىيەت %1$s %2$s"
 
-#: src/gui/gcal-quick-add-popover.c:360
+#: src/gui/gcal-quick-add-popover.c:314
 #, c-format
 msgid "New Event Today"
 msgstr "بۈگۈنكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:364
+#: src/gui/gcal-quick-add-popover.c:318
 #, c-format
 msgid "New Event Tomorrow"
 msgstr "ئەتىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:368
+#: src/gui/gcal-quick-add-popover.c:322
 #, c-format
 msgid "New Event Yesterday"
 msgstr "تۈنۈگۈنكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:374
+#: src/gui/gcal-quick-add-popover.c:328
 msgid "New Event next Monday"
 msgstr "كېلەر دۈشەنبەدىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:375
+#: src/gui/gcal-quick-add-popover.c:329
 msgid "New Event next Tuesday"
 msgstr "كېلەر سەيشەنبەدىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:376
+#: src/gui/gcal-quick-add-popover.c:330
 msgid "New Event next Wednesday"
 msgstr "كېلەر چارشەنبەدىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:377
+#: src/gui/gcal-quick-add-popover.c:331
 msgid "New Event next Thursday"
 msgstr "كېلەر پەيشەنبەدىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:378
+#: src/gui/gcal-quick-add-popover.c:332
 msgid "New Event next Friday"
 msgstr "كېلەر جۈمەدىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:379
+#: src/gui/gcal-quick-add-popover.c:333
 msgid "New Event next Saturday"
 msgstr "كېلەر شەنبەدىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:380
+#: src/gui/gcal-quick-add-popover.c:334
 msgid "New Event next Sunday"
 msgstr "كېلەر يەكشەنبەدىكى يېڭى پائالىيەت"
 
 #. Translators: %d is the numeric day of month
-#: src/gui/gcal-quick-add-popover.c:392
+#: src/gui/gcal-quick-add-popover.c:346
 #, c-format
 msgid "New Event on January %d"
 msgstr "%d-يانۋاردىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:393
+#: src/gui/gcal-quick-add-popover.c:347
 #, c-format
 msgid "New Event on February %d"
 msgstr "%d-فېۋرالدىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:394
+#: src/gui/gcal-quick-add-popover.c:348
 #, c-format
 msgid "New Event on March %d"
 msgstr "%d-مارتتىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:395
+#: src/gui/gcal-quick-add-popover.c:349
 #, c-format
 msgid "New Event on April %d"
 msgstr "%d-ئاپرېلدىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:396
+#: src/gui/gcal-quick-add-popover.c:350
 #, c-format
 msgid "New Event on May %d"
 msgstr "%d-مايدىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:397
+#: src/gui/gcal-quick-add-popover.c:351
 #, c-format
 msgid "New Event on June %d"
 msgstr "%d-ئىيۇندىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:398
+#: src/gui/gcal-quick-add-popover.c:352
 #, c-format
 msgid "New Event on July %d"
 msgstr "%d-ئىيۇلدىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:399
+#: src/gui/gcal-quick-add-popover.c:353
 #, c-format
 msgid "New Event on August %d"
 msgstr "%d-ئاۋغۇستتىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:400
+#: src/gui/gcal-quick-add-popover.c:354
 #, c-format
 msgid "New Event on September %d"
 msgstr "%d-سېنتەبىردىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:401
+#: src/gui/gcal-quick-add-popover.c:355
 #, c-format
 msgid "New Event on October %d"
 msgstr "%d-ئۆكتەبىردىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:402
+#: src/gui/gcal-quick-add-popover.c:356
 #, c-format
 msgid "New Event on November %d"
 msgstr "%d-نويابىردىكى يېڭى پائالىيەت"
 
-#: src/gui/gcal-quick-add-popover.c:403
+#: src/gui/gcal-quick-add-popover.c:357
 #, c-format
 msgid "New Event on December %d"
 msgstr "%d-دېكابىردىكى يېڭى پائالىيەت"
+
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour.
+#. * To avoid spurious line wrapping, use non-breaking space characters around the en dash.
+#: src/gui/gcal-quick-add-popover.c:426
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s, %2$s – %3$s"
 
 #: src/gui/gcal-search-button.blp:26
 msgid "Search Events"
@@ -1198,6 +1219,17 @@ msgstr "پائالىيەت ئىزدە"
 #: src/gui/gcal-search-button.blp:44
 msgid "Search events"
 msgstr "پائالىيەت ئىزدە"
+
+#: src/gui/gcal-search-button.c:179
+msgid "No results found"
+msgstr "ھېچقانداق نەتىجە تېپىلمىدى"
+
+#: src/gui/gcal-search-button.c:179
+#, c-format
+msgid "One result found"
+msgid_plural "%u results found"
+msgstr[0] "بىر نەتىجە تېپىلدى"
+msgstr[1] "%u نەتىجە تىپىلدى"
 
 #: src/gui/gcal-sync-indicator.blp:19
 msgctxt "tooltip"
@@ -1216,69 +1248,69 @@ msgstr "ئاپتوماتىك ئورنى"
 msgid "Search locations"
 msgstr "ئىزدەش ئورنى"
 
-#: src/gui/gcal-window.blp:111
+#: src/gui/gcal-window.blp:126
 msgid "Drop Event Files to Import"
 msgstr "پائالىيەت ھۆججىتى سۆرەپ تاشلانسا ئەكىرىدۇ"
 
-#: src/gui/gcal-window.blp:163
+#: src/gui/gcal-window.blp:178
 msgid "Toggle Sidebar"
 msgstr "يان بالداق ئالماشتۇر"
 
-#: src/gui/gcal-window.blp:188
+#: src/gui/gcal-window.blp:203
 msgid "Main Menu"
 msgstr "ئاساسىي تىزىملىك"
 
-#: src/gui/gcal-window.blp:194
+#: src/gui/gcal-window.blp:209
 msgctxt "tooltip"
 msgid "Search"
 msgstr "ئىزدە"
 
-#: src/gui/gcal-window.blp:209
+#: src/gui/gcal-window.blp:224
 msgid "_Month"
 msgstr "ئاي(_M)"
 
-#: src/gui/gcal-window.blp:223
+#: src/gui/gcal-window.blp:238
 msgid "_Week"
 msgstr "ھەپتە(_W)"
 
-#: src/gui/gcal-window.blp:236
+#: src/gui/gcal-window.blp:251
 msgid "_Agenda"
 msgstr "كۈنتەرتىپ(_A)"
 
-#: src/gui/gcal-window.blp:271
+#: src/gui/gcal-window.blp:286
 msgid "_Today"
 msgstr "بۈگۈن(_T)"
 
-#: src/gui/gcal-window.blp:275
+#: src/gui/gcal-window.blp:290
 msgid "Go to Today"
 msgstr "بۈگۈنگە يۆتكەل"
 
-#: src/gui/gcal-window.blp:291
+#: src/gui/gcal-window.blp:306
 msgctxt "tooltip"
 msgid "Add Event"
 msgstr "پائالىيەت قوش"
 
-#: src/gui/gcal-window.blp:297
+#: src/gui/gcal-window.blp:312
 msgid "Manage Calendars"
 msgstr "يىلنامە باشقۇرۇش"
 
-#: src/gui/gcal-window.blp:357
+#: src/gui/gcal-window.blp:372
 msgid "_Synchronize Calendars"
 msgstr "يىلنامە قەدەمداشلا(_S)"
 
-#: src/gui/gcal-window.blp:364
+#: src/gui/gcal-window.blp:379
 msgid "_Date & Time Settings…"
 msgstr "چېسلا ۋە ۋاقىت تەڭشىكى(_D)…"
 
-#: src/gui/gcal-window.blp:369
+#: src/gui/gcal-window.blp:384
 msgid "_Online Accounts…"
 msgstr "توردىكى ھېسابات(_O)…"
 
-#: src/gui/gcal-window.blp:384
+#: src/gui/gcal-window.blp:399
 msgid "_Keyboard Shortcuts"
 msgstr "ھەرپتاختا تېزلەتمىسى(_K)"
 
-#: src/gui/gcal-window.blp:389
+#: src/gui/gcal-window.blp:404
 msgid "_About Calendar"
 msgstr "يىلنامە ھەققىدە(_A)"
 
@@ -1310,19 +1342,19 @@ msgstr "ئاي"
 msgid "Agenda"
 msgstr "كۈنتەرتىپ"
 
-#: src/gui/gcal-window.c:950
+#: src/gui/gcal-window.c:979
 msgid "Another event deleted"
 msgstr "باشقا پائالىيەت ئۆچۈرۈلدى"
 
-#: src/gui/gcal-window.c:950
+#: src/gui/gcal-window.c:979
 msgid "Event deleted"
 msgstr "پائالىيەت ئۆچۈرۈلدى"
 
-#: src/gui/gcal-window.c:1015
+#: src/gui/gcal-window.c:1044
 msgid "Could not import some files: Not ICS files"
 msgstr "بەزى ھۆججەتنى ئەكىرەلمەيدۇ: ICS ھۆججىتى ئەمەس"
 
-#: src/gui/gcal-window.c:1020
+#: src/gui/gcal-window.c:1049
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "«%s» نى ئەكىرەلمەيدۇ: ICS ھۆججىتى ئەمەس"
@@ -1507,89 +1539,105 @@ msgstr "داۋاملىشىۋاتىدۇ"
 msgid "New Event…"
 msgstr "يېڭى پائالىيەت…"
 
-#: src/gui/views/gcal-week-header.c:480
+#: src/gui/views/gcal-week-header.c:479
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "باشقا پائالىيەت"
 msgstr[1] "باشقا %d پائالىيەت"
 
-#: src/utils/gcal-utils.c:1123
+#: src/gui/views/gcal-week-view.c:241
+msgid "Hide Additional Events"
+msgstr "قوشۇمچە پائالىيەتنى يوشۇر"
+
+#: src/gui/views/gcal-week-view.c:243
+msgid "Show Additional Events"
+msgstr "قوشۇمچە پائالىيەتنى كۆرسەت"
+
+#: src/utils/gcal-utils.c:1209
 msgid "Modify Multiple Events?"
 msgstr "كۆپ پائالىيەتنى ئۆزگەرتەمدۇ؟"
 
-#: src/utils/gcal-utils.c:1124
-msgid ""
-"The event you are trying to modify is recurring. The changes you have "
-"selected should be applied to:"
+#: src/utils/gcal-utils.c:1210
+msgid "The event you are trying to modify is recurring. The changes you have selected should be applied to:"
 msgstr "سىز تەھرىرلەشنى سىناۋاتقان پائالىيەت دەۋرىي. سىز تاللىغان ئۆزگەرتىشلەرنى قوللىنىش كېرەك:"
 
-#: src/utils/gcal-utils.c:1128
+#: src/utils/gcal-utils.c:1214
 msgid "_Only This Event"
 msgstr "بۇ پائالىيەتلا(_O)"
 
-#: src/utils/gcal-utils.c:1134
+#: src/utils/gcal-utils.c:1220
 msgid "_Subsequent Events"
 msgstr "كېيىنكى پائالىيەت(_S)"
 
-#: src/utils/gcal-utils.c:1137
+#: src/utils/gcal-utils.c:1223
 msgid "_All Events"
 msgstr "ھەممە پائالىيەت(_A)"
 
 #. Conferencing
-#: src/utils/gcal-utils.c:1240
+#: src/utils/gcal-utils.c:1326
 msgid "BlueJeans"
 msgstr "BlueJeans"
 
-#: src/utils/gcal-utils.c:1241 src/utils/gcal-utils.c:1242
+#: src/utils/gcal-utils.c:1327 src/utils/gcal-utils.c:1328
 msgid "BigBlueButton"
 msgstr "BigBlueButton"
 
-#: src/utils/gcal-utils.c:1243
+#: src/utils/gcal-utils.c:1329
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1244 src/utils/gcal-utils.c:1245
+#: src/utils/gcal-utils.c:1330 src/utils/gcal-utils.c:1331
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1246
+#: src/utils/gcal-utils.c:1332
 msgid "Uber Conference"
 msgstr "Uber Conference"
 
-#: src/utils/gcal-utils.c:1247
+#: src/utils/gcal-utils.c:1333
 msgid "GNOME Meet"
 msgstr "GNOME Meet"
 
-#: src/utils/gcal-utils.c:1248
+#: src/utils/gcal-utils.c:1334
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
-#: src/utils/gcal-utils.c:1249
+#: src/utils/gcal-utils.c:1335
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1250
+#: src/utils/gcal-utils.c:1336
 msgid "Webex"
 msgstr "Webex"
 
-#: src/utils/gcal-utils.c:1251
+#: src/utils/gcal-utils.c:1337
 msgid "Zoom"
-msgstr "Zoom"
+msgstr "چوڭايت كىچىكلەت"
 
 #. Map
-#: src/utils/gcal-utils.c:1254
+#: src/utils/gcal-utils.c:1340
 msgid "View Map"
 msgstr "خەرىتە كۆرسەت"
 
-#: src/utils/gcal-utils.c:1255
+#: src/utils/gcal-utils.c:1341
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: src/utils/gcal-utils.c:1256 src/utils/gcal-utils.c:1257
+#: src/utils/gcal-utils.c:1342 src/utils/gcal-utils.c:1343
 msgid "Google Maps"
 msgstr "Google خەرىتە"
 
-#: src/utils/gcal-utils.c:1258
+#: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Bing خەرىتە"
+
+#~ msgid "Toggle Alarm Sound"
+#~ msgstr "قوڭغۇراق ئاۋازىنى ئالماشتۇر"
+
+#~ msgid "Add"
+#~ msgstr "قوش"
+
+#, c-format
+#~ msgid "%s (this calendar is read-only)"
+#~ msgstr "%s (بۇ يىلنامەنى ئوقۇشقىلا بولىدۇ)"
