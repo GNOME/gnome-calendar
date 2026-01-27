@@ -57,57 +57,79 @@ gcal_overflow_bin_layout_measure (GtkLayoutManager *layout_manager,
 {
   GtkSizeRequestMode request_mode;
   GtkWidget *child;
+  gboolean clamp;
 
   request_mode = gtk_widget_get_request_mode (widget);
+  switch (request_mode)
+    {
+    case GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH:
+      clamp = orientation == GTK_ORIENTATION_VERTICAL;
+      break;
+    case GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT:
+      clamp = orientation == GTK_ORIENTATION_HORIZONTAL;
+      break;
+    case GTK_SIZE_REQUEST_CONSTANT_SIZE:
+      clamp = TRUE;
+      break;
+    }
 
   for (child = gtk_widget_get_first_child (widget);
        child != NULL;
        child = gtk_widget_get_next_sibling (child))
     {
-      gint child_min_baseline = -1;
-      gint child_nat_baseline = -1;
       gint child_min = 0;
       gint child_nat = 0;
 
       if (!gtk_widget_should_layout (child))
         continue;
 
-      gtk_widget_measure (child, orientation, for_size,
-                          &child_min, &child_nat,
-                          &child_min_baseline, &child_nat_baseline);
+      if (clamp || for_size == -1)
+        {
+          gtk_widget_measure (child, orientation, for_size,
+                              &child_min, &child_nat,
+                              NULL, NULL);
+        }
+      else
+        {
+          gint child_min_opposite;
+          GtkOrientation opposite_orientation = 1 - orientation;
+
+          /* We'll be clamping the child's size in the opposite
+           * orientation. The for_size value describes our size along
+           * that opposite orientation, but the child's size could be
+           * larger if we are to clamp it.
+           *
+           * As such:
+           * - measure the child's *overall* mininmum size, since its
+           *   size along the opposite orientation can be arbitrary
+           *   (we'd clamp it if it was larger than for_size);
+           * - try to measure the child's natural size at for_size, but
+           *   not any less than its minimum opposite size.
+           *
+           * When for_size = -1, we take the other branch and just
+           * measure the child' overall minimum and natural sizes
+           * directly.
+           */
+
+          gtk_widget_measure (child, opposite_orientation, -1,
+                              &child_min_opposite, NULL,
+                              NULL, NULL);
+          gtk_widget_measure (child, orientation, -1,
+                              &child_min, NULL,
+                              NULL, NULL);
+          gtk_widget_measure (child, orientation, MAX (for_size, child_min_opposite),
+                              NULL, &child_nat,
+                              NULL, NULL);
+        }
 
       *minimum = MAX (*minimum, child_min);
       *natural = MAX (*natural, child_nat);
-
-      if (child_min_baseline > -1)
-        *minimum_baseline = MAX (*minimum_baseline, child_min_baseline);
-      if (child_nat_baseline > -1)
-        *natural_baseline = MAX (*natural_baseline, child_nat_baseline);
     }
 
-  switch (request_mode)
-    {
-    case GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH:
-      if (orientation == GTK_ORIENTATION_VERTICAL)
-        {
-          *minimum = 0;
-          *minimum_baseline = -1;
-        }
-      break;
-
-    case GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT:
-      if (orientation == GTK_ORIENTATION_HORIZONTAL)
-        {
-          *minimum = 0;
-          *minimum_baseline = -1;
-        }
-      break;
-
-    case GTK_SIZE_REQUEST_CONSTANT_SIZE:
-      *minimum = 0;
-      *minimum_baseline = -1;
-      break;
-    }
+  if (clamp)
+    *minimum = 0;
+  *minimum_baseline = -1;
+  *natural_baseline = -1;
 }
 
 static void
@@ -143,18 +165,18 @@ gcal_overflow_bin_layout_allocate (GtkLayoutManager *layout_manager,
           width = MAX (width, child_min_width);
 
           gtk_widget_measure (child,
-                              GTK_ORIENTATION_HORIZONTAL,
+                              GTK_ORIENTATION_VERTICAL,
                               width,
-                              &child_min_width, NULL,
+                              &child_min_height, NULL,
                               NULL, NULL);
           height = MAX (height, child_min_height);
           break;
 
         case GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT:
           gtk_widget_measure (child,
-                              GTK_ORIENTATION_HORIZONTAL,
+                              GTK_ORIENTATION_VERTICAL,
                               -1,
-                              &child_min_width, NULL,
+                              &child_min_height, NULL,
                               NULL, NULL);
           height = MAX (height, child_min_height);
 
@@ -175,15 +197,15 @@ gcal_overflow_bin_layout_allocate (GtkLayoutManager *layout_manager,
           width = MAX (width, child_min_width);
 
           gtk_widget_measure (child,
-                              GTK_ORIENTATION_HORIZONTAL,
+                              GTK_ORIENTATION_VERTICAL,
                               -1,
-                              &child_min_width, NULL,
+                              &child_min_height, NULL,
                               NULL, NULL);
           height = MAX (height, child_min_height);
           break;
         }
 
-      gtk_widget_allocate (child, width, height, baseline, NULL);
+      gtk_widget_allocate (child, width, height, -1, NULL);
     }
 }
 
