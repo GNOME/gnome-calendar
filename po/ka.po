@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-01-21 19:37+0000\n"
-"PO-Revision-Date: 2026-01-25 10:11+0100\n"
+"POT-Creation-Date: 2026-01-29 01:25+0000\n"
+"PO-Revision-Date: 2026-01-29 06:01+0100\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -474,6 +474,7 @@ msgid "Event start time"
 msgstr "მოვლენის დაწყების დრო"
 
 #: src/gui/event-editor/gcal-attendee-row.blp:29
+#: src/gui/event-editor/gcal-organizer-row.blp:25
 msgid "Copy email"
 msgstr "ელფოსტის კოპირება"
 
@@ -510,35 +511,42 @@ msgstr "დელეგირებული"
 msgid "Not responded"
 msgstr "არ უპასუხია"
 
-#: src/gui/event-editor/gcal-attendee-summary-row.c:111
-msgid "accepted"
-msgid_plural "accepted"
-msgstr[0] "მიიღო"
-msgstr[1] "მიიღო"
-
 #: src/gui/event-editor/gcal-attendee-summary-row.c:112
-msgid "maybe"
-msgid_plural "maybe"
-msgstr[0] "შეიძლება"
-msgstr[1] "შეიძლება"
+#, c-format
+#| msgid "accepted"
+#| msgid_plural "accepted"
+msgid "%1$u accepted"
+msgid_plural "%1$u accepted"
+msgstr[0] "%1$u-მა მიიღო"
+msgstr[1] "%1$u-მა მიიღო"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:113
-msgid "declined"
-msgid_plural "declined"
-msgstr[0] "უარჰყო"
-msgstr[1] "უარჰყო"
+#, c-format
+msgid "%1$u maybe"
+msgid_plural "%1$u maybe"
+msgstr[0] "შეიძლება %1$u"
+msgstr[1] "შეიძლება %1$u"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:114
-msgid "delegated"
-msgid_plural "delegated"
-msgstr[0] "დელეგირებულია"
-msgstr[1] "დელეგირებულია"
+#, c-format
+msgid "%1$u declined"
+msgid_plural "%1$u declined"
+msgstr[0] "%1$u უარჰყო"
+msgstr[1] "%1$u უარჰყო"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:115
-msgid "not responded"
-msgid_plural "not responded"
-msgstr[0] "არ უპასუხია"
-msgstr[1] "არ უპასუხია"
+#, c-format
+msgid "%1$u delegated"
+msgid_plural "%1$u delegated"
+msgstr[0] "%1$u დელეგირებულია"
+msgstr[1] "%1$u დელეგირებულია"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:116
+#, c-format
+msgid "%1$u not responded"
+msgid_plural "%1$u not responded"
+msgstr[0] "%1$u-ს არ უპასუხია"
+msgstr[1] "%1$u-ს არ უპასუხია"
 
 #: src/gui/event-editor/gcal-attendees-section.blp:28
 msgid "Resources"
@@ -637,6 +645,10 @@ msgstr "მოვლენის დეტალები"
 #: src/gui/event-editor/gcal-event-editor-dialog.c:711
 msgid "Edit Event"
 msgstr "მოვლენის ჩასწორება"
+
+#: src/gui/event-editor/gcal-organizer-row.blp:5
+msgid "Organizer"
+msgstr "ორგანიზატორი"
 
 #: src/gui/event-editor/gcal-reminders-section.blp:16
 msgid "Add Reminder"
@@ -1285,7 +1297,6 @@ msgstr "ახალი მოვლენა %d დეკემბერს"
 #. * To avoid spurious line wrapping, use non-breaking space characters around the en dash.
 #: src/gui/gcal-quick-add-popover.c:426
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
@@ -1712,6 +1723,11 @@ msgstr "Google Maps"
 #: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Bing Maps"
+
+#~ msgid "maybe"
+#~ msgid_plural "maybe"
+#~ msgstr[0] "შეიძლება"
+#~ msgstr[1] "შეიძლება"
 
 #~ msgid "Toggle Alarm Sound"
 #~ msgstr "ხმოვანი განგაშის გადართვა"
