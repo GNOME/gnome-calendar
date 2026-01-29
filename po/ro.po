@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-01-21 19:37+0000\n"
-"PO-Revision-Date: 2026-01-22 14:30+0100\n"
+"POT-Creation-Date: 2026-01-29 01:25+0000\n"
+"PO-Revision-Date: 2026-01-29 11:18+0100\n"
 "Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -496,6 +496,7 @@ msgid "Event start time"
 msgstr "Începutul evenimentului"
 
 #: src/gui/event-editor/gcal-attendee-row.blp:29
+#: src/gui/event-editor/gcal-organizer-row.blp:25
 msgid "Copy email"
 msgstr "Copiază e-mailul"
 
@@ -532,40 +533,45 @@ msgstr "Delegat"
 msgid "Not responded"
 msgstr "Fără răspuns"
 
-#: src/gui/event-editor/gcal-attendee-summary-row.c:111
-msgid "accepted"
-msgid_plural "accepted"
-msgstr[0] "a acceptat"
-msgstr[1] "au acceptat"
-msgstr[2] "au acceptat"
-
 #: src/gui/event-editor/gcal-attendee-summary-row.c:112
-msgid "maybe"
-msgid_plural "maybe"
-msgstr[0] "nesigur"
-msgstr[1] "nesiguri"
-msgstr[2] "nesiguri"
+#, c-format
+msgid "%1$u accepted"
+msgid_plural "%1$u accepted"
+msgstr[0] "%1$u a acceptat"
+msgstr[1] "%1$u au acceptat"
+msgstr[2] "%1$u au acceptat"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:113
-msgid "declined"
-msgid_plural "declined"
-msgstr[0] "a refuzat"
-msgstr[1] "au refuzat"
-msgstr[2] "au refuzat"
+#, c-format
+msgid "%1$u maybe"
+msgid_plural "%1$u maybe"
+msgstr[0] "%1$u posibil"
+msgstr[1] "%1$u posibil"
+msgstr[2] "%1$u posibil"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:114
-msgid "delegated"
-msgid_plural "delegated"
-msgstr[0] "delegat"
-msgstr[1] "delegați"
-msgstr[2] "delegați"
+#, c-format
+msgid "%1$u declined"
+msgid_plural "%1$u declined"
+msgstr[0] "%1$u a refuzat"
+msgstr[1] "%1$u au refuzat"
+msgstr[2] "%1$u au refuzat"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:115
-msgid "not responded"
-msgid_plural "not responded"
-msgstr[0] "fără răspuns"
-msgstr[1] "fără răspuns"
-msgstr[2] "fără răspuns"
+#, c-format
+msgid "%1$u delegated"
+msgid_plural "%1$u delegated"
+msgstr[0] "%1$u delegat"
+msgstr[1] "%1$u delegați"
+msgstr[2] "%1$u delegați"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:116
+#, c-format
+msgid "%1$u not responded"
+msgid_plural "%1$u not responded"
+msgstr[0] "%1$u fără răspuns"
+msgstr[1] "%1$u fără răspuns"
+msgstr[2] "%1$u fără răspuns"
 
 #: src/gui/event-editor/gcal-attendees-section.blp:28
 msgid "Resources"
@@ -665,6 +671,10 @@ msgstr "Detaliile evenimentului"
 #: src/gui/event-editor/gcal-event-editor-dialog.c:711
 msgid "Edit Event"
 msgstr "Modifică evenimentul"
+
+#: src/gui/event-editor/gcal-organizer-row.blp:5
+msgid "Organizer"
+msgstr "Organizator"
 
 #: src/gui/event-editor/gcal-reminders-section.blp:16
 msgid "Add Reminder"
