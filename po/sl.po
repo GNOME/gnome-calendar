@@ -9,18 +9,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-01-21 19:37+0000\n"
-"PO-Revision-Date: 2026-01-21 22:15+0100\n"
+"POT-Creation-Date: 2026-01-29 01:25+0000\n"
+"PO-Revision-Date: 2026-01-29 14:31+0100\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
-"n%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -511,6 +511,7 @@ msgid "Event start time"
 msgstr "Začetni čas dogodka"
 
 #: src/gui/event-editor/gcal-attendee-row.blp:29
+#: src/gui/event-editor/gcal-organizer-row.blp:25
 msgid "Copy email"
 msgstr "Kopiraj e-naslov"
 
@@ -547,45 +548,50 @@ msgstr "Pooblaščeno zastopanje"
 msgid "Not responded"
 msgstr "Ni odziva"
 
-#: src/gui/event-editor/gcal-attendee-summary-row.c:111
-msgid "accepted"
-msgid_plural "accepted"
-msgstr[0] "sprejeto"
-msgstr[1] "sprejeto"
-msgstr[2] "sprejeto"
-msgstr[3] "sprejeto"
-
 #: src/gui/event-editor/gcal-attendee-summary-row.c:112
-msgid "maybe"
-msgid_plural "maybe"
-msgstr[0] "morda"
-msgstr[1] "morda"
-msgstr[2] "morda"
-msgstr[3] "morda"
+#, c-format
+msgid "%1$u accepted"
+msgid_plural "%1$u accepted"
+msgstr[0] "%1$u sprejetih"
+msgstr[1] "%1$u sprejet"
+msgstr[2] "%1$u sprejeta"
+msgstr[3] "%1$u sprejeti"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:113
-msgid "declined"
-msgid_plural "declined"
-msgstr[0] "zavrnjeno"
-msgstr[1] "zavrnjeno"
-msgstr[2] "zavrnjeno"
-msgstr[3] "zavrnjeno"
+#, c-format
+msgid "%1$u maybe"
+msgid_plural "%1$u maybe"
+msgstr[0] "%1$u morda"
+msgstr[1] "%1$u morda"
+msgstr[2] "%1$u morda"
+msgstr[3] "%1$u morda"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:114
-msgid "delegated"
-msgid_plural "delegated"
-msgstr[0] "pooblaščeno zastopanje"
-msgstr[1] "pooblaščeno zastopanje"
-msgstr[2] "pooblaščeno zastopanje"
-msgstr[3] "pooblaščeno zastopanje"
+#, c-format
+msgid "%1$u declined"
+msgid_plural "%1$u declined"
+msgstr[0] "%1$u zavrnjenih"
+msgstr[1] "%1$u  zavrnjen"
+msgstr[2] "%1$u zavrnjena"
+msgstr[3] "%1$u  zavrnjeni"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:115
-msgid "not responded"
-msgid_plural "not responded"
-msgstr[0] "ni odziva"
-msgstr[1] "ni odziva"
-msgstr[2] "ni odziva"
-msgstr[3] "ni odziva"
+#, c-format
+msgid "%1$u delegated"
+msgid_plural "%1$u delegated"
+msgstr[0] "%1$u pooblaščeno zastopanih"
+msgstr[1] "%1$u pooblaščeno zastopani"
+msgstr[2] "%1$u pooblaščeno zastopana"
+msgstr[3] "%1$u pooblaščeno zastopani"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:116
+#, c-format
+msgid "%1$u not responded"
+msgid_plural "%1$u not responded"
+msgstr[0] "%1$u brez odziva"
+msgstr[1] "%1$u brez odziva"
+msgstr[2] "%1$u brez odziva"
+msgstr[3] "%1$u brez odziva"
 
 #: src/gui/event-editor/gcal-attendees-section.blp:28
 msgid "Resources"
@@ -684,6 +690,10 @@ msgstr "Podrobnosti dogodka"
 #: src/gui/event-editor/gcal-event-editor-dialog.c:711
 msgid "Edit Event"
 msgstr "Uredi dogodek"
+
+#: src/gui/event-editor/gcal-organizer-row.blp:5
+msgid "Organizer"
+msgstr "Organizator"
 
 #: src/gui/event-editor/gcal-reminders-section.blp:16
 msgid "Add Reminder"
