@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-01-21 19:37+0000\n"
-"PO-Revision-Date: 2026-01-25 18:37+0100\n"
+"POT-Creation-Date: 2026-01-29 01:25+0000\n"
+"PO-Revision-Date: 2026-01-29 12:24+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -479,6 +479,7 @@ msgid "Event start time"
 msgstr "Ora de debuta de l’eveniment"
 
 #: src/gui/event-editor/gcal-attendee-row.blp:29
+#: src/gui/event-editor/gcal-organizer-row.blp:25
 msgid "Copy email"
 msgstr "Copiar l'adreça electronica"
 
@@ -515,35 +516,40 @@ msgstr "Deleguèron"
 msgid "Not responded"
 msgstr "Respondèron pas"
 
-#: src/gui/event-editor/gcal-attendee-summary-row.c:111
-msgid "accepted"
-msgid_plural "accepted"
-msgstr[0] "acceptèt"
-msgstr[1] "acceptèron"
-
 #: src/gui/event-editor/gcal-attendee-summary-row.c:112
-msgid "maybe"
-msgid_plural "maybe"
-msgstr[0] "benlèu"
-msgstr[1] "benlèu"
+#, c-format
+msgid "%1$u accepted"
+msgid_plural "%1$u accepted"
+msgstr[0] "%1$u acceptèt"
+msgstr[1] "%1$u acceptèron"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:113
-msgid "declined"
-msgid_plural "declined"
-msgstr[0] "refusèt"
-msgstr[1] "refusèron"
+#, c-format
+msgid "%1$u maybe"
+msgid_plural "%1$u maybe"
+msgstr[0] "%1$u benlèu"
+msgstr[1] "%1$u benlèu"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:114
-msgid "delegated"
-msgid_plural "delegated"
-msgstr[0] "deleguèt"
-msgstr[1] "deleguèron"
+#, c-format
+msgid "%1$u declined"
+msgid_plural "%1$u declined"
+msgstr[0] "%1$u refusèt"
+msgstr[1] "%1$u refusèron"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:115
-msgid "not responded"
-msgid_plural "not responded"
-msgstr[0] "respondèt pas"
-msgstr[1] "respondèron pas"
+#, c-format
+msgid "%1$u delegated"
+msgid_plural "%1$u delegated"
+msgstr[0] "%1$u deleguèt"
+msgstr[1] "%1$u deleguèron"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:116
+#, c-format
+msgid "%1$u not responded"
+msgid_plural "%1$u not responded"
+msgstr[0] "%1$u respondèt pas"
+msgstr[1] "%1$u respondèron pas"
 
 #: src/gui/event-editor/gcal-attendees-section.blp:28
 msgid "Resources"
@@ -643,6 +649,10 @@ msgstr "Detalhs de l’eveniment"
 #: src/gui/event-editor/gcal-event-editor-dialog.c:711
 msgid "Edit Event"
 msgstr "Modificar l'eveniment"
+
+#: src/gui/event-editor/gcal-organizer-row.blp:5
+msgid "Organizer"
+msgstr "Organizaire"
 
 #: src/gui/event-editor/gcal-reminders-section.blp:16
 msgid "Add Reminder"
@@ -1719,6 +1729,11 @@ msgstr "Google Maps"
 #: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Bing Maps"
+
+#~ msgid "maybe"
+#~ msgid_plural "maybe"
+#~ msgstr[0] "benlèu"
+#~ msgstr[1] "benlèu"
 
 #~ msgid "Toggle Alarm Sound"
 #~ msgstr "Alternar lo son d’alarma"
