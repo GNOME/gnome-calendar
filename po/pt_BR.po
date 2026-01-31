@@ -14,14 +14,15 @@
 # Rafael Fontenelle <rafaelff@gnome.org>, 2012-2025.
 # Nilton Perim Neto <niltonperimneto@gmail.com>, 2025.
 # Juliano de Souza Camargo <julianosc@pm.me>, 2024-2026.
+# Álvaro Burns <>, 2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-01-21 19:37+0000\n"
-"PO-Revision-Date: 2026-01-25 18:21-0300\n"
-"Last-Translator: Juliano de Souza Camargo <julianosc@pm.me>\n"
+"POT-Creation-Date: 2026-01-29 23:26+0000\n"
+"PO-Revision-Date: 2026-01-29 20:40-0300\n"
+"Last-Translator: Álvaro Burns <>\n"
 "Language-Team: Brazilian Portuguese <https://br.gnome.org/traducao/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -160,7 +161,7 @@ msgstr "Editor de eventos"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1783 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1786 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -169,13 +170,13 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1791
+#: src/core/gcal-event.c:1794
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1807
+#: src/core/gcal-event.c:1810
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -496,6 +497,7 @@ msgid "Event start time"
 msgstr "Horário de início do evento"
 
 #: src/gui/event-editor/gcal-attendee-row.blp:29
+#: src/gui/event-editor/gcal-organizer-row.blp:25
 msgid "Copy email"
 msgstr "Copiar e-mail"
 
@@ -532,35 +534,40 @@ msgstr "Delegado"
 msgid "Not responded"
 msgstr "Não respondido"
 
-#: src/gui/event-editor/gcal-attendee-summary-row.c:111
-msgid "accepted"
-msgid_plural "accepted"
-msgstr[0] "aceito"
-msgstr[1] "aceitos"
-
 #: src/gui/event-editor/gcal-attendee-summary-row.c:112
-msgid "maybe"
-msgid_plural "maybe"
-msgstr[0] "talvez"
-msgstr[1] "talvez"
+#, c-format
+msgid "%1$u accepted"
+msgid_plural "%1$u accepted"
+msgstr[0] "%1$u aceito"
+msgstr[1] "%1$u aceitos"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:113
-msgid "declined"
-msgid_plural "declined"
-msgstr[0] "rejeitado"
-msgstr[1] "rejeitados"
+#, c-format
+msgid "%1$u maybe"
+msgid_plural "%1$u maybe"
+msgstr[0] "%1$u talvez"
+msgstr[1] "%1$u talvez"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:114
-msgid "delegated"
-msgid_plural "delegated"
-msgstr[0] "delegado"
-msgstr[1] "delegados"
+#, c-format
+msgid "%1$u declined"
+msgid_plural "%1$u declined"
+msgstr[0] "%1$u rejeitado"
+msgstr[1] "%1$u rejeitados"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:115
-msgid "not responded"
-msgid_plural "not responded"
-msgstr[0] "não respondido"
-msgstr[1] "não respondidos"
+#, c-format
+msgid "%1$u delegated"
+msgid_plural "%1$u delegated"
+msgstr[0] "%1$u delegado"
+msgstr[1] "%1$u delegados"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:116
+#, c-format
+msgid "%1$u not responded"
+msgid_plural "%1$u not responded"
+msgstr[0] "%1$u não respondido"
+msgstr[1] "%1$u não respondidos"
 
 #: src/gui/event-editor/gcal-attendees-section.blp:28
 msgid "Resources"
@@ -649,17 +656,21 @@ msgstr "_Excluir evento"
 msgid "_Save"
 msgstr "_Salvar"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:707
+#: src/gui/event-editor/gcal-event-editor-dialog.c:705
 msgid "New Event"
 msgstr "Novo evento"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:709
+#: src/gui/event-editor/gcal-event-editor-dialog.c:707
 msgid "Event Details"
 msgstr "Mais detalhes"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:711
+#: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Edit Event"
 msgstr "Editar evento"
+
+#: src/gui/event-editor/gcal-organizer-row.blp:5
+msgid "Organizer"
+msgstr "Organizador"
 
 #: src/gui/event-editor/gcal-reminders-section.blp:16
 msgid "Add Reminder"
@@ -1745,6 +1756,11 @@ msgstr "Google Maps"
 #: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Bing Maps"
+
+#~ msgid "maybe"
+#~ msgid_plural "maybe"
+#~ msgstr[0] "talvez"
+#~ msgstr[1] "talvez"
 
 #~ msgid "Toggle Alarm Sound"
 #~ msgstr "Habilitar/Desabilitar som do Alarme"
