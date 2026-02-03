@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-01-21 19:37+0000\n"
-"PO-Revision-Date: 2026-01-26 22:12+0100\n"
+"POT-Creation-Date: 2026-01-29 23:26+0000\n"
+"PO-Revision-Date: 2026-02-01 22:32+0100\n"
 "Last-Translator: Jordi Mas i Hernàndez <jmas@softcatala.org>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -145,7 +145,7 @@ msgstr "Editor de cites"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1783 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1786 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -154,13 +154,13 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1791
+#: src/core/gcal-event.c:1794
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1807
+#: src/core/gcal-event.c:1810
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -483,6 +483,7 @@ msgid "Event start time"
 msgstr "Hora d'inici de la cita"
 
 #: src/gui/event-editor/gcal-attendee-row.blp:29
+#: src/gui/event-editor/gcal-organizer-row.blp:25
 msgid "Copy email"
 msgstr "Copia el correu electrònic"
 
@@ -509,47 +510,50 @@ msgstr "Tentatiu"
 
 #: src/gui/event-editor/gcal-attendee-details-page.blp:42
 msgid "Declined"
-msgstr ""
+msgstr "Declinat"
 
 #: src/gui/event-editor/gcal-attendee-details-page.blp:55
 msgid "Delegated"
-msgstr ""
+msgstr "Delegat"
 
 #: src/gui/event-editor/gcal-attendee-details-page.blp:68
 msgid "Not responded"
 msgstr "Sense resposta"
 
-#: src/gui/event-editor/gcal-attendee-summary-row.c:111
-msgid "accepted"
-msgid_plural "accepted"
-msgstr[0] "acceptat"
-msgstr[1] "acceptat"
-
 #: src/gui/event-editor/gcal-attendee-summary-row.c:112
-msgid "maybe"
-msgid_plural "maybe"
-msgstr[0] "potser"
-msgstr[1] "potser"
+#, c-format
+msgid "%1$u accepted"
+msgid_plural "%1$u accepted"
+msgstr[0] "%1$u ha acceptat"
+msgstr[1] "%1$u han acceptat"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:113
-msgid "declined"
-msgid_plural "declined"
-msgstr[0] ""
-msgstr[1] ""
+#, c-format
+msgid "%1$u maybe"
+msgid_plural "%1$u maybe"
+msgstr[0] "%1$u potser"
+msgstr[1] "%1$u potser"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:114
-#, fuzzy
-#| msgid "Event deleted"
-msgid "delegated"
-msgid_plural "delegated"
-msgstr[0] "S'ha suprimit la cita"
-msgstr[1] "S'ha suprimit la cita"
+#, c-format
+msgid "%1$u declined"
+msgid_plural "%1$u declined"
+msgstr[0] "%1$u ha declinat"
+msgstr[1] "%1$u han declinat"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:115
-msgid "not responded"
-msgid_plural "not responded"
-msgstr[0] ""
-msgstr[1] ""
+#, c-format
+msgid "%1$u delegated"
+msgid_plural "%1$u delegated"
+msgstr[0] "%1$u ha delegat"
+msgstr[1] "%1$u han delegat"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:116
+#, c-format
+msgid "%1$u not responded"
+msgid_plural "%1$u not responded"
+msgstr[0] "%1$u no ha respost"
+msgstr[1] "%1$u no han respost"
 
 #: src/gui/event-editor/gcal-attendees-section.blp:28
 msgid "Resources"
@@ -638,17 +642,21 @@ msgstr "_Suprimeix la cita"
 msgid "_Save"
 msgstr "_Desa"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:707
+#: src/gui/event-editor/gcal-event-editor-dialog.c:705
 msgid "New Event"
 msgstr "Cita nova"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:709
+#: src/gui/event-editor/gcal-event-editor-dialog.c:707
 msgid "Event Details"
 msgstr "Detalls de la cita"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:711
+#: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Edit Event"
 msgstr "Edita una cita"
+
+#: src/gui/event-editor/gcal-organizer-row.blp:5
+msgid "Organizer"
+msgstr "Organitzador"
 
 #: src/gui/event-editor/gcal-reminders-section.blp:16
 msgid "Add Reminder"
@@ -1726,6 +1734,11 @@ msgstr "Google Maps"
 #: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Bing Maps"
+
+#~ msgid "maybe"
+#~ msgid_plural "maybe"
+#~ msgstr[0] "potser"
+#~ msgstr[1] "potser"
 
 #~ msgid "Toggle Alarm Sound"
 #~ msgstr "Commuta el so d'alarma"
