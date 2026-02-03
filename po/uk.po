@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-01-21 19:37+0000\n"
-"PO-Revision-Date: 2026-01-25 08:16+0200\n"
+"POT-Creation-Date: 2026-01-29 23:26+0000\n"
+"PO-Revision-Date: 2026-02-03 05:23+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -145,7 +145,7 @@ msgstr "Редактор подій"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1783 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1786 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -154,13 +154,13 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1791
+#: src/core/gcal-event.c:1794
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1807
+#: src/core/gcal-event.c:1810
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -237,7 +237,6 @@ msgid "_Display Calendar"
 msgstr "П_оказати календар"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:82
-#| msgid "Import a Calendar"
 msgid "_Export Calendar"
 msgstr "_Експортувати календар"
 
@@ -254,7 +253,6 @@ msgid "On This Computer"
 msgstr "На цьому комп'ютері"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:344
-#| msgid "Import a Calendar"
 msgid "Export Calendar"
 msgstr "Експортування календаря"
 
@@ -514,16 +512,15 @@ msgid "Event start time"
 msgstr "Час початку події"
 
 #: src/gui/event-editor/gcal-attendee-row.blp:29
+#: src/gui/event-editor/gcal-organizer-row.blp:25
 msgid "Copy email"
 msgstr "Копіювати адресу електронної пошти"
 
 #: src/gui/event-editor/gcal-attendee-row.c:108
-#| msgid "Delete Event"
 msgid "Delegated to: "
 msgstr "Доручено: "
 
 #: src/gui/event-editor/gcal-attendee-row.c:124
-#| msgid "Location"
 msgid "optional"
 msgstr "необов'язкове"
 
@@ -549,50 +546,63 @@ msgid "Delegated"
 msgstr "Доручено"
 
 #: src/gui/event-editor/gcal-attendee-details-page.blp:68
-#| msgid "No results found"
 msgid "Not responded"
 msgstr "Без відповіді"
 
-#: src/gui/event-editor/gcal-attendee-summary-row.c:111
-msgid "accepted"
-msgid_plural "accepted"
-msgstr[0] "прийнято"
-msgstr[1] "прийнято"
-msgstr[2] "прийнято"
-msgstr[3] "прийнято"
-
 #: src/gui/event-editor/gcal-attendee-summary-row.c:112
-msgid "maybe"
-msgid_plural "maybe"
-msgstr[0] "можливо"
-msgstr[1] "можливо"
-msgstr[2] "можливо"
-msgstr[3] "можливо"
+#, c-format
+#| msgid "accepted"
+#| msgid_plural "accepted"
+msgid "%1$u accepted"
+msgid_plural "%1$u accepted"
+msgstr[0] "%1$u прийняте"
+msgstr[1] "%1$u прийнятих"
+msgstr[2] "%1$u прийнятих"
+msgstr[3] "%1$u прийняте"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:113
-msgid "declined"
-msgid_plural "declined"
-msgstr[0] "відхилено"
-msgstr[1] "відхилено"
-msgstr[2] "відхилено"
-msgstr[3] "відхилено"
+#, c-format
+#| msgid "%1$u day before"
+#| msgid_plural "%1$u days before"
+msgid "%1$u maybe"
+msgid_plural "%1$u maybe"
+msgstr[0] "%1$u можливе"
+msgstr[1] "%1$u можливих"
+msgstr[2] "%1$u можливих"
+msgstr[3] "%1$u можливе"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:114
-#| msgid "Event deleted"
-msgid "delegated"
-msgid_plural "delegated"
-msgstr[0] "доручено"
-msgstr[1] "Подію вилучено"
-msgstr[2] "Подію вилучено"
-msgstr[3] "Подію вилучено"
+#, c-format
+#| msgid "declined"
+#| msgid_plural "declined"
+msgid "%1$u declined"
+msgid_plural "%1$u declined"
+msgstr[0] "%1$u відхилене"
+msgstr[1] "%1$u відхилених"
+msgstr[2] "%1$u відхилених"
+msgstr[3] "%1$u відхилене"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:115
-msgid "not responded"
-msgid_plural "not responded"
-msgstr[0] "без відповіді"
-msgstr[1] "без відповіді"
-msgstr[2] "без відповіді"
-msgstr[3] "без відповіді"
+#, c-format
+#| msgid "delegated"
+#| msgid_plural "delegated"
+msgid "%1$u delegated"
+msgid_plural "%1$u delegated"
+msgstr[0] "%1$u доручене"
+msgstr[1] "%1$u доручених"
+msgstr[2] "%1$u доручених"
+msgstr[3] "%1$u доручене"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:116
+#, c-format
+#| msgid "not responded"
+#| msgid_plural "not responded"
+msgid "%1$u not responded"
+msgid_plural "%1$u not responded"
+msgstr[0] "%1$u без відповіді"
+msgstr[1] "%1$u без відповіді"
+msgstr[2] "%1$u без відповіді"
+msgstr[3] "%1$u без відповіді"
 
 #: src/gui/event-editor/gcal-attendees-section.blp:28
 msgid "Resources"
@@ -674,7 +684,6 @@ msgid "Notes"
 msgstr "Примітки"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:89
-#| msgid "Delete Event"
 msgid "_Delete Event"
 msgstr "Ви_лучити подію"
 
@@ -682,17 +691,21 @@ msgstr "Ви_лучити подію"
 msgid "_Save"
 msgstr "З_берегти"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:707
+#: src/gui/event-editor/gcal-event-editor-dialog.c:705
 msgid "New Event"
 msgstr "Нова подія"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:709
+#: src/gui/event-editor/gcal-event-editor-dialog.c:707
 msgid "Event Details"
 msgstr "Подробиці події"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:711
+#: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Edit Event"
 msgstr "Редагування події"
+
+#: src/gui/event-editor/gcal-organizer-row.blp:5
+msgid "Organizer"
+msgstr "Щоденник"
 
 #: src/gui/event-editor/gcal-reminders-section.blp:16
 msgid "Add Reminder"
@@ -1119,12 +1132,10 @@ msgid "Unknown Service"
 msgstr "Невідома служба"
 
 #: src/gui/gcal-quick-add-popover.blp:86
-#| msgid "Edit Details…"
 msgid "_Edit Details"
 msgstr "З_мінити подробиці"
 
 #: src/gui/gcal-quick-add-popover.blp:98
-#| msgid "New Event"
 msgid "_Save Event"
 msgstr "З_берегти подію"
 
@@ -1346,7 +1357,6 @@ msgstr "Нова подія на грудень %d"
 #. * To avoid spurious line wrapping, use non-breaking space characters around the en dash.
 #: src/gui/gcal-quick-add-popover.c:426
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
@@ -1364,7 +1374,6 @@ msgstr "Не знайдено жодного результату"
 
 #: src/gui/gcal-search-button.c:179
 #, c-format
-#| msgid "No results found"
 msgid "One result found"
 msgid_plural "%u results found"
 msgstr[0] "Знайдено %u результат"
@@ -1693,12 +1702,10 @@ msgstr[2] "Інші %d подій"
 msgstr[3] "Інша %d подія"
 
 #: src/gui/views/gcal-week-view.c:241
-#| msgid "View Additional Details"
 msgid "Hide Additional Events"
 msgstr "Приховати додаткові події"
 
 #: src/gui/views/gcal-week-view.c:243
-#| msgid "View Additional Details"
 msgid "Show Additional Events"
 msgstr "Показати додаткові події"
 
@@ -1783,6 +1790,13 @@ msgstr "Карти Google"
 #: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Bing Maps"
+
+#~ msgid "maybe"
+#~ msgid_plural "maybe"
+#~ msgstr[0] "можливо"
+#~ msgstr[1] "можливо"
+#~ msgstr[2] "можливо"
+#~ msgstr[3] "можливо"
 
 #~ msgid "Toggle Alarm Sound"
 #~ msgstr "Перемкнути звук попередження"
