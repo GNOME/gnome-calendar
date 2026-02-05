@@ -57,6 +57,8 @@ gboolean             gcal_month_cell_get_selected                (GcalMonthCell 
 void                 gcal_month_cell_set_selected                (GcalMonthCell      *self,
                                                                   gboolean            selected);
 
+GtkWidget           *gcal_month_cell_get_overflow_button         (GcalMonthCell      *self);
+
 G_END_DECLS
 
 #endif /* GCAL_MONTH_VIEW_CELL_H */

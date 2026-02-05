@@ -637,3 +637,12 @@ gcal_month_cell_set_selected (GcalMonthCell *self,
 
   gtk_widget_queue_resize (GTK_WIDGET (self));
 }
+
+GtkWidget *
+gcal_month_cell_get_overflow_button (GcalMonthCell *self)
+{
+  g_assert (GCAL_IS_MONTH_CELL (self));
+
+  return self->overflow_button;
+}
+
