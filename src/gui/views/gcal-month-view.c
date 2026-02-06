@@ -670,6 +670,61 @@ update_selection_range (GcalMonthView *self)
     }
 }
 
+static gboolean
+focus_month_cell (GcalMonthView    *self,
+                  GtkWidget        *cell,
+                  GtkDirectionType  direction)
+{
+  GtkWidget *row, *new_row, *new_cell;
+  GtkDirectionType lateral;
+  gboolean is_rtl;
+  gint n_rows, new_cell_x;
+  guint row_index, new_row_index;
+
+  row = gtk_widget_get_ancestor (cell, GCAL_TYPE_MONTH_VIEW_ROW);
+
+  if (gtk_widget_child_focus (row, direction))
+    return TRUE;
+
+  is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
+
+  switch (direction)
+    {
+    case GTK_DIR_LEFT:
+      lateral = is_rtl ? GTK_DIR_DOWN : GTK_DIR_UP;
+      break;
+    case GTK_DIR_RIGHT:
+      lateral = is_rtl ? GTK_DIR_UP : GTK_DIR_DOWN;
+      break;
+    default:
+      break;
+    }
+
+  if (!g_ptr_array_find (self->week_rows, row, &row_index))
+    g_assert_not_reached ();
+
+  if (direction == GTK_DIR_LEFT)
+    new_cell_x = gtk_widget_get_width (row) - gtk_widget_get_width (cell) / 2;
+  else if (direction == GTK_DIR_RIGHT)
+    new_cell_x = gtk_widget_get_width (cell) / 2;
+  else
+    return TRUE;
+
+  if (lateral == GTK_DIR_UP)
+    n_rows = -1;
+  else
+    n_rows = 1;
+
+  new_row_index = row_index + n_rows;
+  new_row = g_ptr_array_index (self->week_rows, new_row_index);
+  new_cell = gcal_month_view_row_get_cell_at_x (GCAL_MONTH_VIEW_ROW (new_row), new_cell_x);
+
+  if (row_index < FIRST_VISIBLE_ROW_INDEX || row_index > LAST_VISIBLE_ROW_INDEX)
+    return TRUE;
+
+  return gtk_widget_grab_focus (new_cell);
+}
+
 
 
 /*
@@ -1428,7 +1483,12 @@ gcal_month_view_focus (GtkWidget        *widget,
   g_assert (candidate == NULL || GTK_IS_WIDGET (candidate));
 
   if (candidate == NULL)
-    return gtk_widget_keynav_failed (widget, direction);
+    {
+      if (GCAL_IS_MONTH_CELL (focused) && !(self->state & GDK_CONTROL_MASK))
+        return focus_month_cell (self, focused, direction);
+      else
+        return gtk_widget_keynav_failed (widget, direction);
+    }
 
   return TRUE;
 }
