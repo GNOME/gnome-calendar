@@ -10,6 +10,7 @@ template $GcalMonthView: Widget {
 
   EventControllerKey {
     key-pressed => $on_key_controller_key_pressed_cb(template) not-swapped;
+    key-released => $on_key_controller_key_released_cb(template) not-swapped;
   }
 
   EventControllerScroll {

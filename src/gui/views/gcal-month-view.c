@@ -670,6 +670,33 @@ update_selection_range (GcalMonthView *self)
     }
 }
 
+static gboolean
+child_focus_from_keyval (GtkWidget *widget,
+                         guint      keyval)
+{
+  switch (keyval)
+    {
+    case GDK_KEY_Up:
+    case GDK_KEY_KP_Up:
+      return gtk_widget_child_focus (widget, GTK_DIR_UP);
+
+    case GDK_KEY_Right:
+    case GDK_KEY_KP_Right:
+      return gtk_widget_child_focus (widget, GTK_DIR_RIGHT);
+
+    case GDK_KEY_Down:
+    case GDK_KEY_KP_Down:
+      return gtk_widget_child_focus (widget, GTK_DIR_DOWN);
+
+    case GDK_KEY_Left:
+    case GDK_KEY_KP_Left:
+      return gtk_widget_child_focus (widget, GTK_DIR_LEFT);
+
+    default:
+      return FALSE;
+    }
+}
+
 static void
 trigger_scroll (GcalMonthView *self,
                 gint           n_rows)
@@ -935,9 +962,80 @@ on_key_controller_key_pressed_cb (GtkEventControllerKey *event_controller,
                                   GdkModifierType        state,
                                   GcalMonthView         *self)
 {
+  GDateTime *date = NULL;
+  GtkWidget *focused_widget, *month_cell;
+  GtkRoot *root;
+
+  root = gtk_widget_get_root (GTK_WIDGET (self));
+  focused_widget = gtk_root_get_focus (root);
+  month_cell = gtk_widget_get_ancestor (focused_widget, GCAL_TYPE_MONTH_CELL);
+
   self->state = state;
 
+  if (month_cell && (state & GDK_SHIFT_MASK))
+    {
+      if (keyval == GDK_KEY_Escape)
+        {
+          gcal_view_clear_marks (GCAL_VIEW (self));
+          return GDK_EVENT_STOP;
+        }
+
+      if (!child_focus_from_keyval (GTK_WIDGET (self), keyval))
+        return GDK_EVENT_PROPAGATE;
+
+      if (!self->selection.start)
+        {
+          date = gcal_month_cell_get_date (GCAL_MONTH_CELL (month_cell));
+          self->selection.start = g_date_time_ref (date);
+
+          update_selection_range (self);
+        }
+
+      focused_widget = gtk_root_get_focus (root);
+      month_cell = gtk_widget_get_ancestor (focused_widget, GCAL_TYPE_MONTH_CELL);
+
+      g_assert (GCAL_IS_MONTH_CELL (month_cell));
+
+      gcal_clear_date_time (&self->selection.end);
+      date = gcal_month_cell_get_date (GCAL_MONTH_CELL (month_cell));
+      self->selection.end = g_date_time_ref (date);
+
+      update_selection_range (self);
+    }
+
   return GDK_EVENT_PROPAGATE;
+}
+
+static void
+on_key_controller_key_released_cb (GtkEventControllerKey *event_controller,
+                                   guint                  keyval,
+                                   guint                  keycode,
+                                   GdkModifierType        state,
+                                   GcalMonthView         *self)
+{
+  GtkWidget *focused_widget, *month_cell;
+  GtkRoot *root;
+
+  root = gtk_widget_get_root (GTK_WIDGET (self));
+  focused_widget = gtk_root_get_focus (root);
+  month_cell = gtk_widget_get_ancestor (focused_widget, GCAL_TYPE_MONTH_CELL);
+
+  if (month_cell)
+    {
+      switch (keyval)
+        {
+        case GDK_KEY_Shift_L:
+        case GDK_KEY_Shift_R:
+        case GDK_KEY_Shift_Lock:
+          if (!self->selection.end)
+            break;
+
+          gtk_widget_activate (month_cell);
+          break;
+        default:
+          break;
+        }
+    }
 }
 
 static void
@@ -1819,6 +1917,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_scroll_end_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_scroll_controller_decelerate_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_key_controller_key_pressed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_key_controller_key_released_cb);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
