@@ -433,6 +433,35 @@ focus_vertical_cell (GcalMonthViewRow *self,
   return gtk_widget_grab_focus (cell);
 }
 
+static gboolean
+focus_horizontal_cell (GcalMonthViewRow *self,
+                       GtkWidget        *focused_cell,
+                       GtkDirectionType  direction)
+{
+  gint width;
+  GtkWidget *new_cell;
+  graphene_point_t point;
+
+  width = gtk_widget_get_width (focused_cell);
+
+  if (!gtk_widget_compute_point (focused_cell, GTK_WIDGET (self),
+                                 &GRAPHENE_POINT_INIT (width / 2, 0),
+                                 &point))
+    g_assert_not_reached ();
+
+  if (direction == GTK_DIR_LEFT)
+    point.x -= width;
+  else
+    point.x += width;
+
+  new_cell = gcal_month_view_row_get_cell_at_x (self, point.x);
+
+  if (new_cell)
+    return gtk_widget_grab_focus (new_cell);
+  else
+    return FALSE;
+}
+
 static void
 layout_block_free (gpointer data)
 {
@@ -852,8 +881,8 @@ gcal_month_view_row_focus (GtkWidget        *widget,
     {
       if (direction == GTK_DIR_UP || direction == GTK_DIR_DOWN)
         return focus_vertical_cell (self, cell);
-      else
-        return FALSE;
+      else if (direction == GTK_DIR_LEFT || direction == GTK_DIR_RIGHT)
+        return focus_horizontal_cell (self, cell, direction);
     }
 
   if (GCAL_IS_EVENT_WIDGET (focused) || overflow_focused)
