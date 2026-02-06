@@ -41,6 +41,7 @@
 #define N_TOTAL_ROWS (N_ROWS_PER_PAGE * N_PAGES)
 #define FIRST_VISIBLE_ROW_INDEX (N_ROWS_PER_PAGE * (N_PAGES - 1) / 2)
 #define LAST_VISIBLE_ROW_INDEX (FIRST_VISIBLE_ROW_INDEX + N_ROWS_PER_PAGE - 1)
+#define CELL_ACTIVATED_OFFSET 18.0
 
 // N_PAGES must be an odd number
 G_STATIC_ASSERT (N_PAGES % 2 != 0);
@@ -792,6 +793,49 @@ on_event_widget_activated_cb (GcalMonthViewRow *row,
                               GcalMonthView    *self)
 {
   gcal_view_event_activated (GCAL_VIEW (self), event_widget);
+}
+
+static void
+on_month_row_cell_activated_cb (GcalMonthViewRow *row,
+                                GcalMonthCell    *cell,
+                                GcalMonthView    *self)
+{
+  g_autoptr (GcalRange) selection_range = NULL;
+  g_autoptr (GDateTime) selection_start = NULL;
+  g_autoptr (GDateTime) selection_end = NULL;
+  gint cell_width, cell_height;
+  graphene_point_t point;
+
+  GCAL_ENTRY;
+
+  self->selection.end = g_date_time_ref (gcal_month_cell_get_date (cell));
+
+  selection_start = self->selection.start ?: self->selection.end;
+  selection_end = self->selection.end;
+
+  /* Swap dates if end is before start */
+  if (gcal_date_time_compare_date (selection_start, selection_end) > 0)
+    {
+      GDateTime *aux = selection_end;
+      selection_end = selection_start;
+      selection_start = aux;
+    }
+
+  cell_width = gtk_widget_get_width (GTK_WIDGET (cell));
+  cell_height = gtk_widget_get_height (GTK_WIDGET (cell));
+
+  selection_start = g_date_time_ref (selection_start);
+  selection_end = g_date_time_add_days (selection_end, 1);
+
+  if (!gtk_widget_compute_point (GTK_WIDGET (cell), GTK_WIDGET (self),
+                                 &GRAPHENE_POINT_INIT (cell_width / 2, cell_height - CELL_ACTIVATED_OFFSET),
+                                 &point))
+    g_assert_not_reached ();
+
+  selection_range = gcal_range_new (selection_start, selection_end, GCAL_RANGE_DATE_ONLY);
+  gcal_view_create_event (GCAL_VIEW (self), selection_range, point.x, point.y);
+
+  GCAL_EXIT;
 }
 
 static gboolean
@@ -1710,6 +1754,7 @@ gcal_month_view_init (GcalMonthView *self)
     {
       GtkWidget *row = gcal_month_view_row_new ();
       g_signal_connect (row, "event-activated", G_CALLBACK (on_event_widget_activated_cb), self);
+      g_signal_connect (row, "cell-activated", G_CALLBACK (on_month_row_cell_activated_cb), self);
       g_signal_connect (row, "show-overflow", G_CALLBACK (on_month_row_show_overflow_cb), self);
       gtk_widget_set_parent (row, GTK_WIDGET (self));
       g_ptr_array_add (self->week_rows, row);
