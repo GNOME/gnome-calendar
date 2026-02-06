@@ -1273,3 +1273,20 @@ gcal_month_view_row_update_selection (GcalMonthViewRow *self,
       gcal_month_cell_set_selected (month_cell, selected);
     }
 }
+
+gboolean
+gcal_month_view_row_focus_adjacent_cell (GcalMonthViewRow *self,
+                                         GtkWidget        *widget)
+{
+  GtkWidget *cell;
+  g_autoptr (FocusEventData) data = NULL;
+
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+  g_assert (gtk_widget_is_ancestor (widget, GTK_WIDGET (self)));
+
+  data = create_focus_event_data (self, widget);
+
+  cell = gcal_month_view_row_get_cell_at_x (self, data->focal_x);
+
+  return gtk_widget_grab_focus (cell);
+}
