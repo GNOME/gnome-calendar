@@ -1342,7 +1342,7 @@ gcal_month_view_focus (GtkWidget        *widget,
 {
   GcalMonthView *self = GCAL_MONTH_VIEW (widget);
   GtkWidget *candidate = NULL;
-  GtkWidget *focused;
+  GtkWidget *focused, *row;
   GtkRoot *root;
 
   root = gtk_widget_get_root (widget);
@@ -1357,7 +1357,13 @@ gcal_month_view_focus (GtkWidget        *widget,
           g_assert_nonnull (focused);
 
           gcal_month_popover_popdown (GCAL_MONTH_POPOVER (self->overflow.popover));
-          return FALSE;
+
+          if (gtk_widget_is_ancestor (focused, self->overflow.popover))
+            return gtk_widget_grab_focus (self->overflow.relative_to);
+
+          row = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_VIEW_ROW);
+
+          return gcal_month_view_row_focus_adjacent_cell (GCAL_MONTH_VIEW_ROW (row), focused);
         }
 
       return GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction);
