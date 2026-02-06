@@ -409,6 +409,30 @@ is_overflow_focused (GtkWidget *focused)
   return gtk_widget_is_focus (overflow);
 }
 
+static inline gboolean
+focus_vertical_cell (GcalMonthViewRow *self,
+                     GtkWidget        *focused_cell)
+{
+  graphene_point_t point;
+  GtkWidget *row, *cell;
+  gdouble cell_width;
+
+  if (gtk_widget_is_ancestor (focused_cell, GTK_WIDGET (self)))
+    return FALSE;
+
+  cell_width = (gdouble) gtk_widget_get_width (GTK_WIDGET (self)) / 7.0;
+  row = gtk_widget_get_ancestor (focused_cell, GCAL_TYPE_MONTH_VIEW_ROW);
+
+  g_assert (GTK_WIDGET (self) != row);
+
+  if (!gtk_widget_compute_point (focused_cell, row, &GRAPHENE_POINT_INIT (cell_width / 2, 0), &point))
+    g_assert_not_reached ();
+
+  cell = gcal_month_view_row_get_cell_at_x (self, point.x);
+
+  return gtk_widget_grab_focus (cell);
+}
+
 static void
 layout_block_free (gpointer data)
 {
@@ -789,7 +813,9 @@ gcal_month_view_row_focus (GtkWidget        *widget,
                            GtkDirectionType  direction)
 {
   GcalMonthViewRow *self = GCAL_MONTH_VIEW_ROW (widget);
-  GtkWidget *focused, *new_focus;
+  g_autoptr (FocusEventData) data = NULL;
+  GtkWidget *focused, *new_focus, *cell;
+  gboolean overflow_focused;
   GtkRoot *root;
 
   root = gtk_widget_get_root (widget);
@@ -819,7 +845,18 @@ gcal_month_view_row_focus (GtkWidget        *widget,
         }
     }
 
-  if (GCAL_IS_EVENT_WIDGET (focused) || is_overflow_focused (focused))
+  overflow_focused = is_overflow_focused (focused);
+  cell = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_CELL);
+
+  if (cell && !overflow_focused)
+    {
+      if (direction == GTK_DIR_UP || direction == GTK_DIR_DOWN)
+        return focus_vertical_cell (self, cell);
+      else
+        return FALSE;
+    }
+
+  if (GCAL_IS_EVENT_WIDGET (focused) || overflow_focused)
     {
       g_autoptr (FocusEventData) focus_event_data = create_focus_event_data (self, focused);
 
