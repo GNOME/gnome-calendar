@@ -65,6 +65,9 @@ static gint          compare_events_cb                           (gconstpointer 
 static void          on_event_widget_activated_cb                (GcalEventWidget    *widget,
                                                                   GcalMonthViewRow   *self);
 
+static void          on_cell_activated_cb                        (GcalMonthCell    *cell,
+                                                                  GcalMonthViewRow *self);
+
 static gboolean      widget_tick_cb                              (GtkWidget          *widget,
                                                                   GdkFrameClock      *frame_clock,
                                                                   gpointer            user_data);
@@ -81,6 +84,7 @@ enum
 enum
 {
   EVENT_ACTIVATED,
+  CELL_ACTIVATED,
   SHOW_OVERFLOW,
   N_SIGNALS,
 };
@@ -796,6 +800,13 @@ on_event_widget_activated_cb (GcalEventWidget  *widget,
 }
 
 static void
+on_cell_activated_cb (GcalMonthCell    *cell,
+                      GcalMonthViewRow *self)
+{
+  g_signal_emit (self, signals[CELL_ACTIVATED], 0, cell);
+}
+
+static void
 on_month_cell_show_overflow_cb (GcalMonthCell    *cell,
                                 GtkWidget        *button,
                                 GcalMonthViewRow *self)
@@ -1153,6 +1164,14 @@ gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
                                            1,
                                            GCAL_TYPE_EVENT_WIDGET);
 
+  signals[CELL_ACTIVATED] = g_signal_new ("cell-activated",
+                                          GCAL_TYPE_MONTH_VIEW_ROW,
+                                          G_SIGNAL_RUN_FIRST,
+                                          0,  NULL, NULL, NULL,
+                                          G_TYPE_NONE,
+                                          1,
+                                          GCAL_TYPE_MONTH_CELL);
+
   signals[SHOW_OVERFLOW] = g_signal_new ("show-overflow",
                                          GCAL_TYPE_MONTH_VIEW_ROW,
                                          G_SIGNAL_RUN_FIRST,
@@ -1177,6 +1196,7 @@ gcal_month_view_row_init (GcalMonthViewRow *self)
       gcal_month_cell_set_overflow (GCAL_MONTH_CELL (self->day_cells[i]), 0);
       gtk_widget_set_parent (self->day_cells[i], GTK_WIDGET (self));
       g_signal_connect (self->day_cells[i], "show-overflow", G_CALLBACK (on_month_cell_show_overflow_cb), self);
+      g_signal_connect (self->day_cells[i], "activate", G_CALLBACK (on_cell_activated_cb), self);
       gtk_accessible_update_relation (GTK_ACCESSIBLE (self->day_cells[i]),
                                       GTK_ACCESSIBLE_RELATION_COL_INDEX, i + 1,
                                       -1);
