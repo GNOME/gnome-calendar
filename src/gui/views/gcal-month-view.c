@@ -670,6 +670,36 @@ update_selection_range (GcalMonthView *self)
     }
 }
 
+static void
+trigger_scroll (GcalMonthView *self,
+                gint           n_rows)
+{
+  gtk_widget_add_css_class (GTK_WIDGET (self), "scrolling");
+
+  maybe_popdown_overflow_popover (self);
+  cancel_row_offset_animation (self);
+  cancel_deceleration (self);
+
+  animate_row_scroll (self, n_rows);
+}
+
+static gint
+compute_horizontal_axis_of_cell (GcalMonthView *self,
+                                 GtkWidget     *cell)
+{
+  gint cell_center;
+  graphene_point_t point;
+
+  cell_center = gtk_widget_get_width (cell) / 2;
+
+  if (!gtk_widget_compute_point (cell, GTK_WIDGET (self),
+                                 &GRAPHENE_POINT_INIT (cell_center, 0),
+                                 &point))
+    g_assert_not_reached ();
+
+  return point.x;
+}
+
 static gboolean
 focus_month_cell (GcalMonthView    *self,
                   GtkWidget        *cell,
@@ -697,6 +727,8 @@ focus_month_cell (GcalMonthView    *self,
       lateral = is_rtl ? GTK_DIR_UP : GTK_DIR_DOWN;
       break;
     default:
+      g_assert (direction == GTK_DIR_UP || direction == GTK_DIR_DOWN);
+      lateral = direction;
       break;
     }
 
@@ -708,7 +740,7 @@ focus_month_cell (GcalMonthView    *self,
   else if (direction == GTK_DIR_RIGHT)
     new_cell_x = gtk_widget_get_width (cell) / 2;
   else
-    return TRUE;
+    new_cell_x = compute_horizontal_axis_of_cell (self, cell);
 
   if (lateral == GTK_DIR_UP)
     n_rows = -1;
@@ -721,6 +753,9 @@ focus_month_cell (GcalMonthView    *self,
 
   if (row_index < FIRST_VISIBLE_ROW_INDEX || row_index > LAST_VISIBLE_ROW_INDEX)
     return TRUE;
+
+  if (new_row_index < FIRST_VISIBLE_ROW_INDEX || new_row_index > LAST_VISIBLE_ROW_INDEX)
+    trigger_scroll (self, n_rows);
 
   return gtk_widget_grab_focus (new_cell);
 }
@@ -977,13 +1012,7 @@ on_discrete_scroll_controller_scroll_cb (GtkEventControllerScroll *scroll_contro
       GCAL_RETURN (GDK_EVENT_PROPAGATE);
     }
 
-  gtk_widget_add_css_class (GTK_WIDGET (self), "scrolling");
-
-  maybe_popdown_overflow_popover (self);
-  cancel_row_offset_animation (self);
-  cancel_deceleration (self);
-
-  animate_row_scroll (self, n_rows);
+  trigger_scroll (self, n_rows);
 
   GCAL_RETURN (GDK_EVENT_STOP);
 }
