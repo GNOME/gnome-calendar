@@ -27,7 +27,7 @@ G_BEGIN_DECLS
 
 #define GCAL_TYPE_MONTH_CELL (gcal_month_cell_get_type())
 
-G_DECLARE_FINAL_TYPE (GcalMonthCell, gcal_month_cell, GCAL, MONTH_CELL, AdwBreakpointBin)
+G_DECLARE_FINAL_TYPE (GcalMonthCell, gcal_month_cell, GCAL, MONTH_CELL, GtkWidget)
 
 GtkWidget*           gcal_month_cell_new                         (void);
 
