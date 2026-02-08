@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-09-08 12:13+0000\n"
-"PO-Revision-Date: 2025-09-09 16:46+0200\n"
+"POT-Creation-Date: 2026-01-05 23:09+0000\n"
+"PO-Revision-Date: 2026-02-08 16:44+0100\n"
 "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Poedit 3.8\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -384,105 +384,105 @@ msgstr "Odebrat budík"
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
-msgstr[0] "před %1$u dnem, %2$u hodinou a %3$u minutou"
-msgstr[1] "před %1$u dnem, %2$u hodinou a %3$u minutami"
-msgstr[2] "před %1$u dnem, %2$u hodinou a %3$u minutami"
+msgstr[0] "%1$u den, %2$u hodina a %3$u minuta předem"
+msgstr[1] "%1$u den, %2$u hodina a %3$u minuty předem"
+msgstr[2] "%1$u den, %2$u hodina a %3$u minut předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:89
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
-msgstr[0] "před %1$u dnem, %2$u hodinami a %3$u minutou"
-msgstr[1] "před %1$u dnem, %2$u hodinami a %3$u minutami"
-msgstr[2] "před %1$u dnem, %2$u hodinami a %3$u minutami"
+msgstr[0] "%1$u den, %2$u hodin a %3$u minuta předem"
+msgstr[1] "%1$u den, %2$u hodin a %3$u minuty předem"
+msgstr[2] "%1$u den, %2$u hodin a %3$u minut předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:95
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
-msgstr[0] "před %1$u dny, %2$u hodinou a %3$u minutou"
-msgstr[1] "před %1$u dny, %2$u hodinou a %3$u minutami"
-msgstr[2] "před %1$u dny, %2$u hodinou a %3$u minutami"
+msgstr[0] "%1$u dní, %2$u hodina a %3$u minuta předem"
+msgstr[1] "%1$u dní, %2$u hodina a %3$u minuty předem"
+msgstr[2] "%1$u dní, %2$u hodina a %3$u minut předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:99
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
-msgstr[0] "před %1$u dny, %2$u hodinami a %3$u minutou"
-msgstr[1] "před %1$u dny, %2$u hodinami a %3$u minutami"
-msgstr[2] "před %1$u dny, %2$u hodinami a %3$u minutami"
+msgstr[0] "%1$u dní, %2$u hodin a %3$u minuta předem"
+msgstr[1] "%1$u dní, %2$u hodin a %3$u minuty předem"
+msgstr[2] "%1$u dní, %2$u hodin a %3$u minut předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:114
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
-msgstr[0] "před %1$u dnem a %2$u hodinou"
-msgstr[1] "před %1$u dnem a %2$u hodinami"
-msgstr[2] "před %1$u dnem a %2$u hodinami"
+msgstr[0] "%1$u den a %2$u hodina předem"
+msgstr[1] "%1$u den a %2$u hodiny předem"
+msgstr[2] "%1$u den a %2$u hodin předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:118
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
-msgstr[0] "před %1$u dny a %2$u hodinou"
-msgstr[1] "před %1$u dny a %2$u hodinami"
-msgstr[2] "před %1$u dny a %2$u hodinami"
+msgstr[0] "%1$u dní a %2$u hodina předem"
+msgstr[1] "%1$u dní a %2$u hodiny předem"
+msgstr[2] "%1$u dní a %2$u hodin předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:134
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
-msgstr[0] "před %1$u dnem a %2$u minutou"
-msgstr[1] "před %1$u dnem a %2$u minutami"
-msgstr[2] "před %1$u dnem a %2$u minutami"
+msgstr[0] "%1$u den a %2$u minuta předem"
+msgstr[1] "%1$u den a %2$u minuty předem"
+msgstr[2] "%1$u den a %2$u minut předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:138
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
-msgstr[0] "před %1$u dny a %2$u minutou"
-msgstr[1] "před %1$u dny a %2$u minutami"
-msgstr[2] "před %1$u dny a %2$u minutami"
+msgstr[0] "%1$u dní a %2$u minuta předem"
+msgstr[1] "%1$u dní a %2$u minuty předem"
+msgstr[2] "%1$u dní a %2$u minut předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:148
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
-msgstr[0] "před %1$u dnem"
-msgstr[1] "před %1$u dny"
-msgstr[2] "před %1$u dny"
+msgstr[0] "%1$u den předem"
+msgstr[1] "%1$u dny předem"
+msgstr[2] "%1$u dní předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:166
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
-msgstr[0] "před %1$u hodinou a %2$u minutou"
-msgstr[1] "před %1$u hodinou a %2$u minutami"
-msgstr[2] "před %1$u hodinou a %2$u minutami"
+msgstr[0] "%1$u hodina a %2$u minuta předem"
+msgstr[1] "%1$u hodina a %2$u minuty předem"
+msgstr[2] "%1$u hodina a %2$u minut předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:170
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
-msgstr[0] "před %1$u hodinami a %2$u minutou"
-msgstr[1] "před %1$u hodinami a %2$u minutami"
-msgstr[2] "před %1$u hodinami a %2$u minutami"
+msgstr[0] "%1$u hodin a %2$u minuta předem"
+msgstr[1] "%1$u hodin a %2$u minuty předem"
+msgstr[2] "%1$u hodin a %2$u minut předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:180
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
-msgstr[0] "před %1$u hodinou"
-msgstr[1] "před %1$u hodinami"
-msgstr[2] "před %1$u hodinami"
+msgstr[0] "%1$u hodina předem"
+msgstr[1] "%1$u hodiny předem"
+msgstr[2] "%1$u hodin předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:192
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
-msgstr[0] "před %1$u minutou"
-msgstr[1] "před %1$u minutami"
-msgstr[2] "před %1$u minutami"
+msgstr[0] "%1$u minuta předem"
+msgstr[1] "%1$u minuty předem"
+msgstr[2] "%1$u minut předem"
 
 #: src/gui/event-editor/gcal-alarm-row.c:199
 msgid "Event start time"
@@ -570,15 +570,15 @@ msgstr "Smazat událost"
 msgid "_Save"
 msgstr "_Uložit"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:688
+#: src/gui/event-editor/gcal-event-editor-dialog.c:669
 msgid "New Event"
 msgstr "Nová událost"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:690
+#: src/gui/event-editor/gcal-event-editor-dialog.c:671
 msgid "Event Details"
 msgstr "Podrobnosti o události"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:692
+#: src/gui/event-editor/gcal-event-editor-dialog.c:673
 msgid "Edit Event"
 msgstr "Upravit událost"
 
