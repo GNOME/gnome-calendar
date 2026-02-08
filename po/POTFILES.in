@@ -30,6 +30,7 @@ src/gui/event-editor/gcal-date-time-chooser.blp
 src/gui/event-editor/gcal-date-time-chooser.c
 src/gui/event-editor/gcal-event-editor-dialog.blp
 src/gui/event-editor/gcal-event-editor-dialog.c
+src/gui/event-editor/gcal-multi-choice.c
 src/gui/event-editor/gcal-organizer-row.blp
 src/gui/event-editor/gcal-organizer-row.c
 src/gui/event-editor/gcal-reminders-section.blp
