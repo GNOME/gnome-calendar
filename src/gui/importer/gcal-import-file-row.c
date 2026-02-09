@@ -149,7 +149,10 @@ fill_grid_with_event_data (GcalImportFileRow *self,
   ical_end = i_cal_component_get_dtend (ical_component);
   end = gcal_date_time_from_icaltime (ical_end);
   if (i_cal_time_is_date (ical_end))
-    end_string = g_date_time_format (end, "%x");
+    {
+      g_autoptr (GDateTime) inclusive_end = g_date_time_add_days (end, -1);
+      end_string = g_date_time_format (inclusive_end, "%x");
+    }
   else
     {
       end_local = g_date_time_to_local (end);
