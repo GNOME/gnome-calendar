@@ -1,3 +1,11 @@
+Major changes in 50.beta:
+* Show event attendees in a section in the event editor dialog
+* Fix accessibility warnings in the Month view
+* Remove support for sound-only alarms. All alarms created by GNOME Calendar
+  display notifications now.
+* Fade out event titles if they're too long
+* Updated translations
+
 Major changes in 50.alpha:
 * Various updates to the Flatpak manifest
 * Minor tweaks to the coloring of event widgets
