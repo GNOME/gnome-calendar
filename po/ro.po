@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-01-29 01:25+0000\n"
-"PO-Revision-Date: 2026-01-29 11:18+0100\n"
+"POT-Creation-Date: 2026-02-08 16:41+0000\n"
+"PO-Revision-Date: 2026-02-09 12:05+0100\n"
 "Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -144,7 +144,7 @@ msgstr "Modifică evenimente"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1783 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1786 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -153,13 +153,13 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1791
+#: src/core/gcal-event.c:1794
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1807
+#: src/core/gcal-event.c:1810
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -660,17 +660,27 @@ msgstr "Ște_rge evenimentul"
 msgid "_Save"
 msgstr "_Salvează"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:707
+#: src/gui/event-editor/gcal-event-editor-dialog.c:705
 msgid "New Event"
 msgstr "Eveniment nou"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:709
+#: src/gui/event-editor/gcal-event-editor-dialog.c:707
 msgid "Event Details"
 msgstr "Detaliile evenimentului"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:711
+#: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Edit Event"
 msgstr "Modifică evenimentul"
+
+#: src/gui/event-editor/gcal-multi-choice.c:170
+#, c-format
+msgid "Previous %1$s"
+msgstr "Precedentul %1$s"
+
+#: src/gui/event-editor/gcal-multi-choice.c:180
+#, c-format
+msgid "Next %1$s"
+msgstr "Următorul %1$s"
 
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
@@ -849,10 +859,9 @@ msgstr "Drepturi de autor © 2012–%d autorii lui Calendar"
 #: src/gui/gcal-application.c:241
 msgid "translator-credits"
 msgstr ""
-"va511e \n"
-"Adrian Gabor <raziel [underscore] theripper [at] yahoo [dot] com\n"
-"Florentina Mușat <florentina.musat.28 [at] gmail [dot] com>, 2019\n"
-"Antonio Marin <gnmer [dot] 6qxyg [at] slmail [dot] me>, 2025"
+"Adrian Gabor <raziel [underscore] theripper [at] yahoo [dot] com>\n"
+"Florentina Mușat <florentina.musat.28 [at] gmail [dot] com>\n"
+"Antonio Marin <gnmer.6qxyg@slmail.me>"
 
 #: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:389
 msgid "Weather"
@@ -1059,7 +1068,7 @@ msgid "Edit Additional Details"
 msgstr "Modifică detaliile suplimentare"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:386
+#: src/gui/gcal-event-widget.c:387
 #, c-format
 msgid ""
 "\n"
@@ -1072,7 +1081,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:399 src/gui/gcal-event-widget.c:405
+#: src/gui/gcal-event-widget.c:400 src/gui/gcal-event-widget.c:406
 #, c-format
 msgid ""
 "\n"
@@ -1089,7 +1098,7 @@ msgstr ""
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:464
+#: src/gui/gcal-event-widget.c:465
 msgid "%a %B %d"
 msgstr "%a %d %B"
 
