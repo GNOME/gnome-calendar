@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-01-29 23:26+0000\n"
-"PO-Revision-Date: 2026-01-30 07:02+0500\n"
+"POT-Creation-Date: 2026-02-08 16:41+0000\n"
+"PO-Revision-Date: 2026-02-09 21:32+0500\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -499,8 +499,6 @@ msgstr "Жауап берілмеді"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:112
 #, c-format
-#| msgid "accepted"
-#| msgid_plural "accepted"
 msgid "%1$u accepted"
 msgid_plural "%1$u accepted"
 msgstr[0] "%1$u қабылдады"
@@ -513,24 +511,18 @@ msgstr[0] "%1$u мүмкін деп қабылдады"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:114
 #, c-format
-#| msgid "declined"
-#| msgid_plural "declined"
 msgid "%1$u declined"
 msgid_plural "%1$u declined"
 msgstr[0] "%1$u тайдырды"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:115
 #, c-format
-#| msgid "delegated"
-#| msgid_plural "delegated"
 msgid "%1$u delegated"
 msgid_plural "%1$u delegated"
 msgstr[0] "%1$u тапсырды"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:116
 #, c-format
-#| msgid "not responded"
-#| msgid_plural "not responded"
 msgid "%1$u not responded"
 msgid_plural "%1$u not responded"
 msgstr[0] "%1$u жауап бермеді"
@@ -633,6 +625,16 @@ msgstr "Оқиға мәліметтері"
 #: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Edit Event"
 msgstr "Оқиғаны түзету"
+
+#: src/gui/event-editor/gcal-multi-choice.c:170
+#, c-format
+msgid "Previous %1$s"
+msgstr "Алдыңғы %1$s"
+
+#: src/gui/event-editor/gcal-multi-choice.c:180
+#, c-format
+msgid "Next %1$s"
+msgstr "Келесі %1$s"
 
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
@@ -1017,7 +1019,7 @@ msgid "Edit Additional Details"
 msgstr "Қосымша ақпаратты түзету"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:386
+#: src/gui/gcal-event-widget.c:387
 #, c-format
 msgid ""
 "\n"
@@ -1030,7 +1032,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:399 src/gui/gcal-event-widget.c:405
+#: src/gui/gcal-event-widget.c:400 src/gui/gcal-event-widget.c:406
 #, c-format
 msgid ""
 "\n"
@@ -1047,7 +1049,7 @@ msgstr ""
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:464
+#: src/gui/gcal-event-widget.c:465
 msgid "%a %B %d"
 msgstr "%a %B %d"
 
