@@ -514,8 +514,9 @@ on_click_gesture_release_cb (GtkGestureClick *click_gesture,
                              gdouble          y,
                              GcalEventWidget *self)
 {
-  GdkRectangle rect;
   gboolean not_inside_list_box;
+  GdkRectangle rect;
+  gint half_width;
 
   gtk_gesture_set_state (GTK_GESTURE (click_gesture), GTK_EVENT_SEQUENCE_CLAIMED);
   g_signal_emit (self, signals[ACTIVATE], 0);
@@ -525,10 +526,13 @@ on_click_gesture_release_cb (GtkGestureClick *click_gesture,
   not_inside_list_box = !gtk_widget_get_ancestor (GTK_WIDGET (self), GTK_TYPE_LIST_BOX);
   if (not_inside_list_box && gcal_event_is_multiday (self->event))
     {
-      rect.x = x;
+      rect.width = gtk_widget_get_width (GTK_WIDGET (self));
+      rect.height = gtk_widget_get_height (GTK_WIDGET (self));
+
+      half_width = rect.width / 2;
+
+      rect.x = CLAMP (x - half_width, -half_width, half_width);
       rect.y = 0;
-      rect.width = 1;
-      rect.height = 1;
 
       gtk_popover_set_pointing_to (GTK_POPOVER (self->preview_popover), &rect);
     }
