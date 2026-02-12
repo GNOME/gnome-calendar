@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-01-29 01:25+0000\n"
-"PO-Revision-Date: 2026-01-29 06:01+0100\n"
+"POT-Creation-Date: 2026-02-11 14:49+0000\n"
+"PO-Revision-Date: 2026-02-12 05:50+0100\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -137,7 +137,7 @@ msgstr "მოვლენის რედაქტორი"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1783 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1786 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -146,13 +146,13 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1791
+#: src/core/gcal-event.c:1794
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1807
+#: src/core/gcal-event.c:1810
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -210,7 +210,7 @@ msgstr "პარამეტრებში გახსნა"
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:197
 #: src/gui/event-editor/gcal-summary-section.blp:18
 #: src/gui/gcal-event-popover.blp:144
-#: src/gui/importer/gcal-import-file-row.c:177
+#: src/gui/importer/gcal-import-file-row.c:180
 msgid "Location"
 msgstr "მდებარეობა"
 
@@ -513,8 +513,6 @@ msgstr "არ უპასუხია"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:112
 #, c-format
-#| msgid "accepted"
-#| msgid_plural "accepted"
 msgid "%1$u accepted"
 msgid_plural "%1$u accepted"
 msgstr[0] "%1$u-მა მიიღო"
@@ -634,17 +632,28 @@ msgstr "_მოვლენის წაშლა"
 msgid "_Save"
 msgstr "_შენახვა"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:707
+#: src/gui/event-editor/gcal-event-editor-dialog.c:705
 msgid "New Event"
 msgstr "ახალი მოვლენა"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:709
+#: src/gui/event-editor/gcal-event-editor-dialog.c:707
 msgid "Event Details"
 msgstr "მოვლენის დეტალები"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:711
+#: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Edit Event"
 msgstr "მოვლენის ჩასწორება"
+
+#: src/gui/event-editor/gcal-multi-choice.c:170
+#, c-format
+#| msgid "Previous Week"
+msgid "Previous %1$s"
+msgstr "წინა %1$s"
+
+#: src/gui/event-editor/gcal-multi-choice.c:180
+#, c-format
+msgid "Next %1$s"
+msgstr "შემდეგი %1$s"
 
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
@@ -771,7 +780,7 @@ msgstr "გამეორების დასრულების თარ�
 
 #: src/gui/event-editor/gcal-summary-section.blp:13
 #: src/gui/gcal-quick-add-popover.blp:44
-#: src/gui/importer/gcal-import-file-row.c:176
+#: src/gui/importer/gcal-import-file-row.c:179
 msgid "Title"
 msgstr "სათაური"
 
@@ -1029,7 +1038,7 @@ msgid "Edit Additional Details"
 msgstr "დამატებითი დეტალების ჩასწორება"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:386
+#: src/gui/gcal-event-widget.c:388
 #, c-format
 msgid ""
 "\n"
@@ -1042,7 +1051,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:399 src/gui/gcal-event-widget.c:405
+#: src/gui/gcal-event-widget.c:401 src/gui/gcal-event-widget.c:407
 #, c-format
 msgid ""
 "\n"
@@ -1059,7 +1068,7 @@ msgstr ""
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:464
+#: src/gui/gcal-event-widget.c:466
 msgid "%a %B %d"
 msgstr "%a %B %d"
 
@@ -1466,15 +1475,15 @@ msgid_plural "Import %d events"
 msgstr[0] "%d მოვლენის შემოტანა"
 msgstr[1] "%d მოვლენის შემოტანა"
 
-#: src/gui/importer/gcal-import-file-row.c:178
+#: src/gui/importer/gcal-import-file-row.c:181
 msgid "Starts"
 msgstr "საწყისი"
 
-#: src/gui/importer/gcal-import-file-row.c:179
+#: src/gui/importer/gcal-import-file-row.c:182
 msgid "Ends"
 msgstr "მთავრდება"
 
-#: src/gui/importer/gcal-import-file-row.c:180
+#: src/gui/importer/gcal-import-file-row.c:183
 msgid "Description"
 msgstr "აღწერა"
 
