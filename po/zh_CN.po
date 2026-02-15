@@ -8,14 +8,14 @@
 # Dinzhong Chen <wsxy162@gmail.com>, 2017.
 # Mingcong Bai <jeffbai@aosc.xyz>, 2018.
 # Dingzhong Chen <wsxy162@gmail.com>, 2019.
-# lumingzh <lumingzh@qq.com>, 2022-2025.
+# lumingzh <lumingzh@qq.com>, 2022-2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-08-20 23:36+0000\n"
-"PO-Revision-Date: 2025-08-24 15:52+0800\n"
+"POT-Creation-Date: 2026-02-11 14:49+0000\n"
+"PO-Revision-Date: 2026-02-15 07:57+0800\n"
 "Last-Translator: lumingzh <lumingzh@qq.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -24,12 +24,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Launchpad-Export-Date: 2016-03-22 14:52+0000\n"
-"X-Generator: Gtranslator 48.0\n"
+"X-Generator: Gtranslator 49.0\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
-#: src/gui/common/gcal-calendar-combo-row.blp:5
-#: src/gui/gcal-quick-add-popover.blp:131 src/gui/gcal-window.blp:5
+#: src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5
 #: src/gui/gcal-window.c:407 src/main.c:35
 msgid "Calendar"
 msgstr "日历"
@@ -125,21 +124,21 @@ msgstr ""
 "和平台来同步事件。GNOME 日历同样支持本地和离线日历，所以您可以在旅行时的任何"
 "地点与任何时间使用它（或在文明崩溃之后）。"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
 msgid "Week view"
 msgstr "周视图"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:66
 msgid "Month view"
 msgstr "月视图"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:70
 msgid "Event editor"
 msgstr "事件编辑器"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1902 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1786 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -148,14 +147,13 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1910
+#: src/core/gcal-event.c:1794
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
-#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1926 src/gui/gcal-quick-add-popover.c:471
+#: src/core/gcal-event.c:1810
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s，%2$s – %3$s"
@@ -193,7 +191,7 @@ msgid "Calendar “%s” removed"
 msgstr "日历“%s”已移除"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:953
+#: src/gui/gcal-window.c:981
 msgid "_Undo"
 msgstr "撤消(_U)"
 
@@ -213,7 +211,7 @@ msgstr "在“设置”中打开"
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:197
 #: src/gui/event-editor/gcal-summary-section.blp:18
 #: src/gui/gcal-event-popover.blp:144
-#: src/gui/importer/gcal-import-file-row.c:177
+#: src/gui/importer/gcal-import-file-row.c:180
 msgid "Location"
 msgstr "位置"
 
@@ -232,6 +230,10 @@ msgid "_Display Calendar"
 msgstr "显示日历(_D)"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:82
+msgid "_Export Calendar"
+msgstr "导出日历(_E)"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:89
 msgid "_Remove Calendar"
 msgstr "移除日历(_R)"
 
@@ -242,6 +244,10 @@ msgstr "日历 URL"
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:198
 msgid "On This Computer"
 msgstr "位于本机"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:344
+msgid "Export Calendar"
+msgstr "导出日历"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:5
 msgid "New Calendar"
@@ -289,8 +295,8 @@ msgid "Password"
 msgstr "密码"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:161
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:16
-#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1127
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:18
+#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1213
 msgid "_Cancel"
 msgstr "取消(_C)"
 
@@ -312,7 +318,7 @@ msgstr "您输入的 URL 似乎是无效的。"
 msgid "A valid user and password are required to connect to this calendar."
 msgstr "连接至该日历需要有效的用户和密码。"
 
-#: src/gui/common/gcal-calendar-combo-row-item.c:70
+#: src/gui/common/gcal-calendar-row.c:72
 msgid "This calendar is hidden"
 msgstr "此日历是隐藏的"
 
@@ -366,10 +372,6 @@ msgid "S"
 msgstr "六"
 
 #: src/gui/event-editor/gcal-alarm-row.blp:8
-msgid "Toggle Alarm Sound"
-msgstr "切换闹钟声音"
-
-#: src/gui/event-editor/gcal-alarm-row.blp:20
 msgid "Remove Alarm"
 msgstr "移除闹钟"
 
@@ -455,6 +457,78 @@ msgstr[0] "%1$u 分钟前"
 msgid "Event start time"
 msgstr "事件开始时间"
 
+#: src/gui/event-editor/gcal-attendee-row.blp:29
+#: src/gui/event-editor/gcal-organizer-row.blp:25
+msgid "Copy email"
+msgstr "复制邮件"
+
+#: src/gui/event-editor/gcal-attendee-row.c:108
+msgid "Delegated to: "
+msgstr "委托至："
+
+#: src/gui/event-editor/gcal-attendee-row.c:124
+msgid "optional"
+msgstr "可选"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:5
+#: src/gui/event-editor/gcal-attendees-section.blp:22
+msgid "Participants"
+msgstr "参与者"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:16
+msgid "Accepted"
+msgstr "已接受"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:29
+msgid "Tentative"
+msgstr "暂定"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:42
+msgid "Declined"
+msgstr "已拒绝"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:55
+msgid "Delegated"
+msgstr "已委托"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:68
+msgid "Not responded"
+msgstr "未响应"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:112
+#, c-format
+msgid "%1$u accepted"
+msgid_plural "%1$u accepted"
+msgstr[0] "%1$u 人已接受"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:113
+#, c-format
+msgid "%1$u maybe"
+msgid_plural "%1$u maybe"
+msgstr[0] "%1$u 人暂定"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:114
+#, c-format
+msgid "%1$u declined"
+msgid_plural "%1$u declined"
+msgstr[0] "%1$u 人已拒绝"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:115
+#, c-format
+msgid "%1$u delegated"
+msgid_plural "%1$u delegated"
+msgstr[0] "%1$u 人已委托"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:116
+#, c-format
+msgid "%1$u not responded"
+msgid_plural "%1$u not responded"
+msgstr[0] "%1$u 人未响应"
+
+#: src/gui/event-editor/gcal-attendees-section.blp:28
+msgid "Resources"
+msgstr "资源"
+
 #: src/gui/event-editor/gcal-date-chooser-row.blp:12
 msgid "Edit Date"
 msgstr "编辑日期"
@@ -511,42 +585,56 @@ msgstr "编辑时间"
 msgid "%1$s (%2$s)"
 msgstr "%1$s (%2$s)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:23
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:25
+#: src/gui/event-editor/gcal-event-editor-dialog.c:129
 msgid "_Done"
 msgstr "完成(_D)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:36
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:38
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr "此事件在只读日历中。无法编辑或删除。"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:62
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:70
 msgid "Reminders"
 msgstr "提醒"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:70
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:78
 msgid "Notes"
 msgstr "备注"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:81
-msgid "Delete Event"
-msgstr "删除事件"
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:89
+msgid "_Delete Event"
+msgstr "删除事件(_D)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:120
+#: src/gui/event-editor/gcal-event-editor-dialog.c:129
 msgid "_Save"
 msgstr "保存(_S)"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:688
+#: src/gui/event-editor/gcal-event-editor-dialog.c:705
 msgid "New Event"
 msgstr "新建事件"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:690
+#: src/gui/event-editor/gcal-event-editor-dialog.c:707
 msgid "Event Details"
 msgstr "事件详情"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:692
+#: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Edit Event"
 msgstr "编辑事件"
+
+#: src/gui/event-editor/gcal-multi-choice.c:170
+#, c-format
+msgid "Previous %1$s"
+msgstr "上个 %1$s"
+
+#: src/gui/event-editor/gcal-multi-choice.c:180
+#, c-format
+msgid "Next %1$s"
+msgstr "下个 %1$s"
+
+#: src/gui/event-editor/gcal-organizer-row.blp:5
+msgid "Organizer"
+msgstr "组织者"
 
 #: src/gui/event-editor/gcal-reminders-section.blp:16
 msgid "Add Reminder"
@@ -663,12 +751,13 @@ msgstr "重复次数"
 msgid "Until Date"
 msgstr "截止日期"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:102
+#: src/gui/event-editor/gcal-schedule-section.blp:103
 msgid "End Repeat Date"
 msgstr "结束重复日期"
 
 #: src/gui/event-editor/gcal-summary-section.blp:13
-#: src/gui/importer/gcal-import-file-row.c:176
+#: src/gui/gcal-quick-add-popover.blp:44
+#: src/gui/importer/gcal-import-file-row.c:179
 msgid "Title"
 msgstr "标题"
 
@@ -726,9 +815,9 @@ msgstr ""
 "Qizhi Zhou <zhouqz@yahoo.com>, 2016\n"
 "Mingcong Bai <jeffbai@aosc.io>, 2018\n"
 "Dinzhong Chen <wsxy162@gmail.com>, 2017, 2019\n"
-"lumingzh <lumingzh@qq.com>, 2022-2025"
+"lumingzh <lumingzh@qq.com>, 2022-2026"
 
-#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:374
+#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:389
 msgid "Weather"
 msgstr "天气"
 
@@ -737,7 +826,7 @@ msgstr "天气"
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-calendar-navigation-button.c:105
+#: src/gui/gcal-calendar-navigation-button.c:106
 msgid "%B %Y"
 msgstr "%Y年 %m月"
 
@@ -757,51 +846,51 @@ msgstr "导出事件"
 msgid "No event notes"
 msgstr "无事件备注"
 
-#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:253
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:211
 msgid "January"
 msgstr "一月"
 
-#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:254
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:212
 msgid "February"
 msgstr "二月"
 
-#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:255
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:213
 msgid "March"
 msgstr "三月"
 
-#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:256
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:214
 msgid "April"
 msgstr "四月"
 
-#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:257
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:215
 msgid "May"
 msgstr "五月"
 
-#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:258
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:216
 msgid "June"
 msgstr "六月"
 
-#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:259
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:217
 msgid "July"
 msgstr "七月"
 
-#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:260
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:218
 msgid "August"
 msgstr "八月"
 
-#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:261
+#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:219
 msgid "September"
 msgstr "九月"
 
-#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:262
+#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:220
 msgid "October"
 msgstr "十月"
 
-#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:263
+#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:221
 msgid "November"
 msgstr "十一月"
 
-#: src/gui/gcal-event-popover.c:137 src/gui/gcal-quick-add-popover.c:264
+#: src/gui/gcal-event-popover.c:137 src/gui/gcal-quick-add-popover.c:222
 msgid "December"
 msgstr "十二月"
 
@@ -975,86 +1064,81 @@ msgstr "参加(_J)"
 msgid "Unknown Service"
 msgstr "未知服务"
 
-#: src/gui/gcal-quick-add-popover.blp:83
-msgid "Edit Details…"
-msgstr "编辑细节…"
+#: src/gui/gcal-quick-add-popover.blp:86
+msgid "_Edit Details"
+msgstr "编辑详情(_E)"
 
-#: src/gui/gcal-quick-add-popover.blp:94
-msgid "Add"
-msgstr "添加"
+#: src/gui/gcal-quick-add-popover.blp:98
+msgid "_Save Event"
+msgstr "保存事件(_S)"
 
-#: src/gui/gcal-quick-add-popover.c:116
-#, c-format
-msgid "%s (this calendar is read-only)"
-msgstr "%s（这个日历是只读的）"
-
-#: src/gui/gcal-quick-add-popover.c:231
+#: src/gui/gcal-quick-add-popover.c:189
 msgid "from next Monday"
 msgstr "下周一开始"
 
-#: src/gui/gcal-quick-add-popover.c:232
+#: src/gui/gcal-quick-add-popover.c:190
 msgid "from next Tuesday"
 msgstr "下周二开始"
 
-#: src/gui/gcal-quick-add-popover.c:233
+#: src/gui/gcal-quick-add-popover.c:191
 msgid "from next Wednesday"
 msgstr "下周三开始"
 
-#: src/gui/gcal-quick-add-popover.c:234
+#: src/gui/gcal-quick-add-popover.c:192
 msgid "from next Thursday"
 msgstr "下周四开始"
 
-#: src/gui/gcal-quick-add-popover.c:235
+#: src/gui/gcal-quick-add-popover.c:193
 msgid "from next Friday"
 msgstr "下周五开始"
 
-#: src/gui/gcal-quick-add-popover.c:236
+#: src/gui/gcal-quick-add-popover.c:194
 msgid "from next Saturday"
 msgstr "下周六开始"
 
-#: src/gui/gcal-quick-add-popover.c:237
+#: src/gui/gcal-quick-add-popover.c:195
 msgid "from next Sunday"
 msgstr "下周日开始"
 
-#: src/gui/gcal-quick-add-popover.c:242
+#: src/gui/gcal-quick-add-popover.c:200
 msgid "to next Monday"
 msgstr "到下周一"
 
-#: src/gui/gcal-quick-add-popover.c:243
+#: src/gui/gcal-quick-add-popover.c:201
 msgid "to next Tuesday"
 msgstr "到下周二"
 
-#: src/gui/gcal-quick-add-popover.c:244
+#: src/gui/gcal-quick-add-popover.c:202
 msgid "to next Wednesday"
 msgstr "到下周三"
 
-#: src/gui/gcal-quick-add-popover.c:245
+#: src/gui/gcal-quick-add-popover.c:203
 msgid "to next Thursday"
 msgstr "到下周四"
 
-#: src/gui/gcal-quick-add-popover.c:246
+#: src/gui/gcal-quick-add-popover.c:204
 msgid "to next Friday"
 msgstr "到下周五"
 
-#: src/gui/gcal-quick-add-popover.c:247
+#: src/gui/gcal-quick-add-popover.c:205
 msgid "to next Saturday"
 msgstr "到下周六"
 
-#: src/gui/gcal-quick-add-popover.c:248
+#: src/gui/gcal-quick-add-popover.c:206
 msgid "to next Sunday"
 msgstr "到下周日"
 
-#: src/gui/gcal-quick-add-popover.c:273
+#: src/gui/gcal-quick-add-popover.c:230
 #, c-format
 msgid "from Today"
 msgstr "今天开始"
 
-#: src/gui/gcal-quick-add-popover.c:277
+#: src/gui/gcal-quick-add-popover.c:234
 #, c-format
 msgid "from Tomorrow"
 msgstr "明天开始"
 
-#: src/gui/gcal-quick-add-popover.c:281
+#: src/gui/gcal-quick-add-popover.c:238
 #, c-format
 msgid "from Yesterday"
 msgstr "昨天开始"
@@ -1063,22 +1147,22 @@ msgstr "昨天开始"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:299
+#: src/gui/gcal-quick-add-popover.c:256
 #, c-format
 msgid "from %1$s %2$s"
 msgstr "从 %1$s 月 %2$s 日"
 
-#: src/gui/gcal-quick-add-popover.c:310
+#: src/gui/gcal-quick-add-popover.c:265
 #, c-format
 msgid "to Today"
 msgstr "到今天"
 
-#: src/gui/gcal-quick-add-popover.c:314
+#: src/gui/gcal-quick-add-popover.c:269
 #, c-format
 msgid "to Tomorrow"
 msgstr "到明天"
 
-#: src/gui/gcal-quick-add-popover.c:318
+#: src/gui/gcal-quick-add-popover.c:273
 #, c-format
 msgid "to Yesterday"
 msgstr "到昨天"
@@ -1087,120 +1171,127 @@ msgstr "到昨天"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:336
+#: src/gui/gcal-quick-add-popover.c:291
 #, c-format
 msgid "to %1$s %2$s"
 msgstr "到 %1$s 月 %2$s 日"
 
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
-#: src/gui/gcal-quick-add-popover.c:343
+#: src/gui/gcal-quick-add-popover.c:297
 #, c-format
 msgid "New Event %1$s %2$s"
 msgstr "为 %1$s 月 %2$s 日新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:360
+#: src/gui/gcal-quick-add-popover.c:314
 #, c-format
 msgid "New Event Today"
 msgstr "为今天新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:364
+#: src/gui/gcal-quick-add-popover.c:318
 #, c-format
 msgid "New Event Tomorrow"
 msgstr "为明天新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:368
+#: src/gui/gcal-quick-add-popover.c:322
 #, c-format
 msgid "New Event Yesterday"
 msgstr "为昨天新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:374
+#: src/gui/gcal-quick-add-popover.c:328
 msgid "New Event next Monday"
 msgstr "为下周一新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:375
+#: src/gui/gcal-quick-add-popover.c:329
 msgid "New Event next Tuesday"
 msgstr "为下周二新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:376
+#: src/gui/gcal-quick-add-popover.c:330
 msgid "New Event next Wednesday"
 msgstr "为下周三新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:377
+#: src/gui/gcal-quick-add-popover.c:331
 msgid "New Event next Thursday"
 msgstr "为下周四新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:378
+#: src/gui/gcal-quick-add-popover.c:332
 msgid "New Event next Friday"
 msgstr "为下周五新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:379
+#: src/gui/gcal-quick-add-popover.c:333
 msgid "New Event next Saturday"
 msgstr "为下周六新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:380
+#: src/gui/gcal-quick-add-popover.c:334
 msgid "New Event next Sunday"
 msgstr "为下周日新建事件"
 
 #. Translators: %d is the numeric day of month
-#: src/gui/gcal-quick-add-popover.c:392
+#: src/gui/gcal-quick-add-popover.c:346
 #, c-format
 msgid "New Event on January %d"
 msgstr "为 1 月 %d 日新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:393
+#: src/gui/gcal-quick-add-popover.c:347
 #, c-format
 msgid "New Event on February %d"
 msgstr "为 2 月 %d 日新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:394
+#: src/gui/gcal-quick-add-popover.c:348
 #, c-format
 msgid "New Event on March %d"
 msgstr "为 3 月 %d 日新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:395
+#: src/gui/gcal-quick-add-popover.c:349
 #, c-format
 msgid "New Event on April %d"
 msgstr "为 4 月 %d 日新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:396
+#: src/gui/gcal-quick-add-popover.c:350
 #, c-format
 msgid "New Event on May %d"
 msgstr "为 5 月 %d 日新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:397
+#: src/gui/gcal-quick-add-popover.c:351
 #, c-format
 msgid "New Event on June %d"
 msgstr "为 6 月 %d 日新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:398
+#: src/gui/gcal-quick-add-popover.c:352
 #, c-format
 msgid "New Event on July %d"
 msgstr "为 7 月 %d 日新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:399
+#: src/gui/gcal-quick-add-popover.c:353
 #, c-format
 msgid "New Event on August %d"
 msgstr "为 8 月 %d 日新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:400
+#: src/gui/gcal-quick-add-popover.c:354
 #, c-format
 msgid "New Event on September %d"
 msgstr "为 9 月 %d 日新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:401
+#: src/gui/gcal-quick-add-popover.c:355
 #, c-format
 msgid "New Event on October %d"
 msgstr "为 10 月 %d 日新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:402
+#: src/gui/gcal-quick-add-popover.c:356
 #, c-format
 msgid "New Event on November %d"
 msgstr "为 11 月 %d 日新建事件"
 
-#: src/gui/gcal-quick-add-popover.c:403
+#: src/gui/gcal-quick-add-popover.c:357
 #, c-format
 msgid "New Event on December %d"
 msgstr "为 12 月 %d 日新建事件"
+
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour.
+#. * To avoid spurious line wrapping, use non-breaking space characters around the en dash.
+#: src/gui/gcal-quick-add-popover.c:426
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s，%2$s – %3$s"
 
 #: src/gui/gcal-search-button.blp:26
 msgid "Search Events"
@@ -1209,6 +1300,16 @@ msgstr "搜索事件"
 #: src/gui/gcal-search-button.blp:44
 msgid "Search events"
 msgstr "搜索事件"
+
+#: src/gui/gcal-search-button.c:179
+msgid "No results found"
+msgstr "未发现结果"
+
+#: src/gui/gcal-search-button.c:179
+#, c-format
+msgid "One result found"
+msgid_plural "%u results found"
+msgstr[0] "找到 %u 个结果"
 
 #: src/gui/gcal-sync-indicator.blp:19
 msgctxt "tooltip"
@@ -1227,69 +1328,69 @@ msgstr "自动定位"
 msgid "Search locations"
 msgstr "搜索位置"
 
-#: src/gui/gcal-window.blp:111
+#: src/gui/gcal-window.blp:126
 msgid "Drop Event Files to Import"
 msgstr "拖放事件文件以导入"
 
-#: src/gui/gcal-window.blp:163
+#: src/gui/gcal-window.blp:178
 msgid "Toggle Sidebar"
 msgstr "开关侧边栏"
 
-#: src/gui/gcal-window.blp:188
+#: src/gui/gcal-window.blp:203
 msgid "Main Menu"
 msgstr "主菜单"
 
-#: src/gui/gcal-window.blp:194
+#: src/gui/gcal-window.blp:209
 msgctxt "tooltip"
 msgid "Search"
 msgstr "搜索"
 
-#: src/gui/gcal-window.blp:209
+#: src/gui/gcal-window.blp:224
 msgid "_Month"
 msgstr "月(_M)"
 
-#: src/gui/gcal-window.blp:223
+#: src/gui/gcal-window.blp:238
 msgid "_Week"
 msgstr "周(_W)"
 
-#: src/gui/gcal-window.blp:236
+#: src/gui/gcal-window.blp:251
 msgid "_Agenda"
 msgstr "日程(_A)"
 
-#: src/gui/gcal-window.blp:271
+#: src/gui/gcal-window.blp:286
 msgid "_Today"
 msgstr "今天(_T)"
 
-#: src/gui/gcal-window.blp:275
+#: src/gui/gcal-window.blp:290
 msgid "Go to Today"
 msgstr "转到今天"
 
-#: src/gui/gcal-window.blp:291
+#: src/gui/gcal-window.blp:306
 msgctxt "tooltip"
 msgid "Add Event"
 msgstr "添加事件"
 
-#: src/gui/gcal-window.blp:297
+#: src/gui/gcal-window.blp:312
 msgid "Manage Calendars"
 msgstr "管理日历"
 
-#: src/gui/gcal-window.blp:357
+#: src/gui/gcal-window.blp:372
 msgid "_Synchronize Calendars"
 msgstr "同步日历(_S)"
 
-#: src/gui/gcal-window.blp:364
+#: src/gui/gcal-window.blp:379
 msgid "_Date & Time Settings…"
 msgstr "日期和时间设置(_D)…"
 
-#: src/gui/gcal-window.blp:369
+#: src/gui/gcal-window.blp:384
 msgid "_Online Accounts…"
 msgstr "在线账号(_O)…"
 
-#: src/gui/gcal-window.blp:384
+#: src/gui/gcal-window.blp:399
 msgid "_Keyboard Shortcuts"
 msgstr "键盘快捷键(_K)"
 
-#: src/gui/gcal-window.blp:389
+#: src/gui/gcal-window.blp:404
 msgid "_About Calendar"
 msgstr "关于日历(_A)"
 
@@ -1321,19 +1422,19 @@ msgstr "月"
 msgid "Agenda"
 msgstr "日程"
 
-#: src/gui/gcal-window.c:951
+#: src/gui/gcal-window.c:979
 msgid "Another event deleted"
 msgstr "另一个事件已删除"
 
-#: src/gui/gcal-window.c:951
+#: src/gui/gcal-window.c:979
 msgid "Event deleted"
 msgstr "事件已删除"
 
-#: src/gui/gcal-window.c:1016
+#: src/gui/gcal-window.c:1044
 msgid "Could not import some files: Not ICS files"
 msgstr "无法导入一些文件：不是 ICS 文件"
 
-#: src/gui/gcal-window.c:1021
+#: src/gui/gcal-window.c:1049
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "无法导入“%s”：不是 ICS 文件"
@@ -1356,15 +1457,15 @@ msgid "Import %d event"
 msgid_plural "Import %d events"
 msgstr[0] "导入 %d 个事件"
 
-#: src/gui/importer/gcal-import-file-row.c:178
+#: src/gui/importer/gcal-import-file-row.c:181
 msgid "Starts"
 msgstr "开始时间"
 
-#: src/gui/importer/gcal-import-file-row.c:179
+#: src/gui/importer/gcal-import-file-row.c:182
 msgid "Ends"
 msgstr "结束时间"
 
-#: src/gui/importer/gcal-import-file-row.c:180
+#: src/gui/importer/gcal-import-file-row.c:183
 msgid "Description"
 msgstr "描述"
 
@@ -1517,91 +1618,109 @@ msgstr "进行中"
 msgid "New Event…"
 msgstr "新建事件…"
 
-#: src/gui/views/gcal-week-header.c:480
+#: src/gui/views/gcal-week-header.c:479
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
-msgstr[0] "其他 %d 个事件"
+msgstr[0] "其它 %d 个事件"
 
-#: src/utils/gcal-utils.c:1123
+#: src/gui/views/gcal-week-view.c:241
+msgid "Hide Additional Events"
+msgstr "隐藏附加事件"
+
+#: src/gui/views/gcal-week-view.c:243
+msgid "Show Additional Events"
+msgstr "显示附加事件"
+
+#: src/utils/gcal-utils.c:1209
 msgid "Modify Multiple Events?"
 msgstr "修改多个事件？"
 
-#: src/utils/gcal-utils.c:1124
+#: src/utils/gcal-utils.c:1210
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr "您正在修改的事件是重复事件。您所作的修改会应用到："
 
-#: src/utils/gcal-utils.c:1128
+#: src/utils/gcal-utils.c:1214
 msgid "_Only This Event"
 msgstr "仅此事件(_O)"
 
-#: src/utils/gcal-utils.c:1134
+#: src/utils/gcal-utils.c:1220
 msgid "_Subsequent Events"
 msgstr "后续事件(_S)"
 
-#: src/utils/gcal-utils.c:1137
+#: src/utils/gcal-utils.c:1223
 msgid "_All Events"
 msgstr "所有事件(_A)"
 
 #. Conferencing
-#: src/utils/gcal-utils.c:1240
+#: src/utils/gcal-utils.c:1326
 msgid "BlueJeans"
 msgstr "BlueJeans"
 
-#: src/utils/gcal-utils.c:1241 src/utils/gcal-utils.c:1242
+#: src/utils/gcal-utils.c:1327 src/utils/gcal-utils.c:1328
 msgid "BigBlueButton"
 msgstr "BigBlueButton"
 
-#: src/utils/gcal-utils.c:1243
+#: src/utils/gcal-utils.c:1329
 msgid "Google Meet"
 msgstr "谷歌 Meet"
 
-#: src/utils/gcal-utils.c:1244 src/utils/gcal-utils.c:1245
+#: src/utils/gcal-utils.c:1330 src/utils/gcal-utils.c:1331
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1246
+#: src/utils/gcal-utils.c:1332
 msgid "Uber Conference"
 msgstr "Uber Conference"
 
-#: src/utils/gcal-utils.c:1247
+#: src/utils/gcal-utils.c:1333
 msgid "GNOME Meet"
 msgstr "GNOME Meet"
 
-#: src/utils/gcal-utils.c:1248
+#: src/utils/gcal-utils.c:1334
 msgid "Microsoft Teams"
 msgstr "微软 Teams"
 
-#: src/utils/gcal-utils.c:1249
+#: src/utils/gcal-utils.c:1335
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1250
+#: src/utils/gcal-utils.c:1336
 msgid "Webex"
 msgstr "Webex"
 
-#: src/utils/gcal-utils.c:1251
+#: src/utils/gcal-utils.c:1337
 msgid "Zoom"
 msgstr "Zoom"
 
 #. Map
-#: src/utils/gcal-utils.c:1254
+#: src/utils/gcal-utils.c:1340
 msgid "View Map"
 msgstr "查看地图"
 
-#: src/utils/gcal-utils.c:1255
+#: src/utils/gcal-utils.c:1341
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: src/utils/gcal-utils.c:1256 src/utils/gcal-utils.c:1257
+#: src/utils/gcal-utils.c:1342 src/utils/gcal-utils.c:1343
 msgid "Google Maps"
 msgstr "谷歌地图"
 
-#: src/utils/gcal-utils.c:1258
+#: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "必应地图"
+
+#~ msgid "Toggle Alarm Sound"
+#~ msgstr "切换闹钟声音"
+
+#~ msgid "Add"
+#~ msgstr "添加"
+
+#, c-format
+#~ msgid "%s (this calendar is read-only)"
+#~ msgstr "%s（这个日历是只读的）"
 
 #~ msgid "Default _Calendar"
 #~ msgstr "默认日历(_C)"
@@ -1660,9 +1779,6 @@ msgstr "必应地图"
 #, c-format
 #~ msgid "This %A"
 #~ msgstr "本周的%A"
-
-#~ msgid "Import a Calendar"
-#~ msgstr "导入日历"
 
 #~ msgid ""
 #~ "Alternatively, enter the web address of an online calendar you want to "
@@ -1806,9 +1922,6 @@ msgstr "必应地图"
 
 #~ msgid "From Web…"
 #~ msgstr "从网络…"
-
-#~ msgid "No results found"
-#~ msgstr "未发现结果"
 
 #~ msgid "Try a different search"
 #~ msgstr "尝试不同的搜索"
