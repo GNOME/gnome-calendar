@@ -9,8 +9,8 @@
 msgid ""
 msgstr "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-01-29 23:26+0000\n"
-"PO-Revision-Date: 2026-02-01 19:41+0200\n"
+"POT-Creation-Date: 2026-02-11 14:49+0000\n"
+"PO-Revision-Date: 2026-02-16 19:41+0200\n"
 "Last-Translator: Asier Saratsua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <Librezale>\n"
 "Language: eu\n"
@@ -195,7 +195,7 @@ msgstr "Ireki hobespenetan"
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:197
 #: src/gui/event-editor/gcal-summary-section.blp:18
 #: src/gui/gcal-event-popover.blp:144
-#: src/gui/importer/gcal-import-file-row.c:177
+#: src/gui/importer/gcal-import-file-row.c:180
 msgid "Location"
 msgstr "Kokalekua"
 
@@ -622,6 +622,17 @@ msgstr "Gertaeraren xehetasunak"
 msgid "Edit Event"
 msgstr "Editatu gertaera"
 
+#: src/gui/event-editor/gcal-multi-choice.c:170
+#, c-format
+#| msgid "Previous Week"
+msgid "Previous %1$s"
+msgstr "Aurreko %1$s"
+
+#: src/gui/event-editor/gcal-multi-choice.c:180
+#, c-format
+msgid "Next %1$s"
+msgstr "Hurrengo %1$s"
+
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
 msgstr "Antolatzailea"
@@ -747,7 +758,7 @@ msgstr "Errepikapen-amaieraren data"
 
 #: src/gui/event-editor/gcal-summary-section.blp:13
 #: src/gui/gcal-quick-add-popover.blp:44
-#: src/gui/importer/gcal-import-file-row.c:176
+#: src/gui/importer/gcal-import-file-row.c:179
 msgid "Title"
 msgstr "Titulua"
 
@@ -1004,7 +1015,7 @@ msgid "Edit Additional Details"
 msgstr "Editatu xehetasun gehigarriak"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:386
+#: src/gui/gcal-event-widget.c:388
 #, c-format
 msgid ""
 "\n"
@@ -1016,7 +1027,7 @@ msgstr "\n"
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:399 src/gui/gcal-event-widget.c:405
+#: src/gui/gcal-event-widget.c:401 src/gui/gcal-event-widget.c:407
 #, c-format
 msgid ""
 "\n"
@@ -1032,7 +1043,7 @@ msgstr "\n"
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:464
+#: src/gui/gcal-event-widget.c:466
 msgid "%a %B %d"
 msgstr "%a, %B %d"
 
@@ -1439,15 +1450,15 @@ msgid_plural "Import %d events"
 msgstr[0] "Inportatu gertaera %d"
 msgstr[1] "Inportatu %d gertaera"
 
-#: src/gui/importer/gcal-import-file-row.c:178
+#: src/gui/importer/gcal-import-file-row.c:181
 msgid "Starts"
 msgstr "Hasten da"
 
-#: src/gui/importer/gcal-import-file-row.c:179
+#: src/gui/importer/gcal-import-file-row.c:182
 msgid "Ends"
 msgstr "Amaitzen da"
 
-#: src/gui/importer/gcal-import-file-row.c:180
+#: src/gui/importer/gcal-import-file-row.c:183
 msgid "Description"
 msgstr "Azalpena"
 
