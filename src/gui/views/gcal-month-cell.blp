@@ -56,6 +56,7 @@ template $GcalMonthCell: Adw.BreakpointBin {
 
     [overlay]
     Button overflow_button {
+      accessible-role: toggle_button;
       valign: end;
       sensitive: false;
       clicked => $overflow_button_clicked_cb(template) not-swapped;
@@ -64,6 +65,11 @@ template $GcalMonthCell: Adw.BreakpointBin {
       margin-start: 1;
       margin-bottom: 2;
       margin-end: 2;
+
+      accessibility {
+        has-popup: true;
+        labelled-by: overflow_inscription;
+      }
 
       styles [
         "flat",
