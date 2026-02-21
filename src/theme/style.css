@@ -59,6 +59,11 @@ popover.event-popover > contents {
   background-color: transparent;
 }
 
+.calendar-list > row {
+  background-color: transparent;
+  border-radius: 10px;
+}
+
 .calendar-list > list {
   border-radius: 4px;
 }

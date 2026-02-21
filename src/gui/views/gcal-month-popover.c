@@ -120,14 +120,22 @@ update_event_list (GcalMonthPopover *self)
       event_end = g_date_time_add_days (event_start, 1);
 
       event_widget = gcal_event_widget_new (self->context, event);
+      gtk_widget_set_focusable (event_widget, FALSE);
       gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (event_widget), event_start);
       gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (event_widget), event_end);
 
       row = gtk_list_box_row_new ();
       gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), event_widget);
-      gtk_list_box_row_set_activatable (GTK_LIST_BOX_ROW (row), FALSE);
 
       gtk_list_box_append (self->listbox, row);
+
+      gtk_accessible_update_property (GTK_ACCESSIBLE (row),
+                                      GTK_ACCESSIBLE_PROPERTY_HAS_POPUP, TRUE,
+                                      -1);
+
+      gtk_accessible_update_relation (GTK_ACCESSIBLE (row),
+                                      GTK_ACCESSIBLE_RELATION_LABELLED_BY, event_widget, NULL,
+                                      -1);
 
       g_signal_connect_object (event_widget,
                                "activate",
@@ -186,6 +194,18 @@ sort_func (GtkListBoxRow *a,
 /*
  * Callbacks
  */
+
+static void
+on_list_box_row_activated_cb (GtkListBox     *list_box,
+                              GtkListBoxRow  *row,
+                              GcalMonthPopover *self)
+{
+  GtkWidget *child = gtk_list_box_row_get_child (row);
+
+  g_assert (GCAL_IS_EVENT_WIDGET (child));
+
+  gtk_widget_activate (child);
+}
 
 static void
 animation_cb (gdouble  value,
@@ -398,6 +418,7 @@ gcal_month_popover_class_init (GcalMonthPopoverClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, close_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, new_event_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_list_box_row_activated_cb);
 
   gtk_widget_class_bind_template_child (widget_class, GcalMonthPopover, day_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthPopover, listbox);

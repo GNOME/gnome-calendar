@@ -47,6 +47,7 @@ template $GcalMonthPopover: Widget {
     ListBox listbox {
       vexpand: true;
       selection-mode: none;
+      row-activated => $on_list_box_row_activated_cb(template) not-swapped;
 
       styles [
         "calendar-list",
