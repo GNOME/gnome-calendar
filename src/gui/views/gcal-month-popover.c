@@ -190,6 +190,23 @@ sort_func (GtkListBoxRow *a,
   return gcal_event_widget_sort_events (event_a, event_b);
 }
 
+static gboolean
+repeat_direction (GtkWidget        *widget,
+                  GtkDirectionType  direction)
+{
+  GtkWidget *child;
+
+  do
+    {
+      child = gtk_widget_get_focus_child (widget);
+
+      g_assert (child != NULL);
+    }
+  while (gtk_widget_child_focus (child, direction));
+
+  return TRUE;
+}
+
 
 /*
  * Callbacks
@@ -330,6 +347,30 @@ gcal_month_popover_size_allocate (GtkWidget *widget,
     }
 }
 
+static gboolean
+gcal_month_popover_focus (GtkWidget        *widget,
+                          GtkDirectionType  direction)
+{
+  GtkWidget *child = gtk_widget_get_focus_child (widget);
+
+  g_assert (child != NULL);
+
+  if (gtk_widget_child_focus (child, direction))
+    return TRUE;
+
+  switch (direction)
+    {
+    case GTK_DIR_DOWN:
+    case GTK_DIR_TAB_FORWARD:
+      return repeat_direction (widget, GTK_DIR_TAB_BACKWARD);
+    case GTK_DIR_UP:
+    case GTK_DIR_TAB_BACKWARD:
+      return repeat_direction (widget, GTK_DIR_TAB_FORWARD);
+    default:
+      return gtk_widget_keynav_failed (widget, direction);
+    }
+}
+
 
 /*
  * GObject overrides
@@ -397,6 +438,7 @@ gcal_month_popover_class_init (GcalMonthPopoverClass *klass)
 
   widget_class->measure = gcal_month_popover_measure;
   widget_class->size_allocate = gcal_month_popover_size_allocate;
+  widget_class->focus = gcal_month_popover_focus;
 
   properties [PROP_CONTEXT] = g_param_spec_object ("context",
                                                    "Context",
