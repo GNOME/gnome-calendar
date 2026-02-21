@@ -78,6 +78,8 @@ struct _GcalMonthView
   GDateTime          *date;
   GcalContext        *context;
 
+  GtkWidget          *last_focused_widget;
+
   GdkModifierType     state;
 };
 
@@ -985,10 +987,17 @@ on_month_row_show_overflow_cb (GcalMonthViewRow *row,
                                GcalMonthView    *self)
 {
   GcalMonthPopover *popover;
+  GtkWidget *focused;
+  GtkRoot *root;
 
   GCAL_ENTRY;
 
   popover = GCAL_MONTH_POPOVER (self->overflow.popover);
+
+  root = gtk_widget_get_root (GTK_WIDGET (self));
+  focused = gtk_root_get_focus (root);
+
+  g_set_weak_pointer (&self->last_focused_widget, focused);
 
   self->overflow.row = row;
   self->overflow.relative_to = GTK_WIDGET (cell);
@@ -1011,6 +1020,17 @@ on_month_popover_event_activated_cb (GcalMonthPopover *month_popover,
                                      GcalMonthViewRow *self)
 {
   gcal_view_event_activated (GCAL_VIEW (self), event_widget);
+}
+
+static void
+on_month_popover_closed_cb (GcalMonthPopover *month_popover,
+                            GcalMonthView    *self)
+{
+  if (self->last_focused_widget)
+    {
+      gtk_widget_grab_focus (self->last_focused_widget);
+      g_clear_weak_pointer (&self->last_focused_widget);
+    }
 }
 
 
@@ -1543,6 +1563,8 @@ gcal_month_view_dispose (GObject *object)
   g_clear_pointer (&self->header, gtk_widget_unparent);
   g_clear_pointer (&self->week_rows, g_ptr_array_unref);
 
+  g_clear_weak_pointer (&self->last_focused_widget);
+
   G_OBJECT_CLASS (gcal_month_view_parent_class)->dispose (object);
 
   GCAL_EXIT;
@@ -1688,6 +1710,7 @@ gcal_month_view_init (GcalMonthView *self)
   self->overflow.popover = gcal_month_popover_new ();
   g_object_bind_property (self, "context", self->overflow.popover, "context", G_BINDING_DEFAULT);
   g_signal_connect (self->overflow.popover, "event-activated", G_CALLBACK (on_month_popover_event_activated_cb), self);
+  g_signal_connect (self->overflow.popover, "closed", G_CALLBACK (on_month_popover_closed_cb), self);
 
   gtk_widget_set_parent (self->overflow.popover, GTK_WIDGET (self));
 
