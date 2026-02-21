@@ -61,6 +61,7 @@ enum
 enum
 {
   EVENT_ACTIVATED,
+  CLOSED,
   LAST_SIGNAL,
 };
 
@@ -456,6 +457,13 @@ gcal_month_popover_class_init (GcalMonthPopoverClass *klass)
                                            1,
                                            GCAL_TYPE_EVENT_WIDGET);
 
+  signals[CLOSED] = g_signal_new ("closed",
+                                  GCAL_TYPE_MONTH_POPOVER,
+                                  G_SIGNAL_RUN_FIRST,
+                                  0,  NULL, NULL, NULL,
+                                  G_TYPE_NONE,
+                                  0, NULL);
+
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-month-popover.ui");
 
   gtk_widget_class_bind_template_callback (widget_class, close_button_clicked_cb);
@@ -535,6 +543,8 @@ gcal_month_popover_popdown (GcalMonthPopover *self)
   adw_timed_animation_set_reverse (ADW_TIMED_ANIMATION (self->animation), TRUE);
   adw_timed_animation_set_easing (ADW_TIMED_ANIMATION (self->animation), ADW_EASE_IN_EXPO);
   adw_animation_play (self->animation);
+
+  g_signal_emit (self, signals[CLOSED], 0, NULL);
 
   GCAL_EXIT;
 }
