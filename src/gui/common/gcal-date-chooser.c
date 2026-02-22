@@ -54,7 +54,6 @@ struct _GcalDateChooser
   GtkWidget          *week[ROWS];
 
   GDateTime          *date;
-  GcalContext        *context;
 
   gint                this_year;
   gint                week_start;
@@ -100,7 +99,6 @@ enum
   PROP_SHOW_EVENTS,
   PROP_SPLIT_MONTH_YEAR,
   PROP_DATE,
-  PROP_CONTEXT,
   PROP_TIME_DIRECTION,
   NUM_PROPERTIES = PROP_SPLIT_MONTH_YEAR + 1,
 };
@@ -722,17 +720,6 @@ calendar_set_property (GObject      *obj,
       gcal_date_chooser_set_date (GCAL_VIEW (self), g_value_get_boxed (value));
       break;
 
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-
-      g_signal_connect_object (gcal_context_get_clock (self->context),
-                               "day-changed",
-                               G_CALLBACK (on_clock_day_changed_cb),
-                               self,
-                               G_CONNECT_SWAPPED);
-      break;
-
     case PROP_SHOW_HEADING:
       gcal_date_chooser_set_show_heading (self, g_value_get_boolean (value));
       break;
@@ -775,10 +762,6 @@ calendar_get_property (GObject    *obj,
     {
     case PROP_DATE:
       g_value_set_boxed (value, self->date);
-      break;
-
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
       break;
 
     case PROP_SHOW_HEADING:
@@ -893,7 +876,6 @@ gcal_date_chooser_finalize (GObject *object)
 {
   GcalDateChooser *self = GCAL_DATE_CHOOSER (object);
 
-  g_clear_object (&self->context);
   g_clear_pointer (&self->date, g_date_time_unref);
   g_clear_pointer (&self->events, gcal_range_tree_unref);
 
@@ -1024,7 +1006,6 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
   g_object_class_install_properties (object_class, NUM_PROPERTIES, properties);
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
-  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
   g_object_class_override_property (object_class, PROP_TIME_DIRECTION, "time-direction");
 
   signals[DAY_SELECTED] = g_signal_new ("day-selected",
@@ -1079,6 +1060,7 @@ show_week_number_to_column_span_cb (GBinding     *binding,
 static void
 gcal_date_chooser_init (GcalDateChooser *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   GtkDropTarget *drop_target;
   GtkWidget *label;
   gint row, col;
@@ -1225,6 +1207,12 @@ gcal_date_chooser_init (GcalDateChooser *self)
   gtk_drop_target_set_preload (drop_target, TRUE);
   g_signal_connect (drop_target, "drop", G_CALLBACK (on_drop_target_drop_cb), NULL);
   gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
+
+  g_signal_connect_object (gcal_context_get_clock (context),
+                           "day-changed",
+                           G_CALLBACK (on_clock_day_changed_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
 }
 
 
