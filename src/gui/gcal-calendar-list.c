@@ -20,6 +20,7 @@
 
 #define G_LOG_DOMAIN "GcalCalendarList"
 
+#include "gcal-application.h"
 #include "gcal-calendar-list.h"
 #include "gcal-calendar.h"
 #include "gcal-context.h"
@@ -30,20 +31,9 @@ struct _GcalCalendarList
   AdwBin              parent;
 
   GtkWidget          *calendar_listbox;
-
-  GcalContext        *context;
 };
 
 G_DEFINE_TYPE (GcalCalendarList, gcal_calendar_list, ADW_TYPE_BIN)
-
-enum
-{
-  PROP_0,
-  PROP_CONTEXT,
-  N_PROPS
-};
-
-static GParamSpec *properties [N_PROPS];
 
 
 /*
@@ -122,13 +112,10 @@ create_row_func (gpointer data,
 static GListModel*
 create_sorted_calendars_model (GcalCalendarList *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  GcalManager *manager = gcal_context_get_manager (context);
   g_autoptr (GtkSortListModel) sort_model = NULL;
   g_autoptr (GtkStringSorter) sorter = NULL;
-  GcalManager *manager;
-
-  g_assert (GCAL_IS_CONTEXT (self->context));
-
-  manager = gcal_context_get_manager (self->context);
 
   sorter = gtk_string_sorter_new (gtk_property_expression_new (E_TYPE_SOURCE,
                                                                gtk_property_expression_new (GCAL_TYPE_CALENDAR, NULL, "parent-source"),
@@ -209,96 +196,10 @@ update_header_func (GtkListBoxRow *row,
 }
 
 
-/*
- * GObject overrides
- */
-
-static void
-gcal_calendar_list_finalize (GObject *object)
-{
-  GcalCalendarList *self = (GcalCalendarList *) object;
-
-  g_clear_object (&self->context);
-
-  G_OBJECT_CLASS (gcal_calendar_list_parent_class)->finalize (object);
-}
-
-static void
-gcal_calendar_list_get_property (GObject *object,
-                                 guint prop_id,
-                                 GValue *value,
-                                 GParamSpec *pspec)
-{
-  GcalCalendarList *self = GCAL_CALENDAR_LIST (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_calendar_list_set_property (GObject *object,
-                                 guint prop_id,
-                                 const GValue *value,
-                                 GParamSpec *pspec)
-{
-  GcalCalendarList *self = GCAL_CALENDAR_LIST (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      {
-        g_autoptr (GListModel) calendars_model = NULL;
-
-        g_assert (self->context == NULL);
-        self->context = g_value_dup_object (value);
-
-        calendars_model = create_sorted_calendars_model (self);
-
-        gtk_list_box_bind_model (GTK_LIST_BOX (self->calendar_listbox),
-                                 calendars_model,
-                                 create_row_func,
-                                 NULL,
-                                 NULL);
-        gtk_list_box_set_header_func (GTK_LIST_BOX (self->calendar_listbox),
-                                      update_header_func,
-                                      NULL, NULL);
-      }
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
 static void
 gcal_calendar_list_class_init (GcalCalendarListClass *klass)
 {
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-
-  object_class->finalize = gcal_calendar_list_finalize;
-  object_class->get_property = gcal_calendar_list_get_property;
-  object_class->set_property = gcal_calendar_list_set_property;
-
-  /**
-   * GcalCalendarList::context:
-   *
-   * The #GcalContext of the application.
-   */
-  properties[PROP_CONTEXT] = g_param_spec_object ("context",
-                                                  "Context of the application",
-                                                  "The context of the application",
-                                                  GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
-
-  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-calendar-list.ui");
 
@@ -310,6 +211,19 @@ gcal_calendar_list_class_init (GcalCalendarListClass *klass)
 static void
 gcal_calendar_list_init (GcalCalendarList *self)
 {
+  g_autoptr (GListModel) calendars_model = NULL;
+
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  calendars_model = create_sorted_calendars_model (self);
+
+  gtk_list_box_bind_model (GTK_LIST_BOX (self->calendar_listbox),
+                           calendars_model,
+                           create_row_func,
+                           NULL,
+                           NULL);
+  gtk_list_box_set_header_func (GTK_LIST_BOX (self->calendar_listbox),
+                                update_header_func,
+                                NULL, NULL);
 }
 
