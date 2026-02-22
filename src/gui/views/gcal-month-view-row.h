@@ -34,11 +34,6 @@ G_DECLARE_FINAL_TYPE (GcalMonthViewRow, gcal_month_view_row, GCAL, MONTH_VIEW_RO
 
 GtkWidget *          gcal_month_view_row_new                     (void);
 
-GcalContext *        gcal_month_view_row_get_context             (GcalMonthViewRow   *self);
-
-void                 gcal_month_view_row_set_context             (GcalMonthViewRow   *self,
-                                                                  GcalContext        *context);
-
 GcalRange *          gcal_month_view_row_get_range               (GcalMonthViewRow   *self);
 
 void                 gcal_month_view_row_set_range               (GcalMonthViewRow   *self,

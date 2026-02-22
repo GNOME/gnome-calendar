@@ -54,8 +54,6 @@ struct _GcalMonthViewRow
   GListStore         *events;
   GHashTable         *layout_blocks;
   gboolean            layout_blocks_valid;
-
-  GcalContext        *context;
 };
 
 static gint          compare_events_cb                           (gconstpointer      a,
@@ -76,13 +74,6 @@ G_DEFINE_FINAL_TYPE (GcalMonthViewRow, gcal_month_view_row, GTK_TYPE_WIDGET)
 
 enum
 {
-  PROP_0,
-  PROP_CONTEXT,
-  N_PROPS,
-};
-
-enum
-{
   EVENT_ACTIVATED,
   CELL_ACTIVATED,
   SHOW_OVERFLOW,
@@ -90,7 +81,6 @@ enum
 };
 
 static guint signals[N_SIGNALS] = { 0, };
-static GParamSpec *properties [N_PROPS];
 
 
 /*
@@ -654,6 +644,7 @@ prepare_layout_blocks (GcalMonthViewRow *self,
 static void
 recalculate_layout_blocks (GcalMonthViewRow *self)
 {
+  GcalContext *context;
   g_autoptr (GDateTime) range_start = NULL;
   guint events_at_weekday[N_WEEKDAYS] = { 0, };
   guint n_events;
@@ -664,6 +655,7 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
 
   range_start = gcal_range_get_start (self->range);
   n_events = g_list_model_get_n_items (G_LIST_MODEL (self->events));
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
 
   g_hash_table_remove_all (self->layout_blocks);
 
@@ -690,7 +682,7 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
             {
               GtkWidget *event_widget;
 
-              event_widget = gcal_event_widget_new (self->context, event);
+              event_widget = gcal_event_widget_new (context, event);
               if (!gcal_event_get_all_day (event) && !gcal_event_is_multiday (event))
                 gcal_event_widget_set_timestamp_policy (GCAL_EVENT_WIDGET (event_widget), GCAL_TIMESTAMP_POLICY_START);
               setup_child_widget (self, event_widget);
@@ -1097,44 +1089,6 @@ gcal_month_view_row_finalize (GObject *object)
 }
 
 static void
-gcal_month_view_row_get_property (GObject    *object,
-                                  guint       prop_id,
-                                  GValue     *value,
-                                  GParamSpec *pspec)
-{
-  GcalMonthViewRow *self = GCAL_MONTH_VIEW_ROW (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_month_view_row_set_property (GObject      *object,
-                                  guint         prop_id,
-                                  const GValue *value,
-                                  GParamSpec   *pspec)
-{
-  GcalMonthViewRow *self = GCAL_MONTH_VIEW_ROW (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      gcal_month_view_row_set_context (self, g_value_get_object (value));
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
 gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
@@ -1142,21 +1096,11 @@ gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
 
   object_class->dispose = gcal_month_view_row_dispose;
   object_class->finalize = gcal_month_view_row_finalize;
-  object_class->get_property = gcal_month_view_row_get_property;
-  object_class->set_property = gcal_month_view_row_set_property;
 
   widget_class->map = gcal_month_view_row_map;
   widget_class->focus = gcal_month_view_row_focus;
   widget_class->measure = gcal_month_view_row_measure;
   widget_class->size_allocate = gcal_month_view_row_size_allocate;
-
-  properties[PROP_CONTEXT] = g_param_spec_object ("context",
-                                                  "Context",
-                                                  "The GcalContext of the application",
-                                                  GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
-
-  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_MONTH_VIEW_ROW,
@@ -1209,29 +1153,6 @@ GtkWidget *
 gcal_month_view_row_new (void)
 {
   return g_object_new (GCAL_TYPE_MONTH_VIEW_ROW, NULL);
-}
-
-GcalContext*
-gcal_month_view_row_get_context (GcalMonthViewRow *self)
-{
-  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
-
-  return self->context;
-}
-
-void
-gcal_month_view_row_set_context (GcalMonthViewRow *self,
-                                 GcalContext      *context)
-{
-  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
-
-  if (g_set_object (&self->context, context))
-    {
-      for (guint i = 0; i < N_WEEKDAYS; i++)
-        gcal_month_cell_set_context (GCAL_MONTH_CELL (self->day_cells[i]), context);
-
-      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CONTEXT]);
-    }
 }
 
 GcalRange *

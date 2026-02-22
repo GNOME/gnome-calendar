@@ -22,7 +22,6 @@
 #define G_LOG_DOMAIN "GcalMonthView"
 
 #include "config.h"
-#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-month-cell.h"
 #include "gcal-month-popover.h"
@@ -77,7 +76,6 @@ struct _GcalMonthView
   gdouble             last_velocity;
 
   GDateTime          *date;
-  GcalContext        *context;
 
   GtkWidget          *last_focused_widget;
 
@@ -99,7 +97,6 @@ G_DEFINE_FINAL_TYPE_WITH_CODE (GcalMonthView, gcal_month_view, GTK_TYPE_WIDGET,
 enum
 {
   PROP_0,
-  PROP_CONTEXT,
   PROP_DATE,
   PROP_TIME_DIRECTION,
   N_PROPS,
@@ -1834,7 +1831,6 @@ gcal_month_view_finalize (GObject *object)
   gcal_clear_date_time (&self->selection.start);
   gcal_clear_date_time (&self->selection.end);
   gcal_clear_date_time (&self->date);
-  g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_month_view_parent_class)->finalize (object);
 }
@@ -1851,10 +1847,6 @@ gcal_month_view_get_property (GObject    *object,
     {
     case PROP_DATE:
       g_value_set_boxed (value, self->date);
-      break;
-
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
       break;
 
     case PROP_TIME_DIRECTION:
@@ -1880,16 +1872,6 @@ gcal_month_view_set_property (GObject      *object,
       gcal_view_set_date (GCAL_VIEW (self), g_value_get_boxed (value));
       break;
 
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-
-      for (gint i = 0; i < N_TOTAL_ROWS; i++)
-        gcal_month_view_row_set_context (g_ptr_array_index (self->week_rows, i), self->context);
-
-      g_object_notify (object, "context");
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -1911,7 +1893,6 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   widget_class->size_allocate = gcal_month_view_size_allocate;
   widget_class->snapshot = gcal_month_view_snapshot;
 
-  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_TIME_DIRECTION, "time-direction");
 
@@ -1971,7 +1952,6 @@ gcal_month_view_init (GcalMonthView *self)
 
   /* Overflow popover */
   self->overflow.popover = gcal_month_popover_new ();
-  g_object_bind_property (self, "context", self->overflow.popover, "context", G_BINDING_DEFAULT);
   g_signal_connect (self->overflow.popover, "event-activated", G_CALLBACK (on_month_popover_event_activated_cb), self);
   g_signal_connect (self->overflow.popover, "closed", G_CALLBACK (on_month_popover_closed_cb), self);
 

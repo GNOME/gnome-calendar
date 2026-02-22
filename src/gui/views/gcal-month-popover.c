@@ -38,8 +38,6 @@ struct _GcalMonthPopover
   GtkWidget          *main_box;
   GtkButton          *new_event_button;
 
-  GcalContext        *context;
-
   GDateTime          *date;
   AdwAnimation       *animation;
 
@@ -53,20 +51,12 @@ G_DEFINE_TYPE (GcalMonthPopover, gcal_month_popover, GTK_TYPE_WIDGET)
 
 enum
 {
-  PROP_0,
-  PROP_CONTEXT,
-  N_PROPS,
-};
-
-enum
-{
   EVENT_ACTIVATED,
   CLOSED,
   LAST_SIGNAL,
 };
 
 static guint signals[LAST_SIGNAL] = { 0, };
-static GParamSpec *properties [N_PROPS] = { NULL, };
 
 
 /*
@@ -76,6 +66,7 @@ static GParamSpec *properties [N_PROPS] = { NULL, };
 static void
 update_event_list (GcalMonthPopover *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   g_autoptr (GDateTime) start_dt = NULL;
   g_autoptr (GDateTime) end_dt = NULL;
   g_autoptr (GPtrArray) events = NULL;
@@ -94,7 +85,7 @@ update_event_list (GcalMonthPopover *self)
                                     0, 0, 0);
   end_dt = g_date_time_add_days (start_dt, 1);
 
-  events = gcal_manager_get_events (gcal_context_get_manager (self->context), start_dt, end_dt);
+  events = gcal_manager_get_events (gcal_context_get_manager (context), start_dt, end_dt);
 
   for (i = 0; events && i < events->len; i++)
     {
@@ -120,7 +111,7 @@ update_event_list (GcalMonthPopover *self)
 
       event_end = g_date_time_add_days (event_start, 1);
 
-      event_widget = gcal_event_widget_new (self->context, event);
+      event_widget = gcal_event_widget_new (context, event);
       gtk_widget_set_focusable (event_widget, FALSE);
       gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (event_widget), event_start);
       gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (event_widget), event_end);
@@ -378,44 +369,6 @@ gcal_month_popover_focus (GtkWidget        *widget,
  */
 
 static void
-gcal_month_popover_get_property (GObject    *object,
-                                 guint       prop_id,
-                                 GValue     *value,
-                                 GParamSpec *pspec)
-{
-  GcalMonthPopover *self = GCAL_MONTH_POPOVER (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_month_popover_set_property (GObject      *object,
-                                 guint         prop_id,
-                                 const GValue *value,
-                                 GParamSpec   *pspec)
-{
-  GcalMonthPopover *self = GCAL_MONTH_POPOVER (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      self->context = g_value_dup_object (value);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
 gcal_month_popover_dispose (GObject *object)
 {
   GcalMonthPopover *self = (GcalMonthPopover *)object;
@@ -434,20 +387,10 @@ gcal_month_popover_class_init (GcalMonthPopoverClass *klass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->dispose = gcal_month_popover_dispose;
-  object_class->get_property = gcal_month_popover_get_property;
-  object_class->set_property = gcal_month_popover_set_property;
 
   widget_class->measure = gcal_month_popover_measure;
   widget_class->size_allocate = gcal_month_popover_size_allocate;
   widget_class->focus = gcal_month_popover_focus;
-
-  properties [PROP_CONTEXT] = g_param_spec_object ("context",
-                                                   "Context",
-                                                   "Context",
-                                                   GCAL_TYPE_CONTEXT,
-                                                   G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
-
-  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_MONTH_POPOVER,

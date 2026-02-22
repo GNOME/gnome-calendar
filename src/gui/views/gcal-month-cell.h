@@ -36,11 +36,6 @@ GDateTime*           gcal_month_cell_get_date                    (GcalMonthCell 
 void                 gcal_month_cell_set_date                    (GcalMonthCell      *self,
                                                                   GDateTime          *date);
 
-GcalContext*         gcal_month_cell_get_context                 (GcalMonthCell      *self);
-
-void                 gcal_month_cell_set_context                 (GcalMonthCell      *self,
-                                                                  GcalContext        *context);
-
 guint                gcal_month_cell_get_overflow                (GcalMonthCell      *self);
 
 void                 gcal_month_cell_set_overflow                (GcalMonthCell      *self,
