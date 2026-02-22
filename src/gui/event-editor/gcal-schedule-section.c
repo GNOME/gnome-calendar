@@ -52,7 +52,6 @@ struct _GcalScheduleSection
   GtkWidget           *repeat_duration_combo;
   GtkWidget           *until_date_selector;
 
-  GcalContext        *context;
   GcalEvent          *event;
 
   GcalEventEditorFlags flags;
@@ -97,13 +96,6 @@ static void          gcal_event_editor_section_iface_init        (GcalEventEdito
 
 G_DEFINE_TYPE_WITH_CODE (GcalScheduleSection, gcal_schedule_section, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_iface_init))
-
-enum
-{
-  PROP_0,
-  PROP_CONTEXT,
-  N_PROPS
-};
 
 static void          on_start_date_changed_cb                    (GtkWidget          *widget,
                                                                   GParamSpec         *pspec,
@@ -469,12 +461,16 @@ on_repeat_type_changed_cb (GtkWidget           *widget,
 static void
 on_time_format_changed_cb (GcalScheduleSection *self)
 {
+  GcalContext *context;
+
   if (self->event)
     {
+      context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+
       /* Apparently we can be notified that the time format changed, even when
        * there has not been an event set yet.  This breaks the code downstream.
        */
-      GcalTimeFormat time_format = gcal_context_get_time_format (self->context);
+      GcalTimeFormat time_format = gcal_context_get_time_format (context);
 
       GcalEventSchedule *updated = gcal_event_schedule_set_time_format (self->values, time_format);
 
@@ -505,6 +501,7 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
 {
   GcalScheduleSection *self;
   GcalTimeFormat time_format;
+  GcalContext *context;
 
   GCAL_ENTRY;
 
@@ -513,7 +510,9 @@ gcal_schedule_section_set_event (GcalEventEditorSection *section,
   g_set_object (&self->event, event);
   self->flags = flags;
 
-  time_format = gcal_context_get_time_format (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+
+  time_format = gcal_context_get_time_format (context);
   self->values = gcal_event_schedule_from_event (event, time_format);
 
   if (!event)
@@ -559,6 +558,7 @@ static void
 gcal_schedule_section_apply (GcalEventEditorSection *section)
 {
   GcalScheduleSection *self = GCAL_SCHEDULE_SECTION (section);
+  GcalContext *context;
 
   GCAL_ENTRY;
 
@@ -566,7 +566,9 @@ gcal_schedule_section_apply (GcalEventEditorSection *section)
 
   gcal_event_schedule_free (self->values);
 
-  GcalTimeFormat time_format = gcal_context_get_time_format (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+
+  GcalTimeFormat time_format = gcal_context_get_time_format (context);
   self->values = gcal_event_schedule_from_event (self->event, time_format);
 
   GCAL_EXIT;
@@ -644,54 +646,9 @@ gcal_schedule_section_finalize (GObject *object)
   GcalScheduleSection *self = (GcalScheduleSection *)object;
 
   g_clear_pointer (&self->values, gcal_event_schedule_free);
-  g_clear_object (&self->context);
   g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_schedule_section_parent_class)->finalize (object);
-}
-
-static void
-gcal_schedule_section_get_property (GObject    *object,
-                                    guint       prop_id,
-                                    GValue     *value,
-                                    GParamSpec *pspec)
-{
-  GcalScheduleSection *self = GCAL_SCHEDULE_SECTION (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_schedule_section_set_property (GObject      *object,
-                                    guint         prop_id,
-                                    const GValue *value,
-                                    GParamSpec   *pspec)
-{
-  GcalScheduleSection *self = GCAL_SCHEDULE_SECTION (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-      g_signal_connect_object (self->context,
-                               "notify::time-format",
-                               G_CALLBACK (on_time_format_changed_cb),
-                               self,
-                               G_CONNECT_SWAPPED);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
 }
 
 static void
@@ -703,10 +660,6 @@ gcal_schedule_section_class_init (GcalScheduleSectionClass *klass)
   g_type_ensure (GCAL_TYPE_DATE_TIME_CHOOSER);
 
   object_class->finalize = gcal_schedule_section_finalize;
-  object_class->get_property = gcal_schedule_section_get_property;
-  object_class->set_property = gcal_schedule_section_set_property;
-
-  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-schedule-section.ui");
 
@@ -735,12 +688,20 @@ gcal_schedule_section_class_init (GcalScheduleSectionClass *klass)
 static void
 gcal_schedule_section_init (GcalScheduleSection *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+
   gtk_widget_init_template (GTK_WIDGET (self));
 
   g_signal_connect (self->schedule_type_toggle_group,
                     "notify::active",
                     G_CALLBACK (on_schedule_type_changed_cb),
                     self);
+
+  g_signal_connect_object (context,
+                           "notify::time-format",
+                           G_CALLBACK (on_time_format_changed_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
 }
 
 gboolean
