@@ -64,8 +64,6 @@ void                 gcal_view_set_date                          (GcalView      
 
 GDateTime*           gcal_view_get_date                          (GcalView           *view);
 
-GcalContext*         gcal_view_get_context                       (GcalView           *self);
-
 GtkOrientation       gcal_view_get_time_direction                (GcalView           *self);
 
 void                 gcal_view_clear_marks                       (GcalView           *view);
