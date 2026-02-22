@@ -18,7 +18,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include "gcal-context.h"
 #include "gcal-event-editor-section.h"
 
 G_DEFINE_INTERFACE (GcalEventEditorSection, gcal_event_editor_section, GTK_TYPE_WIDGET)
@@ -26,12 +25,6 @@ G_DEFINE_INTERFACE (GcalEventEditorSection, gcal_event_editor_section, GTK_TYPE_
 static void
 gcal_event_editor_section_default_init (GcalEventEditorSectionInterface *iface)
 {
-  g_object_interface_install_property (iface,
-                                       g_param_spec_object ("context",
-                                                            "Context",
-                                                            "Context",
-                                                            GCAL_TYPE_CONTEXT,
-                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 }
 
 /**
