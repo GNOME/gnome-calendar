@@ -1221,12 +1221,6 @@ gcal_window_constructed (GObject *object)
   if (maximized)
     gtk_window_maximize (GTK_WINDOW (self));
 
-  /*
-   * FIXME: this is a hack around the issue that happens when trying to bind
-   * these properties using the GtkBuilder .ui file.
-   */
-  g_object_bind_property (self, "context", self->search_button, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-
   /* CSS */
   load_css_providers (self);
 

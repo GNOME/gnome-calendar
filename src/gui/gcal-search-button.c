@@ -24,6 +24,7 @@
 #include "gcal-debug.h"
 #include "gcal-search-button.h"
 #include "gcal-search-hit.h"
+#include "gcal-utils.h"
 
 #include <glib/gi18n.h>
 #include <math.h>
@@ -44,20 +45,9 @@ struct _GcalSearchButton
   GCancellable        *cancellable;
   gint                 max_width_chars;
   GListModel          *model;
-
-  GcalContext         *context;
 };
 
 G_DEFINE_TYPE (GcalSearchButton, gcal_search_button, ADW_TYPE_BIN)
-
-enum
-{
-  PROP_0,
-  PROP_CONTEXT,
-  N_PROPS
-};
-
-static GParamSpec *properties [N_PROPS];
 
 
 /*
@@ -254,6 +244,7 @@ on_entry_search_changed_cb (GtkSearchEntry   *entry,
 {
   g_autofree gchar *sexp_query = NULL;
   GcalSearchEngine *search_engine;
+  GcalContext *context;
   const gchar *text;
 
   GCAL_ENTRY;
@@ -272,7 +263,8 @@ on_entry_search_changed_cb (GtkSearchEntry   *entry,
   g_debug ("Search query changed to \"%s\"", text);
 
   sexp_query = g_strdup_printf ("(contains? \"summary\" \"%s\")", text);
-  search_engine = gcal_context_get_search_engine (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  search_engine = gcal_context_get_search_engine (context);
   gcal_search_engine_search (search_engine,
                              sexp_query,
                              self->cancellable,
@@ -343,48 +335,8 @@ gcal_search_button_finalize (GObject *object)
 
   g_cancellable_cancel (self->cancellable);
   g_clear_object (&self->cancellable);
-  g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_search_button_parent_class)->finalize (object);
-}
-
-static void
-gcal_search_button_get_property (GObject    *object,
-                                 guint       prop_id,
-                                 GValue     *value,
-                                 GParamSpec *pspec)
-{
-  GcalSearchButton *self = GCAL_SEARCH_BUTTON (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_search_button_set_property (GObject      *object,
-                                 guint         prop_id,
-                                 const GValue *value,
-                                 GParamSpec   *pspec)
-{
-  GcalSearchButton *self = GCAL_SEARCH_BUTTON (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
 }
 
 static void
@@ -395,21 +347,6 @@ gcal_search_button_class_init (GcalSearchButtonClass *klass)
 
   object_class->dispose = gcal_search_button_dispose;
   object_class->finalize = gcal_search_button_finalize;
-  object_class->get_property = gcal_search_button_get_property;
-  object_class->set_property = gcal_search_button_set_property;
-
-  /**
-   * GcalSearchButton::context:
-   *
-   * The #GcalContext of the application.
-   */
-  properties[PROP_CONTEXT] = g_param_spec_object ("context",
-                                                  "Context of the application",
-                                                  "The context of the application",
-                                                  GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
-
-  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-search-button.ui");
 
