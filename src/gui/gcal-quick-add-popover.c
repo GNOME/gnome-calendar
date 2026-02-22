@@ -39,8 +39,6 @@ struct _GcalQuickAddPopover
   GcalRange          *range;
 
   GListModel         *read_write_calendars_model;
-
-  GcalContext        *context;
 };
 
 G_DEFINE_TYPE (GcalQuickAddPopover, gcal_quick_add_popover, GTK_TYPE_POPOVER)
@@ -48,7 +46,6 @@ G_DEFINE_TYPE (GcalQuickAddPopover, gcal_quick_add_popover, GTK_TYPE_POPOVER)
 enum {
   PROP_0,
   PROP_RANGE,
-  PROP_CONTEXT,
   N_PROPS
 };
 
@@ -95,13 +92,15 @@ create_row_func (gpointer data,
   GcalCalendar *default_calendar;
   GcalCalendar *calendar = data;
   GcalQuickAddPopover *self = user_data;
+  GcalContext *context;
   GcalManager *manager;
   g_autoptr (GdkPaintable) paintable = NULL;
   g_autofree gchar *parent_name = NULL;
   g_autofree gchar *tooltip = NULL;
   GtkWidget *first_row, *row, *check_button;
 
-  manager = gcal_context_get_manager (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  manager = gcal_context_get_manager (context);
 
   default_calendar = gcal_manager_get_default_calendar (manager);
 
@@ -140,17 +139,6 @@ bind_model (GcalQuickAddPopover *self)
   gtk_list_box_bind_model (GTK_LIST_BOX (self->calendars_list_box),
                            self->read_write_calendars_model,
                            create_row_func, self, NULL);
-}
-
-static void
-set_up_context (GcalQuickAddPopover *self)
-{
-  GcalManager *manager;
-
-  manager = gcal_context_get_manager (self->context);
-  self->read_write_calendars_model = gcal_create_writable_calendars_model (manager);
-
-  bind_model (self);
 }
 
 static gint
@@ -372,7 +360,7 @@ update_header (GcalQuickAddPopover *self)
   g_autoptr (GDateTime) range_end = NULL;
   g_autofree gchar *title_date = NULL;
   gboolean multiday_or_timed;
-
+  GcalContext *context;
 
   if (!self->range)
     return;
@@ -403,7 +391,8 @@ update_header (GcalQuickAddPopover *self)
           GcalTimeFormat time_format;
           const gchar *hour_format;
 
-          time_format = gcal_context_get_time_format (self->context);
+          context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+          time_format = gcal_context_get_time_format (context);
 
           if (time_format == GCAL_TIME_FORMAT_24H)
               hour_format = "%R";
@@ -455,6 +444,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
   ECalComponent *component;
   GcalCalendar *calendar;
   GtkListBoxRow *selected_row;
+  GcalContext *context;
   GcalManager *manager;
   GDateTime *date_start, *date_end;
   GTimeZone *tz;
@@ -465,7 +455,8 @@ edit_or_create_event (GcalQuickAddPopover *self,
   range_start = gcal_range_get_start (self->range);
   range_end = gcal_range_get_end (self->range);
 
-  manager = gcal_context_get_manager (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  manager = gcal_context_get_manager (context);
   selected_row = gtk_list_box_get_selected_row (GTK_LIST_BOX (self->calendars_list_box));
   calendar = gcal_calendar_row_get_calendar (GCAL_CALENDAR_ROW (selected_row));
 
@@ -555,16 +546,6 @@ summary_entry_activated (AdwEntryRow         *entry,
  */
 
 static void
-gcal_quick_add_popover_finalize (GObject *object)
-{
-  GcalQuickAddPopover *self = (GcalQuickAddPopover *)object;
-
-  g_clear_object (&self->context);
-
-  G_OBJECT_CLASS (gcal_quick_add_popover_parent_class)->finalize (object);
-}
-
-static void
 gcal_quick_add_popover_get_property (GObject    *object,
                                      guint       prop_id,
                                      GValue     *value,
@@ -576,10 +557,6 @@ gcal_quick_add_popover_get_property (GObject    *object,
     {
     case PROP_RANGE:
       g_value_set_object (value, self->range);
-      break;
-
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
       break;
 
     default:
@@ -599,31 +576,6 @@ gcal_quick_add_popover_set_property (GObject      *object,
     {
     case PROP_RANGE:
       gcal_quick_add_popover_set_range (self, g_value_get_boxed (value));
-      break;
-
-    case PROP_CONTEXT:
-        {
-          GcalManager *manager;
-
-          g_assert (self->context == NULL);
-          self->context = g_value_dup_object (value);
-
-          manager = gcal_context_get_manager (self->context);
-          set_up_context (self);
-
-          /* Connect to the manager signals and keep the list updates */
-          g_signal_connect_object (manager,
-                                   "notify::default-calendar",
-                                   G_CALLBACK (bind_model),
-                                   self,
-                                   G_CONNECT_SWAPPED);
-
-          g_signal_connect_object (self->context,
-                                   "notify::time-format",
-                                   G_CALLBACK (update_header),
-                                   self,
-                                   G_CONNECT_SWAPPED);
-        }
       break;
 
     default:
@@ -658,7 +610,6 @@ gcal_quick_add_popover_class_init (GcalQuickAddPopoverClass *klass)
 
   popover_class->closed = gcal_quick_add_popover_closed;
 
-  object_class->finalize = gcal_quick_add_popover_finalize;
   object_class->get_property = gcal_quick_add_popover_get_property;
   object_class->set_property = gcal_quick_add_popover_set_property;
 
@@ -690,19 +641,6 @@ gcal_quick_add_popover_class_init (GcalQuickAddPopoverClass *klass)
                                                        G_TYPE_DATE_TIME,
                                                        G_PARAM_READWRITE));
 
-  /**
-   * GcalQuickAddPopover::context:
-   *
-   * The context of the application.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_CONTEXT,
-                                   g_param_spec_object ("context",
-                                                        "Context of the application",
-                                                        "The singleton context of the application",
-                                                        GCAL_TYPE_CONTEXT,
-                                                        G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
-
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-quick-add-popover.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalQuickAddPopover, add_button);
@@ -720,7 +658,27 @@ gcal_quick_add_popover_class_init (GcalQuickAddPopoverClass *klass)
 static void
 gcal_quick_add_popover_init (GcalQuickAddPopover *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  GcalManager *manager = gcal_context_get_manager (context);
+
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  self->read_write_calendars_model = gcal_create_writable_calendars_model (manager);
+
+  bind_model (self);
+
+  /* Connect to the manager signals and keep the list updates */
+  g_signal_connect_object (manager,
+                           "notify::default-calendar",
+                           G_CALLBACK (bind_model),
+                           self,
+                           G_CONNECT_SWAPPED);
+
+  g_signal_connect_object (context,
+                           "notify::time-format",
+                           G_CALLBACK (update_header),
+                           self,
+                           G_CONNECT_SWAPPED);
 }
 
 GtkWidget*
