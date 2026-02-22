@@ -49,7 +49,6 @@ struct _GcalAgendaView
 
   /* property */
   GDateTime          *date;
-  GcalContext        *context;
 
   GcalRangeTree      *events;
   guint               scroll_grid_timeout_id;
@@ -69,7 +68,6 @@ enum
 {
   PROP_0,
   PROP_DATE,
-  PROP_CONTEXT,
   PROP_TIME_DIRECTION,
   N_PROPS,
 };
@@ -603,6 +601,7 @@ gcal_agenda_view_add_event (GcalTimelineSubscriber *subscriber,
   g_autoptr (GDateTime) event_date = gcal_event_get_date_start (event);
   GtkWidget *widget, *row;
   GcalTimestampPolicy timestamp_policy;
+  GcalContext *context;
 
   GCAL_ENTRY;
 
@@ -624,8 +623,10 @@ gcal_agenda_view_add_event (GcalTimelineSubscriber *subscriber,
   else
     timestamp_policy = GCAL_TIMESTAMP_POLICY_START;
 
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+
   widget = g_object_new (GCAL_TYPE_EVENT_WIDGET,
-                         "context", self->context,
+                         "context", context,
                          "event", event,
                          "orientation", GTK_ORIENTATION_VERTICAL,
                          "timestamp-policy", timestamp_policy,
@@ -752,8 +753,6 @@ gcal_agenda_view_finalize (GObject       *object)
 
   g_clear_pointer (&self->date, g_date_time_unref);
 
-  g_clear_object (&self->context);
-
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_agenda_view_parent_class)->finalize (object);
 }
@@ -764,17 +763,10 @@ gcal_agenda_view_set_property (GObject      *object,
                                const GValue *value,
                                GParamSpec   *pspec)
 {
-  GcalAgendaView *self = (GcalAgendaView *) object;
-
   switch (property_id)
     {
     case PROP_DATE:
       gcal_view_set_date (GCAL_VIEW (object), g_value_get_boxed (value));
-      break;
-
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
       break;
 
     default:
@@ -800,10 +792,6 @@ gcal_agenda_view_get_property (GObject    *object,
       g_value_set_boxed (value, self->date);
       break;
 
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
     case PROP_TIME_DIRECTION:
       g_value_set_enum (value, GTK_ORIENTATION_VERTICAL);
       break;
@@ -826,7 +814,6 @@ gcal_agenda_view_class_init (GcalAgendaViewClass *klass)
   object_class->get_property = gcal_agenda_view_get_property;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
-  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
   g_object_class_override_property (object_class, PROP_TIME_DIRECTION, "time-direction");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-agenda-view.ui");
