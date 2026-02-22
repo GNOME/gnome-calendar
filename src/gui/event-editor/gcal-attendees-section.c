@@ -23,7 +23,6 @@
 #include <libintl.h>
 
 #include "gcal-attendee-summary-row.h"
-#include "gcal-context.h"
 #include "gcal-event-attendee.h"
 #include "gcal-event-editor-section.h"
 #include "gcal-event-organizer.h"
@@ -35,7 +34,6 @@ struct _GcalAttendeesSection
 {
   GtkBox parent_instance;
 
-  GcalContext         *context;
   GcalEvent           *event;
   GcalEventOrganizer  *organizer;
 
@@ -52,7 +50,6 @@ G_DEFINE_FINAL_TYPE_WITH_CODE (GcalAttendeesSection, gcal_attendees_section, GTK
 enum
 {
   PROP_0,
-  PROP_CONTEXT,
   PROP_ATTENDEES,
   PROP_ORGANIZER,
   N_PROPS
@@ -116,10 +113,6 @@ gcal_attendees_section_get_property (GObject *object,
 
   switch (property_id)
     {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
     case PROP_ATTENDEES:
       g_value_set_object (value, self->attendees);
       break;
@@ -143,11 +136,6 @@ gcal_attendees_section_set_property (GObject *object,
 
   switch (property_id)
     {
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-      break;
-
     case PROP_ORGANIZER:
       self->organizer = g_value_get_object (value);
       break;
@@ -162,7 +150,6 @@ gcal_attendees_section_finalize (GObject *object)
 {
   GcalAttendeesSection *self = (GcalAttendeesSection *) object;
 
-  g_clear_object (&self->context);
   g_clear_object (&self->event);
 
   self->attendees = NULL; /* not owned */
@@ -188,16 +175,6 @@ gcal_attendees_section_class_init (GcalAttendeesSectionClass *klass)
   object_class->finalize = gcal_attendees_section_finalize;
   object_class->get_property = gcal_attendees_section_get_property;
   object_class->set_property = gcal_attendees_section_set_property;
-
-  /**
-   * GcalAttendeesSection:context:
-   *
-   * The #GcalContext instance. Required by the interface.
-   */
-  properties[PROP_CONTEXT] =
-    g_param_spec_object ("context", NULL, NULL,
-                         GCAL_TYPE_CONTEXT,
-                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalAttendeesSection:attendees:
