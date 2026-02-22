@@ -75,7 +75,6 @@ struct _GcalEventEditorDialog
 
   GMenu              *sources_menu;
 
-  GcalContext        *context;
   GcalEvent          *event;
 
   GBinding           *event_title_binding;
@@ -95,7 +94,6 @@ G_DEFINE_TYPE (GcalEventEditorDialog, gcal_event_editor_dialog, ADW_TYPE_DIALOG)
 enum
 {
   PROP_0,
-  PROP_CONTEXT,
   PROP_EVENT,
   PROP_WRITABLE,
   N_PROPS
@@ -190,18 +188,20 @@ apply_event_properties_to_template_event (GcalEvent *template_event,
 }
 
 static void
-setup_context (GcalEventEditorDialog *self)
+set_up_context (GcalEventEditorDialog *self)
 {
   g_autoptr (GtkFlattenListModel) flatten_model = NULL;
   g_autoptr (GListModel) writable_calendars = NULL;
   g_autoptr (GListStore) all_calendars = NULL;
+  GcalContext *context;
   GcalManager *manager;
 
   GCAL_ENTRY;
 
   g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (self));
 
-  manager = gcal_context_get_manager (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  manager = gcal_context_get_manager (context);
   writable_calendars = gcal_create_writable_calendars_model (manager);
 
   self->read_only_calendar_model = g_list_store_new (GCAL_TYPE_CALENDAR);
@@ -226,9 +226,11 @@ save_event_and_close_dialog (GcalEventEditorDialog *self)
   gboolean can_show_mod_all;
   gboolean was_recurrent;
   gboolean calendar_changed;
+  GcalContext *context;
   gint i;
 
-  manager = gcal_context_get_manager (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  manager = gcal_context_get_manager (context);
   calendar = gcal_event_get_calendar (self->event);
 
   if (gcal_calendar_is_read_only (calendar))
@@ -394,11 +396,13 @@ on_ask_recurrence_response_save_cb (GcalEvent             *event,
                                     gpointer               user_data)
 {
   GcalEventEditorDialog *self = GCAL_EVENT_EDITOR_DIALOG (user_data);
+  GcalContext *context;
   GcalManager *manager;
 
   GCAL_ENTRY;
 
-  manager = gcal_context_get_manager (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  manager = gcal_context_get_manager (context);
 
   switch (mod_type)
     {
@@ -476,7 +480,6 @@ gcal_event_editor_dialog_finalize (GObject *object)
 
   g_clear_object (&self->read_only_calendar_model);
   g_clear_object (&self->action_group);
-  g_clear_object (&self->context);
   g_clear_object (&self->event);
 
   self->attendees_model = NULL; /* not owned */
@@ -500,10 +503,6 @@ gcal_event_editor_dialog_get_property (GObject    *object,
       g_value_set_object (value, self->event);
       break;
 
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
     case PROP_WRITABLE:
       g_value_set_boolean (value, self->writable);
       break;
@@ -523,13 +522,6 @@ gcal_event_editor_dialog_set_property (GObject      *object,
 
   switch (prop_id)
     {
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-      setup_context (self);
-      g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
-      break;
-
     case PROP_WRITABLE:
       set_writable (self, g_value_get_boolean (value));
       break;
@@ -576,17 +568,6 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
                                                 "The event being edited",
                                                 GCAL_TYPE_EVENT,
                                                 G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
-
-  /**
-   * GcalEventEditorDialog::manager:
-   *
-   * The #GcalManager of the dialog.
-   */
-  properties[PROP_CONTEXT] = g_param_spec_object ("context",
-                                                  "Context of the dialog",
-                                                  "The context of the dialog",
-                                                  GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEventEditorDialog::writable:
@@ -645,8 +626,7 @@ gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
   self->sections[i++] = self->summary_section;
   self->sections[i++] = self->attendees_section;
 
-  for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
-    g_object_bind_property (self, "context", self->sections[i], "context", G_BINDING_DEFAULT);
+  set_up_context (self);
 }
 
 /**
