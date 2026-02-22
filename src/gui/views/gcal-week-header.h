@@ -32,9 +32,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalWeekHeader, gcal_week_header, GCAL, WEEK_HEADER, GtkWidget)
 
-void                 gcal_week_header_set_context                (GcalWeekHeader     *self,
-                                                                  GcalContext        *context);
-
 void                 gcal_week_header_add_event                  (GcalWeekHeader     *self,
                                                                   GcalEvent          *event);
 

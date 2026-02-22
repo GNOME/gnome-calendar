@@ -29,7 +29,4 @@ G_BEGIN_DECLS
 #define GCAL_TYPE_WEEK_HOUR_BAR (gcal_week_hour_bar_get_type())
 G_DECLARE_FINAL_TYPE (GcalWeekHourBar, gcal_week_hour_bar, GCAL, WEEK_HOUR_BAR, GtkBox)
 
-void                 gcal_week_hour_bar_set_context              (GcalWeekHourBar    *self,
-                                                                  GcalContext        *context);
-
 G_END_DECLS

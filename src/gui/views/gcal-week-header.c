@@ -78,8 +78,6 @@ struct _GcalWeekHeader
   GtkBox             *weekdays_box;
   GtkWidget          *main_box;
 
-  GcalContext        *context;
-
   /*
    * Stores the events as they come from the week-view
    * The list will later be iterated after the active date is changed
@@ -214,6 +212,7 @@ clear_weather_infos (GcalWeekHeader *self)
 static void
 update_weather_infos (GcalWeekHeader *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   GPtrArray *weather_infos;
   GcalWeatherService *service;
 
@@ -221,8 +220,7 @@ update_weather_infos (GcalWeekHeader *self)
 
   clear_weather_infos (self);
 
-  g_assert (self->context);
-  service = gcal_context_get_weather_service (self->context);
+  service = gcal_context_get_weather_service (context);
 
   weather_infos = gcal_weather_service_get_weather_infos (service);
   add_weather_infos (self, weather_infos);
@@ -787,6 +785,7 @@ add_event_to_grid (GcalWeekHeader *self,
                    gint            start,
                    gint            end)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   g_autoptr (GDateTime) week_start = NULL;
   g_autoptr (GDateTime) week_end = NULL;
   GtkLayoutManager *layout_manager;
@@ -804,7 +803,7 @@ add_event_to_grid (GcalWeekHeader *self,
   move_events_at_column (self, DOWN, start, position);
 
   /* Add the event to the grid */
-  widget = gcal_event_widget_new (self->context, event);
+  widget = gcal_event_widget_new (context, event);
   setup_event_widget (self, widget);
 
   gtk_grid_attach (self->grid,
@@ -1138,6 +1137,7 @@ move_event_to_cell (GcalWeekHeader        *self,
                     guint                  cell,
                     GcalRecurrenceModType  mod_type)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   g_autoptr (GDateTime) week_start = NULL;
   g_autoptr (GDateTime) dnd_date = NULL;
   g_autoptr (GDateTime) new_end = NULL;
@@ -1194,7 +1194,7 @@ move_event_to_cell (GcalWeekHeader        *self,
   gcal_event_set_date_start (changed_event, dnd_date);
 
   /* Commit the changes */
-  gcal_manager_update_event (gcal_context_get_manager (self->context), changed_event, mod_type);
+  gcal_manager_update_event (gcal_context_get_manager (context), changed_event, mod_type);
 }
 
 static void
@@ -1542,6 +1542,7 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
 static void
 gcal_week_header_init (GcalWeekHeader *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   GtkDropTarget *drop_target;
   gint i;
 
@@ -1596,15 +1597,6 @@ gcal_week_header_init (GcalWeekHeader *self)
   g_signal_connect (drop_target, "leave", G_CALLBACK (on_drop_target_leave_cb), self);
   g_signal_connect (drop_target, "motion", G_CALLBACK (on_drop_target_motion_cb), self);
   gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
-}
-
-void
-gcal_week_header_set_context (GcalWeekHeader *self,
-                              GcalContext    *context)
-{
-  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
-
-  self->context = context;
 
   g_signal_connect_object (gcal_context_get_clock (context),
                            "day-changed",
@@ -1612,7 +1604,7 @@ gcal_week_header_set_context (GcalWeekHeader *self,
                            self,
                            G_CONNECT_SWAPPED);
 
-  g_signal_connect_object (gcal_context_get_weather_service (self->context),
+  g_signal_connect_object (gcal_context_get_weather_service (context),
                            "weather-changed",
                            G_CALLBACK (on_weather_update),
                            self,

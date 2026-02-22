@@ -76,8 +76,6 @@ struct _GcalWeekGrid
     GtkWidget        *widget;
     gint              event_minutes;
   } dnd;
-
-  GcalContext        *context;
 };
 
 G_DEFINE_TYPE (GcalWeekGrid, gcal_week_grid, GTK_TYPE_WIDGET);
@@ -352,7 +350,7 @@ move_event_to_cell (GcalWeekGrid          *self,
                     guint                  cell,
                     GcalRecurrenceModType  mod_type)
 {
-
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   g_autoptr (GDateTime) week_start = NULL;
   g_autoptr (GDateTime) dnd_date = NULL;
   g_autoptr (GDateTime) new_end = NULL;
@@ -392,7 +390,7 @@ move_event_to_cell (GcalWeekGrid          *self,
   gcal_event_set_date_end (changed_event, new_end);
 
   /* Commit the changes */
-  gcal_manager_update_event (gcal_context_get_manager (self->context), changed_event, mod_type);
+  gcal_manager_update_event (gcal_context_get_manager (context), changed_event, mod_type);
 }
 
 static void
@@ -861,6 +859,7 @@ gcal_week_grid_class_init (GcalWeekGridClass *klass)
 static void
 gcal_week_grid_init (GcalWeekGrid *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   GtkDropTarget *drop_target;
   GtkGesture *click_gesture;
 
@@ -900,16 +899,6 @@ gcal_week_grid_init (GcalWeekGrid *self)
   g_signal_connect (drop_target, "leave", G_CALLBACK (on_drop_target_leave_cb), self);
   g_signal_connect (drop_target, "motion", G_CALLBACK (on_drop_target_motion_cb), self);
   gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
-}
-
-/* Public API */
-void
-gcal_week_grid_set_context (GcalWeekGrid *self,
-                            GcalContext  *context)
-{
-  g_return_if_fail (GCAL_IS_WEEK_GRID (self));
-
-  self->context = context;
 
   g_signal_connect_object (gcal_context_get_clock (context),
                            "minute-changed",
@@ -918,10 +907,12 @@ gcal_week_grid_set_context (GcalWeekGrid *self,
                            G_CONNECT_SWAPPED);
 }
 
+/* Public API */
 void
 gcal_week_grid_add_event (GcalWeekGrid *self,
                           GcalEvent    *event)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   GtkWidget *widget;
 
   g_return_if_fail (GCAL_IS_WEEK_GRID (self));
@@ -929,7 +920,7 @@ gcal_week_grid_add_event (GcalWeekGrid *self,
   g_object_ref (event);
 
   widget = g_object_new (GCAL_TYPE_EVENT_WIDGET,
-                         "context", self->context,
+                         "context", context,
                          "event", event,
                          "orientation", GTK_ORIENTATION_VERTICAL,
                          "timestamp-policy", GCAL_TIMESTAMP_POLICY_START,
