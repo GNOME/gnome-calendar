@@ -47,7 +47,6 @@ struct _GcalRemindersSection
   GtkWidget          *three_days_button;
   GtkWidget          *one_week_button;
 
-  GcalContext        *context;
   GcalEvent          *event;
   GPtrArray          *alarms;
 };
@@ -63,13 +62,6 @@ static void          on_update_alarm_cb                          (GcalAlarmRow  
 
 G_DEFINE_TYPE_WITH_CODE (GcalRemindersSection, gcal_reminders_section, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_iface_init))
-
-enum
-{
-  PROP_0,
-  PROP_CONTEXT,
-  N_PROPS
-};
 
 /*
  * Auxiliary methods
@@ -497,49 +489,9 @@ gcal_reminders_section_finalize (GObject *object)
   GcalRemindersSection *self = (GcalRemindersSection *)object;
 
   g_clear_pointer (&self->alarms, g_ptr_array_unref);
-  g_clear_object (&self->context);
   g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_reminders_section_parent_class)->finalize (object);
-}
-
-static void
-gcal_reminders_section_get_property (GObject    *object,
-                                     guint       prop_id,
-                                     GValue     *value,
-                                     GParamSpec *pspec)
-{
-  GcalRemindersSection *self = GCAL_REMINDERS_SECTION (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_reminders_section_set_property (GObject      *object,
-                                     guint         prop_id,
-                                     const GValue *value,
-                                     GParamSpec   *pspec)
-{
-  GcalRemindersSection *self = GCAL_REMINDERS_SECTION (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
 }
 
 static void
@@ -550,10 +502,6 @@ gcal_reminders_section_class_init (GcalRemindersSectionClass *klass)
 
   object_class->dispose = gcal_reminders_section_dispose;
   object_class->finalize = gcal_reminders_section_finalize;
-  object_class->get_property = gcal_reminders_section_get_property;
-  object_class->set_property = gcal_reminders_section_set_property;
-
-  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-reminders-section.ui");
 
