@@ -20,7 +20,6 @@
 
 #define G_LOG_DOMAIN "GcalSummarySection"
 
-#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-event-editor-section.h"
 #include "gcal-summary-section.h"
@@ -35,7 +34,6 @@ struct _GcalSummarySection
   AdwEntryRow        *summary_entry;
   AdwEntryRow        *location_entry;
 
-  GcalContext        *context;
   GcalEvent          *event;
 };
 
@@ -44,13 +42,6 @@ static void          gcal_event_editor_section_iface_init        (GcalEventEdito
 
 G_DEFINE_TYPE_WITH_CODE (GcalSummarySection, gcal_summary_section, ADW_TYPE_BIN,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_iface_init))
-
-enum
-{
-  PROP_0,
-  PROP_CONTEXT,
-  N_PROPS
-};
 
 /*
  * GcalEventEditorSection interface
@@ -141,49 +132,9 @@ gcal_summary_section_finalize (GObject *object)
 {
   GcalSummarySection *self = (GcalSummarySection *)object;
 
-  g_clear_object (&self->context);
   g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_summary_section_parent_class)->finalize (object);
-}
-
-static void
-gcal_summary_section_get_property (GObject    *object,
-                                   guint       prop_id,
-                                   GValue     *value,
-                                   GParamSpec *pspec)
-{
-  GcalSummarySection *self = GCAL_SUMMARY_SECTION (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_summary_section_set_property (GObject      *object,
-                                   guint         prop_id,
-                                   const GValue *value,
-                                   GParamSpec   *pspec)
-{
-  GcalSummarySection *self = GCAL_SUMMARY_SECTION (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
 }
 
 static void
@@ -193,10 +144,6 @@ gcal_summary_section_class_init (GcalSummarySectionClass *klass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->finalize = gcal_summary_section_finalize;
-  object_class->get_property = gcal_summary_section_get_property;
-  object_class->set_property = gcal_summary_section_set_property;
-
-  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-summary-section.ui");
 
