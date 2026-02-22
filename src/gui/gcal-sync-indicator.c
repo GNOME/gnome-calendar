@@ -21,7 +21,7 @@
 
 #define G_LOG_DOMAIN "GcalSyncIndicator"
 
-#include "gcal-context.h"
+#include "gcal-utils.h"
 #include "gcal-sync-indicator.h"
 
 struct _GcalSyncIndicator
@@ -32,22 +32,11 @@ struct _GcalSyncIndicator
   GtkStack           *stack;
 
   guint               icon_changed_source_id;
-
-  GcalContext        *context;
 };
 
 static gboolean      icon_change_timeout_cb                      (gpointer           data);
 
 G_DEFINE_FINAL_TYPE (GcalSyncIndicator, gcal_sync_indicator, ADW_TYPE_BIN)
-
-enum
-{
-  PROP_0,
-  PROP_CONTEXT,
-  N_PROPS,
-};
-
-static GParamSpec *properties [N_PROPS] = { NULL, };
 
 
 /*
@@ -86,11 +75,13 @@ static gboolean
 icon_change_timeout_cb (gpointer data)
 {
   GcalSyncIndicator *self;
+  GcalContext *context;
   GcalManager *manager;
   gboolean synchronizing;
 
   self = GCAL_SYNC_INDICATOR (data);
-  manager = gcal_context_get_manager (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  manager = gcal_context_get_manager (context);
   synchronizing = gcal_manager_get_synchronizing (manager);
 
   g_debug ("Updating calendar icon to spinner");
@@ -123,54 +114,8 @@ gcal_sync_indicator_finalize (GObject *object)
   GcalSyncIndicator *self = (GcalSyncIndicator *)object;
 
   g_clear_handle_id (&self->icon_changed_source_id, g_source_remove);
-  g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_sync_indicator_parent_class)->finalize (object);
-}
-
-static void
-gcal_sync_indicator_get_property (GObject    *object,
-                                  guint       prop_id,
-                                  GValue     *value,
-                                  GParamSpec *pspec)
-{
-  GcalSyncIndicator *self = GCAL_SYNC_INDICATOR (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_sync_indicator_set_property (GObject      *object,
-                                  guint         prop_id,
-                                  const GValue *value,
-                                  GParamSpec   *pspec)
-{
-  GcalSyncIndicator *self = GCAL_SYNC_INDICATOR (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-
-      g_signal_connect_object (gcal_context_get_manager (self->context),
-                               "notify::synchronizing",
-                               G_CALLBACK (on_manager_synchronizing_changed_cb),
-                               object,
-                               0);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
 }
 
 static void
@@ -180,21 +125,6 @@ gcal_sync_indicator_class_init (GcalSyncIndicatorClass *klass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->finalize = gcal_sync_indicator_finalize;
-  object_class->get_property = gcal_sync_indicator_get_property;
-  object_class->set_property = gcal_sync_indicator_set_property;
-
-  /**
-   * GcalSyncIndicator::context:
-   *
-   * The #GcalContext of the application.
-   */
-  properties[PROP_CONTEXT] = g_param_spec_object ("context",
-                                                  "Context of the application",
-                                                  "The context of the application",
-                                                  GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
-
-  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-sync-indicator.ui");
 
@@ -207,5 +137,13 @@ gcal_sync_indicator_class_init (GcalSyncIndicatorClass *klass)
 static void
 gcal_sync_indicator_init (GcalSyncIndicator *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  g_signal_connect_object (gcal_context_get_manager (context),
+                           "notify::synchronizing",
+                           G_CALLBACK (on_manager_synchronizing_changed_cb),
+                           self,
+                           0);
 }
