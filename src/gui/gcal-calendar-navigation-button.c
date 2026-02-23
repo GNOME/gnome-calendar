@@ -99,11 +99,11 @@ gcal_calendar_navigation_button_set_property (GObject *object,
       gcal_clear_date_time (&self->active_date);
       self->active_date = g_date_time_ref (g_value_get_boxed (value));
       /*
-       * Translators: %B is the month name and %Y is the year.
+       * Translators: %OB is the month name and %Y is the year.
        * More formats can be found on the doc:
        * https://docs.gtk.org/glib/method.DateTime.format.html
        */
-      gtk_menu_button_set_label (self->button, g_date_time_format (self->active_date, _ ("%B %Y")));
+      gtk_menu_button_set_label (self->button, g_date_time_format (self->active_date, _ ("%OB %Y")));
       break;
 
     case PROP_ACTIVE:
