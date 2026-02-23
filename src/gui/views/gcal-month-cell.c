@@ -229,7 +229,7 @@ update_weather (GcalMonthCell *self)
       /* No risk of conflicting with the weather forecast labels in their absence, use the full month name label */
       if (day_of_month == 1)
         {
-          g_autofree gchar *month_name = g_date_time_format (self->date, "%B");
+          g_autofree gchar *month_name = g_date_time_format (self->date, "%OB");
           gtk_label_set_text (self->day_label, month_name);
         }
     }
@@ -494,7 +494,7 @@ gcal_month_cell_set_date (GcalMonthCell *self,
 
   if (day_of_month == 1)
     {
-      g_autofree gchar *month_name = g_date_time_format (date, "%B");
+      g_autofree gchar *month_name = g_date_time_format (date, "%OB");
       gtk_label_set_text (self->day_label, month_name);
       gtk_widget_add_css_class (GTK_WIDGET (self->day_label), "first-day");
     }
