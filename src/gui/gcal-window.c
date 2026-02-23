@@ -117,6 +117,7 @@ struct _GcalWindow
   GtkWidget          *menu_button;
 
   GcalEventEditorDialog *event_editor;
+  GcalCalendarManagementDialog *calendar_management;
   GtkWidget             *import_dialog;
 
   GtkWidget          *last_focused_widget;
@@ -537,9 +538,8 @@ on_show_calendars_action_activated (GSimpleAction *action,
                                     gpointer       user_data)
 {
   GcalWindow *self = GCAL_WINDOW (user_data);
-  GcalCalendarManagementDialog *dialog = gcal_calendar_management_dialog_new ();
 
-  adw_dialog_present (ADW_DIALOG (dialog), GTK_WIDGET (self));
+  adw_dialog_present (ADW_DIALOG (self->calendar_management), GTK_WIDGET (self));
 }
 
 static void
@@ -1335,6 +1335,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   g_type_ensure (GCAL_TYPE_CALENDAR_NAVIGATION_BUTTON);
   g_type_ensure (GCAL_TYPE_DATE_CHOOSER);
   g_type_ensure (GCAL_TYPE_EVENT_EDITOR_DIALOG);
+  g_type_ensure (GCAL_TYPE_CALENDAR_MANAGEMENT_DIALOG);
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
   g_type_ensure (GCAL_TYPE_QUICK_ADD_POPOVER);
@@ -1383,6 +1384,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_list);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, date_chooser);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, event_editor);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_management);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, menu_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
