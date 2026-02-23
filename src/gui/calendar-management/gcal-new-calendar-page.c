@@ -63,8 +63,6 @@ struct _GcalNewCalendarPage
   GCancellable       *cancellable;
 
   ESource            *local_source;
-
-  GcalContext        *context;
 };
 
 static gboolean      pulse_web_entry                             (gpointer           data);
@@ -81,12 +79,6 @@ G_DEFINE_TYPE_WITH_CODE (GcalNewCalendarPage, gcal_new_calendar_page, ADW_TYPE_N
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_CALENDAR_MANAGEMENT_PAGE,
                                                 gcal_calendar_management_page_iface_init))
 
-enum
-{
-  PROP_0,
-  PROP_CONTEXT,
-  N_PROPS
-};
 
 /*
  * Auxiliary methods
@@ -340,9 +332,11 @@ static void
 on_add_button_clicked_cb (GtkWidget           *button,
                           GcalNewCalendarPage *self)
 {
+  GcalContext *context;
   GcalManager *manager;
 
-  manager = gcal_context_get_manager (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  manager = gcal_context_get_manager (context);
 
   /* Commit each new remote source */
   if (self->remote_sources)
@@ -524,48 +518,8 @@ gcal_new_calendar_page_finalize (GObject *object)
 
   g_cancellable_cancel (self->cancellable);
   g_clear_object (&self->cancellable);
-  g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_new_calendar_page_parent_class)->finalize (object);
-}
-
-static void
-gcal_new_calendar_page_get_property (GObject    *object,
-                                     guint       prop_id,
-                                     GValue     *value,
-                                     GParamSpec *pspec)
-{
-  GcalNewCalendarPage *self = GCAL_NEW_CALENDAR_PAGE (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_new_calendar_page_set_property (GObject      *object,
-                                     guint         prop_id,
-                                     const GValue *value,
-                                     GParamSpec   *pspec)
-{
-  GcalNewCalendarPage *self = GCAL_NEW_CALENDAR_PAGE (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      self->context = g_value_dup_object (value);
-      g_assert (self->context != NULL);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
 }
 
 static void
@@ -576,10 +530,6 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
 
   object_class->dispose = gcal_new_calendar_page_dispose;
   object_class->finalize = gcal_new_calendar_page_finalize;
-  object_class->get_property = gcal_new_calendar_page_get_property;
-  object_class->set_property = gcal_new_calendar_page_set_property;
-
-  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-new-calendar-page.ui");
 

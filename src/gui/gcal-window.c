@@ -538,7 +538,7 @@ on_show_calendars_action_activated (GSimpleAction *action,
                                     gpointer       user_data)
 {
   GcalWindow *self = GCAL_WINDOW (user_data);
-  GcalCalendarManagementDialog *dialog = gcal_calendar_management_dialog_new (self->context);
+  GcalCalendarManagementDialog *dialog = gcal_calendar_management_dialog_new ();
 
   adw_dialog_present (ADW_DIALOG (dialog), GTK_WIDGET (self));
 }

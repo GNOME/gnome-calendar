@@ -36,7 +36,7 @@ G_DECLARE_FINAL_TYPE (GcalCalendarManagementDialog,
                       GCAL, CALENDAR_MANAGEMENT_DIALOG,
                       AdwDialog)
 
-GcalCalendarManagementDialog* gcal_calendar_management_dialog_new (GcalContext       *context);
+GcalCalendarManagementDialog* gcal_calendar_management_dialog_new (void);
 
 
 G_END_DECLS

@@ -22,7 +22,6 @@
 
 #include "gcal-calendar-management-dialog.h"
 #include "gcal-calendar-management-page.h"
-#include "gcal-context.h"
 
 G_DEFINE_INTERFACE (GcalCalendarManagementPage, gcal_calendar_management_page, ADW_TYPE_NAVIGATION_PAGE)
 
@@ -37,13 +36,6 @@ static guint signals[N_SIGNALS] = { 0, };
 static void
 gcal_calendar_management_page_default_init (GcalCalendarManagementPageInterface *iface)
 {
-  g_object_interface_install_property (iface,
-                                       g_param_spec_object ("context",
-                                                            "Context",
-                                                            "Context",
-                                                            GCAL_TYPE_CONTEXT,
-                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-
   signals[SWITCH_PAGE] = g_signal_new ("switch-page",
                                        GCAL_TYPE_CALENDAR_MANAGEMENT_PAGE,
                                        G_SIGNAL_RUN_LAST,

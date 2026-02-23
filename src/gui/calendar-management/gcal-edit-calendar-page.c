@@ -40,8 +40,6 @@ struct _GcalEditCalendarPage
   GtkWidget          *remove_button_row;
 
   GcalCalendar       *calendar;
-
-  GcalContext        *context;
 };
 
 static void          gcal_calendar_management_page_iface_init    (GcalCalendarManagementPageInterface *iface);
@@ -49,13 +47,6 @@ static void          gcal_calendar_management_page_iface_init    (GcalCalendarMa
 G_DEFINE_TYPE_WITH_CODE (GcalEditCalendarPage, gcal_edit_calendar_page, ADW_TYPE_NAVIGATION_PAGE,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_CALENDAR_MANAGEMENT_PAGE,
                                                 gcal_calendar_management_page_iface_init))
-
-enum
-{
-  PROP_0,
-  PROP_CONTEXT,
-  N_PROPS
-};
 
 
 /*
@@ -67,12 +58,15 @@ is_goa_calendar (GcalEditCalendarPage *self,
                  GcalCalendar         *calendar)
 {
   g_autoptr (ESource) parent = NULL;
+  GcalContext *context;
   GcalManager *manager;
   ESource *source;
 
   g_assert (calendar && GCAL_IS_CALENDAR (calendar));
 
-  manager = gcal_context_get_manager (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  manager = gcal_context_get_manager (context);
+
   source = gcal_calendar_get_source (calendar);
   parent = gcal_manager_get_source (manager, e_source_get_parent (source));
 
@@ -374,13 +368,15 @@ on_settings_button_clicked_cb (GtkWidget            *button,
 {
   g_autoptr (ESource) parent = NULL;
   GApplication *app;
+  GcalContext *context;
   GcalManager *manager;
   ESourceGoa *goa;
   ESource *source;
 
   GCAL_ENTRY;
 
-  manager = gcal_context_get_manager (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  manager = gcal_context_get_manager (context);
   source = gcal_calendar_get_source (self->calendar);
   parent = gcal_manager_get_source (manager, e_source_get_parent (source));
 
@@ -415,6 +411,7 @@ static void
 gcal_edit_calendar_page_deactivate (GcalCalendarManagementPage *page)
 {
   GcalEditCalendarPage *self;
+  GcalContext *context;
   GcalManager *manager;
 
   GCAL_ENTRY;
@@ -423,7 +420,8 @@ gcal_edit_calendar_page_deactivate (GcalCalendarManagementPage *page)
 
   gcal_calendar_set_name (self->calendar, gtk_editable_get_text (GTK_EDITABLE (self->name_entry)));
 
-  manager = gcal_context_get_manager (self->context);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  manager = gcal_context_get_manager (context);
   gcal_manager_save_source (manager, gcal_calendar_get_source (self->calendar));
 
   g_clear_object (&self->calendar);
@@ -460,48 +458,8 @@ gcal_edit_calendar_page_finalize (GObject *object)
   GcalEditCalendarPage *self = (GcalEditCalendarPage *)object;
 
   g_clear_object (&self->calendar);
-  g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_edit_calendar_page_parent_class)->finalize (object);
-}
-
-static void
-gcal_edit_calendar_page_get_property (GObject    *object,
-                                      guint       prop_id,
-                                      GValue     *value,
-                                      GParamSpec *pspec)
-{
-  GcalEditCalendarPage *self = GCAL_EDIT_CALENDAR_PAGE (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_edit_calendar_page_set_property (GObject      *object,
-                                      guint         prop_id,
-                                      const GValue *value,
-                                      GParamSpec   *pspec)
-{
-  GcalEditCalendarPage *self = GCAL_EDIT_CALENDAR_PAGE (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      self->context = g_value_dup_object (value);
-      g_assert (self->context != NULL);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
 }
 
 static void
@@ -512,10 +470,6 @@ gcal_edit_calendar_page_class_init (GcalEditCalendarPageClass *klass)
 
   object_class->dispose = gcal_edit_calendar_page_dispose;
   object_class->finalize = gcal_edit_calendar_page_finalize;
-  object_class->get_property = gcal_edit_calendar_page_get_property;
-  object_class->set_property = gcal_edit_calendar_page_set_property;
-
-  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-edit-calendar-page.ui");
 
