@@ -1596,10 +1596,22 @@ gcal_month_view_focus (GtkWidget        *widget,
 
           return gcal_month_view_row_focus_adjacent_cell (GCAL_MONTH_VIEW_ROW (row), focused);
         }
-      else if (focused && GCAL_IS_MONTH_CELL (focused))
+      else if (focused)
         {
-          gcal_view_clear_marks (GCAL_VIEW (self));
-          return FALSE;
+          if (GCAL_IS_MONTH_CELL (focused))
+            {
+              gcal_view_clear_marks (GCAL_VIEW (self));
+              return FALSE;
+            }
+
+          if (direction == GTK_DIR_TAB_FORWARD && GCAL_IS_EVENT_WIDGET (focused))
+            {
+              if (GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction))
+                return TRUE;
+
+              row = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_VIEW_ROW);
+              return gcal_month_view_row_focus_adjacent_cell (GCAL_MONTH_VIEW_ROW (row), focused);
+            }
         }
 
       return GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction);
