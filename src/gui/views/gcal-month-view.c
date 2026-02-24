@@ -833,7 +833,8 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
   g_autoptr (GcalRange) selection_range = NULL;
   g_autoptr (GDateTime) selection_start = NULL;
   g_autoptr (GDateTime) selection_end = NULL;
-  GtkWidget *widget_at_position;
+  GtkWidget *widget_at_position, *cell, *row;
+  GtkRoot *root;
 
   GCAL_ENTRY;
 
@@ -843,11 +844,15 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
 
   if (!self->selection.start ||
       !widget_at_position ||
-      !gtk_widget_get_ancestor (widget_at_position, GCAL_TYPE_MONTH_VIEW_ROW))
+      !(row = gtk_widget_get_ancestor (widget_at_position, GCAL_TYPE_MONTH_VIEW_ROW)))
     {
       gcal_view_clear_marks (GCAL_VIEW (self));
       GCAL_RETURN ();
     }
+
+  root = gtk_widget_get_root (GTK_WIDGET (self));
+  cell = gcal_month_view_row_get_cell_at_x (GCAL_MONTH_VIEW_ROW (row), x);
+  gtk_root_set_focus (root, cell);
 
   selection_start = self->selection.start;
   selection_end = self->selection.end ?: selection_start;
