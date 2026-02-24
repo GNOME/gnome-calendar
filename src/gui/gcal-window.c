@@ -220,6 +220,16 @@ update_today_action_enabled (GcalWindow *window)
   GCAL_EXIT;
 }
 
+static void
+focus_last_focused_widget (GcalWindow *self)
+{
+  if (self->last_focused_widget)
+    {
+      gtk_widget_grab_focus (self->last_focused_widget);
+      g_clear_weak_pointer (&self->last_focused_widget);
+    }
+}
+
 static gchar*
 get_previous_date_icon (GcalWindow     *window,
                         GcalWindowView *view)
@@ -764,7 +774,10 @@ set_new_event_mode (GcalWindow *window,
   g_object_notify_by_pspec (G_OBJECT (window), properties[PROP_NEW_EVENT_MODE]);
 
   if (!enabled && window->views[window->active_view])
-    gcal_view_clear_marks (GCAL_VIEW (window->views[window->active_view]));
+    {
+      gcal_view_clear_marks (GCAL_VIEW (window->views[window->active_view]));
+      focus_last_focused_widget (window);
+    }
 
   /* XXX: here we could disable clicks from the views, yet */
   /* for now we relaunch the new-event widget */
@@ -786,10 +799,14 @@ show_new_event_widget (GcalView   *view,
 {
   graphene_point_t p;
   GdkRectangle rect;
+  GtkRoot *root;
 
   GCAL_ENTRY;
 
   g_assert (range != NULL);
+
+  root = gtk_widget_get_root (GTK_WIDGET (window));
+  g_set_weak_pointer (&window->last_focused_widget, gtk_root_get_focus (root));
 
   /* 1st and 2nd steps */
   set_new_event_mode (window, TRUE);
@@ -891,11 +908,7 @@ event_preview_cb (GcalEventWidget        *event_widget,
 
     case GCAL_EVENT_PREVIEW_ACTION_NONE:
     default:
-      if (self->last_focused_widget)
-        {
-          gtk_root_set_focus (GTK_ROOT (self), self->last_focused_widget);
-          g_clear_weak_pointer (&self->last_focused_widget);
-        }
+      focus_last_focused_widget (self);
       break;
     }
 }
