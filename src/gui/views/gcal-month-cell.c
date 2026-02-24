@@ -345,6 +345,23 @@ on_breakpoint_changed_cb (GcalMonthCell *self)
 
 
 /*
+ * GtkWidget overrides
+ */
+
+static gboolean
+gcal_month_cell_focus (GtkWidget        *widget,
+                       GtkDirectionType  direction)
+{
+  GtkRoot *root = gtk_widget_get_root (widget);
+
+  if (gtk_root_get_focus (root) == NULL)
+    return FALSE;
+
+  return GTK_WIDGET_CLASS (gcal_month_cell_parent_class)->focus (widget, direction);
+}
+
+
+/*
  * GObject overrides
  */
 
@@ -413,6 +430,8 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
   object_class->dispose = gcal_month_cell_dispose;
   object_class->set_property = gcal_month_cell_set_property;
   object_class->get_property = gcal_month_cell_get_property;
+
+  widget_class->focus = gcal_month_cell_focus;
 
   signals[SHOW_OVERFLOW] = g_signal_new ("show-overflow",
                                          GCAL_TYPE_MONTH_CELL,
