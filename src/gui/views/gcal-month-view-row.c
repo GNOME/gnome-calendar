@@ -805,6 +805,9 @@ gcal_month_view_row_focus (GtkWidget        *widget,
         {
         case GTK_DIR_TAB_FORWARD:
         case GTK_DIR_TAB_BACKWARD:
+          if ((new_focus = find_nearest_vertical_event_widget (self, focus_event_data, direction)))
+            return gtk_widget_grab_focus (new_focus);
+
           if ((new_focus = find_nearest_horizontal_event_widget (self, focus_event_data, direction)))
             return gtk_widget_grab_focus (new_focus);
 
