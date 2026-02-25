@@ -773,25 +773,28 @@ gcal_month_view_row_focus (GtkWidget        *widget,
   root = gtk_widget_get_root (widget);
   focused = gtk_root_get_focus (root);
 
-  if (!focused || gtk_widget_is_ancestor (focused, widget))
+  if (!focused)
     return GTK_WIDGET_CLASS (gcal_month_view_row_parent_class)->focus (widget, direction);
 
-  switch (direction)
+  if (!gtk_widget_is_ancestor (focused, widget))
     {
-    case GTK_DIR_TAB_FORWARD:
-      if ((new_focus = find_first_event_widget (self)))
-        return gtk_widget_grab_focus (new_focus);
-      else
-        return FALSE;
+      switch (direction)
+        {
+        case GTK_DIR_TAB_FORWARD:
+          if ((new_focus = find_first_event_widget (self)))
+            return gtk_widget_grab_focus (new_focus);
+          else
+            return FALSE;
 
-    case GTK_DIR_TAB_BACKWARD:
-      if ((new_focus = find_last_event_widget (self)))
-        return gtk_widget_grab_focus (new_focus);
-      else
-        return FALSE;
+        case GTK_DIR_TAB_BACKWARD:
+          if ((new_focus = find_last_event_widget (self)))
+            return gtk_widget_grab_focus (new_focus);
+          else
+            return FALSE;
 
-    default:
-      break;
+        default:
+          break;
+        }
     }
 
   if (GCAL_IS_EVENT_WIDGET (focused))
