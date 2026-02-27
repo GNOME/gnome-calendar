@@ -105,7 +105,6 @@ gcal_week_hour_bar_init (GcalWeekHourBar *self)
     {
       GtkWidget *label = gtk_label_new ("");
 
-      gtk_widget_add_css_class (label, "line");
       gtk_widget_add_css_class (label, "dimmed");
       gtk_widget_set_vexpand (label, TRUE);
       gtk_label_set_yalign (GTK_LABEL (label), 0.0);

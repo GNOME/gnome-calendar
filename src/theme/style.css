@@ -221,17 +221,9 @@ label.month-name {
 
 /* Week View CSS */
 
-.week-header.lines {
-  color: rgb(from var(--window-fg-color) r g b / 15%);
-}
-
 weekhourbar > label {
   font-size: 10pt;
   padding: 4px 6px;
-}
-
-.week-view .lines {
-  color: rgb(from var(--window-fg-color) r g b / 15%);
 }
 
 .week-main-content {

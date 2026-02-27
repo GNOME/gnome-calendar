@@ -28,7 +28,6 @@ gcal_week_view_common_snapshot_hour_lines (GtkWidget      *widget,
                                            gint            width,
                                            gint            height)
 {
-  GtkStyleContext *context;
   GdkRGBA color;
   gboolean ltr;
   gdouble column_width;
@@ -36,11 +35,10 @@ gcal_week_view_common_snapshot_hour_lines (GtkWidget      *widget,
 
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
-  context = gtk_widget_get_style_context (widget);
-  gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "lines");
-  gtk_style_context_get_color (context, &color);
-  gtk_style_context_restore (context);
+  gtk_snapshot_save (snapshot);
+  gtk_widget_get_color (widget, &color);
+  color.alpha = 0.15;
+  gtk_snapshot_restore (snapshot);
 
   column_width = width / 7.0;
 
