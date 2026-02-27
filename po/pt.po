@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-01-21 19:37+0000\n"
-"PO-Revision-Date: 2026-01-27 22:23+0000\n"
+"POT-Creation-Date: 2026-02-25 13:45+0000\n"
+"PO-Revision-Date: 2026-02-27 17:20+0000\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Português (https://l10n.gnome.org/teams/pt/)\n"
 "Language: pt\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -147,7 +147,7 @@ msgstr "Editor de eventos"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1783 src/gui/gcal-event-popover.c:423
+#: src/core/gcal-event.c:1786 src/gui/gcal-event-popover.c:423
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -156,13 +156,13 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1791
+#: src/core/gcal-event.c:1794
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1807
+#: src/core/gcal-event.c:1810
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -188,7 +188,7 @@ msgstr "Definições do Calendário"
 msgid "Calendars"
 msgstr "Caléndários"
 
-#: src/gui/calendar-management/gcal-calendars-page.blp:52
+#: src/gui/calendar-management/gcal-calendars-page.blp:37
 msgid "_Add Calendar"
 msgstr "_Adicionar calendário"
 
@@ -220,7 +220,7 @@ msgstr "Abrir em Definições"
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:197
 #: src/gui/event-editor/gcal-summary-section.blp:18
 #: src/gui/gcal-event-popover.blp:144
-#: src/gui/importer/gcal-import-file-row.c:177
+#: src/gui/importer/gcal-import-file-row.c:180
 msgid "Location"
 msgstr "Localização"
 
@@ -343,43 +343,43 @@ msgstr "Este calendário está oculto"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:273
+#: src/gui/common/gcal-date-chooser.c:337
 msgctxt "grid sunday"
 msgid "S"
 msgstr "D"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:278
+#: src/gui/common/gcal-date-chooser.c:342
 msgctxt "grid monday"
 msgid "M"
 msgstr "S"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:283
+#: src/gui/common/gcal-date-chooser.c:347
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "T"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:288
+#: src/gui/common/gcal-date-chooser.c:352
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "Q"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:293
+#: src/gui/common/gcal-date-chooser.c:357
 msgctxt "grid thursday"
 msgid "T"
 msgstr "Q"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:298
+#: src/gui/common/gcal-date-chooser.c:362
 msgctxt "grid friday"
 msgid "F"
 msgstr "S"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:303
+#: src/gui/common/gcal-date-chooser.c:367
 msgctxt "grid saturday"
 msgid "S"
 msgstr "S"
@@ -484,6 +484,7 @@ msgid "Event start time"
 msgstr "Início do evento"
 
 #: src/gui/event-editor/gcal-attendee-row.blp:29
+#: src/gui/event-editor/gcal-organizer-row.blp:25
 msgid "Copy email"
 msgstr "Copiar e-mail"
 
@@ -520,35 +521,40 @@ msgstr "Delegado"
 msgid "Not responded"
 msgstr "Sem resposta"
 
-#: src/gui/event-editor/gcal-attendee-summary-row.c:111
-msgid "accepted"
-msgid_plural "accepted"
-msgstr[0] "aceite"
-msgstr[1] "aceites"
-
 #: src/gui/event-editor/gcal-attendee-summary-row.c:112
-msgid "maybe"
-msgid_plural "maybe"
-msgstr[0] "talvez"
-msgstr[1] "talvez"
+#, c-format
+msgid "%1$u accepted"
+msgid_plural "%1$u accepted"
+msgstr[0] "%1$u aceite"
+msgstr[1] "%1$u aceites"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:113
-msgid "declined"
-msgid_plural "declined"
-msgstr[0] "recusado"
-msgstr[1] "recusados"
+#, c-format
+msgid "%1$u maybe"
+msgid_plural "%1$u maybe"
+msgstr[0] "%1$u talvez"
+msgstr[1] "%1$u talvez"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:114
-msgid "delegated"
-msgid_plural "delegated"
-msgstr[0] "delegado"
-msgstr[1] "delegados"
+#, c-format
+msgid "%1$u declined"
+msgid_plural "%1$u declined"
+msgstr[0] "%1$u recusado"
+msgstr[1] "%1$u recusados"
 
 #: src/gui/event-editor/gcal-attendee-summary-row.c:115
-msgid "not responded"
-msgid_plural "not responded"
-msgstr[0] "não respondido"
-msgstr[1] "não respondidos"
+#, c-format
+msgid "%1$u delegated"
+msgid_plural "%1$u delegated"
+msgstr[0] "%1$u delegado"
+msgstr[1] "%1$u delegados"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:116
+#, c-format
+msgid "%1$u not responded"
+msgid_plural "%1$u not responded"
+msgstr[0] "%1$u não respondido"
+msgstr[1] "%1$u não respondidos"
 
 #: src/gui/event-editor/gcal-attendees-section.blp:28
 msgid "Resources"
@@ -637,17 +643,31 @@ msgstr "_Eliminar evento"
 msgid "_Save"
 msgstr "_Gravar"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:707
+#: src/gui/event-editor/gcal-event-editor-dialog.c:705
 msgid "New Event"
 msgstr "Novo evento"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:709
+#: src/gui/event-editor/gcal-event-editor-dialog.c:707
 msgid "Event Details"
 msgstr "Detalhes de evento"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:711
+#: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Edit Event"
 msgstr "Editar evento"
+
+#: src/gui/event-editor/gcal-multi-choice.c:172
+#, c-format
+msgid "Previous %1$s"
+msgstr "Anterior %1$s"
+
+#: src/gui/event-editor/gcal-multi-choice.c:182
+#, c-format
+msgid "Next %1$s"
+msgstr "Seguinte %1$s"
+
+#: src/gui/event-editor/gcal-organizer-row.blp:5
+msgid "Organizer"
+msgstr "Organizador"
 
 #: src/gui/event-editor/gcal-reminders-section.blp:16
 msgid "Add Reminder"
@@ -770,7 +790,7 @@ msgstr "Data do fim da repetição"
 
 #: src/gui/event-editor/gcal-summary-section.blp:13
 #: src/gui/gcal-quick-add-popover.blp:44
-#: src/gui/importer/gcal-import-file-row.c:176
+#: src/gui/importer/gcal-import-file-row.c:179
 msgid "Title"
 msgstr "Título"
 
@@ -1035,7 +1055,7 @@ msgid "Edit Additional Details"
 msgstr "Editar detalhes adicionais"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:386
+#: src/gui/gcal-event-widget.c:388
 #, c-format
 msgid ""
 "\n"
@@ -1048,7 +1068,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:399 src/gui/gcal-event-widget.c:405
+#: src/gui/gcal-event-widget.c:401 src/gui/gcal-event-widget.c:407
 #, c-format
 msgid ""
 "\n"
@@ -1065,7 +1085,7 @@ msgstr ""
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:464
+#: src/gui/gcal-event-widget.c:466
 msgid "%a %B %d"
 msgstr "%a %B %d"
 
@@ -1303,7 +1323,6 @@ msgstr "Novo evento a %d de dezembro"
 #. * To avoid spurious line wrapping, use non-breaking space characters around the en dash.
 #: src/gui/gcal-quick-add-popover.c:426
 #, c-format
-#| msgid "%1$s, %2$s – %3$s"
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
@@ -1473,15 +1492,15 @@ msgid_plural "Import %d events"
 msgstr[0] "Importar %d evento"
 msgstr[1] "Importar %d eventos"
 
-#: src/gui/importer/gcal-import-file-row.c:178
+#: src/gui/importer/gcal-import-file-row.c:181
 msgid "Starts"
 msgstr "Inicia"
 
-#: src/gui/importer/gcal-import-file-row.c:179
+#: src/gui/importer/gcal-import-file-row.c:182
 msgid "Ends"
 msgstr "Termina"
 
-#: src/gui/importer/gcal-import-file-row.c:180
+#: src/gui/importer/gcal-import-file-row.c:183
 msgid "Description"
 msgstr "Descrição"
 
@@ -1730,6 +1749,11 @@ msgstr "Mapas Google"
 #: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Bing Maps"
+
+#~ msgid "maybe"
+#~ msgid_plural "maybe"
+#~ msgstr[0] "talvez"
+#~ msgstr[1] "talvez"
 
 #~ msgid "Toggle Alarm Sound"
 #~ msgstr "Alternar som do alarme"
