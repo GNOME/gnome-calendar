@@ -30,8 +30,6 @@ struct _GcalAlarmRow
 {
   AdwActionRow        parent;
 
-  GtkToggleButton    *volume_button;
-
   ECalComponentAlarm *alarm;
 };
 
@@ -318,8 +316,6 @@ gcal_alarm_row_class_init (GcalAlarmRowClass *klass)
                                         0);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-alarm-row.ui");
-
-  gtk_widget_class_bind_template_child (widget_class, GcalAlarmRow, volume_button);
 
   gtk_widget_class_bind_template_callback (widget_class, on_remove_button_clicked_cb);
 }
