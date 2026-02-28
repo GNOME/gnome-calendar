@@ -862,6 +862,7 @@ gcal_week_grid_init (GcalWeekGrid *self)
   GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   GtkDropTarget *drop_target;
   GtkGesture *click_gesture;
+  AdwStyleManager *manager;
 
   self->selection.start = -1;
   self->selection.end = -1;
@@ -904,6 +905,13 @@ gcal_week_grid_init (GcalWeekGrid *self)
                            "minute-changed",
                            G_CALLBACK (gtk_widget_queue_resize),
                            self->now_strip,
+                           G_CONNECT_SWAPPED);
+
+  manager = adw_style_manager_get_default ();
+  g_signal_connect_object (manager,
+                           "notify::high-contrast",
+                           G_CALLBACK (gtk_widget_queue_draw),
+                           self,
                            G_CONNECT_SWAPPED);
 }
 

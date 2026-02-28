@@ -18,6 +18,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include <adwaita.h>
+
 #include "gcal-week-view-common.h"
 #include "gcal-utils.h"
 
@@ -28,16 +30,20 @@ gcal_week_view_common_snapshot_hour_lines (GtkWidget      *widget,
                                            gint            width,
                                            gint            height)
 {
+  AdwStyleManager *manager;
   GdkRGBA color;
-  gboolean ltr;
+  gboolean ltr, is_high_contrast;
   gdouble column_width;
   guint i;
 
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
+  manager = adw_style_manager_get_default ();
+  is_high_contrast = adw_style_manager_get_high_contrast (manager);
+
   gtk_snapshot_save (snapshot);
   gtk_widget_get_color (widget, &color);
-  color.alpha = 0.15;
+  color.alpha = is_high_contrast ? 0.65 : 0.15;
   gtk_snapshot_restore (snapshot);
 
   column_width = width / (float) N_WEEKDAYS;
