@@ -61,12 +61,9 @@ template $GcalEventEditorDialog: Adw.Dialog {
             }
           }
 
-          Adw.PreferencesGroup {
+          $GcalRemindersSection reminders_section {
             title: _("Reminders");
-
-            $GcalRemindersSection reminders_section {
-              sensitive: bind template.writable;
-            }
+            sensitive: bind template.writable;
           }
 
           $GcalNotesSection notes_section {

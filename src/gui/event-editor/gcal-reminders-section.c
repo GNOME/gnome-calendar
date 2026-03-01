@@ -30,7 +30,7 @@
 
 struct _GcalRemindersSection
 {
-  GtkBox              parent;
+  AdwPreferencesGroup parent;
 
   GtkListBox         *alarms_listbox;
   GtkWidget          *alarms_popover;
@@ -60,7 +60,7 @@ static void          on_remove_alarm_cb                          (GcalAlarmRow  
 static void          on_update_alarm_cb                          (GcalAlarmRow         *alarm_row,
                                                                   GcalRemindersSection *self);
 
-G_DEFINE_TYPE_WITH_CODE (GcalRemindersSection, gcal_reminders_section, GTK_TYPE_BOX,
+G_DEFINE_TYPE_WITH_CODE (GcalRemindersSection, gcal_reminders_section, ADW_TYPE_PREFERENCES_GROUP,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_iface_init))
 
 /*
