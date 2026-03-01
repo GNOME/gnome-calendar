@@ -40,7 +40,7 @@ struct _GcalScheduleSection
 
   GcalEventSchedule *values;
 
-  AdwToggleGroup      *schedule_type_toggle_group;
+  AdwViewStack        *schedule_type_stack;
   AdwPreferencesGroup *start_date_group;
   GcalDateChooserRow  *start_date_row;
   AdwPreferencesGroup *end_date_group;
@@ -228,7 +228,7 @@ widget_state_free (WidgetState *state)
 static gboolean
 all_day_selected (GcalScheduleSection *self)
 {
-  const gchar *active = adw_toggle_group_get_active_name (self->schedule_type_toggle_group);
+  const gchar *active = adw_view_stack_get_visible_child_name (self->schedule_type_stack);
   return g_strcmp0 (active, "all-day") == 0;
 }
 
@@ -269,18 +269,10 @@ static void
 update_widgets (GcalScheduleSection *self,
                 WidgetState         *state)
 {
-  g_signal_handlers_block_by_func (self->schedule_type_toggle_group, on_schedule_type_changed_cb, self);
+  g_signal_handlers_block_by_func (self->schedule_type_stack, on_schedule_type_changed_cb, self);
   g_signal_handlers_block_by_func (self->number_of_occurrences_spin, on_number_of_occurrences_changed_cb, self);
   g_signal_handlers_block_by_func (self->until_date_selector, on_until_date_changed_cb, self);
   block_date_signals (self);
-
-  adw_toggle_group_set_active_name (self->schedule_type_toggle_group,
-                                    state->schedule_type_all_day ? "all-day" : "time-slot");
-
-  gtk_widget_set_visible (GTK_WIDGET (self->start_date_group), state->date_widgets_visible);
-  gtk_widget_set_visible (GTK_WIDGET (self->end_date_group), state->date_widgets_visible);
-  gtk_widget_set_visible (GTK_WIDGET (self->start_date_time_chooser), state->date_time_widgets_visible);
-  gtk_widget_set_visible (GTK_WIDGET (self->end_date_time_chooser), state->date_time_widgets_visible);
 
   gcal_date_time_chooser_set_time_format (self->start_date_time_chooser, state->time_format);
   gcal_date_time_chooser_set_time_format (self->end_date_time_chooser, state->time_format);
@@ -320,7 +312,7 @@ update_widgets (GcalScheduleSection *self,
   unblock_date_signals (self);
   g_signal_handlers_unblock_by_func (self->until_date_selector, on_until_date_changed_cb, self);
   g_signal_handlers_unblock_by_func (self->number_of_occurrences_spin, on_number_of_occurrences_changed_cb, self);
-  g_signal_handlers_unblock_by_func (self->schedule_type_toggle_group, on_schedule_type_changed_cb, self);
+  g_signal_handlers_unblock_by_func (self->schedule_type_stack, on_schedule_type_changed_cb, self);
 }
 
 /* Recomputes and sets the widget state.  Assumes self->values has already been updated. */
@@ -663,7 +655,7 @@ gcal_schedule_section_class_init (GcalScheduleSectionClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-schedule-section.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalScheduleSection, schedule_type_toggle_group);
+  gtk_widget_class_bind_template_child (widget_class, GcalScheduleSection, schedule_type_stack);
   gtk_widget_class_bind_template_child (widget_class, GcalScheduleSection, start_date_group);
   gtk_widget_class_bind_template_child (widget_class, GcalScheduleSection, start_date_row);
   gtk_widget_class_bind_template_child (widget_class, GcalScheduleSection, end_date_group);
@@ -692,8 +684,8 @@ gcal_schedule_section_init (GcalScheduleSection *self)
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  g_signal_connect (self->schedule_type_toggle_group,
-                    "notify::active",
+  g_signal_connect (self->schedule_type_stack,
+                    "notify::visible-child-name",
                     G_CALLBACK (on_schedule_type_changed_cb),
                     self);
 

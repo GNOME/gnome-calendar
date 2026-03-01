@@ -5,47 +5,61 @@ template $GcalScheduleSection: Box {
   orientation: vertical;
   spacing: 12;
 
-  Adw.ToggleGroup schedule_type_toggle_group {
-    active-name: "time-slot";
+  Adw.InlineViewSwitcher {
+    stack: schedule_type_stack;
     homogeneous: true;
+  }
 
-    Adw.Toggle {
-      label: _("_All Day");
-      use-underline: true;
+  Adw.ViewStack schedule_type_stack {
+    vhomogeneous: false;
+
+    Adw.ViewStackPage {
+      title: _("_All Day");
       name: "all-day";
-    }
-
-    Adw.Toggle {
-      label: _("_Time Slot");
       use-underline: true;
+
+      child: Box {
+        orientation: vertical;
+        spacing: 12;
+
+        Adw.PreferencesGroup start_date_group {
+          $GcalDateChooserRow start_date_row {
+            title: _("Start Date");
+            notify::date => $on_start_date_changed_cb(template) not-swapped;
+          }
+        }
+
+        Adw.PreferencesGroup end_date_group {
+          $GcalDateChooserRow end_date_row {
+            title: _("End Date");
+            notify::date => $on_end_date_changed_cb(template) not-swapped;
+          }
+        }
+      };
+    }
+
+    Adw.ViewStackPage {
+      title: _("_Time Slot");
       name: "time-slot";
+      use-underline: true;
+
+      child: Box {
+        orientation: vertical;
+        spacing: 12;
+
+        $GcalDateTimeChooser start_date_time_chooser {
+          date-label: _("Start Date");
+          time-label: _("Start Time");
+          notify::date-time => $on_start_date_time_changed_cb(template) not-swapped;
+        }
+
+        $GcalDateTimeChooser end_date_time_chooser {
+          date-label: _("End Date");
+          time-label: _("End Time");
+          notify::date-time => $on_end_date_time_changed_cb(template) not-swapped;
+        }
+      };
     }
-  }
-
-  Adw.PreferencesGroup start_date_group {
-    $GcalDateChooserRow start_date_row {
-      title: _("Start Date");
-      notify::date => $on_start_date_changed_cb(template) not-swapped;
-    }
-  }
-
-  Adw.PreferencesGroup end_date_group {
-    $GcalDateChooserRow end_date_row {
-      title: _("End Date");
-      notify::date => $on_end_date_changed_cb(template) not-swapped;
-    }
-  }
-
-  $GcalDateTimeChooser start_date_time_chooser {
-    date-label: _("Start Date");
-    time-label: _("Start Time");
-    notify::date-time => $on_start_date_time_changed_cb(template) not-swapped;
-  }
-
-  $GcalDateTimeChooser end_date_time_chooser {
-    date-label: _("End Date");
-    time-label: _("End Time");
-    notify::date-time => $on_end_date_time_changed_cb(template) not-swapped;
   }
 
   Adw.PreferencesGroup {
