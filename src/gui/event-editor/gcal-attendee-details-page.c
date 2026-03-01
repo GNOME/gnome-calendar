@@ -47,11 +47,11 @@ struct _GcalAttendeeDetailsPage
   GtkCustomFilter          *delegated_filter;
   GtkCustomFilter          *not_responded_filter;
 
-  GtkWidget                *list_accepted;
-  GtkWidget                *list_tentative;
-  GtkWidget                *list_declined;
-  GtkWidget                *list_delegated;
-  GtkWidget                *list_not_responded;
+  GtkWidget                *group_accepted;
+  GtkWidget                *group_tentative;
+  GtkWidget                *group_declined;
+  GtkWidget                *group_delegated;
+  GtkWidget                *group_not_responded;
 
   GcalEventAttendeeTypeFilterFlags attendee_type_filter_flags;
 };
@@ -272,30 +272,30 @@ gcal_attendee_details_page_init (GcalAttendeeDetailsPage *instance)
 
   gtk_widget_init_template (GTK_WIDGET (instance));
 
-  gtk_list_box_bind_model (GTK_LIST_BOX (instance->list_accepted),
-                           G_LIST_MODEL (instance->filter_list_accepted),
-                           create_attendee_row_widget,
-                           NULL, NULL);
+  adw_preferences_group_bind_model (ADW_PREFERENCES_GROUP (instance->group_accepted),
+                                    G_LIST_MODEL (instance->filter_list_accepted),
+                                    create_attendee_row_widget,
+                                    NULL, NULL);
 
-  gtk_list_box_bind_model (GTK_LIST_BOX (instance->list_tentative),
-                           G_LIST_MODEL (instance->filter_list_tentative),
-                           create_attendee_row_widget,
-                           NULL, NULL);
+  adw_preferences_group_bind_model (ADW_PREFERENCES_GROUP (instance->group_tentative),
+                                    G_LIST_MODEL (instance->filter_list_tentative),
+                                    create_attendee_row_widget,
+                                    NULL, NULL);
 
-  gtk_list_box_bind_model (GTK_LIST_BOX (instance->list_declined),
-                           G_LIST_MODEL (instance->filter_list_declined),
-                           create_attendee_row_widget,
-                           NULL, NULL);
+  adw_preferences_group_bind_model (ADW_PREFERENCES_GROUP (instance->group_declined),
+                                    G_LIST_MODEL (instance->filter_list_declined),
+                                    create_attendee_row_widget,
+                                    NULL, NULL);
 
-  gtk_list_box_bind_model (GTK_LIST_BOX (instance->list_delegated),
-                           G_LIST_MODEL (instance->filter_list_delegated),
-                           create_attendee_row_widget,
-                           NULL, NULL);
+  adw_preferences_group_bind_model (ADW_PREFERENCES_GROUP (instance->group_delegated),
+                                    G_LIST_MODEL (instance->filter_list_delegated),
+                                    create_attendee_row_widget,
+                                    NULL, NULL);
 
-  gtk_list_box_bind_model (GTK_LIST_BOX (instance->list_not_responded),
-                           G_LIST_MODEL (instance->filter_list_not_responded),
-                           create_attendee_row_widget,
-                           NULL, NULL);
+  adw_preferences_group_bind_model (ADW_PREFERENCES_GROUP (instance->group_not_responded),
+                                    G_LIST_MODEL (instance->filter_list_not_responded),
+                                    create_attendee_row_widget,
+                                    NULL, NULL);
 }
 
 static void
@@ -376,11 +376,11 @@ gcal_attendee_details_page_class_init (GcalAttendeeDetailsPageClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-attendee-details-page.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalAttendeeDetailsPage, list_accepted);
-  gtk_widget_class_bind_template_child (widget_class, GcalAttendeeDetailsPage, list_tentative);
-  gtk_widget_class_bind_template_child (widget_class, GcalAttendeeDetailsPage, list_declined);
-  gtk_widget_class_bind_template_child (widget_class, GcalAttendeeDetailsPage, list_delegated);
-  gtk_widget_class_bind_template_child (widget_class, GcalAttendeeDetailsPage, list_not_responded);
+  gtk_widget_class_bind_template_child (widget_class, GcalAttendeeDetailsPage, group_accepted);
+  gtk_widget_class_bind_template_child (widget_class, GcalAttendeeDetailsPage, group_tentative);
+  gtk_widget_class_bind_template_child (widget_class, GcalAttendeeDetailsPage, group_declined);
+  gtk_widget_class_bind_template_child (widget_class, GcalAttendeeDetailsPage, group_delegated);
+  gtk_widget_class_bind_template_child (widget_class, GcalAttendeeDetailsPage, group_not_responded);
 }
 
 /**
