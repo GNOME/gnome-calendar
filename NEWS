@@ -3,7 +3,7 @@ Major changes in 50.rc:
   accessibility improvement, but it also comes in preparation of further
   improvements in the Month view.
 * Fix handling of all-day events in the file importer dialog
-* Make Page Up and Page Down shortcuts hump to first day of month
+* Make Page Up and Page Down shortcuts jump to first day of month
 * Updated translations
 
 Major changes in 50.beta:
