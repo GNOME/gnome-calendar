@@ -325,7 +325,6 @@ gcal_application_activate (GApplication *application)
 
       self->window =  g_object_new (GCAL_TYPE_WINDOW,
                                     "application", self,
-                                    "context", self->context,
                                     "active-date", self->initial_date,
                                     NULL);
 
