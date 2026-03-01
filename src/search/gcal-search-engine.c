@@ -124,7 +124,7 @@ gcal_search_engine_constructed (GObject *object)
   G_OBJECT_CLASS (gcal_search_engine_parent_class)->constructed (object);
 
   /* Setup the data model */
-  self->timeline = gcal_timeline_new (self->context);
+  self->timeline = gcal_timeline_new ();
 
   manager = gcal_context_get_manager (self->context);
   g_signal_connect_object (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), self, 0);

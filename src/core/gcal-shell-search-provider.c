@@ -523,7 +523,7 @@ gcal_shell_search_provider_set_property (GObject      *object,
         g_assert (self->context == NULL);
         self->context = g_value_get_object (value);
 
-        self->timeline = gcal_timeline_new (self->context);
+        self->timeline = gcal_timeline_new ();
         g_signal_connect (self->timeline, "notify::complete", G_CALLBACK (on_timeline_completed_cb), self);
 
         manager = gcal_context_get_manager (self->context);

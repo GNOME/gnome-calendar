@@ -22,13 +22,13 @@
 
 #include "gcal-calendar.h"
 #include "gcal-calendar-monitor.h"
-#include "gcal-context.h"
 #include "gcal-date-time-utils.h"
 #include "gcal-debug.h"
 #include "gcal-event.h"
 #include "gcal-range-tree.h"
 #include "gcal-timeline.h"
 #include "gcal-timeline-subscriber.h"
+#include "gcal-utils.h"
 
 #include <libedataserver/libedataserver.h>
 
@@ -80,8 +80,6 @@ struct _GcalTimeline
   GHashTable         *queued_adds;
   GQueue             *event_queue;
   GSource            *timeline_source;
-
-  GcalContext        *context;
 };
 
 G_DEFINE_TYPE (GcalTimeline, gcal_timeline, G_TYPE_OBJECT)
@@ -90,7 +88,6 @@ enum
 {
   PROP_0,
   PROP_COMPLETE,
-  PROP_CONTEXT,
   PROP_FILTER,
   N_PROPS
 };
@@ -873,10 +870,6 @@ gcal_timeline_get_property (GObject    *object,
       g_value_set_boolean (value, self->complete);
       break;
 
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
     case PROP_FILTER:
       g_value_set_string (value, self->filter);
       break;
@@ -896,11 +889,6 @@ gcal_timeline_set_property (GObject      *object,
 
   switch (prop_id)
     {
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_get_object (value);
-      break;
-
     case PROP_FILTER:
       gcal_timeline_set_filter (self, g_value_get_string (value));
       break;
@@ -929,17 +917,6 @@ gcal_timeline_class_init (GcalTimelineClass *klass)
                                                     "Complete",
                                                     FALSE,
                                                     G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
-
-  /**
-   * GcalSearchEngine::context:
-   *
-   * The #GcalContext of the application.
-   */
-  properties[PROP_CONTEXT] = g_param_spec_object ("context",
-                                                  "Data context",
-                                                  "Data context",
-                                                  GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalTimeline::filter:
@@ -980,17 +957,15 @@ gcal_timeline_init (GcalTimeline *self)
 
 /**
  * gcal_timeline_new:
- * @context: a #GcalContext
  *
  * Creates a new #GcalTimeline.
  *
  * Returns: (transfer full): a #GcalTimeline
  */
 GcalTimeline*
-gcal_timeline_new (GcalContext *context)
+gcal_timeline_new (void)
 {
   return g_object_new (GCAL_TYPE_TIMELINE,
-                       "context", context,
                        NULL);
 }
 

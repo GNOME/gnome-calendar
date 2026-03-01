@@ -29,7 +29,7 @@ G_BEGIN_DECLS
 #define GCAL_TYPE_TIMELINE (gcal_timeline_get_type())
 G_DECLARE_FINAL_TYPE (GcalTimeline, gcal_timeline, GCAL, TIMELINE, GObject)
 
-GcalTimeline*        gcal_timeline_new                           (GcalContext        *context);
+GcalTimeline*        gcal_timeline_new                           (void);
 
 void                 gcal_timeline_add_calendar                  (GcalTimeline       *self,
                                                                   GcalCalendar       *calendar);
