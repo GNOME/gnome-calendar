@@ -26,7 +26,7 @@
 
 struct _GcalNotesSection
 {
-  AdwPreferencesRow   parent;
+  AdwPreferencesGroup parent;
 
   GtkTextView        *notes_text;
   GtkLabel           *placeholder;
@@ -36,7 +36,7 @@ struct _GcalNotesSection
 
 static void          gcal_event_editor_section_iface_init        (GcalEventEditorSectionInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GcalNotesSection, gcal_notes_section, ADW_TYPE_PREFERENCES_ROW,
+G_DEFINE_TYPE_WITH_CODE (GcalNotesSection, gcal_notes_section, ADW_TYPE_PREFERENCES_GROUP,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_iface_init))
 
 /*
@@ -44,16 +44,15 @@ G_DEFINE_TYPE_WITH_CODE (GcalNotesSection, gcal_notes_section, ADW_TYPE_PREFEREN
  */
 
 static void
-on_notes_text_state_flags_changed_cb (GtkTextView      *text_view,
-                                      GtkStateFlags     previous_flags,
-                                      GcalNotesSection *self)
+on_row_state_flags_changed_cb (AdwPreferencesRow *row,
+                               GtkStateFlags      previous_flags)
 {
-  GtkStateFlags flags = gtk_widget_get_state_flags (GTK_WIDGET (text_view));
+  GtkStateFlags flags = gtk_widget_get_state_flags (GTK_WIDGET (row));
 
   if (flags & GTK_STATE_FLAG_FOCUS_WITHIN)
-    gtk_widget_add_css_class (GTK_WIDGET (self), "focused");
+    gtk_widget_add_css_class (GTK_WIDGET (row), "focused");
   else
-    gtk_widget_remove_css_class (GTK_WIDGET (self), "focused");
+    gtk_widget_remove_css_class (GTK_WIDGET (row), "focused");
 }
 
 static gboolean
@@ -185,7 +184,7 @@ gcal_notes_section_class_init (GcalNotesSectionClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, empty_string);
   gtk_widget_class_bind_template_callback (widget_class, on_row_pressed);
-  gtk_widget_class_bind_template_callback (widget_class, on_notes_text_state_flags_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_row_state_flags_changed_cb);
 }
 
 static void

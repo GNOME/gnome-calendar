@@ -69,11 +69,8 @@ template $GcalEventEditorDialog: Adw.Dialog {
             }
           }
 
-          Adw.PreferencesGroup {
-            $GcalNotesSection notes_section {
-              sensitive: bind template.writable;
-              vexpand: true;
-            }
+          $GcalNotesSection notes_section {
+            sensitive: bind template.writable;
           }
 
           Adw.PreferencesGroup delete_group {

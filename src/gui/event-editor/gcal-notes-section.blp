@@ -1,67 +1,74 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $GcalNotesSection: Adw.PreferencesRow {
-  focusable: false;
-  selectable: false;
-
+template $GcalNotesSection: Adw.PreferencesGroup {
   styles [
-    "entry",
+    "notes-section",
   ]
 
-  GestureClick {
-    pressed => $on_row_pressed(notes_text) not-swapped;
-  }
-
-  child: Overlay {
-    css-name: "box";
+  Adw.PreferencesRow {
+    vexpand: true;
+    activatable: false;
+    focusable: false;
+    state-flags-changed => $on_row_state_flags_changed_cb();
 
     styles [
-      "header",
+      "entry",
     ]
 
-    [overlay]
-    Adw.Bin {
-      can-focus: false;
-      can-target: false;
-
-      styles [
-        "editable-area",
-      ]
-
-      child: Label placeholder {
-        label: _("Notes");
-        xalign: 0.0;
-        yalign: 0.0;
-        visible: bind $empty_string(notes_text.buffer.text);
-        margin-top: 12;
-        margin-bottom: 12;
-
-        styles [
-          "dimmed",
-          "placeholder",
-        ]
-      };
+    GestureClick {
+      pressed => $on_row_pressed(notes_text) not-swapped;
     }
 
-    child: Adw.Bin {
+    child: Overlay {
+      css-name: "box";
+
       styles [
-        "editable-area",
+        "header",
       ]
 
-      child: TextView notes_text {
-        hexpand: true;
-        sensitive: true;
-        wrap-mode: word_char;
-        accepts-tab: false;
-        top-margin: 12;
-        bottom-margin: 12;
-        state-flags-changed => $on_notes_text_state_flags_changed_cb(template) not-swapped;
+      [overlay]
+      Adw.Bin {
+        can-focus: false;
+        can-target: false;
 
-        accessibility {
-          placeholder: _("Notes");
-        }
+        styles [
+          "editable-area",
+        ]
+
+        child: Label placeholder {
+          label: _("Notes");
+          xalign: 0.0;
+          yalign: 0.0;
+          visible: bind $empty_string(notes_text.buffer.text);
+          margin-top: 12;
+          margin-bottom: 12;
+
+          styles [
+            "dimmed",
+            "placeholder",
+          ]
+        };
+      }
+
+      child: Adw.Bin {
+        styles [
+          "editable-area",
+        ]
+
+        child: TextView notes_text {
+          hexpand: true;
+          sensitive: true;
+          wrap-mode: word_char;
+          accepts-tab: false;
+          top-margin: 12;
+          bottom-margin: 12;
+
+          accessibility {
+            placeholder: _("Notes");
+          }
+        };
       };
     };
-  };
+  }
 }
