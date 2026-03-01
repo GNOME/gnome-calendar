@@ -18,22 +18,17 @@ template $GcalScheduleSection: Box {
       name: "all-day";
       use-underline: true;
 
-      child: Box {
-        orientation: vertical;
-        spacing: 12;
+      child: Adw.PreferencesGroup {
+        separate-rows: true;
 
-        Adw.PreferencesGroup start_date_group {
-          $GcalDateChooserRow start_date_row {
-            title: _("Start Date");
-            notify::date => $on_start_date_changed_cb(template) not-swapped;
-          }
+        $GcalDateChooserRow start_date_row {
+          title: _("Start Date");
+          notify::date => $on_start_date_changed_cb(template) not-swapped;
         }
 
-        Adw.PreferencesGroup end_date_group {
-          $GcalDateChooserRow end_date_row {
-            title: _("End Date");
-            notify::date => $on_end_date_changed_cb(template) not-swapped;
-          }
+        $GcalDateChooserRow end_date_row {
+          title: _("End Date");
+          notify::date => $on_end_date_changed_cb(template) not-swapped;
         }
       };
     }

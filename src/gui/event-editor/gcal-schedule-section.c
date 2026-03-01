@@ -41,9 +41,7 @@ struct _GcalScheduleSection
   GcalEventSchedule *values;
 
   AdwViewStack        *schedule_type_stack;
-  AdwPreferencesGroup *start_date_group;
   GcalDateChooserRow  *start_date_row;
-  AdwPreferencesGroup *end_date_group;
   GcalDateChooserRow  *end_date_row;
   GcalDateTimeChooser *start_date_time_chooser;
   GcalDateTimeChooser *end_date_time_chooser;
@@ -656,9 +654,7 @@ gcal_schedule_section_class_init (GcalScheduleSectionClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-schedule-section.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalScheduleSection, schedule_type_stack);
-  gtk_widget_class_bind_template_child (widget_class, GcalScheduleSection, start_date_group);
   gtk_widget_class_bind_template_child (widget_class, GcalScheduleSection, start_date_row);
-  gtk_widget_class_bind_template_child (widget_class, GcalScheduleSection, end_date_group);
   gtk_widget_class_bind_template_child (widget_class, GcalScheduleSection, end_date_row);
   gtk_widget_class_bind_template_child (widget_class, GcalScheduleSection, start_date_time_chooser);
   gtk_widget_class_bind_template_child (widget_class, GcalScheduleSection, end_date_time_chooser);
