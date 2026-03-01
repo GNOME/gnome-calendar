@@ -30,7 +30,6 @@ G_BEGIN_DECLS
 #define GCAL_TYPE_EVENT_POPOVER (gcal_event_popover_get_type())
 G_DECLARE_FINAL_TYPE (GcalEventPopover, gcal_event_popover, GCAL, EVENT_POPOVER, GtkPopover)
 
-GtkWidget*           gcal_event_popover_new                      (GcalContext        *context,
-                                                                  GcalEvent          *event);
+GtkWidget*           gcal_event_popover_new                      (GcalEvent *event);
 
 G_END_DECLS

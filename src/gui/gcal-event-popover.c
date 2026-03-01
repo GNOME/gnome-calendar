@@ -44,7 +44,6 @@ struct _GcalEventPopover
   GtkLabel           *summary_label;
   GtkImage           *read_only_icon;
 
-  GcalContext        *context;
   GcalEvent          *event;
 };
 
@@ -57,7 +56,6 @@ G_DEFINE_TYPE (GcalEventPopover, gcal_event_popover, GTK_TYPE_POPOVER)
 enum
 {
   PROP_0,
-  PROP_CONTEXT,
   PROP_EVENT,
   N_PROPS
 };
@@ -100,9 +98,10 @@ static gchar*
 format_time (GcalEventPopover *self,
              GDateTime        *date)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   GcalTimeFormat time_format;
 
-  time_format = gcal_context_get_time_format (self->context);
+  time_format = gcal_context_get_time_format (context);
 
   switch (time_format)
     {
@@ -678,7 +677,6 @@ gcal_event_popover_finalize (GObject *object)
 {
   GcalEventPopover *self = (GcalEventPopover *)object;
 
-  g_clear_object (&self->context);
   g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_event_popover_parent_class)->finalize (object);
@@ -694,10 +692,6 @@ gcal_event_popover_get_property (GObject    *object,
 
   switch (prop_id)
     {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
     case PROP_EVENT:
       g_value_set_object (value, self->event);
       break;
@@ -717,16 +711,6 @@ gcal_event_popover_set_property (GObject      *object,
 
   switch (prop_id)
     {
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-      g_signal_connect_object (self->context,
-                               "notify::time-format",
-                               G_CALLBACK (on_time_format_changed_cb),
-                               self,
-                               G_CONNECT_SWAPPED);
-      break;
-
     case PROP_EVENT:
       g_assert (self->event == NULL);
       set_event_internal (self, g_value_get_object (value));
@@ -749,16 +733,6 @@ gcal_event_popover_class_init (GcalEventPopoverClass *klass)
 
   widget_class->map = gcal_event_popover_map;
 
-  /**
-   * GcalEventPopover::context:
-   *
-   * The context of the event popover.
-   */
-  properties[PROP_CONTEXT] = g_param_spec_object ("context",
-                                                  "Context",
-                                                  "Context",
-                                                  GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
   /**
    * GcalEventPopover::event:
    *
@@ -802,15 +776,21 @@ gcal_event_popover_class_init (GcalEventPopoverClass *klass)
 static void
 gcal_event_popover_init (GcalEventPopover *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  g_signal_connect_object (context,
+                           "notify::time-format",
+                           G_CALLBACK (on_time_format_changed_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
 }
 
 GtkWidget*
-gcal_event_popover_new (GcalContext *context,
-                        GcalEvent   *event)
+gcal_event_popover_new (GcalEvent   *event)
 {
   return g_object_new (GCAL_TYPE_EVENT_POPOVER,
-                       "context", context,
                        "event", event,
                        NULL);
 }
