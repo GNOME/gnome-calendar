@@ -49,10 +49,8 @@ template $GcalEventEditorDialog: Adw.Dialog {
             }
           }
 
-          Adw.PreferencesGroup {
-            $GcalScheduleSection schedule_section {
-              sensitive: bind template.writable;
-            }
+          $GcalScheduleSection schedule_section {
+            sensitive: bind template.writable;
           }
 
           $GcalAttendeesSection attendees_section {

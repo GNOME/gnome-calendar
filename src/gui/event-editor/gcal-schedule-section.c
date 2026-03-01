@@ -92,7 +92,7 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (WidgetState, widget_state_free);
 
 static void          gcal_event_editor_section_iface_init        (GcalEventEditorSectionInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GcalScheduleSection, gcal_schedule_section, GTK_TYPE_BOX,
+G_DEFINE_TYPE_WITH_CODE (GcalScheduleSection, gcal_schedule_section, ADW_TYPE_PREFERENCES_GROUP,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_iface_init))
 
 static void          on_start_date_changed_cb                    (GtkWidget          *widget,
