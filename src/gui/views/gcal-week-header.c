@@ -785,7 +785,6 @@ add_event_to_grid (GcalWeekHeader *self,
                    gint            start,
                    gint            end)
 {
-  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   g_autoptr (GDateTime) week_start = NULL;
   g_autoptr (GDateTime) week_end = NULL;
   GtkLayoutManager *layout_manager;
@@ -803,7 +802,7 @@ add_event_to_grid (GcalWeekHeader *self,
   move_events_at_column (self, DOWN, start, position);
 
   /* Add the event to the grid */
-  widget = gcal_event_widget_new (context, event);
+  widget = gcal_event_widget_new (event);
   setup_event_widget (self, widget);
 
   gtk_grid_attach (self->grid,

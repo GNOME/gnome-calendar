@@ -912,7 +912,6 @@ void
 gcal_week_grid_add_event (GcalWeekGrid *self,
                           GcalEvent    *event)
 {
-  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   GtkWidget *widget;
 
   g_return_if_fail (GCAL_IS_WEEK_GRID (self));
@@ -920,7 +919,6 @@ gcal_week_grid_add_event (GcalWeekGrid *self,
   g_object_ref (event);
 
   widget = g_object_new (GCAL_TYPE_EVENT_WIDGET,
-                         "context", context,
                          "event", event,
                          "orientation", GTK_ORIENTATION_VERTICAL,
                          "timestamp-policy", GCAL_TIMESTAMP_POLICY_START,

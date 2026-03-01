@@ -111,7 +111,7 @@ update_event_list (GcalMonthPopover *self)
 
       event_end = g_date_time_add_days (event_start, 1);
 
-      event_widget = gcal_event_widget_new (context, event);
+      event_widget = gcal_event_widget_new (event);
       gtk_widget_set_focusable (event_widget, FALSE);
       gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (event_widget), event_start);
       gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (event_widget), event_end);

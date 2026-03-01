@@ -601,7 +601,6 @@ gcal_agenda_view_add_event (GcalTimelineSubscriber *subscriber,
   g_autoptr (GDateTime) event_date = gcal_event_get_date_start (event);
   GtkWidget *widget, *row;
   GcalTimestampPolicy timestamp_policy;
-  GcalContext *context;
 
   GCAL_ENTRY;
 
@@ -623,10 +622,7 @@ gcal_agenda_view_add_event (GcalTimelineSubscriber *subscriber,
   else
     timestamp_policy = GCAL_TIMESTAMP_POLICY_START;
 
-  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
-
   widget = g_object_new (GCAL_TYPE_EVENT_WIDGET,
-                         "context", context,
                          "event", event,
                          "orientation", GTK_ORIENTATION_VERTICAL,
                          "timestamp-policy", timestamp_policy,

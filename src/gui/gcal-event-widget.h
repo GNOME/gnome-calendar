@@ -39,8 +39,7 @@ typedef void         (*GcalEventPreviewCallback)                 (GcalEventWidge
                                                                   GcalEventPreviewAction  action,
                                                                   gpointer                user_data);
 
-GtkWidget*           gcal_event_widget_new                       (GcalContext        *context,
-                                                                  GcalEvent          *event);
+GtkWidget*           gcal_event_widget_new                       (GcalEvent          *event);
 
 GcalEvent*           gcal_event_widget_get_event                 (GcalEventWidget    *self);
 

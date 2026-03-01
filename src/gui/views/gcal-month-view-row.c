@@ -644,7 +644,6 @@ prepare_layout_blocks (GcalMonthViewRow *self,
 static void
 recalculate_layout_blocks (GcalMonthViewRow *self)
 {
-  GcalContext *context;
   g_autoptr (GDateTime) range_start = NULL;
   guint events_at_weekday[N_WEEKDAYS] = { 0, };
   guint n_events;
@@ -655,7 +654,6 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
 
   range_start = gcal_range_get_start (self->range);
   n_events = g_list_model_get_n_items (G_LIST_MODEL (self->events));
-  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
 
   g_hash_table_remove_all (self->layout_blocks);
 
@@ -682,7 +680,7 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
             {
               GtkWidget *event_widget;
 
-              event_widget = gcal_event_widget_new (context, event);
+              event_widget = gcal_event_widget_new (event);
               if (!gcal_event_get_all_day (event) && !gcal_event_is_multiday (event))
                 gcal_event_widget_set_timestamp_policy (GCAL_EVENT_WIDGET (event_widget), GCAL_TIMESTAMP_POLICY_START);
               setup_child_widget (self, event_widget);

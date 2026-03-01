@@ -24,7 +24,6 @@
 
 #include "gcal-fading-label.h"
 #include "gcal-application.h"
-#include "gcal-context.h"
 #include "gcal-clock.h"
 #include "gcal-debug.h"
 #include "gcal-event-popover.h"
@@ -74,14 +73,11 @@ struct _GcalEventWidget
 
   gint                old_width;
   gint                old_height;
-
-  GcalContext        *context;
 };
 
 enum
 {
   PROP_0,
-  PROP_CONTEXT,
   PROP_EVENT,
   PROP_TIMESTAMP_POLICY,
   PROP_ORIENTATION,
@@ -250,6 +246,7 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
   GString *tooltip_mesg;
   gboolean allday, multiday, is_ltr;
   guint description_len;
+  GcalContext *context;
 
   tooltip_mesg = g_string_new (NULL);
   escaped_summary = g_markup_escape_text (gcal_event_get_summary (event), -1);
@@ -279,12 +276,13 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
     }
   else
     {
+      context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
       tooltip_start = g_date_time_to_local (gcal_event_get_date_start (event));
       tooltip_end = g_date_time_to_local (gcal_event_get_date_end (event));
 
       if (multiday)
         {
-          switch (gcal_context_get_time_format (self->context))
+          switch (gcal_context_get_time_format (context))
             {
             case GCAL_TIME_FORMAT_24H:
               if (is_ltr)
@@ -315,7 +313,7 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
         }
       else
         {
-          switch (gcal_context_get_time_format (self->context))
+          switch (gcal_context_get_time_format (context))
             {
             case GCAL_TIME_FORMAT_24H:
               if (is_ltr)
@@ -445,10 +443,12 @@ static void
 gcal_event_widget_update_timestamp (GcalEventWidget *self)
 {
   g_autofree gchar *timestamp_str = NULL;
+  GcalContext *context;
 
   if (GCAL_IS_EVENT (self->event) &&
       self->timestamp_policy != GCAL_TIMESTAMP_POLICY_NONE)
     {
+      context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
       g_autoptr (GDateTime) time = NULL;
 
       if (self->timestamp_policy == GCAL_TIMESTAMP_POLICY_START)
@@ -464,7 +464,7 @@ gcal_event_widget_update_timestamp (GcalEventWidget *self)
          * https://docs.gtk.org/glib/method.DateTime.format.html
          */
         timestamp_str = g_date_time_format (time, _("%a %B %d"));
-      else if (gcal_context_get_time_format (self->context) == GCAL_TIME_FORMAT_24H)
+      else if (gcal_context_get_time_format (context) == GCAL_TIME_FORMAT_24H)
         timestamp_str = g_date_time_format (time, "%R");
       else
         timestamp_str = g_date_time_format (time, "%I:%M %P");
@@ -486,6 +486,8 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
    * Because of that condition, we don't really have to care about
    * disconnecting functions or cleaning up the previous event.
    */
+
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
 
   /* The event spawns with a floating reference, and we take it's ownership */
   g_set_object (&self->event, event);
@@ -512,7 +514,7 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
                            self,
                            G_CONNECT_SWAPPED);
 
-  g_signal_connect_object (self->context,
+  g_signal_connect_object (context,
                            "notify::time-format",
                            G_CALLBACK (gcal_event_widget_update_timestamp),
                            self,
@@ -671,17 +673,6 @@ gcal_event_widget_set_property (GObject      *object,
 
   switch (property_id)
     {
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-
-      g_signal_connect_object (gcal_context_get_clock (self->context),
-                               "minute-changed",
-                               G_CALLBACK (update_color),
-                               self,
-                               G_CONNECT_SWAPPED);
-      break;
-
     case PROP_EVENT:
       gcal_event_widget_set_event_internal (self, g_value_get_object (value));
       break;
@@ -713,10 +704,6 @@ gcal_event_widget_get_property (GObject      *object,
 
   switch (property_id)
     {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
     case PROP_EVENT:
       g_value_set_object (value, self->event);
       break;
@@ -760,7 +747,6 @@ gcal_event_widget_finalize (GObject *object)
   /* releasing properties */
   g_clear_pointer (&self->css_class, g_free);
   g_clear_object (&self->event);
-  g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->finalize (object);
 }
@@ -777,19 +763,6 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   object_class->get_property = gcal_event_widget_get_property;
   object_class->dispose = gcal_event_widget_dispose;
   object_class->finalize = gcal_event_widget_finalize;
-
-  /**
-   * GcalEventWidget::context:
-   *
-   * The context of the event.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_CONTEXT,
-                                   g_param_spec_object ("context",
-                                                        "Context",
-                                                        "Context",
-                                                        GCAL_TYPE_CONTEXT,
-                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   /**
    * GcalEventWidget::event:
@@ -886,6 +859,8 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 static void
 gcal_event_widget_init (GcalEventWidget *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+
   g_type_ensure (GCAL_TYPE_OVERFLOW_BIN);
 
   gtk_widget_init_template (GTK_WIDGET (self));
@@ -899,14 +874,18 @@ gcal_event_widget_init (GcalEventWidget *self)
   gtk_accessible_update_state (GTK_ACCESSIBLE (self),
                                GTK_ACCESSIBLE_STATE_PRESSED, FALSE,
                                -1);
+
+  g_signal_connect_object (gcal_context_get_clock (context),
+                           "minute-changed",
+                           G_CALLBACK (update_color),
+                           self,
+                           G_CONNECT_SWAPPED);
 }
 
 GtkWidget*
-gcal_event_widget_new (GcalContext *context,
-                       GcalEvent   *event)
+gcal_event_widget_new (GcalEvent   *event)
 {
   return g_object_new (GCAL_TYPE_EVENT_WIDGET,
-                       "context", context,
                        "event", event,
                        NULL);
 }
@@ -1055,6 +1034,7 @@ gcal_event_widget_show_preview (GcalEventWidget          *self,
                                 GcalEventPreviewCallback  callback,
                                 gpointer                  user_data)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   PreviewData *data;
 
   GCAL_ENTRY;
@@ -1066,7 +1046,7 @@ gcal_event_widget_show_preview (GcalEventWidget          *self,
   data->callback = callback;
   data->user_data = user_data;
 
-  self->preview_popover = gcal_event_popover_new (self->context, self->event);
+  self->preview_popover = gcal_event_popover_new (context, self->event);
   g_object_add_weak_pointer (G_OBJECT (self->preview_popover), (gpointer *) &self->preview_popover);
 
   gtk_widget_set_parent (self->preview_popover, GTK_WIDGET (self));
@@ -1099,7 +1079,7 @@ gcal_event_widget_get_event (GcalEventWidget *self)
 GtkWidget*
 gcal_event_widget_clone (GcalEventWidget *widget)
 {
-  return gcal_event_widget_new (widget->context, widget->event);
+  return gcal_event_widget_new (widget->event);
 }
 
 /**
