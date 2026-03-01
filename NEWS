@@ -1,3 +1,11 @@
+Major changes in 50.rc:
+* Add navigation using arrow keys in the Month view. This in itself is a major
+  accessibility improvement, but it also comes in preparation of further
+  improvements in the Month view.
+* Fix handling of all-day events in the file importer dialog
+* Make Page Up and Page Down shortcuts hump to first day of month
+* Updated translations
+
 Major changes in 50.beta:
 * Show event attendees in a section in the event editor dialog
 * Fix accessibility warnings in the Month view
