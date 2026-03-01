@@ -30,7 +30,7 @@ G_BEGIN_DECLS
 #define GCAL_TYPE_MANAGER (gcal_manager_get_type ())
 G_DECLARE_FINAL_TYPE (GcalManager, gcal_manager, GCAL, MANAGER, GObject)
 
-GcalManager*         gcal_manager_new                            (GcalContext        *context);
+GcalManager*         gcal_manager_new                            (void);
 
 ESource*             gcal_manager_get_source                     (GcalManager        *self,
                                                                   const gchar        *uid);

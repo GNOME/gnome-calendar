@@ -163,7 +163,7 @@ gcal_context_constructed (GObject *object)
 
   G_OBJECT_CLASS (gcal_context_parent_class)->constructed (object);
 
-  self->manager = gcal_manager_new (self);
+  self->manager = gcal_manager_new ();
   self->search_engine = gcal_search_engine_new (self);
 }
 
