@@ -20,7 +20,7 @@
 
 #include "gcal-event-editor-section.h"
 
-G_DEFINE_INTERFACE (GcalEventEditorSection, gcal_event_editor_section, GTK_TYPE_WIDGET)
+G_DEFINE_INTERFACE (GcalEventEditorSection, gcal_event_editor_section, ADW_TYPE_PREFERENCES_GROUP)
 
 static void
 gcal_event_editor_section_default_init (GcalEventEditorSectionInterface *iface)

@@ -22,13 +22,13 @@
 
 #include "gcal-event.h"
 
-#include <gtk/gtk.h>
+#include <adwaita.h>
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_EVENT_EDITOR_SECTION (gcal_event_editor_section_get_type ())
 
-G_DECLARE_INTERFACE (GcalEventEditorSection, gcal_event_editor_section, GCAL, EVENT_EDITOR_SECTION, GtkBox)
+G_DECLARE_INTERFACE (GcalEventEditorSection, gcal_event_editor_section, GCAL, EVENT_EDITOR_SECTION, AdwPreferencesGroup)
 
 typedef enum
 {
