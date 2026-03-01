@@ -132,13 +132,13 @@ on_page_switched_cb (GcalCalendarManagementPage   *page,
  */
 
 static void
-gcal_calendar_management_dialog_hide (GtkWidget *widget)
+gcal_calendar_management_dialog_unmap (GtkWidget *widget)
 {
-  GcalCalendarManagementDialog *self = (GcalCalendarManagementDialog *) widget;
+  GcalCalendarManagementDialog *self = GCAL_CALENDAR_MANAGEMENT_DIALOG (widget);
 
   set_page (self, "calendars", NULL);
 
-  GTK_WIDGET_CLASS (gcal_calendar_management_dialog_parent_class)->hide (widget);
+  GTK_WIDGET_CLASS (gcal_calendar_management_dialog_parent_class)->unmap (widget);
 }
 
 
@@ -153,7 +153,7 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
 
   g_type_ensure (E_TYPE_SOURCE_LOCAL);
 
-  widget_class->hide = gcal_calendar_management_dialog_hide;
+  widget_class->unmap = gcal_calendar_management_dialog_unmap;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-calendar-management-dialog.ui");
 
