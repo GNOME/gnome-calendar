@@ -32,7 +32,7 @@
 
 struct _GcalAttendeesSection
 {
-  GtkBox parent_instance;
+  AdwPreferencesGroup  parent_instance;
 
   GcalEvent           *event;
   GcalEventOrganizer  *organizer;
@@ -44,7 +44,7 @@ struct _GcalAttendeesSection
 
 static void          gcal_event_editor_section_init_iface        (GcalEventEditorSectionInterface *iface);
 
-G_DEFINE_FINAL_TYPE_WITH_CODE (GcalAttendeesSection, gcal_attendees_section, GTK_TYPE_BOX,
+G_DEFINE_FINAL_TYPE_WITH_CODE (GcalAttendeesSection, gcal_attendees_section, ADW_TYPE_PREFERENCES_GROUP,
                                G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_init_iface))
 
 enum

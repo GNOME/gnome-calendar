@@ -64,7 +64,6 @@ struct _GcalEventEditorDialog
   GtkWidget                *source_label;
   GcalEventEditorSection   *summary_section;
   GcalEventEditorSection   *attendees_section;
-  GtkWidget                *participants_group;
   GtkWidget                *nav_view;
   GtkWidget                *main_page;
   GtkWidget                *attendee_details_page;
@@ -591,7 +590,6 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, schedule_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, summary_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, attendees_section);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, participants_group);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, nav_view);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, main_page);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, attendee_details_page);
@@ -691,7 +689,7 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
 
   set_writable (self, !gcal_calendar_is_read_only (calendar));
   gboolean has_participants = gcal_event_get_organizer (self->event) != NULL;
-  gtk_widget_set_visible (GTK_WIDGET (self->participants_group), has_participants);
+  gtk_widget_set_visible (GTK_WIDGET (self->attendees_section), has_participants);
 
   gtk_widget_set_visible (self->cancel_button, self->writable);
 

@@ -1,33 +1,20 @@
 using Gtk 4.0;
+using Adw 1;
 
-template $GcalAttendeesSection: Gtk.Box {
-  orientation: vertical;
-  hexpand: true;
-  valign: start;
+template $GcalAttendeesSection: Adw.PreferencesGroup {
+  $GcalOrganizerRow organizer_row {
+    organizer: bind template.organizer;
+  }
 
-  ListBox listbox {
-    halign: fill;
-    valign: fill;
-    selection-mode: none;
+  $GcalAttendeeSummaryRow summary_row {
+    title: _("Participants");
+    attendees: bind template.attendees;
+    filter-flags: GCAL_EVENT_ATTENDEE_TYPE_FILTER_PERSON;
+  }
 
-    styles [
-      "boxed-list",
-    ]
-
-    $GcalOrganizerRow organizer_row {
-      organizer: bind template.organizer;
-    }
-
-    $GcalAttendeeSummaryRow summary_row {
-      title: _("Participants");
-      attendees: bind template.attendees;
-      filter-flags: GCAL_EVENT_ATTENDEE_TYPE_FILTER_PERSON;
-    }
-
-    $GcalAttendeeSummaryRow {
-      title: _("Resources");
-      attendees: bind template.attendees;
-      filter-flags: GCAL_EVENT_ATTENDEE_TYPE_FILTER_RESOURCE;
-    }
+  $GcalAttendeeSummaryRow {
+    title: _("Resources");
+    attendees: bind template.attendees;
+    filter-flags: GCAL_EVENT_ATTENDEE_TYPE_FILTER_RESOURCE;
   }
 }
