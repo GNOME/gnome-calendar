@@ -25,6 +25,6 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_SUMMARY_SECTION (gcal_summary_section_get_type())
-G_DECLARE_FINAL_TYPE (GcalSummarySection, gcal_summary_section, GCAL, SUMMARY_SECTION, AdwBin)
+G_DECLARE_FINAL_TYPE (GcalSummarySection, gcal_summary_section, GCAL, SUMMARY_SECTION, AdwPreferencesGroup)
 
 G_END_DECLS

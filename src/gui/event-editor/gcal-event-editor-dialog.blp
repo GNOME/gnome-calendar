@@ -37,10 +37,8 @@ template $GcalEventEditorDialog: Adw.Dialog {
             revealed: bind template.writable inverted;
           };
 
-          Adw.PreferencesGroup {
-            $GcalSummarySection summary_section {
-              sensitive: bind template.writable;
-            }
+          $GcalSummarySection summary_section {
+            sensitive: bind template.writable;
           }
 
           Adw.PreferencesGroup {
