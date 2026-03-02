@@ -513,6 +513,8 @@ gcal_application_dbus_register (GApplication     *application,
 
   self = GCAL_APPLICATION (application);
 
+  self->search_provider = gcal_shell_search_provider_new ();
+
   if (!G_APPLICATION_CLASS (gcal_application_parent_class)->dbus_register (application, connection, object_path, error))
     GCAL_RETURN (FALSE);
 
@@ -602,7 +604,6 @@ gcal_application_init (GcalApplication *self)
   g_application_add_main_option_entries (G_APPLICATION (self), gcal_application_goptions);
 
   self->context = gcal_context_new ();
-  self->search_provider = gcal_shell_search_provider_new (self->context);
 }
 
 /* Public API */

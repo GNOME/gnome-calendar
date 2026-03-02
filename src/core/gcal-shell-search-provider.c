@@ -40,7 +40,6 @@ struct _GcalShellSearchProvider
   GObject             parent;
 
   GcalShellSearchProvider2 *skel;
-  GcalContext        *context;
 
   PendingSearch      *pending_search;
   GHashTable         *events;
@@ -55,15 +54,6 @@ static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSu
 G_DEFINE_TYPE_WITH_CODE (GcalShellSearchProvider, gcal_shell_search_provider, G_TYPE_OBJECT,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
                                                 gcal_timeline_subscriber_interface_init));
-
-enum
-{
-  PROP_0,
-  PROP_CONTEXT,
-  N_PROPS
-};
-
-static GParamSpec* properties[N_PROPS] = { NULL, };
 
 
 /*
@@ -118,10 +108,12 @@ maybe_update_range (GcalShellSearchProvider *self)
   g_autoptr (GDateTime) end = NULL;
   g_autoptr (GDateTime) now = NULL;
   gboolean range_changed = FALSE;
+  GcalContext *context;
 
   GCAL_ENTRY;
 
-  now = g_date_time_new_now (gcal_context_get_timezone (self->context));
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  now = g_date_time_new_now (gcal_context_get_timezone (context));
   start = g_date_time_add_weeks (now, -1);
   end = g_date_time_add_weeks (now, 3);
 
@@ -481,62 +473,24 @@ gcal_shell_search_provider_finalize (GObject *object)
   GcalShellSearchProvider *self = (GcalShellSearchProvider *) object;
 
   g_clear_pointer (&self->events, g_hash_table_destroy);
-  g_clear_object (&self->context);
   g_clear_object (&self->skel);
 
   G_OBJECT_CLASS (gcal_shell_search_provider_parent_class)->finalize (object);
 }
 
 static void
-gcal_shell_search_provider_get_property (GObject    *object,
-                                         guint       property_id,
-                                         GValue     *value,
-                                         GParamSpec *pspec)
+gcal_shell_search_provider_constructed (GObject *object)
 {
-  GcalShellSearchProvider *self = GCAL_SHELL_SEARCH_PROVIDER (object);
+  GcalShellSearchProvider *self = (GcalShellSearchProvider *) object;
 
-  switch (property_id)
-    {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  GcalManager *manager = gcal_context_get_manager (context);
 
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-    }
-}
+  self->timeline = gcal_timeline_new ();
+  g_signal_connect (self->timeline, "notify::complete", G_CALLBACK (on_timeline_completed_cb), self);
 
-static void
-gcal_shell_search_provider_set_property (GObject      *object,
-                                         guint         property_id,
-                                         const GValue *value,
-                                         GParamSpec   *pspec)
-{
-  GcalShellSearchProvider *self = GCAL_SHELL_SEARCH_PROVIDER (object);
-
-  switch (property_id)
-    {
-    case PROP_CONTEXT:
-      {
-        GcalManager *manager;
-
-        g_assert (self->context == NULL);
-        self->context = g_value_get_object (value);
-
-        self->timeline = gcal_timeline_new ();
-        g_signal_connect (self->timeline, "notify::complete", G_CALLBACK (on_timeline_completed_cb), self);
-
-        manager = gcal_context_get_manager (self->context);
-        g_signal_connect (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), self);
-        g_signal_connect (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), self);
-
-        g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
-      }
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-    }
+  g_signal_connect (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), self);
+  g_signal_connect (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), self);
 }
 
 static void
@@ -545,16 +499,7 @@ gcal_shell_search_provider_class_init (GcalShellSearchProviderClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   object_class->finalize = gcal_shell_search_provider_finalize;
-  object_class->get_property = gcal_shell_search_provider_get_property;
-  object_class->set_property = gcal_shell_search_provider_set_property;
-
-  properties[PROP_CONTEXT] = g_param_spec_object ("context",
-                                                  "The context object",
-                                                  "The context object",
-                                                  GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
-
-  g_object_class_install_properties (object_class, N_PROPS, properties);
+  object_class->constructed = gcal_shell_search_provider_constructed;
 }
 
 static void
@@ -571,10 +516,9 @@ gcal_shell_search_provider_init (GcalShellSearchProvider *self)
 }
 
 GcalShellSearchProvider*
-gcal_shell_search_provider_new (GcalContext *context)
+gcal_shell_search_provider_new (void)
 {
   return g_object_new (GCAL_TYPE_SHELL_SEARCH_PROVIDER,
-                       "context", context,
                        NULL);
 }
 
