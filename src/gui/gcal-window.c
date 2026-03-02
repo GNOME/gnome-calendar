@@ -1043,7 +1043,6 @@ on_ics_files_filtered_cb (GObject      *source_object,
                           GAsyncResult *result,
                           gpointer      data)
 {
-  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   g_autoptr (GError) error = NULL;
   g_autofree gchar* toast_title = NULL;
   AdwToast *error_toast = NULL;
@@ -1075,11 +1074,9 @@ on_ics_files_filtered_cb (GObject      *source_object,
 
   if (filter_result->ics_files)
     {
-      context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
-
       g_clear_pointer (&self->import_dialog, gtk_widget_unparent);
 
-      self->import_dialog = gcal_import_dialog_new_for_file_list (context, filter_result->ics_files);
+      self->import_dialog = gcal_import_dialog_new_for_file_list (filter_result->ics_files);
       adw_dialog_present (ADW_DIALOG (self->import_dialog), GTK_WIDGET (self));
 
       g_object_add_weak_pointer (G_OBJECT (self->import_dialog), (gpointer *)&self->import_dialog);
@@ -1558,12 +1555,11 @@ gcal_window_import_files (GcalWindow  *self,
                           GFile      **files,
                           gint         n_files)
 {
-  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   g_return_if_fail (GCAL_IS_WINDOW (self));
 
   g_clear_pointer (&self->import_dialog, gtk_widget_unparent);
 
-  self->import_dialog = gcal_import_dialog_new_for_files (context, files, n_files);
+  self->import_dialog = gcal_import_dialog_new_for_files (files, n_files);
   adw_dialog_present (ADW_DIALOG (self->import_dialog), GTK_WIDGET (self));
 
   g_object_add_weak_pointer (G_OBJECT (self->import_dialog), (gpointer *)&self->import_dialog);

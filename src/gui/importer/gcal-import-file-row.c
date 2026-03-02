@@ -38,8 +38,6 @@ struct _GcalImportFileRow
   GFile              *file;
   GPtrArray          *ical_components;
   GPtrArray          *ical_timezones;
-
-  GcalContext        *context;
 };
 
 static void          read_calendar_finished_cb                   (GObject            *source_object,
@@ -51,7 +49,6 @@ G_DEFINE_TYPE (GcalImportFileRow, gcal_import_file_row, ADW_TYPE_BIN)
 enum
 {
   PROP_0,
-  PROP_CONTEXT,
   PROP_FILE,
   N_PROPS,
 };
@@ -112,6 +109,7 @@ fill_grid_with_event_data (GcalImportFileRow *self,
                            GtkGrid           *grid,
                            ICalComponent     *ical_component)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   g_autofree gchar *start_string = NULL;
   g_autofree gchar *description = NULL;
   g_autofree gchar *end_string = NULL;
@@ -131,7 +129,7 @@ fill_grid_with_event_data (GcalImportFileRow *self,
     {
       start_local = g_date_time_to_local (start);
 
-      switch (gcal_context_get_time_format (self->context))
+      switch (gcal_context_get_time_format (context))
         {
         case GCAL_TIME_FORMAT_24H:
           start_string = g_date_time_format (start_local, "%x %R");
@@ -157,7 +155,7 @@ fill_grid_with_event_data (GcalImportFileRow *self,
     {
       end_local = g_date_time_to_local (end);
 
-      switch (gcal_context_get_time_format (self->context))
+      switch (gcal_context_get_time_format (context))
         {
         case GCAL_TIME_FORMAT_24H:
           end_string = g_date_time_format (end_local, "%x %R");
@@ -327,7 +325,6 @@ gcal_import_file_row_finalize (GObject *object)
 
   g_cancellable_cancel (self->cancellable);
   g_clear_object (&self->cancellable);
-  g_clear_object (&self->context);
   g_clear_object (&self->file);
   g_clear_pointer (&self->ical_components, g_ptr_array_unref);
   g_clear_pointer (&self->ical_timezones, g_ptr_array_unref);
@@ -345,10 +342,6 @@ gcal_import_file_row_get_property (GObject    *object,
 
   switch (prop_id)
     {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
     case PROP_FILE:
       g_value_set_object (value, self->file);
       break;
@@ -368,11 +361,6 @@ gcal_import_file_row_set_property (GObject      *object,
 
   switch (prop_id)
     {
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-      break;
-
     case PROP_FILE:
       g_assert (self->file == NULL);
       self->file = g_value_dup_object (value);
@@ -403,12 +391,6 @@ gcal_import_file_row_class_init (GcalImportFileRowClass *klass)
                                        1,
                                        G_TYPE_PTR_ARRAY);
 
-  properties[PROP_CONTEXT] = g_param_spec_object ("context",
-                                                  "Context",
-                                                  "Context",
-                                                  GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
-
   properties[PROP_FILE] = g_param_spec_object ("file",
                                                "An ICS file",
                                                "An ICS file",
@@ -431,14 +413,12 @@ gcal_import_file_row_init (GcalImportFileRow *self)
 }
 
 GtkWidget*
-gcal_import_file_row_new (GcalContext  *context,
-                          GFile        *file,
+gcal_import_file_row_new (GFile        *file,
                           GtkSizeGroup *title_sizegroup)
 {
   GcalImportFileRow *self;
 
   self = g_object_new (GCAL_TYPE_IMPORT_FILE_ROW,
-                       "context", context,
                        "file", file,
                        NULL);
   self->title_sizegroup = title_sizegroup;

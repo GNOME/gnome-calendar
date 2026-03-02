@@ -55,7 +55,6 @@ struct _GcalImportDialog
   GList                *rows;
 
   GCancellable         *cancellable;
-  GcalContext          *context;
   gint                  n_events;
   gint                  n_files;
 };
@@ -66,15 +65,6 @@ static void          on_import_row_file_loaded_cb                 (GcalImportFil
                                                                    GcalImportDialog  *self);
 
 G_DEFINE_TYPE (GcalImportDialog, gcal_import_dialog, ADW_TYPE_DIALOG)
-
-enum
-{
-  PROP_0,
-  PROP_CONTEXT,
-  N_PROPS
-};
-
-static GParamSpec *properties [N_PROPS];
 
 
 /*
@@ -98,10 +88,11 @@ import_data_free (gpointer data)
 static void
 update_default_calendar (GcalImportDialog *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   GcalCalendar *default_calendar;
   GcalManager *manager;
 
-  manager = gcal_context_get_manager (self->context);
+  manager = gcal_context_get_manager (context);
   default_calendar = gcal_manager_get_default_calendar (manager);
 
   if (default_calendar)
@@ -111,12 +102,11 @@ update_default_calendar (GcalImportDialog *self)
 static void
 setup_calendars (GcalImportDialog *self)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   g_autoptr (GListModel) calendars = NULL;
   GcalManager *manager;
 
-  g_assert (self->context != NULL);
-
-  manager = gcal_context_get_manager (self->context);
+  manager = gcal_context_get_manager (context);
   calendars = gcal_create_writable_calendars_model (manager);
 
   // TODO: sort model
@@ -138,7 +128,7 @@ add_file (GcalImportDialog *self,
 
   GCAL_ENTRY;
 
-  row = gcal_import_file_row_new (self->context, file, self->title_sizegroup);
+  row = gcal_import_file_row_new (file, self->title_sizegroup);
   g_signal_connect (row, "file-loaded", G_CALLBACK (on_import_row_file_loaded_cb), self);
 
   group = ADW_PREFERENCES_GROUP (adw_preferences_group_new ());
@@ -368,50 +358,10 @@ gcal_import_dialog_finalize (GObject *object)
 
   g_cancellable_cancel (self->cancellable);
   g_clear_object (&self->cancellable);
-  g_clear_object (&self->context);
 
   g_clear_pointer (&self->rows, g_list_free);
 
   G_OBJECT_CLASS (gcal_import_dialog_parent_class)->finalize (object);
-}
-
-static void
-gcal_import_dialog_get_property (GObject    *object,
-                                 guint       prop_id,
-                                 GValue     *value,
-                                 GParamSpec *pspec)
-{
-  GcalImportDialog *self = GCAL_IMPORT_DIALOG (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_value_set_object (value, self->context);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_import_dialog_set_property (GObject      *object,
-                                 guint         prop_id,
-                                 const GValue *value,
-                                 GParamSpec   *pspec)
-{
-  GcalImportDialog *self = GCAL_IMPORT_DIALOG (object);
-
-  switch (prop_id)
-    {
-    case PROP_CONTEXT:
-      g_assert (self->context == NULL);
-      self->context = g_value_dup_object (value);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
 }
 
 static void
@@ -424,21 +374,6 @@ gcal_import_dialog_class_init (GcalImportDialogClass *klass)
 
   object_class->constructed = gcal_import_dialog_constructed;
   object_class->finalize = gcal_import_dialog_finalize;
-  object_class->get_property = gcal_import_dialog_get_property;
-  object_class->set_property = gcal_import_dialog_set_property;
-
-  /**
-   * GcalEventPopover::context:
-   *
-   * The context of the import dialog.
-   */
-  properties[PROP_CONTEXT] = g_param_spec_object ("context",
-                                                  "Context",
-                                                  "Context",
-                                                  GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
-
-  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/importer/gcal-import-dialog.ui");
 
@@ -462,14 +397,12 @@ gcal_import_dialog_init (GcalImportDialog *self)
 }
 
 GtkWidget*
-gcal_import_dialog_new_for_files (GcalContext  *context,
-                                  GFile       **files,
-                                  gint          n_files)
+gcal_import_dialog_new_for_files (GFile **files,
+                                  gint    n_files)
 {
   GcalImportDialog *self;
 
   self =  g_object_new (GCAL_TYPE_IMPORT_DIALOG,
-                        "context", context,
                         NULL);
 
   setup_files (self, files, n_files);
@@ -478,13 +411,11 @@ gcal_import_dialog_new_for_files (GcalContext  *context,
 }
 
 GtkWidget*
-gcal_import_dialog_new_for_file_list (GcalContext *context,
-                                      GList       *file_list)
+gcal_import_dialog_new_for_file_list (GList *file_list)
 {
   GcalImportDialog *self;
 
   self =  g_object_new (GCAL_TYPE_IMPORT_DIALOG,
-                        "context", context,
                         NULL);
 
   setup_files_list (self, file_list);
