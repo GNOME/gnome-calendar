@@ -29,7 +29,7 @@ G_BEGIN_DECLS
 #define GCAL_TYPE_SEARCH_ENGINE (gcal_search_engine_get_type())
 G_DECLARE_FINAL_TYPE (GcalSearchEngine, gcal_search_engine, GCAL, SEARCH_ENGINE, GObject)
 
-GcalSearchEngine*    gcal_search_engine_new                      (GcalContext        *context);
+GcalSearchEngine*    gcal_search_engine_new                      (void);
 
 void                 gcal_search_engine_search                   (GcalSearchEngine   *self,
                                                                   const gchar        *search_query,
