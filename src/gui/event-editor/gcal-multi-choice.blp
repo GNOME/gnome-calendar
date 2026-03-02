@@ -9,7 +9,7 @@ template $GcalMultiChoice: Box {
     icon-name: "pan-start-symbolic";
     clicked => $button_clicked_cb();
     can-focus: false;
-    tooltip-text: bind $get_down_button_tooltip(template.category) as <string>;
+    tooltip-text: bind template.previous-button-tooltip;
 
     styles [
       "back-button",
@@ -55,7 +55,7 @@ template $GcalMultiChoice: Box {
     icon-name: "pan-end-symbolic";
     clicked => $button_clicked_cb();
     can-focus: false;
-    tooltip-text: bind $get_up_button_tooltip(template.category) as <string>;
+    tooltip-text: bind template.next-button-tooltip;
 
     styles [
       "circular",

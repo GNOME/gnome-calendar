@@ -24,8 +24,6 @@
 
 #include "gcal-multi-choice.h"
 
-#include <glib/gi18n.h>
-
 struct _GcalMultiChoice
 {
   GtkBox                          parent;
@@ -43,6 +41,8 @@ struct _GcalMultiChoice
   gboolean                        wrap;
   gboolean                        animate;
   gchar                          *category;
+  gchar                          *prev_button_tooltip_text;
+  gchar                          *next_button_tooltip_text;
 
   GtkWidget                     **choices;
   gint                            n_choices;
@@ -66,6 +66,8 @@ enum
   PROP_CHOICES,
   PROP_POPOVER,
   PROP_CATEGORY,
+  PROP_PREVIOUS_BUTTON_TOOLTIP,
+  PROP_NEXT_BUTTON_TOOLTIP,
   NUM_PROPERTIES
 };
 
@@ -161,26 +163,6 @@ set_value (GcalMultiChoice         *self,
                                   -1);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_VALUE]);
-}
-
-static gchar *
-get_down_button_tooltip (GcalMultiChoice    *self,
-                         gchar              *category)
-{
-  g_autofree gchar *formatted_tooltip = NULL;
-
-  formatted_tooltip =  g_strdup_printf (_("Previous %1$s"), category);
-  return g_steal_pointer (&formatted_tooltip);
-}
-
-static gchar *
-get_up_button_tooltip (GcalMultiChoice    *self,
-                         gchar              *category)
-{
-  g_autofree gchar *formatted_tooltip = NULL;
-
-  formatted_tooltip =  g_strdup_printf (_("Next %1$s"), category);
-  return g_steal_pointer (&formatted_tooltip);
 }
 
 static void
@@ -388,6 +370,10 @@ gcal_multi_choice_dispose (GObject *object)
   g_free (self->choices);
   self->choices = NULL;
 
+  g_clear_pointer (&self->category, g_free);
+  g_clear_pointer (&self->prev_button_tooltip_text, g_free);
+  g_clear_pointer (&self->next_button_tooltip_text, g_free);
+
   if (self->format_destroy)
     {
       self->format_destroy (self->format_data);
@@ -447,6 +433,14 @@ gcal_multi_choice_get_property (GObject    *object,
       g_value_set_string (value, gcal_multi_choice_get_category (self));
       break;
 
+    case PROP_PREVIOUS_BUTTON_TOOLTIP:
+      g_value_set_string (value, self->prev_button_tooltip_text);
+      break;
+
+    case PROP_NEXT_BUTTON_TOOLTIP:
+      g_value_set_string (value, self->next_button_tooltip_text);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -499,6 +493,16 @@ gcal_multi_choice_set_property (GObject      *object,
 
     case PROP_CATEGORY:
       gcal_multi_choice_set_category (self, g_value_get_string (value));
+      break;
+
+    case PROP_PREVIOUS_BUTTON_TOOLTIP:
+      if (g_set_str (&self->prev_button_tooltip_text, g_value_get_string (value)))
+        g_object_notify_by_pspec (object, properties[PROP_PREVIOUS_BUTTON_TOOLTIP]);
+      break;
+
+    case PROP_NEXT_BUTTON_TOOLTIP:
+      if (g_set_str (&self->next_button_tooltip_text, g_value_get_string (value)))
+        g_object_notify_by_pspec (object, properties[PROP_NEXT_BUTTON_TOOLTIP]);
       break;
 
     default:
@@ -677,6 +681,14 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
       g_param_spec_string ("category", "Category", "Category",
                            "",
                            G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
+  properties[PROP_PREVIOUS_BUTTON_TOOLTIP] =
+      g_param_spec_string ("previous-button-tooltip", NULL, NULL,
+                           NULL,
+                           G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
+  properties[PROP_NEXT_BUTTON_TOOLTIP] =
+      g_param_spec_string ("next-button-tooltip", NULL, NULL,
+                           NULL,
+                           G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
 
   g_object_class_install_properties (object_class, NUM_PROPERTIES, properties);
 
@@ -713,8 +725,6 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   gtk_widget_class_bind_template_callback (widget_class, button_toggled_cb);
   gtk_widget_class_bind_template_callback (widget_class, button_state_flags_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, key_pressed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, get_down_button_tooltip);
-  gtk_widget_class_bind_template_callback (widget_class, get_up_button_tooltip);
 
   gtk_widget_class_set_css_name (widget_class, "navigator");
 }
