@@ -10,17 +10,40 @@ template $GcalNotesSection: Adw.PreferencesRow {
     "notes-section",
   ]
 
-  Box {
-    TextView notes_text {
-      hexpand: true;
-      top-margin: 6;
-      bottom-margin: 6;
-      left-margin: 6;
-      right-margin: 6;
-      sensitive: true;
-      wrap-mode: word_char;
-      accepts-tab: false;
-      state-flags-changed => $on_notes_text_state_flags_changed_cb(template) not-swapped;
+  child: Overlay {
+    [overlay]
+    Label placeholder {
+      label: _("Notes");
+      can-focus: false;
+      can-target: false;
+      xalign: 0.0;
+      yalign: 0.0;
+      visible: bind $empty_string(notes_text.buffer.text);
+
+      styles [
+        "dimmed",
+        "placeholder",
+      ]
     }
-  }
+
+    child: Adw.Bin {
+      css-name: "box";
+
+      child: TextView notes_text {
+        hexpand: true;
+        top-margin: 6;
+        bottom-margin: 6;
+        left-margin: 6;
+        right-margin: 6;
+        sensitive: true;
+        wrap-mode: word_char;
+        accepts-tab: false;
+        state-flags-changed => $on_notes_text_state_flags_changed_cb(template) not-swapped;
+
+        accessibility {
+          placeholder: _("Notes");
+        }
+      };
+    };
+  };
 }

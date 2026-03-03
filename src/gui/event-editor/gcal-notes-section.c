@@ -30,6 +30,7 @@ struct _GcalNotesSection
   AdwPreferencesRow   parent;
 
   GtkTextView        *notes_text;
+  GtkLabel           *placeholder;
 
   GcalContext        *context;
   GcalEvent          *event;
@@ -64,6 +65,12 @@ on_notes_text_state_flags_changed_cb (GtkTextView      *text_view,
     gtk_widget_remove_css_class (GTK_WIDGET (self), "focused");
 }
 
+static gboolean
+empty_string (gpointer     user_data,
+              const gchar *text)
+{
+  return g_utf8_strlen (text, -1) == 0;
+}
 
 /*
  * GcalEventEditorSection interface
@@ -208,7 +215,9 @@ gcal_notes_section_class_init (GcalNotesSectionClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-notes-section.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalNotesSection, notes_text);
+  gtk_widget_class_bind_template_child (widget_class, GcalNotesSection, placeholder);
 
+  gtk_widget_class_bind_template_callback (widget_class, empty_string);
   gtk_widget_class_bind_template_callback (widget_class, on_notes_text_state_flags_changed_cb);
 }
 
