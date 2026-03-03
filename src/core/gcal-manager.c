@@ -1018,12 +1018,12 @@ gcal_manager_refresh (GcalManager *self)
       if (!e_client_check_refresh_supported (client))
         continue;
 
+      self->clients_synchronizing++;
+
       e_client_refresh (client,
                         NULL,
                         on_client_refreshed,
                         self);
-
-      self->clients_synchronizing++;
     }
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SYNCHRONIZING]);
