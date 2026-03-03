@@ -160,6 +160,31 @@ source_changed (GcalManager *self,
 }
 
 static void
+on_collection_source_refreshed (GObject      *source_object,
+                                GAsyncResult *result,
+                                gpointer      user_data)
+{
+  GcalManager *self = GCAL_MANAGER (user_data);
+  GError *error = NULL;
+
+  GCAL_ENTRY;
+
+  if (!e_source_registry_refresh_backend_finish (E_SOURCE_REGISTRY (source_object), result, &error))
+    {
+      /* FIXME: do something when there was some error */
+      if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+        g_warning ("Error refreshing collection source backend: %s", error->message);
+      g_clear_error (&error);
+    }
+
+  self->clients_synchronizing--;
+  if (self->clients_synchronizing == 0)
+    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SYNCHRONIZING]);
+
+  GCAL_EXIT;
+}
+
+static void
 on_client_refreshed (GObject      *source_object,
                      GAsyncResult *result,
                      gpointer      user_data)
@@ -955,12 +980,31 @@ gcal_manager_save_source (GcalManager *self,
 void
 gcal_manager_refresh (GcalManager *self)
 {
+  g_autolist(ESource) collections = NULL;
   GList *clients;
   GList *l;
 
   GCAL_ENTRY;
 
   g_return_if_fail (GCAL_IS_MANAGER (self));
+
+  /* First, refresh collection sources to get latest calendar list */
+  collections = e_source_registry_list_sources (self->source_registry, E_SOURCE_EXTENSION_COLLECTION);
+  for (GList *sl = collections; sl != NULL; sl = sl->next)
+    {
+      ESource *source = sl->data;
+
+      if (!e_source_registry_check_enabled (self->source_registry, source))
+        continue;
+
+      self->clients_synchronizing++;
+
+      e_source_registry_refresh_backend (self->source_registry,
+                                         e_source_get_uid (source),
+                                         NULL,
+                                         on_collection_source_refreshed,
+                                         self);
+    }
 
   clients = g_hash_table_get_values (self->clients);
 
