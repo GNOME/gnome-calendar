@@ -989,9 +989,9 @@ gcal_manager_refresh (GcalManager *self)
 
   /* First, refresh collection sources to get latest calendar list */
   collections = e_source_registry_list_sources (self->source_registry, E_SOURCE_EXTENSION_COLLECTION);
-  for (GList *sl = collections; sl != NULL; sl = sl->next)
+  for (GList *l = collections; l != NULL; l = l->next)
     {
-      ESource *source = sl->data;
+      ESource *source = E_SOURCE (l->data);
 
       if (!e_source_registry_check_enabled (self->source_registry, source))
         continue;
