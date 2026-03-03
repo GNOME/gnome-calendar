@@ -981,8 +981,7 @@ void
 gcal_manager_refresh (GcalManager *self)
 {
   g_autolist(ESource) collections = NULL;
-  GList *clients;
-  GList *l;
+  g_autoptr(GList) clients = NULL;
 
   GCAL_ENTRY;
 
@@ -1009,7 +1008,7 @@ gcal_manager_refresh (GcalManager *self)
   clients = g_hash_table_get_values (self->clients);
 
   /* refresh clients */
-  for (l = clients; l != NULL; l = l->next)
+  for (GList *l = clients; l != NULL; l = l->next)
     {
       GcalCalendar *calendar = l->data;
       EClient *client;
@@ -1026,8 +1025,6 @@ gcal_manager_refresh (GcalManager *self)
 
       self->clients_synchronizing++;
     }
-
-  g_list_free (clients);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SYNCHRONIZING]);
 
