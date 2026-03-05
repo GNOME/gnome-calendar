@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2026-03-04 00:11+0000\n"
-"PO-Revision-Date: 2026-03-05 21:26+0900\n"
+"PO-Revision-Date: 2026-03-05 22:54+0900\n"
 "Last-Translator: 小山田 純 <oyamadajun@outlook.jp>\n"
 "Language-Team: Japanese <https://l10n.gnome.org/teams/ja/>\n"
 "Language: ja\n"
@@ -23,6 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.8\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -829,7 +830,8 @@ msgstr ""
 "Kusano Takayuki https://bsky.app/profile/tkusano.jp\n"
 "Japanese Translation Team https://l10n.gnome.org/teams/ja/\n"
 "Seiji Iizuka <seiji@iizuka.dev>\n"
-"Makoto Sakaguchi <ycco34vx@gmail.com>"
+"Makoto Sakaguchi <ycco34vx@gmail.com>\n"
+"小山田 純 <oyamadajun@outlook.jp>"
 
 #: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:389
 msgid "Weather"
