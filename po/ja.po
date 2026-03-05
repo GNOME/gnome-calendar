@@ -8,6 +8,7 @@
 # Kusano Takayuki <https://bsky.app/profile/tkusano.jp>, 2025.
 # Seiji Iizuka <seiji@iizuka.dev>, 2025.
 # Makoto Sakaguchi <ycco34vx@gmail.com>, 2025.
+# 小山田 純 <oyamadajun@outlook.jp>, 2026.
 #
 msgid ""
 msgstr ""
