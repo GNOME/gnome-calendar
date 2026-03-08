@@ -59,16 +59,16 @@
 
   <screenshots>
     <screenshot type="default">
-      <caption>Week view</caption>
-      <image>https://static.gnome.org/appdata/gnome-43/calendar/calendar-week.png</image>
-    </screenshot>
-    <screenshot>
+      <image>https://static.gnome.org/appdata/gnome-calendar/month-view.png</image>
       <caption>Month view</caption>
-      <image>https://static.gnome.org/appdata/gnome-43/calendar/calendar-month.png</image>
     </screenshot>
     <screenshot>
+      <image>https://static.gnome.org/appdata/gnome-calendar/week-view.png</image>
+      <caption>Week view</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://static.gnome.org/appdata/gnome-calendar/calendar-editor-dialog.png</image>
       <caption>Event editor</caption>
-      <image>https://static.gnome.org/appdata/gnome-43/calendar/calendar-event.png</image>
     </screenshot>
   </screenshots>
 
