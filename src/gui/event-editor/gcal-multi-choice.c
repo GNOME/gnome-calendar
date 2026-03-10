@@ -367,18 +367,12 @@ gcal_multi_choice_dispose (GObject *object)
 {
   GcalMultiChoice *self = GCAL_MULTI_CHOICE (object);
 
-  g_free (self->choices);
-  self->choices = NULL;
-
+  g_clear_pointer (&self->choices, g_free);
   g_clear_pointer (&self->category, g_free);
   g_clear_pointer (&self->prev_button_tooltip_text, g_free);
   g_clear_pointer (&self->next_button_tooltip_text, g_free);
 
-  if (self->format_destroy)
-    {
-      self->format_destroy (self->format_data);
-      self->format_destroy = NULL;
-    }
+  g_clear_pointer (&self->format_data, self->format_destroy);
 
   if (self->popover)
     {
@@ -388,8 +382,7 @@ gcal_multi_choice_dispose (GObject *object)
       g_signal_handlers_disconnect_by_func (self->popover,
                                             popover_destroy_cb,
                                             object);
-      gtk_widget_unparent (self->popover);
-      self->popover = NULL;
+      g_clear_pointer (&self->popover, gtk_widget_unparent);
     }
 
   G_OBJECT_CLASS (gcal_multi_choice_parent_class)->dispose (object);
