@@ -968,16 +968,15 @@ on_key_controller_key_pressed_cb (GtkEventControllerKey *event_controller,
                                   GcalMonthView         *self)
 {
   GDateTime *date = NULL;
-  GtkWidget *focused_widget, *month_cell;
+  GtkWidget *focused_widget;
   GtkRoot *root;
 
   root = gtk_widget_get_root (GTK_WIDGET (self));
   focused_widget = gtk_root_get_focus (root);
-  month_cell = gtk_widget_get_ancestor (focused_widget, GCAL_TYPE_MONTH_CELL);
 
   self->state = state;
 
-  if (month_cell && (state & GDK_SHIFT_MASK))
+  if (GCAL_IS_MONTH_CELL (focused_widget) && (state & GDK_SHIFT_MASK))
     {
       if (keyval == GDK_KEY_Escape)
         {
@@ -990,19 +989,18 @@ on_key_controller_key_pressed_cb (GtkEventControllerKey *event_controller,
 
       if (!self->selection.start)
         {
-          date = gcal_month_cell_get_date (GCAL_MONTH_CELL (month_cell));
+          date = gcal_month_cell_get_date (GCAL_MONTH_CELL (focused_widget));
           self->selection.start = g_date_time_ref (date);
 
           update_selection_range (self);
         }
 
       focused_widget = gtk_root_get_focus (root);
-      month_cell = gtk_widget_get_ancestor (focused_widget, GCAL_TYPE_MONTH_CELL);
 
-      g_assert (GCAL_IS_MONTH_CELL (month_cell));
+      g_assert (GCAL_IS_MONTH_CELL (focused_widget));
 
       gcal_clear_date_time (&self->selection.end);
-      date = gcal_month_cell_get_date (GCAL_MONTH_CELL (month_cell));
+      date = gcal_month_cell_get_date (GCAL_MONTH_CELL (focused_widget));
       self->selection.end = g_date_time_ref (date);
 
       update_selection_range (self);
@@ -1018,14 +1016,13 @@ on_key_controller_key_released_cb (GtkEventControllerKey *event_controller,
                                    GdkModifierType        state,
                                    GcalMonthView         *self)
 {
-  GtkWidget *focused_widget, *month_cell;
+  GtkWidget *focused_widget;
   GtkRoot *root;
 
   root = gtk_widget_get_root (GTK_WIDGET (self));
   focused_widget = gtk_root_get_focus (root);
-  month_cell = gtk_widget_get_ancestor (focused_widget, GCAL_TYPE_MONTH_CELL);
 
-  if (month_cell)
+  if (GCAL_IS_MONTH_CELL (focused_widget))
     {
       switch (keyval)
         {
@@ -1035,7 +1032,7 @@ on_key_controller_key_released_cb (GtkEventControllerKey *event_controller,
           if (!self->selection.end)
             break;
 
-          gtk_widget_activate (month_cell);
+          gtk_widget_activate (focused_widget);
           break;
         default:
           break;
