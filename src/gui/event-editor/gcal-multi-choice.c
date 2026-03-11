@@ -372,7 +372,8 @@ gcal_multi_choice_dispose (GObject *object)
   g_clear_pointer (&self->prev_button_tooltip_text, g_free);
   g_clear_pointer (&self->next_button_tooltip_text, g_free);
 
-  g_clear_pointer (&self->format_data, self->format_destroy);
+  if (self->format_destroy)
+    g_clear_pointer (&self->format_data, self->format_destroy);
 
   if (self->popover)
     {
