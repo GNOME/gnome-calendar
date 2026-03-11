@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-02-11 14:49+0000\n"
-"PO-Revision-Date: 2026-02-15 07:57+0800\n"
+"POT-Creation-Date: 2026-03-11 00:30+0000\n"
+"PO-Revision-Date: 2026-03-11 12:16+0800\n"
 "Last-Translator: lumingzh <lumingzh@qq.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -29,7 +29,7 @@ msgstr ""
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5
-#: src/gui/gcal-window.c:407 src/main.c:35
+#: src/gui/gcal-window.c:417 src/main.c:35
 msgid "Calendar"
 msgstr "日历"
 
@@ -124,15 +124,15 @@ msgstr ""
 "和平台来同步事件。GNOME 日历同样支持本地和离线日历，所以您可以在旅行时的任何"
 "地点与任何时间使用它（或在文明崩溃之后）。"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
-msgid "Week view"
-msgstr "周视图"
-
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:66
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
 msgstr "月视图"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:70
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:67
+msgid "Week view"
+msgstr "周视图"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:71
 msgid "Event editor"
 msgstr "事件编辑器"
 
@@ -179,7 +179,7 @@ msgstr "日历设置"
 msgid "Calendars"
 msgstr "日历"
 
-#: src/gui/calendar-management/gcal-calendars-page.blp:52
+#: src/gui/calendar-management/gcal-calendars-page.blp:37
 msgid "_Add Calendar"
 msgstr "添加日历(_A)"
 
@@ -191,7 +191,7 @@ msgid "Calendar “%s” removed"
 msgstr "日历“%s”已移除"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:981
+#: src/gui/gcal-window.c:994
 msgid "_Undo"
 msgstr "撤消(_U)"
 
@@ -322,6 +322,33 @@ msgstr "连接至该日历需要有效的用户和密码。"
 msgid "This calendar is hidden"
 msgstr "此日历是隐藏的"
 
+#: src/gui/common/gcal-date-chooser.blp:15
+#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:411
+msgid "Month"
+msgstr "月"
+
+#: src/gui/common/gcal-date-chooser.blp:16
+#: src/gui/common/gcal-date-chooser.blp:56 src/gui/gcal-window.c:257
+msgid "Previous Month"
+msgstr "上个月"
+
+#: src/gui/common/gcal-date-chooser.blp:17
+#: src/gui/common/gcal-date-chooser.blp:57 src/gui/gcal-window.c:288
+msgid "Next Month"
+msgstr "下个月"
+
+#: src/gui/common/gcal-date-chooser.blp:34
+msgid "Year"
+msgstr "年"
+
+#: src/gui/common/gcal-date-chooser.blp:35
+msgid "Previous Year"
+msgstr "上一年"
+
+#: src/gui/common/gcal-date-chooser.blp:36
+msgid "Next Year"
+msgstr "下一年"
+
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
 #. * NOTE: These grid abbreviations are always shown together
@@ -330,43 +357,43 @@ msgstr "此日历是隐藏的"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:273
+#: src/gui/common/gcal-date-chooser.c:336
 msgctxt "grid sunday"
 msgid "S"
 msgstr "日"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:278
+#: src/gui/common/gcal-date-chooser.c:341
 msgctxt "grid monday"
 msgid "M"
 msgstr "一"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:283
+#: src/gui/common/gcal-date-chooser.c:346
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "二"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:288
+#: src/gui/common/gcal-date-chooser.c:351
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "三"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:293
+#: src/gui/common/gcal-date-chooser.c:356
 msgctxt "grid thursday"
 msgid "T"
 msgstr "四"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:298
+#: src/gui/common/gcal-date-chooser.c:361
 msgctxt "grid friday"
 msgid "F"
 msgstr "五"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:303
+#: src/gui/common/gcal-date-chooser.c:366
 msgctxt "grid saturday"
 msgid "S"
 msgstr "六"
@@ -375,85 +402,85 @@ msgstr "六"
 msgid "Remove Alarm"
 msgstr "移除闹钟"
 
-#: src/gui/event-editor/gcal-alarm-row.c:85
+#: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u 天 %2$u 小时 %3$u 分钟前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:89
+#: src/gui/event-editor/gcal-alarm-row.c:88
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u 天 %2$u 小时 %3$u 分钟前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:95
+#: src/gui/event-editor/gcal-alarm-row.c:94
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u 天 %2$u 小时 %3$u 分钟前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:99
+#: src/gui/event-editor/gcal-alarm-row.c:98
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u 天 %2$u 小时 %3$u 分钟前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:114
+#: src/gui/event-editor/gcal-alarm-row.c:113
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
 msgstr[0] "%1$u 天 %2$u 小时前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:118
+#: src/gui/event-editor/gcal-alarm-row.c:117
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
 msgstr[0] "%1$u 天 %2$u 小时前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:134
+#: src/gui/event-editor/gcal-alarm-row.c:133
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
 msgstr[0] "%1$u 天 %2$u 分钟前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:138
+#: src/gui/event-editor/gcal-alarm-row.c:137
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
 msgstr[0] "%1$u 天 %2$u 分钟前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:148
+#: src/gui/event-editor/gcal-alarm-row.c:147
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "%1$u 天前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:166
+#: src/gui/event-editor/gcal-alarm-row.c:165
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "%1$u 小时 %2$u 分钟前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:170
+#: src/gui/event-editor/gcal-alarm-row.c:169
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "%1$u 小时 %2$u 分钟前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:180
+#: src/gui/event-editor/gcal-alarm-row.c:179
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "%1$u 小时前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:192
+#: src/gui/event-editor/gcal-alarm-row.c:191
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "%1$u 分钟前"
 
-#: src/gui/event-editor/gcal-alarm-row.c:199
+#: src/gui/event-editor/gcal-alarm-row.c:198
 msgid "Event start time"
 msgstr "事件开始时间"
 
@@ -621,16 +648,6 @@ msgstr "事件详情"
 #: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Edit Event"
 msgstr "编辑事件"
-
-#: src/gui/event-editor/gcal-multi-choice.c:170
-#, c-format
-msgid "Previous %1$s"
-msgstr "上个 %1$s"
-
-#: src/gui/event-editor/gcal-multi-choice.c:180
-#, c-format
-msgid "Next %1$s"
-msgstr "下个 %1$s"
 
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
@@ -935,12 +952,12 @@ msgid "Today"
 msgstr "今天"
 
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
-#: src/gui/gcal-window.c:280 src/gui/views/gcal-agenda-view.c:200
+#: src/gui/gcal-window.c:290 src/gui/views/gcal-agenda-view.c:200
 msgid "Tomorrow"
 msgstr "明天"
 
 #: src/gui/gcal-event-popover.c:211 src/gui/gcal-event-popover.c:325
-#: src/gui/gcal-window.c:249 src/gui/views/gcal-agenda-view.c:202
+#: src/gui/gcal-window.c:259 src/gui/views/gcal-agenda-view.c:202
 msgid "Yesterday"
 msgstr "昨天"
 
@@ -1394,47 +1411,35 @@ msgstr "键盘快捷键(_K)"
 msgid "_About Calendar"
 msgstr "关于日历(_A)"
 
-#: src/gui/gcal-window.c:245
+#: src/gui/gcal-window.c:255
 msgid "Previous Week"
 msgstr "上周"
 
-#: src/gui/gcal-window.c:247
-msgid "Previous Month"
-msgstr "上月"
-
-#: src/gui/gcal-window.c:276
+#: src/gui/gcal-window.c:286
 msgid "Next Week"
 msgstr "下周"
 
-#: src/gui/gcal-window.c:278
-msgid "Next Month"
-msgstr "下月"
-
-#: src/gui/gcal-window.c:398
+#: src/gui/gcal-window.c:408
 msgid "Week"
 msgstr "周"
 
-#: src/gui/gcal-window.c:401
-msgid "Month"
-msgstr "月"
-
-#: src/gui/gcal-window.c:404
+#: src/gui/gcal-window.c:414
 msgid "Agenda"
 msgstr "日程"
 
-#: src/gui/gcal-window.c:979
+#: src/gui/gcal-window.c:992
 msgid "Another event deleted"
 msgstr "另一个事件已删除"
 
-#: src/gui/gcal-window.c:979
+#: src/gui/gcal-window.c:992
 msgid "Event deleted"
 msgstr "事件已删除"
 
-#: src/gui/gcal-window.c:1044
+#: src/gui/gcal-window.c:1057
 msgid "Could not import some files: Not ICS files"
 msgstr "无法导入一些文件：不是 ICS 文件"
 
-#: src/gui/gcal-window.c:1049
+#: src/gui/gcal-window.c:1062
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "无法导入“%s”：不是 ICS 文件"
@@ -1614,7 +1619,7 @@ msgstr "%m月 %d日 %A"
 msgid "On-going"
 msgstr "进行中"
 
-#: src/gui/views/gcal-month-popover.blp:56
+#: src/gui/views/gcal-month-popover.blp:58
 msgid "New Event…"
 msgstr "新建事件…"
 
@@ -1711,6 +1716,14 @@ msgstr "谷歌地图"
 #: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "必应地图"
+
+#, c-format
+#~ msgid "Previous %1$s"
+#~ msgstr "上个 %1$s"
+
+#, c-format
+#~ msgid "Next %1$s"
+#~ msgstr "下个 %1$s"
 
 #~ msgid "Toggle Alarm Sound"
 #~ msgstr "切换闹钟声音"
@@ -1894,9 +1907,6 @@ msgstr "必应地图"
 
 #~ msgid "Year view"
 #~ msgstr "年视图"
-
-#~ msgid "Year"
-#~ msgstr "年"
 
 #~ msgctxt "shortcut window"
 #~ msgid "Year view"
