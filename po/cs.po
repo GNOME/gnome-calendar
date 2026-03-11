@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-02-10 03:14+0000\n"
-"PO-Revision-Date: 2026-02-11 15:44+0100\n"
+"POT-Creation-Date: 2026-03-11 00:30+0000\n"
+"PO-Revision-Date: 2026-03-11 14:58+0100\n"
 "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5
-#: src/gui/gcal-window.c:407 src/main.c:35
+#: src/gui/gcal-window.c:417 src/main.c:35
 msgid "Calendar"
 msgstr "Kalendář"
 
@@ -128,15 +128,15 @@ msgstr ""
 "podporuje místní a offline kalendář, takže jej můžete používat kdekoli a "
 "kdykoli na cestách (nebo po kolapsu civilizace.)"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
-msgid "Week view"
-msgstr "Týdenní zobrazení"
-
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:66
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
 msgstr "Měsíční zobrazení"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:70
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:67
+msgid "Week view"
+msgstr "Týdenní zobrazení"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:71
 msgid "Event editor"
 msgstr "Úprava události"
 
@@ -183,7 +183,7 @@ msgstr "Nastavení kalendáře"
 msgid "Calendars"
 msgstr "Kalendáře"
 
-#: src/gui/calendar-management/gcal-calendars-page.blp:52
+#: src/gui/calendar-management/gcal-calendars-page.blp:37
 msgid "_Add Calendar"
 msgstr "Přid_at kalendář"
 
@@ -195,7 +195,7 @@ msgid "Calendar “%s” removed"
 msgstr "Kalendář „%s“ byl odstraněn"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:981
+#: src/gui/gcal-window.c:994
 msgid "_Undo"
 msgstr "_Zpět"
 
@@ -329,6 +329,33 @@ msgstr "Pro připojení k tomuto kalendáři je vyžadován platný uživatel a 
 msgid "This calendar is hidden"
 msgstr "Tento kalendář je skrytý"
 
+#: src/gui/common/gcal-date-chooser.blp:15
+#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:411
+msgid "Month"
+msgstr "Měsíc"
+
+#: src/gui/common/gcal-date-chooser.blp:16
+#: src/gui/common/gcal-date-chooser.blp:56 src/gui/gcal-window.c:257
+msgid "Previous Month"
+msgstr "Předchozí měsíc"
+
+#: src/gui/common/gcal-date-chooser.blp:17
+#: src/gui/common/gcal-date-chooser.blp:57 src/gui/gcal-window.c:288
+msgid "Next Month"
+msgstr "Následující měsíc"
+
+#: src/gui/common/gcal-date-chooser.blp:34
+msgid "Year"
+msgstr "Rok"
+
+#: src/gui/common/gcal-date-chooser.blp:35
+msgid "Previous Year"
+msgstr "Předchozí rok"
+
+#: src/gui/common/gcal-date-chooser.blp:36
+msgid "Next Year"
+msgstr "Následující rok"
+
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
 #. * NOTE: These grid abbreviations are always shown together
@@ -337,43 +364,43 @@ msgstr "Tento kalendář je skrytý"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:273
+#: src/gui/common/gcal-date-chooser.c:336
 msgctxt "grid sunday"
 msgid "S"
 msgstr "Ne"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:278
+#: src/gui/common/gcal-date-chooser.c:341
 msgctxt "grid monday"
 msgid "M"
 msgstr "Po"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:283
+#: src/gui/common/gcal-date-chooser.c:346
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "Út"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:288
+#: src/gui/common/gcal-date-chooser.c:351
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "St"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:293
+#: src/gui/common/gcal-date-chooser.c:356
 msgctxt "grid thursday"
 msgid "T"
 msgstr "Čt"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:298
+#: src/gui/common/gcal-date-chooser.c:361
 msgctxt "grid friday"
 msgid "F"
 msgstr "Pá"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:303
+#: src/gui/common/gcal-date-chooser.c:366
 msgctxt "grid saturday"
 msgid "S"
 msgstr "So"
@@ -382,7 +409,7 @@ msgstr "So"
 msgid "Remove Alarm"
 msgstr "Odebrat budík"
 
-#: src/gui/event-editor/gcal-alarm-row.c:85
+#: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
@@ -390,7 +417,7 @@ msgstr[0] "%1$u den, %2$u hodina a %3$u minuta předem"
 msgstr[1] "%1$u den, %2$u hodina a %3$u minuty předem"
 msgstr[2] "%1$u den, %2$u hodina a %3$u minut předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:89
+#: src/gui/event-editor/gcal-alarm-row.c:88
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
@@ -398,7 +425,7 @@ msgstr[0] "%1$u den, %2$u hodin a %3$u minuta předem"
 msgstr[1] "%1$u den, %2$u hodin a %3$u minuty předem"
 msgstr[2] "%1$u den, %2$u hodin a %3$u minut předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:95
+#: src/gui/event-editor/gcal-alarm-row.c:94
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
@@ -406,7 +433,7 @@ msgstr[0] "%1$u dní, %2$u hodina a %3$u minuta předem"
 msgstr[1] "%1$u dní, %2$u hodina a %3$u minuty předem"
 msgstr[2] "%1$u dní, %2$u hodina a %3$u minut předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:99
+#: src/gui/event-editor/gcal-alarm-row.c:98
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
@@ -414,7 +441,7 @@ msgstr[0] "%1$u dní, %2$u hodin a %3$u minuta předem"
 msgstr[1] "%1$u dní, %2$u hodin a %3$u minuty předem"
 msgstr[2] "%1$u dní, %2$u hodin a %3$u minut předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:114
+#: src/gui/event-editor/gcal-alarm-row.c:113
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
@@ -422,7 +449,7 @@ msgstr[0] "%1$u den a %2$u hodina předem"
 msgstr[1] "%1$u den a %2$u hodiny předem"
 msgstr[2] "%1$u den a %2$u hodin předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:118
+#: src/gui/event-editor/gcal-alarm-row.c:117
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
@@ -430,7 +457,7 @@ msgstr[0] "%1$u dní a %2$u hodina předem"
 msgstr[1] "%1$u dní a %2$u hodiny předem"
 msgstr[2] "%1$u dní a %2$u hodin předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:134
+#: src/gui/event-editor/gcal-alarm-row.c:133
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
@@ -438,7 +465,7 @@ msgstr[0] "%1$u den a %2$u minuta předem"
 msgstr[1] "%1$u den a %2$u minuty předem"
 msgstr[2] "%1$u den a %2$u minut předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:138
+#: src/gui/event-editor/gcal-alarm-row.c:137
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
@@ -446,7 +473,7 @@ msgstr[0] "%1$u dní a %2$u minuta předem"
 msgstr[1] "%1$u dní a %2$u minuty předem"
 msgstr[2] "%1$u dní a %2$u minut předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:148
+#: src/gui/event-editor/gcal-alarm-row.c:147
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
@@ -454,7 +481,7 @@ msgstr[0] "%1$u den předem"
 msgstr[1] "%1$u dny předem"
 msgstr[2] "%1$u dní předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:166
+#: src/gui/event-editor/gcal-alarm-row.c:165
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
@@ -462,7 +489,7 @@ msgstr[0] "%1$u hodina a %2$u minuta předem"
 msgstr[1] "%1$u hodina a %2$u minuty předem"
 msgstr[2] "%1$u hodina a %2$u minut předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:170
+#: src/gui/event-editor/gcal-alarm-row.c:169
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
@@ -470,7 +497,7 @@ msgstr[0] "%1$u hodin a %2$u minuta předem"
 msgstr[1] "%1$u hodin a %2$u minuty předem"
 msgstr[2] "%1$u hodin a %2$u minut předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:180
+#: src/gui/event-editor/gcal-alarm-row.c:179
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
@@ -478,7 +505,7 @@ msgstr[0] "%1$u hodina předem"
 msgstr[1] "%1$u hodiny předem"
 msgstr[2] "%1$u hodin předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:192
+#: src/gui/event-editor/gcal-alarm-row.c:191
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
@@ -486,7 +513,7 @@ msgstr[0] "%1$u minuta předem"
 msgstr[1] "%1$u minuty předem"
 msgstr[2] "%1$u minut předem"
 
-#: src/gui/event-editor/gcal-alarm-row.c:199
+#: src/gui/event-editor/gcal-alarm-row.c:198
 msgid "Event start time"
 msgstr "Čas začátku události"
 
@@ -665,16 +692,6 @@ msgstr "Podrobnosti o události"
 #: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Edit Event"
 msgstr "Upravit událost"
-
-#: src/gui/event-editor/gcal-multi-choice.c:170
-#, c-format
-msgid "Previous %1$s"
-msgstr "Předchozí %1$s"
-
-#: src/gui/event-editor/gcal-multi-choice.c:180
-#, c-format
-msgid "Next %1$s"
-msgstr "Další %1$s"
 
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
@@ -974,12 +991,12 @@ msgid "Today"
 msgstr "Dnes"
 
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
-#: src/gui/gcal-window.c:280 src/gui/views/gcal-agenda-view.c:200
+#: src/gui/gcal-window.c:290 src/gui/views/gcal-agenda-view.c:200
 msgid "Tomorrow"
 msgstr "Zítra"
 
 #: src/gui/gcal-event-popover.c:211 src/gui/gcal-event-popover.c:325
-#: src/gui/gcal-window.c:249 src/gui/views/gcal-agenda-view.c:202
+#: src/gui/gcal-window.c:259 src/gui/views/gcal-agenda-view.c:202
 msgid "Yesterday"
 msgstr "Včera"
 
@@ -1061,7 +1078,7 @@ msgid "Edit Additional Details"
 msgstr "Upravit další údaje"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:387
+#: src/gui/gcal-event-widget.c:388
 #, c-format
 msgid ""
 "\n"
@@ -1074,7 +1091,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:400 src/gui/gcal-event-widget.c:406
+#: src/gui/gcal-event-widget.c:401 src/gui/gcal-event-widget.c:407
 #, c-format
 msgid ""
 "\n"
@@ -1091,7 +1108,7 @@ msgstr ""
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:465
+#: src/gui/gcal-event-widget.c:466
 msgid "%a %B %d"
 msgstr "%a, %d. %B"
 
@@ -1435,47 +1452,35 @@ msgstr "_Klávesové zkratky"
 msgid "_About Calendar"
 msgstr "O _aplikaci Kalendář"
 
-#: src/gui/gcal-window.c:245
+#: src/gui/gcal-window.c:255
 msgid "Previous Week"
 msgstr "Předchozí týden"
 
-#: src/gui/gcal-window.c:247
-msgid "Previous Month"
-msgstr "Předchozí měsíc"
-
-#: src/gui/gcal-window.c:276
+#: src/gui/gcal-window.c:286
 msgid "Next Week"
 msgstr "Následující týden"
 
-#: src/gui/gcal-window.c:278
-msgid "Next Month"
-msgstr "Následující měsíc"
-
-#: src/gui/gcal-window.c:398
+#: src/gui/gcal-window.c:408
 msgid "Week"
 msgstr "Týden"
 
-#: src/gui/gcal-window.c:401
-msgid "Month"
-msgstr "Měsíc"
-
-#: src/gui/gcal-window.c:404
+#: src/gui/gcal-window.c:414
 msgid "Agenda"
 msgstr "Agenda"
 
-#: src/gui/gcal-window.c:979
+#: src/gui/gcal-window.c:992
 msgid "Another event deleted"
 msgstr "Smazána ještě jedna událost"
 
-#: src/gui/gcal-window.c:979
+#: src/gui/gcal-window.c:992
 msgid "Event deleted"
 msgstr "Událost smazána"
 
-#: src/gui/gcal-window.c:1044
+#: src/gui/gcal-window.c:1057
 msgid "Could not import some files: Not ICS files"
 msgstr "Nelze importovat některé soubory: Nejedná se o soubory ICS"
 
-#: src/gui/gcal-window.c:1049
+#: src/gui/gcal-window.c:1062
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Nelze importovat „%s“: Nejedná se o soubor ICS"
@@ -1657,7 +1662,7 @@ msgstr "%A, %d. %B"
 msgid "On-going"
 msgstr "Stále"
 
-#: src/gui/views/gcal-month-popover.blp:56
+#: src/gui/views/gcal-month-popover.blp:58
 msgid "New Event…"
 msgstr "Nová událost…"
 
@@ -1758,6 +1763,14 @@ msgstr "Mapy Google"
 #: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Mapy Bing"
+
+#, c-format
+#~ msgid "Previous %1$s"
+#~ msgstr "Předchozí %1$s"
+
+#, c-format
+#~ msgid "Next %1$s"
+#~ msgstr "Další %1$s"
 
 #~ msgid "Toggle Alarm Sound"
 #~ msgstr "Přepnout zvuk budíku"
