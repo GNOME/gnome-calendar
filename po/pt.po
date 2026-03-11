@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-02-25 13:45+0000\n"
-"PO-Revision-Date: 2026-02-27 17:20+0000\n"
+"POT-Creation-Date: 2026-03-11 00:30+0000\n"
+"PO-Revision-Date: 2026-03-11 12:12+0000\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Português (https://l10n.gnome.org/teams/pt/)\n"
 "Language: pt\n"
@@ -28,7 +28,7 @@ msgstr ""
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5
-#: src/gui/gcal-window.c:407 src/main.c:35
+#: src/gui/gcal-window.c:417 src/main.c:35
 msgid "Calendar"
 msgstr "Calendário"
 
@@ -133,15 +133,15 @@ msgstr ""
 "locais e offline, para que possa utilizá-lo em qualquer lugar e a qualquer "
 "momento durante viagens (ou após o colapso da civilização)."
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
-msgid "Week view"
-msgstr "Visualização da semana"
-
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:66
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
 msgstr "Visualização do mês"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:70
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:67
+msgid "Week view"
+msgstr "Visualização da semana"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:71
 msgid "Event editor"
 msgstr "Editor de eventos"
 
@@ -200,7 +200,7 @@ msgid "Calendar “%s” removed"
 msgstr "Calendário “%s” removido"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:981
+#: src/gui/gcal-window.c:994
 msgid "_Undo"
 msgstr "An_ular"
 
@@ -335,6 +335,33 @@ msgstr ""
 msgid "This calendar is hidden"
 msgstr "Este calendário está oculto"
 
+#: src/gui/common/gcal-date-chooser.blp:15
+#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:411
+msgid "Month"
+msgstr "Mês"
+
+#: src/gui/common/gcal-date-chooser.blp:16
+#: src/gui/common/gcal-date-chooser.blp:56 src/gui/gcal-window.c:257
+msgid "Previous Month"
+msgstr "Mês anterior"
+
+#: src/gui/common/gcal-date-chooser.blp:17
+#: src/gui/common/gcal-date-chooser.blp:57 src/gui/gcal-window.c:288
+msgid "Next Month"
+msgstr "Mês seguinte"
+
+#: src/gui/common/gcal-date-chooser.blp:34
+msgid "Year"
+msgstr "Ano"
+
+#: src/gui/common/gcal-date-chooser.blp:35
+msgid "Previous Year"
+msgstr "Ano anterior"
+
+#: src/gui/common/gcal-date-chooser.blp:36
+msgid "Next Year"
+msgstr "Ano seguinte"
+
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
 #. * NOTE: These grid abbreviations are always shown together
@@ -343,43 +370,43 @@ msgstr "Este calendário está oculto"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:337
+#: src/gui/common/gcal-date-chooser.c:336
 msgctxt "grid sunday"
 msgid "S"
 msgstr "D"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:342
+#: src/gui/common/gcal-date-chooser.c:341
 msgctxt "grid monday"
 msgid "M"
 msgstr "S"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:347
+#: src/gui/common/gcal-date-chooser.c:346
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "T"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:352
+#: src/gui/common/gcal-date-chooser.c:351
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "Q"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:357
+#: src/gui/common/gcal-date-chooser.c:356
 msgctxt "grid thursday"
 msgid "T"
 msgstr "Q"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:362
+#: src/gui/common/gcal-date-chooser.c:361
 msgctxt "grid friday"
 msgid "F"
 msgstr "S"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:367
+#: src/gui/common/gcal-date-chooser.c:366
 msgctxt "grid saturday"
 msgid "S"
 msgstr "S"
@@ -388,98 +415,98 @@ msgstr "S"
 msgid "Remove Alarm"
 msgstr "Remover alarme"
 
-#: src/gui/event-editor/gcal-alarm-row.c:85
+#: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u dia, %2$u hora, e %3$u minuto antes"
 msgstr[1] "%1$u dia, %2$u hora, e %3$u minutos antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:89
+#: src/gui/event-editor/gcal-alarm-row.c:88
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u dia, %2$u horas, e %3$u minuto antes"
 msgstr[1] "%1$u dia, %2$u horas, e %3$u minutos antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:95
+#: src/gui/event-editor/gcal-alarm-row.c:94
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u dias, %2$u hora, e %3$u minuto antes"
 msgstr[1] "%1$u dias, %2$u hora, e %3$u minutos antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:99
+#: src/gui/event-editor/gcal-alarm-row.c:98
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u dias, %2$u horas, e %3$u minuto antes"
 msgstr[1] "%1$u dias, %2$u horas, e %3$u minutos antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:114
+#: src/gui/event-editor/gcal-alarm-row.c:113
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
 msgstr[0] "%1$u dia e %2$u hora antes"
 msgstr[1] "%1$u dia e %2$u horas antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:118
+#: src/gui/event-editor/gcal-alarm-row.c:117
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
 msgstr[0] "%1$u dias e %2$u hora antes"
 msgstr[1] "%1$u dias e %2$u horas antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:134
+#: src/gui/event-editor/gcal-alarm-row.c:133
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
 msgstr[0] "%1$u dia e %2$u minuto antes"
 msgstr[1] "%1$u dia e %2$u minutos antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:138
+#: src/gui/event-editor/gcal-alarm-row.c:137
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
 msgstr[0] "%1$u dias e %2$u minuto antes"
 msgstr[1] "%1$u dias e %2$u minutos antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:148
+#: src/gui/event-editor/gcal-alarm-row.c:147
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "%1$u dia antes"
 msgstr[1] "%1$u dias antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:166
+#: src/gui/event-editor/gcal-alarm-row.c:165
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "%1$u hora e %2$u minuto antes"
 msgstr[1] "%1$u hora e %2$u minutos antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:170
+#: src/gui/event-editor/gcal-alarm-row.c:169
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "%1$u horas e %2$u minuto antes"
 msgstr[1] "%1$u horas e %2$u minutos antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:180
+#: src/gui/event-editor/gcal-alarm-row.c:179
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "%1$u hora antes"
 msgstr[1] "%1$u horas antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:192
+#: src/gui/event-editor/gcal-alarm-row.c:191
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "%1$u minuto antes"
 msgstr[1] "%1$u minutos antes"
 
-#: src/gui/event-editor/gcal-alarm-row.c:199
+#: src/gui/event-editor/gcal-alarm-row.c:198
 msgid "Event start time"
 msgstr "Início do evento"
 
@@ -654,16 +681,6 @@ msgstr "Detalhes de evento"
 #: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Edit Event"
 msgstr "Editar evento"
-
-#: src/gui/event-editor/gcal-multi-choice.c:172
-#, c-format
-msgid "Previous %1$s"
-msgstr "Anterior %1$s"
-
-#: src/gui/event-editor/gcal-multi-choice.c:182
-#, c-format
-msgid "Next %1$s"
-msgstr "Seguinte %1$s"
 
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
@@ -968,12 +985,12 @@ msgid "Today"
 msgstr "Hoje"
 
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
-#: src/gui/gcal-window.c:280 src/gui/views/gcal-agenda-view.c:200
+#: src/gui/gcal-window.c:290 src/gui/views/gcal-agenda-view.c:200
 msgid "Tomorrow"
 msgstr "Amanhã"
 
 #: src/gui/gcal-event-popover.c:211 src/gui/gcal-event-popover.c:325
-#: src/gui/gcal-window.c:249 src/gui/views/gcal-agenda-view.c:202
+#: src/gui/gcal-window.c:259 src/gui/views/gcal-agenda-view.c:202
 msgid "Yesterday"
 msgstr "Ontem"
 
@@ -1428,47 +1445,35 @@ msgstr "_Teclas de atalho"
 msgid "_About Calendar"
 msgstr "_Acerca do Calendário"
 
-#: src/gui/gcal-window.c:245
+#: src/gui/gcal-window.c:255
 msgid "Previous Week"
 msgstr "Semana anterior"
 
-#: src/gui/gcal-window.c:247
-msgid "Previous Month"
-msgstr "Mês anterior"
-
-#: src/gui/gcal-window.c:276
+#: src/gui/gcal-window.c:286
 msgid "Next Week"
-msgstr "Próxima semana"
+msgstr "Semana seguinte"
 
-#: src/gui/gcal-window.c:278
-msgid "Next Month"
-msgstr "Próximo Mês"
-
-#: src/gui/gcal-window.c:398
+#: src/gui/gcal-window.c:408
 msgid "Week"
 msgstr "Semana"
 
-#: src/gui/gcal-window.c:401
-msgid "Month"
-msgstr "Mês"
-
-#: src/gui/gcal-window.c:404
+#: src/gui/gcal-window.c:414
 msgid "Agenda"
 msgstr "Calendário"
 
-#: src/gui/gcal-window.c:979
+#: src/gui/gcal-window.c:992
 msgid "Another event deleted"
 msgstr "Outro evento eliminado"
 
-#: src/gui/gcal-window.c:979
+#: src/gui/gcal-window.c:992
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
-#: src/gui/gcal-window.c:1044
+#: src/gui/gcal-window.c:1057
 msgid "Could not import some files: Not ICS files"
 msgstr "Não foi possível importar alguns ficheiros: Não são ficheiros ICS"
 
-#: src/gui/gcal-window.c:1049
+#: src/gui/gcal-window.c:1062
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Não foi possível importar “%s”: não é um ficheiro ICS"
@@ -1649,7 +1654,7 @@ msgstr "%A %B %d"
 msgid "On-going"
 msgstr "Em andamento"
 
-#: src/gui/views/gcal-month-popover.blp:56
+#: src/gui/views/gcal-month-popover.blp:58
 msgid "New Event…"
 msgstr "Novo evento…"
 
@@ -1749,6 +1754,14 @@ msgstr "Mapas Google"
 #: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Bing Maps"
+
+#, c-format
+#~ msgid "Previous %1$s"
+#~ msgstr "Anterior %1$s"
+
+#, c-format
+#~ msgid "Next %1$s"
+#~ msgstr "Seguinte %1$s"
 
 #~ msgid "maybe"
 #~ msgid_plural "maybe"
@@ -1942,9 +1955,6 @@ msgstr "Bing Maps"
 
 #~ msgid "Year view"
 #~ msgstr "Vista de ano"
-
-#~ msgid "Year"
-#~ msgstr "Ano"
 
 #~ msgctxt "shortcut window"
 #~ msgid "Year view"
