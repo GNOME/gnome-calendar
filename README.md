@@ -5,7 +5,7 @@
 
   Manage your schedule
 
-  <img width="922" src="https://static.gnome.org/appdata/gnome-43/calendar/calendar-week.png">
+  <img width="922" src="https://static.gnome.org/appdata/gnome-50/org.gnome.Calendar/month-view.png">
 </div>
 
 ## Installation
