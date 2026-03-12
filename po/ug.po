@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-03-01 19:55+0000\n"
-"PO-Revision-Date: 2026-03-03 00:14-0500\n"
+"POT-Creation-Date: 2026-03-12 01:12+0000\n"
+"PO-Revision-Date: 2026-03-12 15:28-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: \n"
 "Language: ug\n"
@@ -21,7 +21,7 @@ msgstr ""
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5
-#: src/gui/gcal-window.c:407 src/main.c:35
+#: src/gui/gcal-window.c:417 src/main.c:35
 msgid "Calendar"
 msgstr "يىلنامە"
 
@@ -125,15 +125,15 @@ msgstr ""
 "قانداق ئورۇن ھەر قانداق ۋاقىتتا ئۇنى ئىشلىتەلەيسىز(ياكى مەدەنىيەت "
 "يىمىرىلگەندىن كېيىنمۇ)."
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
-msgid "Week view"
-msgstr "ھەپتە كۆرۈنۈشى"
-
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:66
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
 msgstr "ئاي كۆرۈنۈشى"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:70
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:67
+msgid "Week view"
+msgstr "ھەپتە كۆرۈنۈشى"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:71
 msgid "Event editor"
 msgstr "پائالىيەت تەھرىرلىگۈچ"
 
@@ -192,7 +192,7 @@ msgid "Calendar “%s” removed"
 msgstr "«%s» يىلنامە چىقىرىۋېتىلدى"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:981
+#: src/gui/gcal-window.c:994
 msgid "_Undo"
 msgstr "يېنىۋال(_U)"
 
@@ -326,6 +326,33 @@ msgstr ""
 msgid "This calendar is hidden"
 msgstr "بۇ يىلنامە يوشۇرۇن"
 
+#: src/gui/common/gcal-date-chooser.blp:15
+#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:411
+msgid "Month"
+msgstr "ئاي"
+
+#: src/gui/common/gcal-date-chooser.blp:16
+#: src/gui/common/gcal-date-chooser.blp:56 src/gui/gcal-window.c:257
+msgid "Previous Month"
+msgstr "ئالدىنقى ئاي"
+
+#: src/gui/common/gcal-date-chooser.blp:17
+#: src/gui/common/gcal-date-chooser.blp:57 src/gui/gcal-window.c:288
+msgid "Next Month"
+msgstr "كېيىنكى ئاي"
+
+#: src/gui/common/gcal-date-chooser.blp:34
+msgid "Year"
+msgstr "يىل"
+
+#: src/gui/common/gcal-date-chooser.blp:35
+msgid "Previous Year"
+msgstr "ئالدىنقى يىل"
+
+#: src/gui/common/gcal-date-chooser.blp:36
+msgid "Next Year"
+msgstr "كېيىنكى يىل"
+
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
 #. * NOTE: These grid abbreviations are always shown together
@@ -334,43 +361,43 @@ msgstr "بۇ يىلنامە يوشۇرۇن"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:337
+#: src/gui/common/gcal-date-chooser.c:336
 msgctxt "grid sunday"
 msgid "S"
 msgstr "ي"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:342
+#: src/gui/common/gcal-date-chooser.c:341
 msgctxt "grid monday"
 msgid "M"
 msgstr "د"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:347
+#: src/gui/common/gcal-date-chooser.c:346
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "س"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:352
+#: src/gui/common/gcal-date-chooser.c:351
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "چ"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:357
+#: src/gui/common/gcal-date-chooser.c:356
 msgctxt "grid thursday"
 msgid "T"
 msgstr "پ"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:362
+#: src/gui/common/gcal-date-chooser.c:361
 msgctxt "grid friday"
 msgid "F"
 msgstr "ج"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:367
+#: src/gui/common/gcal-date-chooser.c:366
 msgctxt "grid saturday"
 msgid "S"
 msgstr "ش"
@@ -379,85 +406,85 @@ msgstr "ش"
 msgid "Remove Alarm"
 msgstr "قوڭغۇراقنى چىقىرىۋەت"
 
-#: src/gui/event-editor/gcal-alarm-row.c:83
+#: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u كۈن، %2$u سائەت، %3$u مىنۇت ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:87
+#: src/gui/event-editor/gcal-alarm-row.c:88
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u كۈن، %2$u سائەت، %3$u مىنۇت ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:93
+#: src/gui/event-editor/gcal-alarm-row.c:94
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
 msgstr[0] "%1$u كۈن، %2$u سائەت، %3$u مىنۇت ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:97
+#: src/gui/event-editor/gcal-alarm-row.c:98
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
 msgstr[0] "%1$u كۈن، %2$u سائەت، %3$u مىنۇت ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:112
+#: src/gui/event-editor/gcal-alarm-row.c:113
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
 msgstr[0] "%1$u كۈن، %2$u سائەت ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:116
+#: src/gui/event-editor/gcal-alarm-row.c:117
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
 msgstr[0] "%1$u كۈن، %2$u سائەت ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:132
+#: src/gui/event-editor/gcal-alarm-row.c:133
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
 msgstr[0] "%1$u كۈن، %2$u مىنۇت ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:136
+#: src/gui/event-editor/gcal-alarm-row.c:137
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
 msgstr[0] "%1$u كۈن، %2$u مىنۇت ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:146
+#: src/gui/event-editor/gcal-alarm-row.c:147
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
 msgstr[0] "%1$u كۈن ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:164
+#: src/gui/event-editor/gcal-alarm-row.c:165
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
 msgstr[0] "%1$u سائەت، %2$u مىنۇت ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:168
+#: src/gui/event-editor/gcal-alarm-row.c:169
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] "%1$u سائەت، %2$u مىنۇت ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:178
+#: src/gui/event-editor/gcal-alarm-row.c:179
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
 msgstr[0] "%1$u سائەت ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:190
+#: src/gui/event-editor/gcal-alarm-row.c:191
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
 msgstr[0] "%1$u مىنۇت ئىلگىرى"
 
-#: src/gui/event-editor/gcal-alarm-row.c:197
+#: src/gui/event-editor/gcal-alarm-row.c:198
 msgid "Event start time"
 msgstr "پائالىيەت باشلىنىش ۋاقتى"
 
@@ -627,16 +654,6 @@ msgstr "پائالىيەت تەپسىلاتى"
 #: src/gui/event-editor/gcal-event-editor-dialog.c:709
 msgid "Edit Event"
 msgstr "پائالىيەت تەھرىر"
-
-#: src/gui/event-editor/gcal-multi-choice.c:172
-#, c-format
-msgid "Previous %1$s"
-msgstr "ئالدىنقى %1$s"
-
-#: src/gui/event-editor/gcal-multi-choice.c:182
-#, c-format
-msgid "Next %1$s"
-msgstr "كېيىنكى %1$s"
 
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
@@ -936,12 +953,12 @@ msgid "Today"
 msgstr "بۈگۈن"
 
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
-#: src/gui/gcal-window.c:280 src/gui/views/gcal-agenda-view.c:200
+#: src/gui/gcal-window.c:290 src/gui/views/gcal-agenda-view.c:200
 msgid "Tomorrow"
 msgstr "ئەتە"
 
 #: src/gui/gcal-event-popover.c:211 src/gui/gcal-event-popover.c:325
-#: src/gui/gcal-window.c:249 src/gui/views/gcal-agenda-view.c:202
+#: src/gui/gcal-window.c:259 src/gui/views/gcal-agenda-view.c:202
 msgid "Yesterday"
 msgstr "تۈنۈگۈن"
 
@@ -1395,47 +1412,35 @@ msgstr "ھەرپتاختا تېزلەتمىسى(_K)"
 msgid "_About Calendar"
 msgstr "يىلنامە ھەققىدە(_A)"
 
-#: src/gui/gcal-window.c:245
+#: src/gui/gcal-window.c:255
 msgid "Previous Week"
 msgstr "ئالدىنقى ھەپتە"
 
-#: src/gui/gcal-window.c:247
-msgid "Previous Month"
-msgstr "ئالدىنقى ئاي"
-
-#: src/gui/gcal-window.c:276
+#: src/gui/gcal-window.c:286
 msgid "Next Week"
 msgstr "كېيىنكى ھەپتە"
 
-#: src/gui/gcal-window.c:278
-msgid "Next Month"
-msgstr "كېيىنكى ئاي"
-
-#: src/gui/gcal-window.c:398
+#: src/gui/gcal-window.c:408
 msgid "Week"
 msgstr "ھەپتە"
 
-#: src/gui/gcal-window.c:401
-msgid "Month"
-msgstr "ئاي"
-
-#: src/gui/gcal-window.c:404
+#: src/gui/gcal-window.c:414
 msgid "Agenda"
 msgstr "كۈنتەرتىپ"
 
-#: src/gui/gcal-window.c:979
+#: src/gui/gcal-window.c:992
 msgid "Another event deleted"
 msgstr "باشقا پائالىيەت ئۆچۈرۈلدى"
 
-#: src/gui/gcal-window.c:979
+#: src/gui/gcal-window.c:992
 msgid "Event deleted"
 msgstr "پائالىيەت ئۆچۈرۈلدى"
 
-#: src/gui/gcal-window.c:1044
+#: src/gui/gcal-window.c:1057
 msgid "Could not import some files: Not ICS files"
 msgstr "بەزى ھۆججەتنى ئەكىرەلمەيدۇ: ICS ھۆججىتى ئەمەس"
 
-#: src/gui/gcal-window.c:1049
+#: src/gui/gcal-window.c:1062
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "«%s» نى ئەكىرەلمەيدۇ: ICS ھۆججىتى ئەمەس"
@@ -1714,6 +1719,14 @@ msgstr "Google خەرىتە"
 #: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Bing خەرىتە"
+
+#, c-format
+#~ msgid "Previous %1$s"
+#~ msgstr "ئالدىنقى %1$s"
+
+#, c-format
+#~ msgid "Next %1$s"
+#~ msgstr "كېيىنكى %1$s"
 
 #~ msgid "maybe"
 #~ msgid_plural "maybe"
