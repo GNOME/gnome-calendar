@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-02-08 16:41+0000\n"
-"PO-Revision-Date: 2026-02-09 17:51+0200\n"
+"POT-Creation-Date: 2026-03-12 01:12+0000\n"
+"PO-Revision-Date: 2026-03-13 18:11+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5
-#: src/gui/gcal-window.c:407 src/main.c:35
+#: src/gui/gcal-window.c:417 src/main.c:35
 msgid "Calendar"
 msgstr "Календар"
 
@@ -131,15 +131,15 @@ msgstr ""
 "користуватися програмою будь-де і будь-коли під час подорожей (або після "
 "краху цивілізації.)"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:62
-msgid "Week view"
-msgstr "Перегляд тижня"
-
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:66
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
 msgstr "Перегляд місяця"
 
-#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:70
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:67
+msgid "Week view"
+msgstr "Перегляд тижня"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:71
 msgid "Event editor"
 msgstr "Редактор подій"
 
@@ -186,7 +186,7 @@ msgstr "Параметри календаря"
 msgid "Calendars"
 msgstr "Календарі"
 
-#: src/gui/calendar-management/gcal-calendars-page.blp:52
+#: src/gui/calendar-management/gcal-calendars-page.blp:37
 msgid "_Add Calendar"
 msgstr "_Додати календар"
 
@@ -198,7 +198,7 @@ msgid "Calendar “%s” removed"
 msgstr "Календар «%s» вилучено"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:981
+#: src/gui/gcal-window.c:994
 msgid "_Undo"
 msgstr "_Скасувати"
 
@@ -218,7 +218,7 @@ msgstr "Відкрити у «Параметрах»"
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:197
 #: src/gui/event-editor/gcal-summary-section.blp:18
 #: src/gui/gcal-event-popover.blp:144
-#: src/gui/importer/gcal-import-file-row.c:177
+#: src/gui/importer/gcal-import-file-row.c:180
 msgid "Location"
 msgstr "Місцевість"
 
@@ -337,6 +337,35 @@ msgstr ""
 msgid "This calendar is hidden"
 msgstr "Цей календар приховано"
 
+#: src/gui/common/gcal-date-chooser.blp:15
+#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:411
+msgid "Month"
+msgstr "Місяць"
+
+#: src/gui/common/gcal-date-chooser.blp:16
+#: src/gui/common/gcal-date-chooser.blp:56 src/gui/gcal-window.c:257
+msgid "Previous Month"
+msgstr "Попередній місяць"
+
+#: src/gui/common/gcal-date-chooser.blp:17
+#: src/gui/common/gcal-date-chooser.blp:57 src/gui/gcal-window.c:288
+msgid "Next Month"
+msgstr "Наступний місяць"
+
+#: src/gui/common/gcal-date-chooser.blp:34
+msgid "Year"
+msgstr "Рік"
+
+#: src/gui/common/gcal-date-chooser.blp:35
+#| msgid "Previous Week"
+msgid "Previous Year"
+msgstr "Попередній рік"
+
+#: src/gui/common/gcal-date-chooser.blp:36
+#| msgid "Next Week"
+msgid "Next Year"
+msgstr "Наступний рік"
+
 #. Translators: Calendar grid abbreviation for Sunday.
 #. *
 #. * NOTE: These grid abbreviations are always shown together
@@ -345,43 +374,43 @@ msgstr "Цей календар приховано"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:273
+#: src/gui/common/gcal-date-chooser.c:336
 msgctxt "grid sunday"
 msgid "S"
 msgstr "Н"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:278
+#: src/gui/common/gcal-date-chooser.c:341
 msgctxt "grid monday"
 msgid "M"
 msgstr "П"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:283
+#: src/gui/common/gcal-date-chooser.c:346
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "В"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:288
+#: src/gui/common/gcal-date-chooser.c:351
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "С"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:293
+#: src/gui/common/gcal-date-chooser.c:356
 msgctxt "grid thursday"
 msgid "T"
 msgstr "Ч"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:298
+#: src/gui/common/gcal-date-chooser.c:361
 msgctxt "grid friday"
 msgid "F"
 msgstr "П"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:303
+#: src/gui/common/gcal-date-chooser.c:366
 msgctxt "grid saturday"
 msgid "S"
 msgstr "С"
@@ -390,7 +419,7 @@ msgstr "С"
 msgid "Remove Alarm"
 msgstr "Вилучити нагадування"
 
-#: src/gui/event-editor/gcal-alarm-row.c:85
+#: src/gui/event-editor/gcal-alarm-row.c:84
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
@@ -399,7 +428,7 @@ msgstr[1] "За %1$u день, %2$u година, %3$u хвилини"
 msgstr[2] "За %1$u день, %2$u година, %3$u хвилин"
 msgstr[3] "За %1$u день, %2$u година, %3$u хвилина"
 
-#: src/gui/event-editor/gcal-alarm-row.c:89
+#: src/gui/event-editor/gcal-alarm-row.c:88
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
@@ -408,7 +437,7 @@ msgstr[1] "За %1$u день, %2$u години, %3$u хвилини"
 msgstr[2] "За %1$u день, %2$u години, %3$u хвилин"
 msgstr[3] "За %1$u дня, %2$u годин, та %3$u хвилини"
 
-#: src/gui/event-editor/gcal-alarm-row.c:95
+#: src/gui/event-editor/gcal-alarm-row.c:94
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
@@ -417,7 +446,7 @@ msgstr[1] "За %1$u днів, %2$u години, та %3$u хвилин"
 msgstr[2] "За %1$u днів, %2$u годин, та %3$u хвилин"
 msgstr[3] "За %1$u днів, %2$u години, та %3$u хвилини"
 
-#: src/gui/event-editor/gcal-alarm-row.c:99
+#: src/gui/event-editor/gcal-alarm-row.c:98
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
@@ -426,7 +455,7 @@ msgstr[1] "За %1$u днів, %2$u годин, та %3$u хвилин"
 msgstr[2] "За %1$u днів, %2$u годин, та %3$u хвилин"
 msgstr[3] "За %1$u днів, %2$u годин, та %3$u хвилини"
 
-#: src/gui/event-editor/gcal-alarm-row.c:114
+#: src/gui/event-editor/gcal-alarm-row.c:113
 #, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
@@ -435,7 +464,7 @@ msgstr[1] "За %1$u дня та %2$u години"
 msgstr[2] "За %1$u дня та %2$u годин"
 msgstr[3] "За %1$u дня та %2$u годину"
 
-#: src/gui/event-editor/gcal-alarm-row.c:118
+#: src/gui/event-editor/gcal-alarm-row.c:117
 #, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
@@ -444,7 +473,7 @@ msgstr[1] "За %1$u днів та %2$u години"
 msgstr[2] "За %1$u днів та %2$u годин"
 msgstr[3] "За %1$u днів та %2$u годину"
 
-#: src/gui/event-editor/gcal-alarm-row.c:134
+#: src/gui/event-editor/gcal-alarm-row.c:133
 #, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
@@ -453,7 +482,7 @@ msgstr[1] "За %1$u дня та %2$u хвилини"
 msgstr[2] "За %1$u дня та %2$u хвилин"
 msgstr[3] "За %1$u дня та %2$u хвилину"
 
-#: src/gui/event-editor/gcal-alarm-row.c:138
+#: src/gui/event-editor/gcal-alarm-row.c:137
 #, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
@@ -462,7 +491,7 @@ msgstr[1] "За %1$u днів та %2$u хвилини"
 msgstr[2] "За %1$u днів та %2$u хвилин"
 msgstr[3] "За %1$u днів та %2$u хвилину"
 
-#: src/gui/event-editor/gcal-alarm-row.c:148
+#: src/gui/event-editor/gcal-alarm-row.c:147
 #, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
@@ -471,7 +500,7 @@ msgstr[1] "За %1$u дні"
 msgstr[2] "За %1$u днів"
 msgstr[3] "За %1$u день"
 
-#: src/gui/event-editor/gcal-alarm-row.c:166
+#: src/gui/event-editor/gcal-alarm-row.c:165
 #, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
@@ -480,7 +509,7 @@ msgstr[1] "За %1$u години та %2$u хвилини"
 msgstr[2] "За %1$u години та %2$u хвилин"
 msgstr[3] "За %1$u години та %2$u хвилину"
 
-#: src/gui/event-editor/gcal-alarm-row.c:170
+#: src/gui/event-editor/gcal-alarm-row.c:169
 #, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
@@ -489,7 +518,7 @@ msgstr[1] "За %1$u годин та %2$u хвилини"
 msgstr[2] "За %1$u годин та %2$u хвилин"
 msgstr[3] "За %1$u годин та %2$u хвилину"
 
-#: src/gui/event-editor/gcal-alarm-row.c:180
+#: src/gui/event-editor/gcal-alarm-row.c:179
 #, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
@@ -498,7 +527,7 @@ msgstr[1] "За %1$u години"
 msgstr[2] "За %1$u годин"
 msgstr[3] "За %1$u годину"
 
-#: src/gui/event-editor/gcal-alarm-row.c:192
+#: src/gui/event-editor/gcal-alarm-row.c:191
 #, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
@@ -507,7 +536,7 @@ msgstr[1] "За %1$u хвилини"
 msgstr[2] "За %1$u хвилин"
 msgstr[3] "За %1$u хвилину"
 
-#: src/gui/event-editor/gcal-alarm-row.c:199
+#: src/gui/event-editor/gcal-alarm-row.c:198
 msgid "Event start time"
 msgstr "Час початку події"
 
@@ -693,17 +722,6 @@ msgstr "Подробиці події"
 msgid "Edit Event"
 msgstr "Редагування події"
 
-#: src/gui/event-editor/gcal-multi-choice.c:170
-#, c-format
-#| msgid "Previous Week"
-msgid "Previous %1$s"
-msgstr "Попередні %1$s"
-
-#: src/gui/event-editor/gcal-multi-choice.c:180
-#, c-format
-msgid "Next %1$s"
-msgstr "Наступні %1$s"
-
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
 msgstr "Щоденник"
@@ -829,7 +847,7 @@ msgstr "Дата завершення повтору"
 
 #: src/gui/event-editor/gcal-summary-section.blp:13
 #: src/gui/gcal-quick-add-popover.blp:44
-#: src/gui/importer/gcal-import-file-row.c:176
+#: src/gui/importer/gcal-import-file-row.c:179
 msgid "Title"
 msgstr "Заголовок"
 
@@ -1003,12 +1021,12 @@ msgid "Today"
 msgstr "Сьогодні"
 
 #: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
-#: src/gui/gcal-window.c:280 src/gui/views/gcal-agenda-view.c:200
+#: src/gui/gcal-window.c:290 src/gui/views/gcal-agenda-view.c:200
 msgid "Tomorrow"
 msgstr "Завтра"
 
 #: src/gui/gcal-event-popover.c:211 src/gui/gcal-event-popover.c:325
-#: src/gui/gcal-window.c:249 src/gui/views/gcal-agenda-view.c:202
+#: src/gui/gcal-window.c:259 src/gui/views/gcal-agenda-view.c:202
 msgid "Yesterday"
 msgstr "Учора"
 
@@ -1090,7 +1108,7 @@ msgid "Edit Additional Details"
 msgstr "Редагувати додаткові подробиці"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:387
+#: src/gui/gcal-event-widget.c:388
 #, c-format
 msgid ""
 "\n"
@@ -1103,7 +1121,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:400 src/gui/gcal-event-widget.c:406
+#: src/gui/gcal-event-widget.c:401 src/gui/gcal-event-widget.c:407
 #, c-format
 msgid ""
 "\n"
@@ -1120,7 +1138,7 @@ msgstr ""
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:465
+#: src/gui/gcal-event-widget.c:466
 msgid "%a %B %d"
 msgstr "%a %B %d"
 
@@ -1465,47 +1483,35 @@ msgstr "_Клавіатурні скорочення"
 msgid "_About Calendar"
 msgstr "Про _Календар"
 
-#: src/gui/gcal-window.c:245
+#: src/gui/gcal-window.c:255
 msgid "Previous Week"
 msgstr "Попередній тиждень"
 
-#: src/gui/gcal-window.c:247
-msgid "Previous Month"
-msgstr "Попередній місяць"
-
-#: src/gui/gcal-window.c:276
+#: src/gui/gcal-window.c:286
 msgid "Next Week"
 msgstr "Наступний тиждень"
 
-#: src/gui/gcal-window.c:278
-msgid "Next Month"
-msgstr "Наступний місяць"
-
-#: src/gui/gcal-window.c:398
+#: src/gui/gcal-window.c:408
 msgid "Week"
 msgstr "Тиждень"
 
-#: src/gui/gcal-window.c:401
-msgid "Month"
-msgstr "Місяць"
-
-#: src/gui/gcal-window.c:404
+#: src/gui/gcal-window.c:414
 msgid "Agenda"
 msgstr "Порядок денний"
 
-#: src/gui/gcal-window.c:979
+#: src/gui/gcal-window.c:992
 msgid "Another event deleted"
 msgstr "Іншу подію вилучено"
 
-#: src/gui/gcal-window.c:979
+#: src/gui/gcal-window.c:992
 msgid "Event deleted"
 msgstr "Подію вилучено"
 
-#: src/gui/gcal-window.c:1044
+#: src/gui/gcal-window.c:1057
 msgid "Could not import some files: Not ICS files"
 msgstr "Не вдалося імпортувати деякі файли: це не файли ICS"
 
-#: src/gui/gcal-window.c:1049
+#: src/gui/gcal-window.c:1062
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Не вдалося імпортувати «%s»: це не файл ICS"
@@ -1531,15 +1537,15 @@ msgstr[1] "Імпортувати %d записи подій"
 msgstr[2] "Імпортувати %d записів подій"
 msgstr[3] "Імпортувати один запис події"
 
-#: src/gui/importer/gcal-import-file-row.c:178
+#: src/gui/importer/gcal-import-file-row.c:181
 msgid "Starts"
 msgstr "Початки"
 
-#: src/gui/importer/gcal-import-file-row.c:179
+#: src/gui/importer/gcal-import-file-row.c:182
 msgid "Ends"
 msgstr "Кінці"
 
-#: src/gui/importer/gcal-import-file-row.c:180
+#: src/gui/importer/gcal-import-file-row.c:183
 msgid "Description"
 msgstr "Опис"
 
@@ -1689,7 +1695,7 @@ msgstr "%A %B %d"
 msgid "On-going"
 msgstr "Невдовзі"
 
-#: src/gui/views/gcal-month-popover.blp:56
+#: src/gui/views/gcal-month-popover.blp:58
 msgid "New Event…"
 msgstr "Створити подію"
 
@@ -1791,6 +1797,15 @@ msgstr "Карти Google"
 #: src/utils/gcal-utils.c:1344
 msgid "Bing Maps"
 msgstr "Bing Maps"
+
+#, c-format
+#~| msgid "Previous Week"
+#~ msgid "Previous %1$s"
+#~ msgstr "Попередні %1$s"
+
+#, c-format
+#~ msgid "Next %1$s"
+#~ msgstr "Наступні %1$s"
 
 #~ msgid "maybe"
 #~ msgid_plural "maybe"
@@ -1986,9 +2001,6 @@ msgstr "Bing Maps"
 
 #~ msgid "Year view"
 #~ msgstr "Перегляд року"
-
-#~ msgid "Year"
-#~ msgstr "Рік"
 
 #~ msgctxt "shortcut window"
 #~ msgid "Year view"
