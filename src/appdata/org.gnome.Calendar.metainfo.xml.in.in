@@ -111,6 +111,28 @@
   <update_contact>gbsneto@gnome.org</update_contact>
 
   <releases>
+    <release date="2026-03-14" version="50.0" type="stable">
+      <description>
+        <ul>
+          <li>It is now possible to navigate between events with arrow keys in the Month View</li>
+          <li>Now it's' also possible to navigate to day cells in the Month View with the Ctrl+Tab shortcut</li>
+          <li>A plethora of accessibility fixes and improvements all around</li>
+          <li>Improved scrolling animations in the Month View</li>
+          <li>Various fixes to focus handling around the app</li>
+          <li>Update the design of the Quick Add popover</li>
+          <li>Dozens of memory leaks were fixed</li>
+          <li>Respect the new GNOME setting for first weekday</li>
+          <li>Event names now fade when they're too long</li>
+          <li>Event widgets are more colorful</li>
+          <li>Remove support for sound-only alarms</li>
+          <li>Show event attendees in the event editor dialog</li>
+          <li>Make Page Up and Page Down shortcuts jump to first day of month</li>
+          <li>Refreshing calendars also updates collections now. This makes new remote calendars appear when refreshing.</li>
+          <li>New and updated translations</li>
+        </ul>
+      </description>
+    </release>
+
     <release date="2026-03-01" version="50~rc" type="development" />
     <release date="2026-02-09" version="50~beta" type="development" />
     <release date="2026-01-05" version="50~alpha" type="development" />

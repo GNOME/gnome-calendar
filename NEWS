@@ -1,3 +1,11 @@
+Major changes in 50.0:
+* Updated screenshots
+* Focus adjacent cell when pressing Ctrl+Tab in the Month view
+* Refreshing calendars also updates collections now. This makes new remote
+  calendars appear when refreshing.
+* Fix an untranslatable string
+* Updated translations
+
 Major changes in 50.rc:
 * Add navigation using arrow keys in the Month view. This in itself is a major
   accessibility improvement, but it also comes in preparation of further
