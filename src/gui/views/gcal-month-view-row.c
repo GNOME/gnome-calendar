@@ -264,12 +264,14 @@ find_nearest_vertical_event_widget (GcalMonthViewRow  *self,
   g_autoptr (FocusEventData) candidate = NULL;
   g_autoptr (FocusEventData) nearest = NULL;
   GtkWidget *child;
-  gboolean downward, forward_or_backward;
+  gboolean downward, upward, forward_or_backward;
   gboolean is_rtl;
 
   GCAL_ENTRY;
 
   downward = direction == GTK_DIR_DOWN || direction == GTK_DIR_TAB_FORWARD;
+  upward = !downward;
+
   is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
   forward_or_backward = direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD;
 
@@ -297,13 +299,13 @@ find_nearest_vertical_event_widget (GcalMonthViewRow  *self,
         continue;
 
       if ((downward && candidate->rect.origin.y < focused->rect.origin.y) ||
-          (!downward && candidate->rect.origin.y > focused->rect.origin.y))
+          (upward && candidate->rect.origin.y > focused->rect.origin.y))
         continue;
 
       if (nearest == NULL)
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
       else if ((downward && candidate->rect.origin.y < nearest->rect.origin.y) ||
-               (!downward && candidate->rect.origin.y > nearest->rect.origin.y))
+               (upward && candidate->rect.origin.y > nearest->rect.origin.y))
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
       else if (downward && candidate->rect.origin.y == nearest->rect.origin.y &&
                ((is_rtl && candidate->focal_x > nearest->focal_x) ||
