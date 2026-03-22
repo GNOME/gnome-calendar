@@ -223,11 +223,8 @@ update_today_action_enabled (GcalWindow *window)
 static void
 focus_last_focused_widget (GcalWindow *self)
 {
-  if (self->last_focused_widget)
-    {
-      gtk_widget_grab_focus (self->last_focused_widget);
-      g_clear_weak_pointer (&self->last_focused_widget);
-    }
+  if (self->last_focused_widget && gtk_widget_grab_focus (self->last_focused_widget))
+    g_clear_weak_pointer (&self->last_focused_widget);
 }
 
 static gchar*
