@@ -527,6 +527,15 @@ switch_prev_view (GcalWindow *self)
  */
 
 static void
+event_editor_closed_cb (GcalEventEditorDialog *dialog,
+                        GcalWindow            *self)
+{
+  g_assert (GCAL_IS_WINDOW (self));
+
+  focus_last_focused_widget (self);
+}
+
+static void
 on_show_calendars_action_activated (GSimpleAction *action,
                                     GVariant      *param,
                                     gpointer       user_data)
@@ -1494,6 +1503,7 @@ gcal_window_init (GcalWindow *self)
                               G_N_ELEMENTS(drop_types));
 
   gcal_drop_overlay_set_drop_target(self->drop_overlay, self->drop_target);
+  g_signal_connect_object (self->event_editor, "closed", G_CALLBACK (event_editor_closed_cb), self, 0);
 }
 
 /**
