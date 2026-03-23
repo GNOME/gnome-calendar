@@ -185,6 +185,29 @@ delete_calendar (GcalCalendarsPage *self,
     }
 }
 
+static void
+clear_toast_and_delete_calendar (GcalCalendarsPage *self,
+                                 AdwToast          *toast)
+{
+  GcalCalendar *calendar;
+
+  GCAL_ENTRY;
+
+  calendar = g_object_get_data (G_OBJECT (toast), "calendar");
+
+  if (!calendar)
+    {
+      g_assert (self->toast == NULL);
+      GCAL_RETURN ();
+    }
+
+  delete_calendar (self, calendar);
+
+  g_clear_object (&self->toast);
+
+  GCAL_EXIT;
+}
+
 
 /*
  * Callbacks
@@ -291,23 +314,7 @@ static void
 on_toast_dismissed_cb (AdwToast          *toast,
                        GcalCalendarsPage *self)
 {
-  GcalCalendar *calendar;
-
-  GCAL_ENTRY;
-
-  calendar = g_object_get_data (G_OBJECT (toast), "calendar");
-
-  if (!calendar)
-    {
-      g_assert (self->toast == NULL);
-      GCAL_RETURN ();
-    }
-
-  delete_calendar (self, calendar);
-
-  g_clear_object (&self->toast);
-
-  GCAL_EXIT;
+  clear_toast_and_delete_calendar (self, toast);
 }
 
 
@@ -363,6 +370,23 @@ gcal_calendar_management_page_iface_init (GcalCalendarManagementPageInterface *i
   iface->activate = gcal_calendars_page_activate;
 }
 
+
+/*
+ * GtkWidget overrides
+ */
+
+static void
+gcal_calendars_page_unmap (GtkWidget *widget)
+{
+  GcalCalendarsPage *self = GCAL_CALENDARS_PAGE (widget);
+
+  if (self->toast)
+    clear_toast_and_delete_calendar (self, self->toast);
+
+  GTK_WIDGET_CLASS (gcal_calendars_page_parent_class)->unmap (widget);
+}
+
+
 /*
  * GObject overrides
  */
@@ -384,6 +408,8 @@ gcal_calendars_page_class_init (GcalCalendarsPageClass *klass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->finalize = gcal_calendars_page_finalize;
+
+  widget_class->unmap = gcal_calendars_page_unmap;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-calendars-page.ui");
 
