@@ -70,8 +70,8 @@ pages:
     - mkdir -p public
     - cp .gitlab-ci/landing-page.html public/index.html
     - mv public_scanbuild/ public/scanbuild
-    - mv public_grcov/coverage.xml public/
-    - mv public_grcov/coverage public/coverage
+    - mv public_grcov/cobertura.xml public/
+    - mv public_grcov/html public/coverage
   artifacts:
     paths:
       - public
