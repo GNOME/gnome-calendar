@@ -3,7 +3,7 @@ using Adw 1;
 
 template $GcalOrganizerRow: Adw.ActionRow {
   title: _("Organizer");
-  subtitle: bind $generate_subtitle(template.organizer) as <string>;
+  subtitle: bind $generate_subtitle(template.organizer);
 
   styles [
     "property",

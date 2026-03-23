@@ -266,15 +266,15 @@ template $GcalWindow: Adw.ApplicationWindow {
           ActionBar {
             [start]
             Button previous_date_button {
-              icon-name: bind $get_previous_date_icon(views_stack.visible-child) as <string>;
-              tooltip-text: bind $get_previous_date_tooltip(views_stack.visible-child-name) as <string>;
+              icon-name: bind $get_previous_date_icon(views_stack.visible-child);
+              tooltip-text: bind $get_previous_date_tooltip(views_stack.visible-child-name);
               action-name: "win.previous-date";
             }
 
             [start]
             Button next_date_button {
-              icon-name: bind $get_next_date_icon(views_stack.visible-child) as <string>;
-              tooltip-text: bind $get_next_date_tooltip(views_stack.visible-child-name) as <string>;
+              icon-name: bind $get_next_date_icon(views_stack.visible-child);
+              tooltip-text: bind $get_next_date_tooltip(views_stack.visible-child-name);
               action-name: "win.next-date";
             }
 
