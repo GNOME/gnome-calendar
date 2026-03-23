@@ -9,6 +9,7 @@ include:
   - component: "gitlab.gnome.org/gnome/citemplates/gnomeos-basic-ci@master"
     inputs:
       meson-options: "-Dtracing=true -Dprofile=development"
+      grcov-c-options: '--ignore "tests/*"'
 
 variables:
   APP_ID: "org.gnome.Calendar.Devel"
