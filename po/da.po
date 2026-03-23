@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2026-03-11 00:30+0000\n"
-"PO-Revision-Date: 2026-03-11 17:33+0100\n"
+"PO-Revision-Date: 2026-03-23 17:27+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -1113,7 +1113,7 @@ msgstr "Ukendt tjeneste"
 
 #: src/gui/gcal-quick-add-popover.blp:86
 msgid "_Edit Details"
-msgstr "_Redigér detaljer …"
+msgstr "_Redigér detaljer"
 
 #: src/gui/gcal-quick-add-popover.blp:98
 msgid "_Save Event"
