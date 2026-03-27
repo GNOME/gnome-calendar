@@ -35,10 +35,9 @@ style-check-diff:
   allow_failure: true
 
 blueprint-format:
-  image: fedora:latest
+  image: quay.io/gnome_infrastructure/gnome-build-meta:core-nightly
   stage: check
   before_script:
-    - dnf install -y blueprint-compiler
     - shopt -s globstar
   script:
     - blueprint-compiler format **/*.blp
