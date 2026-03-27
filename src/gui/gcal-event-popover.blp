@@ -55,7 +55,9 @@ template $GcalEventPopover: Popover {
           spacing: 6;
 
           Image read_only_icon {
-            tooltip-markup: _("<b>This event is part of a read-only calendar</b>\n    You cannot delete or change this event.");
+            tooltip-markup: _(
+              "<b>This event is part of a read-only calendar</b>\n    You cannot delete or change this event."
+            );
             icon-name: "changes-prevent-symbolic";
             pixel-size: 18;
             valign: start;

@@ -46,7 +46,9 @@ template $GcalNewCalendarPage: Adw.NavigationPage {
           column-spacing: 12;
 
           Label {
-            label: _("HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only be updated by the provider will be added as read-only.");
+            label: _(
+              "HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only be updated by the provider will be added as read-only."
+            );
             wrap: true;
             xalign: 0;
 
@@ -105,7 +107,9 @@ template $GcalNewCalendarPage: Adw.NavigationPage {
           }
 
           Label web_description_label {
-            label: _("If the calendar belongs to one of your online accounts, you can add it through the <a href=\"GOA\">online account settings</a>.");
+            label: _(
+              "If the calendar belongs to one of your online accounts, you can add it through the <a href=\"GOA\">online account settings</a>."
+            );
             use-markup: true;
             wrap: true;
             xalign: 0;
