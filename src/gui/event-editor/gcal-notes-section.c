@@ -63,6 +63,25 @@ empty_string (gpointer     user_data,
   return g_utf8_strlen (text, -1) == 0;
 }
 
+static void
+on_row_pressed (GtkGestureClick *gesture,
+                gint             n_press,
+                gdouble          x,
+                gdouble          y,
+                GtkWidget       *text_view)
+{
+  GtkWidget *row;
+
+  g_assert (GTK_IS_TEXT_VIEW (text_view));
+
+  row = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (gesture));
+
+  if (gtk_widget_contains (row, x, y))
+    gtk_widget_grab_focus (text_view);
+
+  gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_NONE);
+}
+
 /*
  * GcalEventEditorSection interface
  */
@@ -165,6 +184,7 @@ gcal_notes_section_class_init (GcalNotesSectionClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalNotesSection, placeholder);
 
   gtk_widget_class_bind_template_callback (widget_class, empty_string);
+  gtk_widget_class_bind_template_callback (widget_class, on_row_pressed);
   gtk_widget_class_bind_template_callback (widget_class, on_notes_text_state_flags_changed_cb);
 }
 

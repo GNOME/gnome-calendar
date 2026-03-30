@@ -414,10 +414,6 @@ monthpopover > box {
   padding: 8px;
 }
 
-.notes-section label.placeholder {
-  margin: 14px;
-}
-
 .notes-section box > textview > text {
   background: none;
 }
