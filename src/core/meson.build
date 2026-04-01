@@ -6,6 +6,7 @@ sources += files(
   'gcal-clock.c',
   'gcal-context.c',
   'gcal-event.c',
+  'gcal-event-list.c',
   'gcal-global.c',
   'gcal-log.c',
   'gcal-manager.c',
