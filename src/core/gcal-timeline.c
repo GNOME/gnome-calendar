@@ -72,6 +72,8 @@ struct _GcalTimeline
   GHashTable         *calendars; /* GcalCalendar* -> GcalCalendarMonitor* */
   gboolean            complete;
 
+  GListStore         *calendar_monitors;
+
   GHashTable         *subscribers; /* GcalTimelineSubscriber* -> SubscriberData* */
   GcalRangeTree      *subscriber_ranges;
 
@@ -945,6 +947,8 @@ gcal_timeline_init (GcalTimeline *self)
   self->event_queue = g_queue_new ();
   self->queued_adds = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 
+  self->calendar_monitors = g_list_store_new (GCAL_TYPE_CALENDAR_MONITOR);
+
   /* Timeline source */
   timeline_source = (TimelineSource*) g_source_new (&timeline_source_funcs, sizeof (TimelineSource));
   timeline_source->timeline = self;
@@ -997,6 +1001,7 @@ gcal_timeline_add_calendar (GcalTimeline *self,
   monitor = gcal_calendar_monitor_new (calendar, &monitor_listener, self);
   g_signal_connect (monitor, "notify::complete", G_CALLBACK (on_calendar_monitor_completed_cb), self);
   g_hash_table_insert (self->calendars, calendar, g_object_ref (monitor));
+  g_list_store_append (self->calendar_monitors, monitor);
 
   if (self->range)
     gcal_calendar_monitor_set_range (monitor, self->range);
@@ -1010,6 +1015,8 @@ void
 gcal_timeline_remove_calendar (GcalTimeline *self,
                                GcalCalendar *calendar)
 {
+  g_autoptr (GcalCalendarMonitor) calendar_monitor = NULL;
+
   g_return_if_fail (GCAL_IS_TIMELINE (self));
   g_return_if_fail (GCAL_IS_CALENDAR (calendar));
 
@@ -1017,9 +1024,15 @@ gcal_timeline_remove_calendar (GcalTimeline *self,
 
   g_object_ref (calendar);
 
-  if (g_hash_table_remove (self->calendars, calendar))
+  if (g_hash_table_steal_extended (self->calendars, calendar, NULL, (gpointer *) &calendar_monitor))
     {
+      guint position = 0;
+
       GCAL_TRACE_MSG ("Removing calendar '%s' from timeline %p", gcal_calendar_get_name (calendar), self);
+
+      if (g_list_store_find (self->calendar_monitors, calendar_monitor, &position))
+        g_list_store_remove (self->calendar_monitors, position);
+
       update_completed_calendars (self);
     }
 
