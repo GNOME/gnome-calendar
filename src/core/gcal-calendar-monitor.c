@@ -1068,7 +1068,7 @@ add_events_to_timeline_in_idle_cb (gpointer user_data)
   events = idle_data->events;
   g_assert (idle_data->event_ids == NULL);
 
-  events_to_add = g_ptr_array_sized_new (events->len);
+  events_to_add = g_ptr_array_new_null_terminated (events->len, NULL, TRUE);
 
   G_RW_LOCK_WRITER_AUTO_LOCK (&self->shared.lock, writer_locker);
   for (guint i = 0; i < events->len; i++)
@@ -1110,8 +1110,8 @@ update_events_in_idle_cb (gpointer user_data)
   events = g_steal_pointer (&idle_data->events);
   g_assert (idle_data->event_ids == NULL);
 
-  old_events = g_ptr_array_new_full (events->len, g_object_unref);
-  new_events = g_ptr_array_sized_new (events->len);
+  old_events = g_ptr_array_new_null_terminated (events->len, g_object_unref, TRUE);
+  new_events = g_ptr_array_new_null_terminated (events->len, NULL, TRUE);
 
   G_RW_LOCK_WRITER_AUTO_LOCK (&self->shared.lock, writer_locker);
   for (guint i = 0; i < events->len; i++)
@@ -1160,7 +1160,7 @@ remove_events_from_timeline_in_idle_cb (gpointer user_data)
   event_ids = g_steal_pointer (&idle_data->event_ids);
   g_assert (idle_data->events == NULL);
 
-  events_to_remove = g_ptr_array_new_full (event_ids->len, g_object_unref);
+  events_to_remove = g_ptr_array_new_null_terminated (event_ids->len, g_object_unref, TRUE);
 
   G_RW_LOCK_WRITER_AUTO_LOCK (&self->shared.lock, writer_locker);
 
