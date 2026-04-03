@@ -70,6 +70,17 @@ static guint signals[N_SIGNALS] = { 0, };
  * Auxiliary methods
  */
 
+static inline gint
+get_parent_bin_height (GtkWidget *widget)
+{
+  GtkWidget *parent;
+
+  parent = gtk_widget_get_parent (widget);
+  g_assert (ADW_IS_BIN (parent));
+
+  return gtk_widget_get_height (parent);
+}
+
 static void
 update_style_flags (GcalMonthCell *self)
 {
@@ -568,9 +579,7 @@ gcal_month_cell_get_header_height (GcalMonthCell *self)
 {
   g_return_val_if_fail (GCAL_IS_MONTH_CELL (self), -1);
 
-  return gtk_widget_get_height (self->header_box) +
-         gtk_widget_get_margin_top (self->header_box) +
-         gtk_widget_get_margin_bottom (self->header_box);
+  return get_parent_bin_height (self->header_box);
 }
 
 gint
@@ -578,7 +587,7 @@ gcal_month_cell_get_overflow_height (GcalMonthCell *self)
 {
   g_return_val_if_fail (GCAL_IS_MONTH_CELL (self), -1);
 
-  return gtk_widget_get_height (self->overflow_button);
+  return get_parent_bin_height (self->overflow_button);
 }
 
 gboolean

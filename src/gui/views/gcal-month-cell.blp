@@ -29,66 +29,70 @@ template $GcalMonthCell: Widget {
 
     child: Overlay overlay {
       [overlay]
-      Box header_box {
+      Adw.Bin {
         valign: start;
-        spacing: 6;
-        margin-top: 6;
-        margin-bottom: 6;
-        margin-start: 6;
-        margin-end: 6;
 
-        Label day_label {
-          styles [
-            "day-label",
-            "numeric",
-          ]
-        }
+        child: Box header_box {
+          spacing: 6;
+          margin-top: 6;
+          margin-bottom: 6;
+          margin-start: 6;
+          margin-end: 6;
 
-        Image weather_icon {
-          pixel-size: 16;
-          margin-start: 12;
-          accessible-role: presentation;
+          Label day_label {
+            styles [
+              "day-label",
+              "numeric",
+            ]
+          }
 
-          styles [
-            "dimmed",
-          ]
-        }
+          Image weather_icon {
+            pixel-size: 16;
+            margin-start: 12;
+            accessible-role: presentation;
 
-        Label temp_label {
-          styles [
-            "dimmed",
-            "temp-label",
-          ]
-        }
+            styles [
+              "dimmed",
+            ]
+          }
+
+          Label temp_label {
+            styles [
+              "dimmed",
+              "temp-label",
+            ]
+          }
+        };
       }
 
       [overlay]
-      Button overflow_button {
-        accessible-role: toggle_button;
+      Adw.Bin {
         valign: end;
-        sensitive: false;
-        clicked => $overflow_button_clicked_cb(template) not-swapped;
-        tooltip-text: _("All Events");
-        margin-top: 1;
-        margin-start: 1;
-        margin-bottom: 2;
-        margin-end: 2;
 
-        accessibility {
-          has-popup: true;
-          labelled-by: overflow_inscription;
-        }
+        child: Button overflow_button {
+          accessible-role: toggle_button;
+          sensitive: false;
+          clicked => $overflow_button_clicked_cb(template) not-swapped;
+          tooltip-text: _("All Events");
+          margin-top: 1;
+          margin-start: 1;
+          margin-bottom: 2;
+          margin-end: 2;
 
-        styles [
-          "flat",
-          "overflow",
-        ]
-
-        Box {
-          Inscription overflow_inscription {
-            text-overflow: ellipsize_end;
+          accessibility {
+            has-popup: true;
+            labelled-by: overflow_inscription;
           }
-        }
+
+          styles [
+            "flat",
+            "overflow",
+          ]
+
+          child: Inscription overflow_inscription {
+            text-overflow: ellipsize_end;
+          };
+        };
       }
     };
   }
