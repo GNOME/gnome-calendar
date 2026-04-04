@@ -1467,6 +1467,47 @@ gcal_month_view_row_focus_adjacent_cell (GcalMonthViewRow *self,
 }
 
 /**
+ * gcal_month_view_row_focus_adjacent_event:
+ * @self: a #GcalMonthViewRow
+ * @widget: the month cell
+ *
+ * Focuses the adjacent event widget.
+ *
+ * Returns: %TRUE if the event widget grabbed focus
+ */
+gboolean
+gcal_month_view_row_focus_adjacent_event (GcalMonthViewRow *self,
+                                          GtkWidget        *widget)
+{
+  GtkWidget *picked_widget, *event_widget;
+  graphene_rect_t rect;
+  gdouble x, y;
+
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+  g_assert (GCAL_IS_MONTH_CELL (widget));
+  g_assert (gtk_widget_is_ancestor (widget, GTK_WIDGET (self)));
+
+  if (!gtk_widget_compute_bounds (widget, GTK_WIDGET (self), &rect))
+    g_assert_not_reached ();
+
+  x = rect.origin.x + rect.size.width / 2;
+  y = rect.origin.y + gcal_month_cell_get_header_height (GCAL_MONTH_CELL (widget));
+
+  picked_widget = gtk_widget_pick (GTK_WIDGET (self), x, y, GTK_PICK_DEFAULT);
+
+  g_assert (GTK_IS_WIDGET (picked_widget));
+
+  event_widget = gtk_widget_get_ancestor (picked_widget, GCAL_TYPE_EVENT_WIDGET);
+
+  g_assert (event_widget == NULL || GCAL_IS_EVENT_WIDGET (event_widget));
+
+  if (event_widget)
+    return gtk_widget_grab_focus (event_widget);
+  else
+    return FALSE;
+}
+
+/**
  * gcal_month_view_row_get_ceiled_height:
  * @self: a #GcalMonthViewRow
  *
