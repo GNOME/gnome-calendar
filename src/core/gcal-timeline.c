@@ -322,6 +322,7 @@ update_subscriber_event (GcalTimelineSubscriber *subscriber,
 
   GCAL_TIMELINE_SUBSCRIBER_GET_IFACE (subscriber)->update_event (subscriber, old_event, event);
 }
+
 static void
 remove_event_from_subscriber (GcalTimelineSubscriber *subscriber,
                               GcalEvent              *event)
