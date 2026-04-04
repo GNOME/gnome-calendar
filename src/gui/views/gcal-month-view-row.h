@@ -39,11 +39,8 @@ GcalRange *          gcal_month_view_row_get_range               (GcalMonthViewR
 void                 gcal_month_view_row_set_range               (GcalMonthViewRow   *self,
                                                                   GcalRange          *range);
 
-void                 gcal_month_view_row_add_event               (GcalMonthViewRow   *self,
-                                                                  GcalEvent          *event);
-
-void                 gcal_month_view_row_remove_event            (GcalMonthViewRow   *self,
-                                                                  GcalEvent          *event);
+void                 gcal_month_view_row_set_model               (GcalMonthViewRow   *self,
+                                                                  GListModel         *model);
 
 GList*               gcal_month_view_row_get_children_by_uuid    (GcalMonthViewRow      *self,
                                                                   GcalRecurrenceModType  mod,

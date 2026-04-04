@@ -51,14 +51,11 @@ struct _GcalMonthViewRow
 
   GcalRange          *range;
 
-  GListStore         *events;
+  GListModel         *events;
+
   GHashTable         *layout_blocks;
   gboolean            layout_blocks_valid;
 };
-
-static gint          compare_events_cb                           (gconstpointer      a,
-                                                                  gconstpointer      b,
-                                                                  gpointer           user_data);
 
 static void          on_event_widget_activated_cb                (GcalEventWidget    *widget,
                                                                   GcalMonthViewRow   *self);
@@ -547,7 +544,7 @@ prepare_layout_blocks (GcalMonthViewRow *self,
 
   g_assert (self->layout_blocks_valid);
 
-  n_events = g_list_model_get_n_items (G_LIST_MODEL (self->events));
+  n_events = g_list_model_get_n_items (self->events);
 
   for (guint i = 0; i < N_WEEKDAYS; i++)
     {
@@ -568,7 +565,7 @@ prepare_layout_blocks (GcalMonthViewRow *self,
       g_autoptr (GcalEvent) event = NULL;
       GPtrArray *blocks;
 
-      event = g_list_model_get_item (G_LIST_MODEL (self->events), i);
+      event = g_list_model_get_item (self->events, i);
 
       blocks = g_hash_table_lookup (self->layout_blocks, event);
       g_assert (blocks != NULL);
@@ -653,7 +650,7 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
   g_assert (!self->layout_blocks_valid);
 
   range_start = gcal_range_get_start (self->range);
-  n_events = g_list_model_get_n_items (G_LIST_MODEL (self->events));
+  n_events = g_list_model_get_n_items (self->events);
 
   g_hash_table_remove_all (self->layout_blocks);
 
@@ -665,7 +662,7 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
       gint first_cell;
       gint last_cell;
 
-      event = g_list_model_get_item (G_LIST_MODEL (self->events), i);
+      event = g_list_model_get_item (self->events, i);
 
       calculate_event_cells (self, event, &first_cell, &last_cell);
       g_assert (last_cell >= first_cell);
@@ -770,18 +767,33 @@ invalidate_layout_blocks (GcalMonthViewRow *self)
  * Callbacks
  */
 
-static gint
-compare_events_cb (gconstpointer a,
-                   gconstpointer b,
-                   gpointer      user_data)
+static gboolean
+filter_by_range_cb (GcalEvent        *event,
+                    GcalRange        *row_range,
+                    GcalMonthViewRow *self)
 {
-  GcalEvent *event_a = (GcalEvent *)a;
-  GcalEvent *event_b = (GcalEvent *)b;
+  g_assert (GCAL_IS_EVENT (event));
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+  g_assert (self->range == row_range);
 
-  if (gcal_event_is_multiday (event_a) != gcal_event_is_multiday (event_b))
-    return gcal_event_is_multiday (event_b) - gcal_event_is_multiday (event_a);
+  if (!self->range)
+    return FALSE;
 
-  return gcal_event_compare (event_a, event_b);
+  return gcal_event_overlaps (event, self->range);
+}
+
+static void
+events_changed_cb (GListModel       *model,
+                   guint             position,
+                   guint             removed,
+                   guint             added,
+                   GcalMonthViewRow *self)
+{
+  GCAL_ENTRY;
+
+  invalidate_layout_blocks (self);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -1015,14 +1027,14 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
       for (guint i = 0; i < N_WEEKDAYS; i++)
         cell_y[i] = gcal_month_cell_get_header_height (GCAL_MONTH_CELL (self->day_cells[i]));
 
-      n_events = g_list_model_get_n_items (G_LIST_MODEL (self->events));
+      n_events = g_list_model_get_n_items (self->events);
 
       for (guint i = 0; i < n_events; i++)
         {
           g_autoptr (GcalEvent) event = NULL;
           GPtrArray *blocks;
 
-          event = g_list_model_get_item (G_LIST_MODEL (self->events), i);
+          event = g_list_model_get_item (self->events, i);
 
           blocks = g_hash_table_lookup (self->layout_blocks, event);
           g_assert (blocks != NULL);
@@ -1130,7 +1142,11 @@ gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
 static void
 gcal_month_view_row_init (GcalMonthViewRow *self)
 {
-  self->events = g_list_store_new (GCAL_TYPE_EVENT);
+  self->events = G_LIST_MODEL (gtk_filter_list_model_new (NULL,
+                                                          GTK_FILTER (gtk_custom_filter_new (event_in_range_func, self, NULL))));
+  gtk_filter_list_model_set_incremental (GTK_FILTER_LIST_MODEL (self->events), TRUE);
+  g_signal_connect (self->events, "items-changed", G_CALLBACK (events_changed_cb), self);
+
   self->layout_blocks = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_ptr_array_unref);
   self->layout_blocks_valid = TRUE;
 
@@ -1166,6 +1182,7 @@ gcal_month_view_row_set_range (GcalMonthViewRow *self,
                                GcalRange        *range)
 {
   g_autoptr (GDateTime) start = NULL;
+  GtkFilter *filter;
 
   g_return_if_fail (GCAL_IS_MONTH_VIEW_ROW (self));
   g_return_if_fail (range != NULL);
@@ -1178,10 +1195,10 @@ gcal_month_view_row_set_range (GcalMonthViewRow *self,
   g_clear_pointer (&self->range, gcal_range_unref);
   self->range = gcal_range_ref (range);
 
-  /* Preemptively remove all event widgets */
-  g_list_store_remove_all (self->events);
-  g_hash_table_remove_all (self->layout_blocks);
-  invalidate_layout_blocks (self);
+  /* Refilter */
+  filter = gtk_filter_list_model_get_filter (GTK_FILTER_LIST_MODEL (self->events));
+  g_assert (GTK_IS_CUSTOM_FILTER (filter));
+  gtk_filter_changed (filter, GTK_FILTER_CHANGE_DIFFERENT);
 
   start = gcal_range_get_start (range);
   for (guint i = 0; i < N_WEEKDAYS; i++)
@@ -1194,40 +1211,13 @@ gcal_month_view_row_set_range (GcalMonthViewRow *self,
 }
 
 void
-gcal_month_view_row_add_event (GcalMonthViewRow *self,
-                               GcalEvent        *event)
+gcal_month_view_row_set_model (GcalMonthViewRow *self,
+                               GListModel       *model)
 {
-  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
-  g_assert (GCAL_IS_EVENT (event));
+  g_return_if_fail (GCAL_IS_MONTH_VIEW_ROW (self));
 
-  g_list_store_insert_sorted (self->events, event, compare_events_cb, self);
+  gtk_filter_list_model_set_model (GTK_FILTER_LIST_MODEL (self->events), model);
   invalidate_layout_blocks (self);
-}
-
-void
-gcal_month_view_row_remove_event (GcalMonthViewRow *self,
-                                  GcalEvent        *event)
-{
-  guint position;
-
-  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
-  g_assert (GCAL_IS_EVENT (event));
-
-  GCAL_ENTRY;
-
-  if (!g_list_store_find (self->events, event, &position))
-    {
-      g_warning ("%s: Widget with uuid: %s not found in view: %s",
-                 G_STRFUNC,
-                 gcal_event_get_uid (event),
-                 G_OBJECT_TYPE_NAME (self));
-      GCAL_RETURN ();
-    }
-
-  g_list_store_remove (self->events, position);
-  invalidate_layout_blocks (self);
-
-  GCAL_EXIT;
 }
 
 GList*
