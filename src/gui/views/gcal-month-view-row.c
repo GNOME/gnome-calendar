@@ -1116,14 +1116,11 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
   /* Event widgets */
   if (self->layout_blocks_valid)
     {
-      gdouble cell_y[N_WEEKDAYS];
+      gdouble cell_y[N_WEEKDAYS] = { 0, };
       guint overflows[N_WEEKDAYS] = { 0, };
       guint n_events;
 
       prepare_layout_blocks (self, overflows);
-
-      for (guint i = 0; i < N_WEEKDAYS; i++)
-        cell_y[i] = gcal_month_cell_get_header_height (GCAL_MONTH_CELL (self->day_cells[i]));
 
       n_events = g_list_model_get_n_items (self->events);
 
@@ -1144,6 +1141,7 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
             {
               GcalEventBlock *block;
               GtkAllocation allocation;
+              gint header_height;
               gint start_cell;
               gint end_cell;
 
@@ -1151,9 +1149,10 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
 
               start_cell = is_ltr ? block->cell : N_WEEKDAYS - block->cell - block->length;
               end_cell = start_cell + block->length;
+              header_height = gcal_month_cell_get_header_height (GCAL_MONTH_CELL (self->day_cells[block->cell]));
 
               allocation.x = round (start_cell * cell_width - (is_ltr ? 0 : SEPARATOR_OFFSET));
-              allocation.y = cell_y[block->cell];
+              allocation.y = cell_y[block->cell] + header_height;
               allocation.width = round (end_cell * cell_width) - allocation.x + (is_ltr ? SEPARATOR_OFFSET : 0);
               allocation.height = block->height;
 
