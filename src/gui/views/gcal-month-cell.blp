@@ -27,11 +27,10 @@ template $GcalMonthCell: Widget {
       }
     }
 
-    child: Overlay overlay {
-      [overlay]
-      Adw.Bin {
-        valign: start;
+    child: Box {
+      orientation: vertical;
 
+      Adw.Bin {
         child: Box header_box {
           spacing: 6;
           margin-top: 6;
@@ -65,10 +64,11 @@ template $GcalMonthCell: Widget {
         };
       }
 
-      [overlay]
-      Adw.Bin {
-        valign: end;
+      Adw.Bin content_space {
+        vexpand: true;
+      }
 
+      Adw.Bin {
         child: Button overflow_button {
           accessible-role: toggle_button;
           sensitive: false;

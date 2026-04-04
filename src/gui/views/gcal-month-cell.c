@@ -44,7 +44,7 @@ struct _GcalMonthCell
 
   GtkWidget          *overflow_button;
   GtkInscription     *overflow_inscription;
-  GtkWidget          *overlay;
+  GtkWidget          *content_space;
 
   gboolean            different_month;
   gboolean            selected;
@@ -409,7 +409,7 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, header_box);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overflow_button);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overflow_inscription);
-  gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overlay);
+  gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, content_space);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, temp_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, weather_icon);
 
@@ -538,8 +538,7 @@ gcal_month_cell_get_content_space (GcalMonthCell *self)
 {
   g_return_val_if_fail (GCAL_IS_MONTH_CELL (self), -1);
 
-  return gtk_widget_get_height (GTK_WIDGET (self)) -
-         gcal_month_cell_get_header_height (self);
+  return gtk_widget_get_height (self->content_space);
 }
 
 gint

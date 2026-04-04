@@ -549,8 +549,8 @@ prepare_layout_blocks (GcalMonthViewRow *self,
 {
   GPtrArray *blocks_per_day[N_WEEKDAYS];
   gboolean cell_will_overflow[N_WEEKDAYS] = { FALSE, };
-  guint available_height_without_overflow[N_WEEKDAYS] = { 0, };
-  guint available_height_with_overflow[N_WEEKDAYS] = { 0, };
+  guint combined_height[N_WEEKDAYS] = { 0, };
+  guint content_height[N_WEEKDAYS] = { 0, };
   guint weekday_heights[N_WEEKDAYS] = { 0, };
   guint n_events;
 
@@ -568,8 +568,8 @@ prepare_layout_blocks (GcalMonthViewRow *self,
         content_space--;
       overflow_height = gcal_month_cell_get_overflow_height (GCAL_MONTH_CELL (self->day_cells[i]));
 
-      available_height_without_overflow[i] = content_space;
-      available_height_with_overflow[i] = content_space - overflow_height;
+      combined_height[i] = content_space + overflow_height;
+      content_height[i] = content_space;
       blocks_per_day[i] = g_ptr_array_sized_new (n_events);
     }
 
@@ -606,7 +606,7 @@ prepare_layout_blocks (GcalMonthViewRow *self,
 
               g_ptr_array_add (blocks_per_day[cell], block);
               weekday_heights[cell] += block->height;
-              cell_will_overflow[cell] |= weekday_heights[cell] > available_height_without_overflow[cell];
+              cell_will_overflow[cell] |= weekday_heights[cell] > combined_height[cell];
             }
         }
     }
@@ -629,9 +629,9 @@ prepare_layout_blocks (GcalMonthViewRow *self,
               gint available_height;
 
               if (cell_will_overflow[block_cell])
-                available_height = available_height_with_overflow[block_cell];
+                available_height = content_height[block_cell];
               else
-                available_height = available_height_without_overflow[block_cell];
+                available_height = combined_height[block_cell];
 
               block->visible &= available_height > block->height;
             }
@@ -640,8 +640,8 @@ prepare_layout_blocks (GcalMonthViewRow *self,
             {
               if (block->visible)
                 {
-                  available_height_with_overflow[block_cell] -= block->height;
-                  available_height_without_overflow[block_cell] -= block->height;
+                  content_height[block_cell] -= block->height;
+                  combined_height[block_cell] -= block->height;
                 }
               else
                 {
