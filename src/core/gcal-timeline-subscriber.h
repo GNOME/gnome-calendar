@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <glib-object.h>
+#include <gio/gio.h>
 
 #define LIBICAL_GLIB_UNSTABLE_API
 #include <libical-glib/libical-glib.h>
@@ -49,6 +49,9 @@ struct _GcalTimelineSubscriberInterface
 
   void               (*remove_event)                             (GcalTimelineSubscriber *self,
                                                                   GcalEvent              *event);
+
+  void               (*set_model)                                (GcalTimelineSubscriber *self,
+                                                                  GListModel             *model);
 };
 
 GcalRange*           gcal_timeline_subscriber_get_range            (GcalTimelineSubscriber  *self);
