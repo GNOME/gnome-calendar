@@ -73,6 +73,7 @@ struct _GcalTimeline
   gboolean            complete;
 
   GListStore         *calendar_monitors;
+  GListModel         *events_model;
 
   GHashTable         *subscribers; /* GcalTimelineSubscriber* -> SubscriberData* */
   GcalRangeTree      *subscriber_ranges;
@@ -96,6 +97,73 @@ enum
 
 static GParamSpec *properties [N_PROPS] = { NULL, };
 
+
+/*
+ * SubscriberData
+ */
+
+typedef struct
+{
+  GcalRange *range;
+  GtkFilterListModel *events;
+  GtkSortListModel *sorted_events;
+} SubscriberData;
+
+static void
+subscriber_data_free (SubscriberData *data)
+{
+  gtk_filter_list_model_set_model (data->events, NULL);
+
+  g_clear_pointer (&data->range, gcal_range_unref);
+  g_clear_object (&data->sorted_events);
+  g_clear_object (&data->events);
+  g_clear_pointer (&data, g_free);
+}
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (SubscriberData, subscriber_data_free)
+
+static gboolean
+event_in_subscriber_range_func (gpointer item,
+                                gpointer user_data)
+{
+  SubscriberData *data = user_data;
+
+  g_assert (GCAL_IS_EVENT (item));
+
+  if (!data->range)
+    return FALSE;
+
+  return gcal_event_overlaps (item, data->range);
+}
+
+static gint
+compare_events_cb (gconstpointer a,
+                   gconstpointer b,
+                   gpointer      user_data)
+{
+  GcalEvent *event_a = (GcalEvent *) a;
+  GcalEvent *event_b = (GcalEvent *) b;
+
+  return gcal_range_compare (gcal_event_get_range (event_b), gcal_event_get_range (event_a));
+}
+
+static SubscriberData *
+subscriber_data_new (GcalTimeline           *self,
+                     GcalTimelineSubscriber *subscriber)
+{
+  g_autoptr (GtkCustomFilter) filter = NULL;
+  g_autoptr (SubscriberData) data = NULL;
+
+  data = g_new0 (SubscriberData, 1);
+  data->range = gcal_timeline_subscriber_get_range (subscriber);
+
+  filter = gtk_custom_filter_new (event_in_subscriber_range_func, data, NULL);
+  data->events = gtk_filter_list_model_new (g_object_ref (self->events_model), GTK_FILTER (g_steal_pointer (&filter)));
+  data->sorted_events = gtk_sort_list_model_new (G_LIST_MODEL (g_object_ref (data->events)),
+                                                 GTK_SORTER (gtk_custom_sorter_new (compare_events_cb, NULL, NULL)));
+
+  return g_steal_pointer (&data);
+}
 
 /*
  * Auxiliary methods
@@ -264,6 +332,21 @@ remove_event_from_subscriber (GcalTimelineSubscriber *subscriber,
                   G_OBJECT_TYPE_NAME (subscriber));
 
   GCAL_TIMELINE_SUBSCRIBER_GET_IFACE (subscriber)->remove_event (subscriber, event);
+}
+
+static void
+set_model_on_subscriber (GcalTimelineSubscriber *subscriber,
+                         GListModel             *model)
+{
+  /* Optional while we transition away from add/update/remove_event */
+  if (!GCAL_TIMELINE_SUBSCRIBER_GET_IFACE (subscriber)->set_model)
+    return;
+
+  GCAL_TRACE_MSG ("Setting event model %p on subscriber %s",
+                  model,
+                  G_OBJECT_TYPE_NAME (subscriber));
+
+  GCAL_TIMELINE_SUBSCRIBER_GET_IFACE (subscriber)->set_model (subscriber, model);
 }
 
 static void
@@ -485,10 +568,14 @@ update_subscriber_range (GcalTimeline           *self,
 {
   g_autoptr (GcalRange) old_range = NULL;
   g_autoptr (GcalRange) new_range = NULL;
+  SubscriberData *subscriber_data;
+  GtkFilter *filter;
 
   GCAL_ENTRY;
 
-  old_range = g_hash_table_lookup (self->subscribers, subscriber);
+  subscriber_data = g_hash_table_lookup (self->subscribers, subscriber);
+
+  old_range = g_steal_pointer (&subscriber_data->range);
   g_assert (old_range != NULL);
 
   new_range = gcal_timeline_subscriber_get_range (subscriber);
@@ -500,8 +587,36 @@ update_subscriber_range (GcalTimeline           *self,
   gcal_range_tree_remove_data (self->subscriber_ranges, subscriber);
   gcal_range_tree_add_range (self->subscriber_ranges, new_range, subscriber);
 
-  g_hash_table_insert (self->subscribers, g_object_ref (subscriber), g_steal_pointer (&new_range));
-  g_steal_pointer (&old_range);
+  subscriber_data->range = gcal_range_ref (new_range);
+
+  g_assert (old_range != NULL);
+  g_assert (new_range != NULL);
+
+  filter = gtk_filter_list_model_get_filter (subscriber_data->events);
+  g_assert (GTK_IS_FILTER (filter));
+
+  switch (gcal_range_calculate_overlap (new_range, old_range, NULL))
+    {
+    case GCAL_RANGE_NO_OVERLAP:
+    case GCAL_RANGE_INTERSECTS:
+      gtk_filter_changed (filter, GTK_FILTER_CHANGE_DIFFERENT);
+      break;
+
+    case GCAL_RANGE_SUBSET:
+      gtk_filter_changed (filter, GTK_FILTER_CHANGE_MORE_STRICT);
+      break;
+
+    case GCAL_RANGE_EQUAL:
+      /* No need to refilter */
+      break;
+
+    case GCAL_RANGE_SUPERSET:
+      gtk_filter_changed (filter, GTK_FILTER_CHANGE_LESS_STRICT);
+      break;
+
+    default:
+      g_assert_not_reached ();
+    }
 
   GCAL_EXIT;
 }
@@ -942,12 +1057,13 @@ gcal_timeline_init (GcalTimeline *self)
   self->cancellable = g_cancellable_new ();
   self->events = gcal_range_tree_new_with_free_func (g_object_unref);
   self->calendars = g_hash_table_new_full (NULL, NULL, NULL, g_object_unref);
-  self->subscribers = g_hash_table_new_full (NULL, NULL, g_object_unref, (GDestroyNotify) gcal_range_unref);
+  self->subscribers = g_hash_table_new_full (NULL, NULL, g_object_unref, (GDestroyNotify) subscriber_data_free);
   self->subscriber_ranges = gcal_range_tree_new ();
   self->event_queue = g_queue_new ();
   self->queued_adds = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 
   self->calendar_monitors = g_list_store_new (GCAL_TYPE_CALENDAR_MONITOR);
+  self->events_model = G_LIST_MODEL (gtk_flatten_list_model_new (g_object_ref (G_LIST_MODEL (self->calendar_monitors))));
 
   /* Timeline source */
   timeline_source = (TimelineSource*) g_source_new (&timeline_source_funcs, sizeof (TimelineSource));
@@ -1045,7 +1161,7 @@ void
 gcal_timeline_add_subscriber (GcalTimeline           *self,
                               GcalTimelineSubscriber *subscriber)
 {
-  g_autoptr (GcalRange) subscriber_range = NULL;
+  g_autoptr (SubscriberData) subscriber_data = NULL;
 
   g_return_if_fail (GCAL_IS_TIMELINE (self));
   g_return_if_fail (GCAL_IS_TIMELINE_SUBSCRIBER (subscriber));
@@ -1057,9 +1173,11 @@ gcal_timeline_add_subscriber (GcalTimeline           *self,
 
   g_debug ("Adding subscriber %s to timeline %p", G_OBJECT_TYPE_NAME (subscriber), self);
 
-  subscriber_range = gcal_timeline_subscriber_get_range (subscriber);
+  subscriber_data = subscriber_data_new (self, subscriber);
 
-  g_hash_table_insert (self->subscribers, g_object_ref (subscriber), gcal_range_ref (subscriber_range));
+  set_model_on_subscriber (subscriber, G_LIST_MODEL (subscriber_data->sorted_events));
+
+  g_hash_table_insert (self->subscribers, g_object_ref (subscriber), g_steal_pointer (&subscriber_data));
   g_signal_connect_object (subscriber,
                            "range-changed",
                            G_CALLBACK (on_subscriber_range_changed_cb),
