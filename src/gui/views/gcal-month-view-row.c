@@ -31,6 +31,7 @@
 #include "gcal-utils.h"
 
 #define SEPARATOR_OFFSET -1
+#define EVENT_VERTICAL_GAP 2
 
 typedef struct
 {
@@ -595,10 +596,12 @@ prepare_layout_blocks (GcalMonthViewRow *self,
           for (guint j = 0; j < block->length; j++)
             {
               guint cell = block->cell + j;
+              int spacing;
 
               g_ptr_array_add (blocks_per_day[cell], block);
+              spacing = (blocks_per_day[cell]->len - 1) * EVENT_VERTICAL_GAP;
               weekday_heights[cell] += block->height;
-              cell_will_overflow[cell] |= weekday_heights[cell] > combined_height[cell];
+              cell_will_overflow[cell] |= weekday_heights[cell] + spacing > combined_height[cell];
             }
         }
     }
@@ -621,7 +624,7 @@ prepare_layout_blocks (GcalMonthViewRow *self,
               gint available_height;
 
               if (cell_will_overflow[block_cell])
-                available_height = content_height[block_cell];
+                available_height = content_height[block_cell] - block_cell * EVENT_VERTICAL_GAP;
               else
                 available_height = combined_height[block_cell];
 
@@ -1144,15 +1147,17 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
               gint header_height;
               gint start_cell;
               gint end_cell;
+              gint spacing;
 
               block = g_ptr_array_index (blocks, block_index);
 
               start_cell = is_ltr ? block->cell : N_WEEKDAYS - block->cell - block->length;
               end_cell = start_cell + block->length;
               header_height = gcal_month_cell_get_header_height (GCAL_MONTH_CELL (self->day_cells[block->cell]));
+              spacing = (cell_y[block->cell] / block->height - 1) * EVENT_VERTICAL_GAP;
 
               allocation.x = round (start_cell * cell_width - (is_ltr ? 0 : SEPARATOR_OFFSET));
-              allocation.y = cell_y[block->cell] + header_height;
+              allocation.y = cell_y[block->cell] + header_height + spacing;
               allocation.width = round (end_cell * cell_width) - allocation.x + (is_ltr ? SEPARATOR_OFFSET : 0);
               allocation.height = block->height;
 

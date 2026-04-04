@@ -49,3 +49,7 @@ event.slanted-start widget.edge {
 weekgrid event {
   margin: 1px;
 }
+
+calendar-view.month-view event {
+  margin: 0 1px 0 1px;
+}
