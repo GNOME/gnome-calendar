@@ -71,7 +71,6 @@ template $GcalMonthCell: Widget {
       Adw.Bin {
         child: Button overflow_button {
           accessible-role: toggle_button;
-          sensitive: false;
           clicked => $overflow_button_clicked_cb(template) not-swapped;
           tooltip-text: _("All Events");
           margin-top: 1;

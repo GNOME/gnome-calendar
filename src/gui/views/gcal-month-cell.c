@@ -450,6 +450,8 @@ gcal_month_cell_init (GcalMonthCell *self)
 
   GcalWeatherService *weather_service = gcal_context_get_weather_service (context);
   gcal_weather_service_hold (weather_service);
+
+  gtk_widget_set_child_visible (self->overflow_button, FALSE);
 }
 
 GtkWidget*
@@ -520,7 +522,7 @@ gcal_month_cell_set_overflow (GcalMonthCell *self,
 
   self->n_overflow = n_overflow;
 
-  gtk_widget_set_sensitive (self->overflow_button, n_overflow > 0);
+  gtk_widget_set_child_visible (self->overflow_button, n_overflow > 0);
 
   if (n_overflow > 0)
     {
