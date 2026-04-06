@@ -100,7 +100,7 @@ typedef struct
 {
   GtkWidget *widget;
   graphene_rect_t rect;
-  gint focal_x;
+  gint normalized_x;
 } FocusEventData;
 
 static void
@@ -116,13 +116,13 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (FocusEventData, focus_event_data_free)
 static FocusEventData *
 focus_event_data_new (GtkWidget             *widget,
                       const graphene_rect_t *rect,
-                      gint                   focal_x)
+                      gint                   normalized_x)
 {
   g_autoptr (FocusEventData) focus_event_data = NULL;
 
   focus_event_data = g_new0 (FocusEventData, 1);
   focus_event_data->widget = widget;
-  focus_event_data->focal_x = focal_x;
+  focus_event_data->normalized_x = normalized_x;
   graphene_rect_init_from_rect (&focus_event_data->rect, rect);
 
   return g_steal_pointer (&focus_event_data);
@@ -147,9 +147,9 @@ static FocusEventData *
 create_focus_event_data (GcalMonthViewRow *self,
                          GtkWidget        *child)
 {
+  gint focal_x, normalized_x;
   graphene_rect_t rect;
   gboolean is_rtl;
-  gint focal_x;
 
   g_assert (GTK_IS_WIDGET (child));
 
@@ -158,8 +158,9 @@ create_focus_event_data (GcalMonthViewRow *self,
 
   is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
   focal_x = rect.origin.x + (is_rtl ? rect.size.width : 0);
+  normalized_x = is_rtl ? -focal_x : focal_x;
 
-  return focus_event_data_new (child, &rect, focal_x);
+  return focus_event_data_new (child, &rect, normalized_x);
 }
 
 static FocusEventData *
@@ -189,9 +190,6 @@ find_first_event_widget (GcalMonthViewRow *self)
   g_autoptr (FocusEventData) candidate = NULL;
   g_autoptr (FocusEventData) nearest = NULL;
   GtkWidget *child;
-  gboolean is_rtl;
-
-  is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
   for (child = gtk_widget_get_first_child (GTK_WIDGET (self));
        child != NULL;
@@ -207,10 +205,10 @@ find_first_event_widget (GcalMonthViewRow *self)
 
       if (nearest == NULL)
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
-      else if ((is_rtl && candidate->focal_x > nearest->focal_x) ||
-               (!is_rtl && candidate->focal_x < nearest->focal_x))
+      else if (candidate->normalized_x < nearest->normalized_x)
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
-      else if (candidate->focal_x == nearest->focal_x && candidate->rect.origin.y < nearest->rect.origin.y)
+      else if (candidate->normalized_x == nearest->normalized_x &&
+               candidate->rect.origin.y < nearest->rect.origin.y)
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
     }
 
@@ -225,9 +223,6 @@ find_last_event_widget (GcalMonthViewRow *self)
   g_autoptr (FocusEventData) candidate = NULL;
   g_autoptr (FocusEventData) nearest = NULL;
   GtkWidget *child;
-  gboolean is_rtl;
-
-  is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
   for (child = gtk_widget_get_first_child (GTK_WIDGET (self));
        child != NULL;
@@ -243,10 +238,10 @@ find_last_event_widget (GcalMonthViewRow *self)
 
       if (nearest == NULL)
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
-      else if ((is_rtl && candidate->focal_x < nearest->focal_x) ||
-               (!is_rtl && candidate->focal_x > nearest->focal_x))
+      else if (candidate->normalized_x > nearest->normalized_x)
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
-      else if (candidate->focal_x == nearest->focal_x && candidate->rect.origin.y > nearest->rect.origin.y)
+      else if (candidate->normalized_x == nearest->normalized_x &&
+               candidate->rect.origin.y > nearest->rect.origin.y)
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
     }
 
@@ -264,14 +259,12 @@ find_nearest_vertical_event_widget (GcalMonthViewRow  *self,
   g_autoptr (FocusEventData) nearest = NULL;
   GtkWidget *child;
   gboolean downward, upward, forward_or_backward;
-  gboolean is_rtl;
 
   GCAL_ENTRY;
 
   downward = direction == GTK_DIR_DOWN || direction == GTK_DIR_TAB_FORWARD;
   upward = !downward;
 
-  is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
   forward_or_backward = direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD;
 
   for (child = gtk_widget_get_first_child (GTK_WIDGET (self));
@@ -294,7 +287,7 @@ find_nearest_vertical_event_widget (GcalMonthViewRow  *self,
                                        NULL))
         continue;
 
-      if (forward_or_backward && focused->focal_x != candidate->focal_x)
+      if (forward_or_backward && focused->normalized_x != candidate->normalized_x)
         continue;
 
       if ((downward && candidate->rect.origin.y < focused->rect.origin.y) ||
@@ -307,8 +300,7 @@ find_nearest_vertical_event_widget (GcalMonthViewRow  *self,
                (upward && candidate->rect.origin.y > nearest->rect.origin.y))
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
       else if (downward && candidate->rect.origin.y == nearest->rect.origin.y &&
-               ((is_rtl && candidate->focal_x > nearest->focal_x) ||
-                (!is_rtl && candidate->focal_x < nearest->focal_x)))
+               candidate->normalized_x < nearest->normalized_x)
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
     }
 
@@ -358,7 +350,6 @@ find_nearest_horizontal_event_widget (GcalMonthViewRow  *self,
     {
       g_autoptr (FocusEventData) aux = NULL;
       gboolean candidate_intersects_vertically;
-      gboolean candidate_in_opposite_direction;
 
       if (!(aux = create_focus_event_data_candidate (self, child)))
         continue;
@@ -369,28 +360,29 @@ find_nearest_horizontal_event_widget (GcalMonthViewRow  *self,
       if (candidate->widget == focused->widget)
         continue;
 
-      if (forward_or_backward &&
-          ((lateral == GTK_DIR_LEFT && candidate->focal_x >= focused->focal_x) ||
-           (lateral == GTK_DIR_RIGHT && candidate->focal_x <= focused->focal_x)))
+
+      if ((direction == GTK_DIR_TAB_FORWARD && candidate->normalized_x <= focused->normalized_x) ||
+          (direction == GTK_DIR_TAB_BACKWARD && candidate->normalized_x >= focused->normalized_x))
         continue;
 
-      candidate_in_opposite_direction = ((lateral == GTK_DIR_LEFT && candidate->focal_x > focused->focal_x) ||
-                                         (lateral == GTK_DIR_RIGHT && candidate->focal_x < focused->focal_x));
+      if ((direction == GTK_DIR_LEFT && ABS (candidate->normalized_x) > ABS (focused->normalized_x)) ||
+          (direction == GTK_DIR_RIGHT && ABS (candidate->normalized_x) < ABS (focused->normalized_x)))
+        continue;
 
       candidate_intersects_vertically =
           graphene_rect_intersection (&GRAPHENE_RECT_INIT (0, focused->rect.origin.y, 1, focused->rect.size.height),
                                       &GRAPHENE_RECT_INIT (0, candidate->rect.origin.y, 1, candidate->rect.size.height),
                                       NULL);
 
-      if (!forward_or_backward && (!candidate_intersects_vertically || candidate_in_opposite_direction))
+      if (!forward_or_backward && !candidate_intersects_vertically)
         continue;
 
       if (nearest == NULL)
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
-      else if ((lateral == GTK_DIR_LEFT && candidate->focal_x > nearest->focal_x) ||
-               (lateral == GTK_DIR_RIGHT && candidate->focal_x < nearest->focal_x))
+      else if ((lateral == GTK_DIR_LEFT && ABS (candidate->normalized_x) > ABS (nearest->normalized_x)) ||
+               (lateral == GTK_DIR_RIGHT && ABS (candidate->normalized_x) < ABS (nearest->normalized_x)))
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
-      else if (candidate->focal_x == nearest->focal_x &&
+      else if (ABS (candidate->normalized_x) == ABS (nearest->normalized_x) &&
                ((direction == GTK_DIR_TAB_FORWARD && candidate->rect.origin.y < nearest->rect.origin.y) ||
                 (direction == GTK_DIR_TAB_BACKWARD && candidate->rect.origin.y > nearest->rect.origin.y)))
         swap_focus_event_data (&nearest, g_steal_pointer (&candidate));
@@ -1465,7 +1457,7 @@ gcal_month_view_row_focus_adjacent_cell (GcalMonthViewRow *self,
 
   data = create_focus_event_data (self, widget);
 
-  cell = gcal_month_view_row_get_cell_at_x (self, data->focal_x);
+  cell = gcal_month_view_row_get_cell_at_x (self, ABS (data->normalized_x));
 
   return gtk_widget_grab_focus (cell);
 }
