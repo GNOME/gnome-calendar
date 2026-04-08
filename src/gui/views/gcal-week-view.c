@@ -498,9 +498,7 @@ gcal_week_view_add_event (GcalTimelineSubscriber *subscriber,
 
   GCAL_ENTRY;
 
-  if (gcal_event_is_multiday (event) || gcal_event_get_all_day (event))
-    gcal_week_header_add_event (GCAL_WEEK_HEADER (self->header), event);
-  else
+  if (!gcal_event_is_multiday (event) && !gcal_event_get_all_day (event))
     gcal_week_grid_add_event (GCAL_WEEK_GRID (self->week_grid), event);
 
   GCAL_EXIT;
@@ -517,7 +515,6 @@ gcal_week_view_update_event (GcalTimelineSubscriber *subscriber,
   GCAL_ENTRY;
 
   event_id = gcal_event_get_uid (old_event);
-  gcal_week_header_remove_event (GCAL_WEEK_HEADER (self->header), event_id);
   gcal_week_grid_remove_event (GCAL_WEEK_GRID (self->week_grid), event_id);
 
   gcal_week_view_add_event (subscriber, event);
@@ -534,8 +531,22 @@ gcal_week_view_remove_event (GcalTimelineSubscriber *subscriber,
 
   GCAL_ENTRY;
 
-  gcal_week_header_remove_event (GCAL_WEEK_HEADER (self->header), uuid);
   gcal_week_grid_remove_event (GCAL_WEEK_GRID (self->week_grid), uuid);
+
+  GCAL_EXIT;
+}
+
+static void
+gcal_week_view_set_model (GcalTimelineSubscriber *subscriber,
+                          GListModel             *model)
+{
+  GcalWeekView *self;
+
+  GCAL_ENTRY;
+
+  self = GCAL_WEEK_VIEW (subscriber);
+
+  gcal_week_header_set_model (GCAL_WEEK_HEADER (self->header), model);
 
   GCAL_EXIT;
 }
@@ -547,6 +558,7 @@ gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
   iface->add_event = gcal_week_view_add_event;
   iface->update_event = gcal_week_view_update_event;
   iface->remove_event = gcal_week_view_remove_event;
+  iface->set_model = gcal_week_view_set_model;
 }
 
 
