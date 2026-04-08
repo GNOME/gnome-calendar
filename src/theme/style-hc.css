@@ -1,9 +1,0 @@
-datechooser .weeknum {
-  --border-width: 1px;
-  --base-color: var(--window-fg-color);
-}
-
-calendar-view.month-view {
-  --raised-shade-color: var(--border-color);
-  --raised-shade-color-base: transparent;
-}

@@ -142,6 +142,13 @@ datechooser .weeknum {
   background-color: rgb(from var(--base-color) r g b / 5%);
   color: var(--base-color);
 }
+/* high contrast */
+@media (prefers-contrast: more) {
+  datechooser .weeknum {
+    --border-width: 1px;
+    --base-color: var(--window-fg-color);
+  }
+}
 
 /* day names */
 datechooser .weekday {
@@ -377,6 +384,13 @@ calendar-view.month-view {
     inset 0 -1px var(--raised-shade-color, var(--raised-shade-color-base)),
     inset 0 -2px 4px var(--raised-shade-color-base);
 }
+/* high contrast */
+@media (prefers-contrast: more) {
+  calendar-view.month-view {
+    --raised-shade-color: var(--border-color);
+    --raised-shade-color-base: transparent;
+  }
+}
 
 calendar-view.month-view > box.month-header {
   padding-bottom: 6px;
@@ -442,6 +456,12 @@ searchbutton > popover > arrow {
 
 searchbutton > popover listview > row:selected {
   background-color: rgb(from var(--accent-bg-color) r g b / 11%);
+}
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+  searchbutton > popover listview > row:selected {
+    background-color: rgb(from var(--accent-bg-color) r g b / 20%);
+  }
 }
 
 /*

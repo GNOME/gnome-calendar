@@ -1,8 +1,0 @@
-/*
- * Search
- */
-
-searchbutton > popover listview > row:selected {
-  background-color: rgb(from var(--accent-bg-color) r g b / 20%);
-}
-
