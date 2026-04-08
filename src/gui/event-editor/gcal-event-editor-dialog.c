@@ -125,9 +125,77 @@ set_writable (GcalEventEditorDialog *self,
 }
 
 static void
+set_event (GcalEventEditorDialog *self,
+           GcalEvent             *event,
+           gboolean               new_event)
+{
+
+  g_autoptr (GdkPaintable) paintable = NULL;
+  g_autoptr (GcalEvent) cloned_event = NULL;
+  GcalEventEditorFlags flags;
+  GcalCalendar *calendar;
+  gint i;
+
+  GCAL_ENTRY;
+
+  g_clear_object (&self->event);
+
+  /* If we just set the event to NULL, simply send a property notify */
+  if (!event)
+    GCAL_GOTO (out);
+
+  cloned_event = gcal_event_new_from_event (event);
+  self->event = g_object_ref (cloned_event);
+
+  calendar = gcal_event_get_calendar (cloned_event);
+
+  /* dialog's title */
+  if (new_event)
+    adw_navigation_page_set_title (ADW_NAVIGATION_PAGE (self->main_page), _("New Event"));
+  else if (gcal_calendar_is_read_only (calendar))
+    adw_navigation_page_set_title (ADW_NAVIGATION_PAGE (self->main_page), _("Event Details"));
+  else
+    adw_navigation_page_set_title (ADW_NAVIGATION_PAGE (self->main_page), _("Edit Event"));
+
+  g_list_store_remove_all (self->read_only_calendar_model);
+  if (gcal_calendar_is_read_only (calendar))
+    g_list_store_append (self->read_only_calendar_model, calendar);
+
+  gcal_calendar_combo_row_set_calendar (self->calendar_combo_row, calendar);
+
+  /* recurrence_changed */
+  self->recurrence_changed = FALSE;
+
+  set_writable (self, !gcal_calendar_is_read_only (calendar));
+  gboolean has_participants = gcal_event_get_organizer (self->event) != NULL;
+  gtk_widget_set_visible (GTK_WIDGET (self->attendees_section), has_participants);
+
+  gtk_widget_set_visible (self->cancel_button, self->writable);
+
+  self->event_is_new = new_event;
+  gtk_widget_set_visible (self->delete_group, !new_event && self->writable);
+
+  /* fill attendees list */
+  self->attendees_model = gcal_event_get_attendees (self->event);
+
+out:
+  flags = GCAL_EVENT_EDITOR_FLAG_NONE;
+
+  if (new_event)
+    flags |= GCAL_EVENT_EDITOR_FLAG_NEW_EVENT;
+
+  for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
+    gcal_event_editor_section_set_event (self->sections[i], cloned_event, flags);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
+
+  GCAL_EXIT;
+}
+
+static void
 clear_and_hide_dialog (GcalEventEditorDialog *self)
 {
-  gcal_event_editor_dialog_set_event (self, NULL, FALSE);
+  set_event (self, NULL, FALSE);
   adw_dialog_close (ADW_DIALOG (self));
 }
 
@@ -628,83 +696,28 @@ gcal_event_editor_dialog_new (void)
 }
 
 /**
- * gcal_event_editor_dialog_set_event:
+ * gcal_event_editor_dialog_present_event: (set-property event)
  * @dialog: a #GcalDialog
+ * @parent: a widget within the toplevel
  * @event: (nullable): a #GcalEvent
+ * @new_event: whether to treat @event as a new event
  *
- * Sets the event of the @dialog. When @event is
- * %NULL, the current event information is unset.
+ * Updates @self to operate on @event and then presents itself.
  */
 void
-gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
-                                    GcalEvent             *event,
-                                    gboolean               new_event)
+gcal_event_editor_dialog_present_event (GcalEventEditorDialog *self,
+                                        GtkWidget             *parent,
+                                        GcalEvent             *event,
+                                        gboolean               new_event)
 {
-  g_autoptr (GdkPaintable) paintable = NULL;
-  g_autoptr (GcalEvent) cloned_event = NULL;
-  GcalEventEditorFlags flags;
-  GcalCalendar *calendar;
-  gint i;
-
-  GCAL_ENTRY;
-
   g_return_if_fail (GCAL_IS_EVENT_EDITOR_DIALOG (self));
 
-  g_clear_object (&self->event);
+  set_event (self, event, new_event);
 
-  /* If we just set the event to NULL, simply send a property notify */
-  if (!event)
-    GCAL_GOTO (out);
-
-  cloned_event = gcal_event_new_from_event (event);
-  self->event = g_object_ref (cloned_event);
-
-  calendar = gcal_event_get_calendar (cloned_event);
-
-  /* dialog's title */
-  if (new_event)
-    adw_navigation_page_set_title (ADW_NAVIGATION_PAGE (self->main_page), _("New Event"));
-  else if (gcal_calendar_is_read_only (calendar))
-    adw_navigation_page_set_title (ADW_NAVIGATION_PAGE (self->main_page), _("Event Details"));
-  else
-    adw_navigation_page_set_title (ADW_NAVIGATION_PAGE (self->main_page), _("Edit Event"));
-
-  g_list_store_remove_all (self->read_only_calendar_model);
-  if (gcal_calendar_is_read_only (calendar))
-    g_list_store_append (self->read_only_calendar_model, calendar);
-
-  gcal_calendar_combo_row_set_calendar (self->calendar_combo_row, calendar);
-
-  /* recurrence_changed */
-  self->recurrence_changed = FALSE;
-
-  set_writable (self, !gcal_calendar_is_read_only (calendar));
-  gboolean has_participants = gcal_event_get_organizer (self->event) != NULL;
-  gtk_widget_set_visible (GTK_WIDGET (self->attendees_section), has_participants);
-
-  gtk_widget_set_visible (self->cancel_button, self->writable);
-
-  self->event_is_new = new_event;
-  gtk_widget_set_visible (self->delete_group, !new_event && self->writable);
-
-  /* fill attendees list */
-  self->attendees_model = gcal_event_get_attendees (self->event);
-
-out:
-  flags = GCAL_EVENT_EDITOR_FLAG_NONE;
-
-  if (new_event)
-    flags |= GCAL_EVENT_EDITOR_FLAG_NEW_EVENT;
-
-  for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
-    gcal_event_editor_section_set_event (self->sections[i], cloned_event, flags);
-
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
+  adw_dialog_present (ADW_DIALOG (self), parent);
 
   if (self->writable)
     gtk_widget_grab_focus (GTK_WIDGET (self->summary_section));
   else
     gtk_widget_grab_focus (self->done_button);
-
-  GCAL_EXIT;
 }
