@@ -30,6 +30,7 @@
 #include "gcal-utils.h"
 #include "gcal-view-private.h"
 #include "gcal-event-widget.h"
+#include "gcal-event-list.h"
 #include "gcal-range-tree.h"
 
 #include <glib/gi18n.h>
@@ -43,12 +44,6 @@ typedef struct
   gint                drop_cell;
 } DropData;
 
-typedef struct
-{
-  GtkWidget          *widget;
-  GcalEvent          *event;
-} ChildData;
-
 struct _GcalWeekGrid
 {
   GtkWidget           parent;
@@ -59,7 +54,11 @@ struct _GcalWeekGrid
 
   GDateTime          *active_date;
 
-  GcalRangeTree      *events;
+  GPtrArray          *layout_blocks;
+  GtkFilterListModel *filter_model;
+  GtkSortListModel   *sort_model;
+
+  gboolean            layout_blocks_valid;
 
   /*
    * These fields are "cells" rather than minutes. Each cell
@@ -78,6 +77,12 @@ struct _GcalWeekGrid
   } dnd;
 };
 
+static void     on_event_widget_activated_cb (GcalEventWidget *widget,
+                                              GcalWeekGrid    *self);
+static gboolean widget_tick_cb               (GtkWidget       *widget,
+                                              GdkFrameClock   *frame_clock,
+                                              gpointer         user_data);
+
 G_DEFINE_TYPE (GcalWeekGrid, gcal_week_grid, GTK_TYPE_WIDGET);
 
 
@@ -89,9 +94,17 @@ enum
 
 static guint signals[LAST_SIGNAL] = { 0, };
 
+
 /*
- * Auxiliary methods
+ * ChildData
  */
+
+typedef struct
+{
+  GtkWidget          *widget;
+  GcalEvent          *event;
+  uint32_t            n_columns;
+} ChildData;
 
 static ChildData*
 child_data_new (GtkWidget *widget,
@@ -102,6 +115,7 @@ child_data_new (GtkWidget *widget,
   data = g_new (ChildData, 1);
   data->widget = widget;
   data->event = g_object_ref (event);
+  data->n_columns = 1;
 
   return data;
 }
@@ -119,78 +133,322 @@ child_data_free (gpointer data)
   g_free (child_data);
 }
 
-static inline gint
-uint16_compare (gconstpointer a,
-                gconstpointer b)
+
+/*
+ * LayoutBlock
+ */
+
+typedef struct
 {
-  return GPOINTER_TO_UINT (*(gint*)a) - GPOINTER_TO_UINT (*(gint*)b);
+  GcalRange *range;
+  GPtrArray *columns; /* GcalRangeTree<ChildData> */
+} LayoutBlock;
+
+static void
+layout_block_free (gpointer data)
+{
+  LayoutBlock *layout_block = data;
+
+  if (!layout_block)
+    return;
+
+  g_clear_pointer (&layout_block->range, gcal_range_unref);
+  g_clear_pointer (&layout_block->columns, g_ptr_array_unref);
+  g_free (layout_block);
 }
 
-static inline guint
-get_event_index (GcalRangeTree *tree,
-                 GcalRange     *range)
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (LayoutBlock, layout_block_free)
+
+static ChildData *
+layout_block_add_event (LayoutBlock *layout_block,
+                        GcalEvent   *event)
 {
-  g_autoptr (GPtrArray) array = NULL;
-  gint idx, i;
+  GcalRange *event_range = NULL;
+  ChildData *child_data = NULL;
+  size_t column = 0;
 
-  idx = 0;
-  array = gcal_range_tree_get_data_at_range (tree, range);
+  g_assert (layout_block != NULL);
+  g_assert (GCAL_IS_EVENT (event));
 
-  if (!array)
-    return 0;
+  event_range = gcal_event_get_range (event);
 
-  g_ptr_array_sort (array, uint16_compare);
-
-  for (i = 0; array && i < array->len; i++)
+  do
     {
-      if (idx == GPOINTER_TO_INT (g_ptr_array_index (array, i)))
-        idx++;
+      GcalRangeTree *column_data = NULL;
+
+      if (column >= layout_block->columns->len)
+        {
+          column_data = gcal_range_tree_new_with_free_func (child_data_free);
+          g_ptr_array_insert (layout_block->columns, column, column_data);
+        }
       else
-        break;
-    }
+        {
+          column_data = g_ptr_array_index (layout_block->columns, column);
+        }
 
-  return idx;
+      g_assert (column_data != NULL);
+
+      if (!gcal_range_tree_has_entries_at_range (column_data, event_range))
+        {
+          g_autoptr (GcalRange) new_block_range = NULL;
+
+          child_data = child_data_new (NULL, event);
+          gcal_range_tree_add_range (column_data, event_range, child_data);
+
+          new_block_range = gcal_range_union (layout_block->range, event_range);
+          g_clear_pointer (&layout_block->range, gcal_range_unref);
+          layout_block->range = g_steal_pointer (&new_block_range);
+
+          break;
+        }
+
+      column++;
+    }
+  while (TRUE);
+
+  g_assert (child_data != NULL);
+
+  return child_data;
 }
 
-static guint
-count_overlaps_at_range (GcalRangeTree *self,
-                         GcalRange     *range)
+
+/*
+ * Auxiliary methods
+ */
+
+static void
+add_event_to_block (GcalWeekGrid *self,
+                    LayoutBlock  *layout_block,
+                    GcalEvent    *event)
 {
-  g_autoptr (GDateTime) start = NULL;
-  g_autoptr (GDateTime) end = NULL;
-  guint64 counter;
-  gint minutes;
-  gint i;
+  ChildData *child_data;
 
-  g_return_val_if_fail (self, 0);
+  g_assert (GCAL_IS_WEEK_GRID (self));
+  g_assert (layout_block != NULL);
+  g_assert (GCAL_IS_EVENT (event));
 
-  counter = 0;
-  start = gcal_range_get_start (range);
-  end = gcal_range_get_end (range);
-  minutes = g_date_time_difference (end, start) / G_TIME_SPAN_MINUTE;
+  child_data = layout_block_add_event (layout_block, event);
 
-  for (i = 0; i < minutes; i++)
+  child_data->widget = g_object_new (GCAL_TYPE_EVENT_WIDGET,
+                                     "event", event,
+                                     "orientation", GTK_ORIENTATION_VERTICAL,
+                                     "timestamp-policy", GCAL_TIMESTAMP_POLICY_START,
+                                     NULL);
+
+  g_signal_connect (child_data->widget, "activate", G_CALLBACK (on_event_widget_activated_cb), self);
+
+  gtk_widget_set_parent (child_data->widget, GTK_WIDGET (self));
+}
+
+static void
+expand_event_widgets_in_blocks (GcalWeekGrid *self)
+{
+
+  for (size_t block_index = 0; block_index < self->layout_blocks->len; block_index++)
     {
-      g_autoptr (GcalRange) minute_range = NULL;
-      guint n_events;
+      g_autoptr (GDateTime) block_range_start = NULL;
+      LayoutBlock *layout_block = NULL;
 
-      minute_range = gcal_range_new_take (g_date_time_add_minutes (start, i),
-                                          g_date_time_add_minutes (start, i + 1),
-                                          GCAL_RANGE_DEFAULT);
-      n_events = gcal_range_tree_count_entries_at_range (self, minute_range);
+      layout_block = g_ptr_array_index (self->layout_blocks, block_index);
+      g_assert (layout_block != NULL);
+      g_assert (layout_block->columns != NULL);
 
-      if (n_events == 0)
-        break;
+      for (size_t column_index = 0; column_index < layout_block->columns->len; column_index++)
+        {
+          g_autoptr (GPtrArray) children_data = NULL;
+          GcalRangeTree *block_column;
 
-      counter = MAX (counter, n_events);
+          block_column = g_ptr_array_index (layout_block->columns, column_index);
+          g_assert (block_column != NULL);
+
+          children_data = gcal_range_tree_get_all_data (block_column);
+          g_assert (children_data != NULL);
+
+          for (size_t child_data_index = 0; child_data_index < children_data->len; child_data_index++)
+            {
+              GcalRange *event_range;
+              ChildData *child_data;
+
+              child_data = g_ptr_array_index (children_data, child_data_index);
+              event_range = gcal_event_get_range (child_data->event);
+
+              for (size_t next_column_index = column_index + 1;
+                   next_column_index < layout_block->columns->len;
+                   next_column_index++)
+                {
+                  GcalRangeTree *next_column = g_ptr_array_index (layout_block->columns, next_column_index);
+
+                  if (gcal_range_tree_has_entries_at_range (next_column, event_range))
+                    break;
+
+                  child_data->n_columns++;
+                }
+            }
+        }
+    }
+}
+
+static void
+recalculate_layout_blocks (GcalWeekGrid *self)
+{
+  g_autoptr (GcalRangeTree) blocks_by_range = NULL;
+  size_t n_events = 0;
+
+  GCAL_ENTRY;
+
+  g_assert (GCAL_IS_WEEK_GRID (self));
+  g_assert (self->layout_blocks != NULL);
+
+  blocks_by_range = gcal_range_tree_new ();
+
+  /* Remove all blocks */
+  g_ptr_array_set_size (self->layout_blocks, 0);
+
+  /* First pass: create all layout blocks, all event widgets will have 1 column of width */
+  n_events = g_list_model_get_n_items (G_LIST_MODEL (self->sort_model));
+  for (size_t i = 0; i < n_events; i++)
+    {
+      g_autoptr (GPtrArray) blocks_at_range = NULL;
+      g_autoptr (GcalRange) old_block_range = NULL;
+      g_autoptr (GcalRange) new_block_range = NULL;
+      g_autoptr (GcalEvent) event = NULL;
+      LayoutBlock *layout_block = NULL;
+      GcalRange *event_range;
+
+      event = g_list_model_get_item (G_LIST_MODEL (self->sort_model), i);
+      g_assert (GCAL_IS_EVENT (event));
+
+      event_range = gcal_event_get_range (event);
+
+      blocks_at_range = gcal_range_tree_get_data_at_range (blocks_by_range, event_range);
+      g_assert (blocks_at_range == NULL || blocks_at_range->len == 1);
+
+      if (!blocks_at_range)
+        {
+          layout_block = g_new0 (LayoutBlock, 1);
+          layout_block->range = gcal_range_ref (event_range);
+          layout_block->columns = g_ptr_array_new_with_free_func ((GDestroyNotify) gcal_range_tree_unref);
+
+          gcal_range_tree_add_range (blocks_by_range, layout_block->range, layout_block);
+          g_ptr_array_add (self->layout_blocks, layout_block);
+        }
+      else
+        {
+          layout_block = g_ptr_array_index (blocks_at_range, 0);
+        }
+      g_assert (layout_block != NULL);
+
+      old_block_range = gcal_range_ref (layout_block->range);
+
+      add_event_to_block (self, layout_block, event);
+
+      new_block_range = gcal_range_ref (layout_block->range);
+
+      if (gcal_range_calculate_overlap (old_block_range, new_block_range, NULL) != GCAL_RANGE_EQUAL)
+        {
+          gcal_range_tree_remove_range (blocks_by_range, old_block_range, layout_block);
+          gcal_range_tree_add_range (blocks_by_range, new_block_range, layout_block);
+        }
     }
 
-  return counter;
+  /* Second pass: expand event widgets to fill in empty space */
+  expand_event_widgets_in_blocks (self);
+
+  self->layout_blocks_valid = TRUE;
+
+  GCAL_EXIT;
+}
+
+static void
+invalidate_layout_blocks (GcalWeekGrid *self)
+{
+  GCAL_ENTRY;
+
+  if (!self->layout_blocks_valid)
+    GCAL_RETURN ();
+
+  if (gtk_widget_get_mapped (GTK_WIDGET (self)))
+    {
+      gtk_widget_add_tick_callback (GTK_WIDGET (self), widget_tick_cb, self, NULL);
+      gtk_widget_queue_allocate (GTK_WIDGET (self));
+    }
+
+  self->layout_blocks_valid = FALSE;
+
+  GCAL_EXIT;
 }
 
 /*
  * Callbacks
  */
+
+static gboolean
+widget_tick_cb (GtkWidget     *widget,
+                GdkFrameClock *frame_clock,
+                gpointer       user_data)
+{
+  GcalWeekGrid *self = (GcalWeekGrid *) widget;
+
+  GCAL_ENTRY;
+
+  g_assert (GCAL_IS_WEEK_GRID (self));
+
+  recalculate_layout_blocks (self);
+
+  GCAL_RETURN (G_SOURCE_REMOVE);
+}
+
+static int
+compare_events_cb (gconstpointer a,
+                   gconstpointer b,
+                   gpointer      user_data)
+{
+  GDateTime *event_a_start;
+  GDateTime *event_b_start;
+  GDateTime *event_a_end;
+  GDateTime *event_b_end;
+  GcalEvent *event_a;
+  GcalEvent *event_b;
+  int result;
+
+  event_a = (GcalEvent *) a;
+  event_b = (GcalEvent *) b;
+
+  event_a_start = gcal_event_get_date_start (event_a);
+  event_b_start = gcal_event_get_date_start (event_b);
+  result = g_date_time_compare (event_a_start, event_b_start);
+  if (result != 0)
+    return result;
+
+  event_a_end = gcal_event_get_date_end (event_a);
+  event_b_end = gcal_event_get_date_end (event_b);
+  result = g_date_time_compare (event_a_end, event_b_end);
+  if (result != 0)
+    return -result;
+
+  return 0;
+}
+
+static gboolean
+event_is_timed_single_day_func (gpointer item,
+                                gpointer user_data)
+{
+  GcalEvent *event = (GcalEvent *) item;
+
+  g_assert (GCAL_IS_EVENT (event));
+
+  return !gcal_event_get_all_day (event) && !gcal_event_is_multiday (event);
+}
+
+static void
+events_changed_cb (GListModel   *model,
+                   unsigned int  position,
+                   unsigned int  removed,
+                   unsigned int  added,
+                   GcalWeekGrid *self)
+{
+  invalidate_layout_blocks (self);
+}
 
 static void
 on_click_gesture_pressed_cb (GtkGestureClick *click_gesture,
@@ -507,8 +765,8 @@ gcal_week_grid_dispose (GObject *object)
 {
   GcalWeekGrid *self = GCAL_WEEK_GRID (object);
 
+  g_clear_pointer (&self->layout_blocks, g_ptr_array_unref);
   g_clear_pointer (&self->dnd.widget, gtk_widget_unparent);
-  g_clear_pointer (&self->events, gcal_range_tree_unref);
   g_clear_pointer (&self->now_strip, gtk_widget_unparent);
   g_clear_pointer (&self->selection.widget, gtk_widget_unparent);
 
@@ -521,6 +779,8 @@ gcal_week_grid_finalize (GObject *object)
   GcalWeekGrid *self = GCAL_WEEK_GRID (object);
 
   gcal_clear_date_time (&self->active_date);
+  g_clear_object (&self->filter_model);
+  g_clear_object (&self->sort_model);
 
   G_OBJECT_CLASS (gcal_week_grid_parent_class)->finalize (object);
 }
@@ -562,6 +822,19 @@ get_today_column (GcalWeekGrid *self)
 }
 
 static void
+gcal_week_grid_map (GtkWidget *widget)
+{
+  GcalWeekGrid *self = (GcalWeekGrid *) widget;
+
+  g_assert (GCAL_IS_WEEK_GRID (self));
+
+  GTK_WIDGET_CLASS (gcal_week_grid_parent_class)->map (widget);
+
+  if (!self->layout_blocks_valid)
+    recalculate_layout_blocks (self);
+}
+
+static void
 gcal_week_grid_measure (GtkWidget      *widget,
                         GtkOrientation  orientation,
                         gint            for_size,
@@ -580,7 +853,6 @@ static void
 gcal_week_grid_snapshot (GtkWidget   *widget,
                          GtkSnapshot *snapshot)
 {
-  g_autoptr (GPtrArray) widgets = NULL;
   GcalWeekGrid *self;
   gint width, height;
 
@@ -595,12 +867,19 @@ gcal_week_grid_snapshot (GtkWidget   *widget,
   gtk_widget_snapshot_child (widget, self->selection.widget, snapshot);
   gtk_widget_snapshot_child (widget, self->dnd.widget, snapshot);
 
-  widgets = gcal_range_tree_get_all_data (self->events);
-  for (guint i = 0; i < widgets->len; i++)
+  /* Then, event widgets */
+  for (GtkWidget *child = gtk_widget_get_first_child (widget);
+       child;
+       child = gtk_widget_get_next_sibling (child))
     {
-      ChildData *child_data = g_ptr_array_index (widgets, i);
+      if (child == self->selection.widget ||
+          child == self->dnd.widget ||
+          child == self->now_strip)
+        {
+          continue;
+        }
 
-      gtk_widget_snapshot_child (widget, child_data->widget, snapshot);
+      gtk_widget_snapshot_child (widget, child, snapshot);
     }
 
   gtk_widget_snapshot_child (widget, self->now_strip, snapshot);
@@ -614,7 +893,6 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
 {
   GcalWeekGrid *self = GCAL_WEEK_GRID (widget);
   g_autoptr (GDateTime) week_start = NULL;
-  GcalRangeTree *overlaps;
   gboolean ltr;
   gdouble minutes_height;
   gdouble column_width;
@@ -697,100 +975,86 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
                                 baseline);
     }
 
-  /* Temporary range tree to hold positioned events' indexes */
-  overlaps = gcal_range_tree_new ();
-
   week_start = gcal_date_time_get_start_of_week (self->active_date);
 
-  /*
-   * Iterate through weekdays; we don't have to worry about events that
-   * jump between days because they're already handled by GcalWeekHeader.
-   */
-  for (size_t i = 0; i < N_WEEKDAYS; i++)
+  /* Event widgets */
+  for (size_t block_index = 0; block_index < self->layout_blocks->len; block_index++)
     {
-      g_autoptr (GcalRange) day_range = NULL;
-      GPtrArray *widgets_data;
-      guint j;
+      g_autoptr (GDateTime) block_range_start = NULL;
+      LayoutBlock *layout_block = NULL;
+      double block_column_width;
+      int block_weekday;
 
-      day_range = gcal_range_new_take (g_date_time_add_days (week_start, i),
-                                       g_date_time_add_days (week_start, i + 1),
-                                       GCAL_RANGE_DEFAULT);
-      widgets_data = gcal_range_tree_get_data_at_range (self->events, day_range);
+      layout_block = g_ptr_array_index (self->layout_blocks, block_index);
+      g_assert (layout_block != NULL);
+      g_assert (layout_block->columns != NULL);
 
-      for (j = 0; widgets_data && j < widgets_data->len; j++)
+      block_range_start = gcal_range_get_start (layout_block->range);
+      block_weekday = gcal_date_time_compare_date (block_range_start, week_start);
+      g_assert (block_weekday >= 0 && block_weekday < 7);
+
+      block_column_width = column_width / (double) layout_block->columns->len - 1;
+
+      for (size_t block_column_index = 0; block_column_index < layout_block->columns->len; block_column_index++)
         {
-          g_autoptr (GDateTime) event_start = NULL;
-          g_autoptr (GDateTime) event_end = NULL;
-          GtkAllocation child_allocation;
-          GtkWidget *event_widget;
-          GcalRange *event_range;
-          ChildData *data;
-          guint64 events_at_range;
-          gint event_minutes;
-          gint minimum_width;
-          gint minimum_height;
-          gint widget_index;
-          gint offset;
-          gint event_height;
-          gint event_width;
-          gint x;
-          gint y;
+          g_autoptr (GPtrArray) children_data = NULL;
+          GcalRangeTree *block_column;
 
-          data =  g_ptr_array_index (widgets_data, j);
-          event_widget = data->widget;
+          block_column = g_ptr_array_index (layout_block->columns, block_column_index);
+          g_assert (block_column != NULL);
 
-          if (!gtk_widget_should_layout (event_widget))
-            continue;
+          children_data = gcal_range_tree_get_all_data (block_column);
+          g_assert (children_data != NULL);
 
-          event_range = gcal_event_get_range (data->event);
-          event_start = g_date_time_to_local (gcal_event_get_date_start (data->event));
-          event_end = g_date_time_to_local (gcal_event_get_date_end (data->event));
+          for (size_t child_data_index = 0; child_data_index < children_data->len; child_data_index++)
+            {
+              g_autoptr (GDateTime) event_start = NULL;
+              g_autoptr (GDateTime) event_end = NULL;
+              GtkAllocation child_allocation;
+              GtkWidget *event_widget;
+              ChildData *child_data;
+              gint event_minutes;
+              gint minimum_width;
+              gint minimum_height;
+              gint event_height;
+              gint event_width;
+              gint x;
+              gint y;
 
-          /* The total number of events available in this range */
-          events_at_range = count_overlaps_at_range (self->events, event_range);
+              child_data = g_ptr_array_index (children_data, child_data_index);
+              event_widget = child_data->widget;
 
-          /* The real horizontal position of this event */
-          widget_index = get_event_index (overlaps, event_range);
+              if (!gtk_widget_should_layout (event_widget))
+                continue;
 
-          event_minutes = g_date_time_difference (event_end, event_start) / G_TIME_SPAN_MINUTE;
+              event_start = g_date_time_to_local (gcal_event_get_date_start (child_data->event));
+              event_end = g_date_time_to_local (gcal_event_get_date_end (child_data->event));
+              event_minutes = g_date_time_difference (event_end, event_start) / G_TIME_SPAN_MINUTE;
 
-          /* Compute the height of the widget */
-          gtk_widget_measure (event_widget, GTK_ORIENTATION_VERTICAL, -1, &minimum_height, NULL, NULL, NULL);
-          event_height = event_minutes * minutes_height;
-          event_height = MAX (minimum_height, event_height);
+              /* Compute the height of the widget */
+              gtk_widget_measure (event_widget, GTK_ORIENTATION_VERTICAL, -1, &minimum_height, NULL, NULL, NULL);
+              event_height = event_minutes * minutes_height;
+              event_height = MAX (minimum_height, event_height);
 
-          /* Compute the width of the widget */
-          gtk_widget_measure (event_widget, GTK_ORIENTATION_HORIZONTAL, event_height, &minimum_width, NULL, NULL, NULL);
-          event_width = column_width / events_at_range;
-          event_width = MAX (minimum_width, event_width);
+              /* Compute the width of the widget */
+              gtk_widget_measure (event_widget, GTK_ORIENTATION_HORIZONTAL, event_height, &minimum_width, NULL, NULL, NULL);
+              event_width = MAX (minimum_width, block_column_width * child_data->n_columns);
 
-          offset = event_width * widget_index;
-          y = (g_date_time_get_hour (event_start) * 60 + g_date_time_get_minute (event_start)) * minutes_height;
+              x = column_width * block_weekday + block_column_width * block_column_index + 1;
+              if (!ltr)
+                x = width - (x + event_width);
+              y = (g_date_time_get_hour (event_start) * 60 + g_date_time_get_minute (event_start)) * minutes_height;
 
-          if (ltr)
-            x = column_width * i + offset + 1;
-          else
-            x = width - event_width - (column_width * i + offset + 1);
+              /* Setup the child position and size */
+              child_allocation.x = x;
+              child_allocation.y = y;
+              child_allocation.width = event_width;
+              child_allocation.height = event_height;
 
-          /* Setup the child position and size */
-          child_allocation.x = x;
-          child_allocation.y = y;
-          child_allocation.width = event_width;
-          child_allocation.height = event_height;
-
-          gtk_widget_size_allocate (event_widget, &child_allocation, baseline);
-
-          /*
-           * Add the current event to the temporary overlaps tree so we have a way to
-           * know how many events are already positioned in the current column.
-           */
-          gcal_range_tree_add_range (overlaps, event_range, GUINT_TO_POINTER (widget_index));
+              gtk_widget_size_allocate (event_widget, &child_allocation, baseline);
+            }
         }
-
-      g_clear_pointer (&widgets_data, g_ptr_array_unref);
     }
-
-  g_clear_pointer (&overlaps, gcal_range_tree_unref);
 
   /* Today column */
   today_column = get_today_column (GCAL_WEEK_GRID (widget));
@@ -841,6 +1105,7 @@ gcal_week_grid_class_init (GcalWeekGridClass *klass)
   object_class->get_property = gcal_week_grid_get_property;
   object_class->set_property = gcal_week_grid_set_property;
 
+  widget_class->map = gcal_week_grid_map;
   widget_class->measure = gcal_week_grid_measure;
   widget_class->size_allocate = gcal_week_grid_size_allocate;
   widget_class->snapshot = gcal_week_grid_snapshot;
@@ -860,6 +1125,7 @@ static void
 gcal_week_grid_init (GcalWeekGrid *self)
 {
   GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  GtkCustomFilter *filter;
   GtkDropTarget *drop_target;
   GtkGesture *click_gesture;
   AdwStyleManager *manager;
@@ -875,7 +1141,13 @@ gcal_week_grid_init (GcalWeekGrid *self)
   gtk_widget_set_visible (self->dnd.widget, FALSE);
   gtk_widget_set_parent (self->dnd.widget, GTK_WIDGET (self));
 
-  self->events = gcal_range_tree_new_with_free_func (child_data_free);
+  self->layout_blocks = g_ptr_array_new_with_free_func (layout_block_free);
+
+  filter = gtk_custom_filter_new (event_is_timed_single_day_func, NULL, NULL);
+  self->filter_model = gtk_filter_list_model_new (NULL, GTK_FILTER (g_steal_pointer (&filter)));
+  self->sort_model = gtk_sort_list_model_new (G_LIST_MODEL (g_object_ref (self->filter_model)),
+                                              GTK_SORTER (gtk_custom_sorter_new (compare_events_cb, NULL, NULL)));
+  g_signal_connect (self->sort_model, "items-changed", G_CALLBACK (events_changed_cb), self);
 
   self->now_strip = adw_bin_new ();
   gtk_widget_add_css_class (self->now_strip, "now-strip");
@@ -915,57 +1187,13 @@ gcal_week_grid_init (GcalWeekGrid *self)
                            G_CONNECT_SWAPPED);
 }
 
-/* Public API */
 void
-gcal_week_grid_add_event (GcalWeekGrid *self,
-                          GcalEvent    *event)
+gcal_week_grid_set_model (GcalWeekGrid *self,
+                          GListModel   *model)
 {
-  GtkWidget *widget;
+  g_assert (GCAL_IS_WEEK_GRID (self));
 
-  g_return_if_fail (GCAL_IS_WEEK_GRID (self));
-
-  g_object_ref (event);
-
-  widget = g_object_new (GCAL_TYPE_EVENT_WIDGET,
-                         "event", event,
-                         "orientation", GTK_ORIENTATION_VERTICAL,
-                         "timestamp-policy", GCAL_TIMESTAMP_POLICY_START,
-                         NULL);
-
-  gcal_range_tree_add_range (self->events,
-                             gcal_event_get_range (event),
-                             child_data_new (widget, event));
-
-  g_signal_connect (widget, "activate", G_CALLBACK (on_event_widget_activated_cb), self);
-
-  gtk_widget_set_parent (widget, GTK_WIDGET (self));
-}
-
-void
-gcal_week_grid_remove_event (GcalWeekGrid *self,
-                             const gchar  *uid)
-{
-  g_autoptr (GPtrArray) widgets = NULL;
-  guint i;
-
-  g_return_if_fail (GCAL_IS_WEEK_GRID (self));
-
-  widgets = gcal_range_tree_get_all_data (self->events);
-
-  for (i = 0; widgets && i < widgets->len; i++)
-    {
-      ChildData *data;
-      GcalEvent *event;
-
-      data = g_ptr_array_index (widgets, i);
-      event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (data->widget));
-
-      if (g_strcmp0 (gcal_event_get_uid (event), uid) != 0)
-        continue;
-
-      gcal_range_tree_remove_range (self->events, gcal_event_get_range (event), data);
-      gtk_widget_queue_allocate (GTK_WIDGET (self));
-    }
+  gtk_filter_list_model_set_model (self->filter_model, model);
 }
 
 GList*
@@ -998,7 +1226,6 @@ gcal_week_grid_set_date (GcalWeekGrid *self,
 {
   gcal_set_date_time (&self->active_date, date);
 
-  gtk_widget_queue_resize (GTK_WIDGET (self));
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  invalidate_layout_blocks (self);
 }
 
