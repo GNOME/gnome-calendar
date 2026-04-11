@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-04-01 11:20+0000\n"
-"PO-Revision-Date: 2026-04-02 10:52+0200\n"
+"POT-Creation-Date: 2026-04-09 12:04+0000\n"
+"PO-Revision-Date: 2026-04-11 19:07+0200\n"
 "Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -220,7 +220,7 @@ msgstr "Deschide în Preferințe"
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:43
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:191
 #: src/gui/event-editor/gcal-summary-section.blp:18
-#: src/gui/gcal-event-popover.blp:149
+#: src/gui/gcal-event-popover.blp:152
 #: src/gui/importer/gcal-import-file-row.c:178
 msgid "Location"
 msgstr "Locul"
@@ -908,6 +908,10 @@ msgstr "Exportă evenimentul"
 #: src/gui/gcal-event-popover.blp:104
 msgid "No event notes"
 msgstr "Nicio mențiune"
+
+#: src/gui/gcal-event-popover.blp:170
+msgid "Open Location"
+msgstr "Deschide locul"
 
 #: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:199
 msgid "January"
