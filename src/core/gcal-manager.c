@@ -245,7 +245,6 @@ on_calendar_created_cb (GObject      *source_object,
 {
   g_autoptr (ESource) default_source = NULL;
   g_autoptr (GError) error = NULL;
-  ESourceRefresh *refresh_extension;
   ESourceOffline *offline_extension;
   GcalCalendar *calendar;
   GcalManager *self;
@@ -292,11 +291,6 @@ on_calendar_created_cb (GObject      *source_object,
   /* Cache all the online calendars, so the user can see them offline */
   offline_extension = e_source_get_extension (source, E_SOURCE_EXTENSION_OFFLINE);
   e_source_offline_set_stay_synchronized (offline_extension, TRUE);
-
-  /* And also make sure the source is periodically updated */
-  refresh_extension = e_source_get_extension (source, E_SOURCE_EXTENSION_REFRESH);
-  e_source_refresh_set_enabled (refresh_extension, TRUE);
-  e_source_refresh_set_interval_minutes (refresh_extension, 30);
 
   e_source_registry_commit_source (self->source_registry,
                                    source,
