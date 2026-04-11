@@ -79,6 +79,9 @@ GPtrArray*           gcal_range_tree_get_all_data                (GcalRangeTree 
 GPtrArray*           gcal_range_tree_get_data_at_range           (GcalRangeTree      *self,
                                                                   GcalRange          *range);
 
+gboolean             gcal_range_tree_has_entries_at_range        (GcalRangeTree      *self,
+                                                                  GcalRange          *range);
+
 guint64              gcal_range_tree_count_entries_at_range      (GcalRangeTree      *self,
                                                                   GcalRange          *range);
 
