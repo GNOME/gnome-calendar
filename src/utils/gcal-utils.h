@@ -141,4 +141,7 @@ SoupSession *        gcal_create_soup_session                    (void);
 GListModel *         gcal_create_writable_calendars_model        (GcalManager        *manager);
 
 const gchar *        gcal_get_email_from_mailto_uri              (const gchar        *mailto_uri);
+
+guint                gcal_create_activate_signal_and_shortcuts   (GtkWidgetClass *widget_class,
+                                                                  GType           widget_type);
 #endif /* __GCAL_UTILS_H__ */
