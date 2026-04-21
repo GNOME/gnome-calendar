@@ -489,7 +489,7 @@ setup_description_label (GcalEventPopover *self)
 {
   g_autofree gchar *description = NULL;
   g_autofree gchar *meeting_url = NULL;
-  g_autoptr (GString) string = NULL;
+  g_autofree char *str = NULL;
 
   gcal_utils_extract_google_section (gcal_event_get_description (self->event),
                                      &description,
@@ -499,12 +499,9 @@ setup_description_label (GcalEventPopover *self)
   if (meeting_url)
     add_meeting (self, meeting_url);
 
-  string = g_string_new (description);
-  g_string_replace (string, "<br>", "\n", 0);
-  g_string_replace (string, "&nbsp;", " ", 0);
-
-  gtk_label_set_markup (self->description_label, string->str);
-  gtk_widget_set_visible (GTK_WIDGET (self->description_scrolled_window), string->str && *string->str);
+  str = g_markup_escape_text (description, -1);
+  gtk_label_set_markup (self->description_label, str);
+  gtk_widget_set_visible (GTK_WIDGET (self->description_scrolled_window), str && *str);
 }
 
 static void
