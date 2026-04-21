@@ -373,13 +373,21 @@ update_header (GtkListBoxRow *row,
   GcalAgendaView *self = GCAL_AGENDA_VIEW (user_data);
   GtkWidget *widget = gtk_list_box_row_get_child (row);
   gboolean event_all_day = get_row_is_all_day (row);
-  g_autoptr (GDateTime) start = get_start_date_for_row (self, row);
-  g_autoptr (GDateTime) end = get_end_date_for_row (self, row);
+  g_autoptr (GDateTime) start = NULL;
+  g_autoptr (GDateTime) end = NULL;
   g_autoptr (GDateTime) today = NULL;
   g_autoptr (GDateTime) end_midnight = NULL;
   GcalEvent *event = NULL;
   g_autofree gchar *label = NULL;
   GtkWidget *header;
+
+  start = get_start_date_for_row (self, row);
+  if (!start)
+    return;
+
+  end = get_end_date_for_row (self, row);
+  if (!end)
+    return;
 
   start = event_all_day ? g_date_time_ref (start) : g_date_time_to_local (start);
   end = event_all_day ? g_date_time_ref (end) : g_date_time_to_local (end);
