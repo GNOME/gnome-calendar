@@ -37,9 +37,6 @@ GcalWeatherInfo*     gcal_weather_info_new                       (GDate         
 void                 gcal_weather_info_get_date                  (GcalWeatherInfo    *self,
                                                                   GDate              *date);
 
-void                 gcal_weather_info_get_date                  (GcalWeatherInfo    *self,
-                                                                  GDate              *date);
-
 const gchar*         gcal_weather_info_get_icon_name             (GcalWeatherInfo    *self);
 
 const gchar*         gcal_weather_info_get_temperature           (GcalWeatherInfo    *self);
