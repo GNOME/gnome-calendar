@@ -118,7 +118,11 @@ void                 gcal_utils_launch_gnome_settings            (GDBusConnectio
 
 gchar*               gcal_utils_format_filename_for_display      (const gchar         *filename);
 
-void                 gcal_utils_extract_google_section           (const gchar        *description,
+gboolean             gcal_utils_extract_google_section           (const gchar        *description,
+                                                                  gchar             **out_description,
+                                                                  gchar             **out_meeting_url);
+
+gboolean             gcal_utils_extract_teams_section            (const gchar        *description,
                                                                   gchar             **out_description,
                                                                   gchar             **out_meeting_url);
 
