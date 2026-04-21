@@ -1104,7 +1104,7 @@ gcal_utils_format_filename_for_display (const gchar *filename)
   return g_steal_pointer (&display_name);
 }
 
-void
+static gboolean
 gcal_utils_extract_google_section (const gchar  *description,
                                    gchar       **out_description,
                                    gchar       **out_meeting_url)
@@ -1117,21 +1117,21 @@ gcal_utils_extract_google_section (const gchar  *description,
   gchar *last_delimiter;
 
   if (!description)
-    goto out;
+    return FALSE;
 
 #define GOOGLE_DELIMITER "-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-"
 
   description_len = strlen (description);
   first_delimiter = g_strstr_len (description, description_len, GOOGLE_DELIMITER);
   if (!first_delimiter)
-    goto out;
+    return FALSE;
 
   delimiter_len = strlen (GOOGLE_DELIMITER);
   last_delimiter = g_strstr_len (first_delimiter + delimiter_len,
                                  description_len,
                                  GOOGLE_DELIMITER);
   if (!last_delimiter)
-    goto out;
+    return FALSE;
 
   if (out_description)
     actual_description = g_utf8_substring (description, 0, first_delimiter - description);
@@ -1149,12 +1149,94 @@ gcal_utils_extract_google_section (const gchar  *description,
         meeting_url = g_utf8_substring (meet_url_start, 0, strlen ("https://meet.google.com/xxx-xxxx-xxx"));
     }
 
-out:
   if (out_description)
     *out_description = actual_description ? g_steal_pointer (&actual_description) : g_strdup (description);
 
   if (out_meeting_url)
     *out_meeting_url = g_steal_pointer (&meeting_url);
+
+  return TRUE;
+}
+
+static gboolean
+gcal_utils_extract_teams_section (const gchar  *description,
+                                  gchar       **out_description,
+                                  gchar       **out_meeting_url)
+{
+  g_autofree gchar *actual_description = NULL;
+  g_autofree gchar *meeting_url = NULL;
+  gssize description_len;
+  gsize delimiter_len;
+  gchar *first_delimiter;
+  gchar *last_delimiter;
+
+  if (!description)
+    return FALSE;
+
+#define TEAMS_DELIMITER "________________________________________________________________________________"
+
+  description_len = strlen (description);
+  first_delimiter = g_strstr_len (description, description_len, TEAMS_DELIMITER);
+  if (!first_delimiter)
+    return FALSE;
+
+  delimiter_len = strlen (TEAMS_DELIMITER);
+  last_delimiter = g_strstr_len (first_delimiter + delimiter_len,
+                                 description_len,
+                                 TEAMS_DELIMITER);
+  if (!last_delimiter)
+    return FALSE;
+
+  if (out_description)
+    actual_description = g_utf8_substring (description, 0, first_delimiter - description);
+
+  if (out_meeting_url)
+    {
+      gchar *teams_section_start;
+      gchar *meet_url_start;
+
+      teams_section_start = first_delimiter + delimiter_len;
+      meet_url_start = g_strstr_len (teams_section_start,
+                                     last_delimiter - first_delimiter,
+                                     "https://teams.microsoft.com");
+      if (meet_url_start)
+        {
+          char *end = g_strstr_len (meet_url_start + 1, -1, "\n");
+          meeting_url = g_utf8_substring (meet_url_start, 0, end - meet_url_start);
+        }
+    }
+
+  if (out_description)
+    *out_description = actual_description ? g_steal_pointer (&actual_description) : g_strdup (description);
+
+  if (out_meeting_url)
+    *out_meeting_url = g_steal_pointer (&meeting_url);
+
+  return TRUE;
+}
+
+/**
+ * gcal_utils_extract_meeting_url:
+ * @description: (nullable): a string description
+ * @out_description: (nullable)(transfer full): return location for a parsed description
+ * @out_meeting_url: (nullable)(transfer full): return location for the parsed meeting url
+ *
+ * Parses @description for meeting URLs.
+ */
+void
+gcal_utils_extract_meeting_url (const char  *description,
+                                char       **out_description,
+                                char       **out_meeting_url)
+{
+  if (!gcal_utils_extract_google_section (description, out_description, out_meeting_url) &&
+      !gcal_utils_extract_teams_section (description, out_description, out_meeting_url))
+    {
+      if (out_description)
+        *out_description = g_strdup (description);
+
+      if (out_meeting_url)
+        *out_meeting_url = NULL;
+    }
 }
 
 typedef struct

@@ -133,6 +133,64 @@ date_time_from_icaltime (void)
 
 /*********************************************************************************************************************/
 
+#define GOOGLE_SAMPLE_DESCRIPTION \
+"-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-\n" \
+"Entrar com o Google Meet: https://meet.google.com/abc-defg-hij\n"                          \
+"\n"                                                                                        \
+"Saiba mais sobre o Meet em: https://support.google.com/a/users/answer/9282720\n"           \
+"\n"                                                                                        \
+"Não edite esta seção.\n"                                                                   \
+"-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-"
+
+#define GOOGLE_SAMPLE_DESCRIPTION_WITH_COMMENT \
+"TROLOLO\n"                                                                                 \
+"-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-\n" \
+"Entrar com o Google Meet: https://meet.google.com/abc-defg-hij\n"                          \
+"\n"                                                                                        \
+"Saiba mais sobre o Meet em: https://support.google.com/a/users/answer/9282720\n"           \
+"\n"                                                                                        \
+"Não edite esta seção.\n"                                                                   \
+"-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-"
+
+#define TEAMS_SAMPLE_DESCRIPTION \
+"________________________________________________________________________________\n" \
+"Réunion Microsoft Teams\n" \
+"Joindre : https://teams.microsoft.com/meet/12345678912345?p=0AbCdEfGjKLm1nOjTj\n" \
+"Numéro de réunion : 123 456 789 123 45\n" \
+"Code secret : abcdefgh\n" \
+"________________________________\n" \
+"Besoin d’aide?<https://aka.ms/JoinTeamsMeeting?omkt=fr-CA> | Référence système<https://teams.microsoft.com/l/meetup-join/19%3ameeting_KLMNTABC02UJKL5OC00ZWJhLThhNDgtYmJlYTI2ZTE5YzM0%40abc.v2/0?context=%7b%22Tid%22%3a%3f5f042f-920a-4035-8dc7-477b5dce3c73%22%2c%22Oid%22%3a%aa4dd47c-47a1-4a00-b766-6e5f83e7d367%22%7d>\n" \
+"Pour les organisateurs : Options de réunion<https://teams.microsoft.com/meetingOptions/?organizerId=690add55-d0e3-4605-ac28-a3a08193c212&tenantId=43743467-968a-4ded-8250-afd003a4a407&threadId=19_meeting_Yjk5NTI0M2UtNjA5OC00ZWJhLThhNDgtYmJlYTI2ZTE5YzM0&messageId=100&language=fr-CA>\n" \
+"________________________________________________________________________________"
+
+
+static void
+extract_meeting_url (void)
+{
+  g_autofree char *description = NULL;
+  g_autofree char *meeting_url = NULL;
+
+  gcal_utils_extract_meeting_url (GOOGLE_SAMPLE_DESCRIPTION, &description, &meeting_url);
+  g_assert_cmpstr (description, ==, "");
+  g_assert_cmpstr (meeting_url, ==, "https://meet.google.com/abc-defg-hij");
+
+  g_clear_pointer (&description, g_free);
+  g_clear_pointer (&meeting_url, g_free);
+
+  gcal_utils_extract_meeting_url (GOOGLE_SAMPLE_DESCRIPTION_WITH_COMMENT, &description, &meeting_url);
+  g_assert_cmpstr (description, ==, "TROLOLO\n");
+  g_assert_cmpstr (meeting_url, ==, "https://meet.google.com/abc-defg-hij");
+
+  g_clear_pointer (&description, g_free);
+  g_clear_pointer (&meeting_url, g_free);
+
+  gcal_utils_extract_meeting_url (TEAMS_SAMPLE_DESCRIPTION, &description, &meeting_url);
+  g_assert_cmpstr (description, ==, "");
+  g_assert_cmpstr (meeting_url, ==, "https://teams.microsoft.com/meet/12345678912345?p=0AbCdEfGjKLm1nOjTj");
+}
+
+/*********************************************************************************************************************/
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -143,6 +201,7 @@ main (gint   argc,
   g_test_bug_base ("https://gitlab.gnome.org/GNOME/gnome-calendar/-/issues/");
 
   g_test_add_func ("/utils/date-time/date_time_from_icaltime", date_time_from_icaltime);
+  g_test_add_func ("/utils/misc/extract_meeting_url", extract_meeting_url);
 
   return g_test_run ();
 }

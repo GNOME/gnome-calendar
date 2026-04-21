@@ -118,9 +118,9 @@ void                 gcal_utils_launch_gnome_settings            (GDBusConnectio
 
 gchar*               gcal_utils_format_filename_for_display      (const gchar         *filename);
 
-void                 gcal_utils_extract_google_section           (const gchar        *description,
-                                                                  gchar             **out_description,
-                                                                  gchar             **out_meeting_url);
+void                 gcal_utils_extract_meeting_url              (const char         *description,
+                                                                  char              **out_description,
+                                                                  char              **out_meeting_url);
 
 void                 gcal_utils_ask_recurrence_modification_type (GtkWidget                 *parent,
                                                                   GcalEvent                 *event,

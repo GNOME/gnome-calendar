@@ -491,9 +491,8 @@ setup_description_label (GcalEventPopover *self)
   g_autofree gchar *meeting_url = NULL;
   g_autoptr (GString) string = NULL;
 
-  gcal_utils_extract_google_section (gcal_event_get_description (self->event),
-                                     &description,
-                                     &meeting_url);
+  gcal_utils_extract_meeting_url (gcal_event_get_description (self->event), &description, &meeting_url);
+
   g_strstrip (description);
 
   if (meeting_url)
