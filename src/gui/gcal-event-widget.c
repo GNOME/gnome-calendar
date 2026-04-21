@@ -391,7 +391,8 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
 
               if (truncated_location->len > LOCATION_MAX_LEN)
                 {
-                  g_string_truncate (truncated_location, LOCATION_MAX_LEN - 1);
+                  char *cut = g_utf8_offset_to_pointer (truncated_location->str, LOCATION_MAX_LEN - 1);
+                  g_string_truncate (truncated_location, cut - truncated_location->str);
                   g_string_append (truncated_location, "…");
                 }
 
@@ -423,7 +424,8 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
       /* If the description is larger than DESC_MAX_CHAR, ellipsize it */
       if (description_len > DESC_MAX_CHAR)
         {
-          g_string_truncate (tooltip_desc, DESC_MAX_CHAR - 1);
+          char *cut = g_utf8_offset_to_pointer (tooltip_desc->str, DESC_MAX_CHAR - 1);
+          g_string_truncate (tooltip_desc, cut - tooltip_desc->str);
           g_string_append (tooltip_desc, "…");
         }
 
