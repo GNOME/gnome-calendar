@@ -170,9 +170,7 @@ fill_grid_with_event_data (GcalImportFileRow *self,
         }
     }
 
-  gcal_utils_extract_google_section (i_cal_component_get_description (ical_component),
-                                     &description,
-                                     NULL);
+  gcal_utils_extract_meeting_url (i_cal_component_get_description (ical_component), &description, NULL);
 
   add_grid_row (self, grid, row++, _("Title"), i_cal_component_get_summary (ical_component));
   add_grid_row (self, grid, row++, _("Location"), i_cal_component_get_location (ical_component));
