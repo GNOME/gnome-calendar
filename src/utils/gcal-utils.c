@@ -1104,7 +1104,7 @@ gcal_utils_format_filename_for_display (const gchar *filename)
   return g_steal_pointer (&display_name);
 }
 
-void
+gboolean
 gcal_utils_extract_google_section (const gchar  *description,
                                    gchar       **out_description,
                                    gchar       **out_meeting_url)
@@ -1115,6 +1115,7 @@ gcal_utils_extract_google_section (const gchar  *description,
   gsize delimiter_len;
   gchar *first_delimiter;
   gchar *last_delimiter;
+  gboolean found = FALSE;
 
   if (!description)
     goto out;
@@ -1155,6 +1156,68 @@ out:
 
   if (out_meeting_url)
     *out_meeting_url = g_steal_pointer (&meeting_url);
+
+  return found;
+}
+
+gboolean
+gcal_utils_extract_teams_section (const gchar  *description,
+                                  gchar       **out_description,
+                                  gchar       **out_meeting_url)
+{
+  g_autofree gchar *actual_description = NULL;
+  g_autofree gchar *meeting_url = NULL;
+  gssize description_len;
+  gsize delimiter_len;
+  gchar *first_delimiter;
+  gchar *last_delimiter;
+  gboolean found = FALSE;
+
+  if (!description)
+    goto out;
+
+#define TEAMS_DELIMITER "________________________________________________________________________________"
+
+  description_len = strlen (description);
+  first_delimiter = g_strstr_len (description, description_len, TEAMS_DELIMITER);
+  if (!first_delimiter)
+    goto out;
+
+  delimiter_len = strlen (TEAMS_DELIMITER);
+  last_delimiter = g_strstr_len (first_delimiter + delimiter_len,
+                                 description_len,
+                                 TEAMS_DELIMITER);
+  if (!last_delimiter)
+    goto out;
+
+  if (out_description)
+    actual_description = g_utf8_substring (description, 0, first_delimiter - description);
+
+  if (out_meeting_url)
+    {
+      gchar *teams_section_start;
+      gchar *meet_url_start;
+
+      teams_section_start = first_delimiter + delimiter_len;
+      meet_url_start = g_strstr_len (teams_section_start,
+                                     last_delimiter - first_delimiter,
+                                     "https://teams.microsoft.com");
+      if (meet_url_start) {
+        char *end = g_strstr_len (meet_url_start + 1, -1, "\n");
+        meeting_url = g_utf8_substring (meet_url_start, 0, end - meet_url_start);
+      }
+    }
+
+    found = TRUE;
+out:
+
+  if (out_description)
+    *out_description = actual_description ? g_steal_pointer (&actual_description) : g_strdup (description);
+
+  if (out_meeting_url)
+    *out_meeting_url = g_steal_pointer (&meeting_url);
+
+  return found;
 }
 
 typedef struct
