@@ -4,6 +4,7 @@ blueprints = custom_target(
   'blueprints',
   input: files(
     'gcal-agenda-view.blp',
+    'gcal-agenda-view-day-row.blp',
     'gcal-month-cell.blp',
     'gcal-month-popover.blp',
     'gcal-month-view.blp',
@@ -29,6 +30,8 @@ built_sources += gnome.compile_resources(
 
 sources += files(
   'gcal-agenda-view.c',
+  'gcal-agenda-view-day.c',
+  'gcal-agenda-view-day-row.c',
   'gcal-month-cell.c',
   'gcal-month-popover.c',
   'gcal-month-view.c',

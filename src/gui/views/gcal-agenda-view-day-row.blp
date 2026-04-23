@@ -1,0 +1,35 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalAgendaViewDayRow: Adw.Bin {
+  Box {
+    orientation: vertical;
+
+    Label title_label {
+      xalign: 0.0;
+      label: bind $datetime_to_string_func(template.day as <$GcalAgendaViewDay>.date);
+
+      styles [
+        "caption-heading",
+      ]
+    }
+
+    ListBox listbox {
+      hexpand: true;
+      vexpand: true;
+      selection-mode: none;
+      row-activated => $on_list_box_row_activated_cb(template) not-swapped;
+
+      [placeholder]
+      Label {
+        label: _("No events");
+        xalign: 0;
+
+        styles [
+          "no-events",
+          "dimmed",
+        ]
+      }
+    }
+  }
+}

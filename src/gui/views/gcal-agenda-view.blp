@@ -13,26 +13,37 @@ template $GcalAgendaView: Box {
   ScrolledWindow scrolled_window {
     hexpand: true;
     vexpand: true;
+    hscrollbar-policy: never;
 
-    ListBox list_box {
-      hexpand: true;
-      selection-mode: none;
-      vexpand: true;
-      row-activated => $on_list_box_row_activated_cb(template) not-swapped;
+    ListView list_view {
+      hscroll-policy: natural;
+      vscroll-policy: natural;
+      single-click-activate: true;
 
-      ListBoxRow no_events_row {
-        activatable: false;
+      model: Gtk.NoSelection {
+        model: FilterListModel filtered_days {
+          watch-items: true;
 
-        child: Label {
-          label: _("No events");
-          xalign: 0;
-
-          styles [
-            "no-events",
-            "dimmed",
-          ]
+          filter: BoolFilter {
+            expression: expr $n_items_and_date_to_boolean(
+              item as <$GcalAgendaViewDay>.n-items,
+              item as <$GcalAgendaViewDay>.date,
+            ) as <bool>;
+          };
         };
-      }
+      };
+
+      factory: BuilderListItemFactory {
+        template ListItem {
+          activatable: false;
+          selectable: false;
+
+          child: $GcalAgendaViewDayRow {
+            day: bind template.item;
+            event-activated => $on_day_row_event_activated_cb(template) not-swapped;
+          };
+        }
+      };
     }
   }
 }
