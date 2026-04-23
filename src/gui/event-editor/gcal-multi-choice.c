@@ -505,22 +505,6 @@ gcal_multi_choice_set_property (GObject      *object,
     }
 }
 
-static void
-gcal_multi_choice_notify (GObject    *object,
-                          GParamSpec *pspec)
-{
-  if (strcmp (pspec->name, "focus-on-click") == 0)
-    {
-      GcalMultiChoice *self = GCAL_MULTI_CHOICE (object);
-
-      gtk_widget_set_focus_on_click (self->button,
-                                     gtk_widget_get_focus_on_click (GTK_WIDGET (self)));
-    }
-
-  if (G_OBJECT_CLASS (gcal_multi_choice_parent_class)->notify)
-    G_OBJECT_CLASS (gcal_multi_choice_parent_class)->notify (object, pspec);
-}
-
 /*
  * GtkWidget overrides
  */
@@ -541,40 +525,6 @@ gcal_multi_choice_state_flags_changed (GtkWidget    *widget,
       if (self->popover)
         gtk_widget_set_visible (self->popover, FALSE);
     }
-}
-
-static void
-gcal_multi_choice_measure (GtkWidget      *widget,
-                           GtkOrientation  orientation,
-                           int             for_size,
-                           int            *minimum,
-                           int            *natural,
-                           int            *minimum_baseline,
-                           int            *natural_baseline)
-{
-  GcalMultiChoice *self = GCAL_MULTI_CHOICE (widget);
-
-  gtk_widget_measure (self->button,
-                      orientation,
-                      for_size,
-                      minimum, natural,
-                      minimum_baseline, natural_baseline);
-
-}
-
-static void
-gcal_multi_choice_size_allocate (GtkWidget *widget,
-                                 int        width,
-                                 int        height,
-                                 int        baseline)
-{
-  GcalMultiChoice *self= GCAL_MULTI_CHOICE (widget);
-
-  gtk_widget_size_allocate (self->button,
-                            &(GtkAllocation) { 0, 0, width, height },
-                            baseline);
-  if (self->popover)
-    gtk_popover_present (GTK_POPOVER (self->popover));
 }
 
 static gboolean
@@ -632,13 +582,10 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
   GObjectClass *object_class = G_OBJECT_CLASS (class);
 
-  object_class->notify = gcal_multi_choice_notify;
   object_class->dispose = gcal_multi_choice_dispose;
   object_class->set_property = gcal_multi_choice_set_property;
   object_class->get_property = gcal_multi_choice_get_property;
 
-  widget_class->measure = gcal_multi_choice_measure;
-  widget_class->size_allocate = gcal_multi_choice_size_allocate;
   widget_class->state_flags_changed = gcal_multi_choice_state_flags_changed;
   widget_class->focus = gcal_multi_choice_focus;
   widget_class->grab_focus = gcal_multi_choice_grab_focus;
