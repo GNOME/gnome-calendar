@@ -1,7 +1,10 @@
 using Gtk 4.0;
 
-template $GcalMultiChoice: Box {
+template $GcalMultiChoice: Widget {
   accessible-role: spin_button;
+  receives-default: true;
+  focusable: true;
+  hexpand: true;
 
   PopoverBin popover_bin {
     child: Box {

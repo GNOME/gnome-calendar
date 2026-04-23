@@ -25,7 +25,7 @@ G_BEGIN_DECLS
 
 #define GCAL_TYPE_MULTI_CHOICE (gcal_multi_choice_get_type())
 
-G_DECLARE_FINAL_TYPE (GcalMultiChoice, gcal_multi_choice, GCAL, MULTI_CHOICE, GtkBox)
+G_DECLARE_FINAL_TYPE (GcalMultiChoice, gcal_multi_choice, GCAL, MULTI_CHOICE, GtkWidget)
 
 GtkWidget*           gcal_multi_choice_new                       (void);
 

@@ -26,7 +26,7 @@
 
 struct _GcalMultiChoice
 {
-  GtkBox                          parent;
+  GtkWidget                       parent;
 
   GtkWidget                      *down_button;
   GtkWidget                      *button;
@@ -82,7 +82,7 @@ static void gcal_multi_choice_accessible_init (GtkAccessibleInterface *iface);
 
 static void gcal_multi_choice_accessible_range_init (GtkAccessibleRangeInterface *iface);
 
-G_DEFINE_FINAL_TYPE_WITH_CODE (GcalMultiChoice, gcal_multi_choice, GTK_TYPE_BOX,
+G_DEFINE_FINAL_TYPE_WITH_CODE (GcalMultiChoice, gcal_multi_choice, GTK_TYPE_WIDGET,
                                G_IMPLEMENT_INTERFACE (GTK_TYPE_ACCESSIBLE, gcal_multi_choice_accessible_init)
                                G_IMPLEMENT_INTERFACE (GTK_TYPE_ACCESSIBLE_RANGE, gcal_multi_choice_accessible_range_init))
 
@@ -334,6 +334,8 @@ static void
 gcal_multi_choice_dispose (GObject *object)
 {
   GcalMultiChoice *self = GCAL_MULTI_CHOICE (object);
+
+  g_clear_pointer ((GtkWidget **) &self->popover_bin, gtk_widget_unparent);
 
   g_clear_pointer (&self->choices, g_free);
   g_clear_pointer (&self->category, g_free);
@@ -608,6 +610,8 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   gtk_widget_class_bind_template_callback (widget_class, key_pressed_cb);
 
   gtk_widget_class_set_css_name (widget_class, "navigator");
+
+  gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
 }
 
 static void
