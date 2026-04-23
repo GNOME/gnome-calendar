@@ -1,0 +1,84 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GcalNotesRow: Adw.PreferencesRow {
+  GestureClick {
+    pressed => $on_row_pressed(text_view) not-swapped;
+  }
+
+  styles [
+    "entry",
+    "textbox",
+  ]
+
+  child: Adw.Bin {
+    css-name: "box";
+
+    styles [
+      "content",
+    ]
+
+    child: $GcalGizmo titles {
+      styles [
+        "editable-area",
+      ]
+
+      Label reference_title {
+        lines: 0;
+        xalign: 0;
+        ellipsize: end;
+        valign: start;
+        halign: start;
+        label: bind template.title;
+        use-markup: bind template.use-markup;
+        use-underline: bind template.use-underline;
+        mnemonic-widget: template;
+
+        styles [
+          "subtitle",
+        ]
+      }
+
+      Label visible_title {
+        lines: 0;
+        xalign: 0;
+        ellipsize: end;
+        valign: start;
+        halign: start;
+        label: bind template.title;
+        use-markup: bind template.use-markup;
+        use-underline: bind template.use-underline;
+        mnemonic-widget: template;
+
+        styles [
+          "title",
+          "dimmed",
+        ]
+      }
+
+      Image edit_icon {
+        accessible-role: presentation;
+        icon-name: "document-edit-symbolic";
+        sensitive: bind template.editable;
+        valign: center;
+        hexpand: true;
+        halign: end;
+
+        styles [
+          "edit-icon",
+        ]
+      }
+
+      TextView text_view {
+        accepts-tab: false;
+        hexpand: true;
+        wrap-mode: word_char;
+        editable: bind template.editable;
+
+        accessibility {
+          labelled-by: visible_title;
+        }
+      }
+    };
+  };
+}

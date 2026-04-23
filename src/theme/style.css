@@ -539,3 +539,8 @@ syncindicator {
    background-color: color-mix(in srgb, currentColor 10%, transparent);
    padding: 6px 9px;
 }
+
+/* Notes row */
+row textview {
+  background: none;
+}
