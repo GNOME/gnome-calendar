@@ -79,12 +79,9 @@ enum
 static guint signals[LAST_SIGNAL] = { 0, };
 static GParamSpec *properties[N_PROPS] = { NULL, };
 
-static void gcal_multi_choice_accessible_init (GtkAccessibleInterface *iface);
-
 static void gcal_multi_choice_accessible_range_init (GtkAccessibleRangeInterface *iface);
 
 G_DEFINE_FINAL_TYPE_WITH_CODE (GcalMultiChoice, gcal_multi_choice, GTK_TYPE_WIDGET,
-                               G_IMPLEMENT_INTERFACE (GTK_TYPE_ACCESSIBLE, gcal_multi_choice_accessible_init)
                                G_IMPLEMENT_INTERFACE (GTK_TYPE_ACCESSIBLE_RANGE, gcal_multi_choice_accessible_range_init))
 
 /*
@@ -223,33 +220,38 @@ update_sensitivity (GcalMultiChoice *self)
 }
 
 static void
-button_toggled_cb (GcalMultiChoice *self)
+on_widget_activated (GcalMultiChoice *self)
 {
-  const gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->button));
-
   if (gtk_popover_bin_get_popover (self->popover_bin))
     {
-      if (active)
-        {
-          gtk_popover_bin_popup (self->popover_bin);
-          gtk_accessible_update_state (GTK_ACCESSIBLE (self),
-                                       GTK_ACCESSIBLE_STATE_EXPANDED, TRUE,
-                                       -1);
-        }
-      else
-        {
-          gtk_accessible_reset_state (GTK_ACCESSIBLE (self),
-                                      GTK_ACCESSIBLE_STATE_EXPANDED);
-        }
+      gtk_popover_bin_popup (self->popover_bin);
+      gtk_accessible_update_state (GTK_ACCESSIBLE (self),
+                                   GTK_ACCESSIBLE_STATE_EXPANDED, TRUE,
+                                   -1);
+    }
+  else
+    {
+      gtk_accessible_reset_state (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_STATE_EXPANDED);
     }
 }
 
-static gboolean
-menu_deactivate_cb (GcalMultiChoice *self)
+static void
+on_gesture_click_released (GcalMultiChoice *self,
+                           gint             n_press,
+                           double           x,
+                           double           y,
+                           GtkGestureClick *gesture)
 {
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->button), FALSE);
+  if (gtk_widget_contains (GTK_WIDGET (self), x, y))
+    {
+      if (!gtk_widget_grab_focus (GTK_WIDGET (self)))
+        g_assert_not_reached ();
 
-  return TRUE;
+      gtk_widget_activate (GTK_WIDGET (self));
+    }
+
+  gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_NONE);
 }
 
 /*
@@ -381,57 +383,28 @@ gcal_multi_choice_state_flags_changed (GtkWidget    *widget,
                                        GtkStateFlags previous_state_flags)
 {
   GcalMultiChoice *self;
-  GtkStateFlags button_state_flags;
+  GtkStateFlags state_flags;
   GtkWidget *popover;
 
   g_assert (GCAL_IS_MULTI_CHOICE (widget));
 
   self = GCAL_MULTI_CHOICE (widget);
 
-  button_state_flags = gtk_widget_get_state_flags (self->button);
-  if (button_state_flags & GTK_STATE_FLAG_FOCUSED)
-    button_state_flags |= GTK_STATE_FLAG_FOCUS_VISIBLE;
-  gtk_widget_set_state_flags (GTK_WIDGET (self), button_state_flags, TRUE);
-
-  if (!gtk_widget_is_sensitive (widget))
+  if ((popover = gtk_popover_bin_get_popover (self->popover_bin)))
     {
-      if ((popover = gtk_popover_bin_get_popover (self->popover_bin)))
-        gtk_widget_set_visible (popover, FALSE);
+      if (gtk_widget_get_mapped (popover))
+        gtk_widget_set_state_flags (self->button, GTK_STATE_FLAG_CHECKED, FALSE);
+      else
+        gtk_widget_unset_state_flags (self->button, GTK_STATE_FLAG_CHECKED);
     }
-}
-
-static gboolean
-gcal_multi_choice_focus (GtkWidget        *widget,
-                         GtkDirectionType  direction)
-{
-  GcalMultiChoice *self = GCAL_MULTI_CHOICE (widget);
-  GtkWidget *popover = gtk_popover_bin_get_popover (self->popover_bin);
-
-  if (popover && gtk_widget_get_visible (popover))
-    return gtk_widget_child_focus (popover, direction);
   else
-    return gtk_widget_child_focus (self->button, direction);
-}
+    {
+      gtk_widget_set_state_flags (self->button, GTK_STATE_FLAG_NORMAL, TRUE);
+    }
 
-static gboolean
-gcal_multi_choice_grab_focus (GtkWidget *widget)
-{
-  GcalMultiChoice *self = GCAL_MULTI_CHOICE (widget);
-
-  return gtk_widget_grab_focus (self->button);
-}
-
-/*
- * GtkAccessible overrides
- */
-
-static gboolean
-gcal_multi_choice_accessible_get_platform_state (GtkAccessible              *accessible,
-                                                 GtkAccessiblePlatformState  state)
-{
-  GcalMultiChoice *self = GCAL_MULTI_CHOICE (accessible);
-
-  return gtk_accessible_get_platform_state (GTK_ACCESSIBLE (self->button), state);
+  state_flags = gtk_widget_get_state_flags (widget);
+  if (state_flags & GTK_STATE_FLAG_FOCUSED)
+    gtk_widget_set_state_flags (widget, GTK_STATE_FLAG_FOCUS_VISIBLE, FALSE);
 }
 
 /*
@@ -461,8 +434,6 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   object_class->get_property = gcal_multi_choice_get_property;
 
   widget_class->state_flags_changed = gcal_multi_choice_state_flags_changed;
-  widget_class->focus = gcal_multi_choice_focus;
-  widget_class->grab_focus = gcal_multi_choice_grab_focus;
 
   properties[PROP_VALUE] =
       g_param_spec_int ("value", "Value", "Value",
@@ -533,18 +504,12 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, label2);
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, popover_bin);
 
+  gtk_widget_class_bind_template_callback (widget_class, on_gesture_click_released);
   gtk_widget_class_bind_template_callback (widget_class, gcal_multi_choice_state_flags_changed);
-  gtk_widget_class_bind_template_callback (widget_class, button_toggled_cb);
 
   gtk_widget_class_set_css_name (widget_class, "navigator");
 
   gtk_widget_class_set_layout_manager_type (widget_class, GTK_TYPE_BIN_LAYOUT);
-}
-
-static void
-gcal_multi_choice_accessible_init (GtkAccessibleInterface *iface)
-{
-  iface->get_platform_state = gcal_multi_choice_accessible_get_platform_state;
 }
 
 static void
@@ -560,7 +525,7 @@ gcal_multi_choice_init (GcalMultiChoice *self)
 
   update_sensitivity (self);
 
-  g_signal_connect_swapped (self, "activate", (GCallback) button_toggled_cb, self);
+  g_signal_connect_swapped (self, "activate", (GCallback) on_widget_activated, self);
 }
 
 /*
@@ -699,9 +664,6 @@ gcal_multi_choice_set_popover (GcalMultiChoice *self,
     return;
 
   gtk_popover_bin_set_popover (self->popover_bin, popover);
-
-  if (popover)
-    g_signal_connect_swapped (popover, "closed", G_CALLBACK (menu_deactivate_cb), self);
 
   update_sensitivity (self);
 

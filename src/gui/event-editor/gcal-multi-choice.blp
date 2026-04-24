@@ -1,10 +1,15 @@
 using Gtk 4.0;
+using Adw 1;
 
 template $GcalMultiChoice: Widget {
   accessible-role: spin_button;
   receives-default: true;
   focusable: true;
   hexpand: true;
+
+  GestureClick {
+    released => $on_gesture_click_released(template);
+  }
 
   PopoverBin popover_bin {
     child: Box {
@@ -23,9 +28,8 @@ template $GcalMultiChoice: Widget {
         ]
       }
 
-      ToggleButton button {
-        accessible-role: none;
-        toggled => $button_toggled_cb() swapped;
+      Adw.Bin button {
+        css-name: "button";
         state-flags-changed => $gcal_multi_choice_state_flags_changed(template);
 
         styles [
@@ -34,7 +38,7 @@ template $GcalMultiChoice: Widget {
           "popup",
         ]
 
-        Stack stack {
+        child: Stack stack {
           hexpand: true;
           vexpand: true;
 
@@ -49,7 +53,7 @@ template $GcalMultiChoice: Widget {
 
             child: Label label2 {};
           }
-        }
+        };
       }
 
       Button up_button {

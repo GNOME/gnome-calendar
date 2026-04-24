@@ -122,7 +122,6 @@ datechooser navigator label {
 
 datechooser navigator button {
   padding: 0;
-  outline: unset;
 }
 
 /* week numbers, with a style resembling GNOME Shell's */
