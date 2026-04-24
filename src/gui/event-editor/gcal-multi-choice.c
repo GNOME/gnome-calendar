@@ -217,14 +217,6 @@ update_sensitivity (GcalMultiChoice *self)
 }
 
 static void
-set_accessibility_label (GcalMultiChoice *self)
-{
-  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
-                                  GTK_ACCESSIBLE_PROPERTY_LABEL,
-                                  gcal_multi_choice_get_category (self), -1);
-}
-
-static void
 button_clicked_cb (GtkWidget       *button,
                    GcalMultiChoice *self)
 {
@@ -617,7 +609,6 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, label1);
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, label2);
 
-  gtk_widget_class_bind_template_callback (widget_class, set_accessibility_label);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, button_toggled_cb);
   gtk_widget_class_bind_template_callback (widget_class, button_state_flags_changed_cb);
@@ -845,6 +836,10 @@ gcal_multi_choice_set_category (GcalMultiChoice *self,
   if (g_strcmp0 (self->category, category) != 0)
     {
       self->category = g_strdup (category ? category : "");
+
+      gtk_accessible_update_property (GTK_ACCESSIBLE (self),
+                                      GTK_ACCESSIBLE_PROPERTY_LABEL, category,
+                                      -1);
 
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CATEGORY]);
     }

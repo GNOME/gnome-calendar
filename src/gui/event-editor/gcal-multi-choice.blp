@@ -3,7 +3,6 @@ using Gtk 4.0;
 template $GcalMultiChoice: Box {
   spacing: 6;
   accessible-role: spin_button;
-  notify::category => $set_accessibility_label() swapped;
 
   Button down_button {
     icon-name: "pan-start-symbolic";
