@@ -99,11 +99,6 @@ entry.compact > text {
 /* month/year controls */
 
 datechooser navigator {
-  /* add some space between the two controls */
-  margin-right: 6px;
-  margin-left: 6px;
-  margin-bottom: 6px;
-
   outline: 0 solid transparent;
   border-radius: 9px;
   outline-offset: 6px;
