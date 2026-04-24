@@ -26,7 +26,7 @@ template $GcalMultiChoice: Widget {
       ToggleButton button {
         accessible-role: none;
         toggled => $button_toggled_cb() swapped;
-        state-flags-changed => $button_state_flags_changed_cb() swapped;
+        state-flags-changed => $gcal_multi_choice_state_flags_changed(template);
 
         styles [
           "flat",
