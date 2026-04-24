@@ -62,9 +62,6 @@ struct _GcalCalendarMonitor
   gboolean            complete;
   GcalEventList      *event_list;
 
-  const GcalCalendarMonitorListener *listener;
-  gpointer                           listener_user_data;
-
   /*
    * These fields are only accessed on the monitor thread, and
    * never on the main thread.
@@ -1058,30 +1055,20 @@ remove_events_outside_range (GcalCalendarMonitor *self,
     }
 
   if (events_to_remove->len > 0)
-    {
-      self->listener->remove_events (self, events_to_remove, self->listener_user_data);
-      gcal_event_list_remove_events (self->event_list, (GcalEvent **) events_to_remove->pdata);
-    }
+    gcal_event_list_remove_events (self->event_list, (GcalEvent **) events_to_remove->pdata);
 }
 
 static void
 remove_all_events (GcalCalendarMonitor *self)
 {
-  g_autoptr (GPtrArray) events_to_remove = NULL;
-
   g_assert (GCAL_IS_MAIN_THREAD ());
 
   GCAL_TRACE_MSG ("Removing all events from view");
 
   G_RW_LOCK_WRITER_AUTO_LOCK (&self->shared.lock, writer_locker);
 
-  events_to_remove = g_hash_table_steal_all_values (self->shared.events);
-
-  if (events_to_remove->len > 0)
-    {
-      self->listener->remove_events (self, events_to_remove, self->listener_user_data);
-      gcal_event_list_remove_all_events (self->event_list);
-    }
+  g_hash_table_remove_all (self->shared.events);
+  gcal_event_list_remove_all_events (self->event_list);
 }
 
 static void
@@ -1140,10 +1127,7 @@ add_events_to_timeline_in_idle_cb (gpointer user_data)
     }
 
   if (events_to_add->len > 0)
-    {
-      self->listener->add_events (self, events_to_add, self->listener_user_data);
-      gcal_event_list_add_events (self->event_list, (GcalEvent **) events_to_add->pdata);
-    }
+    gcal_event_list_add_events (self->event_list, (GcalEvent **) events_to_add->pdata);
 
   GCAL_RETURN (G_SOURCE_REMOVE);
 }
@@ -1195,7 +1179,6 @@ update_events_in_idle_cb (gpointer user_data)
 
   if (new_events->len > 0)
     {
-      self->listener->update_events (self, old_events, new_events, self->listener_user_data);
       gcal_event_list_remove_events (self->event_list, (GcalEvent **) old_events->pdata);
       gcal_event_list_add_events (self->event_list, (GcalEvent **) new_events->pdata);
     }
@@ -1241,10 +1224,7 @@ remove_events_from_timeline_in_idle_cb (gpointer user_data)
     }
 
   if (events_to_remove->len > 0)
-    {
-      self->listener->remove_events (self, events_to_remove, self->listener_user_data);
-      gcal_event_list_remove_events (self->event_list, (GcalEvent **) events_to_remove->pdata);
-    }
+    gcal_event_list_remove_events (self->event_list, (GcalEvent **) events_to_remove->pdata);
 
   GCAL_RETURN (G_SOURCE_REMOVE);
 }
@@ -1413,23 +1393,13 @@ gcal_calendar_monitor_init (GcalCalendarMonitor *self)
 }
 
 GcalCalendarMonitor*
-gcal_calendar_monitor_new (GcalCalendar                      *calendar,
-                           const GcalCalendarMonitorListener *listener,
-                           gpointer                           user_data)
+gcal_calendar_monitor_new (GcalCalendar *calendar)
 {
-  g_autoptr (GcalCalendarMonitor) monitor = NULL;
-
   g_assert (calendar != NULL && GCAL_IS_CALENDAR (calendar));
-  g_assert (listener != NULL);
 
-  monitor = g_object_new (GCAL_TYPE_CALENDAR_MONITOR,
-                          "calendar", calendar,
-                          NULL);
-
-  monitor->listener = listener;
-  monitor->listener_user_data = user_data;
-
-  return g_steal_pointer (&monitor);
+  return g_object_new (GCAL_TYPE_CALENDAR_MONITOR,
+                       "calendar", calendar,
+                       NULL);
 }
 
 /**
@@ -1531,3 +1501,4 @@ gcal_calendar_monitor_is_complete (GcalCalendarMonitor *self)
 
   return self->complete;
 }
+

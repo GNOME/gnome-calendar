@@ -1254,25 +1254,6 @@ gcal_month_view_get_range (GcalTimelineSubscriber *subscriber)
 }
 
 static void
-gcal_month_view_add_event (GcalTimelineSubscriber *subscriber,
-                           GcalEvent              *event)
-{
-}
-
-static void
-gcal_month_view_remove_event (GcalTimelineSubscriber *subscriber,
-                              GcalEvent              *event)
-{
-}
-
-static void
-gcal_month_view_update_event (GcalTimelineSubscriber *subscriber,
-                              GcalEvent              *old_event,
-                              GcalEvent              *event)
-{
-}
-
-static void
 gcal_month_view_set_model (GcalTimelineSubscriber *subscriber,
                            GListModel             *model)
 {
@@ -1296,9 +1277,6 @@ static void
 gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
 {
   iface->get_range = gcal_month_view_get_range;
-  iface->add_event = gcal_month_view_add_event;
-  iface->update_event = gcal_month_view_update_event;
-  iface->remove_event = gcal_month_view_remove_event;
   iface->set_model = gcal_month_view_set_model;
 }
 

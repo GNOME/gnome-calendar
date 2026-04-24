@@ -40,16 +40,6 @@ struct _GcalTimelineSubscriberInterface
 
   GcalRange*         (*get_range)                                (GcalTimelineSubscriber *self);
 
-  void               (*add_event)                                (GcalTimelineSubscriber *self,
-                                                                  GcalEvent              *event);
-
-  void               (*update_event)                             (GcalTimelineSubscriber *self,
-                                                                  GcalEvent              *old_event,
-                                                                  GcalEvent              *event);
-
-  void               (*remove_event)                             (GcalTimelineSubscriber *self,
-                                                                  GcalEvent              *event);
-
   void               (*set_model)                                (GcalTimelineSubscriber *self,
                                                                   GListModel             *model);
 };
