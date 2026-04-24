@@ -12,7 +12,7 @@ template $GcalMultiChoice: Widget {
 
       Button down_button {
         icon-name: "pan-start-symbolic";
-        clicked => $button_clicked_cb();
+        action-name: "multi-choice.down";
         can-focus: false;
         tooltip-text: bind template.previous-button-tooltip;
 
@@ -34,10 +34,6 @@ template $GcalMultiChoice: Widget {
           "popup",
         ]
 
-        EventControllerKey {
-          key-pressed => $key_pressed_cb(template);
-        }
-
         Stack stack {
           hexpand: true;
           vexpand: true;
@@ -58,7 +54,7 @@ template $GcalMultiChoice: Widget {
 
       Button up_button {
         icon-name: "pan-end-symbolic";
-        clicked => $button_clicked_cb();
+        action-name: "multi-choice.up";
         can-focus: false;
         tooltip-text: bind template.next-button-tooltip;
 

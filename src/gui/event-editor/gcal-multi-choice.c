@@ -23,6 +23,7 @@
 #include "config.h"
 
 #include "gcal-multi-choice.h"
+#include "gcal-utils.h"
 
 struct _GcalMultiChoice
 {
@@ -155,13 +156,13 @@ set_value (GcalMultiChoice         *self,
 }
 
 static void
-go_up (GcalMultiChoice *self)
+up_action_activated (GcalMultiChoice *self)
 {
   gboolean wrapped = FALSE;
   gint value;
 
   value = self->next_cb ? self->next_cb (self->value) : self->value + 1;
-  g_assert_cmpint (value, > ,self->value);
+  g_assert_cmpint (value, >, self->value);
 
   if (value > self->max_value)
     {
@@ -173,16 +174,18 @@ go_up (GcalMultiChoice *self)
 
   if (wrapped)
     g_signal_emit (self, signals[WRAPPED], 0);
+
+  gtk_widget_grab_focus (GTK_WIDGET (self));
 }
 
 static void
-go_down (GcalMultiChoice *self)
+down_action_activated (GcalMultiChoice *self)
 {
   gint value;
   gboolean wrapped = FALSE;
 
   value = self->prev_cb ? self->prev_cb (self->value) : self->value - 1;
-  g_assert_cmpint (value, < , self->value);
+  g_assert_cmpint (value, <, self->value);
 
   if (value < self->min_value)
     {
@@ -194,6 +197,8 @@ go_down (GcalMultiChoice *self)
 
   if (wrapped)
     g_signal_emit (self, signals[WRAPPED], 0);
+
+  gtk_widget_grab_focus (GTK_WIDGET (self));
 }
 
 static void
@@ -215,72 +220,6 @@ update_sensitivity (GcalMultiChoice *self)
   else
     gtk_accessible_reset_relation (GTK_ACCESSIBLE (self),
                                    GTK_ACCESSIBLE_RELATION_CONTROLS);
-}
-
-static void
-button_clicked_cb (GtkWidget       *button,
-                   GcalMultiChoice *self)
-{
-  GtkStateFlags state_flags;
-
-  state_flags = gtk_widget_get_state_flags (button);
-
-  if (button == self->down_button)
-    go_down (self);
-  else if (button == self->up_button)
-    go_up (self);
-  else
-    g_assert_not_reached ();
-
-  if (!gtk_widget_grab_focus (GTK_WIDGET (self)))
-    g_assert_not_reached ();
-
-  gtk_widget_set_state_flags (button, state_flags, TRUE);
-}
-
-static gboolean
-key_pressed_cb (GcalMultiChoice       *self,
-                guint                  keyval,
-                guint                  keycode,
-                GdkModifierType        state,
-                GtkEventControllerKey *event_controller)
-{
-  gboolean is_active;
-  gint old_value;
-
-  g_assert (GCAL_IS_MULTI_CHOICE (self));
-  g_assert (GTK_IS_EVENT_CONTROLLER_KEY (event_controller));
-
-  switch (keyval)
-    {
-    case GDK_KEY_space:
-    case GDK_KEY_KP_Space:
-    case GDK_KEY_Return:
-    case GDK_KEY_ISO_Enter:
-    case GDK_KEY_KP_Enter:
-      is_active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->button));
-      if (gtk_popover_bin_get_popover (self->popover_bin))
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->button), !is_active);
-      return TRUE;
-
-    case GDK_KEY_Up:
-    case GDK_KEY_KP_Up:
-      old_value = self->value;
-      go_up (self);
-      if (old_value == self->value)
-        gtk_widget_error_bell (GTK_WIDGET (self));
-      return TRUE;
-
-    case GDK_KEY_Down:
-    case GDK_KEY_KP_Down:
-      old_value = self->value;
-      go_down (self);
-      if (old_value == self->value)
-        gtk_widget_error_bell (GTK_WIDGET (self));
-      return TRUE;
-    }
-
-  return FALSE;
 }
 
 static void
@@ -583,16 +522,14 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
                   NULL, NULL,
                   NULL,
                   G_TYPE_NONE, 0);
-  signals[ACTIVATE] =
-      g_signal_new ("activate",
-                    G_TYPE_FROM_CLASS (object_class),
-                    G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-                    0,
-                    NULL, NULL,
-                    NULL,
-                    G_TYPE_NONE, 0);
 
-  gtk_widget_class_set_activate_signal (widget_class, signals[ACTIVATE]);
+  gtk_widget_class_install_action (widget_class, "multi-choice.up", NULL, (GtkWidgetActionActivateFunc) up_action_activated);
+  gtk_widget_class_install_action (widget_class, "multi-choice.down", NULL, (GtkWidgetActionActivateFunc) down_action_activated);
+
+  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_Up, 0, "multi-choice.up", NULL);
+  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_Down, 0, "multi-choice.down", NULL);
+
+  signals[ACTIVATE] = gcal_util_create_activate_signal_and_shortcuts (widget_class, GCAL_TYPE_MULTI_CHOICE);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-multi-choice.ui");
 
@@ -604,10 +541,8 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, label2);
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, popover_bin);
 
-  gtk_widget_class_bind_template_callback (widget_class, button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, button_toggled_cb);
   gtk_widget_class_bind_template_callback (widget_class, button_state_flags_changed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, key_pressed_cb);
 
   gtk_widget_class_set_css_name (widget_class, "navigator");
 
@@ -632,6 +567,8 @@ gcal_multi_choice_init (GcalMultiChoice *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 
   update_sensitivity (self);
+
+  g_signal_connect_swapped (self, "activate", (GCallback) button_toggled_cb, self);
 }
 
 /*
