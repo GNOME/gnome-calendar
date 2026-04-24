@@ -85,9 +85,9 @@ static void gcal_multi_choice_accessible_init (GtkAccessibleInterface *iface);
 
 static void gcal_multi_choice_accessible_range_init (GtkAccessibleRangeInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GcalMultiChoice, gcal_multi_choice, GTK_TYPE_BOX,
-                         G_IMPLEMENT_INTERFACE (GTK_TYPE_ACCESSIBLE, gcal_multi_choice_accessible_init)
-                         G_IMPLEMENT_INTERFACE (GTK_TYPE_ACCESSIBLE_RANGE, gcal_multi_choice_accessible_range_init))
+G_DEFINE_FINAL_TYPE_WITH_CODE (GcalMultiChoice, gcal_multi_choice, GTK_TYPE_BOX,
+                               G_IMPLEMENT_INTERFACE (GTK_TYPE_ACCESSIBLE, gcal_multi_choice_accessible_init)
+                               G_IMPLEMENT_INTERFACE (GTK_TYPE_ACCESSIBLE_RANGE, gcal_multi_choice_accessible_range_init))
 
 /*
  * Auxiliary methods
