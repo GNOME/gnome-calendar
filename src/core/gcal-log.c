@@ -29,6 +29,7 @@ GIOChannel *standard_channel = NULL;
 static const gchar* ignored_domains[] =
 {
   "GdkPixbuf",
+  "GWeather",
   NULL
 };
 
