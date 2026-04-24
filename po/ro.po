@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-04-09 12:04+0000\n"
-"PO-Revision-Date: 2026-04-11 19:07+0200\n"
+"POT-Creation-Date: 2026-04-23 16:28+0000\n"
+"PO-Revision-Date: 2026-04-24 11:02+0200\n"
 "Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -866,7 +866,7 @@ msgstr "Deschide calendarul la data indicată"
 
 #: src/gui/gcal-application.c:78
 msgid "Open calendar showing the passed event"
-msgstr "Deschide calendarul care arată evenimentul indicat"
+msgstr "Deschide calendarul la evenimentul indicat"
 
 #: src/gui/gcal-application.c:144
 #, c-format
@@ -885,13 +885,13 @@ msgid "Weather"
 msgstr "Vremea"
 
 #.
-#. * Translators: %B is the month name and %Y is the year.
+#. * Translators: %OB is the month name and %Y is the year.
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
 #: src/gui/gcal-calendar-navigation-button.c:106
-msgid "%B %Y"
-msgstr "%B %Y"
+msgid "%OB %Y"
+msgstr "%OB %Y"
 
 #: src/gui/gcal-event-popover.blp:59
 msgid ""
@@ -1102,7 +1102,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:399 src/gui/gcal-event-widget.c:405
+#: src/gui/gcal-event-widget.c:400 src/gui/gcal-event-widget.c:406
 #, c-format
 msgid ""
 "\n"
@@ -1119,7 +1119,7 @@ msgstr ""
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:466
+#: src/gui/gcal-event-widget.c:468
 msgid "%a %B %d"
 msgstr "%a %d %B"
 
