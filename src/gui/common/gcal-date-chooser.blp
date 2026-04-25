@@ -11,7 +11,6 @@ template $GcalDateChooser: Adw.Bin {
       max-value: 11;
       animate: false;
       value: 0;
-      wrap: true;
       category: _("Month");
       previous-button-tooltip: _("Previous Month");
       next-button-tooltip: _("Next Month");
@@ -87,7 +86,6 @@ Popover popover {
     spacing: 12;
 
     $GcalMultiChoice popover_month_choice {
-      wrap: true;
       min-value: bind month_choice.min-value bidirectional;
       max-value: bind month_choice.max-value bidirectional;
       animate: bind month_choice.animate bidirectional;
