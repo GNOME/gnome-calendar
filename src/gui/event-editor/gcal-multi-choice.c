@@ -45,7 +45,7 @@ struct _GcalMultiChoice
   GtkWidget                     **choices;
   gint                            n_choices;
   GtkWidget                      *active;
-  GtkWidget                      *popover;
+  GtkPopoverBin                  *popover_bin;
 
   GcalMultiChoiceFormatCallback   format_cb;
   gpointer                        format_data;
@@ -199,18 +199,18 @@ go_down (GcalMultiChoice *self)
 static void
 update_sensitivity (GcalMultiChoice *self)
 {
-  gboolean has_popup;
+  GtkWidget *popover = gtk_popover_bin_get_popover (self->popover_bin);
+  GtkAccessibleTristate state;
 
-  has_popup = self->popover != NULL;
+  gtk_widget_set_can_target (self->button, !!popover);
 
-  gtk_widget_set_can_target (self->button, has_popup);
-
+  state = !!popover ? GTK_ACCESSIBLE_TRISTATE_TRUE : GTK_ACCESSIBLE_TRISTATE_FALSE;
   gtk_accessible_update_property (GTK_ACCESSIBLE (self),
-                                  GTK_ACCESSIBLE_PROPERTY_HAS_POPUP, has_popup,
+                                  GTK_ACCESSIBLE_PROPERTY_HAS_POPUP, state,
                                   -1);
-  if (self->popover != NULL)
+  if (popover != NULL)
     gtk_accessible_update_relation (GTK_ACCESSIBLE (self),
-                                    GTK_ACCESSIBLE_RELATION_CONTROLS, self->popover, NULL,
+                                    GTK_ACCESSIBLE_RELATION_CONTROLS, popover, NULL,
                                     -1);
   else
     gtk_accessible_reset_relation (GTK_ACCESSIBLE (self),
@@ -259,7 +259,7 @@ key_pressed_cb (GcalMultiChoice       *self,
     case GDK_KEY_ISO_Enter:
     case GDK_KEY_KP_Enter:
       is_active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->button));
-      if (self->popover)
+      if (gtk_popover_bin_get_popover (self->popover_bin))
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->button), !is_active);
       return TRUE;
 
@@ -288,18 +288,17 @@ button_toggled_cb (GcalMultiChoice *self)
 {
   const gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->button));
 
-  if (self->popover)
+  if (gtk_popover_bin_get_popover (self->popover_bin))
     {
       if (active)
         {
-          gtk_popover_popup (GTK_POPOVER (self->popover));
+          gtk_popover_bin_popup (self->popover_bin);
           gtk_accessible_update_state (GTK_ACCESSIBLE (self),
                                        GTK_ACCESSIBLE_STATE_EXPANDED, TRUE,
                                        -1);
         }
       else
         {
-          gtk_popover_popdown (GTK_POPOVER (self->popover));
           gtk_accessible_reset_state (GTK_ACCESSIBLE (self),
                                       GTK_ACCESSIBLE_STATE_EXPANDED);
         }
@@ -312,12 +311,6 @@ menu_deactivate_cb (GcalMultiChoice *self)
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->button), FALSE);
 
   return TRUE;
-}
-
-static void
-popover_destroy_cb (GcalMultiChoice *menu_button)
-{
-  gcal_multi_choice_set_popover (menu_button, NULL);
 }
 
 static void
@@ -350,17 +343,6 @@ gcal_multi_choice_dispose (GObject *object)
   if (self->format_destroy)
     g_clear_pointer (&self->format_data, self->format_destroy);
 
-  if (self->popover)
-    {
-      g_signal_handlers_disconnect_by_func (self->popover,
-                                            menu_deactivate_cb,
-                                            object);
-      g_signal_handlers_disconnect_by_func (self->popover,
-                                            popover_destroy_cb,
-                                            object);
-      g_clear_pointer (&self->popover, gtk_widget_unparent);
-    }
-
   G_OBJECT_CLASS (gcal_multi_choice_parent_class)->dispose (object);
 }
 
@@ -387,7 +369,7 @@ gcal_multi_choice_get_property (GObject    *object,
       break;
 
     case PROP_POPOVER:
-      g_value_set_object (value, self->popover);
+      g_value_set_object (value, gcal_multi_choice_get_popover (self));
       break;
 
     case PROP_CATEGORY:
@@ -472,6 +454,7 @@ gcal_multi_choice_state_flags_changed (GtkWidget    *widget,
 {
   GcalMultiChoice *self = GCAL_MULTI_CHOICE (widget);
   GtkStateFlags state_flags;
+  GtkWidget *popover;
 
   state_flags = gtk_widget_get_state_flags (widget);
   if (state_flags & GTK_STATE_FLAG_FOCUSED)
@@ -479,8 +462,8 @@ gcal_multi_choice_state_flags_changed (GtkWidget    *widget,
 
   if (!gtk_widget_is_sensitive (widget))
     {
-      if (self->popover)
-        gtk_widget_set_visible (self->popover, FALSE);
+      if ((popover = gtk_popover_bin_get_popover (self->popover_bin)))
+        gtk_widget_set_visible (popover, FALSE);
     }
 }
 
@@ -489,9 +472,10 @@ gcal_multi_choice_focus (GtkWidget        *widget,
                          GtkDirectionType  direction)
 {
   GcalMultiChoice *self = GCAL_MULTI_CHOICE (widget);
+  GtkWidget *popover = gtk_popover_bin_get_popover (self->popover_bin);
 
-  if (self->popover && gtk_widget_get_visible (self->popover))
-    return gtk_widget_child_focus (self->popover, direction);
+  if (popover && gtk_widget_get_visible (popover))
+    return gtk_widget_child_focus (popover, direction);
   else
     return gtk_widget_child_focus (self->button, direction);
 }
@@ -563,10 +547,17 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
       g_param_spec_boxed ("choices", "Choices", "Choices",
                           G_TYPE_STRV,
                           G_PARAM_WRITABLE|G_PARAM_EXPLICIT_NOTIFY);
+
+  /**
+   * GcalMultiChoice:popover:
+   *
+   * The popover widget.
+   */
   properties[PROP_POPOVER] =
-      g_param_spec_object ("popover", "Popover", "Popover",
+      g_param_spec_object ("popover", NULL, NULL,
                            GTK_TYPE_POPOVER,
-                           G_PARAM_READWRITE);
+                           G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
   properties[PROP_CATEGORY] =
       g_param_spec_string ("category", "Category", "Category",
                            "",
@@ -609,6 +600,7 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, stack);
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, label1);
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, label2);
+  gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, popover_bin);
 
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, button_toggled_cb);
@@ -770,39 +762,17 @@ gcal_multi_choice_set_popover (GcalMultiChoice *self,
   g_assert (GCAL_IS_MULTI_CHOICE (self));
   g_assert (popover == NULL || GTK_IS_POPOVER (popover));
 
-  g_object_freeze_notify (G_OBJECT (self));
+  if (gtk_popover_bin_get_popover (self->popover_bin) == popover)
+    return;
 
-  if (self->popover)
-    {
-      if (gtk_widget_get_visible (self->popover))
-        gtk_widget_set_visible (self->popover, FALSE);
-
-      g_signal_handlers_disconnect_by_func (self->popover,
-                                            menu_deactivate_cb,
-                                            self);
-      g_signal_handlers_disconnect_by_func (self->popover,
-                                            popover_destroy_cb,
-                                            self);
-
-      gtk_widget_unparent (self->popover);
-    }
-
-  self->popover = popover;
+  gtk_popover_bin_set_popover (self->popover_bin, popover);
 
   if (popover)
-    {
-      gtk_widget_set_parent (self->popover, GTK_WIDGET (self));
-      g_signal_connect_swapped (self->popover, "closed",
-                                G_CALLBACK (menu_deactivate_cb), self);
-      g_signal_connect_swapped (self->popover, "destroy",
-                                G_CALLBACK (popover_destroy_cb), self);
-      gtk_popover_set_position (GTK_POPOVER (self->popover), GTK_POS_BOTTOM);
-    }
+    g_signal_connect_swapped (popover, "closed", G_CALLBACK (menu_deactivate_cb), self);
 
   update_sensitivity (self);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_POPOVER]);
-  g_object_thaw_notify (G_OBJECT (self));
 }
 
 /**
@@ -816,9 +786,13 @@ gcal_multi_choice_set_popover (GcalMultiChoice *self,
 GtkPopover *
 gcal_multi_choice_get_popover (GcalMultiChoice *self)
 {
+  GtkWidget *popover;
+
   g_assert (GCAL_IS_MULTI_CHOICE (self));
 
-  return GTK_POPOVER (self->popover);
+  popover = gtk_popover_bin_get_popover (self->popover_bin);
+
+  return (GtkPopover *)popover;
 }
 
 /**
