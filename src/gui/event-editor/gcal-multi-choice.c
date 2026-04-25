@@ -38,7 +38,6 @@ struct _GcalMultiChoice
   gint                            value;
   gint                            min_value;
   gint                            max_value;
-  gboolean                        wrap;
   gboolean                        animate;
   gchar                          *category;
   gchar                          *prev_button_tooltip_text;
@@ -61,7 +60,6 @@ enum
   PROP_VALUE = 1,
   PROP_MIN_VALUE,
   PROP_MAX_VALUE,
-  PROP_WRAP,
   PROP_ANIMATE,
   PROP_CHOICES,
   PROP_POPOVER,
@@ -135,11 +133,6 @@ apply_value (GcalMultiChoice        *self,
     transition = GTK_STACK_TRANSITION_TYPE_NONE;
 
   gtk_stack_set_visible_child_full (GTK_STACK (self->stack), name, transition);
-
-  gtk_widget_set_sensitive (self->down_button,
-                            self->wrap || self->value > self->min_value);
-  gtk_widget_set_sensitive (self->up_button,
-                            self->wrap || self->value < self->max_value);
 }
 
 static void
@@ -176,9 +169,6 @@ go_up (GcalMultiChoice *self)
 
   if (value > self->max_value)
     {
-      if (!self->wrap)
-        return;
-
       value = self->min_value;
       wrapped = TRUE;
     }
@@ -200,9 +190,6 @@ go_down (GcalMultiChoice *self)
 
   if (value < self->min_value)
     {
-      if (!self->wrap)
-        return;
-
       value = self->max_value;
       wrapped = TRUE;
     }
@@ -411,10 +398,6 @@ gcal_multi_choice_get_property (GObject    *object,
       g_value_set_int (value, self->max_value);
       break;
 
-    case PROP_WRAP:
-      g_value_set_boolean (value, self->wrap);
-      break;
-
     case PROP_ANIMATE:
       g_value_set_boolean (value, self->animate);
       break;
@@ -465,11 +448,6 @@ gcal_multi_choice_set_property (GObject      *object,
       self->max_value = g_value_get_int (value);
       g_object_notify_by_pspec (object, properties[PROP_MAX_VALUE]);
       gcal_multi_choice_set_value (self, self->value);
-      break;
-
-    case PROP_WRAP:
-      self->wrap = g_value_get_boolean (value);
-      g_object_notify_by_pspec (object, properties[PROP_WRAP]);
       break;
 
     case PROP_ANIMATE:
@@ -602,10 +580,6 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
       g_param_spec_int ("max-value", "Maximum Value", "Maximum Value",
                         G_MININT, G_MAXINT, 0,
                         G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
-  properties[PROP_WRAP] =
-      g_param_spec_boolean ("wrap", "Wrap", "Wrap",
-                            FALSE,
-                            G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
   properties[PROP_ANIMATE] =
       g_param_spec_boolean ("animate", "Animate", "Animate",
                             FALSE,
