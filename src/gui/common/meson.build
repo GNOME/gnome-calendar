@@ -30,4 +30,5 @@ sources += files(
   'gcal-calendar-combo-row.c',
   'gcal-date-chooser.c',
   'gcal-date-chooser-day.c',
+  'gcal-stack-label.c',
 )
