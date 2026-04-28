@@ -292,6 +292,9 @@ static void
 recalculate_layout_blocks (GcalWeekGrid *self)
 {
   g_autoptr (GcalRangeTree) blocks_by_range = NULL;
+  g_autoptr (GDateTime) week_start = NULL;
+  g_autoptr (GDateTime) week_end = NULL;
+  g_autoptr (GcalRange) range = NULL;
   size_t n_events = 0;
 
   GCAL_ENTRY;
@@ -300,6 +303,10 @@ recalculate_layout_blocks (GcalWeekGrid *self)
   g_assert (self->layout_blocks != NULL);
 
   blocks_by_range = gcal_range_tree_new ();
+
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
+  week_end = g_date_time_add_weeks (week_start, 1);
+  range = gcal_range_new (week_start, week_end, GCAL_RANGE_DEFAULT);
 
   /* Remove all blocks */
   g_ptr_array_set_size (self->layout_blocks, 0);
@@ -317,6 +324,9 @@ recalculate_layout_blocks (GcalWeekGrid *self)
 
       event = g_list_model_get_item (G_LIST_MODEL (self->sort_model), i);
       g_assert (GCAL_IS_EVENT (event));
+
+      if (!gcal_event_overlaps (event, range))
+        continue;
 
       event_range = gcal_event_get_range (event);
 
