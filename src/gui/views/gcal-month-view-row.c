@@ -71,6 +71,13 @@ G_DEFINE_FINAL_TYPE (GcalMonthViewRow, gcal_month_view_row, GTK_TYPE_WIDGET)
 
 enum
 {
+  PROP_0,
+  PROP_RANGE,
+  N_PROPS
+};
+
+enum
+{
   EVENT_ACTIVATED,
   CELL_ACTIVATED,
   SHOW_OVERFLOW,
@@ -78,6 +85,7 @@ enum
 };
 
 static guint signals[N_SIGNALS] = { 0, };
+static GParamSpec *properties [N_PROPS] = { NULL, };
 
 
 /*
@@ -567,6 +575,9 @@ prepare_layout_blocks (GcalMonthViewRow *self,
 
       event = g_list_model_get_item (self->events, i);
 
+      if (!gcal_event_overlaps (event, self->range))
+        continue;
+
       blocks = g_hash_table_lookup (self->layout_blocks, event);
       g_assert (blocks != NULL);
 
@@ -663,6 +674,9 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
       gint last_cell;
 
       event = g_list_model_get_item (self->events, i);
+
+      if (!gcal_event_overlaps (event, self->range))
+        continue;
 
       calculate_event_cells (self, event, &first_cell, &last_cell);
       g_assert (last_cell >= first_cell);
@@ -1036,6 +1050,9 @@ gcal_month_view_row_size_allocate (GtkWidget *widget,
 
           event = g_list_model_get_item (self->events, i);
 
+          if (!gcal_event_overlaps (event, self->range))
+            continue;
+
           blocks = g_hash_table_lookup (self->layout_blocks, event);
           g_assert (blocks != NULL);
 
@@ -1099,6 +1116,44 @@ gcal_month_view_row_finalize (GObject *object)
 }
 
 static void
+gcal_month_view_row_get_property (GObject    *object,
+                                  guint       prop_id,
+                                  GValue     *value,
+                                  GParamSpec *pspec)
+{
+  GcalMonthViewRow *self = GCAL_MONTH_VIEW_ROW (object);
+
+  switch (prop_id)
+    {
+    case PROP_RANGE:
+      g_value_set_boxed (value, self->range);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gcal_month_view_row_set_property (GObject      *object,
+                                  guint         prop_id,
+                                  const GValue *value,
+                                  GParamSpec   *pspec)
+{
+  GcalMonthViewRow *self = GCAL_MONTH_VIEW_ROW (object);
+
+  switch (prop_id)
+    {
+    case PROP_RANGE:
+      gcal_month_view_row_set_range (self, g_value_get_boxed (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
 gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
@@ -1106,11 +1161,19 @@ gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
 
   object_class->dispose = gcal_month_view_row_dispose;
   object_class->finalize = gcal_month_view_row_finalize;
+  object_class->get_property = gcal_month_view_row_get_property;
+  object_class->set_property = gcal_month_view_row_set_property;
 
   widget_class->map = gcal_month_view_row_map;
   widget_class->focus = gcal_month_view_row_focus;
   widget_class->measure = gcal_month_view_row_measure;
   widget_class->size_allocate = gcal_month_view_row_size_allocate;
+
+  properties[PROP_RANGE] = g_param_spec_boxed ("range", NULL, NULL,
+                                               GCAL_TYPE_RANGE,
+                                               G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_MONTH_VIEW_ROW,
@@ -1142,9 +1205,24 @@ gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
 static void
 gcal_month_view_row_init (GcalMonthViewRow *self)
 {
-  self->events = G_LIST_MODEL (gtk_filter_list_model_new (NULL,
-                                                          GTK_FILTER (gtk_custom_filter_new (event_in_range_func, self, NULL))));
-  gtk_filter_list_model_set_incremental (GTK_FILTER_LIST_MODEL (self->events), TRUE);
+  GtkExpression *expression;
+  GtkBoolFilter *filter;
+
+  expression = gtk_cclosure_expression_new (G_TYPE_BOOLEAN,
+                                            NULL,
+                                            1, (GtkExpression* [1]) {
+                                              gtk_property_expression_new (GCAL_TYPE_MONTH_VIEW_ROW,
+                                                                           gtk_constant_expression_new (GCAL_TYPE_MONTH_VIEW_ROW,
+                                                                                                        self,
+                                                                                                        NULL),
+                                                                           "range"),
+                                            },
+                                            G_CALLBACK (filter_by_range_cb),
+                                            self,
+                                            NULL);
+  filter = gtk_bool_filter_new (g_steal_pointer (&expression));
+
+  self->events = G_LIST_MODEL (gtk_filter_list_model_new (NULL, GTK_FILTER (filter)));
   g_signal_connect (self->events, "items-changed", G_CALLBACK (events_changed_cb), self);
 
   self->layout_blocks = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_ptr_array_unref);
@@ -1182,7 +1260,6 @@ gcal_month_view_row_set_range (GcalMonthViewRow *self,
                                GcalRange        *range)
 {
   g_autoptr (GDateTime) start = NULL;
-  GtkFilter *filter;
 
   g_return_if_fail (GCAL_IS_MONTH_VIEW_ROW (self));
   g_return_if_fail (range != NULL);
@@ -1195,17 +1272,14 @@ gcal_month_view_row_set_range (GcalMonthViewRow *self,
   g_clear_pointer (&self->range, gcal_range_unref);
   self->range = gcal_range_ref (range);
 
-  /* Refilter */
-  filter = gtk_filter_list_model_get_filter (GTK_FILTER_LIST_MODEL (self->events));
-  g_assert (GTK_IS_CUSTOM_FILTER (filter));
-  gtk_filter_changed (filter, GTK_FILTER_CHANGE_DIFFERENT);
-
   start = gcal_range_get_start (range);
   for (guint i = 0; i < N_WEEKDAYS; i++)
     {
       g_autoptr (GDateTime) day = g_date_time_add_days (start, i);
       gcal_month_cell_set_date (GCAL_MONTH_CELL (self->day_cells[i]), day);
     }
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_RANGE]);
 
   GCAL_EXIT;
 }
