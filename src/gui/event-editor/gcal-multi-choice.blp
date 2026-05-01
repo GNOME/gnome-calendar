@@ -38,21 +38,9 @@ template $GcalMultiChoice: Widget {
           "popup",
         ]
 
-        child: Stack stack {
+        child: $GcalStackLabel label {
           hexpand: true;
-          vexpand: true;
-
-          StackPage {
-            name: "label1";
-
-            child: Label label1 {};
-          }
-
-          StackPage {
-            name: "label2";
-
-            child: Label label2 {};
-          }
+          halign: center;
         };
       }
 

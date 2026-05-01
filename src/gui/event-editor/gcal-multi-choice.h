@@ -47,6 +47,11 @@ void                 gcal_multi_choice_set_category              (GcalMultiChoic
 void                 gcal_multi_choice_set_choices               (GcalMultiChoice     *self,
                                                                   const gchar        **selfs);
 
+GtkStringList       *gcal_multi_choice_get_string_list           (GcalMultiChoice     *self);
+
+void                 gcal_multi_choice_set_string_list           (GcalMultiChoice     *self,
+                                                                  GtkStringList       *string_list);
+
 typedef gchar*       (*GcalMultiChoiceFormatCallback)            (GcalMultiChoice     *self,
                                                                   gint                 value,
                                                                   gpointer             user_data);

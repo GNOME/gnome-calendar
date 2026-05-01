@@ -23,6 +23,7 @@
 #include "config.h"
 
 #include "gcal-multi-choice.h"
+#include "gcal-stack-label.h"
 #include "gcal-utils.h"
 
 #define WRAP(value, min, max) (((value - min) % (max + 1 - min)) + (max + 1 - min)) % (max + 1 - min) + min
@@ -33,10 +34,8 @@ struct _GcalMultiChoice
 
   GtkWidget                      *down_button;
   GtkWidget                      *button;
-  GtkStack                       *stack;
   GtkWidget                      *up_button;
-  GtkWidget                      *label1;
-  GtkWidget                      *label2;
+  GcalStackLabel                 *label;
 
   gint                            value;
   gint                            min_value;
@@ -45,8 +44,7 @@ struct _GcalMultiChoice
   gchar                          *prev_button_tooltip_text;
   gchar                          *next_button_tooltip_text;
 
-  GtkWidget                     **choices;
-  gint                            n_choices;
+  GtkStringList                  *string_list;
   GtkWidget                      *active;
   GtkPopoverBin                  *popover_bin;
 
@@ -63,7 +61,7 @@ enum
   PROP_VALUE,
   PROP_MIN_VALUE,
   PROP_MAX_VALUE,
-  PROP_CHOICES,
+  PROP_STRING_LIST,
   PROP_POPOVER,
   PROP_CATEGORY,
   PROP_PREVIOUS_BUTTON_TOOLTIP,
@@ -90,51 +88,39 @@ G_DEFINE_FINAL_TYPE_WITH_CODE (GcalMultiChoice, gcal_multi_choice, GTK_TYPE_WIDG
  * Auxiliary methods
  */
 
+static unsigned int
+string_list_get_n_items (GcalMultiChoice *self)
+{
+  return self->string_list ? g_list_model_get_n_items (G_LIST_MODEL (self->string_list)) : 0;
+}
+
 static gchar *
 get_value_string (GcalMultiChoice *self,
                   gint             value)
 {
   if (self->format_cb)
     return self->format_cb (self, value, self->format_data);
-  else if (0 <= value && value < self->n_choices)
-    return g_strdup (gtk_label_get_label (GTK_LABEL (self->choices[value])));
+  else if (0 <= value && value < string_list_get_n_items (self))
+    return g_strdup (gtk_string_list_get_string (self->string_list, value));
   else
     return g_strdup_printf ("%d", value);
 }
 
 static void
-apply_value (GcalMultiChoice        *self,
-             GtkStackTransitionType  transition)
+apply_value (GcalMultiChoice *self)
 {
-  GtkWidget *label;
-  const gchar *name;
-  gchar *text;
-
-  if (gtk_stack_get_visible_child (GTK_STACK (self->stack)) == self->label1)
-    {
-      name = "label2";
-      label = self->label2;
-    }
-  else
-    {
-      name = "label1";
-      label = self->label1;
-    }
+  g_autofree char *text = NULL;
 
   text = get_value_string (self, self->value);
-  gtk_label_set_text (GTK_LABEL (label), text);
+  gcal_stack_label_set_label (self->label, text);
   gtk_accessible_update_property (GTK_ACCESSIBLE (self),
                                   GTK_ACCESSIBLE_PROPERTY_VALUE_TEXT, text,
                                   -1);
-  g_free (text);
-
-  gtk_stack_set_visible_child_full (GTK_STACK (self->stack), name, transition);
 }
 
 static void
-set_value (GcalMultiChoice         *self,
-           gint                     value,
-           GtkStackTransitionType   transition)
+set_value (GcalMultiChoice *self,
+           gint             value)
 {
   value = CLAMP (value, self->min_value, self->max_value);
 
@@ -143,7 +129,7 @@ set_value (GcalMultiChoice         *self,
 
   self->value = value;
 
-  apply_value (self, transition);
+  apply_value (self);
 
   gtk_accessible_update_property (GTK_ACCESSIBLE (self),
                                   GTK_ACCESSIBLE_PROPERTY_VALUE_MAX, (gdouble) self->max_value,
@@ -162,7 +148,7 @@ action_activated (GcalMultiChoice *self,
 
   wrapped_value = WRAP (value, self->min_value, self->max_value);
 
-  set_value (self, wrapped_value, GTK_STACK_TRANSITION_TYPE_NONE);
+  set_value (self, wrapped_value);
 
   if (wrapped_value != value)
     g_signal_emit (self, signals[WRAPPED], 0);
@@ -259,7 +245,8 @@ gcal_multi_choice_dispose (GObject *object)
 
   g_clear_pointer ((GtkWidget **) &self->popover_bin, gtk_widget_unparent);
 
-  g_clear_pointer (&self->choices, g_free);
+  g_clear_pointer (&self->string_list, g_object_unref);
+
   g_clear_pointer (&self->category, g_free);
   g_clear_pointer (&self->prev_button_tooltip_text, g_free);
   g_clear_pointer (&self->next_button_tooltip_text, g_free);
@@ -290,6 +277,10 @@ gcal_multi_choice_get_property (GObject    *object,
 
     case PROP_MAX_VALUE:
       g_value_set_int (value, self->max_value);
+      break;
+
+    case PROP_STRING_LIST:
+      g_value_set_object (value, gcal_multi_choice_get_string_list (self));
       break;
 
     case PROP_POPOVER:
@@ -340,8 +331,8 @@ gcal_multi_choice_set_property (GObject      *object,
       gcal_multi_choice_set_value (self, self->value);
       break;
 
-    case PROP_CHOICES:
-      gcal_multi_choice_set_choices (self, (const gchar **)g_value_get_boxed (value));
+    case PROP_STRING_LIST:
+      gcal_multi_choice_set_string_list (self, g_value_get_object (value));
       break;
 
     case PROP_POPOVER:
@@ -423,6 +414,8 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
   GObjectClass *object_class = G_OBJECT_CLASS (class);
 
+  g_type_ensure (GCAL_TYPE_STACK_LABEL);
+
   object_class->dispose = gcal_multi_choice_dispose;
   object_class->set_property = gcal_multi_choice_set_property;
   object_class->get_property = gcal_multi_choice_get_property;
@@ -441,10 +434,16 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
       g_param_spec_int ("max-value", "Maximum Value", "Maximum Value",
                         G_MININT, G_MAXINT, 0,
                         G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
-  properties[PROP_CHOICES] =
-      g_param_spec_boxed ("choices", "Choices", "Choices",
-                          G_TYPE_STRV,
-                          G_PARAM_WRITABLE|G_PARAM_EXPLICIT_NOTIFY);
+
+  /**
+   * GcalMultiChoice:string-list:
+   *
+   * The string list.
+   */
+  properties[PROP_STRING_LIST] =
+      g_param_spec_object ("string-list", NULL, NULL,
+                           GTK_TYPE_STRING_LIST,
+                           G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalMultiChoice:popover:
@@ -493,10 +492,8 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, down_button);
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, up_button);
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, button);
-  gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, stack);
-  gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, label1);
-  gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, label2);
   gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, popover_bin);
+  gtk_widget_class_bind_template_child (widget_class, GcalMultiChoice, label);
 
   gtk_widget_class_bind_template_callback (widget_class, on_gesture_click_released);
   gtk_widget_class_bind_template_callback (widget_class, gcal_multi_choice_state_flags_changed);
@@ -552,7 +549,7 @@ gcal_multi_choice_set_value (GcalMultiChoice *self,
 {
   g_assert (GCAL_IS_MULTI_CHOICE (self));
 
-  set_value (self, value, GTK_STACK_TRANSITION_TYPE_NONE);
+  set_value (self, value);
 }
 
 /**
@@ -572,36 +569,40 @@ gcal_multi_choice_get_value (GcalMultiChoice *self)
 }
 
 /**
- * gcal_multi_choice_set_choices:
+ * gcal_multi_choice_get_string_list:
  * @self: a #GcalMultiChoice
- * @choices: an array of strings
  *
- * Sets the available choices for @self.
+ * Gets the string list for @self.
+ *
+ * Returns: (transfer none) (nullable): the string list
  */
-void
-gcal_multi_choice_set_choices (GcalMultiChoice  *self,
-                               const gchar     **choices)
+GtkStringList *
+gcal_multi_choice_get_string_list (GcalMultiChoice *self)
 {
-  gint i;
-
   g_assert (GCAL_IS_MULTI_CHOICE (self));
 
-  for (i = 0; i < self->n_choices; i++)
-    gtk_stack_remove (self->stack, self->choices[i]);
-  g_free (self->choices);
+  return self->string_list;
+}
 
-  self->n_choices = g_strv_length ((gchar **)choices);
-  self->choices = g_new (GtkWidget *, self->n_choices);
-  for (i = 0; i < self->n_choices; i++)
-    {
-      self->choices[i] = gtk_label_new (choices[i]);
-      gtk_widget_set_visible (self->choices[i], TRUE);
-      gtk_stack_add_named (GTK_STACK (self->stack),
-                           self->choices[i],
-                           choices[i]);
-    }
+/**
+ * gcal_multi_choice_set_string_list:
+ * @self: a #GcalMultiChoice
+ * @string_list: the string list
+ *
+ * Sets the string list for @self.
+ */
+void
+gcal_multi_choice_set_string_list (GcalMultiChoice *self,
+                                   GtkStringList   *string_list)
+{
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
 
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CHOICES]);
+  if (!g_set_object (&self->string_list, string_list))
+    return;
+
+  gcal_stack_label_compute_labels (self->label, self->string_list);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_STRING_LIST]);
 }
 
 /**
@@ -628,7 +629,7 @@ gcal_multi_choice_set_format_callback (GcalMultiChoice               *self,
   self->format_data = user_data;
   self->format_destroy = destroy;
 
-  apply_value (self, GTK_STACK_TRANSITION_TYPE_NONE);
+  apply_value (self);
 }
 
 /**

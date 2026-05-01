@@ -388,12 +388,12 @@ calendar_init_weekday_display (GcalDateChooser *self)
     }
 }
 
-static gchar *
-format_month (GcalMultiChoice *choice,
-              gint             value,
-              gpointer         data)
+static char *
+combine_month_year (GcalDateChooser *self,
+                    int              year,
+                    int              month)
 {
-  return g_strdup (gcal_util_get_month_name (value));
+  return g_strdup_printf ("%s %d", gcal_util_get_month_name (month - 1), year);
 }
 
 static gchar *
@@ -410,40 +410,32 @@ format_month_year (GcalMultiChoice *choice,
   if (g_date_time_get_year (now) == year)
     return g_strdup (gcal_util_get_month_name (month - 1));
   else
-    return g_strdup_printf ("%s %d", gcal_util_get_month_name (month - 1), year);
+    return combine_month_year (self, year, month);
 }
+
 
 static void
 calendar_init_month_display (GcalDateChooser *self)
 {
-  gchar *months[13];
-  gchar *month;
-  gint i;
+  g_autoptr (GtkStringList) combined_list = gtk_string_list_new (NULL);
+  g_autoptr (GtkStringList) month_list = gtk_string_list_new (NULL);
+  g_autoptr (GtkStringList) year_list = gtk_string_list_new (NULL);
+  int max_year;
 
-  for (i = 0; i < 12; i++)
+  g_object_get (self->year_choice,
+                "max-value", &max_year,
+                NULL);
+  gtk_string_list_take (year_list, g_strdup_printf ("%i", max_year));
+
+  for (int i = 0; i < 12; i++)
     {
-      month = gcal_util_get_month_name (i);
-      months[i] = g_strdup (month);
+      gtk_string_list_append (month_list, gcal_util_get_month_name (i));
+      gtk_string_list_take (combined_list, combine_month_year (self, max_year, i));
     }
 
-  months[12] = NULL;
-
-  gcal_multi_choice_set_choices (GCAL_MULTI_CHOICE (self->month_choice),
-                                (const gchar**) months);
-  gcal_multi_choice_set_choices (GCAL_MULTI_CHOICE (self->popover_month_choice),
-                                (const gchar**) months);
-
-  for (i = 0; i < 12; i++)
-    g_free (months[i]);
-
-  gcal_multi_choice_set_format_callback (GCAL_MULTI_CHOICE (self->month_choice),
-                                         format_month,
-                                         self,
-                                         NULL);
-  gcal_multi_choice_set_format_callback (GCAL_MULTI_CHOICE (self->popover_month_choice),
-                                         format_month,
-                                         self,
-                                         NULL);
+  gcal_multi_choice_set_string_list (GCAL_MULTI_CHOICE (self->month_choice), month_list);
+  gcal_multi_choice_set_string_list (GCAL_MULTI_CHOICE (self->year_choice), year_list);
+  gcal_multi_choice_set_string_list (GCAL_MULTI_CHOICE (self->combined_choice), combined_list);
 
   gcal_multi_choice_set_format_callback (GCAL_MULTI_CHOICE (self->combined_choice),
                                          format_month_year,
