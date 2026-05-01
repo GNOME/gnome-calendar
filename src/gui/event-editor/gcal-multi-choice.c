@@ -25,6 +25,8 @@
 #include "gcal-multi-choice.h"
 #include "gcal-utils.h"
 
+#define WRAP(value, min, max) (((value - min) % (max + 1 - min)) + (max + 1 - min)) % (max + 1 - min) + min
+
 struct _GcalMultiChoice
 {
   GtkWidget                       parent;
@@ -155,21 +157,16 @@ set_value (GcalMultiChoice         *self,
 static void
 up_action_activated (GcalMultiChoice *self)
 {
-  gboolean wrapped = FALSE;
-  gint value;
+  int value, wrapped_value;
 
   value = self->next_cb ? self->next_cb (self->value) : self->value + 1;
   g_assert_cmpint (value, >, self->value);
 
-  if (value > self->max_value)
-    {
-      value = self->min_value;
-      wrapped = TRUE;
-    }
+  wrapped_value = WRAP (value, self->min_value, self->max_value);
 
-  set_value (self, value, GTK_STACK_TRANSITION_TYPE_NONE);
+  set_value (self, wrapped_value, GTK_STACK_TRANSITION_TYPE_NONE);
 
-  if (wrapped)
+  if (wrapped_value != value)
     g_signal_emit (self, signals[WRAPPED], 0);
 
   gtk_widget_grab_focus (GTK_WIDGET (self));
@@ -178,21 +175,16 @@ up_action_activated (GcalMultiChoice *self)
 static void
 down_action_activated (GcalMultiChoice *self)
 {
-  gint value;
-  gboolean wrapped = FALSE;
+  int value, wrapped_value;
 
   value = self->prev_cb ? self->prev_cb (self->value) : self->value - 1;
   g_assert_cmpint (value, <, self->value);
 
-  if (value < self->min_value)
-    {
-      value = self->max_value;
-      wrapped = TRUE;
-    }
+  wrapped_value = WRAP (value, self->min_value, self->max_value);
 
-  set_value (self, value, GTK_STACK_TRANSITION_TYPE_NONE);
+  set_value (self, wrapped_value, GTK_STACK_TRANSITION_TYPE_NONE);
 
-  if (wrapped)
+  if (wrapped_value != value)
     g_signal_emit (self, signals[WRAPPED], 0);
 
   gtk_widget_grab_focus (GTK_WIDGET (self));
