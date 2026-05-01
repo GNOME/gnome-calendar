@@ -155,12 +155,10 @@ set_value (GcalMultiChoice         *self,
 }
 
 static void
-up_action_activated (GcalMultiChoice *self)
+action_activated (GcalMultiChoice *self,
+                  int              value)
 {
-  int value, wrapped_value;
-
-  value = self->next_cb ? self->next_cb (self->value) : self->value + 1;
-  g_assert_cmpint (value, >, self->value);
+  int wrapped_value;
 
   wrapped_value = WRAP (value, self->min_value, self->max_value);
 
@@ -173,21 +171,25 @@ up_action_activated (GcalMultiChoice *self)
 }
 
 static void
+up_action_activated (GcalMultiChoice *self)
+{
+  int value;
+
+  value = self->next_cb ? self->next_cb (self->value) : self->value + 1;
+  g_assert_cmpint (value, >, self->value);
+
+  action_activated (self, value);
+}
+
+static void
 down_action_activated (GcalMultiChoice *self)
 {
-  int value, wrapped_value;
+  int value;
 
   value = self->prev_cb ? self->prev_cb (self->value) : self->value - 1;
   g_assert_cmpint (value, <, self->value);
 
-  wrapped_value = WRAP (value, self->min_value, self->max_value);
-
-  set_value (self, wrapped_value, GTK_STACK_TRANSITION_TYPE_NONE);
-
-  if (wrapped_value != value)
-    g_signal_emit (self, signals[WRAPPED], 0);
-
-  gtk_widget_grab_focus (GTK_WIDGET (self));
+  action_activated (self, value);
 }
 
 static void
