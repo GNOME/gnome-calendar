@@ -1256,7 +1256,7 @@ gcal_manager_startup (GcalManager *self)
 
   GCAL_ENTRY;
 
-  self->timeline = gcal_timeline_new ();
+  self->timeline = gcal_timeline_new_augmented (2.0);
   self->clients = g_hash_table_new_full ((GHashFunc) e_source_hash,
                                          (GEqualFunc) e_source_equal,
                                          g_object_unref,
