@@ -388,6 +388,24 @@ gcal_application_startup (GApplication *app)
   GCAL_EXIT;
 }
 
+static void
+gcal_application_shutdown (GApplication *app)
+{
+  GcalApplication *self;
+  GcalWeatherService *weather_service;
+
+  GCAL_ENTRY;
+
+  self = GCAL_APPLICATION (app);
+
+  weather_service = gcal_context_get_weather_service (self->context);
+  gcal_weather_service_stop (weather_service);
+
+  G_APPLICATION_CLASS (gcal_application_parent_class)->shutdown (app);
+
+  GCAL_EXIT;
+}
+
 static gint
 gcal_application_command_line (GApplication            *app,
                                GApplicationCommandLine *command_line)
@@ -577,6 +595,7 @@ gcal_application_class_init (GcalApplicationClass *klass)
   application_class = G_APPLICATION_CLASS (klass);
   application_class->activate = gcal_application_activate;
   application_class->startup = gcal_application_startup;
+  application_class->shutdown = gcal_application_shutdown;
   application_class->command_line = gcal_application_command_line;
   application_class->open = gcal_application_open;
   application_class->handle_local_options = gcal_application_handle_local_options;
