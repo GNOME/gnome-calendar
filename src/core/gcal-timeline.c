@@ -36,8 +36,11 @@ struct _GcalTimeline
 {
   GObject             parent_instance;
 
+  double              augmentation_factor;
+
   guint               update_range_idle_id;
   GcalRange          *range;
+  GcalRange          *augmented_range;
 
   GcalRangeTree      *events;
   gchar              *filter;
@@ -184,6 +187,50 @@ set_model_on_subscriber (GcalTimelineSubscriber *subscriber,
   GCAL_TIMELINE_SUBSCRIBER_GET_IFACE (subscriber)->set_model (subscriber, model);
 }
 
+static GcalRange *
+augment_range (GcalRange *range,
+               double     augmentation_factor)
+{
+  g_autoptr (GcalRange) augmented_range = NULL;
+  g_autoptr (GDateTime) range_start = NULL;
+  g_autoptr (GDateTime) range_end = NULL;
+  GTimeSpan timespan;
+  GTimeSpan offset;
+
+  g_assert (range != NULL);
+  g_assert (augmentation_factor >= 1.0 || G_APPROX_VALUE (augmentation_factor, 1.0, DBL_EPSILON));
+
+  if (G_APPROX_VALUE (augmentation_factor, 1.0, DBL_EPSILON))
+    {
+#ifdef GCAL_ENABLE_TRACE
+      GCAL_TRACE_MSG ("%s: Augmenting range by 1.0, skipping", G_STRFUNC);
+#endif
+      return gcal_range_ref (range);
+    }
+
+  range_start = gcal_range_get_start (range);
+  range_end = gcal_range_get_end (range);
+
+  timespan = g_date_time_difference (range_end, range_start);
+  g_assert (timespan > 0);
+
+  offset = (timespan / 2) * augmentation_factor;
+
+  augmented_range = gcal_range_new_take (g_date_time_add (range_start, -offset),
+                                         g_date_time_add (range_end, offset),
+                                         gcal_range_get_range_type (range));
+#ifdef GCAL_ENABLE_TRACE
+    {
+      g_autofree char *range_str = gcal_range_to_string (range);
+      g_autofree char *augmented_range_str = gcal_range_to_string (augmented_range);
+
+      GCAL_TRACE_MSG ("%s: Range %s augmented to %s", G_STRFUNC, range_str, augmented_range_str);
+    }
+#endif
+
+  return g_steal_pointer (&augmented_range);
+}
+
 static void
 update_range (GcalTimeline *self)
 {
@@ -224,15 +271,43 @@ update_range (GcalTimeline *self)
 
       if (!self->range || gcal_range_compare (self->range, new_range) != 0)
         {
+          g_autoptr (GcalRange) new_augmented_range = NULL;
+
           g_clear_pointer (&self->range, gcal_range_unref);
           self->range = g_steal_pointer (&new_range);
-          range_changed = TRUE;
+
+          if (self->augmented_range)
+            {
+              switch (gcal_range_calculate_overlap (self->range, self->augmented_range, NULL))
+                {
+                case GCAL_RANGE_NO_OVERLAP:
+                case GCAL_RANGE_INTERSECTS:
+                case GCAL_RANGE_SUPERSET:
+                  g_clear_pointer (&self->augmented_range, gcal_range_unref);
+                  self->augmented_range = augment_range (self->range, self->augmentation_factor);
+                  range_changed = TRUE;
+                  break;
+
+                case GCAL_RANGE_SUBSET:
+                case GCAL_RANGE_EQUAL:
+                  break;
+
+                default:
+                  g_assert_not_reached ();
+                }
+            }
+          else
+            {
+              self->augmented_range = augment_range (self->range, self->augmentation_factor);
+              range_changed = TRUE;
+            }
         }
 
     }
   else if (self->range)
     {
       g_clear_pointer (&self->range, gcal_range_unref);
+      g_clear_pointer (&self->augmented_range, gcal_range_unref);
       range_changed = TRUE;
     }
 
@@ -242,7 +317,7 @@ update_range (GcalTimeline *self)
 
       g_hash_table_iter_init (&iter, self->calendars);
       while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &monitor))
-        gcal_calendar_monitor_set_range (monitor, self->range);
+        gcal_calendar_monitor_set_range (monitor, self->augmented_range);
     }
 
   GCAL_EXIT;
@@ -375,6 +450,9 @@ gcal_timeline_finalize (GObject *object)
   g_clear_pointer (&self->calendars, g_hash_table_destroy);
   g_clear_pointer (&self->subscribers, g_hash_table_destroy);
 
+  g_clear_pointer (&self->augmented_range, gcal_range_unref);
+  g_clear_pointer (&self->range, gcal_range_unref);
+
   G_OBJECT_CLASS (gcal_timeline_parent_class)->finalize (object);
 }
 
@@ -457,6 +535,8 @@ gcal_timeline_class_init (GcalTimelineClass *klass)
 static void
 gcal_timeline_init (GcalTimeline *self)
 {
+  self->augmentation_factor = 1.0;
+
   self->cancellable = g_cancellable_new ();
   self->events = gcal_range_tree_new_with_free_func (g_object_unref);
   self->calendars = g_hash_table_new_full (NULL, NULL, NULL, g_object_unref);
@@ -478,6 +558,25 @@ gcal_timeline_new (void)
 {
   return g_object_new (GCAL_TYPE_TIMELINE,
                        NULL);
+}
+
+/**
+ * gcal_timeline_new_augmented:
+ *
+ * Creates a new #GcalTimeline that augments its ranges by
+ * @augmentation_factor. This is
+ *
+ * Returns: (transfer full): a #GcalTimeline
+ */
+GcalTimeline*
+gcal_timeline_new_augmented (double augmentation_factor)
+{
+  g_autoptr (GcalTimeline) self = NULL;
+
+  self = g_object_new (GCAL_TYPE_TIMELINE, NULL);
+  self->augmentation_factor = augmentation_factor;
+
+  return g_steal_pointer (&self);
 }
 
 /**
@@ -510,8 +609,8 @@ gcal_timeline_add_calendar (GcalTimeline *self,
   g_hash_table_insert (self->calendars, calendar, g_object_ref (monitor));
   g_list_store_append (self->calendar_monitors, monitor);
 
-  if (self->range)
-    gcal_calendar_monitor_set_range (monitor, self->range);
+  if (self->augmented_range)
+    gcal_calendar_monitor_set_range (monitor, self->augmented_range);
 
   update_completed_calendars (self);
 

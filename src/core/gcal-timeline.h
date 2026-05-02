@@ -31,6 +31,8 @@ G_DECLARE_FINAL_TYPE (GcalTimeline, gcal_timeline, GCAL, TIMELINE, GObject)
 
 GcalTimeline*        gcal_timeline_new                           (void);
 
+GcalTimeline*        gcal_timeline_new_augmented                 (double              augmentation_factor);
+
 void                 gcal_timeline_add_calendar                  (GcalTimeline       *self,
                                                                   GcalCalendar       *calendar);
 
