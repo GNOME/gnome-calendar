@@ -66,7 +66,7 @@ struct _GcalDateChooser
   gboolean            show_events;
   gboolean            split_month_year;
 
-  gulong              update_indicators_idle_id;
+  unsigned int        update_indicators_idle_id;
 };
 
 static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
@@ -872,6 +872,8 @@ static void
 gcal_date_chooser_finalize (GObject *object)
 {
   GcalDateChooser *self = GCAL_DATE_CHOOSER (object);
+
+  g_clear_handle_id (&self->update_indicators_idle_id, g_source_remove);
 
   g_clear_object (&self->model_signal_group);
 
