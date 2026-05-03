@@ -101,6 +101,7 @@ struct _GcalWindow
   AdwApplicationWindow parent;
 
   /* upper level widgets */
+  AdwViewStackPage       *agenda_page;
   GtkWidget              *header_bar;
   AdwToastOverlay        *overlay;
   AdwViewStack           *views_stack;
@@ -300,7 +301,6 @@ maybe_add_subscribers_to_timeline (GcalWindow *self)
   timeline = gcal_manager_get_timeline (gcal_context_get_manager (context));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
-  gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->agenda_view));
   gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->date_chooser));
 
   self->subscribed = TRUE;
@@ -519,9 +519,31 @@ switch_prev_view (GcalWindow *self)
   update_active_date (self, previous_date);
 }
 
+static void
+add_or_remove_agenda_view_to_timeline (GcalWindow *self)
+{
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  GcalTimeline *timeline = gcal_manager_get_timeline (gcal_context_get_manager (context));
+
+  if (adw_view_stack_page_get_visible (self->agenda_page))
+    gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->agenda_view));
+  else
+    gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->agenda_view));
+}
+
 /*
  * Callbacks
  */
+
+static void
+on_agenda_page_visible_changed_cb (AdwViewStackPage *agenda_page,
+                                   GParamSpec       *pspec,
+                                   GcalWindow       *self)
+{
+  g_assert (GCAL_IS_WINDOW (self));
+
+  add_or_remove_agenda_view_to_timeline (self);
+}
 
 static void
 event_editor_closed_cb (GcalEventEditorDialog *dialog,
@@ -1381,6 +1403,7 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   /* widgets */
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, agenda_view);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, agenda_page);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_list);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, date_chooser);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, event_editor);
@@ -1476,6 +1499,8 @@ gcal_window_init (GcalWindow *self)
                    self,
                    "active-view",
                    G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
+
+  g_signal_connect (self->agenda_page, "notify::visible", G_CALLBACK (on_agenda_page_visible_changed_cb), self);
 }
 
 /**
