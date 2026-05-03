@@ -1,0 +1,3 @@
+[submodule "build-aux/shared-modules"]
+	path = build-aux/shared-modules
+	url = https://github.com/flathub/shared-modules
