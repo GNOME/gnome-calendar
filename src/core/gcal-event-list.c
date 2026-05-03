@@ -26,47 +26,25 @@
 
 #include <gio/gio.h>
 
+#define GDK_ARRAY_TYPE_NAME GcalEventArray
+#define GDK_ARRAY_NAME gcal_event_array
+#define GDK_ARRAY_ELEMENT_TYPE GcalEvent*
+#define GDK_ARRAY_PREALLOC 50
+#define GDK_ARRAY_FREE_FUNC g_object_unref
+#include "gdkarrayimpl.c"
+
 struct _GcalEventList
 {
   GObject            parent_instance;
 
-  GSequence         *events;
-  GHashTable        *event_to_iter;
-  GHashTable        *uid_to_iter;
-  guint              n_events;
-
-  /* cache */
-  guint             last_position;
-  GSequenceIter    *last_iter;
-  gboolean          last_position_valid;
+  GcalEventArray     event_array;
+  GHashTable        *events;
 };
 
 static void          g_list_model_interface_init                 (GListModelInterface *iface);
 
 G_DEFINE_FINAL_TYPE_WITH_CODE (GcalEventList, gcal_event_list, G_TYPE_OBJECT,
                                G_IMPLEMENT_INTERFACE (G_TYPE_LIST_MODEL, g_list_model_interface_init))
-
-
-/*
- * Auxiliary functions
- */
-
-static void
-gcal_event_list_items_changed (GcalEventList *self,
-                               guint          position,
-                               guint          removed,
-                               guint          added)
-{
-  /* check if the iter cache may have been invalidated */
-  if (position <= self->last_position)
-    {
-      self->last_iter = NULL;
-      self->last_position = 0;
-      self->last_position_valid = FALSE;
-    }
-
-  g_list_model_items_changed (G_LIST_MODEL (self), position, removed, added);
-}
 
 
 /*
@@ -86,7 +64,7 @@ gcal_event_list_get_n_items (GListModel *model)
 
   g_assert (GCAL_IS_EVENT_LIST (self));
 
-  return g_hash_table_size (self->event_to_iter);
+  return gcal_event_array_get_size (&self->event_array);
 }
 
 static gpointer
@@ -94,31 +72,13 @@ gcal_event_list_get_item (GListModel *model,
                           guint       position)
 {
   GcalEventList *self = (GcalEventList *) model;
-  GSequenceIter *it = NULL;
 
   g_assert (GCAL_IS_EVENT_LIST (self));
 
-  if (self->last_position_valid)
-    {
-      if (position < G_MAXUINT && self->last_position == position + 1)
-        it = g_sequence_iter_prev (self->last_iter);
-      else if (position > 0 && self->last_position == position - 1)
-        it = g_sequence_iter_next (self->last_iter);
-      else if (self->last_position == position)
-        it = self->last_iter;
-    }
-
-  if (it == NULL)
-    it = g_sequence_get_iter_at_pos (self->events, position);
-
-  self->last_iter = it;
-  self->last_position = position;
-  self->last_position_valid = TRUE;
-
-  if (g_sequence_iter_is_end (it))
-    return NULL;
+  if (position < gcal_event_array_get_size (&self->event_array))
+    return g_object_ref (gcal_event_array_get (&self->event_array, position));
   else
-    return g_object_ref (g_sequence_get (it));
+    return NULL;
 }
 
 static void
@@ -139,8 +99,8 @@ gcal_event_list_finalize (GObject *object)
 {
   GcalEventList *self = (GcalEventList *)object;
 
-  g_clear_pointer (&self->event_to_iter, g_hash_table_destroy);
-  g_clear_pointer (&self->events, g_sequence_free);
+  gcal_event_array_clear (&self->event_array);
+  g_clear_pointer (&self->events, g_hash_table_destroy);
 
   G_OBJECT_CLASS (gcal_event_list_parent_class)->finalize (object);
 }
@@ -156,8 +116,8 @@ gcal_event_list_class_init (GcalEventListClass *klass)
 static void
 gcal_event_list_init (GcalEventList *self)
 {
-  self->events = g_sequence_new (g_object_unref);
-  self->event_to_iter = g_hash_table_new (g_direct_hash, g_direct_equal);
+  gcal_event_array_init (&self->event_array);
+  self->events = g_hash_table_new (g_direct_hash, g_direct_equal);
 }
 
 /**
@@ -210,23 +170,20 @@ gcal_event_list_add_events (GcalEventList  *self,
   g_assert (GCAL_IS_EVENT_LIST (self));
   g_assert (events != NULL);
 
-  position = g_hash_table_size (self->event_to_iter);
+  position = gcal_event_array_get_size (&self->event_array);
 
   for (gsize i = 0; events[i]; i++)
     {
-      GSequenceIter *iter;
-
-      if (g_hash_table_contains (self->event_to_iter, events[i]))
+      if (g_hash_table_contains (self->events, events[i]))
         continue;
 
-      iter = g_sequence_append (self->events, g_object_ref (events[i]));
-
-      g_hash_table_insert (self->event_to_iter, events[i], iter);
+      gcal_event_array_append (&self->event_array, g_object_ref (events[i]));
+      g_hash_table_add (self->events, events[i]);
       n_added++;
     }
 
   if (n_added > 0)
-      gcal_event_list_items_changed (self, position, 0, n_added);
+      g_list_model_items_changed (G_LIST_MODEL (self), position, 0, n_added);
 }
 
 /**
@@ -261,35 +218,47 @@ void
 gcal_event_list_remove_events (GcalEventList  *self,
                                GcalEvent     **events)
 {
+  g_autoptr (GHashTable) contained_events = NULL;
   g_autoptr (GtkBitset) bitset = NULL;
-  g_autoptr (GPtrArray) iters = NULL;
+  GtkBitsetIter iter;
 
   g_assert (GCAL_IS_EVENT_LIST (self));
   g_assert (events != NULL);
 
   bitset = gtk_bitset_new_empty ();
-  iters = g_ptr_array_new ();
+  contained_events = g_hash_table_new (g_direct_hash, g_direct_equal);
 
-  for (gsize i = 0; events[i]; i++)
+  for (size_t i = 0; events[i]; i++)
     {
-      GSequenceIter *iter = g_hash_table_lookup (self->event_to_iter, events[i]);
-
-      if (!iter)
-        continue;
-
-      g_ptr_array_add (iters, iter);
-      gtk_bitset_add (bitset, g_sequence_iter_get_position (iter));
-
-      g_hash_table_remove (self->event_to_iter, events[i]);
+      if (g_hash_table_contains (self->events, events[i]))
+        g_hash_table_add (contained_events, events[i]);
     }
 
-  for (gsize i = 0; i < iters->len; i++)
+  for (size_t i = 0; i < gcal_event_array_get_size (&self->event_array); i++)
     {
-      GSequenceIter *iter = g_ptr_array_index (iters, i);
+      GcalEvent *event = gcal_event_array_get (&self->event_array, i);
 
-      g_assert (iter != NULL);
+      if (g_hash_table_contains (contained_events, event))
+        {
+          g_hash_table_remove (contained_events, event);
+          g_hash_table_remove (self->events, event);
+          gtk_bitset_add (bitset, i);
+        }
 
-      g_sequence_remove (iter);
+      if (g_hash_table_size (contained_events) == 0)
+        break;
+    }
+
+  for (gtk_bitset_iter_init_last (&iter, bitset, NULL);
+       gtk_bitset_iter_is_valid (&iter);
+       gtk_bitset_iter_previous (&iter, NULL))
+    {
+      gcal_event_array_splice (&self->event_array,
+                               gtk_bitset_iter_get_value (&iter),
+                               1,
+                               FALSE,
+                               NULL,
+                               0);
     }
 
   if (!gtk_bitset_is_empty (bitset))
@@ -299,7 +268,7 @@ gcal_event_list_remove_events (GcalEventList  *self,
       guint range_size = last - first + 1;
       guint n_removed = gtk_bitset_get_size_in_range (bitset, first, last);
 
-      gcal_event_list_items_changed (self, first, range_size, range_size - n_removed);
+      g_list_model_items_changed (G_LIST_MODEL (self), first, range_size, range_size - n_removed);
     }
 }
 
@@ -315,12 +284,11 @@ gcal_event_list_remove_all_events (GcalEventList  *self)
 
   g_assert (GCAL_IS_EVENT_LIST (self));
 
-  n_removed = g_hash_table_size (self->event_to_iter);
+  n_removed = gcal_event_array_get_size (&self->event_array);
 
-  g_hash_table_remove_all (self->event_to_iter);
-  g_sequence_remove_range (g_sequence_get_begin_iter (self->events),
-                           g_sequence_get_end_iter (self->events));
+  g_hash_table_remove_all (self->events);
+  gcal_event_array_clear (&self->event_array);
 
   if (n_removed > 0)
-      gcal_event_list_items_changed (self, 0, n_removed, 0);
+      g_list_model_items_changed (G_LIST_MODEL (self), 0, n_removed, 0);
 }
