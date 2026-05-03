@@ -36,7 +36,7 @@
 #include <adwaita.h>
 
 #define N_ROWS_PER_PAGE 5
-#define N_PAGES 5
+#define N_PAGES 3
 #define N_TOTAL_ROWS (N_ROWS_PER_PAGE * N_PAGES)
 #define FIRST_VISIBLE_ROW_INDEX (N_ROWS_PER_PAGE * (N_PAGES - 1) / 2)
 #define LAST_VISIBLE_ROW_INDEX (FIRST_VISIBLE_ROW_INDEX + N_ROWS_PER_PAGE - 1)
