@@ -216,10 +216,25 @@ layout_block_add_event (LayoutBlock *layout_block,
  * Auxiliary methods
  */
 
+static GtkWidget *
+pick_existing_event_widget (GHashTable *event_widgets,
+                            GcalEvent  *event)
+{
+  GtkWidget *widget;
+
+  g_assert (event_widgets != NULL);
+  g_assert (GCAL_IS_EVENT (event));
+
+  g_hash_table_steal_extended (event_widgets, event, NULL, (gpointer *) &widget);
+
+  return widget;
+}
+
 static void
 add_event_to_block (GcalWeekGrid *self,
                     LayoutBlock  *layout_block,
-                    GcalEvent    *event)
+                    GcalEvent    *event,
+                    GHashTable   *event_widgets)
 {
   ChildData *child_data;
 
@@ -228,14 +243,18 @@ add_event_to_block (GcalWeekGrid *self,
   g_assert (GCAL_IS_EVENT (event));
 
   child_data = layout_block_add_event (layout_block, event);
+  child_data->widget = pick_existing_event_widget (event_widgets, event);
 
-  child_data->widget = g_object_new (GCAL_TYPE_EVENT_WIDGET,
-                                     "event", event,
-                                     "orientation", GTK_ORIENTATION_VERTICAL,
-                                     "timestamp-policy", GCAL_TIMESTAMP_POLICY_START,
-                                     NULL);
+  if (!child_data->widget)
+    {
+      child_data->widget = g_object_new (GCAL_TYPE_EVENT_WIDGET,
+                                         "event", event,
+                                         "orientation", GTK_ORIENTATION_VERTICAL,
+                                         "timestamp-policy", GCAL_TIMESTAMP_POLICY_START,
+                                         NULL);
 
-  g_signal_connect (child_data->widget, "activate", G_CALLBACK (on_event_widget_activated_cb), self);
+      g_signal_connect (child_data->widget, "activate", G_CALLBACK (on_event_widget_activated_cb), self);
+    }
 
   gtk_widget_set_parent (child_data->widget, GTK_WIDGET (self));
 }
@@ -288,10 +307,52 @@ expand_event_widgets_in_blocks (GcalWeekGrid *self)
     }
 }
 
+static GHashTable *
+extract_current_event_widgets (GcalWeekGrid *self)
+{
+  g_autoptr (GHashTable) event_widgets = NULL;
+
+  g_assert (GCAL_IS_WEEK_GRID (self));
+
+  event_widgets = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) gtk_widget_unparent);
+
+  for (unsigned int i = 0; i < self->layout_blocks->len; i++)
+    {
+      LayoutBlock *layout_block = g_ptr_array_index (self->layout_blocks, i);
+
+      g_assert (layout_block != NULL);
+      g_assert (layout_block->columns != NULL);
+
+      for (size_t column_index = 0; column_index < layout_block->columns->len; column_index++)
+        {
+          g_autoptr (GPtrArray) children_data = NULL;
+          GcalRangeTree *block_column;
+
+          block_column = g_ptr_array_index (layout_block->columns, column_index);
+          g_assert (block_column != NULL);
+
+          children_data = gcal_range_tree_get_all_data (block_column);
+          g_assert (children_data != NULL);
+
+          for (size_t child_data_index = 0; child_data_index < children_data->len; child_data_index++)
+            {
+              ChildData *child_data = g_ptr_array_index (children_data, child_data_index);
+
+              g_assert (!g_hash_table_contains (event_widgets, child_data->event));
+
+              g_hash_table_insert (event_widgets, child_data->event, g_steal_pointer (&child_data->widget));
+            }
+        }
+    }
+
+  return g_steal_pointer (&event_widgets);
+}
+
 static void
 recalculate_layout_blocks (GcalWeekGrid *self)
 {
   g_autoptr (GcalRangeTree) blocks_by_range = NULL;
+  g_autoptr (GHashTable) event_widgets = NULL;
   g_autoptr (GDateTime) week_start = NULL;
   g_autoptr (GDateTime) week_end = NULL;
   g_autoptr (GcalRange) range = NULL;
@@ -307,6 +368,8 @@ recalculate_layout_blocks (GcalWeekGrid *self)
   week_start = gcal_date_time_get_start_of_week (self->active_date);
   week_end = g_date_time_add_weeks (week_start, 1);
   range = gcal_range_new (week_start, week_end, GCAL_RANGE_DEFAULT);
+
+  event_widgets = extract_current_event_widgets (self);
 
   /* Remove all blocks */
   g_ptr_array_set_size (self->layout_blocks, 0);
@@ -350,7 +413,7 @@ recalculate_layout_blocks (GcalWeekGrid *self)
 
       old_block_range = gcal_range_ref (layout_block->range);
 
-      add_event_to_block (self, layout_block, event);
+      add_event_to_block (self, layout_block, event, event_widgets);
 
       new_block_range = gcal_range_ref (layout_block->range);
 
