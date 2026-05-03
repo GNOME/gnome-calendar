@@ -649,9 +649,61 @@ prepare_layout_blocks (GcalMonthViewRow *self,
     g_clear_pointer (&blocks_per_day[i], g_ptr_array_unref);
 }
 
+static GHashTable *
+extract_current_event_widgets (GcalMonthViewRow *self)
+{
+  g_autoptr (GHashTable) event_widgets = NULL;
+  GHashTableIter iter;
+  GPtrArray *blocks;
+  GcalEvent *event;
+
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+
+  event_widgets = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_ptr_array_unref);
+
+  g_hash_table_iter_init (&iter, self->layout_blocks);
+  while (g_hash_table_iter_next (&iter, (gpointer *) &event, (gpointer *) &blocks))
+    {
+      g_autoptr (GPtrArray) widgets = NULL;
+
+      g_assert (GCAL_IS_EVENT (event));
+      g_assert (blocks != NULL);
+
+      widgets = g_ptr_array_new_full (blocks->len, (GDestroyNotify) gtk_widget_unparent);
+
+      for (unsigned int i = 0; i < blocks->len; i++)
+        {
+          GcalEventBlock *block = g_ptr_array_index (blocks, i);
+
+          g_ptr_array_add (widgets, g_steal_pointer (&block->event_widget));
+        }
+
+      g_hash_table_insert (event_widgets, event, g_steal_pointer (&widgets));
+    }
+
+  return g_steal_pointer (&event_widgets);
+}
+
+static GtkWidget *
+pick_existing_event_widget (GHashTable *event_widgets,
+                            GcalEvent  *event)
+{
+  GPtrArray *widgets;
+
+  g_assert (event_widgets != NULL);
+  g_assert (GCAL_IS_EVENT (event));
+
+  widgets = g_hash_table_lookup (event_widgets, event);
+  if (!widgets || widgets->len == 0)
+    return NULL;
+
+  return g_ptr_array_steal_index_fast (widgets, 0);
+}
+
 static void
 recalculate_layout_blocks (GcalMonthViewRow *self)
 {
+  g_autoptr (GHashTable) event_widgets = NULL;
   g_autoptr (GDateTime) range_start = NULL;
   guint events_at_weekday[N_WEEKDAYS] = { 0, };
   guint n_events;
@@ -662,6 +714,8 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
 
   range_start = gcal_range_get_start (self->range);
   n_events = g_list_model_get_n_items (self->events);
+
+  event_widgets = extract_current_event_widgets (self);
 
   g_hash_table_remove_all (self->layout_blocks);
 
@@ -691,10 +745,14 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
             {
               GtkWidget *event_widget;
 
-              event_widget = gcal_event_widget_new (event);
-              if (!gcal_event_get_all_day (event) && !gcal_event_is_multiday (event))
-                gcal_event_widget_set_timestamp_policy (GCAL_EVENT_WIDGET (event_widget), GCAL_TIMESTAMP_POLICY_START);
-              setup_child_widget (self, event_widget);
+              event_widget = pick_existing_event_widget (event_widgets, event);
+              if (!event_widget)
+                {
+                  event_widget = gcal_event_widget_new (event);
+                  if (!gcal_event_get_all_day (event) && !gcal_event_is_multiday (event))
+                    gcal_event_widget_set_timestamp_policy (GCAL_EVENT_WIDGET (event_widget), GCAL_TIMESTAMP_POLICY_START);
+                  setup_child_widget (self, event_widget);
+                }
 
               block = g_new (GcalEventBlock, 1);
               block->event_widget = g_steal_pointer (&event_widget);
@@ -707,8 +765,12 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
             {
               GtkWidget *new_event_widget;
 
-              new_event_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (block->event_widget));
-              setup_child_widget (self, new_event_widget);
+              new_event_widget = pick_existing_event_widget (event_widgets, event);
+              if (!new_event_widget)
+                {
+                  new_event_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (block->event_widget));
+                  setup_child_widget (self, new_event_widget);
+                }
 
               block = g_new (GcalEventBlock, 1);
               block->event_widget = g_steal_pointer (&new_event_widget);
