@@ -37,6 +37,13 @@
 #include <string.h>
 #include <math.h>
 
+#define GDK_ARRAY_TYPE_NAME GcalEventArray
+#define GDK_ARRAY_NAME gcal_event_array
+#define GDK_ARRAY_ELEMENT_TYPE GcalEvent*
+#define GDK_ARRAY_PREALLOC 50
+#define GDK_ARRAY_FREE_FUNC g_object_unref
+#include "gdkarrayimpl.c"
+
 /* WeatherInfoDay:
  * @winfo: (nullable): Holds weather information for this week-day. All other fields are only valid if this one is not %NULL.
  * @icon_buf: (nullable): Buffered weather icon.
@@ -79,7 +86,7 @@ struct _GcalWeekHeader
   GtkWidget          *main_box;
 
   GtkFilterListModel *events_model;
-  GSequence          *events_sequence;
+  GcalEventArray      event_array;
 
   /*
    * Stores the events as they come from the week-view
@@ -1427,33 +1434,35 @@ events_changed_cb (GListModel     *model,
                    guint           added,
                    GcalWeekHeader *self)
 {
-  while (removed != 0)
-    {
-      GSequenceIter *iter;
-      GcalEvent *event;
+  g_autoptr (GPtrArray) added_events = NULL;
 
-      iter = g_sequence_get_iter_at_pos (self->events_sequence, position);
-      event = g_sequence_get (iter);
+  added_events = g_ptr_array_new_full (added, NULL);
+
+  for (unsigned int i = 0; i < removed; i++)
+    {
+      GcalEvent *event = gcal_event_array_get (&self->event_array, position + i);
 
       g_assert (GCAL_IS_EVENT (event));
 
       remove_event (self, event);
-
-      g_sequence_remove (iter);
-
-      removed--;
     }
 
-  for (gsize i = 0; i < added; i++)
+  for (unsigned int i = 0; i < added; i++)
     {
-      g_autoptr (GcalEvent) event = g_list_model_get_item (model, i);
+      g_autoptr (GcalEvent) event = g_list_model_get_item (model, position + i);
 
       g_assert (GCAL_IS_EVENT (event));
 
-      g_sequence_insert_before (g_sequence_get_iter_at_pos (self->events_sequence, position + i),
-                                g_object_ref (event));
+      g_ptr_array_add (added_events, g_object_ref (event));
       add_event (self, event);
     }
+
+  gcal_event_array_splice (&self->event_array,
+                           position,
+                           removed,
+                           FALSE,
+                           (GcalEvent **) added_events->pdata,
+                           added_events->len);
 }
 
 /* Drawing area content and size */
@@ -1596,7 +1605,7 @@ gcal_week_header_finalize (GObject *object)
   GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
   gint i;
 
-  g_clear_pointer (&self->events_sequence, g_sequence_free);
+  gcal_event_array_clear (&self->event_array);
   g_clear_object (&self->events_model);
 
   gcal_clear_date_time (&self->active_date);
@@ -1710,10 +1719,11 @@ gcal_week_header_init (GcalWeekHeader *self)
   GtkDropTarget *drop_target;
   gint i;
 
+  gcal_event_array_init (&self->event_array);
+
   filter = gtk_custom_filter_new (event_is_all_day_or_multiday_func, NULL, NULL);
 
   self->events_model = gtk_filter_list_model_new (NULL, GTK_FILTER (g_steal_pointer (&filter)));
-  self->events_sequence = g_sequence_new (g_object_unref);
 
   g_signal_connect (self->events_model, "items-changed", G_CALLBACK (events_changed_cb), self);
 
