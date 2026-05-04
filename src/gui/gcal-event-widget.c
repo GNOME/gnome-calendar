@@ -509,12 +509,6 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
                            self,
                            G_CONNECT_SWAPPED);
 
-  g_signal_connect_object (event,
-                           "notify::summary",
-                           G_CALLBACK (gtk_widget_queue_draw),
-                           self,
-                           G_CONNECT_SWAPPED);
-
   g_signal_connect_object (context,
                            "notify::time-format",
                            G_CALLBACK (gcal_event_widget_update_timestamp),
@@ -743,7 +737,6 @@ gcal_event_widget_finalize (GObject *object)
 
   /* disconnect signals */
   g_signal_handlers_disconnect_by_func (self->event, update_color, self);
-  g_signal_handlers_disconnect_by_func (self->event, gtk_widget_queue_draw, self);
 
   /* releasing properties */
   g_clear_pointer (&self->css_class, g_free);
