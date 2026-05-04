@@ -70,6 +70,10 @@ struct _GcalEventWidget
   GtkOrientation      orientation;
 
   GcalTimestampPolicy timestamp_policy;
+
+  GSignalGroup       *clock_signal_group;
+  GSignalGroup       *context_signal_group;
+  GSignalGroup       *event_signal_group;
 };
 
 enum
@@ -495,23 +499,11 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
   gcal_event_widget_set_date_start (self, gcal_event_get_date_start (event));
   gcal_event_widget_set_date_end (self, gcal_event_get_date_end (event));
 
-  /* Update color */
+  g_signal_group_set_target (self->context_signal_group, context);
+  g_signal_group_set_target (self->clock_signal_group, gcal_context_get_clock (context));
+  g_signal_group_set_target (self->event_signal_group, event);
+
   update_color (self);
-
-  g_signal_connect_object (event,
-                           "notify::color",
-                           G_CALLBACK (update_color),
-                           self,
-                           G_CONNECT_SWAPPED);
-
-  g_signal_connect_object (context,
-                           "notify::time-format",
-                           G_CALLBACK (gcal_event_widget_update_timestamp),
-                           self,
-                           G_CONNECT_SWAPPED);
-
-
-  /* Tooltip */
   gcal_event_widget_set_event_tooltip (self, event);
   gcal_event_widget_update_style (self);
   gcal_event_widget_update_timestamp (self);
@@ -688,6 +680,10 @@ gcal_event_widget_dispose (GObject *object)
 {
   GcalEventWidget *self = GCAL_EVENT_WIDGET (object);
 
+  g_clear_object (&self->clock_signal_group);
+  g_clear_object (&self->context_signal_group);
+  g_clear_object (&self->event_signal_group);
+
   g_clear_pointer (&self->preview_popover, gtk_widget_unparent);
   g_clear_pointer (&self->overflow_bin, gtk_widget_unparent);
   g_clear_pointer (&self->edge, gtk_widget_unparent);
@@ -701,9 +697,6 @@ gcal_event_widget_finalize (GObject *object)
   GcalEventWidget *self;
 
   self = GCAL_EVENT_WIDGET (object);
-
-  /* disconnect signals */
-  g_signal_handlers_disconnect_by_func (self->event, update_color, self);
 
   /* releasing properties */
   g_clear_pointer (&self->css_class, g_free);
@@ -783,8 +776,6 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 static void
 gcal_event_widget_init (GcalEventWidget *self)
 {
-  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
-
   g_type_ensure (GCAL_TYPE_OVERFLOW_BIN);
 
   gtk_widget_init_template (GTK_WIDGET (self));
@@ -799,11 +790,25 @@ gcal_event_widget_init (GcalEventWidget *self)
                                GTK_ACCESSIBLE_STATE_PRESSED, FALSE,
                                -1);
 
-  g_signal_connect_object (gcal_context_get_clock (context),
-                           "minute-changed",
-                           G_CALLBACK (update_color),
-                           self,
-                           G_CONNECT_SWAPPED);
+  self->clock_signal_group = g_signal_group_new (GCAL_TYPE_CLOCK);
+  g_signal_group_connect_swapped (self->clock_signal_group,
+                                  "minute-changed",
+                                  G_CALLBACK (update_color),
+                                  self);
+
+  self->context_signal_group = g_signal_group_new (GCAL_TYPE_CONTEXT);
+  g_signal_group_connect_swapped (self->context_signal_group,
+                                  "notify::time-format",
+                                  G_CALLBACK (gcal_event_widget_update_timestamp),
+                                  self);
+
+  self->event_signal_group = g_signal_group_new (GCAL_TYPE_EVENT);
+  g_signal_group_connect_swapped (self->event_signal_group,
+                                  "notify::color",
+                                  G_CALLBACK (update_color),
+                                  self);
+
+
 }
 
 GtkWidget*
