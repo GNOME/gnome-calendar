@@ -70,9 +70,6 @@ struct _GcalEventWidget
   GtkOrientation      orientation;
 
   GcalTimestampPolicy timestamp_policy;
-
-  gint                old_width;
-  gint                old_height;
 };
 
 enum
