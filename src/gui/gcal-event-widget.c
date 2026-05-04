@@ -80,8 +80,9 @@ enum
   PROP_0,
   PROP_EVENT,
   PROP_TIMESTAMP_POLICY,
+  N_PROPS,
+
   PROP_ORIENTATION,
-  NUM_PROPS
 };
 
 enum
@@ -98,6 +99,7 @@ typedef enum
 } CursorType;
 
 static guint signals[NUM_SIGNALS] = { 0, };
+static GParamSpec *properties[N_PROPS] = { NULL, };
 
 static gboolean read_only_to_propagation_phase_cb (GBinding     *binding,
                                                    const GValue *from_value,
@@ -771,13 +773,9 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
    *
    * The event this widget represents.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_EVENT,
-                                   g_param_spec_object ("event",
-                                                        "Event",
-                                                        "The event this widget represents",
-                                                        GCAL_TYPE_EVENT,
-                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+  properties[PROP_EVENT] = g_param_spec_object ("event", NULL, NULL,
+                                                GCAL_TYPE_EVENT,
+                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEventWidget::timestamp-policy:
@@ -787,14 +785,12 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
    * Whether to show the start time, end time, or no time for the
    * event. Depending on the event's kind, it will be an hour or a day.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_TIMESTAMP_POLICY,
-                                   g_param_spec_enum ("timestamp-policy",
-                                                      "Timestamp Policy",
-                                                      "The policy for this widget's timestamp",
-                                                      GCAL_TYPE_TIMESTAMP_POLICY,
-                                                      GCAL_TIMESTAMP_POLICY_NONE,
-                                                      G_PARAM_READWRITE));
+  properties[PROP_TIMESTAMP_POLICY] = g_param_spec_enum ("timestamp-policy", NULL, NULL,
+                                                         GCAL_TYPE_TIMESTAMP_POLICY,
+                                                         GCAL_TIMESTAMP_POLICY_NONE,
+                                                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   /**
    * GcalEventWidget::orientation:
@@ -985,7 +981,7 @@ gcal_event_widget_set_timestamp_policy (GcalEventWidget     *self,
 
       gcal_event_widget_update_timestamp (self);
 
-      g_object_notify (G_OBJECT (self), "timestamp-policy");
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_TIMESTAMP_POLICY]);
     }
 }
 
