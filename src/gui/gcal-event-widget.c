@@ -98,11 +98,6 @@ typedef enum
 static guint signals[NUM_SIGNALS] = { 0, };
 static GParamSpec *properties[N_PROPS] = { NULL, };
 
-static gboolean read_only_to_propagation_phase_cb (GBinding     *binding,
-                                                   const GValue *from_value,
-                                                   GValue       *to_value,
-                                                   gpointer      user_data);
-
 G_DEFINE_TYPE_WITH_CODE (GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET,
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL));
 
@@ -518,24 +513,6 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
 
   /* Tooltip */
   gcal_event_widget_set_event_tooltip (self, event);
-
-  /* Summary label */
-  g_object_bind_property (event,
-                          "summary",
-                          self->summary_label,
-                          "label",
-                          G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-
-  g_object_bind_property_full (gcal_event_get_calendar (event),
-                               "read-only",
-                               self->drag_source,
-                               "propagation-phase",
-                               G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE,
-                               read_only_to_propagation_phase_cb,
-                               NULL,
-                               self,
-                               NULL);
-
   gcal_event_widget_update_style (self);
   gcal_event_widget_update_timestamp (self);
 }
@@ -635,22 +612,12 @@ on_event_popover_edit_cb (GtkWidget   *event_popover,
   reply_preview_callback (event_popover, data, GCAL_EVENT_PREVIEW_ACTION_EDIT);
 }
 
-static gboolean
-read_only_to_propagation_phase_cb (GBinding     *binding,
-                                   const GValue *from_value,
-                                   GValue       *to_value,
-                                   gpointer      user_data)
+static GtkPropagationPhase
+read_only_to_propagation_phase_cb (gpointer source_object,
+                                   gboolean read_only,
+                                   gpointer user_data)
 {
-  GtkPropagationPhase phase;
-
-  if (g_value_get_boolean (from_value))
-    phase = GTK_PHASE_NONE;
-  else
-    phase = GTK_PHASE_BUBBLE;
-
-  g_value_set_enum (to_value, phase);
-
-  return TRUE;
+  return read_only ? GTK_PHASE_NONE : GTK_PHASE_BUBBLE;
 }
 
 
@@ -805,6 +772,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_click_gesture_release_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_drag_source_begin_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_drag_source_prepare_cb);
+  gtk_widget_class_bind_template_callback (widget_class, read_only_to_propagation_phase_cb);
 
   gtk_widget_class_set_css_name (widget_class, "event");
   gtk_widget_class_set_accessible_role (widget_class, GTK_ACCESSIBLE_ROLE_TOGGLE_BUTTON);
