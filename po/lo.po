@@ -1,0 +1,1687 @@
+# Lao translation for gnome-calendar.
+# Copyright (C) 2026 gnome-calendar's COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-calendar package.
+# bone NI <bounkirdni@gmail.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-calendar gnome-50\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
+"POT-Creation-Date: 2026-03-14 15:24+0000\n"
+"PO-Revision-Date: 2026-03-14 15:24+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Lao <lo@li.org>\n"
+"Language: lo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: data/org.gnome.Calendar.desktop.in.in:2
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
+#: src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5
+#: src/gui/gcal-window.c:417 src/main.c:35
+msgid "Calendar"
+msgstr "ປະຕິທິນ"
+
+#: data/org.gnome.Calendar.desktop.in.in:3
+msgid "Access and manage your calendars"
+msgstr "ເຂົ້າເຖິງ ແລະ ຈັດການປະຕິທິນຂອງທ່ານ"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.Calendar.desktop.in.in:12
+msgid "Calendar;Event;Reminder;"
+msgstr "ປະຕິທິນ;ເຫດການ;ການເຕືອນ;"
+
+#: data/org.gnome.calendar.gschema.xml.in:6
+msgid "Window maximized"
+msgstr "ໜ້າຕ່າງຖືກຂະຫຍາຍໃຫຍ່ສຸດ"
+
+#: data/org.gnome.calendar.gschema.xml.in:7
+msgid "Window maximized state"
+msgstr "ສະຖານະຂະຫຍາຍໜ້າຕ່າງໃຫຍ່ສຸດ"
+
+#: data/org.gnome.calendar.gschema.xml.in:11
+msgid "Window size"
+msgstr "ຂະໜາດໜ້າຕ່າງ"
+
+#: data/org.gnome.calendar.gschema.xml.in:12
+msgid "Window size (width and height)."
+msgstr "ຂະໜາດໜ້າຕ່າງ (ຄວາມກວ້າງ ແລະ ຄວາມສູງ)."
+
+#: data/org.gnome.calendar.gschema.xml.in:16
+msgid "Type of the active view"
+msgstr "ປະເພດຂອງມຸມມອງທີ່ກຳລັງໃຊ້ງານ"
+
+#: data/org.gnome.calendar.gschema.xml.in:17
+msgid "Type of the active window view, default value is: monthly view"
+msgstr "ປະເພດຂອງມຸມມອງໜ້າຕ່າງທີ່ກຳລັງໃຊ້ງານ, ຄ່າເລີ່ມຕົ້ນແມ່ນ: ມຸມມອງລາຍເດືອນ"
+
+#: data/org.gnome.calendar.gschema.xml.in:21
+msgid "Weather Service Configuration"
+msgstr "ການຕັ້ງຄ່າການບໍລິການສະພາບອາກາດ"
+
+#: data/org.gnome.calendar.gschema.xml.in:22
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr "ກຳນົດວ່າຈະໃຫ້ສະແດງລາຍງານສະພາບອາກາດ, ໃຊ້ຕຳແໜ່ງອັດຕະໂນມັດ ແລະ ຊື່ຕຳແໜ່ງຫຼືບໍ່"
+
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Zoom level of the week grid"
+msgstr "ລະດັບການຊູມຂອງຕາຕະລາງລາຍອາທິດ"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid "The current zoom level of the week grid"
+msgstr "ລະດັບການຊູມປັດຈຸບັນຂອງຕາຕະລາງລາຍອາທິດ"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
+msgid "Manage your schedule"
+msgstr "ຈັດການຕາຕະລາງເວລາຂອງທ່ານ"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:17
+msgid ""
+"GNOME Calendar is an elegant tool to help you plan and stay on top of your "
+"schedule for upcoming days and weeks, whether your months are filled with "
+"meetings and appointments, public events, travel logistics, or other "
+"commitments in your life."
+msgstr ""
+"GNOME ປະຕິທິນ ແມ່ນເຄື່ອງມືທີ່ສວຍງາມເພື່ອຊ່ວຍໃຫ້ທ່ານວາງແຜນ ແລະ ຕິດຕາມຕາຕະລາງເວລາຂອງທ່ານໃນແຕ່ລະວັນ ແລະ ແຕ່ລະອາທິດ, "
+"ບໍ່ວ່າໃນແຕ່ລະເດືອນຂອງທ່ານຈະເຕັມไปด้วยການປະຊຸມ, ການນັດໝາຍ, ກິດຈະກຳສາທາລະນະ, ການເດີນທາງ ຫຼື ພັນທະອື່ນໆໃນຊີວິດ."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:22
+msgid ""
+"Easily create and manage unlimited calendars and events with GNOME "
+"Calendar's infinite scrolling month view, week timetable, and scheduling "
+"list view."
+msgstr ""
+"ສ້າງ ແລະ ຈັດການປະຕິທິນລວມເຖິງເຫດການຕ່າງໆໄດ້ບໍ່ຈຳກັດດ້ວຍມຸມມອງລາຍເດືອນແບບເລື່ອນໄດ້ບໍ່ສິ້ນສຸດ, "
+"ຕາຕະລາງລາຍອາທິດ ແລະ ມຸມມອງລາຍການເວລາຂອງ GNOME ປະຕິທິນ."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
+msgid ""
+"Integrating the latest GNOME technologies and design best practices, GNOME "
+"Calendar builds on top of the mature Evolution data server to manage large "
+"quantities of events and to provide integration with other applications. You "
+"can add calendars from various online calendaring services (like NextCloud, "
+"Google Calendar, and CalDAV / WebDAV servers), enabling you to synchronize "
+"your events across multiple devices and platforms. GNOME Calendar also "
+"supports local and offline calendaring, so you can use it anywhere and "
+"anytime while travelling (or after civilization's collapse.)"
+msgstr ""
+"ດ້ວຍການລວມເອົາເຕັກໂນໂລຊີຫຼ້າສຸດຂອງ GNOME ແລະ ການອອກແບບທີ່ດີຢ້ຽມ, GNOME ປະຕິທິນ ໄດ້ພັດທະນາຂຶ້ນເທິງລະບົບແມ່ຂ່າຍຂໍ້ມູນ Evolution "
+"ເພື່ອຈັດການເຫດການຈຳນວນຫຼາຍ ແລະ ເພື່ອເຮັດວຽກຮ່ວມກັບແອັບພລິເຄຊັນອື່ນໆ. ທ່ານສາມາດເພີ່ມປະຕິທິນຈາກບໍລິການອອນລາຍຕ່າງໆ "
+"(ເຊັ່ນ NextCloud, Google Calendar, ແລະ ເຊີເວີ CalDAV / WebDAV), ເຊິ່ງຊ່ວຍໃຫ້ທ່ານສາມາດຊິງຄ໌ເຫດການຂອງທ່ານຂ້າມອຸປະກອນ "
+"ແລະ ແພລັດຟອມຕ່າງໆໄດ້. GNOME ປະຕິທິນ ຍັງຮອງຮັບການໃຊ້ງານແບບທ້ອງຖິ່ນ ແລະ ແບບອອບລາຍ, ດັ່ງນັ້ນທ່ານຈຶ່ງສາມາດໃຊ້ມັນໄດ້ທຸກບ່ອນທຸກເວລາ."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
+msgid "Month view"
+msgstr "ມຸມມອງລາຍເດືອນ"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:67
+msgid "Week view"
+msgstr "ມຸມມອງລາຍອາທິດ"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:71
+msgid "Event editor"
+msgstr "ເຄື່ອງມືແກ້ໄຂເຫດການ"
+
+#. Translators: %1$s is the start date and %2$s is the end date.
+#. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
+#: src/core/gcal-event.c:1786 src/gui/gcal-event-popover.c:423
+#, c-format
+msgid "%1$s — %2$s"
+msgstr "%1$s — %2$s"
+
+#.
+#. * Translators: %1$s is the start date, %2$s is the start time,
+#. * %3$s is the end date, and %4$s is the end time.
+#.
+#: src/core/gcal-event.c:1794
+#, c-format
+msgid "%1$s %2$s — %3$s %4$s"
+msgstr "%1$s %2$s — %3$s %4$s"
+
+#. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
+#: src/core/gcal-event.c:1810
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s, %2$s – %3$s"
+
+#: src/gui/calendar-management/calendar-row.blp:20
+msgid "Read-Only Calendar"
+msgstr "ປະຕິທິນສຳລັບອ່ານເທົ່ານັ້ນ"
+
+#: src/gui/calendar-management/calendar-row.blp:29
+msgid "Display Calendar"
+msgstr "ສະແດງປະຕິທິນ"
+
+#: src/gui/calendar-management/calendar-row.blp:39
+msgid "Edit calendar"
+msgstr "ແກ້ໄຂປະຕິທິນ"
+
+#: src/gui/calendar-management/gcal-calendar-management-dialog.blp:5
+msgid "Calendar Settings"
+msgstr "ການຕັ້ງຄ່າປະຕິທິນ"
+
+#: src/gui/calendar-management/gcal-calendars-page.blp:5
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:88
+msgid "Calendars"
+msgstr "ປະຕິທິນ"
+
+#: src/gui/calendar-management/gcal-calendars-page.blp:37
+msgid "_Add Calendar"
+msgstr "ເພີ່ມປະຕິທິນ (_A)"
+
+#. Create the new toast
+#. TRANSLATORS: %s is a calendar name.
+#: src/gui/calendar-management/gcal-calendars-page.c:351
+#, c-format
+msgid "Calendar “%s” removed"
+msgstr "ລຶບປະຕິທິນ “%s” ແລ້ວ"
+
+#: src/gui/calendar-management/gcal-calendars-page.c:356
+#: src/gui/gcal-window.c:994
+msgid "_Undo"
+msgstr "ກັບຄືນ (_U)"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:5
+msgid "Edit Calendar"
+msgstr "ແກ້ໄຂປະຕິທິນ"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:19
+msgid "Account"
+msgstr "ບັນຊີ"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:27
+msgid "Open in Settings"
+msgstr "ເປີດໃນການຕັ້ງຄ່າ"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:43
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:197
+#: src/gui/event-editor/gcal-summary-section.blp:18
+#: src/gui/gcal-event-popover.blp:144
+#: src/gui/importer/gcal-import-file-row.c:180
+msgid "Location"
+msgstr "ສະຖານທີ່"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:54
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:20
+msgid "Calendar Name"
+msgstr "ຊື່ປະຕິທິນ"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:58
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:25
+msgid "Color"
+msgstr "ສີ"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:74
+msgid "_Display Calendar"
+msgstr "ສະແດງປະຕິທິນ (_D)"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:82
+msgid "_Export Calendar"
+msgstr "ສົ່ງອອກປະຕິທິນ (_E)"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.blp:89
+msgid "_Remove Calendar"
+msgstr "ລຶບປະຕິທິນ (_R)"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:180
+msgid "Calendar URL"
+msgstr "URL ຂອງປະຕິທິນ"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:198
+msgid "On This Computer"
+msgstr "ໃນຄອມພິວເຕີເຄື່ອງນີ້"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:344
+msgid "Export Calendar"
+msgstr "ສົ່ງອອກປະຕິທິນ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:5
+msgid "New Calendar"
+msgstr "ປະຕິທິນໃໝ່"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:17
+msgid "Create a Local Calendar"
+msgstr "ສ້າງປະຕິທິນໃນເຄື່ອງ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:42
+msgid "Connect to an Online Calendar"
+msgstr "ເຊື່ອມຕໍ່ຫາປະຕິທິນອອນລາຍ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:49
+msgid ""
+"HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
+"be updated by the provider will be added as read-only."
+msgstr ""
+"ຮອງຮັບ URL ແບບ HTTPS, CalDAV, ຫຼື Webcal. ປະຕິທິນອອນລາຍທີ່ສາມາດອັບເດດໄດ້ໂດຍຜູ້ໃຫ້ບໍລິການເທົ່ານັ້ນ "
+"ຈະຖືກເພີ່ມເປັນແບບອ່ານເທົ່ານັ້ນ."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:108
+msgid ""
+"If the calendar belongs to one of your online accounts, you can add it "
+"through the <a href=\"GOA\">online account settings</a>."
+msgstr ""
+"ຖ້າປະຕິທິນເປັນຂອງບັນຊີອອນລາຍຂອງທ່ານ, ທ່ານສາມາດເພີ່ມມັນຜ່ານ <a href=\"GOA\">ການຕັ້ງຄ່າບັນຊີອອນລາຍ</a>."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:126
+#: src/gui/calendar-management/gcal-new-calendar-page.c:124
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "ເພີ່ມປະຕິທິນ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:141
+msgid "Credentials"
+msgstr "ຂໍ້ມູນການຢືນຢັນຕົວຕົນ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:147
+msgid "User"
+msgstr "ຜູ້ໃຊ້"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:151
+msgid "Password"
+msgstr "ລະຫັດຜ່ານ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:161
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:18
+#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1213
+msgid "_Cancel"
+msgstr "ຍົກເລີກ (_C)"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:162
+msgid "_Connect"
+msgstr "ເຊື່ອມຕໍ່ (_C)"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:117
+#, c-format
+msgid "Add Calendar"
+msgid_plural "Add %1$u Calendars"
+msgstr[0] "ເພີ່ມ %1$u ປະຕິທິນ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:332
+msgid "The URL you have entered appears to be invalid."
+msgstr "URL ທີ່ທ່ານປ້ອນເບິ່ງຄືວ່າບໍ່ຖືກຕ້ອງ."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:385
+msgid "A valid user and password are required to connect to this calendar."
+msgstr "ຕ້ອງມີຊື່ຜູ້ໃຊ້ ແລະ ລະຫັດຜ່ານທີ່ຖືກຕ້ອງເພື່ອເຊື່ອມຕໍ່ຫາປະຕິທິນນີ້."
+
+#: src/gui/common/gcal-calendar-row.c:72
+msgid "This calendar is hidden"
+msgstr "ປະຕິທິນນີ້ຖືກເຊື່ອງໄວ້"
+
+#: src/gui/common/gcal-date-chooser.blp:15
+#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:411
+msgid "Month"
+msgstr "ເດືອນ"
+
+#: src/gui/common/gcal-date-chooser.blp:16
+#: src/gui/common/gcal-date-chooser.blp:56 src/gui/gcal-window.c:257
+msgid "Previous Month"
+msgstr "ເດືອນກ່ອນໜ້າ"
+
+#: src/gui/common/gcal-date-chooser.blp:17
+#: src/gui/common/gcal-date-chooser.blp:57 src/gui/gcal-window.c:288
+msgid "Next Month"
+msgstr "ເດືອນຖັດໄປ"
+
+#: src/gui/common/gcal-date-chooser.blp:34
+msgid "Year"
+msgstr "ປີ"
+
+#: src/gui/common/gcal-date-chooser.blp:35
+msgid "Previous Year"
+msgstr "ປີກ່ອນໜ້າ"
+
+#: src/gui/common/gcal-date-chooser.blp:36
+msgid "Next Year"
+msgstr "ປີຖັດໄປ"
+
+#. Translators: Calendar grid abbreviation for Sunday.
+#: src/gui/common/gcal-date-chooser.c:336
+msgctxt "grid sunday"
+msgid "S"
+msgstr "ອ"
+
+#. Translators: Calendar grid abbreviation for Monday
+#: src/gui/common/gcal-date-chooser.c:341
+msgctxt "grid monday"
+msgid "M"
+msgstr "ຈ"
+
+#. Translators: Calendar grid abbreviation for Tuesday
+#: src/gui/common/gcal-date-chooser.c:346
+msgctxt "grid tuesday"
+msgid "T"
+msgstr "ອ"
+
+#. Translators: Calendar grid abbreviation for Wednesday
+#: src/gui/common/gcal-date-chooser.c:351
+msgctxt "grid wednesday"
+msgid "W"
+msgstr "ພ"
+
+#. Translators: Calendar grid abbreviation for Thursday
+#: src/gui/common/gcal-date-chooser.c:356
+msgctxt "grid thursday"
+msgid "T"
+msgstr "ພ"
+
+#. Translators: Calendar grid abbreviation for Friday
+#: src/gui/common/gcal-date-chooser.c:361
+msgctxt "grid friday"
+msgid "F"
+msgstr "ສ"
+
+#. Translators: Calendar grid abbreviation for Saturday
+#: src/gui/common/gcal-date-chooser.c:366
+msgctxt "grid saturday"
+msgid "S"
+msgstr "ສ"
+
+#: src/gui/event-editor/gcal-alarm-row.blp:8
+msgid "Remove Alarm"
+msgstr "ລຶບການເຕືອນ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:84
+#, c-format
+msgid "%1$u day, %2$u hour, and %3$u minute before"
+msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u ມື້, %2$u ຊົ່ວໂມງ, ແລະ %3$u ນາທີ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:88
+#, c-format
+msgid "%1$u day, %2$u hours, and %3$u minute before"
+msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u ມື້, %2$u ຊົ່ວໂມງ, ແລະ %3$u ນາທີ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:94
+#, c-format
+msgid "%1$u days, %2$u hour, and %3$u minute before"
+msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u ມື້, %2$u ຊົ່ວໂມງ, ແລະ %3$u ນາທີ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:98
+#, c-format
+msgid "%1$u days, %2$u hours, and %3$u minute before"
+msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u ມື້, %2$u ຊົ່ວໂມງ, ແລະ %3$u ນາທີ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:113
+#, c-format
+msgid "%1$u day and %2$u hour before"
+msgid_plural "%1$u day and %2$u hours before"
+msgstr[0] "%1$u ມື້ ແລະ %2$u ຊົ່ວໂມງ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:117
+#, c-format
+msgid "%1$u days and %2$u hour before"
+msgid_plural "%1$u days and %2$u hours before"
+msgstr[0] "%1$u ມື້ ແລະ %2$u ຊົ່ວໂມງ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:133
+#, c-format
+msgid "%1$u day and %2$u minute before"
+msgid_plural "%1$u day and %2$u minutes before"
+msgstr[0] "%1$u ມື້ ແລະ %2$u ນາທີ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:137
+#, c-format
+msgid "%1$u days and %2$u minute before"
+msgid_plural "%1$u days and %2$u minutes before"
+msgstr[0] "%1$u ມື້ ແລະ %2$u ນາທີ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:147
+#, c-format
+msgid "%1$u day before"
+msgid_plural "%1$u days before"
+msgstr[0] "%1$u ມື້ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:165
+#, c-format
+msgid "%1$u hour and %2$u minute before"
+msgid_plural "%1$u hour and %2$u minutes before"
+msgstr[0] "%1$u ຊົ່ວໂມງ ແລະ %2$u ນາທີ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:169
+#, c-format
+msgid "%1$u hours and %2$u minute before"
+msgid_plural "%1$u hours and %2$u minutes before"
+msgstr[0] "%1$u ຊົ່ວໂມງ ແລະ %2$u ນາທີ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:179
+#, c-format
+msgid "%1$u hour before"
+msgid_plural "%1$u hours before"
+msgstr[0] "%1$u ຊົ່ວໂມງ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:191
+#, c-format
+msgid "%1$u minute before"
+msgid_plural "%1$u minutes before"
+msgstr[0] "%1$u ນາທີ ກ່ອນໜ້າ"
+
+#: src/gui/event-editor/gcal-alarm-row.c:198
+msgid "Event start time"
+msgstr "ເວລາເລີ່ມຕົ້ນເຫດການ"
+
+#: src/gui/event-editor/gcal-attendee-row.blp:29
+#: src/gui/event-editor/gcal-organizer-row.blp:25
+msgid "Copy email"
+msgstr "ຄັດລອກອີເມວ"
+
+#: src/gui/event-editor/gcal-attendee-row.c:108
+msgid "Delegated to: "
+msgstr "ມອບໝາຍໃຫ້: "
+
+#: src/gui/event-editor/gcal-attendee-row.c:124
+msgid "optional"
+msgstr "ທາງເລືອກ"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:5
+#: src/gui/event-editor/gcal-attendees-section.blp:22
+msgid "Participants"
+msgstr "ຜູ້ເຂົ້າຮ່ວມ"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:16
+msgid "Accepted"
+msgstr "ຕອບຮັບແລ້ວ"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:29
+msgid "Tentative"
+msgstr "ຍັງບໍ່ແນ່ນອນ"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:42
+msgid "Declined"
+msgstr "ປະຕິເສດແລ້ວ"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:55
+msgid "Delegated"
+msgstr "ມອບໝາຍແລ້ວ"
+
+#: src/gui/event-editor/gcal-attendee-details-page.blp:68
+msgid "Not responded"
+msgstr "ຍັງບໍ່ຕອບຮັບ"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:112
+#, c-format
+msgid "%1$u accepted"
+msgid_plural "%1$u accepted"
+msgstr[0] "ຕອບຮັບແລ້ວ %1$u ຄົນ"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:113
+#, c-format
+msgid "%1$u maybe"
+msgid_plural "%1$u maybe"
+msgstr[0] "ອາດຈະມາ %1$u ຄົນ"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:114
+#, c-format
+msgid "%1$u declined"
+msgid_plural "%1$u declined"
+msgstr[0] "ປະຕິເສດແລ້ວ %1$u ຄົນ"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:115
+#, c-format
+msgid "%1$u delegated"
+msgid_plural "%1$u delegated"
+msgstr[0] "ມອບໝາຍແລ້ວ %1$u ຄົນ"
+
+#: src/gui/event-editor/gcal-attendee-summary-row.c:116
+#, c-format
+msgid "%1$u not responded"
+msgid_plural "%1$u not responded"
+msgstr[0] "ຍັງບໍ່ຕອບຮັບ %1$u ຄົນ"
+
+#: src/gui/event-editor/gcal-attendees-section.blp:28
+msgid "Resources"
+msgstr "ຊັບພະຍາກອນ"
+
+#: src/gui/event-editor/gcal-date-chooser-row.blp:12
+msgid "Edit Date"
+msgstr "ແກ້ໄຂວັນທີ"
+
+#: src/gui/event-editor/gcal-date-chooser-row.blp:32
+msgid "Edit date"
+msgstr "ແກ້ໄຂວັນທີ"
+
+#: src/gui/event-editor/gcal-date-time-chooser.blp:6
+msgid "Date"
+msgstr "ວັນທີ"
+
+#: src/gui/event-editor/gcal-date-time-chooser.blp:11
+msgid "Time"
+msgstr "ເວລາ"
+
+#: src/gui/event-editor/gcal-date-time-chooser.blp:20
+#: src/gui/event-editor/gcal-time-chooser-row.blp:12
+msgid "Edit Time"
+msgstr "ແກ້ໄຂເວລາ"
+
+#: src/gui/event-editor/gcal-date-time-chooser.blp:52
+msgid ":"
+msgstr ":"
+
+#: src/gui/event-editor/gcal-date-time-chooser.blp:70
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.c:270
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "AM"
+msgstr "ເຊົ້າ"
+
+#: src/gui/event-editor/gcal-date-time-chooser.blp:75
+#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/views/gcal-week-hour-bar.c:57
+msgid "PM"
+msgstr "ແລງ"
+
+#: src/gui/event-editor/gcal-date-time-chooser.blp:85
+#: src/gui/event-editor/gcal-date-time-chooser.blp:94
+msgid "Change Timezone"
+msgstr "ປ່ຽນເຂດເວລາ"
+
+#: src/gui/event-editor/gcal-date-time-chooser.blp:103
+#: src/gui/event-editor/gcal-time-chooser-row.blp:29
+msgid "Edit time"
+msgstr "ແກ້ໄຂເວລາ"
+
+#. Translators: "%1$s" is the timezone identifier (e.g. UTC, America/Sao_Paulo)
+#. * and "%2$s" is the timezone offset (e.g. UTC-3).
+#.
+#: src/gui/event-editor/gcal-date-time-chooser.c:141
+#, c-format
+msgid "%1$s (%2$s)"
+msgstr "%1$s (%2$s)"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:25
+#: src/gui/event-editor/gcal-event-editor-dialog.c:129
+msgid "_Done"
+msgstr "ສຳເລັດ (_D)"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:38
+msgid "This event is in a read-only calendar. It cannot be edited or deleted."
+msgstr "ເຫດການນີ້ຢູ່ໃນປະຕິທິນແບບອ່ານເທົ່ານັ້ນ. ບໍ່ສາມາດແກ້ໄຂ ຫຼື ລຶບໄດ້."
+
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:70
+msgid "Reminders"
+msgstr "ການເຕືອນ"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:78
+msgid "Notes"
+msgstr "ບັນທຶກ"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:89
+msgid "_Delete Event"
+msgstr "ລຶບເຫດການ (_D)"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:129
+msgid "_Save"
+msgstr "ບັນທຶກ (_S)"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:705
+msgid "New Event"
+msgstr "ເຫດການໃໝ່"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:707
+msgid "Event Details"
+msgstr "ລາຍລະອຽດເຫດການ"
+
+#: src/gui/event-editor/gcal-event-editor-dialog.c:709
+msgid "Edit Event"
+msgstr "ແກ້ໄຂເຫດການ"
+
+#: src/gui/event-editor/gcal-organizer-row.blp:5
+msgid "Organizer"
+msgstr "ຜູ້ຈັດງານ"
+
+#: src/gui/event-editor/gcal-reminders-section.blp:16
+msgid "Add Reminder"
+msgstr "ເພີ່ມການເຕືອນ"
+
+#: src/gui/event-editor/gcal-reminders-section.blp:38
+msgid "Event start"
+msgstr "ເລີ່ມຕົ້ນເຫດການ"
+
+#: src/gui/event-editor/gcal-reminders-section.blp:43
+msgid "5 Minutes"
+msgstr "5 ນາທີ"
+
+#: src/gui/event-editor/gcal-reminders-section.blp:48
+msgid "10 Minutes"
+msgstr "10 ນາທີ"
+
+#: src/gui/event-editor/gcal-reminders-section.blp:53
+msgid "15 Minutes"
+msgstr "15 ນາທີ"
+
+#: src/gui/event-editor/gcal-reminders-section.blp:58
+msgid "30 Minutes"
+msgstr "30 ນາທີ"
+
+#: src/gui/event-editor/gcal-reminders-section.blp:63
+msgid "1 Hour"
+msgstr "1 ຊົ່ວໂມງ"
+
+#: src/gui/event-editor/gcal-reminders-section.blp:68
+msgid "1 Day"
+msgstr "1 ມື້"
+
+#: src/gui/event-editor/gcal-reminders-section.blp:73
+msgid "2 Days"
+msgstr "2 ມື້"
+
+#: src/gui/event-editor/gcal-reminders-section.blp:78
+msgid "3 Days"
+msgstr "3 ມື້"
+
+#: src/gui/event-editor/gcal-reminders-section.blp:83
+msgid "1 Week"
+msgstr "1 ອາທິດ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:13
+msgid "_All Day"
+msgstr "ໝົດມື້ (_A)"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:19
+msgid "_Time Slot"
+msgstr "ຊ່ວງເວລາ (_T)"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:27
+#: src/gui/event-editor/gcal-schedule-section.blp:40
+msgid "Start Date"
+msgstr "ວັນທີເລີ່ມຕົ້ນ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:34
+#: src/gui/event-editor/gcal-schedule-section.blp:46
+msgid "End Date"
+msgstr "ວັນທີສິ້ນສຸດ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:41
+msgid "Start Time"
+msgstr "ເວລາເລີ່ມຕົ້ນ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:47
+msgid "End Time"
+msgstr "ເວລາສິ້ນສຸດ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:55
+msgid "Repeat"
+msgstr "ເຮັດຊ້ຳ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:60
+msgid "No Repeat"
+msgstr "ບໍ່ເຮັດຊ້ຳ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:61
+msgid "Daily"
+msgstr "ທຸກມື້"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:62
+msgid "Monday – Friday"
+msgstr "ວັນຈັນ – ວັນສຸກ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:63
+msgid "Weekly"
+msgstr "ທຸກອາທິດ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:64
+msgid "Monthly"
+msgstr "ທຸກເດືອນ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:65
+msgid "Yearly"
+msgstr "ທຸກປີ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:73
+msgid "End Repeat"
+msgstr "ສິ້ນສຸດການເຮັດຊ້ຳ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:78
+msgid "Forever"
+msgstr "ຕະຫຼອດໄປ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:79
+#: src/gui/event-editor/gcal-schedule-section.blp:89
+msgid "Number of Occurrences"
+msgstr "ຈຳນວນຄັ້ງທີ່ເກີດຂຶ້ນ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:80
+msgid "Until Date"
+msgstr "ຈົນເຖິງວັນທີ"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:103
+msgid "End Repeat Date"
+msgstr "ວັນທີສິ້ນສຸດການເຮັດຊ້ຳ"
+
+#: src/gui/event-editor/gcal-summary-section.blp:13
+#: src/gui/gcal-quick-add-popover.blp:44
+#: src/gui/importer/gcal-import-file-row.c:179
+msgid "Title"
+msgstr "ຫົວຂໍ້"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.blp:5
+msgid "Select Timezone"
+msgstr "ເລືອກເຂດເວລາ"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.blp:16
+msgid "Search Locations"
+msgstr "ຄົ້ນຫາສະຖານທີ່"
+
+#: src/gui/event-editor/gcal-time-zone-dialog.blp:29
+msgid "Search for a Timezone"
+msgstr "ຄົ້ນຫາເຂດເວລາ"
+
+#. Translators: "%1$s" is the city / region name, and
+#. * "%2$s" is the country name (already localized).
+#.
+#: src/gui/event-editor/gcal-time-zone-dialog.c:84
+#, c-format
+msgid "%1$s, %2$s"
+msgstr "%1$s, %2$s"
+
+#: src/gui/gcal-application.c:58
+msgid "Quit GNOME Calendar"
+msgstr "ອອກຈາກ GNOME ປະຕິທິນ"
+
+#: src/gui/gcal-application.c:63
+msgid "Display version number"
+msgstr "ສະແດງເລກເວີຊັນ"
+
+#: src/gui/gcal-application.c:68
+msgid "Enable debug messages"
+msgstr "ເປີດໃຊ້ຂໍ້ຄວາມດີບັກ"
+
+#: src/gui/gcal-application.c:73
+msgid "Open calendar on the passed date"
+msgstr "ເປີດປະຕິທິນໃນວັນທີທີ່ລະບຸ"
+
+#: src/gui/gcal-application.c:78
+msgid "Open calendar showing the passed event"
+msgstr "ເປີດປະຕິທິນໂດຍສະແດງເຫດການທີ່ລະບຸ"
+
+#: src/gui/gcal-application.c:144
+#, c-format
+msgid "Copyright © 2012–%d The Calendar authors"
+msgstr "ລິຂະສິດ © 2012–%d ຜູ້ພັດທະນາປະຕິທິນ"
+
+#: src/gui/gcal-application.c:241
+msgid "translator-credits"
+msgstr "ຜູ້ແປພາສາ"
+
+#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:389
+msgid "Weather"
+msgstr "ສະພາບອາກາດ"
+
+#.
+#. * Translators: %B is the month name and %Y is the year.
+#.
+#: src/gui/gcal-calendar-navigation-button.c:106
+msgid "%B %Y"
+msgstr "%B %Y"
+
+#: src/gui/gcal-event-popover.blp:54
+msgid ""
+"<b>This event is part of a read-only calendar</b>\n"
+"    You cannot delete or change this event."
+msgstr ""
+"<b>ເຫດການນີ້ເປັນສ່ວນໜຶ່ງຂອງປະຕິທິນແບບອ່ານເທົ່ານັ້ນ</b>\n"
+"    ທ່ານບໍ່ສາມາດລຶບ ຫຼື ປ່ຽນແປງເຫດການນີ້ໄດ້."
+
+#: src/gui/gcal-event-popover.blp:71 src/gui/gcal-event-popover.c:593
+msgid "Export Event"
+msgstr "ສົ່ງອອກເຫດການ"
+
+#: src/gui/gcal-event-popover.blp:98
+msgid "No event notes"
+msgstr "ບໍ່ມີບັນທຶກເຫດການ"
+
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:211
+msgid "January"
+msgstr "ມັງກອນ"
+
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:212
+msgid "February"
+msgstr "ກຸມພາ"
+
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:213
+msgid "March"
+msgstr "ມີນາ"
+
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:214
+msgid "April"
+msgstr "ເມສາ"
+
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:215
+msgid "May"
+msgstr "ພຶດສະພາ"
+
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:216
+msgid "June"
+msgstr "ມິຖຸນາ"
+
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:217
+msgid "July"
+msgstr "ກໍລະກົດ"
+
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:218
+msgid "August"
+msgstr "ສິງຫາ"
+
+#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:219
+msgid "September"
+msgstr "ກັນຍາ"
+
+#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:220
+msgid "October"
+msgstr "ຕຸລາ"
+
+#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:221
+msgid "November"
+msgstr "ພະຈິກ"
+
+#: src/gui/gcal-event-popover.c:137 src/gui/gcal-quick-add-popover.c:222
+msgid "December"
+msgstr "ທັນວາ"
+
+#: src/gui/gcal-event-popover.c:162
+#, c-format
+msgid "Today %s"
+msgstr "ມື້ນີ້ %s"
+
+#: src/gui/gcal-event-popover.c:166
+#, c-format
+msgid "Tomorrow %s"
+msgstr "ມື້ອື່ນ %s"
+
+#: src/gui/gcal-event-popover.c:170
+#, c-format
+msgid "Yesterday %s"
+msgstr "ມື້ວານນີ້ %s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, and %3$ is the hour. This format string results in dates
+#. * like "November 21, 22:00".
+#.
+#: src/gui/gcal-event-popover.c:179
+#, c-format
+msgid "%1$s %2$d, %3$s"
+msgstr "%1$s %2$d, %3$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$d is the year, and %4$s is the hour. This format string
+#. * results in dates like "November 21, 2020, 22:00".
+#.
+#: src/gui/gcal-event-popover.c:191
+#, c-format
+msgid "%1$s %2$d, %3$d, %4$s"
+msgstr "%1$s %2$d, %3$d, %4$s"
+
+#: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
+#: src/gui/views/gcal-agenda-view.c:198
+msgid "Today"
+msgstr "ມື້ນີ້"
+
+#: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
+#: src/gui/gcal-window.c:290 src/gui/views/gcal-agenda-view.c:200
+msgid "Tomorrow"
+msgstr "ມື້ອື່ນ"
+
+#: src/gui/gcal-event-popover.c:211 src/gui/gcal-event-popover.c:325
+#: src/gui/gcal-window.c:259 src/gui/views/gcal-agenda-view.c:202
+msgid "Yesterday"
+msgstr "ມື້ວານນີ້"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), and %2$d is
+#. * the day of month. This format string results in dates like
+#. * "November 21".
+#.
+#: src/gui/gcal-event-popover.c:220 src/gui/gcal-event-popover.c:334
+#, c-format
+msgid "%1$s %2$d"
+msgstr "%1$s %2$d"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, and %3$d is the year. This format string results in dates
+#. * like "November 21, 2020".
+#.
+#: src/gui/gcal-event-popover.c:231 src/gui/gcal-event-popover.c:345
+#, c-format
+msgid "%1$s %2$d, %3$d"
+msgstr "%1$s %2$d, %3$d"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Today, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:265
+#, c-format
+msgid "Today, %1$s — %2$s"
+msgstr "ມື້ນີ້, %1$s — %2$s"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Tomorrow, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:273
+#, c-format
+msgid "Tomorrow, %1$s – %2$s"
+msgstr "ມື້ອື່ນ, %1$s – %2$s"
+
+#.
+#. * Translators: %1$s is the start hour, and %2$s is the end hour, for
+#. * example: "Tomorrow, 19:00 — 22:00"
+#.
+#: src/gui/gcal-event-popover.c:281
+#, c-format
+msgid "Yesterday, %1$s – %2$s"
+msgstr "ມື້ວານນີ້, %1$s – %2$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$s is the start hour, and %4$s is the end hour. This
+#. * format string results in dates like "November 21, 19:00 — 22:00".
+#.
+#: src/gui/gcal-event-popover.c:290
+#, c-format
+msgid "%1$s %2$d, %3$s – %4$s"
+msgstr "%1$s %2$d, %3$s – %4$s"
+
+#.
+#. * Translators: %1$s is a month name (e.g. November), %2$d is the day
+#. * of month, %3$d is the year, %4$s is the start hour, and %5$s is the
+#. * end hour. This format string results in dates like:
+#. *
+#. * "November 21, 2021, 19:00 — 22:00".
+#.
+#: src/gui/gcal-event-popover.c:305
+#, c-format
+msgid "%1$s %2$d, %3$d, %4$s – %5$s"
+msgstr "%1$s %2$d, %3$d, %4$s – %5$s"
+
+#: src/gui/gcal-event-popover.c:370
+msgid "View Additional Details"
+msgstr "ເບິ່ງລາຍລະອຽດເພີ່ມເຕີມ"
+
+#: src/gui/gcal-event-popover.c:375
+msgid "Edit Additional Details"
+msgstr "ແກ້ໄຂລາຍລະອຽດເພີ່ມເຕີມ"
+
+#. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
+#: src/gui/gcal-event-widget.c:388
+#, c-format
+msgid ""
+"\n"
+"\n"
+"On %s"
+msgstr ""
+"\n"
+"\n"
+"ໃນ %s"
+
+#. Translators: %s is a URL informed as the location of the event
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:401 src/gui/gcal-event-widget.c:407
+#, c-format
+msgid ""
+"\n"
+"\n"
+"At %s"
+msgstr ""
+"\n"
+"\n"
+"ຢູ່ %s"
+
+#.
+#. * Translators: %a is the abbreviated day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#.
+#: src/gui/gcal-event-widget.c:466
+msgid "%a %B %d"
+msgstr "%a %B %d"
+
+#: src/gui/gcal-meeting-row.blp:35
+msgid "_Join"
+msgstr "ເຂົ້າຮ່ວມ (_J)"
+
+#: src/gui/gcal-meeting-row.c:72
+msgid "Unknown Service"
+msgstr "ບໍ່ຮູ້ບໍລິການ"
+
+#: src/gui/gcal-quick-add-popover.blp:86
+msgid "_Edit Details"
+msgstr "ແກ້ໄຂລາຍລະອຽດ (_E)"
+
+#: src/gui/gcal-quick-add-popover.blp:98
+msgid "_Save Event"
+msgstr "ບັນທຶກເຫດການ (_S)"
+
+#: src/gui/gcal-quick-add-popover.c:189
+msgid "from next Monday"
+msgstr "ຈາກວັນຈັນໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:190
+msgid "from next Tuesday"
+msgstr "ຈາກວັນອັງຄານໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:191
+msgid "from next Wednesday"
+msgstr "ຈາກວັນພຸດໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:192
+msgid "from next Thursday"
+msgstr "ຈາກວັນພະຫັດໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:193
+msgid "from next Friday"
+msgstr "ຈາກວັນສຸກໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:194
+msgid "from next Saturday"
+msgstr "ຈາກວັນເສົາໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:195
+msgid "from next Sunday"
+msgstr "ຈາກວັນອາທິດໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:200
+msgid "to next Monday"
+msgstr "ຫາວັນຈັນໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:201
+msgid "to next Tuesday"
+msgstr "ຫາວັນອັງຄານໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:202
+msgid "to next Wednesday"
+msgstr "ຫາວັນພຸດໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:203
+msgid "to next Thursday"
+msgstr "ຫາວັນພະຫັດໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:204
+msgid "to next Friday"
+msgstr "ຫາວັນສຸກໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:205
+msgid "to next Saturday"
+msgstr "ຫາວັນເສົາໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:206
+msgid "to next Sunday"
+msgstr "ຫາວັນອາທິດໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:230
+#, c-format
+msgid "from Today"
+msgstr "ຈາກມື້ນີ້"
+
+#: src/gui/gcal-quick-add-popover.c:234
+#, c-format
+msgid "from Tomorrow"
+msgstr "ຈາກມື້ອື່ນ"
+
+#: src/gui/gcal-quick-add-popover.c:238
+#, c-format
+msgid "from Yesterday"
+msgstr "ຈາກມື້ວານນີ້"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gui/gcal-quick-add-popover.c:256
+#, c-format
+msgid "from %1$s %2$s"
+msgstr "ຈາກ %1$s %2$s"
+
+#: src/gui/gcal-quick-add-popover.c:265
+#, c-format
+msgid "to Today"
+msgstr "ຫາມື້ນີ້"
+
+#: src/gui/gcal-quick-add-popover.c:269
+#, c-format
+msgid "to Tomorrow"
+msgstr "ຫາມື້ອື່ນ"
+
+#: src/gui/gcal-quick-add-popover.c:273
+#, c-format
+msgid "to Yesterday"
+msgstr "ຫາມື້ວານນີ້"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gui/gcal-quick-add-popover.c:291
+#, c-format
+msgid "to %1$s %2$s"
+msgstr "ຫາ %1$s %2$s"
+
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
+#: src/gui/gcal-quick-add-popover.c:297
+#, c-format
+msgid "New Event %1$s %2$s"
+msgstr "ເຫດການໃໝ່ %1$s %2$s"
+
+#: src/gui/gcal-quick-add-popover.c:314
+#, c-format
+msgid "New Event Today"
+msgstr "ເຫດການໃໝ່ມື້ນີ້"
+
+#: src/gui/gcal-quick-add-popover.c:318
+#, c-format
+msgid "New Event Tomorrow"
+msgstr "ເຫດການໃໝ່ມື້ອື່ນ"
+
+#: src/gui/gcal-quick-add-popover.c:322
+#, c-format
+msgid "New Event Yesterday"
+msgstr "ເຫດການໃໝ່ມື້ວານນີ້"
+
+#: src/gui/gcal-quick-add-popover.c:328
+msgid "New Event next Monday"
+msgstr "ເຫດການໃໝ່ວັນຈັນໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:329
+msgid "New Event next Tuesday"
+msgstr "ເຫດການໃໝ່ວັນອັງຄານໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:330
+msgid "New Event next Wednesday"
+msgstr "ເຫດການໃໝ່ວັນພຸດໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:331
+msgid "New Event next Thursday"
+msgstr "ເຫດການໃໝ່ວັນພະຫັດໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:332
+msgid "New Event next Friday"
+msgstr "ເຫດການໃໝ່ວັນສຸກໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:333
+msgid "New Event next Saturday"
+msgstr "ເຫດການໃໝ່ວັນເສົາໜ້າ"
+
+#: src/gui/gcal-quick-add-popover.c:334
+msgid "New Event next Sunday"
+msgstr "ເຫດການໃໝ່ວັນອາທິດໜ້າ"
+
+#. Translators: %d is the numeric day of month
+#: src/gui/gcal-quick-add-popover.c:346
+#, c-format
+msgid "New Event on January %d"
+msgstr "ເຫດການໃໝ່ໃນວັນທີ %d ມັງກອນ"
+
+#: src/gui/gcal-quick-add-popover.c:347
+#, c-format
+msgid "New Event on February %d"
+msgstr "ເຫດການໃໝ່ໃນວັນທີ %d ກຸມພາ"
+
+#: src/gui/gcal-quick-add-popover.c:348
+#, c-format
+msgid "New Event on March %d"
+msgstr "ເຫດການໃໝ່ໃນວັນທີ %d ມີນາ"
+
+#: src/gui/gcal-quick-add-popover.c:349
+#, c-format
+msgid "New Event on April %d"
+msgstr "ເຫດການໃໝ່ໃນວັນທີ %d ເມສາ"
+
+#: src/gui/gcal-quick-add-popover.c:350
+#, c-format
+msgid "New Event on May %d"
+msgstr "ເຫດການໃໝ່ໃນວັນທີ %d ພຶດສະພາ"
+
+#: src/gui/gcal-quick-add-popover.c:351
+#, c-format
+msgid "New Event on June %d"
+msgstr "ເຫດການໃໝ່ໃນວັນທີ %d ມິຖຸນາ"
+
+#: src/gui/gcal-quick-add-popover.c:352
+#, c-format
+msgid "New Event on July %d"
+msgstr "ເຫດການໃໝ່ໃນວັນທີ %d ກໍລະກົດ"
+
+#: src/gui/gcal-quick-add-popover.c:353
+#, c-format
+msgid "New Event on August %d"
+msgstr "ເຫດການໃໝ່ໃນວັນທີ %d ສິງຫາ"
+
+#: src/gui/gcal-quick-add-popover.c:354
+#, c-format
+msgid "New Event on September %d"
+msgstr "ເຫດການໃໝ່ໃນວັນທີ %d ກັນຍາ"
+
+#: src/gui/gcal-quick-add-popover.c:355
+#, c-format
+msgid "New Event on October %d"
+msgstr "ເຫດການໃໝ່ໃນວັນທີ %d ຕຸລາ"
+
+#: src/gui/gcal-quick-add-popover.c:356
+#, c-format
+msgid "New Event on November %d"
+msgstr "ເຫດການໃໝ່ໃນວັນທີ %d ພະຈິກ"
+
+#: src/gui/gcal-quick-add-popover.c:357
+#, c-format
+msgid "New Event on December %d"
+msgstr "ເຫດການໃໝ່ໃນວັນທີ %d ທັນວາ"
+
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour.
+#: src/gui/gcal-quick-add-popover.c:426
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s, %2$s – %3$s"
+
+#: src/gui/gcal-search-button.blp:26
+msgid "Search Events"
+msgstr "ຄົ້ນຫາເຫດການ"
+
+#: src/gui/gcal-search-button.blp:44
+msgid "Search events"
+msgstr "ຄົ້ນຫາເຫດການ"
+
+#: src/gui/gcal-search-button.c:179
+msgid "No results found"
+msgstr "ບໍ່ພົບຜົນການຄົ້ນຫາ"
+
+#: src/gui/gcal-search-button.c:179
+#, c-format
+msgid "One result found"
+msgid_plural "%u results found"
+msgstr[0] "ພົບຜົນການຄົ້ນຫາ %u ລາຍການ"
+
+#: src/gui/gcal-sync-indicator.blp:19
+msgctxt "tooltip"
+msgid "Synchronizing Remote Calendars"
+msgstr "ກຳລັງຊິງຄ໌ປະຕິທິນທາງໄກ"
+
+#: src/gui/gcal-weather-settings.blp:17
+msgid "Show Weather"
+msgstr "ສະແດງສະພາບອາກາດ"
+
+#: src/gui/gcal-weather-settings.blp:31
+msgid "Automatic Location"
+msgstr "ຕຳແໜ່ງອັດຕະໂນມັດ"
+
+#: src/gui/gcal-weather-settings.blp:40
+msgid "Search locations"
+msgstr "ຄົ້ນຫາສະຖານທີ່"
+
+#: src/gui/gcal-window.blp:126
+msgid "Drop Event Files to Import"
+msgstr "ວາງໄຟລ໌ເຫດການເພື່ອເລີ່ມການນຳເຂົ້າ"
+
+#: src/gui/gcal-window.blp:178
+msgid "Toggle Sidebar"
+msgstr "ເປີດ/ປິດ ແຖບຂ້າງ"
+
+#: src/gui/gcal-window.blp:203
+msgid "Main Menu"
+msgstr "ເມນູຫຼັກ"
+
+#: src/gui/gcal-window.blp:209
+msgctxt "tooltip"
+msgid "Search"
+msgstr "ຄົ້ນຫາ"
+
+#: src/gui/gcal-window.blp:224
+msgid "_Month"
+msgstr "ເດືອນ (_M)"
+
+#: src/gui/gcal-window.blp:238
+msgid "_Week"
+msgstr "ອາທິດ (_W)"
+
+#: src/gui/gcal-window.blp:251
+msgid "_Agenda"
+msgstr "ກຳນົດການ (_A)"
+
+#: src/gui/gcal-window.blp:286
+msgid "_Today"
+msgstr "ມື້ນີ້ (_T)"
+
+#: src/gui/gcal-window.blp:290
+msgid "Go to Today"
+msgstr "ໄປຫາມື້ນີ້"
+
+#: src/gui/gcal-window.blp:306
+msgctxt "tooltip"
+msgid "Add Event"
+msgstr "ເພີ່ມເຫດການ"
+
+#: src/gui/gcal-window.blp:312
+msgid "Manage Calendars"
+msgstr "ຈັດການປະຕິທິນ"
+
+#: src/gui/gcal-window.blp:372
+msgid "_Synchronize Calendars"
+msgstr "ຊິງຄ໌ປະຕິທິນ (_S)"
+
+#: src/gui/gcal-window.blp:379
+msgid "_Date & Time Settings…"
+msgstr "ການຕັ້ງຄ່າວັນທີ ແລະ ເວລາ… (_D)"
+
+#: src/gui/gcal-window.blp:384
+msgid "_Online Accounts…"
+msgstr "ບັນຊີອອນລາຍ… (_O)"
+
+#: src/gui/gcal-window.blp:399
+msgid "_Keyboard Shortcuts"
+msgstr "ປຸ່ມລັດຄີບອດ (_K)"
+
+#: src/gui/gcal-window.blp:404
+msgid "_About Calendar"
+msgstr "ກ່ຽວກັບປະຕິທິນ (_A)"
+
+#: src/gui/gcal-window.c:255
+msgid "Previous Week"
+msgstr "ອາທິດກ່ອນໜ້າ"
+
+#: src/gui/gcal-window.c:286
+msgid "Next Week"
+msgstr "ອາທິດຖັດໄປ"
+
+#: src/gui/gcal-window.c:408
+msgid "Week"
+msgstr "ອາທິດ"
+
+#: src/gui/gcal-window.c:414
+msgid "Agenda"
+msgstr "ກຳນົດການ"
+
+#: src/gui/gcal-window.c:992
+msgid "Another event deleted"
+msgstr "ລຶບເຫດການອື່ນແລ້ວ"
+
+#: src/gui/gcal-window.c:992
+msgid "Event deleted"
+msgstr "ລຶບເຫດການແລ້ວ"
+
+#: src/gui/gcal-window.c:1057
+msgid "Could not import some files: Not ICS files"
+msgstr "ບໍ່ສາມາດນຳເຂົ້າບາງໄຟລ໌: ບໍ່ແມ່ນໄຟລ໌ ICS"
+
+#: src/gui/gcal-window.c:1062
+#, c-format
+msgid "Could not import “%s”: Not an ICS file"
+msgstr "ບໍ່ສາມາດນຳເຂົ້າ “%s”: ບໍ່ແມ່ນໄຟລ໌ ICS"
+
+#: src/gui/importer/gcal-import-dialog.blp:5
+msgid "Import Files…"
+msgstr "ນຳເຂົ້າໄຟລ໌…"
+
+#: src/gui/importer/gcal-import-dialog.blp:25
+msgid "_Import"
+msgstr "ນຳເຂົ້າ (_I)"
+
+#: src/gui/importer/gcal-import-dialog.blp:51
+msgid "C_alendar"
+msgstr "ປະຕິທິນ (_A)"
+
+#: src/gui/importer/gcal-import-dialog.c:338
+#, c-format
+msgid "Import %d event"
+msgid_plural "Import %d events"
+msgstr[0] "ນຳເຂົ້າ %d ເຫດການ"
+
+#: src/gui/importer/gcal-import-file-row.c:181
+msgid "Starts"
+msgstr "ເລີ່ມຕົ້ນ"
+
+#: src/gui/importer/gcal-import-file-row.c:182
+msgid "Ends"
+msgstr "ສິ້ນສຸດ"
+
+#: src/gui/importer/gcal-import-file-row.c:183
+msgid "Description"
+msgstr "ຄຳອະທິບາຍ"
+
+#: src/gui/importer/gcal-importer.c:34
+msgid "No error"
+msgstr "ບໍ່ມີຂໍ້ຜິດພາດ"
+
+#: src/gui/importer/gcal-importer.c:37
+msgid "Bad argument to function"
+msgstr "ອາກິວເມັນຂອງຟັງຊັນບໍ່ຖືກຕ້ອງ"
+
+#: src/gui/importer/gcal-importer.c:41
+msgid "Failed to allocate a new object in memory"
+msgstr "ບໍ່ສາມາດຈອງພື້ນທີ່ວັດຖຸໃໝ່ໃນໜ່ວຍຄວາມຈຳ"
+
+#: src/gui/importer/gcal-importer.c:44
+msgid "File is malformed, invalid, or corrupted"
+msgstr "ໄຟລ໌ມີຮູບແບບບໍ່ຖືກຕ້ອງ ຫຼື ເສຍຫາຍ"
+
+#: src/gui/importer/gcal-importer.c:47
+msgid "Failed to parse the calendar contents"
+msgstr "ບໍ່ສາມາດວິເຄາະເນື້ອໃນປະຕິທິນ"
+
+#: src/gui/importer/gcal-importer.c:50
+msgid "Failed to read file"
+msgstr "ບໍ່ສາມາດອ່ານໄຟລ໌"
+
+#: src/gui/importer/gcal-importer.c:57
+msgid "Internal error"
+msgstr "ຂໍ້ຜິດພາດພາຍໃນ"
+
+#: src/gui/importer/gcal-importer.c:112
+msgid "File is not an iCalendar (.ics) file"
+msgstr "ໄຟລ໌ບໍ່ແມ່ນໄຟລ໌ iCalendar (.ics)"
+
+#: src/gui/shortcuts-dialog.blp:6
+msgctxt "shortcut dialog"
+msgid "General"
+msgstr "ທົ່ວໄປ"
+
+#: src/gui/shortcuts-dialog.blp:9
+msgctxt "shortcut dialog"
+msgid "Open Main Menu"
+msgstr "ເປີດເມນູຫຼັກ"
+
+#: src/gui/shortcuts-dialog.blp:14
+msgctxt "shortcut dialog"
+msgid "Toggle Sidebar"
+msgstr "ເປີດ/ປິດ ແຖບຂ້າງ"
+
+#: src/gui/shortcuts-dialog.blp:19
+msgctxt "shortcut dialog"
+msgid "New Event"
+msgstr "ເຫດການໃໝ່"
+
+#: src/gui/shortcuts-dialog.blp:24
+msgctxt "shortcut dialog"
+msgid "Manage Calendars"
+msgstr "ຈັດການປະຕິທິນ"
+
+#: src/gui/shortcuts-dialog.blp:29
+msgctxt "shortcut dialog"
+msgid "Synchronize Calendars"
+msgstr "ຊິງຄ໌ປະຕິທິນ"
+
+#: src/gui/shortcuts-dialog.blp:34
+msgctxt "shortcut dialog"
+msgid "Close Window"
+msgstr "ປິດໜ້າຕ່າງ"
+
+#: src/gui/shortcuts-dialog.blp:39
+msgctxt "shortcut dialog"
+msgid "Search"
+msgstr "ຄົ້ນຫາ"
+
+#: src/gui/shortcuts-dialog.blp:44
+msgctxt "shortcut dialog"
+msgid "Show Help"
+msgstr "ສະແດງວິທີໃຊ້"
+
+#: src/gui/shortcuts-dialog.blp:49
+msgctxt "shortcut dialog"
+msgid "Shortcuts"
+msgstr "ປຸ່ມລັດ"
+
+#: src/gui/shortcuts-dialog.blp:55
+msgctxt "shortcut dialog"
+msgid "Navigation"
+msgstr "ການນຳທາງ"
+
+#: src/gui/shortcuts-dialog.blp:58
+msgctxt "shortcut dialog"
+msgid "Go Back"
+msgstr "ກັບຄືນ"
+
+#: src/gui/shortcuts-dialog.blp:63
+msgctxt "shortcut dialog"
+msgid "Go Forward"
+msgstr "ໄປທາງໜ້າ"
+
+#: src/gui/shortcuts-dialog.blp:68
+msgctxt "shortcut dialog"
+msgid "Show Today"
+msgstr "ສະແດງມື້ນີ້"
+
+#: src/gui/shortcuts-dialog.blp:73
+msgctxt "shortcut dialog"
+msgid "Next View"
+msgstr "ມຸມມອງຖັດໄປ"
+
+#: src/gui/shortcuts-dialog.blp:78
+msgctxt "shortcut dialog"
+msgid "Previous View"
+msgstr "ມຸມມອງກ່ອນໜ້າ"
+
+#: src/gui/shortcuts-dialog.blp:84
+msgctxt "shortcut dialog"
+msgid "View"
+msgstr "ມຸມມອງ"
+
+#: src/gui/shortcuts-dialog.blp:87
+msgctxt "shortcut dialog"
+msgid "Month View"
+msgstr "ມຸມມອງລາຍເດືອນ"
+
+#: src/gui/shortcuts-dialog.blp:92
+msgctxt "shortcut dialog"
+msgid "Week View"
+msgstr "ມຸມມອງລາຍອາທິດ"
+
+#: src/gui/views/gcal-agenda-view.blp:27
+msgid "No events"
+msgstr "ບໍ່ມີເຫດການ"
+
+#.
+#. * Translators: %A is the full day name, %B is the month name
+#. * and %d is the day of the month as a number between 0 and 31.
+#.
+#: src/gui/views/gcal-agenda-view.c:210
+msgid "%A %B %d"
+msgstr "%A %B %d"
+
+#: src/gui/views/gcal-agenda-view.c:415
+msgid "On-going"
+msgstr "ກຳລັງດຳເນີນການ"
+
+#: src/gui/views/gcal-month-popover.blp:58
+msgid "New Event…"
+msgstr "ເຫດການໃໝ່…"
+
+#: src/gui/views/gcal-week-header.c:479
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "ເຫດການອື່ນ %d ລາຍການ"
+
+#: src/gui/views/gcal-week-view.c:241
+msgid "Hide Additional Events"
+msgstr "ເຊື່ອງເຫດການເພີ່ມເຕີມ"
+
+#: src/gui/views/gcal-week-view.c:243
+msgid "Show Additional Events"
+msgstr "ສະແດງເຫດການເພີ່ມເຕີມ"
+
+#: src/utils/gcal-utils.c:1209
+msgid "Modify Multiple Events?"
+msgstr "ແກ້ໄຂຫຼາຍເຫດການຫຼືບໍ່?"
+
+#: src/utils/gcal-utils.c:1210
+msgid ""
+"The event you are trying to modify is recurring. The changes you have "
+"selected should be applied to:"
+msgstr "ເຫດການທີ່ທ່ານກຳລັງແກ້ໄຂເປັນເຫດການທີ່ເກີດຊ້ຳ. ທ່ານຕ້ອງການນຳໃຊ້ການປ່ຽນແປງກັບ:"
+
+#: src/utils/gcal-utils.c:1214
+msgid "_Only This Event"
+msgstr "ສະເພາະເຫດການນີ້ (_O)"
+
+#: src/utils/gcal-utils.c:1220
+msgid "_Subsequent Events"
+msgstr "ເຫດການຕໍ່ມາທັງໝົດ (_S)"
+
+#: src/utils/gcal-utils.c:1223
+msgid "_All Events"
+msgstr "ທຸກເຫດການ (_A)"
+
+#. Conferencing
+#: src/utils/gcal-utils.c:1326
+msgid "BlueJeans"
+msgstr "BlueJeans"
+
+#: src/utils/gcal-utils.c:1327 src/utils/gcal-utils.c:1328
+msgid "BigBlueButton"
+msgstr "BigBlueButton"
+
+#: src/utils/gcal-utils.c:1329
+msgid "Google Meet"
+msgstr "Google Meet"
+
+#: src/utils/gcal-utils.c:1330 src/utils/gcal-utils.c:1331
+msgid "Jitsi"
+msgstr "Jitsi"
+
+#: src/utils/gcal-utils.c:1332
+msgid "Uber Conference"
+msgstr "Uber Conference"
+
+#: src/utils/gcal-utils.c:1333
+msgid "GNOME Meet"
+msgstr "GNOME Meet"
+
+#: src/utils/gcal-utils.c:1334
+msgid "Microsoft Teams"
+msgstr "Microsoft Teams"
+
+#: src/utils/gcal-utils.c:1335
+msgid "Whereby"
+msgstr "Whereby"
+
+#: src/utils/gcal-utils.c:1336
+msgid "Webex"
+msgstr "Webex"
+
+#: src/utils/gcal-utils.c:1337
+msgid "Zoom"
+msgstr "Zoom"
+
+#. Map
+#: src/utils/gcal-utils.c:1340
+msgid "View Map"
+msgstr "ເບິ່ງແຜນທີ່"
+
+#: src/utils/gcal-utils.c:1341
+msgid "OpenStreetMap"
+msgstr "OpenStreetMap"
+
+#: src/utils/gcal-utils.c:1342 src/utils/gcal-utils.c:1343
+msgid "Google Maps"
+msgstr "Google Maps"
+
+#: src/utils/gcal-utils.c:1344
+msgid "Bing Maps"
+msgstr "Bing Maps"
