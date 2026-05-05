@@ -406,6 +406,23 @@ get_grid_height (GcalMonthView *self)
   return gtk_widget_get_height (GTK_WIDGET (self)) - gtk_widget_get_height (self->header);
 }
 
+static inline void
+update_visible_rows (GcalMonthView *self)
+{
+  int actual_first_visible_row;
+  int actual_last_visible_row;
+
+  actual_first_visible_row = MAX (FIRST_VISIBLE_ROW_INDEX - (self->row_offset < 0.0 ? 1 : 0), 0);
+  actual_last_visible_row = MIN (LAST_VISIBLE_ROW_INDEX + (self->row_offset > 0.0 ? 1 : 0), N_TOTAL_ROWS);
+
+  for (unsigned int i = 0; i < self->week_rows->len; i++)
+    {
+      GtkWidget *row = g_ptr_array_index (self->week_rows, i);
+
+      gtk_widget_set_visible (row, i >= actual_first_visible_row && i <= actual_last_visible_row);
+    }
+}
+
 static void
 offset_and_shuffle_rows (GcalMonthView *self,
                          gdouble        dy)
@@ -440,6 +457,7 @@ offset_and_shuffle_rows (GcalMonthView *self,
       dump_row_ranges (self);
     }
 
+  update_visible_rows (self);
   gtk_widget_queue_allocate (GTK_WIDGET (self));
 
   GCAL_EXIT;
@@ -469,6 +487,8 @@ animate_row_offset_cb (gdouble  value,
   GcalMonthView *self = GCAL_MONTH_VIEW (user_data);
 
   self->row_offset = value;
+
+  update_visible_rows (self);
   gtk_widget_queue_allocate (GTK_WIDGET (self));
 }
 
@@ -480,6 +500,8 @@ on_row_offset_animation_done (AdwAnimation  *animation,
   cancel_row_offset_animation (self);
 
   self->row_offset = 0.0;
+
+  update_visible_rows (self);
   gtk_widget_queue_allocate (GTK_WIDGET (self));
 }
 
@@ -1320,6 +1342,7 @@ gcal_month_view_set_date (GcalView  *view,
 #endif
 
   update_week_ranges (self, date);
+  update_visible_rows (self);
 
   gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
 
@@ -1556,6 +1579,9 @@ gcal_month_view_measure (GtkWidget      *widget,
 
       row = g_ptr_array_index (self->week_rows, i);
 
+      if (!gtk_widget_should_layout (row))
+        continue;
+
       gtk_widget_measure (row,
                           orientation,
                           for_size,
@@ -1628,9 +1654,11 @@ gcal_month_view_size_allocate (GtkWidget *widget,
     {
       GtkAllocation row_allocation;
       GtkWidget *row;
-      gboolean child_visible;
 
       row = g_ptr_array_index (self->week_rows, i);
+
+      if (!gtk_widget_should_layout (row))
+        continue;
 
 #define ROW_Y(_i) (row_height * (_i) + y_offset)
 
@@ -1640,9 +1668,6 @@ gcal_month_view_size_allocate (GtkWidget *widget,
       row_allocation.height = round (ROW_Y (i + 1)) - row_allocation.y;
 
 #undef ROW_Y
-
-      child_visible = (row_allocation.y + row_allocation.height > header_height) && row_allocation.y < height;
-      gtk_widget_set_child_visible (row, child_visible);
 
       gtk_widget_size_allocate (row, &row_allocation, baseline);
     }
@@ -1842,4 +1867,6 @@ gcal_month_view_init (GcalMonthView *self)
 
   now = g_date_time_new_now_local ();
   gcal_view_set_date (GCAL_VIEW (self), now);
+
+  update_visible_rows (self);
 }
