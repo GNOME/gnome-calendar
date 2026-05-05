@@ -22,6 +22,7 @@
 
 #include "gcal-utils.h"
 #include "gcal-date-chooser.h"
+#include "gcal-gizmo.h"
 #include "gcal-date-chooser-day.h"
 #include "gcal-multi-choice.h"
 #include "gcal-range-tree.h"
@@ -44,6 +45,8 @@ struct _GcalDateChooser
   GtkWidget          *popover_month_choice;
   GtkWidget          *year_choice;
   GtkWidget          *combined_choice;
+
+  GcalGizmo          *gizmo;
   GtkWidget          *grid;
 
   GtkWidget          *day_grid;
@@ -672,6 +675,50 @@ gcal_view_interface_init (GcalViewInterface *iface)
 
 
 /*
+ * GcalGizmo overrides
+ */
+
+static gboolean
+gcal_gizmo_focus (GcalGizmo        *gizmo,
+                  GtkDirectionType  direction,
+                  gpointer          user_data)
+{
+  GtkWidget *focus_widget, *new_focus;
+  GTypeClass *gizmo_parent_class;
+  gboolean is_tab, is_rtl;
+  GtkRoot *root;
+
+  is_tab = direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD;
+
+  if (gtk_widget_get_focus_child (GTK_WIDGET (gizmo)) && is_tab)
+    return FALSE;
+
+  if (direction == GTK_DIR_LEFT || direction == GTK_DIR_RIGHT)
+    {
+      is_rtl = gtk_widget_get_direction (GTK_WIDGET (gizmo)) == GTK_TEXT_DIR_RTL;
+      root = gtk_widget_get_root (GTK_WIDGET (gizmo));
+      focus_widget = gtk_root_get_focus (root);
+
+      g_assert (GCAL_IS_DATE_CHOOSER_DAY (focus_widget));
+
+      if (direction == (is_rtl ? GTK_DIR_LEFT : GTK_DIR_RIGHT))
+        new_focus = gtk_widget_get_next_sibling (focus_widget);
+      else
+        new_focus = gtk_widget_get_prev_sibling (focus_widget);
+
+      if (new_focus)
+        return gtk_widget_grab_focus (new_focus);
+    }
+
+  gizmo_parent_class = g_type_class_peek_parent (G_OBJECT_GET_CLASS (gizmo));
+  if (!GTK_WIDGET_CLASS (gizmo_parent_class)->focus (GTK_WIDGET (gizmo), direction))
+    return gtk_widget_keynav_failed (GTK_WIDGET (gizmo), direction);
+
+  return TRUE;
+}
+
+
+/*
  * GcalTimelineSubscriber implementation
  */
 
@@ -885,65 +932,6 @@ gcal_date_chooser_finalize (GObject *object)
   G_OBJECT_CLASS (gcal_date_chooser_parent_class)->finalize (object);
 }
 
-static gboolean
-gcal_date_chooser_child_focus (GtkWidget        *widget,
-                               GtkDirectionType  direction)
-{
-  GcalDateChooser *self = GCAL_DATE_CHOOSER (widget);
-  GtkRoot *root;
-  GtkWidget *focus_widget, *new_focus;
-  gboolean is_tab, is_rtl, left_or_right;
-
-  is_tab = direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD;
-
-  if (gtk_widget_get_focus_child (self->grid))
-    {
-      if (is_tab)
-        {
-          root = gtk_widget_get_root (self->grid);
-
-          while (gtk_widget_get_focus_child (self->grid))
-            {
-              GtkWidget *previous_widget = gtk_root_get_focus (root);
-
-              GTK_WIDGET_CLASS (gcal_date_chooser_parent_class)->focus (widget, direction);
-
-              if (previous_widget == gtk_root_get_focus (root))
-                return FALSE;
-            }
-
-          return TRUE;
-        }
-
-      if (gtk_widget_child_focus (self->grid, direction))
-        return TRUE;
-
-      left_or_right = direction == GTK_DIR_LEFT || direction == GTK_DIR_RIGHT;
-
-      if (left_or_right)
-        {
-          is_rtl = gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL;
-          root = gtk_widget_get_root (self->grid);
-          focus_widget = gtk_root_get_focus (root);
-
-          g_assert (GCAL_IS_DATE_CHOOSER_DAY (focus_widget));
-
-          if (direction == (is_rtl ? GTK_DIR_LEFT : GTK_DIR_RIGHT))
-            new_focus = gtk_widget_get_next_sibling (focus_widget);
-          else
-            new_focus = gtk_widget_get_prev_sibling (focus_widget);
-
-          if (new_focus)
-            return gtk_widget_grab_focus (new_focus);
-        }
-
-      gtk_widget_error_bell (self->grid);
-      return TRUE;
-    }
-
-  return GTK_WIDGET_CLASS (gcal_date_chooser_parent_class)->focus (widget, direction);
-}
-
 static void
 gcal_date_chooser_dispose (GObject *object)
 {
@@ -957,13 +945,12 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
   GObjectClass *object_class = G_OBJECT_CLASS (class);
 
   g_type_ensure (GCAL_TYPE_MULTI_CHOICE);
+  g_type_ensure (GCAL_TYPE_GIZMO);
 
   object_class->dispose = gcal_date_chooser_dispose;
   object_class->finalize = gcal_date_chooser_finalize;
   object_class->set_property = calendar_set_property;
   object_class->get_property = calendar_get_property;
-
-  widget_class->focus = gcal_date_chooser_child_focus;
 
   properties[PROP_SHOW_HEADING] = g_param_spec_boolean ("show-heading",
                                                         "Show Heading",
@@ -1026,6 +1013,7 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, popover_month_choice);
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, year_choice);
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, grid);
+  gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, gizmo);
 
   gtk_widget_class_bind_template_callback (widget_class, combined_multi_choice_changed);
   gtk_widget_class_bind_template_callback (widget_class, get_combined_choice_visible);
@@ -1098,6 +1086,8 @@ gcal_date_chooser_init (GcalDateChooser *self)
   self->week_start = get_first_weekday ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  gcal_gizmo_set_focus_func (self->gizmo, gcal_gizmo_focus, NULL);
 
   for (col = 0; col < N_WEEKDAYS; col++)
     {

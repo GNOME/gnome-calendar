@@ -64,14 +64,18 @@ template $GcalDateChooser: Adw.Bin {
       }
     }
 
-    Grid grid {
-      row-homogeneous: true;
-      column-homogeneous: true;
+    $GcalGizmo gizmo {
+      layout-manager: BinLayout {};
 
       layout {
         column: 0;
         column-span: 2;
         row: 1;
+      }
+
+      Grid grid {
+        row-homogeneous: true;
+        column-homogeneous: true;
       }
     }
   }
