@@ -55,7 +55,6 @@ struct _GcalMonthView
   GtkEventController *motion_controller;
 
   GPtrArray          *week_rows;
-  GHashTable         *events;
 
   struct {
     GtkWidget        *popover;
