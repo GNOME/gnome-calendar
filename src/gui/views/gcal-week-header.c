@@ -26,6 +26,7 @@
 #include "gcal-clock.h"
 #include "gcal-debug.h"
 #include "gcal-event-widget.h"
+#include "gcal-event-widget-pool.h"
 #include "gcal-gui-utils.h"
 #include "gcal-utils.h"
 #include "gcal-view-private.h"
@@ -87,6 +88,8 @@ struct _GcalWeekHeader
 
   GtkFilterListModel *events_model;
   GcalEventArray      event_array;
+
+  GcalEventWidgetPool *event_widget_pool;
 
   /*
    * Stores the events as they come from the week-view
@@ -259,6 +262,8 @@ destroy_event_widget (GcalWeekHeader *self,
 {
   g_signal_handlers_disconnect_by_func (widget, on_event_widget_activated, self);
   gtk_grid_remove (self->grid, widget);
+
+  gcal_event_widget_pool_reclaim (self->event_widget_pool, widget);
 }
 
 /* Auxiliary methods */
@@ -622,6 +627,7 @@ split_event_widget_at_column (GcalWeekHeader *self,
   GtkLayoutManager *layout_manager;
   GtkLayoutChild *layout_child;
   GDateTime *week_start, *column_date, *end_column_date;
+  GcalEvent *event;
   gboolean create_before;
   gboolean create_after;
   gint left_attach;
@@ -642,11 +648,15 @@ split_event_widget_at_column (GcalWeekHeader *self,
   create_before = column > 0 && left_attach < column;
   create_after = column < N_WEEKDAYS - 1 && old_width > 1 && left_attach + old_width > column + 1;
 
+  event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
+
   if (create_before)
     {
       GtkWidget *widget_before;
 
-      widget_before = gcal_event_widget_clone (GCAL_EVENT_WIDGET (widget));
+      widget_before = gcal_event_widget_pool_take_or_create (self->event_widget_pool, event);
+      g_assert (GCAL_IS_EVENT_WIDGET (widget_before));
+
       gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget_before), column_date);
 
       setup_event_widget (self, widget_before);
@@ -680,7 +690,9 @@ split_event_widget_at_column (GcalWeekHeader *self,
 
       event_end = g_date_time_to_local (gcal_event_widget_get_date_end (GCAL_EVENT_WIDGET (widget)));
 
-      widget_after = gcal_event_widget_clone (GCAL_EVENT_WIDGET (widget));
+      widget_after = gcal_event_widget_pool_take_or_create (self->event_widget_pool, event);
+      g_assert (GCAL_IS_EVENT_WIDGET (widget_after));
+
       gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (widget_after), end_column_date);
       gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget_after), event_end);
 
@@ -792,7 +804,8 @@ add_event_to_grid (GcalWeekHeader *self,
   move_events_at_column (self, DOWN, start, position);
 
   /* Add the event to the grid */
-  widget = gcal_event_widget_new (event);
+  widget = gcal_event_widget_pool_take_or_create (self->event_widget_pool, event);
+  g_assert (GCAL_IS_EVENT_WIDGET (widget));
   setup_event_widget (self, widget);
 
   gtk_grid_attach (self->grid,
@@ -854,7 +867,9 @@ add_event_to_grid (GcalWeekHeader *self,
           GtkWidget *cloned_widget;
 
           cloned_widget_start_dt = g_date_time_add_days (week_start, i);
-          cloned_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (widget));
+
+          cloned_widget = gcal_event_widget_pool_take_or_create (self->event_widget_pool, event);
+          g_assert (GCAL_IS_EVENT_WIDGET (cloned_widget));
           setup_event_widget (self, cloned_widget);
 
           gtk_grid_attach (self->grid,
@@ -1605,6 +1620,8 @@ gcal_week_header_finalize (GObject *object)
   GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
   gint i;
 
+  g_clear_object (&self->event_widget_pool);
+
   gcal_event_array_clear (&self->event_array);
   g_clear_object (&self->events_model);
 
@@ -1718,6 +1735,8 @@ gcal_week_header_init (GcalWeekHeader *self)
   GtkCustomFilter *filter;
   GtkDropTarget *drop_target;
   gint i;
+
+  self->event_widget_pool = gcal_event_widget_pool_new ();
 
   gcal_event_array_init (&self->event_array);
 
