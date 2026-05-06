@@ -445,8 +445,7 @@ gcal_event_widget_update_timestamp (GcalEventWidget *self)
   g_autofree gchar *timestamp_str = NULL;
   GcalContext *context;
 
-  if (GCAL_IS_EVENT (self->event) &&
-      self->timestamp_policy != GCAL_TIMESTAMP_POLICY_NONE)
+  if (self->event && self->timestamp_policy != GCAL_TIMESTAMP_POLICY_NONE)
     {
       context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
       g_autoptr (GDateTime) time = NULL;
@@ -472,41 +471,6 @@ gcal_event_widget_update_timestamp (GcalEventWidget *self)
 
   gtk_widget_set_visible (self->timestamp_label, timestamp_str != NULL);
   gtk_label_set_label (GTK_LABEL (self->timestamp_label), timestamp_str);
-}
-
-static void
-gcal_event_widget_set_event_internal (GcalEventWidget *self,
-                                      GcalEvent       *event)
-{
-  /*
-   * This function is called only once, since the property is
-   * set as CONSTRUCT_ONLY. Any other attempt to set an event
-   * will be ignored.
-   *
-   * Because of that condition, we don't really have to care about
-   * disconnecting functions or cleaning up the previous event.
-   */
-
-  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
-
-  /* The event spawns with a floating reference, and we take it's ownership */
-  g_set_object (&self->event, event);
-
-  /*
-   * Initially, the widget's start and end dates are the same
-   * of the event's ones. We may change it afterwards.
-   */
-  gcal_event_widget_set_date_start (self, gcal_event_get_date_start (event));
-  gcal_event_widget_set_date_end (self, gcal_event_get_date_end (event));
-
-  g_signal_group_set_target (self->context_signal_group, context);
-  g_signal_group_set_target (self->clock_signal_group, gcal_context_get_clock (context));
-  g_signal_group_set_target (self->event_signal_group, event);
-
-  update_color (self);
-  gcal_event_widget_set_event_tooltip (self, event);
-  gcal_event_widget_update_style (self);
-  gcal_event_widget_update_timestamp (self);
 }
 
 static void
@@ -628,7 +592,7 @@ gcal_event_widget_set_property (GObject      *object,
   switch (property_id)
     {
     case PROP_EVENT:
-      gcal_event_widget_set_event_internal (self, g_value_get_object (value));
+      gcal_event_widget_set_event (self, g_value_get_object (value));
       break;
 
     case PROP_TIMESTAMP_POLICY:
@@ -725,7 +689,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
    */
   properties[PROP_EVENT] = g_param_spec_object ("event", NULL, NULL,
                                                 GCAL_TYPE_EVENT,
-                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+                                                G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEventWidget::timestamp-policy:
@@ -1002,6 +966,48 @@ gcal_event_widget_get_event (GcalEventWidget *self)
   g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (self), NULL);
 
   return self->event;
+}
+
+/**
+ * gcal_event_widget_set_event:
+ * @event: (nullable)(transfer none): the event
+ *
+ * Sets the event of this widget to @event.
+ */
+void
+gcal_event_widget_set_event (GcalEventWidget *self,
+                             GcalEvent       *event)
+{
+  g_assert (GCAL_IS_EVENT_WIDGET (self));
+  g_assert (event == NULL || GCAL_IS_EVENT (event));
+
+  if (!g_set_object (&self->event, event))
+    return;
+
+  if (event)
+    {
+      GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+
+      gcal_event_widget_set_date_start (self, gcal_event_get_date_start (event));
+      gcal_event_widget_set_date_end (self, gcal_event_get_date_end (event));
+
+      g_signal_group_set_target (self->context_signal_group, context);
+      g_signal_group_set_target (self->clock_signal_group, gcal_context_get_clock (context));
+      g_signal_group_set_target (self->event_signal_group, event);
+
+      update_color (self);
+      gcal_event_widget_set_event_tooltip (self, event);
+      gcal_event_widget_update_style (self);
+      gcal_event_widget_update_timestamp (self);
+    }
+  else
+    {
+      g_signal_group_set_target (self->context_signal_group, NULL);
+      g_signal_group_set_target (self->clock_signal_group, NULL);
+      g_signal_group_set_target (self->event_signal_group, NULL);
+    }
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
 }
 
 GtkWidget*

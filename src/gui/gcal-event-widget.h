@@ -42,6 +42,8 @@ typedef void         (*GcalEventPreviewCallback)                 (GcalEventWidge
 GtkWidget*           gcal_event_widget_new                       (GcalEvent          *event);
 
 GcalEvent*           gcal_event_widget_get_event                 (GcalEventWidget    *self);
+void                 gcal_event_widget_set_event                 (GcalEventWidget    *self,
+                                                                  GcalEvent          *event);
 
 GDateTime*           gcal_event_widget_get_date_start            (GcalEventWidget    *self);
 
