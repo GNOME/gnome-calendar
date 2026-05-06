@@ -71,7 +71,7 @@ gcal_log_handler (const gchar    *domain,
   now = g_date_time_new_now_local ();
   ftime = g_date_time_format (now, "%H:%M:%S");
   microsecond = g_date_time_get_microsecond (now);
-  buffer = g_strdup_printf ("%s.%04d  %28s: %s: %s\n",
+  buffer = g_strdup_printf ("%s.%04d\t%28s: %s: %s\n",
                             ftime,
                             microsecond,
                             domain,
