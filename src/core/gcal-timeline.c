@@ -107,15 +107,49 @@ event_in_subscriber_range_func (gpointer item,
   return gcal_event_overlaps (item, data->range);
 }
 
+static int
+compare_events_by_length (GcalEvent *event_a,
+                          GcalEvent *event_b)
+{
+  time_t time_s1, time_s2;
+  time_t time_e1, time_e2;
+
+  time_s1 = g_date_time_to_unix (gcal_event_get_date_start (event_a));
+  time_e1 = g_date_time_to_unix (gcal_event_get_date_end (event_a));
+
+  time_s2 = g_date_time_to_unix (gcal_event_get_date_start (event_b));
+  time_e2 = g_date_time_to_unix (gcal_event_get_date_end (event_b));
+
+  return (time_e2 - time_s2) - (time_e1 - time_s1);
+}
+
 static gint
 compare_events_cb (gconstpointer a,
                    gconstpointer b,
                    gpointer      user_data)
 {
+  g_autoptr (ICalTime) icaltime_a = NULL;
+  g_autoptr (ICalTime) icaltime_b = NULL;
   GcalEvent *event_a = (GcalEvent *) a;
   GcalEvent *event_b = (GcalEvent *) b;
+  gint diff;
 
-  return gcal_range_compare (gcal_event_get_range (event_b), gcal_event_get_range (event_a));
+  diff = gcal_event_is_multiday (event_b) - gcal_event_is_multiday (event_a);
+  if (diff != 0)
+    return diff;
+
+  diff = g_date_time_compare (gcal_event_get_date_start (event_a), gcal_event_get_date_start (event_b));
+  if (diff != 0)
+    return diff;
+
+  diff = compare_events_by_length (event_a, event_b);
+  if (diff != 0)
+    return diff;
+
+  icaltime_a = e_cal_component_get_last_modified (gcal_event_get_component (event_a));
+  icaltime_b = e_cal_component_get_last_modified (gcal_event_get_component (event_b));
+
+  return icaltime_a && icaltime_b ? i_cal_time_compare (icaltime_b, icaltime_a) : 0;
 }
 
 static SubscriberData *
