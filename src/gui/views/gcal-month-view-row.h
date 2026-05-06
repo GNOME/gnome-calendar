@@ -25,6 +25,7 @@
 
 #include "gcal-context.h"
 #include "gcal-event.h"
+#include "gcal-event-widget-pool.h"
 #include "gcal-range.h"
 
 G_BEGIN_DECLS
@@ -32,7 +33,7 @@ G_BEGIN_DECLS
 #define GCAL_TYPE_MONTH_VIEW_ROW (gcal_month_view_row_get_type())
 G_DECLARE_FINAL_TYPE (GcalMonthViewRow, gcal_month_view_row, GCAL, MONTH_VIEW_ROW, GtkWidget)
 
-GtkWidget *          gcal_month_view_row_new                     (void);
+GtkWidget *          gcal_month_view_row_new                     (GcalEventWidgetPool *event_widget_pool);
 
 GcalRange *          gcal_month_view_row_get_range               (GcalMonthViewRow   *self);
 

@@ -23,6 +23,7 @@
 
 #include "config.h"
 #include "gcal-debug.h"
+#include "gcal-event-widget-pool.h"
 #include "gcal-month-cell.h"
 #include "gcal-month-popover.h"
 #include "gcal-month-view.h"
@@ -55,6 +56,8 @@ struct _GcalMonthView
   GtkEventController *motion_controller;
 
   GPtrArray          *week_rows;
+
+  GcalEventWidgetPool *event_widget_pool;
 
   struct {
     GtkWidget        *popover;
@@ -1737,6 +1740,7 @@ gcal_month_view_finalize (GObject *object)
 {
   GcalMonthView *self = (GcalMonthView *)object;
 
+  g_clear_object (&self->event_widget_pool);
   gcal_clear_date_time (&self->selection.start);
   gcal_clear_date_time (&self->selection.end);
   gcal_clear_date_time (&self->date);
@@ -1836,6 +1840,8 @@ gcal_month_view_init (GcalMonthView *self)
 {
   g_autoptr (GDateTime) now = NULL;
 
+  self->event_widget_pool = gcal_event_widget_pool_new ();
+
   gtk_widget_init_template (GTK_WIDGET (self));
   update_weekday_labels (self);
 
@@ -1847,7 +1853,7 @@ gcal_month_view_init (GcalMonthView *self)
   self->week_rows = g_ptr_array_new_full (N_TOTAL_ROWS, (GDestroyNotify) gtk_widget_unparent);
   for (gint i = 0; i < N_TOTAL_ROWS; i++)
     {
-      GtkWidget *row = gcal_month_view_row_new ();
+      GtkWidget *row = gcal_month_view_row_new (self->event_widget_pool);
       g_signal_connect (row, "event-activated", G_CALLBACK (on_event_widget_activated_cb), self);
       g_signal_connect (row, "cell-activated", G_CALLBACK (on_month_row_cell_activated_cb), self);
       g_signal_connect (row, "show-overflow", G_CALLBACK (on_month_row_show_overflow_cb), self);
