@@ -8,6 +8,8 @@
 
 /* Copied from libadwaita 1.8 and adapted for use in gnome-calendar. */
 
+#define G_LOG_DOMAIN "GcalFadingLabel"
+
 #include "config.h"
 #include "gcal-fading-label.h"
 
@@ -20,7 +22,16 @@ struct _GcalFadingLabel
 {
   GtkWidget parent_instance;
 
-  GtkWidget *label;
+  PangoLayout *layout;
+
+  GskRenderNode *cached_text_node;
+  PangoRectangle cached_extents;
+  gboolean cached_extents_valid;
+  int cached_ascent;
+  int cached_descent;
+
+  char *text;
+
   gfloat align;
 };
 
@@ -28,7 +39,7 @@ G_DEFINE_FINAL_TYPE (GcalFadingLabel, gcal_fading_label, GTK_TYPE_WIDGET)
 
 enum {
   PROP_0,
-  PROP_LABEL,
+  PROP_TEXT,
   PROP_ALIGN,
   LAST_PROP
 };
@@ -39,10 +50,9 @@ static gboolean
 is_rtl (GcalFadingLabel *self)
 {
   PangoDirection pango_direction = PANGO_DIRECTION_NEUTRAL;
-  const gchar *label = gcal_fading_label_get_label (self);
 
-  if (label)
-    pango_direction = gcal_find_base_dir (label, -1);
+  if (self->text)
+    pango_direction = gcal_find_base_dir (self->text, -1);
 
   if (pango_direction == PANGO_DIRECTION_RTL)
     return TRUE;
@@ -51,6 +61,46 @@ is_rtl (GcalFadingLabel *self)
     return FALSE;
 
   return gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
+}
+
+static int
+get_line_pixels (GcalFadingLabel *self,
+                 int            *baseline)
+{
+  if (self->cached_ascent == -1 || self->cached_descent == -1)
+    {
+      PangoFontMetrics *metrics;
+      PangoContext *context;
+
+      context = gtk_widget_get_pango_context (GTK_WIDGET (self));
+      metrics = pango_context_get_metrics (context, NULL, NULL);
+
+      self->cached_ascent = pango_font_metrics_get_ascent (metrics);
+      self->cached_descent = pango_font_metrics_get_descent (metrics);
+
+      g_clear_pointer (&metrics, pango_font_metrics_unref);
+    }
+
+  if (baseline)
+    *baseline = self->cached_ascent;
+
+  return self->cached_ascent + self->cached_descent;
+}
+
+static void
+gcal_fading_label_css_changed (GtkWidget         *widget,
+                               GtkCssStyleChange *change)
+{
+  GcalFadingLabel *self = GCAL_FADING_LABEL (widget);
+
+  GTK_WIDGET_CLASS (gcal_fading_label_parent_class)->css_changed (widget, change);
+
+  self->cached_ascent = -1;
+  self->cached_descent = -1;
+  self->cached_extents_valid = FALSE;
+  g_clear_pointer (&self->cached_text_node, gsk_render_node_unref);
+
+  gtk_widget_queue_draw (widget);
 }
 
 static void
@@ -64,39 +114,34 @@ gcal_fading_label_measure (GtkWidget      *widget,
 {
   GcalFadingLabel *self = GCAL_FADING_LABEL (widget);
 
-  gtk_widget_measure (self->label,
-                      orientation,
-                      for_size,
-                      min, nat,
-                      min_baseline, nat_baseline);
+  switch (orientation)
+    {
+    case GTK_ORIENTATION_VERTICAL:
+      {
+        int line_pixels, baseline;
 
-  if (orientation == GTK_ORIENTATION_HORIZONTAL && min)
-    *min = 0;
-}
+        line_pixels = get_line_pixels (self, &baseline);
 
-static void
-gcal_fading_label_size_allocate (GtkWidget *widget,
-                                gint        width,
-                                gint        height,
-                                gint        baseline)
-{
-  GcalFadingLabel *self = GCAL_FADING_LABEL (widget);
-  GskTransform *transform;
-  gfloat align = is_rtl (self) ? 1 - self->align : self->align;
-  gint child_width;
-  gfloat offset;
+        *min = line_pixels;
+        *nat = line_pixels;
+      }
+      break;
 
-  gtk_widget_measure (self->label,
-                      GTK_ORIENTATION_HORIZONTAL,
-                      height,
-                      NULL,
-                      &child_width,
-                      NULL, NULL);
+    case GTK_ORIENTATION_HORIZONTAL:
+      *min = 0;
+      *nat = 0;
+      break;
 
-  offset = (width - child_width) * align;
-  transform = gsk_transform_translate (NULL, &GRAPHENE_POINT_INIT (offset, 0));
+    default:
+      g_assert_not_reached ();
+    }
 
-  gtk_widget_allocate (self->label, child_width, height, baseline, transform);
+  *min = PANGO_PIXELS_CEIL (*min);
+  *nat = PANGO_PIXELS_CEIL (*nat);
+  if (*min_baseline > 0)
+    *min_baseline = PANGO_PIXELS_CEIL (*min_baseline);
+  if (*nat_baseline > 0)
+    *nat_baseline = PANGO_PIXELS_CEIL (*nat_baseline);
 }
 
 static void
@@ -104,41 +149,49 @@ gcal_fading_label_snapshot (GtkWidget   *widget,
                             GtkSnapshot *snapshot)
 {
   GcalFadingLabel *self = GCAL_FADING_LABEL (widget);
-  g_autoptr (GskRenderNode) node = NULL;
-  g_autoptr (GtkSnapshot) child_snapshot = NULL;
-  graphene_rect_t bounds;
-  gfloat align = is_rtl (self) ? 1 - self->align : self->align;
-  gint width = gtk_widget_get_width (widget);
-  gint clipped_size;
+  float align;
+  int height;
+  int width;
+
+  width = gtk_widget_get_width (widget);
+  height = gtk_widget_get_height (widget);
 
   if (width <= 0)
     return;
 
-  clipped_size = gtk_widget_get_width (self->label) - width;
-
-  if (clipped_size <= 0)
+  if (!self->cached_extents_valid)
     {
-      gtk_widget_snapshot_child (widget, self->label, snapshot);
+      pango_layout_get_pixel_extents (self->layout, NULL, &self->cached_extents);
+      self->cached_extents_valid = TRUE;
+    }
+
+  if (!self->cached_text_node)
+    {
+      g_autoptr (GtkSnapshot) text_snapshot = NULL;
+      GdkRGBA foreground_color;
+
+      gtk_widget_get_color (widget, &foreground_color);
+
+      text_snapshot = gtk_snapshot_new ();
+      gtk_snapshot_append_layout (text_snapshot, self->layout, &foreground_color);
+
+      self->cached_text_node = gtk_snapshot_free_to_node (g_steal_pointer (&text_snapshot));
+    }
+
+  if (self->cached_extents.x + self->cached_extents.width <= width)
+    {
+      gtk_snapshot_append_node (snapshot, self->cached_text_node);
       return;
     }
 
-  child_snapshot = gtk_snapshot_new ();
-  gtk_widget_snapshot_child (widget, self->label, child_snapshot);
-  node = gtk_snapshot_free_to_node (g_steal_pointer (&child_snapshot));
-
-  gsk_render_node_get_bounds (node, &bounds);
-  bounds.origin.x = 0;
-  bounds.origin.y = floor (bounds.origin.y);
-  bounds.size.width = width;
-  bounds.size.height = ceil (bounds.size.height) + 1;
+  align = is_rtl (self) ? 1 - self->align : self->align;
 
   gtk_snapshot_push_mask (snapshot, GSK_MASK_MODE_INVERTED_ALPHA);
 
   if (align > 0)
     {
       gtk_snapshot_append_linear_gradient (snapshot,
-                                           &GRAPHENE_RECT_INIT (0, bounds.origin.y,
-                                                                FADE_WIDTH, bounds.size.height),
+                                           &GRAPHENE_RECT_INIT (0, 0, FADE_WIDTH, height),
                                            &GRAPHENE_POINT_INIT (0, 0),
                                            &GRAPHENE_POINT_INIT (FADE_WIDTH, 0),
                                            (GskColorStop[2]) {
@@ -151,8 +204,7 @@ gcal_fading_label_snapshot (GtkWidget   *widget,
   if (align < 1)
     {
       gtk_snapshot_append_linear_gradient (snapshot,
-                                           &GRAPHENE_RECT_INIT (width - FADE_WIDTH, bounds.origin.y,
-                                                                FADE_WIDTH, bounds.size.height),
+                                           &GRAPHENE_RECT_INIT (width - FADE_WIDTH, 0, FADE_WIDTH, height),
                                            &GRAPHENE_POINT_INIT (width, 0),
                                            &GRAPHENE_POINT_INIT (width - FADE_WIDTH, 0),
                                            (GskColorStop[2]) {
@@ -164,8 +216,8 @@ gcal_fading_label_snapshot (GtkWidget   *widget,
 
   gtk_snapshot_pop (snapshot);
 
-  gtk_snapshot_push_clip (snapshot, &bounds);
-  gtk_snapshot_append_node (snapshot, node);
+  gtk_snapshot_push_clip (snapshot, &GRAPHENE_RECT_INIT (0, 0, width, height));
+  gtk_snapshot_append_node (snapshot, self->cached_text_node);
   gtk_snapshot_pop (snapshot);
 
   gtk_snapshot_pop (snapshot);
@@ -180,8 +232,8 @@ gcal_fading_label_get_property (GObject    *object,
   GcalFadingLabel *self = GCAL_FADING_LABEL (object);
 
   switch (prop_id) {
-  case PROP_LABEL:
-    g_value_set_string (value, gcal_fading_label_get_label (self));
+  case PROP_TEXT:
+    g_value_set_string (value, self->text);
     break;
 
   case PROP_ALIGN:
@@ -202,8 +254,8 @@ gcal_fading_label_set_property (GObject      *object,
   GcalFadingLabel *self = GCAL_FADING_LABEL (object);
 
   switch (prop_id) {
-  case PROP_LABEL:
-    gcal_fading_label_set_label (self, g_value_get_string (value));
+  case PROP_TEXT:
+    gcal_fading_label_set_text (self, g_value_get_string (value));
     break;
 
   case PROP_ALIGN:
@@ -220,7 +272,8 @@ gcal_fading_label_dispose (GObject *object)
 {
   GcalFadingLabel *self = GCAL_FADING_LABEL (object);
 
-  g_clear_pointer (&self->label, gtk_widget_unparent);
+  g_clear_object (&self->layout);
+  g_clear_pointer (&self->cached_text_node, gsk_render_node_unref);
 
   G_OBJECT_CLASS (gcal_fading_label_parent_class)->dispose (object);
 }
@@ -235,12 +288,12 @@ gcal_fading_label_class_init (GcalFadingLabelClass *klass)
   object_class->set_property = gcal_fading_label_set_property;
   object_class->dispose = gcal_fading_label_dispose;
 
+  widget_class->css_changed = gcal_fading_label_css_changed;
   widget_class->measure = gcal_fading_label_measure;
-  widget_class->size_allocate = gcal_fading_label_size_allocate;
   widget_class->snapshot = gcal_fading_label_snapshot;
 
-  props[PROP_LABEL] =
-    g_param_spec_string ("label", NULL, NULL,
+  props[PROP_TEXT] =
+    g_param_spec_string ("text", NULL, NULL,
                          NULL,
                          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
@@ -255,32 +308,41 @@ gcal_fading_label_class_init (GcalFadingLabelClass *klass)
 static void
 gcal_fading_label_init (GcalFadingLabel *self)
 {
-  self->label = gtk_label_new (NULL);
-  gtk_label_set_single_line_mode (GTK_LABEL (self->label), TRUE);
-
-  gtk_widget_set_parent (self->label, GTK_WIDGET (self));
+  self->layout = gtk_widget_create_pango_layout (GTK_WIDGET (self), NULL);
+  self->cached_ascent = -1;
+  self->cached_descent = -1;
+  self->cached_extents_valid = FALSE;
 }
 
 const gchar *
-gcal_fading_label_get_label (GcalFadingLabel *self)
+gcal_fading_label_get_text (GcalFadingLabel *self)
 {
   g_return_val_if_fail (GCAL_IS_FADING_LABEL (self), NULL);
 
-  return gtk_label_get_label (GTK_LABEL (self->label));
+  return self->text;
 }
 
 void
-gcal_fading_label_set_label (GcalFadingLabel *self,
-                             const gchar      *label)
+gcal_fading_label_set_text (GcalFadingLabel *self,
+                            const gchar     *text)
 {
   g_return_if_fail (GCAL_IS_FADING_LABEL (self));
 
-  if (!g_strcmp0 (label, gcal_fading_label_get_label (self)))
+  if (!g_set_str (&self->text, text))
     return;
 
-  gtk_label_set_label (GTK_LABEL (self->label), label);
+  pango_layout_set_text (self->layout,
+                         self->text ? self->text : "",
+                         -1);
 
-  g_object_notify_by_pspec (G_OBJECT (self), props[PROP_LABEL]);
+  self->cached_ascent = -1;
+  self->cached_descent = -1;
+  self->cached_extents_valid = FALSE;
+  g_clear_pointer (&self->cached_text_node, gsk_render_node_unref);
+
+  gtk_widget_queue_draw (GTK_WIDGET (self));
+
+  g_object_notify_by_pspec (G_OBJECT (self), props[PROP_TEXT]);
 }
 
 float
@@ -304,7 +366,7 @@ gcal_fading_label_set_align (GcalFadingLabel *self,
 
   self->align = align;
 
-  gtk_widget_queue_allocate (GTK_WIDGET (self));
+  gtk_widget_queue_draw (GTK_WIDGET (self));
 
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_ALIGN]);
 }

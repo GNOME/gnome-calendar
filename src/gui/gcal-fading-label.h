@@ -18,8 +18,8 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalFadingLabel, gcal_fading_label, GCAL, FADING_LABEL, GtkWidget)
 
-const gchar *gcal_fading_label_get_label (GcalFadingLabel *self);
-void         gcal_fading_label_set_label (GcalFadingLabel *self,
+const gchar *gcal_fading_label_get_text  (GcalFadingLabel *self);
+void         gcal_fading_label_set_text  (GcalFadingLabel *self,
                                           const gchar     *label);
 gfloat       gcal_fading_label_get_align (GcalFadingLabel *self);
 void         gcal_fading_label_set_align (GcalFadingLabel *self,
