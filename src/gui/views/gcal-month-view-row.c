@@ -733,26 +733,6 @@ pick_existing_event_widget (GHashTable *event_widgets,
   return g_ptr_array_steal_index_fast (widgets, 0);
 }
 
-static GtkWidget *
-pick_or_create_event_widget_for_event (GcalMonthViewRow *self,
-                                       GHashTable       *event_widgets,
-                                       GcalEvent        *event)
-{
-  GtkWidget *event_widget;
-
-  event_widget = pick_existing_event_widget (event_widgets, event);
-  if (!event_widget)
-    {
-      event_widget = gcal_event_widget_pool_take_or_create (self->event_widget_pool, event);
-
-      g_assert (GCAL_IS_EVENT_WIDGET (event_widget));
-
-      setup_child_widget (self, event_widget);
-    }
-
-  return g_steal_pointer (&event_widget);
-}
-
 static void
 recalculate_layout_blocks (GcalMonthViewRow *self)
 {
@@ -794,33 +774,24 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
         {
           events_at_weekday[cell]++;
 
-          if (!block)
+          if (!block || (cell > first_cell && events_at_weekday[cell] != events_at_weekday[cell - 1]))
             {
-              GtkWidget *event_widget;
+              GtkWidget *event_widget = pick_existing_event_widget (event_widgets, event);
 
-              event_widget = pick_or_create_event_widget_for_event (self, event_widgets, event);
+              if (!event_widget)
+                {
+                  event_widget = gcal_event_widget_pool_take_or_create (self->event_widget_pool, event);
+
+                  g_assert (GCAL_IS_EVENT_WIDGET (event_widget));
+
+                  setup_child_widget (self, event_widget);
+                }
 
               if (!gcal_event_get_all_day (event) && !gcal_event_is_multiday (event))
                 gcal_event_widget_set_timestamp_policy (GCAL_EVENT_WIDGET (event_widget), GCAL_TIMESTAMP_POLICY_START);
 
               block = g_new (GcalEventBlock, 1);
               block->event_widget = g_steal_pointer (&event_widget);
-              block->length = 1;
-              block->cell = cell;
-
-              g_ptr_array_add (blocks, block);
-            }
-          else if (cell > first_cell && events_at_weekday[cell] != events_at_weekday[cell - 1])
-            {
-              GtkWidget *new_event_widget;
-
-              new_event_widget = pick_or_create_event_widget_for_event (self, event_widgets, event);
-
-              if (!gcal_event_get_all_day (event) && !gcal_event_is_multiday (event))
-                gcal_event_widget_set_timestamp_policy (GCAL_EVENT_WIDGET (new_event_widget), GCAL_TIMESTAMP_POLICY_START);
-
-              block = g_new (GcalEventBlock, 1);
-              block->event_widget = g_steal_pointer (&new_event_widget);
               block->length = 1;
               block->cell = cell;
 
