@@ -689,7 +689,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
    */
   properties[PROP_EVENT] = g_param_spec_object ("event", NULL, NULL,
                                                 GCAL_TYPE_EVENT,
-                                                G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                                                G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GcalEventWidget::timestamp-policy:
@@ -702,7 +702,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   properties[PROP_TIMESTAMP_POLICY] = g_param_spec_enum ("timestamp-policy", NULL, NULL,
                                                          GCAL_TYPE_TIMESTAMP_POLICY,
                                                          GCAL_TIMESTAMP_POLICY_NONE,
-                                                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                                                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
