@@ -868,13 +868,14 @@ invalidate_layout_blocks (GcalMonthViewRow *self)
  */
 
 static gboolean
-filter_by_range_cb (GcalEvent        *event,
-                    GcalRange        *row_range,
-                    GcalMonthViewRow *self)
+filter_by_range_cb (gpointer item,
+                    gpointer user_data)
 {
+  GcalMonthViewRow *self = user_data;
+  GcalEvent *event = item;
+
   g_assert (GCAL_IS_EVENT (event));
   g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
-  g_assert (self->range == row_range);
 
   if (!self->range)
     return FALSE;
@@ -1292,24 +1293,7 @@ gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
 static void
 gcal_month_view_row_init (GcalMonthViewRow *self)
 {
-  GtkExpression *expression;
-  GtkBoolFilter *filter;
-
-  expression = gtk_cclosure_expression_new (G_TYPE_BOOLEAN,
-                                            NULL,
-                                            1, (GtkExpression* [1]) {
-                                              gtk_property_expression_new (GCAL_TYPE_MONTH_VIEW_ROW,
-                                                                           gtk_constant_expression_new (GCAL_TYPE_MONTH_VIEW_ROW,
-                                                                                                        self,
-                                                                                                        NULL),
-                                                                           "range"),
-                                            },
-                                            G_CALLBACK (filter_by_range_cb),
-                                            self,
-                                            NULL);
-  filter = gtk_bool_filter_new (g_steal_pointer (&expression));
-
-  self->events = G_LIST_MODEL (gtk_filter_list_model_new (NULL, GTK_FILTER (filter)));
+  self->events = G_LIST_MODEL (gtk_filter_list_model_new (NULL, GTK_FILTER (gtk_custom_filter_new (filter_by_range_cb, self, NULL))));
   g_signal_connect (self->events, "items-changed", G_CALLBACK (events_changed_cb), self);
 
   self->layout_blocks = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_ptr_array_unref);
@@ -1354,6 +1338,7 @@ gcal_month_view_row_set_range (GcalMonthViewRow *self,
                                GcalRange        *range)
 {
   g_autoptr (GDateTime) start = NULL;
+  GtkFilter *filter;
 
   g_return_if_fail (GCAL_IS_MONTH_VIEW_ROW (self));
   g_return_if_fail (range != NULL);
@@ -1372,6 +1357,10 @@ gcal_month_view_row_set_range (GcalMonthViewRow *self,
       g_autoptr (GDateTime) day = g_date_time_add_days (start, i);
       gcal_month_cell_set_date (GCAL_MONTH_CELL (self->day_cells[i]), day);
     }
+
+  filter = gtk_filter_list_model_get_filter (GTK_FILTER_LIST_MODEL (self->events));
+  g_assert (GTK_IS_CUSTOM_FILTER (filter));
+  gtk_filter_changed (filter, GTK_FILTER_CHANGE_DIFFERENT);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_RANGE]);
 
