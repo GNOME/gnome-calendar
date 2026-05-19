@@ -772,9 +772,13 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
 
       for (gint cell = first_cell; cell <= last_cell; cell++)
         {
+          gboolean event_will_break;
+
           events_at_weekday[cell]++;
 
-          if (!block || (cell > first_cell && events_at_weekday[cell] != events_at_weekday[cell - 1]))
+          event_will_break = cell > first_cell && events_at_weekday[cell] != events_at_weekday[cell - 1];
+
+          if (!block || event_will_break)
             {
               GtkWidget *event_widget = pick_existing_event_widget (event_widgets, event);
 
