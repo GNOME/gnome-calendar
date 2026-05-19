@@ -1302,6 +1302,8 @@ gcal_month_view_set_model (GcalTimelineSubscriber *subscriber,
       gcal_month_view_row_set_model (row, model);
     }
 
+  gcal_month_popover_set_model (GCAL_MONTH_POPOVER (self->overflow.popover), model);
+
   GCAL_EXIT;
 }
 

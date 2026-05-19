@@ -39,7 +39,11 @@ struct _GcalMonthPopover
   GtkButton          *new_event_button;
 
   GDateTime          *date;
+  GcalRange          *range;
   AdwAnimation       *animation;
+
+  GtkFilterListModel *filtered_events;
+  GListModel         *events;
 
   GSimpleActionGroup *action_group;
 };
@@ -62,80 +66,6 @@ static guint signals[LAST_SIGNAL] = { 0, };
 /*
  * Auxiliary functions
  */
-
-static void
-update_event_list (GcalMonthPopover *self)
-{
-  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
-  g_autoptr (GDateTime) start_dt = NULL;
-  g_autoptr (GDateTime) end_dt = NULL;
-  g_autoptr (GPtrArray) events = NULL;
-  GtkWidget *child;
-  guint i;
-
-  while ((child = gtk_widget_get_first_child (GTK_WIDGET (self->listbox))) != NULL)
-    gtk_list_box_remove (self->listbox, child);
-
-  if (!self->date)
-    return;
-
-  start_dt = g_date_time_new_local (g_date_time_get_year (self->date),
-                                    g_date_time_get_month (self->date),
-                                    g_date_time_get_day_of_month (self->date),
-                                    0, 0, 0);
-  end_dt = g_date_time_add_days (start_dt, 1);
-
-  events = gcal_manager_get_events (gcal_context_get_manager (context), start_dt, end_dt);
-
-  for (i = 0; events && i < events->len; i++)
-    {
-      g_autoptr (GDateTime) event_start = NULL;
-      g_autoptr (GDateTime) event_end = NULL;
-      g_autoptr (GTimeZone) tz = NULL;
-      GtkWidget *event_widget;
-      GcalEvent *event;
-      GtkWidget *row;
-
-      event = g_ptr_array_index (events, i);
-
-      if (gcal_event_get_all_day (event))
-        tz = g_time_zone_new_utc ();
-      else
-        tz = g_time_zone_new_local ();
-
-      event_start = g_date_time_new (tz,
-                                     g_date_time_get_year (start_dt),
-                                     g_date_time_get_month (start_dt),
-                                     g_date_time_get_day_of_month (start_dt),
-                                     0, 0, 0);
-
-      event_end = g_date_time_add_days (event_start, 1);
-
-      event_widget = gcal_event_widget_new (event);
-      gtk_widget_set_focusable (event_widget, FALSE);
-      gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (event_widget), event_start);
-      gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (event_widget), event_end);
-
-      row = gtk_list_box_row_new ();
-      gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), event_widget);
-
-      gtk_list_box_append (self->listbox, row);
-
-      gtk_accessible_update_property (GTK_ACCESSIBLE (row),
-                                      GTK_ACCESSIBLE_PROPERTY_HAS_POPUP, TRUE,
-                                      -1);
-
-      gtk_accessible_update_relation (GTK_ACCESSIBLE (row),
-                                      GTK_ACCESSIBLE_RELATION_LABELLED_BY, event_widget, NULL,
-                                      -1);
-
-      g_signal_connect_object (event_widget,
-                               "activate",
-                               G_CALLBACK (event_activated_cb),
-                               self,
-                               0);
-    }
-}
 
 static GskTransform*
 create_transform (GcalMonthPopover *self,
@@ -168,18 +98,79 @@ create_transform (GcalMonthPopover *self,
  * GtkListBox functions
  */
 
-static gint
-sort_func (GtkListBoxRow *a,
-           GtkListBoxRow *b,
-           gpointer       user_data)
+static GtkWidget *
+create_event_widget_func (gpointer item,
+                          gpointer user_data)
 {
-  GcalEventWidget *event_a;
-  GcalEventWidget *event_b;
+  g_autoptr (GDateTime) event_start = NULL;
+  g_autoptr (GDateTime) event_end = NULL;
+  g_autoptr (GDateTime) start_dt = NULL;
+  g_autoptr (GTimeZone) tz = NULL;
+  GcalMonthPopover *self;
+  GtkWidget *event_widget;
+  GcalEvent *event;
+  GtkWidget *row;
 
-  event_a = GCAL_EVENT_WIDGET (gtk_list_box_row_get_child (a));
-  event_b = GCAL_EVENT_WIDGET (gtk_list_box_row_get_child (b));
+  g_assert (GCAL_IS_EVENT (item));
+  g_assert (GCAL_IS_MONTH_POPOVER (user_data));
 
-  return gcal_event_widget_sort_events (event_a, event_b);
+  event = item;
+  self = user_data;
+
+  if (gcal_event_get_all_day (event))
+    tz = g_time_zone_new_utc ();
+  else
+    tz = g_time_zone_new_local ();
+
+  start_dt = gcal_range_get_start (self->range);
+  event_start = g_date_time_new (tz,
+                                 g_date_time_get_year (start_dt),
+                                 g_date_time_get_month (start_dt),
+                                 g_date_time_get_day_of_month (start_dt),
+                                 0, 0, 0);
+
+
+  event_end = g_date_time_add_days (event_start, 1);
+
+  event_widget = gcal_event_widget_new (event);
+  gtk_widget_set_focusable (event_widget, FALSE);
+  gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (event_widget), event_start);
+  gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (event_widget), event_end);
+
+  row = gtk_list_box_row_new ();
+  gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), event_widget);
+
+  gtk_accessible_update_property (GTK_ACCESSIBLE (row),
+                                  GTK_ACCESSIBLE_PROPERTY_HAS_POPUP, TRUE,
+                                  -1);
+
+  gtk_accessible_update_relation (GTK_ACCESSIBLE (row),
+                                  GTK_ACCESSIBLE_RELATION_LABELLED_BY, event_widget, NULL,
+                                  -1);
+
+  g_signal_connect_object (event_widget,
+                           "activate",
+                           G_CALLBACK (event_activated_cb),
+                           self,
+                           0);
+
+  return g_steal_pointer (&row);
+}
+
+static gboolean
+filter_by_range_cb (gpointer item,
+                    gpointer user_data)
+{
+  GcalMonthPopover *self = user_data;
+  GcalEvent *event = item;
+
+  g_assert (GCAL_IS_EVENT (event));
+  g_assert (GCAL_IS_MONTH_POPOVER (self));
+
+  if (!self->range)
+    return FALSE;
+
+  return gcal_event_overlaps (event, self->range);
 }
 
 static gboolean
@@ -231,7 +222,10 @@ on_animation_done_cb (AdwAnimation     *animation,
                       GcalMonthPopover *self)
 {
   if (adw_animation_get_value (animation) == 0.0)
-    gtk_widget_set_visible (GTK_WIDGET (self), FALSE);
+    {
+      gtk_widget_set_visible (GTK_WIDGET (self), FALSE);
+      gtk_filter_list_model_set_model (self->filtered_events, NULL);
+    }
 }
 
 static void
@@ -376,6 +370,8 @@ gcal_month_popover_dispose (GObject *object)
   g_clear_pointer (&self->main_box, gtk_widget_unparent);
 
   g_clear_object (&self->action_group);
+  g_clear_object (&self->filtered_events);
+  g_clear_object (&self->events);
 
   G_OBJECT_CLASS (gcal_month_popover_parent_class)->dispose (object);
 }
@@ -428,6 +424,8 @@ gcal_month_popover_init (GcalMonthPopover *self)
     {"popdown", on_month_popover_popdown_activated_cb },
   };
 
+  self->filtered_events = gtk_filter_list_model_new (NULL, GTK_FILTER (gtk_custom_filter_new (filter_by_range_cb, self, NULL)));
+
   self->action_group = g_simple_action_group_new ();
   g_action_map_add_action_entries (G_ACTION_MAP (self->action_group),
                                    actions,
@@ -440,7 +438,11 @@ gcal_month_popover_init (GcalMonthPopover *self)
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->listbox), sort_func, NULL, NULL);
+  gtk_list_box_bind_model (self->listbox,
+                           G_LIST_MODEL (self->filtered_events),
+                           create_event_widget_func,
+                           self,
+                           NULL);
 
   self->animation = adw_timed_animation_new (GTK_WIDGET (self),
                                              0.0,
@@ -463,13 +465,13 @@ gcal_month_popover_popup (GcalMonthPopover *self)
 
   GCAL_ENTRY;
 
+  gtk_filter_list_model_set_model (self->filtered_events, self->events);
+
   gtk_widget_set_visible (GTK_WIDGET (self), TRUE);
 
   adw_timed_animation_set_reverse (ADW_TIMED_ANIMATION (self->animation), FALSE);
   adw_timed_animation_set_easing (ADW_TIMED_ANIMATION (self->animation), ADW_EASE_OUT_EXPO);
   adw_animation_play (self->animation);
-
-  update_event_list (self);
 
   gtk_widget_grab_focus (GTK_WIDGET (self->new_event_button));
 
@@ -504,22 +506,50 @@ void
 gcal_month_popover_set_date (GcalMonthPopover *self,
                              GDateTime        *date)
 {
+  GtkFilter *custom_filter;
+
   g_return_if_fail (GCAL_IS_MONTH_POPOVER (self));
 
   if (date && self->date && gcal_date_time_compare_date (self->date, date) == 0)
     return;
 
   gcal_clear_date_time (&self->date);
+  g_clear_pointer (&self->range, gcal_range_unref);
 
   if (date)
     {
+      g_autoptr (GDateTime) start_dt = NULL;
+      g_autoptr (GDateTime) end_dt = NULL;
       g_autofree gchar *label = NULL;
 
       self->date = g_date_time_ref (date);
+
+      start_dt = g_date_time_new_local (g_date_time_get_year (self->date),
+                                        g_date_time_get_month (self->date),
+                                        g_date_time_get_day_of_month (self->date),
+                                        0, 0, 0);
+      end_dt = g_date_time_add_days (start_dt, 1);
+
+      self->range = gcal_range_new (start_dt, end_dt, GCAL_RANGE_DEFAULT);
 
       label = g_strdup_printf ("%d", g_date_time_get_day_of_month (date));
       gtk_label_set_label (self->day_label, label);
     }
 
-  update_event_list (self);
+  custom_filter = gtk_filter_list_model_get_filter (self->filtered_events);
+  g_assert (GTK_IS_CUSTOM_FILTER (custom_filter));
+  gtk_filter_changed (custom_filter, GTK_FILTER_CHANGE_DIFFERENT);
+}
+
+void
+gcal_month_popover_set_model (GcalMonthPopover *self,
+                              GListModel       *model)
+{
+  g_assert (GCAL_IS_MONTH_POPOVER (self));
+
+  if (!g_set_object (&self->events, model))
+    return;
+
+  if (gtk_widget_get_visible (GTK_WIDGET (self)))
+    gtk_filter_list_model_set_model (self->filtered_events, model);
 }

@@ -42,4 +42,7 @@ GDateTime*           gcal_month_popover_get_date                 (GcalMonthPopov
 void                 gcal_month_popover_set_date                 (GcalMonthPopover   *self,
                                                                   GDateTime          *date);
 
+void                 gcal_month_popover_set_model                (GcalMonthPopover   *self,
+                                                                  GListModel         *model);
+
 G_END_DECLS
