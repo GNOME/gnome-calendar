@@ -26,10 +26,10 @@
 #include "gcal-stub-calendar.h"
 #include "gcal-utils.h"
 
-#define EVENT_STRING_FOR_DATE(dtstart,dtend)    \
+#define EVENT_STRING_FOR_DATE(uid, dtstart,dtend)    \
                    "BEGIN:VEVENT\n"             \
                    "SUMMARY:Stub event\n"       \
-                   "UID:example@uid\n"          \
+                   "UID:example@uid"uid"\n"          \
                    "DTSTAMP:19970114T170000Z\n" \
                    "DTSTART"dtstart"\n"        \
                    "DTEND"dtend"\n"            \
@@ -101,9 +101,9 @@ event_list_add_events (void)
   AddEventsHelper helper = { };
 
   const gchar * const event_strings[] = {
-    EVENT_STRING_FOR_DATE (":20260331T000000Z", ":20260331T030000Z"),
-    EVENT_STRING_FOR_DATE (":20260401T000000Z", ":20260401T030000Z"),
-    EVENT_STRING_FOR_DATE (":20260402T000000Z", ":20260403T030000Z"),
+    EVENT_STRING_FOR_DATE ("event1", ":20260331T000000Z", ":20260331T030000Z"),
+    EVENT_STRING_FOR_DATE ("event2", ":20260401T000000Z", ":20260401T030000Z"),
+    EVENT_STRING_FOR_DATE ("event3", ":20260402T000000Z", ":20260403T030000Z"),
   };
 
   event_list = gcal_event_list_new ();
@@ -171,9 +171,9 @@ event_list_remove_events (void)
   RemoveEventsHelper helper = { };
 
   const gchar * const event_strings[] = {
-    EVENT_STRING_FOR_DATE (":20260331T000000Z", ":20260331T030000Z"),
-    EVENT_STRING_FOR_DATE (":20260401T000000Z", ":20260401T030000Z"),
-    EVENT_STRING_FOR_DATE (":20260402T000000Z", ":20260403T030000Z"),
+    EVENT_STRING_FOR_DATE ("event1", ":20260331T000000Z", ":20260331T030000Z"),
+    EVENT_STRING_FOR_DATE ("event2", ":20260401T000000Z", ":20260401T030000Z"),
+    EVENT_STRING_FOR_DATE ("event3", ":20260402T000000Z", ":20260403T030000Z"),
   };
 
   event_list = gcal_event_list_new ();

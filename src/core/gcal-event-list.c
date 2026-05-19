@@ -117,7 +117,7 @@ static void
 gcal_event_list_init (GcalEventList *self)
 {
   gcal_event_array_init (&self->event_array);
-  self->events = g_hash_table_new (g_direct_hash, g_direct_equal);
+  self->events = g_hash_table_new (g_str_hash, g_str_equal);
 }
 
 /**
@@ -174,11 +174,11 @@ gcal_event_list_add_events (GcalEventList  *self,
 
   for (gsize i = 0; events[i]; i++)
     {
-      if (g_hash_table_contains (self->events, events[i]))
+      if (g_hash_table_contains (self->events, gcal_event_get_uid (events[i])))
         continue;
 
       gcal_event_array_append (&self->event_array, g_object_ref (events[i]));
-      g_hash_table_add (self->events, events[i]);
+      g_hash_table_add (self->events, (gpointer) gcal_event_get_uid (events[i]));
       n_added++;
     }
 
@@ -226,22 +226,22 @@ gcal_event_list_remove_events (GcalEventList  *self,
   g_assert (events != NULL);
 
   bitset = gtk_bitset_new_empty ();
-  contained_events = g_hash_table_new (g_direct_hash, g_direct_equal);
+  contained_events = g_hash_table_new (g_str_hash, g_str_equal);
 
   for (size_t i = 0; events[i]; i++)
     {
-      if (g_hash_table_contains (self->events, events[i]))
-        g_hash_table_add (contained_events, events[i]);
+      if (g_hash_table_contains (self->events, gcal_event_get_uid (events[i])))
+        g_hash_table_add (contained_events, (gpointer) gcal_event_get_uid (events[i]));
     }
 
   for (size_t i = 0; i < gcal_event_array_get_size (&self->event_array); i++)
     {
       GcalEvent *event = gcal_event_array_get (&self->event_array, i);
 
-      if (g_hash_table_contains (contained_events, event))
+      if (g_hash_table_contains (contained_events, gcal_event_get_uid (event)))
         {
-          g_hash_table_remove (contained_events, event);
-          g_hash_table_remove (self->events, event);
+          g_hash_table_remove (contained_events, gcal_event_get_uid (event));
+          g_hash_table_remove (self->events, gcal_event_get_uid (event));
           gtk_bitset_add (bitset, i);
         }
 
