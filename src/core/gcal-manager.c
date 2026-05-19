@@ -1204,34 +1204,6 @@ gcal_manager_move_event_to_source (GcalManager *self,
 }
 
 /**
- * gcal_manager_get_events:
- * @self: a #GcalManager
- * @start_date: the start of the dete range
- * @end_date: the end of the dete range
- *
- * Returns a list with #GcalEvent objects owned by the caller,
- * the list and the objects. The components inside the list are
- * owned by the caller as well.
- *
- * Returns: (nullable)(transfer full)(content-type GcalEvent):a #GList
- */
-GPtrArray*
-gcal_manager_get_events (GcalManager *self,
-                         GDateTime   *start_date,
-                         GDateTime   *end_date)
-{
-  g_autoptr (GPtrArray) events_at_range = NULL;
-
-  GCAL_ENTRY;
-
-  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
-
-  events_at_range = gcal_timeline_get_events_at_range (self->timeline, start_date, end_date);
-
-  GCAL_RETURN (g_steal_pointer (&events_at_range));
-}
-
-/**
  * gcal_manager_get_synchronizing:
  * @self: a #GcalManager
  *

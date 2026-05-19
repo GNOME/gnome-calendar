@@ -42,7 +42,6 @@ struct _GcalTimeline
   GcalRange          *range;
   GcalRange          *augmented_range;
 
-  GcalRangeTree      *events;
   gchar              *filter;
 
   GHashTable         *calendars; /* GcalCalendar* -> GcalCalendarMonitor* */
@@ -480,7 +479,6 @@ gcal_timeline_finalize (GObject *object)
 
   g_clear_handle_id (&self->update_range_idle_id, g_source_remove);
 
-  g_clear_pointer (&self->events, gcal_range_tree_unref);
   g_clear_pointer (&self->calendars, g_hash_table_destroy);
   g_clear_pointer (&self->subscribers, g_hash_table_destroy);
 
@@ -572,7 +570,6 @@ gcal_timeline_init (GcalTimeline *self)
   self->augmentation_factor = 1.0;
 
   self->cancellable = g_cancellable_new ();
-  self->events = gcal_range_tree_new_with_free_func (g_object_unref);
   self->calendars = g_hash_table_new_full (NULL, NULL, NULL, g_object_unref);
   self->subscribers = g_hash_table_new_full (NULL, NULL, g_object_unref, (GDestroyNotify) subscriber_data_free);
 
@@ -733,24 +730,6 @@ gcal_timeline_remove_subscriber (GcalTimeline           *self,
   update_range (self);
 
   GCAL_EXIT;
-}
-
-GPtrArray*
-gcal_timeline_get_events_at_range (GcalTimeline *self,
-                                   GDateTime    *range_start,
-                                   GDateTime    *range_end)
-{
-  g_autoptr (GPtrArray) events_at_range = NULL;
-  g_autoptr (GcalRange) range = NULL;
-
-  g_return_val_if_fail (GCAL_IS_TIMELINE (self), NULL);
-  g_return_val_if_fail (range_start != NULL, NULL);
-  g_return_val_if_fail (range_end != NULL, NULL);
-
-  range = gcal_range_new (range_start, range_end, GCAL_RANGE_DEFAULT);
-  events_at_range = gcal_range_tree_get_data_at_range (self->events, range);
-
-  return g_steal_pointer (&events_at_range);
 }
 
 const gchar*
