@@ -930,7 +930,8 @@ widget_tick_cb (GtkWidget     *widget,
 
   g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
 
-  recalculate_layout_blocks (self);
+  if (!self->layout_blocks_valid)
+    recalculate_layout_blocks (self);
 
   GCAL_RETURN (G_SOURCE_REMOVE);
 }
