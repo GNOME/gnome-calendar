@@ -419,9 +419,17 @@ update_visible_rows (GcalMonthView *self)
 
   for (unsigned int i = 0; i < self->week_rows->len; i++)
     {
-      GtkWidget *row = g_ptr_array_index (self->week_rows, i);
+      GtkWidget *row;
+      gboolean child_visible;
+      gboolean visible;
 
-      gtk_widget_set_visible (row, i >= actual_first_visible_row && i <= actual_last_visible_row);
+      row = g_ptr_array_index (self->week_rows, i);
+
+      child_visible = i >= actual_first_visible_row && i <= actual_last_visible_row;
+      visible = (i >= actual_first_visible_row - 1) && (i <= actual_last_visible_row + 1);
+
+      gtk_widget_set_visible (row, visible);
+      gtk_widget_set_child_visible (row, child_visible);
     }
 }
 
