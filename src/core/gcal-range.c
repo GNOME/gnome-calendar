@@ -29,21 +29,63 @@ struct _GcalRange
   GDateTime          *range_start;
   GDateTime          *range_end;
   GcalRangeType       range_type;
+
+  int64_t             start_unix_timestamp;
+  int64_t             start_date_timestamp;
+  int64_t             end_unix_timestamp;
+  int64_t             end_date_timestamp;
 };
 
 G_DEFINE_BOXED_TYPE (GcalRange, gcal_range, gcal_range_ref, gcal_range_unref)
 
-typedef int (*CompareDateTimeFunc) (GDateTime *a,
-                                    GDateTime *b);
-
-static CompareDateTimeFunc
-get_compare_func (GcalRange *a,
-                  GcalRange *b)
+static inline int64_t
+date_time_to_date_timestamp (GDateTime *datetime)
 {
+  int64_t date_timestamp = 0;
+
+  date_timestamp += g_date_time_get_day_of_month (datetime);
+  date_timestamp += (g_date_time_get_month (datetime) * 100);
+  date_timestamp += (g_date_time_get_year (datetime) * 10000);
+
+  return date_timestamp;
+}
+
+static inline void
+get_start_and_end_timestamps (GcalRange *a,
+                              GcalRange *b,
+                              int64_t   *out_start_timestamp_a,
+                              int64_t   *out_end_timestamp_a,
+                              int64_t   *out_start_timestamp_b,
+                              int64_t   *out_end_timestamp_b)
+{
+  int64_t start_timestamp_a;
+  int64_t start_timestamp_b;
+  int64_t end_timestamp_a;
+  int64_t end_timestamp_b;
+
   if (a->range_type == GCAL_RANGE_DATE_ONLY || b->range_type == GCAL_RANGE_DATE_ONLY)
-    return gcal_date_time_compare_date;
+    {
+      start_timestamp_a = a->start_date_timestamp;
+      start_timestamp_b = b->start_date_timestamp;
+      end_timestamp_a = a->end_date_timestamp;
+      end_timestamp_b = b->end_date_timestamp;
+    }
   else
-    return (CompareDateTimeFunc) g_date_time_compare;
+    {
+      start_timestamp_a = a->start_unix_timestamp;
+      start_timestamp_b = b->start_unix_timestamp;
+      end_timestamp_a = a->end_unix_timestamp;
+      end_timestamp_b = b->end_unix_timestamp;
+    }
+
+  if (out_start_timestamp_a)
+    *out_start_timestamp_a = start_timestamp_a;
+  if (out_start_timestamp_b)
+    *out_start_timestamp_b = start_timestamp_b;
+  if (out_end_timestamp_a)
+    *out_end_timestamp_a = end_timestamp_a;
+  if (out_end_timestamp_b)
+    *out_end_timestamp_b = end_timestamp_b;
 }
 
 /**
@@ -165,6 +207,11 @@ gcal_range_new_take (GDateTime     *range_start,
   self->range_end = range_end;
   self->range_type = range_type;
 
+  self->start_unix_timestamp = g_date_time_to_unix (range_start);
+  self->start_date_timestamp = date_time_to_date_timestamp (range_start);
+  self->end_unix_timestamp = g_date_time_to_unix (range_end);
+  self->end_date_timestamp = date_time_to_date_timestamp (range_end);
+
   return self;
 }
 
@@ -242,11 +289,14 @@ gcal_range_calculate_overlap (GcalRange         *a,
                               GcalRange         *b,
                               GcalRangePosition *out_position)
 {
-  CompareDateTimeFunc compare_func;
   GcalRangePosition position;
   GcalRangeOverlap overlap;
-  gint a_start_b_start_diff;
-  gint a_end_b_end_diff;
+  int64_t a_start_b_start_diff;
+  int64_t a_end_b_end_diff;
+  int64_t start_timestamp_a;
+  int64_t start_timestamp_b;
+  int64_t end_timestamp_a;
+  int64_t end_timestamp_b;
 
   g_return_val_if_fail (a && b, GCAL_RANGE_NO_OVERLAP);
 
@@ -308,9 +358,12 @@ gcal_range_calculate_overlap (GcalRange         *a,
    *
    */
 
-  compare_func = get_compare_func (a, b);
-  a_start_b_start_diff = compare_func (a->range_start, b->range_start);
-  a_end_b_end_diff = compare_func (a->range_end, b->range_end);
+  get_start_and_end_timestamps (a, b,
+                                &start_timestamp_a, &end_timestamp_a,
+                                &start_timestamp_b, &end_timestamp_b);
+
+  a_start_b_start_diff = start_timestamp_a - start_timestamp_b;
+  a_end_b_end_diff = end_timestamp_a - end_timestamp_b;
 
   if (a_start_b_start_diff == 0 && a_end_b_end_diff == 0)
     {
@@ -337,11 +390,8 @@ gcal_range_calculate_overlap (GcalRange         *a,
         }
       else if (a_end_b_end_diff == 0)
         {
-          gint a_start_b_end_diff;
-          gint a_end_b_start_diff;
-
-          a_start_b_end_diff = compare_func (a->range_start, b->range_end);
-          a_end_b_start_diff = compare_func (a->range_end, b->range_start);
+          int64_t a_start_b_end_diff = start_timestamp_a - end_timestamp_b;
+          int64_t a_end_b_start_diff = end_timestamp_a - start_timestamp_b;
 
           if (a_start_b_end_diff >= 0)
             {
@@ -384,11 +434,8 @@ gcal_range_calculate_overlap (GcalRange         *a,
             }
           else
             {
-              gint a_start_b_end_diff;
-              gint a_end_b_start_diff;
-
-              a_start_b_end_diff = compare_func (a->range_start, b->range_end);
-              a_end_b_start_diff = compare_func (a->range_end, b->range_start);
+              int64_t a_start_b_end_diff = start_timestamp_a - end_timestamp_b;
+              int64_t a_end_b_start_diff = end_timestamp_a - start_timestamp_b;
 
               /* No overlap cases */
               if (a_start_b_end_diff >= 0)
@@ -448,16 +495,22 @@ gint
 gcal_range_compare (GcalRange *a,
                     GcalRange *b)
 {
-  CompareDateTimeFunc compare_func;
-  gint result;
+  int64_t start_timestamp_a;
+  int64_t start_timestamp_b;
+  int64_t end_timestamp_a;
+  int64_t end_timestamp_b;
+  int64_t result;
 
   g_return_val_if_fail (a && b, 0);
 
-  compare_func = get_compare_func (a, b);
-  result = compare_func (a->range_start, b->range_start);
+  get_start_and_end_timestamps (a, b,
+                                &start_timestamp_a, &end_timestamp_a,
+                                &start_timestamp_b, &end_timestamp_b);
+
+  result = start_timestamp_b - start_timestamp_a;
 
   if (result == 0)
-    result = compare_func (a->range_end, b->range_end);
+    result = end_timestamp_b - end_timestamp_a;
 
   return result;
 }
@@ -475,22 +528,27 @@ GcalRange*
 gcal_range_union (GcalRange *a,
                   GcalRange *b)
 {
-  CompareDateTimeFunc compare_func;
   GcalRangeType range_type;
   GDateTime *start;
   GDateTime *end;
+  int64_t start_timestamp_a;
+  int64_t start_timestamp_b;
+  int64_t end_timestamp_a;
+  int64_t end_timestamp_b;
 
   g_return_val_if_fail (a != NULL, NULL);
   g_return_val_if_fail (b != NULL, NULL);
 
-  compare_func = get_compare_func (a, b);
+  get_start_and_end_timestamps (a, b,
+                                &start_timestamp_a, &end_timestamp_a,
+                                &start_timestamp_b, &end_timestamp_b);
 
-  if (compare_func (a->range_start, b->range_start) < 0)
+  if (start_timestamp_a < start_timestamp_b)
     start = a->range_start;
   else
     start = b->range_start;
 
-  if (compare_func (a->range_end, b->range_end) > 0)
+  if (end_timestamp_a > end_timestamp_b)
     end = a->range_end;
   else
     end = b->range_end;
@@ -540,18 +598,21 @@ gboolean
 gcal_range_contains_datetime (GcalRange *self,
                               GDateTime *datetime)
 {
+  int64_t timestamp = 0;
+
   g_return_val_if_fail (self, FALSE);
   g_return_val_if_fail (datetime, FALSE);
 
   switch (self->range_type)
     {
     case GCAL_RANGE_DEFAULT:
-      return g_date_time_compare (datetime, self->range_start) >= 0 &&
-             g_date_time_compare (datetime, self->range_end) < 0;
+      timestamp = g_date_time_to_unix (datetime);
+      return timestamp >= self->start_unix_timestamp && timestamp < self->end_unix_timestamp;
 
     case GCAL_RANGE_DATE_ONLY:
-      return gcal_date_time_compare_date (datetime, self->range_start) >= 0 &&
-             gcal_date_time_compare_date (datetime, self->range_end) <= 0;
+      timestamp = date_time_to_date_timestamp (datetime);
+      return timestamp >= self->start_date_timestamp && timestamp <= self->end_date_timestamp;
+
     default:
       g_assert_not_reached ();
     }
