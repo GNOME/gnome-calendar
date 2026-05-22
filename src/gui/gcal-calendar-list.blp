@@ -15,6 +15,21 @@ template $GcalCalendarList: Adw.Bin {
         hexpand: true;
         selection-mode: none;
         row-activated => $on_listbox_row_activated_cb(template) not-swapped;
+        // Allow Page-Up/Page-Down to consistently switch months/weeks,
+        // regardless of whether the sidebar's calendars listbox has focus.
+        ShortcutController {
+          propagation-phase: capture;
+
+          Shortcut {
+            trigger: "Page_Up";
+            action: "action(win.previous-date)";
+          }
+
+          Shortcut {
+            trigger: "Page_Down";
+            action: "action(win.next-date)";
+          }
+        }
 
         styles [
           "navigation-sidebar",
