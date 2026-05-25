@@ -58,18 +58,11 @@ struct _GcalEventEditorDialog
   GtkWidget                *cancel_button;
   GtkWidget                *delete_group;
   GtkWidget                *done_button;
-  GcalEventEditorSection   *notes_section;
-  GcalEventEditorSection   *reminders_section;
-  GcalEventEditorSection   *schedule_section;
   GcalEventEditorSection   *summary_section;
   GcalEventEditorSection   *attendees_section;
   GtkWidget                *nav_view;
   GtkWidget                *main_page;
   GtkWidget                *attendee_details_page;
-
-
-  GcalEventEditorSection *sections[5];
-
 
   GcalEvent          *event;
   GcalEvent          *edited_event;
@@ -79,7 +72,6 @@ struct _GcalEventEditorDialog
 
   /* flags */
   gboolean          event_is_new;
-  gboolean          recurrence_changed;
   gboolean          writable;
 };
 
@@ -132,9 +124,7 @@ set_event (GcalEventEditorDialog *self,
 {
 
   g_autoptr (GdkPaintable) paintable = NULL;
-  GcalEventEditorFlags flags;
   GcalCalendar *calendar;
-  gint i;
 
   GCAL_ENTRY;
 
@@ -167,9 +157,6 @@ set_event (GcalEventEditorDialog *self,
 
   gcal_calendar_combo_row_set_calendar (self->calendar_combo_row, calendar);
 
-  /* recurrence_changed */
-  self->recurrence_changed = FALSE;
-
   set_writable (self, !gcal_calendar_is_read_only (calendar));
   gboolean has_participants = gcal_event_get_organizer (self->edited_event) != NULL;
   gtk_widget_set_visible (GTK_WIDGET (self->attendees_section), has_participants);
@@ -183,14 +170,6 @@ set_event (GcalEventEditorDialog *self,
   self->attendees_model = gcal_event_get_attendees (self->edited_event);
 
 out:
-  flags = GCAL_EVENT_EDITOR_FLAG_NONE;
-
-  if (new_event)
-    flags |= GCAL_EVENT_EDITOR_FLAG_NEW_EVENT;
-
-  for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
-    gcal_event_editor_section_set_event (self->sections[i], self->edited_event, flags);
-
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
 
   GCAL_EXIT;
@@ -282,95 +261,60 @@ set_up_context (GcalEventEditorDialog *self)
   GCAL_EXIT;
 }
 
-static void
-save_event_and_close_dialog (GcalEventEditorDialog *self)
+static gboolean
+save_event (GcalEventEditorDialog *self,
+            GcalCalendar          *calendar)
 {
   GcalCalendar *selected_calendar;
-  GcalCalendar *calendar;
-  GcalManager *manager;
-  gboolean can_show_mod_all;
-  gboolean was_recurrent;
-  gboolean calendar_changed;
   GcalContext *context;
-  gint i;
+  GcalManager *manager;
+
+  gboolean calendar_equal, alarms_equal, schedule_equal, strings_equal, event_equal;
+
+  GCAL_ENTRY;
 
   context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   manager = gcal_context_get_manager (context);
-  calendar = gcal_event_get_calendar (self->edited_event);
-
-  if (gcal_calendar_is_read_only (calendar))
-    GCAL_GOTO (out);
 
   selected_calendar = gcal_calendar_combo_row_get_calendar (self->calendar_combo_row);
-  calendar_changed = selected_calendar && calendar != selected_calendar;
-  can_show_mod_all = TRUE;
-  if (!self->event_is_new)
-    {
-      gboolean anything_changed = calendar_changed;
 
-      for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
-        {
-          gboolean section_changed;
-
-          section_changed = gcal_event_editor_section_changed (self->sections[i]);
-          anything_changed |= section_changed;
-        }
-
-      if (!anything_changed)
-        goto out;
-
-      can_show_mod_all =
-        !gcal_schedule_section_recurrence_changed (GCAL_SCHEDULE_SECTION (self->schedule_section)) &&
-        !gcal_schedule_section_day_changed (GCAL_SCHEDULE_SECTION (self->schedule_section));
-    }
-
-  /*
-   * We don't want to ask the recurrence mod type if the event wasn't
-   * actually recurrent.
-   */
-  was_recurrent = gcal_event_has_recurrence (self->event);
-
-  for (i = 0; i < G_N_ELEMENTS (self->sections); i++)
-    {
-      if (gcal_event_editor_section_changed (self->sections[i]))
-        gcal_event_editor_section_apply (self->sections[i]);
-    }
-
-  if (calendar_changed)
-    {
-      if (self->event_is_new)
-        {
-          gcal_event_set_calendar (self->edited_event, selected_calendar);
-        }
-      else
-        {
-          ESource *source = gcal_calendar_get_source (selected_calendar);
-
-          gcal_manager_move_event_to_source (manager, self->edited_event, source);
-          goto out;
-        }
-    }
+  calendar_equal = selected_calendar && calendar == selected_calendar;
+  alarms_equal = gcal_event_alarms_equal (self->event, self->edited_event);
+  schedule_equal = gcal_event_schedule_equal (self->event, self->edited_event);
+  strings_equal = gcal_event_strings_equal (self->event, self->edited_event);
+  event_equal = calendar_equal && alarms_equal && schedule_equal && strings_equal;
 
   if (self->event_is_new)
     {
+      gcal_event_set_calendar (self->edited_event, selected_calendar);
       gcal_manager_create_event (manager, self->edited_event);
+      GCAL_RETURN (TRUE);
     }
-  else if (was_recurrent && gcal_event_has_recurrence (self->edited_event))
+
+  if (event_equal)
+    GCAL_RETURN (TRUE);
+
+  if (!calendar_equal)
+    {
+      ESource *source = gcal_calendar_get_source (selected_calendar);
+
+      gcal_manager_move_event_to_source (manager, self->edited_event, source);
+      GCAL_RETURN (TRUE);
+    }
+
+  if (gcal_event_has_recurrence (self->event) && gcal_event_has_recurrence (self->edited_event))
     {
       gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
                                                    self->edited_event,
-                                                   can_show_mod_all,
+                                                   schedule_equal,
                                                    on_ask_recurrence_response_save_cb,
                                                    self);
-      return;
-    }
-  else
-    {
-      gcal_manager_update_event (manager, self->edited_event, GCAL_RECURRENCE_MOD_THIS_ONLY);
+      GCAL_RETURN (FALSE);
     }
 
-out:
-  clear_and_hide_dialog (self);
+  gcal_manager_update_event (manager, self->edited_event, GCAL_RECURRENCE_MOD_THIS_ONLY);
+
+  GCAL_RETURN (TRUE);
 }
 
 
@@ -384,8 +328,10 @@ on_event_editor_save_action_activated_cb (GtkWidget  *widget,
                                           GVariant   *param)
 {
   GcalEventEditorDialog *self = GCAL_EVENT_EDITOR_DIALOG (widget);
+  GcalCalendar *calendar = gcal_event_get_calendar (self->edited_event);
 
-  save_event_and_close_dialog (self);
+  if (gcal_calendar_is_read_only (calendar) || save_event (self, calendar))
+    clear_and_hide_dialog (self);
 }
 
 static void
@@ -654,11 +600,8 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, delete_group);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, done_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, notes_section);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, reminders_section);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, schedule_section);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, summary_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, attendees_section);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, summary_section);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, nav_view);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, main_page);
   gtk_widget_class_bind_template_child (widget_class, GcalEventEditorDialog, attendee_details_page);
@@ -675,15 +618,7 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
 static void
 gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
 {
-  gint i = 0;
-
   gtk_widget_init_template (GTK_WIDGET (self));
-
-  self->sections[i++] = self->notes_section;
-  self->sections[i++] = self->reminders_section;
-  self->sections[i++] = self->schedule_section;
-  self->sections[i++] = self->summary_section;
-  self->sections[i++] = self->attendees_section;
 
   set_up_context (self);
 }

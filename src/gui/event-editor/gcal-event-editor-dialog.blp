@@ -47,7 +47,7 @@ template $GcalEventEditorDialog: Adw.Dialog {
             }
           }
 
-          $GcalScheduleSection schedule_section {
+          $GcalScheduleSection {
             sensitive: bind template.writable;
           }
 
@@ -55,12 +55,12 @@ template $GcalEventEditorDialog: Adw.Dialog {
             sensitive: bind template.writable;
           }
 
-          $GcalRemindersSection reminders_section {
+          $GcalRemindersSection {
             title: _("Reminders");
             sensitive: bind template.writable;
           }
 
-          $GcalNotesSection notes_section {
+          $GcalNotesSection {
             sensitive: bind template.writable;
           }
 
