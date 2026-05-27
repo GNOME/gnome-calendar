@@ -22,6 +22,7 @@
 
 #include "gcal-alarm-row.h"
 #include "gcal-debug.h"
+#include "gcal-event-editor-dialog.h"
 #include "gcal-event-editor-section.h"
 #include "gcal-reminders-section.h"
 #include "gcal-utils.h"
@@ -48,6 +49,7 @@ struct _GcalRemindersSection
   GtkWidget          *one_week_button;
 
   GcalEvent          *event;
+  GcalEvent          *cloned_event;
   GPtrArray          *alarms;
 };
 
@@ -298,12 +300,21 @@ on_remove_alarm_cb (GcalAlarmRow         *alarm_row,
   ECalComponentAlarm *alarm;
   GtkWidget *alarm_button;
   gint trigger_minutes;
+  GtkWidget *dialog;
+  GcalEvent *event;
   gsize i;
 
   GCAL_ENTRY;
 
+  dialog = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_EVENT_EDITOR_DIALOG);
+
+  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
+
+  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
+
   alarm = gcal_alarm_row_get_alarm (alarm_row);
-  trigger_minutes = get_alarm_trigger_minutes (self->event, alarm);
+  trigger_minutes = get_alarm_trigger_minutes (event, alarm);
+  gcal_event_remove_alarm (event, trigger_minutes);
 
   /* Make the button sensitive again */
   alarm_button = get_row_for_alarm_trigger_minutes (self, trigger_minutes);
@@ -339,6 +350,14 @@ on_add_alarm_button_clicked_cb (GtkWidget            *button,
   ECalComponentAlarm *alarm;
   GtkWidget *row;
   guint i, minutes;
+  GtkWidget *dialog;
+  GcalEvent *event;
+
+  dialog = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_EVENT_EDITOR_DIALOG);
+
+  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
+
+  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
 
   /* Search for the button minute */
   minutes = G_MAXUINT;
@@ -359,6 +378,7 @@ on_add_alarm_button_clicked_cb (GtkWidget            *button,
 
   row = create_alarm_row (self, alarm);
   gtk_list_box_append (self->alarms_listbox, row);
+  gcal_event_add_alarm (event, alarm);
 
   g_ptr_array_add (self->alarms, alarm);
 
@@ -390,7 +410,11 @@ gcal_reminders_section_set_event (GcalEventEditorSection *section,
 
   GCAL_ENTRY;
 
-  g_set_object (&self->event, event);
+  g_clear_pointer (&self->event, g_object_unref);
+
+  if (event)
+    g_set_object (&self->event, g_object_ref (gcal_event_new_from_event (event)));
+
   setup_alarms (self);
 
   GCAL_EXIT;
@@ -470,6 +494,44 @@ gcal_event_editor_section_iface_init (GcalEventEditorSectionInterface *iface)
 
 
 /*
+ * GtkWidget overrides
+ */
+
+static void
+gcal_reminders_section_map (GtkWidget *widget)
+{
+  GcalRemindersSection *self = GCAL_REMINDERS_SECTION (widget);
+  GtkWidget *dialog;
+  GcalEvent *event;
+
+  dialog = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_EVENT_EDITOR_DIALOG);
+
+  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
+
+  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
+
+  g_set_object (&self->event, event);
+
+  setup_alarms (self);
+
+  GTK_WIDGET_CLASS (gcal_reminders_section_parent_class)->map (widget);
+}
+
+static void
+gcal_reminders_section_unmap (GtkWidget *widget)
+{
+  GcalRemindersSection *self = GCAL_REMINDERS_SECTION (widget);
+
+  clear_alarms (self);
+
+  for (gsize i = 0; i < G_N_ELEMENTS (minutes_button); i++)
+    gtk_widget_set_sensitive (WIDGET_FROM_OFFSET (minutes_button[i].button_offset), TRUE);
+
+  GTK_WIDGET_CLASS (gcal_reminders_section_parent_class)->unmap (widget);
+}
+
+
+/*
  * GObject overrides
  */
 
@@ -489,7 +551,7 @@ gcal_reminders_section_finalize (GObject *object)
   GcalRemindersSection *self = (GcalRemindersSection *)object;
 
   g_clear_pointer (&self->alarms, g_ptr_array_unref);
-  g_clear_object (&self->event);
+  g_clear_pointer (&self->event, g_object_unref);
 
   G_OBJECT_CLASS (gcal_reminders_section_parent_class)->finalize (object);
 }
@@ -502,6 +564,9 @@ gcal_reminders_section_class_init (GcalRemindersSectionClass *klass)
 
   object_class->dispose = gcal_reminders_section_dispose;
   object_class->finalize = gcal_reminders_section_finalize;
+
+  widget_class->map = gcal_reminders_section_map;
+  widget_class->unmap = gcal_reminders_section_unmap;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-reminders-section.ui");
 
