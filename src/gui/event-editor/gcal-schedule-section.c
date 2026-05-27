@@ -26,6 +26,7 @@
 #include "gcal-date-time-chooser.h"
 #include "gcal-debug.h"
 #include "gcal-event.h"
+#include "gcal-event-editor-dialog.h"
 #include "gcal-event-editor-section.h"
 #include "gcal-event-schedule.h"
 #include "gcal-recurrence.h"
@@ -117,6 +118,9 @@ static void          on_schedule_type_changed_cb                 (GtkWidget     
 
 static void          on_number_of_occurrences_changed_cb         (GcalScheduleSection *self);
 static void          on_until_date_changed_cb                    (GcalScheduleSection *self);
+
+static void          gcal_schedule_section_apply_to_event        (GcalScheduleSection *self,
+                                                                  GcalEvent           *event);
 
 static WidgetState *
 widget_state_from_values (const GcalEventSchedule *values)
@@ -333,6 +337,7 @@ update_from_event_schedule (GcalScheduleSection *self,
   self->values = values;
 
   refresh (self);
+  gcal_schedule_section_apply_to_event (self, self->event);
 }
 
 /*
@@ -627,6 +632,37 @@ gcal_event_editor_section_iface_init (GcalEventEditorSectionInterface *iface)
 
 
 /*
+ * GtkWidget overrides
+ */
+
+static void
+gcal_schedule_section_map (GtkWidget *widget)
+{
+  GcalScheduleSection *self = GCAL_SCHEDULE_SECTION (widget);
+  GcalTimeFormat time_format;
+  GcalContext *context;
+  GtkWidget *dialog;
+  GcalEvent *event;
+
+  dialog = gtk_widget_get_ancestor (widget, GCAL_TYPE_EVENT_EDITOR_DIALOG);
+
+  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
+
+  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
+  g_set_object (&self->event, event);
+  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+
+  time_format = gcal_context_get_time_format (context);
+  self->values = gcal_event_schedule_from_event (event, time_format);
+
+  if (event)
+    refresh (self);
+
+  GTK_WIDGET_CLASS (gcal_schedule_section_parent_class)->map (widget);
+}
+
+
+/*
  * GObject overrides
  */
 
@@ -650,6 +686,8 @@ gcal_schedule_section_class_init (GcalScheduleSectionClass *klass)
   g_type_ensure (GCAL_TYPE_DATE_TIME_CHOOSER);
 
   object_class->finalize = gcal_schedule_section_finalize;
+
+  widget_class->map = gcal_schedule_section_map;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-schedule-section.ui");
 
