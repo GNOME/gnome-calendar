@@ -50,6 +50,7 @@ struct _GcalMonthViewRow
   GtkWidget          *day_cells[N_WEEKDAYS];
 
   GcalRange          *range;
+  gboolean            ceiled_height;
 
   GListModel         *events;
 
@@ -75,6 +76,7 @@ enum
 {
   PROP_0,
   PROP_RANGE,
+  PROP_CEILED_HEIGHT,
   N_PROPS
 };
 
@@ -562,6 +564,8 @@ prepare_layout_blocks (GcalMonthViewRow *self,
       gint content_space;
 
       content_space = gcal_month_cell_get_content_space (GCAL_MONTH_CELL (self->day_cells[i]));
+      if (self->ceiled_height)
+        content_space--;
       overflow_height = gcal_month_cell_get_overflow_height (GCAL_MONTH_CELL (self->day_cells[i]));
 
       available_height_without_overflow[i] = content_space;
@@ -1214,6 +1218,9 @@ gcal_month_view_row_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_CEILED_HEIGHT:
+      g_value_set_boolean (value, gcal_month_view_row_get_ceiled_height (self));
+      break;
     case PROP_RANGE:
       g_value_set_boxed (value, self->range);
       break;
@@ -1233,6 +1240,9 @@ gcal_month_view_row_set_property (GObject      *object,
 
   switch (prop_id)
     {
+    case PROP_CEILED_HEIGHT:
+      gcal_month_view_row_set_ceiled_height (self, g_value_get_boolean (value));
+      break;
     case PROP_RANGE:
       gcal_month_view_row_set_range (self, g_value_get_boxed (value));
       break;
@@ -1257,6 +1267,20 @@ gcal_month_view_row_class_init (GcalMonthViewRowClass *klass)
   widget_class->focus = gcal_month_view_row_focus;
   widget_class->measure = gcal_month_view_row_measure;
   widget_class->size_allocate = gcal_month_view_row_size_allocate;
+
+  /**
+   * GcalMonthViewRow:ceiled-height:
+   *
+   * Whether the row should negate the compensated pixel when allocating overflow.
+   *
+   * This property should only be set to %TRUE if the height of [class@MonthView]
+   * is not divisible by the amount of visible rows, and this row's height is being
+   * allocated an additional pixel.
+   */
+  properties[PROP_CEILED_HEIGHT] =
+      g_param_spec_boolean ("ceiled-height", NULL, NULL,
+                            FALSE,
+                            G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_RANGE] = g_param_spec_boxed ("range", NULL, NULL,
                                                GCAL_TYPE_RANGE,
@@ -1444,4 +1468,43 @@ gcal_month_view_row_focus_adjacent_cell (GcalMonthViewRow *self,
   cell = gcal_month_view_row_get_cell_at_x (self, data->focal_x);
 
   return gtk_widget_grab_focus (cell);
+}
+
+/**
+ * gcal_month_view_row_get_ceiled_height:
+ * @self: a #GcalMonthViewRow
+ *
+ * Gets whether the row is negating the compensated pixel.
+ *
+ * Returns: %TRUE if the row is negating the compensated pixel.
+ */
+gboolean
+gcal_month_view_row_get_ceiled_height (GcalMonthViewRow *self)
+{
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+
+  return self->ceiled_height;
+}
+
+/**
+ * gcal_month_view_row_set_ceiled_height:
+ * @self: a #GcalMonthViewRow
+ * @ceiled_height: %TRUE if the row should negate the compensated pixel.
+ *
+ * Sets whether the row should negate the compensated pixel.
+ *
+ * See [property@MonthViewRow:ceiled-height] for more details.
+ */
+void
+gcal_month_view_row_set_ceiled_height (GcalMonthViewRow *self,
+                                       gboolean          ceiled_height)
+{
+  g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
+
+  if (self->ceiled_height == ceiled_height)
+    return;
+
+  self->ceiled_height = ceiled_height;
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CEILED_HEIGHT]);
 }
