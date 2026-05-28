@@ -1678,6 +1678,7 @@ gcal_month_view_size_allocate (GtkWidget *widget,
       row_allocation.y = round (ROW_Y (i));
       row_allocation.width = width;
       row_allocation.height = round (ROW_Y (i + 1)) - row_allocation.y;
+      gcal_month_view_row_set_ceiled_height (GCAL_MONTH_VIEW_ROW (row), row_height < row_allocation.height);
 
 #undef ROW_Y
 
