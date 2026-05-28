@@ -31,16 +31,9 @@ struct _GcalNotesSection
 
   GtkTextView        *notes_text;
   GtkLabel           *placeholder;
-
-  gulong              handler_id;
-
-  GcalEvent          *event;
 };
 
-static void          gcal_event_editor_section_iface_init        (GcalEventEditorSectionInterface *iface);
-
-G_DEFINE_TYPE_WITH_CODE (GcalNotesSection, gcal_notes_section, ADW_TYPE_PREFERENCES_GROUP,
-                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_iface_init))
+G_DEFINE_FINAL_TYPE (GcalNotesSection, gcal_notes_section, ADW_TYPE_PREFERENCES_GROUP)
 
 /*
  * Callbacks
@@ -106,84 +99,6 @@ on_row_pressed (GtkGestureClick *gesture,
   gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_NONE);
 }
 
-/*
- * GcalEventEditorSection interface
- */
-
-static void
-gcal_notes_section_set_event (GcalEventEditorSection *section,
-                              GcalEvent              *event,
-                              GcalEventEditorFlags    flags)
-{
-  GcalNotesSection *self;
-  GtkTextBuffer *buffer;
-
-  GCAL_ENTRY;
-
-  self = GCAL_NOTES_SECTION (section);
-
-  g_clear_pointer (&self->event, g_object_unref);
-
-  if (!event)
-    GCAL_RETURN ();
-
-  g_set_object (&self->event, g_object_ref (gcal_event_new_from_event (event)));
-
-  buffer = gtk_text_view_get_buffer (self->notes_text);
-
-  g_signal_handlers_block_by_func (buffer, on_notes_text_changed_cb, self);
-  gtk_text_buffer_set_text (buffer, gcal_event_get_description (event), -1);
-  g_signal_handlers_unblock_by_func (buffer, on_notes_text_changed_cb, self);
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_notes_section_apply (GcalEventEditorSection *section)
-{
-  g_autofree gchar *note_text = NULL;
-  GcalNotesSection *self;
-  GtkTextBuffer *buffer;
-
-  GCAL_ENTRY;
-
-  self = GCAL_NOTES_SECTION (section);
-
-  /* Update description */
-  buffer = gtk_text_view_get_buffer (self->notes_text);
-  g_object_get (G_OBJECT (buffer), "text", &note_text, NULL);
-
-  gcal_event_set_description (self->event, note_text);
-
-  GCAL_EXIT;
-}
-
-static gboolean
-gcal_notes_section_changed (GcalEventEditorSection *section)
-{
-  g_autofree gchar *note_text = NULL;
-  GcalNotesSection *self;
-  GtkTextBuffer *buffer;
-
-  GCAL_ENTRY;
-
-  self = GCAL_NOTES_SECTION (section);
-
-  /* Update description */
-  buffer = gtk_text_view_get_buffer (self->notes_text);
-  g_object_get (G_OBJECT (buffer), "text", &note_text, NULL);
-
-  GCAL_RETURN (g_strcmp0 (gcal_event_get_description (self->event), note_text) != 0);
-}
-
-static void
-gcal_event_editor_section_iface_init (GcalEventEditorSectionInterface *iface)
-{
-  iface->set_event = gcal_notes_section_set_event;
-  iface->apply = gcal_notes_section_apply;
-  iface->changed = gcal_notes_section_changed;
-}
-
 
 /*
  * GtkWidget overrides
@@ -244,22 +159,9 @@ gcal_notes_section_unmap (GtkWidget *widget)
  */
 
 static void
-gcal_notes_section_finalize (GObject *object)
-{
-  GcalNotesSection *self = (GcalNotesSection *)object;
-
-  g_clear_pointer (&self->event, g_object_unref);
-
-  G_OBJECT_CLASS (gcal_notes_section_parent_class)->finalize (object);
-}
-
-static void
 gcal_notes_section_class_init (GcalNotesSectionClass *klass)
 {
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-
-  object_class->finalize = gcal_notes_section_finalize;
 
   widget_class->map = gcal_notes_section_map;
   widget_class->unmap = gcal_notes_section_unmap;
