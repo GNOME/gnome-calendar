@@ -47,23 +47,13 @@ struct _GcalRemindersSection
   GtkWidget          *two_days_button;
   GtkWidget          *three_days_button;
   GtkWidget          *one_week_button;
-
-  GcalEvent          *event;
-  GcalEvent          *cloned_event;
-  GPtrArray          *alarms;
 };
 
-
-static void          gcal_event_editor_section_iface_init        (GcalEventEditorSectionInterface *iface);
 
 static void          on_remove_alarm_cb                          (GcalAlarmRow         *alarm_row,
                                                                   GcalRemindersSection *self);
 
-static void          on_update_alarm_cb                          (GcalAlarmRow         *alarm_row,
-                                                                  GcalRemindersSection *self);
-
-G_DEFINE_TYPE_WITH_CODE (GcalRemindersSection, gcal_reminders_section, ADW_TYPE_PREFERENCES_GROUP,
-                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_iface_init))
+G_DEFINE_FINAL_TYPE (GcalRemindersSection, gcal_reminders_section, ADW_TYPE_PREFERENCES_GROUP)
 
 /*
  * Auxiliary methods
@@ -148,8 +138,6 @@ clear_alarms (GcalRemindersSection *self)
 {
   GtkWidget *child;
 
-  g_ptr_array_set_size (self->alarms, 0);
-
   child = gtk_widget_get_first_child (GTK_WIDGET (self->alarms_listbox));
   while (child)
     {
@@ -172,7 +160,6 @@ create_alarm_row (GcalRemindersSection *self,
 
   row = gcal_alarm_row_new (alarm);
   g_signal_connect_object (row, "remove-alarm", G_CALLBACK (on_remove_alarm_cb), self, 0);
-  g_signal_connect_object (row, "update-alarm", G_CALLBACK (on_update_alarm_cb), self, 0);
 
   return row;
 }
@@ -181,35 +168,36 @@ static void
 setup_alarms (GcalRemindersSection *self)
 {
   g_autoptr (GList) alarms = NULL;
+  GtkWidget *dialog;
+  GcalEvent *event;
   GList *l;
-  gsize i;
 
   GCAL_ENTRY;
 
+  dialog = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_EVENT_EDITOR_DIALOG);
+
+  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
+
+  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
+
   clear_alarms (self);
 
-  if (!self->event)
+  if (!event)
     GCAL_RETURN ();
 
-  /* We start by making all alarm buttons sensitive, and only make them insensitive when needed */
-  for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
-    gtk_widget_set_sensitive (WIDGET_FROM_OFFSET (minutes_button[i].button_offset), TRUE);
+  alarms = gcal_event_get_alarms (event);
 
-  alarms = gcal_event_get_alarms (self->event);
   for (l = alarms; l != NULL; l = l->next)
-    g_ptr_array_add (self->alarms, l->data);
-
-  for (i = 0; i < self->alarms->len; i++)
     {
       ECalComponentAlarm *alarm;
       GtkWidget *row;
       gint minutes;
       guint j;
 
-      alarm = g_ptr_array_index (self->alarms, i);
+      alarm = l->data;
 
       /* Make already-added alarm buttons insensitive */
-      minutes = get_alarm_trigger_minutes (self->event, alarm);
+      minutes = get_alarm_trigger_minutes (event, alarm);
 
       for (j = 0; j < G_N_ELEMENTS (minutes_button); j++)
         {
@@ -242,10 +230,18 @@ sort_alarms_func (GtkListBoxRow *a,
   ECalComponentAlarm *alarm_a;
   ECalComponentAlarm *alarm_b;
   GcalRemindersSection *self;
+  GtkWidget *dialog;
+  GcalEvent *event;
   gint minutes_a;
   gint minutes_b;
 
   self = GCAL_REMINDERS_SECTION (user_data);
+
+  dialog = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_EVENT_EDITOR_DIALOG);
+
+  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
+
+  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
 
   if (a == self->new_alarm_row)
     return 1;
@@ -253,44 +249,12 @@ sort_alarms_func (GtkListBoxRow *a,
     return -1;
 
   alarm_a = gcal_alarm_row_get_alarm (GCAL_ALARM_ROW (a));
-  minutes_a = get_alarm_trigger_minutes (self->event, alarm_a);
+  minutes_a = get_alarm_trigger_minutes (event, alarm_a);
 
   alarm_b = gcal_alarm_row_get_alarm (GCAL_ALARM_ROW (b));
-  minutes_b = get_alarm_trigger_minutes (self->event, alarm_b);
+  minutes_b = get_alarm_trigger_minutes (event, alarm_b);
 
   return minutes_a - minutes_b;
-}
-
-static void
-on_update_alarm_cb (GcalAlarmRow         *alarm_row,
-                    GcalRemindersSection *self)
-{
-  ECalComponentAlarm *alarm;
-  gint trigger_minutes;
-  gsize i;
-
-  GCAL_ENTRY;
-
-  alarm = gcal_alarm_row_get_alarm (alarm_row);
-  trigger_minutes = get_alarm_trigger_minutes (self->event, alarm);
-
-  /* Remove from the array */
-  for (i = 0; i < self->alarms->len; i++)
-    {
-      ECalComponentAlarm *a = g_ptr_array_index (self->alarms, i);
-
-      if (trigger_minutes == get_alarm_trigger_minutes (self->event, a))
-        {
-          GCAL_TRACE_MSG ("Updated alarm for %d minutes", trigger_minutes);
-
-          g_ptr_array_remove_index (self->alarms, i);
-          g_ptr_array_insert (self->alarms, i, e_cal_component_alarm_copy (alarm));
-
-          break;
-        }
-    }
-
-  GCAL_EXIT;
 }
 
 static void
@@ -302,7 +266,6 @@ on_remove_alarm_cb (GcalAlarmRow         *alarm_row,
   gint trigger_minutes;
   GtkWidget *dialog;
   GcalEvent *event;
-  gsize i;
 
   GCAL_ENTRY;
 
@@ -321,20 +284,6 @@ on_remove_alarm_cb (GcalAlarmRow         *alarm_row,
 
   if (alarm_button)
     gtk_widget_set_sensitive (alarm_button, TRUE);
-
-  /* Remove from the array */
-  for (i = 0; i < self->alarms->len; i++)
-    {
-      ECalComponentAlarm *a = g_ptr_array_index (self->alarms, i);
-
-      if (trigger_minutes == get_alarm_trigger_minutes (self->event, a))
-        {
-          GCAL_TRACE_MSG ("Removed alarm for %d minutes", trigger_minutes);
-
-          g_ptr_array_remove_index (self->alarms, i);
-          break;
-        }
-    }
 
   gtk_list_box_remove (self->alarms_listbox, GTK_WIDGET (alarm_row));
 
@@ -380,8 +329,6 @@ on_add_alarm_button_clicked_cb (GtkWidget            *button,
   gtk_list_box_append (self->alarms_listbox, row);
   gcal_event_add_alarm (event, alarm);
 
-  g_ptr_array_add (self->alarms, alarm);
-
   gtk_widget_set_sensitive (button, FALSE);
 
   update_new_alarm_icon (self);
@@ -398,102 +345,6 @@ on_alarms_listbox_row_activated_cb (GtkListBox           *alarms_listbox,
 
 
 /*
- * GcalEventEditorSection interface
- */
-
-static void
-gcal_reminders_section_set_event (GcalEventEditorSection *section,
-                                  GcalEvent              *event,
-                                  GcalEventEditorFlags    flags)
-{
-  GcalRemindersSection *self = GCAL_REMINDERS_SECTION (section);
-
-  GCAL_ENTRY;
-
-  g_clear_pointer (&self->event, g_object_unref);
-
-  if (event)
-    g_set_object (&self->event, g_object_ref (gcal_event_new_from_event (event)));
-
-  setup_alarms (self);
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_reminders_section_apply (GcalEventEditorSection *section)
-{
-  GcalRemindersSection *self = GCAL_REMINDERS_SECTION (section);
-  gint i;
-
-  GCAL_ENTRY;
-
-  gcal_event_remove_all_alarms (self->event);
-
-  for (i = 0; i < self->alarms->len; i++)
-    gcal_event_add_alarm (self->event, g_ptr_array_index (self->alarms, i));
-
-  clear_alarms (self);
-
-  GCAL_EXIT;
-}
-
-static gboolean
-gcal_reminders_section_changed (GcalEventEditorSection *section)
-{
-  GcalRemindersSection *self;
-  g_autoptr (GList) alarms = NULL;
-
-  GCAL_ENTRY;
-
-  self = GCAL_REMINDERS_SECTION (section);
-
-  alarms = gcal_event_get_alarms (self->event);
-  if (g_list_length (alarms) != self->alarms->len)
-    GCAL_RETURN (TRUE);
-
-  for (GList *l = alarms; l != NULL; l = l->next)
-    {
-      ECalComponentAlarm *other_alarm;
-      ECalComponentAlarm *alarm;
-
-      alarm = l->data;
-      other_alarm = NULL;
-
-      for (guint i = 0; i < self->alarms->len; i++)
-        {
-          ECalComponentAlarm *aux = g_ptr_array_index (self->alarms, i);
-
-          if (get_alarm_trigger_minutes (self->event, alarm) == get_alarm_trigger_minutes (self->event, aux))
-            {
-              other_alarm = aux;
-
-              if (e_cal_component_alarm_get_action (alarm) != e_cal_component_alarm_get_action (aux))
-                GCAL_RETURN (TRUE);
-
-              break;
-            }
-        }
-
-      if (!other_alarm)
-        GCAL_RETURN (TRUE);
-
-      /* TODO: this certainly needs deeper comparisons! */
-    }
-
-  GCAL_RETURN (FALSE);
-}
-
-static void
-gcal_event_editor_section_iface_init (GcalEventEditorSectionInterface *iface)
-{
-  iface->set_event = gcal_reminders_section_set_event;
-  iface->apply = gcal_reminders_section_apply;
-  iface->changed = gcal_reminders_section_changed;
-}
-
-
-/*
  * GtkWidget overrides
  */
 
@@ -501,16 +352,6 @@ static void
 gcal_reminders_section_map (GtkWidget *widget)
 {
   GcalRemindersSection *self = GCAL_REMINDERS_SECTION (widget);
-  GtkWidget *dialog;
-  GcalEvent *event;
-
-  dialog = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_EVENT_EDITOR_DIALOG);
-
-  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
-
-  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
-
-  g_set_object (&self->event, event);
 
   setup_alarms (self);
 
@@ -546,24 +387,12 @@ gcal_reminders_section_dispose (GObject *object)
 }
 
 static void
-gcal_reminders_section_finalize (GObject *object)
-{
-  GcalRemindersSection *self = (GcalRemindersSection *)object;
-
-  g_clear_pointer (&self->alarms, g_ptr_array_unref);
-  g_clear_pointer (&self->event, g_object_unref);
-
-  G_OBJECT_CLASS (gcal_reminders_section_parent_class)->finalize (object);
-}
-
-static void
 gcal_reminders_section_class_init (GcalRemindersSectionClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->dispose = gcal_reminders_section_dispose;
-  object_class->finalize = gcal_reminders_section_finalize;
 
   widget_class->map = gcal_reminders_section_map;
   widget_class->unmap = gcal_reminders_section_unmap;
@@ -591,8 +420,6 @@ gcal_reminders_section_class_init (GcalRemindersSectionClass *klass)
 static void
 gcal_reminders_section_init (GcalRemindersSection *self)
 {
-  self->alarms = g_ptr_array_new_with_free_func (e_cal_component_alarm_free);
-
   gtk_widget_init_template (GTK_WIDGET (self));
 
   gtk_list_box_set_sort_func (self->alarms_listbox, sort_alarms_func, self, NULL);
