@@ -32,10 +32,6 @@ G_BEGIN_DECLS
 #define GCAL_TYPE_SCHEDULE_SECTION (gcal_schedule_section_get_type())
 G_DECLARE_FINAL_TYPE (GcalScheduleSection, gcal_schedule_section, GCAL, SCHEDULE_SECTION, AdwPreferencesGroup)
 
-gboolean             gcal_schedule_section_recurrence_changed    (GcalScheduleSection *self);
-
-gboolean             gcal_schedule_section_day_changed           (GcalScheduleSection *self);
-
 
 /* Tests */
 

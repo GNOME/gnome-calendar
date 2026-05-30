@@ -50,10 +50,6 @@ struct _GcalScheduleSection
   GtkWidget           *repeat_combo;
   GtkWidget           *repeat_duration_combo;
   GtkWidget           *until_date_selector;
-
-  GcalEvent          *event;
-
-  GcalEventEditorFlags flags;
 };
 
 /* Desired state of the widgets, computed from GcalEventSchedule.
@@ -91,10 +87,7 @@ static void widget_state_free (WidgetState *state);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (WidgetState, widget_state_free);
 
-static void          gcal_event_editor_section_iface_init        (GcalEventEditorSectionInterface *iface);
-
-G_DEFINE_TYPE_WITH_CODE (GcalScheduleSection, gcal_schedule_section, ADW_TYPE_PREFERENCES_GROUP,
-                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_iface_init))
+G_DEFINE_FINAL_TYPE (GcalScheduleSection, gcal_schedule_section, ADW_TYPE_PREFERENCES_GROUP)
 
 static void          on_start_date_changed_cb                    (GtkWidget          *widget,
                                                                   GParamSpec         *pspec,
@@ -118,9 +111,6 @@ static void          on_schedule_type_changed_cb                 (GtkWidget     
 
 static void          on_number_of_occurrences_changed_cb         (GcalScheduleSection *self);
 static void          on_until_date_changed_cb                    (GcalScheduleSection *self);
-
-static void          gcal_schedule_section_apply_to_event        (GcalScheduleSection *self,
-                                                                  GcalEvent           *event);
 
 static WidgetState *
 widget_state_from_values (const GcalEventSchedule *values)
@@ -333,12 +323,47 @@ static void
 update_from_event_schedule (GcalScheduleSection *self,
                             GcalEventSchedule *values)
 {
+  GtkWidget *dialog;
+  GcalEvent *event;
+
+  GCAL_ENTRY;
+
+  dialog = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_EVENT_EDITOR_DIALOG);
+
+  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
+
+  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
+
   gcal_event_schedule_free (self->values);
   self->values = values;
 
+  gcal_event_set_all_day (event, self->values->curr.all_day);
+  gcal_event_set_date_start (event, self->values->curr.date_start);
+  gcal_event_set_date_end (event, self->values->curr.date_end);
+
+  /* Only apply the new recurrence if it's different from the old one.
+   * We don't unconditionally set the recurrence since remove_recurrence_properties()
+   * will actually remove all the rrules, not just *a* unique one.
+   *
+   * That is, here we allow for future support for more than one rrule
+   * in the event, given the current capabilities of gnome-calendar.
+   *
+   */
+  if (!gcal_recurrence_is_equal (self->values->curr.recur, gcal_event_get_recurrence (event)))
+    {
+      remove_recurrence_properties (event);
+
+      if (self->values->curr.recur)
+        {
+          gcal_event_set_recurrence (event, self->values->curr.recur);
+        }
+    }
+
   refresh (self);
-  gcal_schedule_section_apply_to_event (self, self->event);
+
+  GCAL_EXIT;
 }
+
 
 /*
  * Callbacks
@@ -457,8 +482,13 @@ static void
 on_time_format_changed_cb (GcalScheduleSection *self)
 {
   GcalContext *context;
+  GtkWidget *dialog;
 
-  if (self->event)
+  dialog = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_EVENT_EDITOR_DIALOG);
+
+  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
+
+  if (gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog)))
     {
       context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
 
@@ -471,163 +501,6 @@ on_time_format_changed_cb (GcalScheduleSection *self)
 
       update_from_event_schedule (self, updated);
     }
-}
-
-
-/*
- * GcalEventEditorSection interface
- */
-
-/*
- * Sets the event of the schedule section.
- *
- * If the event is not a new event, the event date start and date end timezones are kept and displayed to the user.
- *
- * If the event is a new event, the event date start and date end timezones are forgotten. The results of
- * g_date_time_get_year, g_date_time_get_month, g_date_time_get_day_of_month, g_date_time_get_hour and
- * g_date_time_get_minute are used for the date row and the date time chooser.
- * The date row timezone is set to UTC (as all day events use the UTC timezone).
- * The date time chooser timezone is set to local.
- */
-static void
-gcal_schedule_section_set_event (GcalEventEditorSection *section,
-                                 GcalEvent              *event,
-                                 GcalEventEditorFlags    flags)
-{
-  GcalScheduleSection *self;
-  GcalTimeFormat time_format;
-  GcalContext *context;
-
-  GCAL_ENTRY;
-
-  self = GCAL_SCHEDULE_SECTION (section);
-
-  g_set_object (&self->event, event);
-  self->flags = flags;
-
-  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
-
-  time_format = gcal_context_get_time_format (context);
-  self->values = gcal_event_schedule_from_event (event, time_format);
-
-  if (!event)
-    GCAL_RETURN ();
-
-  refresh (self);
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_schedule_section_apply_to_event (GcalScheduleSection *self,
-                                      GcalEvent           *event)
-{
-  GCAL_ENTRY;
-
-  gcal_event_set_all_day (event, self->values->curr.all_day);
-  gcal_event_set_date_start (event, self->values->curr.date_start);
-  gcal_event_set_date_end (event, self->values->curr.date_end);
-
-  /* Only apply the new recurrence if it's different from the old one.
-   * We don't unconditionally set the recurrence since remove_recurrence_properties()
-   * will actually remove all the rrules, not just *a* unique one.
-   *
-   * That is, here we allow for future support for more than one rrule
-   * in the event, given the current capabilities of gnome-calendar.
-   *
-   */
-  if (!gcal_recurrence_is_equal (self->values->curr.recur, gcal_event_get_recurrence (event)))
-    {
-      remove_recurrence_properties (event);
-
-      if (self->values->curr.recur)
-        {
-          gcal_event_set_recurrence (event, self->values->curr.recur);
-        }
-    }
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_schedule_section_apply (GcalEventEditorSection *section)
-{
-  GcalScheduleSection *self = GCAL_SCHEDULE_SECTION (section);
-  GcalContext *context;
-
-  GCAL_ENTRY;
-
-  gcal_schedule_section_apply_to_event (self, self->event);
-
-  gcal_event_schedule_free (self->values);
-
-  context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
-
-  GcalTimeFormat time_format = gcal_context_get_time_format (context);
-  self->values = gcal_event_schedule_from_event (self->event, time_format);
-
-  GCAL_EXIT;
-}
-
-static gboolean
-recurrence_changed (const GcalEventSchedule *values)
-{
-  return !gcal_recurrence_is_equal (values->orig.recur, values->curr.recur);
-}
-
-static gboolean
-day_changed (const GcalEventSchedule *values)
-{
-  return (gcal_date_time_compare_date (values->curr.date_start, values->orig.date_start) < 0 ||
-          gcal_date_time_compare_date (values->curr.date_end, values->orig.date_end) > 0);
-}
-
-static gboolean
-values_changed (const GcalEventSchedule *values)
-{
-  const GcalScheduleValues *orig = &values->orig;
-  const GcalScheduleValues *curr = &values->curr;
-
-  if (orig->all_day != curr->all_day)
-    return TRUE;
-
-  GTimeZone *orig_start_tz, *orig_end_tz, *start_tz, *end_tz;
-  orig_start_tz = g_date_time_get_timezone (orig->date_start);
-  orig_end_tz = g_date_time_get_timezone (orig->date_end);
-  start_tz = g_date_time_get_timezone (curr->date_start);
-  end_tz = g_date_time_get_timezone (curr->date_end);
-
-  if (!g_date_time_equal (orig->date_start, curr->date_start))
-    return TRUE;
-
-  if (g_strcmp0 (g_time_zone_get_identifier (start_tz), g_time_zone_get_identifier (orig_start_tz)) != 0)
-    return TRUE;
-
-  if (!g_date_time_equal (orig->date_end, curr->date_end))
-    return TRUE;
-
-  if (g_strcmp0 (g_time_zone_get_identifier (end_tz), g_time_zone_get_identifier (orig_end_tz)) != 0)
-    return TRUE;
-
-  return recurrence_changed (values);
-}
-
-static gboolean
-gcal_schedule_section_changed (GcalEventEditorSection *section)
-{
-  GcalScheduleSection *self = GCAL_SCHEDULE_SECTION (section);
-
-  GCAL_ENTRY;
-
-  GCAL_RETURN (values_changed (self->values));
-}
-
-static void
-gcal_event_editor_section_iface_init (GcalEventEditorSectionInterface *iface)
-{
-  iface->set_event = gcal_schedule_section_set_event;
-  iface->apply = gcal_schedule_section_apply;
-  iface->changed = gcal_schedule_section_changed;
 }
 
 
@@ -649,7 +522,6 @@ gcal_schedule_section_map (GtkWidget *widget)
   g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
 
   event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
-  g_set_object (&self->event, event);
   context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
 
   time_format = gcal_context_get_time_format (context);
@@ -672,7 +544,6 @@ gcal_schedule_section_finalize (GObject *object)
   GcalScheduleSection *self = (GcalScheduleSection *)object;
 
   g_clear_pointer (&self->values, gcal_event_schedule_free);
-  g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_schedule_section_parent_class)->finalize (object);
 }
@@ -728,22 +599,6 @@ gcal_schedule_section_init (GcalScheduleSection *self)
                            G_CALLBACK (on_time_format_changed_cb),
                            self,
                            G_CONNECT_SWAPPED);
-}
-
-gboolean
-gcal_schedule_section_recurrence_changed (GcalScheduleSection *self)
-{
-  g_return_val_if_fail (GCAL_IS_SCHEDULE_SECTION (self), FALSE);
-
-  return recurrence_changed (self->values);
-}
-
-gboolean
-gcal_schedule_section_day_changed (GcalScheduleSection *self)
-{
-  g_return_val_if_fail (GCAL_IS_SCHEDULE_SECTION (self), FALSE);
-
-  return day_changed (self->values);
 }
 
 static void
