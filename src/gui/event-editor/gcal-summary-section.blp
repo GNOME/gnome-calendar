@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $GcalSummarySection: Adw.PreferencesGroup {
+template $GcalSummarySection: $GcalEventEditorSection {
   Adw.EntryRow summary_entry {
     title: _("Title");
     notify::text => $on_summary_entry_text_changed_cb(template);
