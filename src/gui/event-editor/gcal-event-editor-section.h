@@ -20,41 +20,37 @@
 
 #pragma once
 
-#include "gcal-event.h"
-
 #include <adwaita.h>
+
+#include "gcal-event.h"
 
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_EVENT_EDITOR_SECTION (gcal_event_editor_section_get_type ())
+#define GCAL_TYPE_EVENT_EDITOR_SECTION (gcal_event_editor_section_get_type())
 
-G_DECLARE_INTERFACE (GcalEventEditorSection, gcal_event_editor_section, GCAL, EVENT_EDITOR_SECTION, AdwPreferencesGroup)
+G_DECLARE_DERIVABLE_TYPE (GcalEventEditorSection, gcal_event_editor_section, GCAL, EVENT_EDITOR_SECTION, AdwPreferencesGroup)
 
-typedef enum
+struct _GcalEventEditorSectionClass
 {
-  GCAL_EVENT_EDITOR_FLAG_NONE      = 0,
-  GCAL_EVENT_EDITOR_FLAG_NEW_EVENT = 1 << 0,
-} GcalEventEditorFlags;
+  AdwPreferencesGroupClass parent_class;
 
-struct _GcalEventEditorSectionInterface
-{
-  GTypeInterface parent;
-
-  void               (*set_event)                                (GcalEventEditorSection *self,
-                                                                  GcalEvent              *event,
-                                                                  GcalEventEditorFlags    flags);
-
-  void               (*apply)                                    (GcalEventEditorSection *self);
-
-  gboolean           (*changed)                                  (GcalEventEditorSection *self);
+  /**
+   * GcalEventEditorSectionClass::event_set_cb:
+   * @self: a #GcalEventEditorSection
+   * @event: (nullable) (transfer none): a #GcalEvent
+   *
+   * Invoked when a new event has been set.
+   *
+   * Subclasses must implement this virtual method and update its children
+   * to reflect the new event.
+   */
+  void (* event_set_cb) (GcalEventEditorSection *self,
+                         GcalEvent              *event);
 };
 
-void                 gcal_event_editor_section_set_event         (GcalEventEditorSection *self,
-                                                                  GcalEvent              *event,
-                                                                  GcalEventEditorFlags    flags);
-
-void                 gcal_event_editor_section_apply             (GcalEventEditorSection *self);
-
-gboolean             gcal_event_editor_section_changed           (GcalEventEditorSection *self);
+GcalEvent *gcal_event_editor_section_get_event  (GcalEventEditorSection *self);
+GtkWidget *gcal_event_editor_section_get_dialog (GcalEventEditorSection *self);
+void       gcal_event_editor_section_set_dialog (GcalEventEditorSection *self,
+                                                 GtkWidget              *dialog);
 
 G_END_DECLS

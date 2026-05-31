@@ -18,63 +18,300 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include "gcal-event-editor-dialog.h"
 #include "gcal-event-editor-section.h"
 
-G_DEFINE_INTERFACE (GcalEventEditorSection, gcal_event_editor_section, ADW_TYPE_PREFERENCES_GROUP)
+/**
+ * GcalEventEditorSection:
+ *
+ * An abstract class representing a section for an event editor dialog.
+ *
+ * Subclasses must override [vfunc@EventEditorSection.event_set_cb] to update widgets, and
+ * should call [method@EventEditorSection.get_event] to propagate changes.
+ */
+
+typedef struct
+{
+  AdwPreferencesGroup  parent_instance;
+
+  GtkWidget           *dialog;
+} GcalEventEditorSectionPrivate;
+
+G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (GcalEventEditorSection, gcal_event_editor_section, ADW_TYPE_PREFERENCES_GROUP)
+
+enum {
+  PROP_0,
+  PROP_DIALOG,
+  PROP_EVENT,
+  N_PROPS,
+};
+
+static GParamSpec *properties[N_PROPS];
+
+
+/*
+ * Callbacks
+ */
 
 static void
-gcal_event_editor_section_default_init (GcalEventEditorSectionInterface *iface)
+on_event_set_cb (GcalEventEditorSection *self)
+{
+  GcalEvent *event;
+
+  event = gcal_event_editor_section_get_event (self);
+
+  GCAL_EVENT_EDITOR_SECTION_GET_CLASS (self)->event_set_cb (self, event);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
+}
+
+
+/*
+ * GtkWidget overrides
+ */
+
+static void
+gcal_event_editor_section_root (GtkWidget *widget)
+{
+  GcalEventEditorSection *self = GCAL_EVENT_EDITOR_SECTION (widget);
+  GcalEventEditorSectionPrivate *priv = gcal_event_editor_section_get_instance_private (self);
+  GtkWidget *dialog;
+
+  dialog = gtk_widget_get_ancestor (widget, GCAL_TYPE_EVENT_EDITOR_DIALOG);
+
+  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
+
+  g_set_object (&priv->dialog, dialog);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DIALOG]);
+
+  GTK_WIDGET_CLASS (gcal_event_editor_section_parent_class)->root (widget);
+}
+
+static void
+gcal_event_editor_section_map (GtkWidget *widget)
+{
+  GcalEventEditorSection *self = GCAL_EVENT_EDITOR_SECTION (widget);
+  GcalEvent *event;
+
+  event = gcal_event_editor_section_get_event (self);
+
+  GCAL_EVENT_EDITOR_SECTION_GET_CLASS (self)->event_set (self, event);
+
+  GTK_WIDGET_CLASS (gcal_event_editor_section_parent_class)->map (widget);
+}
+
+static void
+gcal_event_editor_section_unmap (GtkWidget *widget)
+{
+  GcalEventEditorSection *self = GCAL_EVENT_EDITOR_SECTION (widget);
+
+  GCAL_EVENT_EDITOR_SECTION_GET_CLASS (self)->event_set_cb (self, NULL);
+
+  GTK_WIDGET_CLASS (gcal_event_editor_section_parent_class)->unmap (widget);
+}
+
+
+/*
+ * GObject overrides
+ */
+
+static void
+gcal_event_editor_section_constructed (GObject *object)
+{
+  g_assert (GCAL_EVENT_EDITOR_SECTION_GET_CLASS (object)->event_set_cb != NULL);
+
+  G_OBJECT_CLASS (gcal_event_editor_section_parent_class)->constructed (object);
+}
+
+static void
+gcal_event_editor_section_dispose (GObject *object)
+{
+  GcalEventEditorSection *self = GCAL_EVENT_EDITOR_SECTION (object);
+
+  gcal_event_editor_section_set_dialog (self, NULL);
+
+  G_OBJECT_CLASS (gcal_event_editor_section_parent_class)->dispose (object);
+}
+
+static void
+gcal_event_editor_section_get_property (GObject    *object,
+                                        guint       prop_id,
+                                        GValue     *value,
+                                        GParamSpec *pspec)
+{
+  GcalEventEditorSection *self = GCAL_EVENT_EDITOR_SECTION (object);
+
+  switch (prop_id)
+    {
+    case PROP_DIALOG:
+      g_value_set_object (value, gcal_event_editor_section_get_dialog (self));
+      break;
+    case PROP_EVENT:
+      g_value_set_object (value, gcal_event_editor_section_get_event (self));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gcal_event_editor_section_set_property (GObject      *object,
+                                        guint         prop_id,
+                                        const GValue *value,
+                                        GParamSpec   *pspec)
+{
+  GcalEventEditorSection *self = GCAL_EVENT_EDITOR_SECTION (object);
+
+  switch (prop_id)
+    {
+    case PROP_DIALOG:
+      gcal_event_editor_section_set_dialog (self, g_value_get_object (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+
+/*
+ * Initialization
+ */
+
+static void
+gcal_event_editor_section_class_init (GcalEventEditorSectionClass *klass)
+{
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+
+  object_class->constructed = gcal_event_editor_section_constructed;
+  object_class->dispose = gcal_event_editor_section_dispose;
+  object_class->get_property = gcal_event_editor_section_get_property;
+  object_class->set_property = gcal_event_editor_section_set_property;
+
+  widget_class->root = gcal_event_editor_section_root;
+  widget_class->map = gcal_event_editor_section_map;
+  widget_class->unmap = gcal_event_editor_section_unmap;
+
+  klass->event_set_cb = NULL;
+
+  /**
+   * GcalEventEditorSection:event:
+   *
+   * The #GcalEvent being edited.
+   */
+  properties[PROP_EVENT] =
+      g_param_spec_object ("event", NULL, NULL,
+                           GCAL_TYPE_EVENT,
+                           G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * GcalEventEditorSection:dialog:
+   *
+   * The event editor dialog.
+   *
+   * The dialog must have the `event` property.
+   * Each time `event` is set, [vfunc@EventEditorSection.event_set] is invoked.
+   */
+  properties[PROP_DIALOG] =
+      g_param_spec_object ("dialog", NULL, NULL,
+                           GTK_TYPE_WIDGET,
+                           G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
+}
+
+static void
+gcal_event_editor_section_init (GcalEventEditorSection *self)
 {
 }
 
+
+/*
+ * Public methods
+ */
+
 /**
- * gcal_event_editor_section_set_event:
+ * gcal_event_editor_section_get_event:
  * @self: a #GcalEventEditorSection
- * @event: (nullable): a #GcalEvent
  *
- * Sets the current event to be displayed / edited.
+ * Gets the event that is currently being edited.
+ *
+ * Returns: (nullable) (transfer none): a #GcalEvent
+ */
+GcalEvent *
+gcal_event_editor_section_get_event (GcalEventEditorSection *self)
+{
+  GcalEventEditorSectionPrivate *priv;
+  GcalEvent *event;
+
+  g_assert (GCAL_IS_EVENT_EDITOR_SECTION (self));
+
+  priv = gcal_event_editor_section_get_instance_private (self);
+
+  g_object_get (priv->dialog,
+                "event", &event,
+                NULL);
+
+  return event;
+}
+
+/**
+ * gcal_event_editor_section_get_dialog:
+ * @self: a #GcalEventEditorSection
+ *
+ * Gets the dialog.
+ *
+ * Returns: (nullable) (transfer none): a dialog
+ */
+GtkWidget *
+gcal_event_editor_section_get_dialog (GcalEventEditorSection *self)
+{
+  GcalEventEditorSectionPrivate *priv;
+
+  g_assert (GCAL_IS_EVENT_EDITOR_SECTION (self));
+
+  priv = gcal_event_editor_section_get_instance_private (self);
+
+  return priv->dialog;
+}
+
+/**
+ * gcal_event_editor_section_set_dialog:
+ * @self: a #GcalEventEditorSection
+ * @dialog: (nullable) (transfer none): a dialog
+ *
+ * Sets the dialog.
  */
 void
-gcal_event_editor_section_set_event (GcalEventEditorSection *self,
-                                     GcalEvent              *event,
-                                     GcalEventEditorFlags    flags)
+gcal_event_editor_section_set_dialog (GcalEventEditorSection *self,
+                                      GtkWidget              *dialog)
 {
-  g_return_if_fail (GCAL_IS_EVENT_EDITOR_SECTION (self));
-  g_return_if_fail (GCAL_EVENT_EDITOR_SECTION_GET_IFACE (self)->set_event);
+  GcalEventEditorSectionPrivate *priv;
 
-  GCAL_EVENT_EDITOR_SECTION_GET_IFACE (self)->set_event (self, event, flags);
-}
+  g_assert (GCAL_IS_EVENT_EDITOR_SECTION (self));
+  g_assert (dialog == NULL || GTK_IS_WIDGET (dialog));
 
-/**
- * gcal_event_editor_section_apply:
- * @self: a #GcalEventEditorSection
- *
- * Applies the changes to the event.
- */
-void
-gcal_event_editor_section_apply (GcalEventEditorSection *self)
-{
-  g_return_if_fail (GCAL_IS_EVENT_EDITOR_SECTION (self));
+  priv = gcal_event_editor_section_get_instance_private (self);
 
-  if (GCAL_EVENT_EDITOR_SECTION_GET_IFACE (self)->apply)
-    GCAL_EVENT_EDITOR_SECTION_GET_IFACE (self)->apply (self);
-}
+  if (priv->dialog == dialog)
+    return;
 
-/**
- * gcal_event_editor_section_changed:
- * @self: a #GcalEventEditorSection
- *
- * Checks whether this section has any pending changes to the event.
- *
- * Returns: %TRUE if this section has pending changes
- */
-gboolean
-gcal_event_editor_section_changed (GcalEventEditorSection *self)
-{
-  g_return_val_if_fail (GCAL_IS_EVENT_EDITOR_SECTION (self), FALSE);
+  if (priv->dialog)
+    {
+      g_signal_handlers_disconnect_by_func (priv->dialog, on_event_set_cb, self);
+      g_object_unref (priv->dialog);
+    }
 
-  if (GCAL_EVENT_EDITOR_SECTION_GET_IFACE (self)->changed)
-    return GCAL_EVENT_EDITOR_SECTION_GET_IFACE (self)->changed (self);
-  else
-    return TRUE;
+  priv->dialog = dialog;
+
+  if (priv->dialog)
+    {
+      g_signal_connect_object (priv->dialog, "notify::event", G_CALLBACK (on_event_set_cb), self, G_CONNECT_SWAPPED);
+      g_object_ref (priv->dialog);
+    }
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DIALOG]);
 }
