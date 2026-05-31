@@ -20,9 +20,11 @@
 
 #include <adwaita.h>
 
+#include "gcal-event-editor-section.h"
+
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_ATTENDEES_SECTION (gcal_attendees_section_get_type ())
-G_DECLARE_FINAL_TYPE (GcalAttendeesSection, gcal_attendees_section, GCAL, ATTENDEES_SECTION, AdwPreferencesGroup)
+G_DECLARE_FINAL_TYPE (GcalAttendeesSection, gcal_attendees_section, GCAL, ATTENDEES_SECTION, GcalEventEditorSection)
 
 G_END_DECLS

@@ -24,8 +24,6 @@
 
 #include "gcal-attendee-summary-row.h"
 #include "gcal-event-attendee.h"
-#include "gcal-event-editor-dialog.h"
-#include "gcal-event-editor-section.h"
 #include "gcal-event-organizer.h"
 #include "gcal-event.h"
 #include "gcal-organizer-row.h"
@@ -33,7 +31,7 @@
 
 struct _GcalAttendeesSection
 {
-  AdwPreferencesGroup  parent_instance;
+  GcalEventEditorSection  parent_instance;
 
   GcalEventOrganizer  *organizer;
 
@@ -42,7 +40,7 @@ struct _GcalAttendeesSection
   GListModel          *attendees;
 };
 
-G_DEFINE_FINAL_TYPE (GcalAttendeesSection, gcal_attendees_section, ADW_TYPE_PREFERENCES_GROUP)
+G_DEFINE_FINAL_TYPE (GcalAttendeesSection, gcal_attendees_section, GCAL_TYPE_EVENT_EDITOR_SECTION)
 
 enum
 {
@@ -56,43 +54,28 @@ static GParamSpec *properties[N_PROPS] = { NULL, };
 
 
 /*
- * GtkWidget overrides
+ * GcalEventEditorSection overrides
  */
 
 static void
-gcal_attendees_section_map (GtkWidget *widget)
+gcal_attendees_section_event_set_cb (GcalEventEditorSection *section,
+                                     GcalEvent              *event)
 {
-  GcalAttendeesSection *self = GCAL_ATTENDEES_SECTION (widget);
-  GtkWidget *dialog;
-  GcalEvent *event;
+  GcalAttendeesSection *self = GCAL_ATTENDEES_SECTION (section);
 
-  dialog = gtk_widget_get_ancestor (widget, GCAL_TYPE_EVENT_EDITOR_DIALOG);
-
-  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
-
-  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
-
-  self->organizer = gcal_event_get_organizer (event);
-  self->attendees = gcal_event_get_attendees (event);
+  if (event)
+    {
+      self->organizer = gcal_event_get_organizer (event);
+      self->attendees = gcal_event_get_attendees (event);
+    }
+  else
+    {
+      self->organizer = NULL;
+      self->attendees = NULL;
+    }
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ATTENDEES]);
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ORGANIZER]);
-
-  GTK_WIDGET_CLASS (gcal_attendees_section_parent_class)->map (widget);
-}
-
-static void
-gcal_attendees_section_unmap (GtkWidget *widget)
-{
-  GcalAttendeesSection *self = GCAL_ATTENDEES_SECTION (widget);
-
-  self->organizer = NULL;
-  self->attendees = NULL;
-
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ATTENDEES]);
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ORGANIZER]);
-
-  GTK_WIDGET_CLASS (gcal_attendees_section_parent_class)->unmap (widget);
 }
 
 
@@ -163,6 +146,7 @@ gcal_attendees_section_class_init (GcalAttendeesSectionClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+  GcalEventEditorSectionClass *section_class = GCAL_EVENT_EDITOR_SECTION_CLASS (klass);
 
   g_type_ensure (GCAL_TYPE_ORGANIZER_ROW);
   g_type_ensure (GCAL_TYPE_ATTENDEE_SUMMARY_ROW);
@@ -171,8 +155,7 @@ gcal_attendees_section_class_init (GcalAttendeesSectionClass *klass)
   object_class->get_property = gcal_attendees_section_get_property;
   object_class->set_property = gcal_attendees_section_set_property;
 
-  widget_class->map = gcal_attendees_section_map;
-  widget_class->unmap = gcal_attendees_section_unmap;
+  section_class->event_set_cb = gcal_attendees_section_event_set_cb;
 
   /**
    * GcalAttendeesSection:attendees:

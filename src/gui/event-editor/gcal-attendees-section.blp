@@ -1,7 +1,6 @@
 using Gtk 4.0;
-using Adw 1;
 
-template $GcalAttendeesSection: Adw.PreferencesGroup {
+template $GcalAttendeesSection: $GcalEventEditorSection {
   $GcalOrganizerRow organizer_row {
     organizer: bind template.organizer;
   }
