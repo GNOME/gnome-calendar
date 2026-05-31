@@ -22,9 +22,11 @@
 
 #include <adwaita.h>
 
+#include "gcal-event-editor-section.h"
+
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_NOTES_SECTION (gcal_notes_section_get_type())
-G_DECLARE_FINAL_TYPE (GcalNotesSection, gcal_notes_section, GCAL, NOTES_SECTION, AdwPreferencesGroup)
+G_DECLARE_FINAL_TYPE (GcalNotesSection, gcal_notes_section, GCAL, NOTES_SECTION, GcalEventEditorSection)
 
 G_END_DECLS

@@ -21,19 +21,17 @@
 #define G_LOG_DOMAIN "GcalNotesSection"
 
 #include "gcal-debug.h"
-#include "gcal-event-editor-dialog.h"
-#include "gcal-event-editor-section.h"
 #include "gcal-notes-section.h"
 
 struct _GcalNotesSection
 {
-  AdwPreferencesGroup parent;
+  GcalEventEditorSection  parent;
 
-  GtkTextView        *notes_text;
-  GtkLabel           *placeholder;
+  GtkTextView            *notes_text;
+  GtkLabel               *placeholder;
 };
 
-G_DEFINE_FINAL_TYPE (GcalNotesSection, gcal_notes_section, ADW_TYPE_PREFERENCES_GROUP)
+G_DEFINE_FINAL_TYPE (GcalNotesSection, gcal_notes_section, GCAL_TYPE_EVENT_EDITOR_SECTION)
 
 /*
  * Callbacks
@@ -45,14 +43,9 @@ on_notes_text_changed_cb (GcalNotesSection *self)
   g_autofree char *text = NULL;
   GtkTextIter start, end;
   GtkTextBuffer *buffer;
-  GtkWidget *dialog;
   GcalEvent *event;
 
-  dialog = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_EVENT_EDITOR_DIALOG);
-
-  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
-
-  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
+  event = gcal_event_editor_section_get_event (GCAL_EVENT_EDITOR_SECTION (self));
 
   buffer = gtk_text_view_get_buffer (self->notes_text);
   gtk_text_buffer_get_bounds (buffer, &start, &end);
@@ -101,56 +94,28 @@ on_row_pressed (GtkGestureClick *gesture,
 
 
 /*
- * GtkWidget overrides
+ * GcalEventEditorSection overrides
  */
 
 static void
-gcal_notes_section_map (GtkWidget *widget)
+gcal_notes_section_event_set_cb (GcalEventEditorSection *section,
+                                 GcalEvent              *event)
 {
-  GcalNotesSection *self = GCAL_NOTES_SECTION (widget);
-  GtkTextBuffer *buffer;
-  GtkWidget *dialog;
-  GcalEvent *event;
-
-  dialog = gtk_widget_get_ancestor (widget, GCAL_TYPE_EVENT_EDITOR_DIALOG);
-
-  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
-
-  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
-
-  buffer = gtk_text_view_get_buffer (self->notes_text);
-
-  g_signal_handlers_block_by_func (buffer, on_notes_text_changed_cb, self);
-
-  gtk_text_buffer_set_text (buffer, gcal_event_get_description (event), -1);
-
-  g_signal_handlers_unblock_by_func (buffer, on_notes_text_changed_cb, self);
-
-  GTK_WIDGET_CLASS (gcal_notes_section_parent_class)->map (widget);
-}
-
-static void
-gcal_notes_section_unmap (GtkWidget *widget)
-{
-  GcalNotesSection *self = GCAL_NOTES_SECTION (widget);
+  GcalNotesSection *self = GCAL_NOTES_SECTION (section);
   GtkTextIter start, end;
   GtkTextBuffer *buffer;
-  GtkWidget *dialog;
-
-  dialog = gtk_widget_get_ancestor (widget, GCAL_TYPE_EVENT_EDITOR_DIALOG);
-
-  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
 
   buffer = gtk_text_view_get_buffer (self->notes_text);
   gtk_text_buffer_get_bounds (buffer, &start, &end);
 
   g_signal_handlers_block_by_func (buffer, on_notes_text_changed_cb, self);
 
-  gtk_text_buffer_delete (buffer, &start, &end);
+  if (event)
+    gtk_text_buffer_set_text (buffer, gcal_event_get_description (event), -1);
+  else
+    gtk_text_buffer_delete (buffer, &start, &end);
 
   g_signal_handlers_unblock_by_func (buffer, on_notes_text_changed_cb, self);
-
-  GTK_WIDGET_CLASS (gcal_notes_section_parent_class)->unmap (widget);
 }
 
 
@@ -162,9 +127,9 @@ static void
 gcal_notes_section_class_init (GcalNotesSectionClass *klass)
 {
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+  GcalEventEditorSectionClass *section_class = GCAL_EVENT_EDITOR_SECTION_CLASS (klass);
 
-  widget_class->map = gcal_notes_section_map;
-  widget_class->unmap = gcal_notes_section_unmap;
+  section_class->event_set_cb = gcal_notes_section_event_set_cb;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-notes-section.ui");
 
