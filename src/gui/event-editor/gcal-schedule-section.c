@@ -26,8 +26,6 @@
 #include "gcal-date-time-chooser.h"
 #include "gcal-debug.h"
 #include "gcal-event.h"
-#include "gcal-event-editor-dialog.h"
-#include "gcal-event-editor-section.h"
 #include "gcal-event-schedule.h"
 #include "gcal-recurrence.h"
 #include "gcal-schedule-section.h"
@@ -37,7 +35,7 @@
 
 struct _GcalScheduleSection
 {
-  GtkBox               parent;
+  GcalEventEditorSection parent;
 
   GcalEventSchedule *values;
 
@@ -87,7 +85,7 @@ static void widget_state_free (WidgetState *state);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (WidgetState, widget_state_free);
 
-G_DEFINE_FINAL_TYPE (GcalScheduleSection, gcal_schedule_section, ADW_TYPE_PREFERENCES_GROUP)
+G_DEFINE_FINAL_TYPE (GcalScheduleSection, gcal_schedule_section, GCAL_TYPE_EVENT_EDITOR_SECTION)
 
 static void          on_start_date_changed_cb                    (GtkWidget          *widget,
                                                                   GParamSpec         *pspec,
@@ -323,16 +321,11 @@ static void
 update_from_event_schedule (GcalScheduleSection *self,
                             GcalEventSchedule *values)
 {
-  GtkWidget *dialog;
   GcalEvent *event;
 
   GCAL_ENTRY;
 
-  dialog = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_EVENT_EDITOR_DIALOG);
-
-  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
-
-  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
+  event = gcal_event_editor_section_get_event (GCAL_EVENT_EDITOR_SECTION (self));
 
   gcal_event_schedule_free (self->values);
   self->values = values;
@@ -482,13 +475,8 @@ static void
 on_time_format_changed_cb (GcalScheduleSection *self)
 {
   GcalContext *context;
-  GtkWidget *dialog;
 
-  dialog = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_EVENT_EDITOR_DIALOG);
-
-  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
-
-  if (gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog)))
+  if (gcal_event_editor_section_get_event (GCAL_EVENT_EDITOR_SECTION (self)))
     {
       context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
 
@@ -509,19 +497,13 @@ on_time_format_changed_cb (GcalScheduleSection *self)
  */
 
 static void
-gcal_schedule_section_map (GtkWidget *widget)
+gcal_schedule_section_event_set_cb (GcalEventEditorSection *section,
+                                    GcalEvent              *event)
 {
-  GcalScheduleSection *self = GCAL_SCHEDULE_SECTION (widget);
+  GcalScheduleSection *self = GCAL_SCHEDULE_SECTION (section);
   GcalTimeFormat time_format;
   GcalContext *context;
-  GtkWidget *dialog;
-  GcalEvent *event;
 
-  dialog = gtk_widget_get_ancestor (widget, GCAL_TYPE_EVENT_EDITOR_DIALOG);
-
-  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
-
-  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
   context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
 
   time_format = gcal_context_get_time_format (context);
@@ -529,8 +511,6 @@ gcal_schedule_section_map (GtkWidget *widget)
 
   if (event)
     refresh (self);
-
-  GTK_WIDGET_CLASS (gcal_schedule_section_parent_class)->map (widget);
 }
 
 
@@ -553,12 +533,13 @@ gcal_schedule_section_class_init (GcalScheduleSectionClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+  GcalEventEditorSectionClass *section_class = GCAL_EVENT_EDITOR_SECTION_CLASS (klass);
 
   g_type_ensure (GCAL_TYPE_DATE_TIME_CHOOSER);
 
   object_class->finalize = gcal_schedule_section_finalize;
 
-  widget_class->map = gcal_schedule_section_map;
+  section_class->event_set_cb = gcal_schedule_section_event_set_cb;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-schedule-section.ui");
 

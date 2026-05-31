@@ -26,11 +26,12 @@
 #include "gcal-enums.h"
 #include "gcal-event.h"
 #include "gcal-recurrence.h"
+#include "gcal-event-editor-section.h"
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_SCHEDULE_SECTION (gcal_schedule_section_get_type())
-G_DECLARE_FINAL_TYPE (GcalScheduleSection, gcal_schedule_section, GCAL, SCHEDULE_SECTION, AdwPreferencesGroup)
+G_DECLARE_FINAL_TYPE (GcalScheduleSection, gcal_schedule_section, GCAL, SCHEDULE_SECTION, GcalEventEditorSection)
 
 
 /* Tests */
