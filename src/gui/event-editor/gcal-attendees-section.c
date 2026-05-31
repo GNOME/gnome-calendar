@@ -35,7 +35,6 @@ struct _GcalAttendeesSection
 {
   AdwPreferencesGroup  parent_instance;
 
-  GcalEvent           *event;
   GcalEventOrganizer  *organizer;
 
   AdwActionRow        *summary_row;
@@ -43,10 +42,7 @@ struct _GcalAttendeesSection
   GListModel          *attendees;
 };
 
-static void          gcal_event_editor_section_init_iface        (GcalEventEditorSectionInterface *iface);
-
-G_DEFINE_FINAL_TYPE_WITH_CODE (GcalAttendeesSection, gcal_attendees_section, ADW_TYPE_PREFERENCES_GROUP,
-                               G_IMPLEMENT_INTERFACE (GCAL_TYPE_EVENT_EDITOR_SECTION, gcal_event_editor_section_init_iface))
+G_DEFINE_FINAL_TYPE (GcalAttendeesSection, gcal_attendees_section, ADW_TYPE_PREFERENCES_GROUP)
 
 enum
 {
@@ -99,51 +95,10 @@ gcal_attendees_section_unmap (GtkWidget *widget)
   GTK_WIDGET_CLASS (gcal_attendees_section_parent_class)->unmap (widget);
 }
 
-static void
-gcal_attendees_section_set_event (GcalEventEditorSection *section,
-                                  GcalEvent              *event,
-                                  GcalEventEditorFlags    flags)
-{
-  GcalAttendeesSection *self = GCAL_ATTENDEES_SECTION (section);
 
-  if (event == self->event)
-    return;
-
-  g_set_object (&self->event, event);
-
-  if (self->event == NULL)
-    return;
-
-  /* set organizer */
-  self->organizer = gcal_event_get_organizer (self->event);
-
-  /* set attendees and summarize attendance status */
-  self->attendees = gcal_event_get_attendees (self->event);
-
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ATTENDEES]);
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ORGANIZER]);
-}
-
-static void
-gcal_attendees_section_apply (GcalEventEditorSection *section)
-{
-  /* read-only */
-}
-
-static gboolean
-gcal_attendees_section_changed (GcalEventEditorSection *section)
-{
-  /* This section is read-only for now */
-  return FALSE;
-}
-
-static void
-gcal_event_editor_section_init_iface (GcalEventEditorSectionInterface *iface)
-{
-  iface->set_event = gcal_attendees_section_set_event;
-  iface->apply = gcal_attendees_section_apply;
-  iface->changed = gcal_attendees_section_changed;
-}
+/*
+ * GObject overrides
+ */
 
 static void
 gcal_attendees_section_get_property (GObject *object,
@@ -191,8 +146,6 @@ static void
 gcal_attendees_section_finalize (GObject *object)
 {
   GcalAttendeesSection *self = (GcalAttendeesSection *) object;
-
-  g_clear_object (&self->event);
 
   self->attendees = NULL; /* not owned */
 
