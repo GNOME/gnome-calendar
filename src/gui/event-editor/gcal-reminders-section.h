@@ -22,9 +22,11 @@
 
 #include <adwaita.h>
 
+#include "gcal-event-editor-section.h"
+
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_REMINDERS_SECTION (gcal_reminders_section_get_type())
-G_DECLARE_FINAL_TYPE (GcalRemindersSection, gcal_reminders_section, GCAL, REMINDERS_SECTION, AdwPreferencesGroup)
+G_DECLARE_FINAL_TYPE (GcalRemindersSection, gcal_reminders_section, GCAL, REMINDERS_SECTION, GcalEventEditorSection)
 
 G_END_DECLS

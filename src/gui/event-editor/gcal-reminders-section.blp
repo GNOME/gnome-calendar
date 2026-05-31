@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $GcalRemindersSection: Adw.PreferencesGroup {
+template $GcalRemindersSection: $GcalEventEditorSection {
   ListBox alarms_listbox {
     selection-mode: none;
     row-activated => $on_alarms_listbox_row_activated_cb(template) not-swapped;
