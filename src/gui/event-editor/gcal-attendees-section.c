@@ -24,6 +24,7 @@
 
 #include "gcal-attendee-summary-row.h"
 #include "gcal-event-attendee.h"
+#include "gcal-event-editor-dialog.h"
 #include "gcal-event-editor-section.h"
 #include "gcal-event-organizer.h"
 #include "gcal-event.h"
@@ -56,6 +57,47 @@ enum
 };
 
 static GParamSpec *properties[N_PROPS] = { NULL, };
+
+
+/*
+ * GtkWidget overrides
+ */
+
+static void
+gcal_attendees_section_map (GtkWidget *widget)
+{
+  GcalAttendeesSection *self = GCAL_ATTENDEES_SECTION (widget);
+  GtkWidget *dialog;
+  GcalEvent *event;
+
+  dialog = gtk_widget_get_ancestor (widget, GCAL_TYPE_EVENT_EDITOR_DIALOG);
+
+  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
+
+  event = gcal_event_editor_dialog_get_event (GCAL_EVENT_EDITOR_DIALOG (dialog));
+
+  self->organizer = gcal_event_get_organizer (event);
+  self->attendees = gcal_event_get_attendees (event);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ATTENDEES]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ORGANIZER]);
+
+  GTK_WIDGET_CLASS (gcal_attendees_section_parent_class)->map (widget);
+}
+
+static void
+gcal_attendees_section_unmap (GtkWidget *widget)
+{
+  GcalAttendeesSection *self = GCAL_ATTENDEES_SECTION (widget);
+
+  self->organizer = NULL;
+  self->attendees = NULL;
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ATTENDEES]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ORGANIZER]);
+
+  GTK_WIDGET_CLASS (gcal_attendees_section_parent_class)->unmap (widget);
+}
 
 static void
 gcal_attendees_section_set_event (GcalEventEditorSection *section,
@@ -175,6 +217,9 @@ gcal_attendees_section_class_init (GcalAttendeesSectionClass *klass)
   object_class->finalize = gcal_attendees_section_finalize;
   object_class->get_property = gcal_attendees_section_get_property;
   object_class->set_property = gcal_attendees_section_set_property;
+
+  widget_class->map = gcal_attendees_section_map;
+  widget_class->unmap = gcal_attendees_section_unmap;
 
   /**
    * GcalAttendeesSection:attendees:
