@@ -5,6 +5,7 @@ template $GcalScheduleSection: $GcalEventEditorSection {
   Adw.InlineViewSwitcher {
     stack: schedule_type_stack;
     homogeneous: true;
+    sensitive: bind template.dialog as <$GcalEventEditorDialog>.writable;
   }
 
   Adw.ViewStack schedule_type_stack {
@@ -22,11 +23,13 @@ template $GcalScheduleSection: $GcalEventEditorSection {
         $GcalDateChooserRow start_date_row {
           title: _("Start Date");
           notify::date => $on_start_date_changed_cb(template) not-swapped;
+          editable: bind template.dialog as <$GcalEventEditorDialog>.writable;
         }
 
         $GcalDateChooserRow end_date_row {
           title: _("End Date");
           notify::date => $on_end_date_changed_cb(template) not-swapped;
+          editable: bind template.dialog as <$GcalEventEditorDialog>.writable;
         }
       };
     }
@@ -44,12 +47,14 @@ template $GcalScheduleSection: $GcalEventEditorSection {
           date-label: _("Start Date");
           time-label: _("Start Time");
           notify::date-time => $on_start_date_time_changed_cb(template) not-swapped;
+          editable: bind template.dialog as <$GcalEventEditorDialog>.writable;
         }
 
         $GcalDateTimeChooser end_date_time_chooser {
           date-label: _("End Date");
           time-label: _("End Time");
           notify::date-time => $on_end_date_time_changed_cb(template) not-swapped;
+          editable: bind template.dialog as <$GcalEventEditorDialog>.writable;
         }
       };
     }
@@ -57,6 +62,7 @@ template $GcalScheduleSection: $GcalEventEditorSection {
 
   Adw.PreferencesGroup {
     margin-top: 12;
+    sensitive: bind template.dialog as <$GcalEventEditorDialog>.writable;
 
     Adw.ComboRow repeat_combo {
       title: _("Repeat");
