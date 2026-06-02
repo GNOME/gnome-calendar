@@ -5,10 +5,12 @@ template $GcalSummarySection: $GcalEventEditorSection {
   Adw.EntryRow summary_entry {
     title: _("Title");
     notify::text => $on_summary_entry_text_changed_cb(template);
+    editable: bind template.dialog as <$GcalEventEditorDialog>.writable;
   }
 
   Adw.EntryRow location_entry {
     title: _("Location");
     notify::text => $on_location_entry_changed_cb(template);
+    editable: bind template.dialog as <$GcalEventEditorDialog>.writable;
   }
 }
