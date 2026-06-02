@@ -63,6 +63,7 @@ template $GcalNotesSection: $GcalEventEditorSection {
           accepts-tab: false;
           top-margin: 12;
           bottom-margin: 12;
+          editable: bind template.dialog as <$GcalEventEditorDialog>.writable;
 
           accessibility {
             placeholder: _("Notes");
