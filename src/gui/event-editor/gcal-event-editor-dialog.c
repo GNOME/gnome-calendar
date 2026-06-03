@@ -673,8 +673,5 @@ gcal_event_editor_dialog_present_event (GcalEventEditorDialog *self,
 
   adw_dialog_present (ADW_DIALOG (self), parent);
 
-  if (self->writable)
-    gtk_widget_grab_focus (GTK_WIDGET (self->summary_section));
-  else
-    gtk_widget_grab_focus (self->done_button);
+  gtk_widget_grab_focus (GTK_WIDGET (self->summary_section));
 }
