@@ -105,6 +105,8 @@ gcal_attendee_details_page_finalize (GObject *object)
   page->filter_list_declined = NULL;
   page->filter_list_delegated = NULL;
   page->filter_list_not_responded = NULL;
+
+  G_OBJECT_CLASS (gcal_attendee_details_page_parent_class)->finalize (object);
 }
 
 static gboolean
