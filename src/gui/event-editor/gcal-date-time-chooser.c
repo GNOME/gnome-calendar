@@ -41,6 +41,8 @@ struct _GcalDateTimeChooser
 
   GDateTime      *date_time;
   GcalTimeFormat  time_format;
+
+  gboolean            editable;
 };
 
 G_DEFINE_TYPE (GcalDateTimeChooser, gcal_date_time_chooser, ADW_TYPE_PREFERENCES_GROUP);
@@ -51,6 +53,7 @@ enum
   PROP_DATE_TIME,
   PROP_DATE_LABEL,
   PROP_TIME_LABEL,
+  PROP_EDITABLE,
   N_PROPS
 };
 
@@ -526,6 +529,10 @@ gcal_date_time_chooser_get_property (GObject    *object,
       g_value_set_string (value, gcal_date_time_chooser_get_time_label (self));
       break;
 
+    case PROP_EDITABLE:
+      g_value_set_boolean (value, self->editable);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -551,6 +558,10 @@ gcal_date_time_chooser_set_property (GObject      *object,
 
     case PROP_TIME_LABEL:
       gcal_date_time_chooser_set_time_label (self, g_value_get_string (value));
+      break;
+
+    case PROP_EDITABLE:
+      self->editable = g_value_get_boolean (value);
       break;
 
     default:
@@ -602,6 +613,18 @@ gcal_date_time_chooser_class_init (GcalDateTimeChooserClass *klass)
                                                      NULL,
                                                      "",
                                                      G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * GcalDateTimeChooser:editable:
+   *
+   * Whether the chooser is editable.
+   *
+   * This property is only meant to be bound with, for example, [method@GObject.Object.bind_property].
+   */
+  properties[PROP_EDITABLE] =
+      g_param_spec_boolean ("editable", NULL, NULL,
+                            FALSE,
+                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
