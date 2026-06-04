@@ -10,6 +10,7 @@ template $GcalDateChooserRow: Adw.EntryRow {
     icon-name: "calendar-month-symbolic";
     valign: center;
     tooltip-text: _("Edit Date");
+    sensitive: bind template.editable;
 
     popover: Popover {
       position: bottom;
