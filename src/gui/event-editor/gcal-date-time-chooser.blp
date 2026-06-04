@@ -5,10 +5,12 @@ template $GcalDateTimeChooser: Adw.PreferencesGroup {
   $GcalDateChooserRow date_row {
     title: _("Date");
     notify::date => $on_date_changed_cb(template);
+    editable: bind template.editable;
   }
 
   Adw.EntryRow time_row {
     title: _("Time");
+    editable: bind template.editable;
 
     EventControllerFocus {
       notify::contains-focus => $on_time_row_contains_focus_changed_cb(template) not-swapped;
@@ -18,6 +20,7 @@ template $GcalDateTimeChooser: Adw.PreferencesGroup {
       icon-name: "clock-alt-symbolic";
       valign: center;
       tooltip-text: _("Edit Time");
+      sensitive: bind template.editable;
 
       popover: Popover time_popover {
         position: bottom;
