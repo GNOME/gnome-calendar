@@ -44,10 +44,16 @@ G_DEFINE_FINAL_TYPE (GcalSummarySection, gcal_summary_section, GCAL_TYPE_EVENT_E
 static void
 on_summary_entry_text_changed_cb (GcalSummarySection *self)
 {
-  const char *text = gtk_editable_get_text (GTK_EDITABLE (self->summary_entry));
+  gboolean should_request_validation;
+  const char *text, *summary;
+  GtkWidget *dialog;
   GcalEvent *event;
 
   event = gcal_event_editor_section_get_event (GCAL_EVENT_EDITOR_SECTION (self));
+  summary = gcal_event_get_summary (event);
+  text = gtk_editable_get_text (GTK_EDITABLE (self->summary_entry));
+
+  should_request_validation = gcal_is_valid_event_name (text) != gcal_is_valid_event_name (summary);
 
   if (gcal_is_valid_event_name (text))
     gtk_widget_remove_css_class (GTK_WIDGET (self->summary_entry), "error");
@@ -55,6 +61,10 @@ on_summary_entry_text_changed_cb (GcalSummarySection *self)
     gtk_widget_add_css_class (GTK_WIDGET (self->summary_entry), "error");
 
   gcal_event_set_summary (event, text);
+
+  dialog = gcal_event_editor_section_get_dialog (GCAL_EVENT_EDITOR_SECTION (self));
+  if (should_request_validation)
+    g_signal_emit_by_name (dialog, "validation-requested");
 }
 
 static void
