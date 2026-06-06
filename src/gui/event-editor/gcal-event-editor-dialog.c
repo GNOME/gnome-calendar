@@ -88,6 +88,7 @@ enum
 enum
 {
   REMOVE_EVENT,
+  VALIDATION_REQUESTED,
   NUM_SIGNALS,
 };
 
@@ -102,6 +103,16 @@ static void          on_ask_recurrence_response_save_cb          (GcalEvent     
 /*
  * Auxiliary methods
  */
+
+static void
+validate (GcalEventEditorDialog *self)
+{
+  const char *event_name;
+
+  event_name = gcal_event_get_summary (self->edited_event);
+
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "event-editor.save", gcal_is_valid_event_name (event_name));
+}
 
 static void
 set_writable (GcalEventEditorDialog *self,
@@ -129,10 +140,6 @@ set_event (GcalEventEditorDialog *self,
   GCAL_ENTRY;
 
   g_clear_pointer (&self->edited_event, g_object_unref);
-
-  /* If we just set the event to NULL, simply send a property notify */
-  if (!event)
-    GCAL_GOTO (out);
 
   g_set_object (&self->event, event);
 
@@ -169,7 +176,6 @@ set_event (GcalEventEditorDialog *self,
   /* fill attendees list */
   self->attendees_model = gcal_event_get_attendees (self->edited_event);
 
-out:
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
 
   GCAL_EXIT;
@@ -475,6 +481,12 @@ on_ask_recurrence_response_save_cb (GcalEvent             *event,
   GCAL_EXIT;
 }
 
+static void
+on_validation_requested_cb (GcalEventEditorDialog *self)
+{
+  validate (self);
+}
+
 
 /*
  * Gobject overrides
@@ -571,6 +583,19 @@ gcal_event_editor_dialog_class_init (GcalEventEditorDialogClass *klass)
                                         G_TYPE_INT);
 
   /**
+   * GcalEventEditorDialog::validation-requested:
+   *
+   * Emitted when a [class@Gcal.EventEditorSection] requests to validate the event.
+   */
+  signals[VALIDATION_REQUESTED] =
+      g_signal_new ("validation-requested",
+                    GCAL_TYPE_EVENT_EDITOR_DIALOG,
+                    G_SIGNAL_RUN_FIRST,
+                    0, NULL, NULL, NULL,
+                    G_TYPE_NONE,
+                    0, NULL);
+
+  /**
    * GcalEventEditorDialog::event:
    *
    * The #GcalEvent being edited.
@@ -621,6 +646,8 @@ gcal_event_editor_dialog_init (GcalEventEditorDialog *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 
   set_up_context (self);
+
+  g_signal_connect_swapped (self, "validation-requested", G_CALLBACK (on_validation_requested_cb), self);
 }
 
 /**
@@ -672,6 +699,8 @@ gcal_event_editor_dialog_present_event (GcalEventEditorDialog *self,
   set_event (self, event, new_event);
 
   adw_dialog_present (ADW_DIALOG (self), parent);
+
+  validate (self);
 
   gtk_widget_grab_focus (GTK_WIDGET (self->summary_section));
 }
