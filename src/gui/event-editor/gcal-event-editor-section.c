@@ -18,7 +18,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include "gcal-event-editor-dialog.h"
 #include "gcal-event-editor-section.h"
 
 /**
@@ -63,52 +62,6 @@ on_event_set_cb (GcalEventEditorSection *self)
   GCAL_EVENT_EDITOR_SECTION_GET_CLASS (self)->event_set_cb (self, event);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
-}
-
-
-/*
- * GtkWidget overrides
- */
-
-static void
-gcal_event_editor_section_root (GtkWidget *widget)
-{
-  GcalEventEditorSection *self = GCAL_EVENT_EDITOR_SECTION (widget);
-  GcalEventEditorSectionPrivate *priv = gcal_event_editor_section_get_instance_private (self);
-  GtkWidget *dialog;
-
-  dialog = gtk_widget_get_ancestor (widget, GCAL_TYPE_EVENT_EDITOR_DIALOG);
-
-  g_assert (GCAL_IS_EVENT_EDITOR_DIALOG (dialog));
-
-  g_set_object (&priv->dialog, dialog);
-
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DIALOG]);
-
-  GTK_WIDGET_CLASS (gcal_event_editor_section_parent_class)->root (widget);
-}
-
-static void
-gcal_event_editor_section_map (GtkWidget *widget)
-{
-  GcalEventEditorSection *self = GCAL_EVENT_EDITOR_SECTION (widget);
-  GcalEvent *event;
-
-  event = gcal_event_editor_section_get_event (self);
-
-  GCAL_EVENT_EDITOR_SECTION_GET_CLASS (self)->event_set (self, event);
-
-  GTK_WIDGET_CLASS (gcal_event_editor_section_parent_class)->map (widget);
-}
-
-static void
-gcal_event_editor_section_unmap (GtkWidget *widget)
-{
-  GcalEventEditorSection *self = GCAL_EVENT_EDITOR_SECTION (widget);
-
-  GCAL_EVENT_EDITOR_SECTION_GET_CLASS (self)->event_set_cb (self, NULL);
-
-  GTK_WIDGET_CLASS (gcal_event_editor_section_parent_class)->unmap (widget);
 }
 
 
@@ -184,16 +137,11 @@ static void
 gcal_event_editor_section_class_init (GcalEventEditorSectionClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->constructed = gcal_event_editor_section_constructed;
   object_class->dispose = gcal_event_editor_section_dispose;
   object_class->get_property = gcal_event_editor_section_get_property;
   object_class->set_property = gcal_event_editor_section_set_property;
-
-  widget_class->root = gcal_event_editor_section_root;
-  widget_class->map = gcal_event_editor_section_map;
-  widget_class->unmap = gcal_event_editor_section_unmap;
 
   klass->event_set_cb = NULL;
 
