@@ -39,7 +39,6 @@ src/gui/event-editor/gcal-schedule-section.blp
 src/gui/event-editor/gcal-schedule-section.c
 src/gui/event-editor/gcal-summary-section.blp
 src/gui/event-editor/gcal-summary-section.c
-src/gui/event-editor/gcal-time-chooser-row.blp
 src/gui/event-editor/gcal-time-zone-dialog.blp
 src/gui/event-editor/gcal-time-zone-dialog.c
 src/gui/gcal-application.c

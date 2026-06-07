@@ -13,7 +13,6 @@ blueprints = custom_target(
     'gcal-reminders-section.blp',
     'gcal-schedule-section.blp',
     'gcal-summary-section.blp',
-    'gcal-time-chooser-row.blp',
     'gcal-time-zone-dialog-row.blp',
     'gcal-time-zone-dialog.blp',
     'gcal-attendees-section.blp',
