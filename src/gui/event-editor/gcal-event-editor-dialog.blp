@@ -39,6 +39,7 @@ template $GcalEventEditorDialog: Adw.Dialog {
 
           $GcalSummarySection summary_section {
             sensitive: bind template.writable;
+            dialog: template;
           }
 
           Adw.PreferencesGroup {
@@ -49,19 +50,23 @@ template $GcalEventEditorDialog: Adw.Dialog {
 
           $GcalScheduleSection {
             sensitive: bind template.writable;
+            dialog: template;
           }
 
           $GcalAttendeesSection attendees_section {
             sensitive: bind template.writable;
+            dialog: template;
           }
 
           $GcalRemindersSection {
             title: _("Reminders");
             sensitive: bind template.writable;
+            dialog: template;
           }
 
           $GcalNotesSection {
             sensitive: bind template.writable;
+            dialog: template;
           }
 
           Adw.PreferencesGroup delete_group {
