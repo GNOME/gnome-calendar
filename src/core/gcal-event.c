@@ -1669,6 +1669,157 @@ gcal_event_compare_with_current (GcalEvent *event1,
 }
 
 /**
+ * gcal_event_alarms_equal:
+ * @event1: a #GcalEvent
+ * @event2: a #GcalEvent
+ *
+ * Checks if the alarms set by @event1 and @event2 are identical.
+ *
+ * Returns: %TRUE if the events' alarms are identical
+ */
+gboolean
+gcal_event_alarms_equal (GcalEvent *event1,
+                         GcalEvent *event2)
+{
+  g_autoptr (GList) alarms1 = NULL;
+  g_autoptr (GList) alarms2 = NULL;
+
+  GCAL_ENTRY;
+
+  g_assert (GCAL_IS_EVENT (event1) && GCAL_IS_EVENT (event2));
+
+  alarms1 = gcal_event_get_alarms (event1);
+  alarms2 = gcal_event_get_alarms (event2);
+
+  if (g_list_length (alarms1) != g_list_length (alarms2))
+    GCAL_RETURN (FALSE);
+
+  for (GList *l = alarms1; l != NULL; l = l->next)
+    {
+      ECalComponentAlarm *other_alarm;
+      ECalComponentAlarm *alarm;
+
+      alarm = l->data;
+      other_alarm = NULL;
+
+      for (GList *i = alarms2; i != NULL; i = i->next)
+        {
+          ECalComponentAlarm *aux = i->data;
+
+          if (get_alarm_trigger_minutes (event1, alarm) != get_alarm_trigger_minutes (event1, aux))
+            continue;
+
+          other_alarm = aux;
+
+          if (e_cal_component_alarm_get_action (alarm) != e_cal_component_alarm_get_action (aux))
+            GCAL_RETURN (FALSE);
+
+          break;
+        }
+
+      if (!other_alarm)
+        GCAL_RETURN (FALSE);
+
+      /* TODO: this certainly needs deeper comparisons! */
+    }
+
+  GCAL_RETURN (TRUE);
+}
+
+/**
+ * gcal_event_schedule_equal:
+ * @event1: a #GcalEvent
+ * @event2: a #GcalEvent
+ *
+ * Checks if the schedule set by @event1 and @event2 are identical.
+ *
+ * Returns: %TRUE if the events' schedule are identical
+ */
+gboolean
+gcal_event_schedule_equal (GcalEvent *event1,
+                           GcalEvent *event2)
+{
+  GcalRecurrence *recurrence1, *recurrence2;
+  GTimeZone *date_start_tz1, *date_start_tz2;
+  GTimeZone *date_end_tz1, *date_end_tz2;
+  GDateTime *date_start1, *date_start2;
+  GDateTime *date_end1, *date_end2;
+
+  GCAL_ENTRY;
+
+  g_assert (GCAL_IS_EVENT (event1) && GCAL_IS_EVENT (event2));
+
+  if (gcal_event_has_recurrence (event1) != gcal_event_has_recurrence (event2))
+    GCAL_RETURN (FALSE);
+
+  recurrence1 = gcal_event_get_recurrence (event1);
+  recurrence2 = gcal_event_get_recurrence (event2);
+
+  if (recurrence1 == recurrence2)
+    GCAL_RETURN (TRUE);
+  if (!recurrence1 != !recurrence2)
+    GCAL_RETURN (FALSE);
+
+  if (!gcal_recurrence_is_equal (recurrence1, recurrence2))
+    GCAL_RETURN (FALSE);
+  if (gcal_event_get_all_day (event1) != gcal_event_get_all_day (event2))
+    GCAL_RETURN (FALSE);
+
+  date_start1 = gcal_event_get_date_start (event1);
+  date_start2 = gcal_event_get_date_start (event2);
+
+  date_end1 = gcal_event_get_date_end (event1);
+  date_end2 = gcal_event_get_date_end (event2);
+
+  if (gcal_date_time_compare_date (date_start1, date_start2) < 0 ||
+      gcal_date_time_compare_date (date_end1, date_end2) > 0)
+    GCAL_RETURN (FALSE);
+
+  date_start_tz1 = g_date_time_get_timezone (date_start1);
+  date_end_tz1 = g_date_time_get_timezone (date_end1);
+  date_start_tz2 = g_date_time_get_timezone (date_start2);
+  date_end_tz2 = g_date_time_get_timezone (date_end2);
+
+  if (g_strcmp0 (g_time_zone_get_identifier (date_start_tz1), g_time_zone_get_identifier (date_start_tz2)) != 0)
+    GCAL_RETURN (FALSE);
+
+  if (g_strcmp0 (g_time_zone_get_identifier (date_end_tz1), g_time_zone_get_identifier (date_end_tz2)) != 0)
+    GCAL_RETURN (FALSE);
+
+  GCAL_RETURN (TRUE);
+}
+
+/**
+ * gcal_event_strings_equal:
+ * @event1: a #GcalEvent
+ * @event2: a #GcalEvent
+ *
+ * Checks if the strings set by @event1 and @event2 are identical.
+ *
+ * Specifically, this checks whether [property@Gcal.Event:summary], [property@Gcal.Event:description],
+ * and [property@Gcal.Event:location] are identical.
+ *
+ * Returns: %TRUE if the events' strings are identical
+ */
+gboolean
+gcal_event_strings_equal (GcalEvent *event1,
+                          GcalEvent *event2)
+{
+  GCAL_ENTRY;
+
+  g_assert (GCAL_IS_EVENT (event1) && GCAL_IS_EVENT (event2));
+
+  if (g_strcmp0 (gcal_event_get_summary (event1), gcal_event_get_summary (event2)) != 0)
+    GCAL_RETURN (FALSE);
+  if (g_strcmp0 (gcal_event_get_description (event1), gcal_event_get_description (event2)) != 0)
+    GCAL_RETURN (FALSE);
+  if (g_strcmp0 (gcal_event_get_location (event1), gcal_event_get_location (event2)) != 0)
+    GCAL_RETURN (FALSE);
+
+  GCAL_RETURN (TRUE);
+}
+
+/**
  * gcal_event_set_recurrence:
  * @self: a #GcalEvent
  * @recur: (nullable): a #GcalRecurrence

@@ -142,6 +142,15 @@ GListModel *         gcal_event_get_attendees                    (GcalEvent     
 
 GcalEventOrganizer * gcal_event_get_organizer                    (GcalEvent          *self);
 
+gboolean             gcal_event_alarms_equal                     (GcalEvent          *event1,
+                                                                  GcalEvent          *event2);
+
+gboolean             gcal_event_schedule_equal                   (GcalEvent          *event1,
+                                                                  GcalEvent          *event2);
+
+gboolean             gcal_event_strings_equal                    (GcalEvent          *event1,
+                                                                  GcalEvent          *event2);
+
 G_END_DECLS
 
 #endif /* GCAL_EVENT_H */
