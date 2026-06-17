@@ -61,7 +61,6 @@ struct _GcalEventEditorDialog
   GcalEventEditorSection   *notes_section;
   GcalEventEditorSection   *reminders_section;
   GcalEventEditorSection   *schedule_section;
-  GtkWidget                *source_label;
   GcalEventEditorSection   *summary_section;
   GcalEventEditorSection   *attendees_section;
   GtkWidget                *nav_view;
@@ -72,11 +71,7 @@ struct _GcalEventEditorDialog
   GcalEventEditorSection *sections[5];
 
 
-  GMenu              *sources_menu;
-
   GcalEvent          *event;
-
-  GBinding           *event_title_binding;
 
   GListStore         *read_only_calendar_model;
   GListModel         *attendees_model;
@@ -665,10 +660,6 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   self->event = g_object_ref (cloned_event);
 
   calendar = gcal_event_get_calendar (cloned_event);
-
-  /* update sources list */
-  if (self->sources_menu != NULL)
-    g_menu_remove_all (self->sources_menu);
 
   /* dialog's title */
   if (new_event)
