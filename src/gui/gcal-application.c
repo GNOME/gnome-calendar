@@ -152,8 +152,9 @@ build_system_information (void)
 
   g_string_append_printf (str, "GNOME Calendar (`%s`)\n\n", VERSION);
 
-  if (g_file_test ("/.flatpak-info", G_FILE_TEST_EXISTS))
-    g_string_append (str, "* Flatpak: yes\n");
+  g_string_append_printf (str,
+                          "* Flatpak: %s\n",
+                          g_file_test ("/.flatpak-info", G_FILE_TEST_EXISTS) ? "yes" : "no");
   g_string_append_printf (str,
                           "* GLib: %d.%d.%d (%d.%d.%d)\n",
                           glib_major_version,
