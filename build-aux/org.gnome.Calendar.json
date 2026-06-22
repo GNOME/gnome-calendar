@@ -118,22 +118,6 @@
         },
         "shared-modules/intltool/intltool-0.51.json",
         {
-            "name" : "gcr",
-            "buildsystem" : "meson",
-            "config-opts" : [
-                "-Dgtk_doc=false",
-                "-Dintrospection=false",
-                "-Dvapi=false"
-            ],
-            "sources" : [
-                {
-                    "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/gcr.git",
-                    "branch" : "main"
-                }
-            ]
-        },
-        {
             "name" : "evolution-data-server",
             "cleanup": [ "/share/GConf" ],
             "buildsystem" : "cmake-ninja",
