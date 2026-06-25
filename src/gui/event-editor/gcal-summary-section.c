@@ -124,6 +124,19 @@ gcal_event_editor_section_iface_init (GcalEventEditorSectionInterface *iface)
 
 
 /*
+ * GtkWidget overrides
+ */
+
+static gboolean
+gcal_summary_section_grab_focus (GtkWidget *widget)
+{
+  GcalSummarySection *self = GCAL_SUMMARY_SECTION (widget);
+
+  return gtk_widget_grab_focus (GTK_WIDGET (self->summary_entry));
+}
+
+
+/*
  * GObject overrides
  */
 
@@ -144,6 +157,8 @@ gcal_summary_section_class_init (GcalSummarySectionClass *klass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->finalize = gcal_summary_section_finalize;
+
+  widget_class->grab_focus = gcal_summary_section_grab_focus;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/event-editor/gcal-summary-section.ui");
 
