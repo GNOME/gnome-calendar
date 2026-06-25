@@ -696,9 +696,6 @@ gcal_event_editor_dialog_set_event (GcalEventEditorDialog *self,
   self->event_is_new = new_event;
   gtk_widget_set_visible (self->delete_group, !new_event && self->writable);
 
-  if (!self->writable)
-    gtk_widget_grab_focus (self->done_button);
-
   /* fill attendees list */
   self->attendees_model = gcal_event_get_attendees (self->event);
 
@@ -712,6 +709,11 @@ out:
     gcal_event_editor_section_set_event (self->sections[i], cloned_event, flags);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
+
+  if (self->writable)
+    gtk_widget_grab_focus (GTK_WIDGET (self->summary_section));
+  else
+    gtk_widget_grab_focus (self->done_button);
 
   GCAL_EXIT;
 }
