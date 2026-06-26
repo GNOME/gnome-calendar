@@ -264,6 +264,9 @@ update_widgets (GcalScheduleSection *self,
   g_signal_handlers_block_by_func (self->until_date_selector, on_until_date_changed_cb, self);
   block_date_signals (self);
 
+  adw_view_stack_set_visible_child_name (self->schedule_type_stack,
+                                         state->schedule_type_all_day ? "all-day" : "time-slot");
+
   gcal_date_time_chooser_set_time_format (self->start_date_time_chooser, state->time_format);
   gcal_date_time_chooser_set_time_format (self->end_date_time_chooser, state->time_format);
 
