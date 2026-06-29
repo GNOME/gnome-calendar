@@ -259,15 +259,15 @@ format_single_day (GcalEventPopover *self,
         {
           /*
            * Translators: %1$s is the start hour, and %2$s is the end hour, for
-           * example: "Today, 19:00 — 22:00"
+           * example: "Today, 19:00 – 22:00"
            */
-          return g_strdup_printf (_("Today, %1$s — %2$s"), start_hours, end_hours);
+          return g_strdup_printf (_("Today, %1$s – %2$s"), start_hours, end_hours);
         }
       else if (n_days_from_dt == 1)
         {
           /*
            * Translators: %1$s is the start hour, and %2$s is the end hour, for
-           * example: "Tomorrow, 19:00 — 22:00"
+           * example: "Tomorrow, 19:00 – 22:00"
            */
           return g_strdup_printf (_("Tomorrow, %1$s – %2$s"), start_hours, end_hours);
         }
@@ -275,7 +275,7 @@ format_single_day (GcalEventPopover *self,
         {
           /*
            * Translators: %1$s is the start hour, and %2$s is the end hour, for
-           * example: "Tomorrow, 19:00 — 22:00"
+           * example: "Tomorrow, 19:00 – 22:00"
            */
           return g_strdup_printf (_("Yesterday, %1$s – %2$s"), start_hours, end_hours);
         }
@@ -284,7 +284,7 @@ format_single_day (GcalEventPopover *self,
           /*
            * Translators: %1$s is a month name (e.g. November), %2$d is the day
            * of month, %3$s is the start hour, and %4$s is the end hour. This
-           * format string results in dates like "November 21, 19:00 — 22:00".
+           * format string results in dates like "November 21, 19:00 – 22:00".
            */
           return g_strdup_printf (_("%1$s %2$d, %3$s – %4$s"),
                                   get_month_name (g_date_time_get_month (start_dt) - 1),
@@ -299,7 +299,7 @@ format_single_day (GcalEventPopover *self,
            * of month, %3$d is the year, %4$s is the start hour, and %5$s is the
            * end hour. This format string results in dates like:
            *
-           * "November 21, 2021, 19:00 — 22:00".
+           * "November 21, 2021, 19:00 – 22:00".
            */
           return g_strdup_printf (_("%1$s %2$d, %3$d, %4$s – %5$s"),
                                   get_month_name (g_date_time_get_month (start_dt) - 1),
@@ -418,8 +418,8 @@ update_date_time_label (GcalEventPopover *self)
       
       end_str = format_multiday_date (self, real_end_dt, show_year, show_hours);
 
-      /* Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022 */
-      g_string_printf (string, _("%1$s — %2$s"), start_str, end_str);
+      /* Translators: %1$s is the start date, and %2$s. For example: June 21 – November 29, 2022 */
+      g_string_printf (string, _("%1$s – %2$s"), start_str, end_str);
 
     }
   else
