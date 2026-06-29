@@ -1934,7 +1934,7 @@ gcal_event_format_date (GcalEvent *self)
       if (is_all_day)
         {
           /* Translators: %1$s is the start date and %2$s is the end date. */
-          formatted_string = g_strdup_printf (_("%1$s — %2$s"), start_date, end_date);
+          formatted_string = g_strdup_printf (_("%1$s – %2$s"), start_date, end_date);
         }
       else
         {
@@ -1942,7 +1942,7 @@ gcal_event_format_date (GcalEvent *self)
            * Translators: %1$s is the start date, %2$s is the start time,
            * %3$s is the end date, and %4$s is the end time.
            */
-          formatted_string = g_strdup_printf (_("%1$s %2$s — %3$s %4$s"),
+          formatted_string = g_strdup_printf (_("%1$s %2$s – %3$s %4$s"),
                                               start_date,
                                               start_time,
                                               end_date,
