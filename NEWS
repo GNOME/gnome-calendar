@@ -1,3 +1,23 @@
+Major changes in 51.alpha:
+* Completely rework the internals of GNOME Calendar to be based on GListModel.
+  Notably, GcalTimeline and GcalTimelineSubscriber all operate on GListModels,
+  and so do the views (week, month, and agenda).
+* A number of performance improvements and rendering optimizations to the Month
+  view and to event widgets
+* Vastly reduce amount of data exchanged by Calendar and Evolution Data Server
+* Support the maps URI for opening locations
+* Use a better month name formatting in various places
+* Make the Week view work with the high-contrast setting
+* Cleanup and improve the event editor dialog
+* Adapt CSS to the latest libadwaita and GTK standards
+* Don't change the refresh interval during startup. This avoids changing values
+  set by the user in Evolution.
+* Explicitly state when app is not contained inside Flatpak in the About dialog
+* Cleanup the Flatpak manifest
+* Add support for Teams links
+* Visual improvements to the Notes section of the event editor dialog
+* Updated translations
+
 Major changes in 50.0:
 * Updated screenshots
 * Focus adjacent cell when pressing Ctrl+Tab in the Month view
