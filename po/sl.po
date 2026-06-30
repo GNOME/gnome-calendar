@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-04-23 16:28+0000\n"
-"PO-Revision-Date: 2026-04-29 16:41+0200\n"
+"POT-Creation-Date: 2026-06-30 00:55+0000\n"
+"PO-Revision-Date: 2026-06-30 18:48+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -143,23 +143,23 @@ msgid "Event editor"
 msgstr "Urejevalnik dogodkov"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1786 src/gui/gcal-event-popover.c:422
+#. Translators: %1$s is the start date, and %2$s. For example: June 21 – November 29, 2022
+#: src/core/gcal-event.c:1937 src/gui/gcal-event-popover.c:422
 #, c-format
-msgid "%1$s — %2$s"
+msgid "%1$s – %2$s"
 msgstr "%1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1794
+#: src/core/gcal-event.c:1945
 #, c-format
-msgid "%1$s %2$s — %3$s %4$s"
+msgid "%1$s %2$s – %3$s %4$s"
 msgstr "%1$s, %2$s – %3$s, %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1810
+#: src/core/gcal-event.c:1961
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -196,7 +196,7 @@ msgstr "_Dodaj koledar"
 msgid "Calendar “%s” removed"
 msgstr "Koledar »%s« je odstranjen."
 
-#: src/gui/calendar-management/gcal-calendars-page.c:354 src/gui/gcal-window.c:1002
+#: src/gui/calendar-management/gcal-calendars-page.c:354 src/gui/gcal-window.c:1020
 msgid "_Undo"
 msgstr "_Razveljavi"
 
@@ -214,8 +214,8 @@ msgstr "Odpri nastavitve"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:43
 #: src/gui/calendar-management/gcal-edit-calendar-page.c:191
-#: src/gui/event-editor/gcal-summary-section.blp:18
-#: src/gui/gcal-event-popover.blp:152 src/gui/importer/gcal-import-file-row.c:178
+#: src/gui/event-editor/gcal-summary-section.blp:12
+#: src/gui/gcal-event-popover.blp:152 src/gui/importer/gcal-import-file-row.c:176
 msgid "Location"
 msgstr "Mesto dogodka"
 
@@ -301,7 +301,7 @@ msgstr "Geslo"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:165
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:18
-#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1213
+#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1295
 msgid "_Cancel"
 msgstr "_Prekliči"
 
@@ -336,12 +336,12 @@ msgid "Month"
 msgstr "Mesec"
 
 #: src/gui/common/gcal-date-chooser.blp:16 src/gui/common/gcal-date-chooser.blp:56
-#: src/gui/gcal-window.c:252
+#: src/gui/gcal-window.c:253
 msgid "Previous Month"
 msgstr "Predhodni mesec"
 
 #: src/gui/common/gcal-date-chooser.blp:17 src/gui/common/gcal-date-chooser.blp:57
-#: src/gui/gcal-window.c:283
+#: src/gui/gcal-window.c:284
 msgid "Next Month"
 msgstr "Naslednji mesec"
 
@@ -365,43 +365,43 @@ msgstr "Naslednje leto"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:334
+#: src/gui/common/gcal-date-chooser.c:333
 msgctxt "grid sunday"
 msgid "S"
 msgstr "N"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:339
+#: src/gui/common/gcal-date-chooser.c:338
 msgctxt "grid monday"
 msgid "M"
 msgstr "P"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:344
+#: src/gui/common/gcal-date-chooser.c:343
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "T"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:349
+#: src/gui/common/gcal-date-chooser.c:348
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "S"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:354
+#: src/gui/common/gcal-date-chooser.c:353
 msgctxt "grid thursday"
 msgid "T"
 msgstr "Č"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:359
+#: src/gui/common/gcal-date-chooser.c:358
 msgctxt "grid friday"
 msgid "F"
 msgstr "P"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:364
+#: src/gui/common/gcal-date-chooser.c:363
 msgctxt "grid saturday"
 msgid "S"
 msgstr "S"
@@ -541,7 +541,7 @@ msgstr[3] "%1$uminute prej"
 msgid "Event start time"
 msgstr "Začetni čas dogodka"
 
-#: src/gui/event-editor/gcal-attendee-row.blp:29
+#: src/gui/event-editor/gcal-attendee-row.blp:25
 #: src/gui/event-editor/gcal-organizer-row.blp:25
 msgid "Copy email"
 msgstr "Kopiraj e-naslov"
@@ -555,7 +555,7 @@ msgid "optional"
 msgstr "neobvezno"
 
 #: src/gui/event-editor/gcal-attendee-details-page.blp:5
-#: src/gui/event-editor/gcal-attendees-section.blp:22
+#: src/gui/event-editor/gcal-attendees-section.blp:9
 msgid "Participants"
 msgstr "Udeleženci"
 
@@ -563,19 +563,19 @@ msgstr "Udeleženci"
 msgid "Accepted"
 msgstr "Sprejeto"
 
-#: src/gui/event-editor/gcal-attendee-details-page.blp:29
+#: src/gui/event-editor/gcal-attendee-details-page.blp:21
 msgid "Tentative"
 msgstr "Začasno"
 
-#: src/gui/event-editor/gcal-attendee-details-page.blp:42
+#: src/gui/event-editor/gcal-attendee-details-page.blp:26
 msgid "Declined"
 msgstr "Zavrnjeno"
 
-#: src/gui/event-editor/gcal-attendee-details-page.blp:55
+#: src/gui/event-editor/gcal-attendee-details-page.blp:31
 msgid "Delegated"
 msgstr "Pooblaščeno zastopanje"
 
-#: src/gui/event-editor/gcal-attendee-details-page.blp:68
+#: src/gui/event-editor/gcal-attendee-details-page.blp:36
 msgid "Not responded"
 msgstr "Ni odziva"
 
@@ -624,7 +624,7 @@ msgstr[1] "%1$u brez odziva"
 msgstr[2] "%1$u brez odziva"
 msgstr[3] "%1$u brez odziva"
 
-#: src/gui/event-editor/gcal-attendees-section.blp:28
+#: src/gui/event-editor/gcal-attendees-section.blp:15
 msgid "Resources"
 msgstr "Sredstva"
 
@@ -632,7 +632,7 @@ msgstr "Sredstva"
 msgid "Edit Date"
 msgstr "Uredi datum"
 
-#: src/gui/event-editor/gcal-date-chooser-row.blp:32
+#: src/gui/event-editor/gcal-date-chooser-row.blp:33
 msgid "Edit date"
 msgstr "Uredi datum"
 
@@ -640,81 +640,79 @@ msgstr "Uredi datum"
 msgid "Date"
 msgstr "Datum"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:11
+#: src/gui/event-editor/gcal-date-time-chooser.blp:12
 msgid "Time"
 msgstr "Čas"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:20
-#: src/gui/event-editor/gcal-time-chooser-row.blp:12
+#: src/gui/event-editor/gcal-date-time-chooser.blp:22
 msgid "Edit Time"
 msgstr "Uredi čas"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:52
+#: src/gui/event-editor/gcal-date-time-chooser.blp:55
 msgid ":"
 msgstr ":"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:70
-#: src/gui/event-editor/gcal-date-time-chooser.c:205
-#: src/gui/event-editor/gcal-date-time-chooser.c:270
+#: src/gui/event-editor/gcal-date-time-chooser.blp:73
+#: src/gui/event-editor/gcal-date-time-chooser.c:208
+#: src/gui/event-editor/gcal-date-time-chooser.c:273
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "dop"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:75
-#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.blp:78
+#: src/gui/event-editor/gcal-date-time-chooser.c:208
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "pop"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:85
-#: src/gui/event-editor/gcal-date-time-chooser.blp:94
+#: src/gui/event-editor/gcal-date-time-chooser.blp:88
+#: src/gui/event-editor/gcal-date-time-chooser.blp:97
 msgid "Change Timezone"
 msgstr "Spremeni časovni pas"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:103
-#: src/gui/event-editor/gcal-time-chooser-row.blp:29
+#: src/gui/event-editor/gcal-date-time-chooser.blp:106
 msgid "Edit time"
 msgstr "Uredi čas"
 
 #. Translators: "%1$s" is the timezone identifier (e.g. UTC, America/Sao_Paulo)
 #. * and "%2$s" is the timezone offset (e.g. UTC-3).
 #.
-#: src/gui/event-editor/gcal-date-time-chooser.c:141
+#: src/gui/event-editor/gcal-date-time-chooser.c:144
 #, c-format
 msgid "%1$s (%2$s)"
 msgstr "%1$s (%2$s)"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:25
-#: src/gui/event-editor/gcal-event-editor-dialog.c:127
+#: src/gui/event-editor/gcal-event-editor-dialog.c:124
 msgid "_Done"
 msgstr "_Končano"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:38
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:36
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr ""
 "Ta dogodek je del koledarja samo za branje. Ne morete ga izbrisati ali spremeniti."
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:70
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:60
 msgid "Reminders"
 msgstr "Opomniki"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:87
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:72
 msgid "_Delete Event"
 msgstr "Iz_briši dogodek"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:127
+#: src/gui/event-editor/gcal-event-editor-dialog.c:124
 msgid "_Save"
 msgstr "_Shrani"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:685
+#: src/gui/event-editor/gcal-event-editor-dialog.c:155
 msgid "New Event"
 msgstr "Nov dogodek"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:687
+#: src/gui/event-editor/gcal-event-editor-dialog.c:157
 msgid "Event Details"
 msgstr "Podrobnosti dogodka"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:689
+#: src/gui/event-editor/gcal-event-editor-dialog.c:159
 msgid "Edit Event"
 msgstr "Uredi dogodek"
 
@@ -722,127 +720,127 @@ msgstr "Uredi dogodek"
 msgid "Organizer"
 msgstr "Organizator"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:16
+#: src/gui/event-editor/gcal-reminders-section.blp:14
 msgid "Add Reminder"
 msgstr "Dodaj opomnik"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:38
+#: src/gui/event-editor/gcal-reminders-section.blp:36
 msgid "Event start"
 msgstr "Pričetek dogodka"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:43
+#: src/gui/event-editor/gcal-reminders-section.blp:41
 msgid "5 Minutes"
 msgstr "5 minut"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:48
+#: src/gui/event-editor/gcal-reminders-section.blp:46
 msgid "10 Minutes"
 msgstr "10 minut"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:53
+#: src/gui/event-editor/gcal-reminders-section.blp:51
 msgid "15 Minutes"
 msgstr "15 minut"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:58
+#: src/gui/event-editor/gcal-reminders-section.blp:56
 msgid "30 Minutes"
 msgstr "30 minut"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:63
+#: src/gui/event-editor/gcal-reminders-section.blp:61
 msgid "1 Hour"
 msgstr "1 ura"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:68
+#: src/gui/event-editor/gcal-reminders-section.blp:66
 msgid "1 Day"
 msgstr "1 dan"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:73
+#: src/gui/event-editor/gcal-reminders-section.blp:71
 msgid "2 Days"
 msgstr "2 dneva"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:78
+#: src/gui/event-editor/gcal-reminders-section.blp:76
 msgid "3 Days"
 msgstr "3 dnevi"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:83
+#: src/gui/event-editor/gcal-reminders-section.blp:81
 msgid "1 Week"
 msgstr "1 teden"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:13
+#: src/gui/event-editor/gcal-schedule-section.blp:16
 msgid "_All Day"
 msgstr "_Ves dan"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:19
-msgid "_Time Slot"
-msgstr "_Časovno okno"
-
-#: src/gui/event-editor/gcal-schedule-section.blp:27
-#: src/gui/event-editor/gcal-schedule-section.blp:40
+#: src/gui/event-editor/gcal-schedule-section.blp:24
+#: src/gui/event-editor/gcal-schedule-section.blp:47
 msgid "Start Date"
 msgstr "Začetni datum"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:34
-#: src/gui/event-editor/gcal-schedule-section.blp:46
+#: src/gui/event-editor/gcal-schedule-section.blp:30
+#: src/gui/event-editor/gcal-schedule-section.blp:54
 msgid "End Date"
 msgstr "Končni datum"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:41
+#: src/gui/event-editor/gcal-schedule-section.blp:38
+msgid "_Time Slot"
+msgstr "_Časovno okno"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:48
 msgid "Start Time"
 msgstr "Čas začetka"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:47
+#: src/gui/event-editor/gcal-schedule-section.blp:55
 msgid "End Time"
 msgstr "Čas konca"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:55
+#: src/gui/event-editor/gcal-schedule-section.blp:68
 msgid "Repeat"
 msgstr "Ponovitve"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:60
+#: src/gui/event-editor/gcal-schedule-section.blp:73
 msgid "No Repeat"
 msgstr "Se ne ponovi"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:61
+#: src/gui/event-editor/gcal-schedule-section.blp:74
 msgid "Daily"
 msgstr "Dnevno ponavljanje"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:62
+#: src/gui/event-editor/gcal-schedule-section.blp:75
 msgid "Monday – Friday"
 msgstr "Od ponedeljka do petka"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:63
+#: src/gui/event-editor/gcal-schedule-section.blp:76
 msgid "Weekly"
 msgstr "Tedensko ponavljanje"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:64
+#: src/gui/event-editor/gcal-schedule-section.blp:77
 msgid "Monthly"
 msgstr "Mesečno ponavljanje"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:65
+#: src/gui/event-editor/gcal-schedule-section.blp:78
 msgid "Yearly"
 msgstr "Letno ponavljanje"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:73
+#: src/gui/event-editor/gcal-schedule-section.blp:86
 msgid "End Repeat"
 msgstr "Konec ponavljanja"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:78
+#: src/gui/event-editor/gcal-schedule-section.blp:91
 msgid "Forever"
 msgstr "Ponavljaj v nedogled"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:79
-#: src/gui/event-editor/gcal-schedule-section.blp:89
+#: src/gui/event-editor/gcal-schedule-section.blp:92
+#: src/gui/event-editor/gcal-schedule-section.blp:102
 msgid "Number of Occurrences"
 msgstr "Ponovi nekajkrat"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:80
+#: src/gui/event-editor/gcal-schedule-section.blp:93
 msgid "Until Date"
 msgstr "Ponavljaj do datuma"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:103
+#: src/gui/event-editor/gcal-schedule-section.blp:116
 msgid "End Repeat Date"
 msgstr "Datum konca ponavljanja"
 
-#: src/gui/event-editor/gcal-summary-section.blp:13
-#: src/gui/gcal-quick-add-popover.blp:44 src/gui/importer/gcal-import-file-row.c:177
+#: src/gui/event-editor/gcal-summary-section.blp:6
+#: src/gui/gcal-quick-add-popover.blp:44 src/gui/importer/gcal-import-file-row.c:175
 msgid "Title"
 msgstr "Naslov"
 
@@ -891,11 +889,11 @@ msgstr "Odpri koledar v pogledu preteklih dogodkov"
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Avtorske pravice © 2012–%d Avtorji programa Koledar"
 
-#: src/gui/gcal-application.c:241
+#: src/gui/gcal-application.c:242
 msgid "translator-credits"
 msgstr "Matej Urbančič <mateju@src@gnome.org>"
 
-#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:391
+#: src/gui/gcal-application.c:246 src/gui/gcal-window.blp:391
 msgid "Weather"
 msgstr "Vreme"
 
@@ -916,7 +914,7 @@ msgstr ""
 "<b>Ta dogodek je del koledarja samo za branje</b>\n"
 "    Tega dogodka ne morete izbrisati ali spremeniti."
 
-#: src/gui/gcal-event-popover.blp:77 src/gui/gcal-event-popover.c:592
+#: src/gui/gcal-event-popover.blp:77 src/gui/gcal-event-popover.c:591
 msgid "Export Event"
 msgstr "Izvozi dogodek"
 
@@ -1012,17 +1010,17 @@ msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%2$d. %1$s %3$d ob %4$s"
 
 #: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
-#: src/gui/views/gcal-agenda-view.c:196
+#: src/gui/views/gcal-agenda-view-day-row.c:77
 msgid "Today"
 msgstr "danes"
 
 #: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/gcal-window.c:285 src/gui/views/gcal-agenda-view.c:198
+#: src/gui/gcal-window.c:286 src/gui/views/gcal-agenda-view-day-row.c:79
 msgid "Tomorrow"
 msgstr "jutri"
 
 #: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/gcal-window.c:254 src/gui/views/gcal-agenda-view.c:200
+#: src/gui/gcal-window.c:255 src/gui/views/gcal-agenda-view-day-row.c:81
 msgid "Yesterday"
 msgstr "včeraj"
 
@@ -1048,16 +1046,16 @@ msgstr "%2$d. %1$s ob %3$d"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
-#. * example: "Today, 19:00 — 22:00"
+#. * example: "Today, 19:00 – 22:00"
 #.
 #: src/gui/gcal-event-popover.c:264
 #, c-format
-msgid "Today, %1$s — %2$s"
-msgstr "Danes, %1$s–%2$s"
+msgid "Today, %1$s – %2$s"
+msgstr "Danes, %1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
-#. * example: "Tomorrow, 19:00 — 22:00"
+#. * example: "Tomorrow, 19:00 – 22:00"
 #.
 #: src/gui/gcal-event-popover.c:272
 #, c-format
@@ -1066,7 +1064,7 @@ msgstr "Jutri, %1$s–%2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
-#. * example: "Tomorrow, 19:00 — 22:00"
+#. * example: "Tomorrow, 19:00 – 22:00"
 #.
 #: src/gui/gcal-event-popover.c:280
 #, c-format
@@ -1076,7 +1074,7 @@ msgstr "Včeraj, %1$s–%2$s"
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
 #. * of month, %3$s is the start hour, and %4$s is the end hour. This
-#. * format string results in dates like "November 21, 19:00 — 22:00".
+#. * format string results in dates like "November 21, 19:00 – 22:00".
 #.
 #: src/gui/gcal-event-popover.c:289
 #, c-format
@@ -1088,7 +1086,7 @@ msgstr "%2$d. %1$s, %3$s–%4$s"
 #. * of month, %3$d is the year, %4$s is the start hour, and %5$s is the
 #. * end hour. This format string results in dates like:
 #. *
-#. * "November 21, 2021, 19:00 — 22:00".
+#. * "November 21, 2021, 19:00 – 22:00".
 #.
 #: src/gui/gcal-event-popover.c:304
 #, c-format
@@ -1104,7 +1102,7 @@ msgid "Edit Additional Details"
 msgstr "Uredi vse podrobnosti"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:386
+#: src/gui/gcal-event-widget.c:384
 #, c-format
 msgid ""
 "\n"
@@ -1117,7 +1115,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:400 src/gui/gcal-event-widget.c:406
+#: src/gui/gcal-event-widget.c:398 src/gui/gcal-event-widget.c:404
 #, c-format
 msgid ""
 "\n"
@@ -1134,7 +1132,7 @@ msgstr ""
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:468
+#: src/gui/gcal-event-widget.c:465
 msgid "%a %B %d"
 msgstr "%a, %d. %B"
 
@@ -1479,11 +1477,11 @@ msgstr "_Tipkovne bližnjice"
 msgid "_About Calendar"
 msgstr "_O programu"
 
-#: src/gui/gcal-window.c:250
+#: src/gui/gcal-window.c:251
 msgid "Previous Week"
 msgstr "Predhodni teden"
 
-#: src/gui/gcal-window.c:281
+#: src/gui/gcal-window.c:282
 msgid "Next Week"
 msgstr "Naslednji teden"
 
@@ -1495,19 +1493,19 @@ msgstr "Teden"
 msgid "Agenda"
 msgstr "Dnevni red"
 
-#: src/gui/gcal-window.c:1000
+#: src/gui/gcal-window.c:1018
 msgid "Another event deleted"
 msgstr "Izbrisan je drug dogodek"
 
-#: src/gui/gcal-window.c:1000
+#: src/gui/gcal-window.c:1018
 msgid "Event deleted"
 msgstr "Dogodek je izbrisan"
 
-#: src/gui/gcal-window.c:1065
+#: src/gui/gcal-window.c:1083
 msgid "Could not import some files: Not ICS files"
 msgstr "Nekaterih datotek ni bilo mogoče uvoziti: niso datoteke ICS"
 
-#: src/gui/gcal-window.c:1070
+#: src/gui/gcal-window.c:1088
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Datoteke »%s« ni bilo mogoče uvoziti: ni datoteka ICS"
@@ -1533,15 +1531,15 @@ msgstr[1] "Uvozi %d dogodek"
 msgstr[2] "Uvozi %d dogodka"
 msgstr[3] "Uvozi %d dogodke"
 
-#: src/gui/importer/gcal-import-file-row.c:179
+#: src/gui/importer/gcal-import-file-row.c:177
 msgid "Starts"
 msgstr "Začetek"
 
-#: src/gui/importer/gcal-import-file-row.c:180
+#: src/gui/importer/gcal-import-file-row.c:178
 msgid "Ends"
 msgstr "Konec"
 
-#: src/gui/importer/gcal-import-file-row.c:181
+#: src/gui/importer/gcal-import-file-row.c:179
 msgid "Description"
 msgstr "Opis"
 
@@ -1672,7 +1670,7 @@ msgctxt "shortcut dialog"
 msgid "Week View"
 msgstr "Preklopi na tedenski pogled"
 
-#: src/gui/views/gcal-agenda-view.blp:27
+#: src/gui/views/gcal-agenda-view-day-row.blp:25
 msgid "No events"
 msgstr "Ni dogodkov"
 
@@ -1682,19 +1680,15 @@ msgstr "Ni dogodkov"
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/views/gcal-agenda-view.c:208
+#: src/gui/views/gcal-agenda-view-day-row.c:89
 msgid "%A %B %d"
 msgstr "%A, %d. %B"
-
-#: src/gui/views/gcal-agenda-view.c:436
-msgid "On-going"
-msgstr "Še trajajoče"
 
 #: src/gui/views/gcal-month-popover.blp:58
 msgid "New Event…"
 msgstr "Nov dogodek …"
 
-#: src/gui/views/gcal-week-header.c:477
+#: src/gui/views/gcal-week-header.c:473
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1711,11 +1705,11 @@ msgstr "Skrij dodatne dogodke"
 msgid "Show Additional Events"
 msgstr "Pokaži dodatne dogodke"
 
-#: src/utils/gcal-utils.c:1209
+#: src/utils/gcal-utils.c:1291
 msgid "Modify Multiple Events?"
 msgstr "Ali želite spremeniti več dogodkov?"
 
-#: src/utils/gcal-utils.c:1210
+#: src/utils/gcal-utils.c:1292
 msgid ""
 "The event you are trying to modify is recurring. The changes you have selected "
 "should be applied to:"
@@ -1723,72 +1717,72 @@ msgstr ""
 "Dogodek, ki ga nameravate spremeniti, se ponavlja. Spremembe, ki jih boste "
 "naredili se bodo odražale na:"
 
-#: src/utils/gcal-utils.c:1214
+#: src/utils/gcal-utils.c:1296
 msgid "_Only This Event"
 msgstr "_Le ta dogodek"
 
-#: src/utils/gcal-utils.c:1220
+#: src/utils/gcal-utils.c:1302
 msgid "_Subsequent Events"
 msgstr "_Poznejši dogodki"
 
-#: src/utils/gcal-utils.c:1223
+#: src/utils/gcal-utils.c:1305
 msgid "_All Events"
 msgstr "_Vsi dogodki"
 
 #. Conferencing
-#: src/utils/gcal-utils.c:1326
+#: src/utils/gcal-utils.c:1408
 msgid "BlueJeans"
 msgstr "BlueJeans"
 
-#: src/utils/gcal-utils.c:1327 src/utils/gcal-utils.c:1328
+#: src/utils/gcal-utils.c:1409 src/utils/gcal-utils.c:1410
 msgid "BigBlueButton"
 msgstr "BigBlueButton"
 
-#: src/utils/gcal-utils.c:1329
+#: src/utils/gcal-utils.c:1411
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1330 src/utils/gcal-utils.c:1331
+#: src/utils/gcal-utils.c:1412 src/utils/gcal-utils.c:1413
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1414
 msgid "Uber Conference"
 msgstr "Konferenca Uber"
 
-#: src/utils/gcal-utils.c:1333
+#: src/utils/gcal-utils.c:1415
 msgid "GNOME Meet"
 msgstr "GNOME Meet"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1416
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
-#: src/utils/gcal-utils.c:1335
+#: src/utils/gcal-utils.c:1417
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1336
+#: src/utils/gcal-utils.c:1418
 msgid "Webex"
 msgstr "Webex"
 
-#: src/utils/gcal-utils.c:1337
+#: src/utils/gcal-utils.c:1419
 msgid "Zoom"
 msgstr "Zoom"
 
 #. Map
-#: src/utils/gcal-utils.c:1340
+#: src/utils/gcal-utils.c:1422
 msgid "View Map"
 msgstr "Pokaži zemljevid"
 
-#: src/utils/gcal-utils.c:1341
+#: src/utils/gcal-utils.c:1423
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: src/utils/gcal-utils.c:1342 src/utils/gcal-utils.c:1343
+#: src/utils/gcal-utils.c:1424 src/utils/gcal-utils.c:1425
 msgid "Google Maps"
 msgstr "Zemljevidi Google"
 
-#: src/utils/gcal-utils.c:1344
+#: src/utils/gcal-utils.c:1426
 msgid "Bing Maps"
 msgstr "Zemljevidi Bing"
