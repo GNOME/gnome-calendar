@@ -49,6 +49,7 @@ sources += files(
   'gcal-event-widget.c',
   'gcal-event-widget-pool.c',
   'gcal-fading-label.c',
+  'gcal-gizmo.c',
   'gcal-meeting-row.c',
   'gcal-overflow-bin.c',
   'gcal-overflow-bin-layout.c',
