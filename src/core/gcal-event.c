@@ -1755,11 +1755,6 @@ gcal_event_schedule_equal (GcalEvent *event1,
   recurrence1 = gcal_event_get_recurrence (event1);
   recurrence2 = gcal_event_get_recurrence (event2);
 
-  if (recurrence1 == recurrence2)
-    GCAL_RETURN (TRUE);
-  if (!recurrence1 != !recurrence2)
-    GCAL_RETURN (FALSE);
-
   if (!gcal_recurrence_is_equal (recurrence1, recurrence2))
     GCAL_RETURN (FALSE);
   if (gcal_event_get_all_day (event1) != gcal_event_get_all_day (event2))
@@ -1771,8 +1766,13 @@ gcal_event_schedule_equal (GcalEvent *event1,
   date_end1 = gcal_event_get_date_end (event1);
   date_end2 = gcal_event_get_date_end (event2);
 
-  if (gcal_date_time_compare_date (date_start1, date_start2) < 0 ||
-      gcal_date_time_compare_date (date_end1, date_end2) > 0)
+  /*
+   * The same time instant in two different time zones will compare
+   * equal, so timezones are checked separately below to catch a
+   * manual timezone conversion.
+   */
+  if (!g_date_time_equal (date_start1, date_start2) ||
+      !g_date_time_equal (date_end1, date_end2))
     GCAL_RETURN (FALSE);
 
   date_start_tz1 = g_date_time_get_timezone (date_start1);
