@@ -51,7 +51,9 @@ typedef void (*GcalAskRecurrenceCallback) (GcalEvent             *event,
                                            GcalRecurrenceModType  modtype,
                                            gpointer               user_data);
 
+#if !ICAL_CHECK_VERSION(4, 0, 0)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ICalTime, g_object_unref)
+#endif
 
 gchar*               gcal_get_weekday                            (gint                i);
 

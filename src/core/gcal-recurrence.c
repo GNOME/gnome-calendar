@@ -147,6 +147,11 @@ gcal_recurrence_is_equal (GcalRecurrence *recur1,
   return TRUE;
 }
 
+#if ICAL_CHECK_VERSION(4, 0, 0)
+#define i_cal_recurrence_get_by_day(_r, _idx) i_cal_recurrence_get_by (_r, I_CAL_BY_DAY, _idx)
+#define i_cal_recurrence_set_by_day(_r, _idx, _val) i_cal_recurrence_set_by (_r, I_CAL_BY_DAY, _idx, _val)
+#endif
+
 /**
  * gcal_recurrence_parse_recurrence_rules:
  * @comp: an #ECalComponent
