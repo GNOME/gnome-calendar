@@ -51,10 +51,10 @@ typedef enum
  * GcalRangePosition:
  *
  * @GCAL_RANGE_BEFORE: range @a is before @b
+ * @GCAL_RANGE_MATCH: range @a is equal to @b
  * @GCAL_RANGE_AFTER: range @a is after @b
  *
- * The position of @a relative to @b. When the ranges are exactly equal, it
- * is undefined.
+ * The position of @a relative to @b.
  */
 typedef enum
 {

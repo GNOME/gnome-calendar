@@ -507,12 +507,17 @@ gcal_range_compare (GcalRange *a,
                                 &start_timestamp_a, &end_timestamp_a,
                                 &start_timestamp_b, &end_timestamp_b);
 
-  result = start_timestamp_b - start_timestamp_a;
+  result = start_timestamp_a - start_timestamp_b;
 
   if (result == 0)
-    result = end_timestamp_b - end_timestamp_a;
+    result = end_timestamp_a - end_timestamp_b;
 
-  return result;
+  if (result < 0)
+    return GCAL_RANGE_BEFORE;
+  else if (result > 0)
+    return GCAL_RANGE_AFTER;
+  else
+    return GCAL_RANGE_MATCH;
 }
 
 /**
