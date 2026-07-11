@@ -21,8 +21,10 @@
 #include "gcal-event-attendee.h"
 #include "gcal-event-organizer.h"
 #include "gcal-event.h"
+#include "gcal-recurrence.h"
 #include "gcal-stub-calendar.h"
 #include "gcal-utils.h"
+#include "libecal/libecal.h"
 
 #define STUB_EVENT "BEGIN:VEVENT\n"             \
                    "SUMMARY:Stub event\n"       \
@@ -72,6 +74,16 @@
                                   "ATTENDEE;CN=Bob Johnson;RSVP=TRUE;ROLE=REQ-PARTICIPANT:mailto:bob@example.com\n"          \
                                   "ATTENDEE;CN=Carol Lee;RSVP=FALSE;ROLE=OPT-PARTICIPANT:mailto:carol@example.com\n"         \
                                   "END:VEVENT\n"
+
+#define STUB_EVENT_WITH_RECURRENCE "BEGIN:VEVENT\n"                   \
+                                   "SUMMARY:Stub event\n"             \
+                                   "UID:example@uid\n"                \
+                                   "DTSTAMP:19970114T000000Z\n"       \
+                                   "DTSTART:20180714T000000Z\n"       \
+                                   "DTEND:20180714T235959Z\n"         \
+                                   "RRULE;FREQ=DAILY;COUNT=3\n"       \
+                                   "RECURRENCE-ID:20180714T000000Z\n" \
+                                   "END:VEVENT\n"
 
 /*
  * Auxiliary methods
@@ -376,7 +388,7 @@ event_date_check_tz (void)
       EVENT_STRING_FOR_DATE (":20240709T180000Z", ":20240709T190000Z"), "UTC"
     },
   };
-  
+
   g_test_bug ("171");
 
   for (gsize i = 0; i < G_N_ELEMENTS (timezones); i++)
@@ -442,6 +454,126 @@ event_get_attendees (void)
 
 /*********************************************************************************************************************/
 
+static GDateTime *
+dt_add_second_random (GDateTime *dt)
+{
+  gint32 seconds = 0;
+  do
+    {
+      // numbers chosen to cover a fair amount of years
+      seconds = g_test_rand_int_range (-1000000000, 1000000000);
+    }
+  while (seconds == 0);
+
+  return g_date_time_add_seconds (dt, seconds);
+};
+
+static void
+event_schedule_equal (void)
+{
+  g_test_bug ("1612");
+
+  const gchar *const events[] = {
+    EVENT_STRING_FOR_DATE (":20160229T000000Z", ":20160229T030000Z"),
+    EVENT_STRING_FOR_DATE (":20160229T000000Z", ":20160301T000000Z"),
+    EVENT_STRING_FOR_DATE (":20160229T000000Z", ":20160229T235959Z"),
+    EVENT_STRING_FOR_DATE (":20160229T000000Z", ":20160302T000001Z"),
+    EVENT_STRING_FOR_DATE (":20160229T020000Z", ":20160310T004500Z"),
+    STUB_EVENT_WITH_RECURRENCE,
+  };
+
+  for (guint i = 0; i < G_N_ELEMENTS (events); i++)
+    {
+      g_autoptr (GcalEvent) event_orig = NULL;
+      g_autoptr (GcalEvent) event_mod = NULL;
+      g_autoptr (GError) error = NULL;
+
+      event_orig = create_event_for_string (events[i], &error);
+      g_assert_no_error (error);
+
+      event_mod = create_event_for_string (events[i], &error);
+      g_assert_no_error (error);
+
+      g_assert_true (gcal_event_schedule_equal (event_orig, event_mod));
+
+      g_autoptr (GDateTime) dt_start = g_date_time_ref (gcal_event_get_date_start (event_mod));
+      g_autoptr (GDateTime) dt_end = g_date_time_ref (gcal_event_get_date_end (event_mod));
+
+      /* == type changed == */
+
+      /* use a separate event instance in case flipping the type also changes the stored date time */
+      {
+        g_autoptr (GcalEvent) event_mod_mod = gcal_event_new_from_event (event_mod);
+
+        gcal_event_set_all_day (event_mod_mod, !gcal_event_get_all_day (event_mod_mod));
+
+        g_assert_false (gcal_event_schedule_equal (event_orig, event_mod_mod));
+      }
+
+      /* == start and/or end date time changed == */
+
+      /* poor person's fuzz test I suppose */
+      for (guint j = 0; j < 10; j++)
+        {
+          g_autoptr (GDateTime) dt_start_mod = dt_add_second_random (dt_start);
+          g_autoptr (GDateTime) dt_end_mod = dt_add_second_random (dt_end);
+
+          gcal_event_set_date_start (event_mod, dt_start_mod);
+          g_assert_false (gcal_event_schedule_equal (event_orig, event_mod));
+
+          gcal_event_set_date_start (event_mod, dt_start);
+          g_assert_true (gcal_event_schedule_equal (event_orig, event_mod));
+
+          gcal_event_set_date_end (event_mod, dt_end_mod);
+          g_assert_false (gcal_event_schedule_equal (event_orig, event_mod));
+
+          gcal_event_set_date_end (event_mod, dt_end);
+          g_assert_true (gcal_event_schedule_equal (event_orig, event_mod));
+        }
+
+      /* == start and/or end timezone changed == */
+
+      {
+        g_autoptr (GDateTime) dt_start_mod = g_date_time_to_timezone (dt_start, g_time_zone_new_identifier ("Australia/Melbourne"));
+        g_autoptr (GDateTime) dt_end_mod = g_date_time_to_timezone (dt_end, g_time_zone_new_identifier ("Australia/Melbourne"));
+
+        gcal_event_set_date_start (event_mod, dt_start_mod);
+        g_assert_false (gcal_event_schedule_equal (event_orig, event_mod));
+
+        gcal_event_set_date_start (event_mod, dt_start);
+        g_assert_true (gcal_event_schedule_equal (event_orig, event_mod));
+
+        gcal_event_set_date_end (event_mod, dt_end_mod);
+        g_assert_false (gcal_event_schedule_equal (event_orig, event_mod));
+
+        gcal_event_set_date_end (event_mod, dt_end);
+        g_assert_true (gcal_event_schedule_equal (event_orig, event_mod));
+      }
+
+      /* == recurrence changed == */
+
+      if (gcal_event_has_recurrence (event_mod))
+        {
+          g_autoptr (GcalRecurrence) no_rec = gcal_recurrence_new ();
+
+          gcal_event_set_recurrence (event_mod, no_rec);
+        }
+      else
+        {
+          g_autoptr (ECalComponent) comp = e_cal_component_new_from_string (STUB_EVENT_WITH_RECURRENCE);
+          g_autoptr (GcalRecurrence) some_rec = gcal_recurrence_parse_recurrence_rules (comp);
+
+          gcal_event_set_recurrence (event_mod, some_rec);
+        }
+
+      g_assert_false (gcal_event_schedule_equal (event_orig, event_mod));
+
+      /* event_mod uses different recurrence now, don't add additional tests below */
+    }
+}
+
+/*********************************************************************************************************************/
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -463,6 +595,7 @@ main (gint   argc,
   g_test_add_func ("/event/date/create-tzid", event_date_create_tzid);
   g_test_add_func ("/event/date/check-tz", event_date_check_tz);
   g_test_add_func ("/event/date/get-attendees", event_get_attendees);
+  g_test_add_func ("/event/equal/schedule", event_schedule_equal);
 
   return g_test_run ();
 }
