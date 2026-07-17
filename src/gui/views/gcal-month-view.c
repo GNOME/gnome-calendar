@@ -531,7 +531,7 @@ snap_to_top_row (GcalMonthView *self)
 
   animation_target = adw_callback_animation_target_new (animate_row_offset_cb, self, NULL);
 
-  g_clear_object (&self->row_offset_animation);
+  cancel_row_offset_animation (self);
   self->row_offset_animation = adw_timed_animation_new (GTK_WIDGET (self),
                                                         self->row_offset,
                                                         0.0,
