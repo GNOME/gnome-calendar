@@ -116,7 +116,6 @@
                 }
             ]
         },
-        "shared-modules/intltool/intltool-0.51.json",
         {
             "name" : "evolution-data-server",
             "cleanup": [ "/share/GConf" ],
