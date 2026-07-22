@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-06-30 00:55+0000\n"
-"PO-Revision-Date: 2026-06-30 18:48+0200\n"
+"POT-Creation-Date: 2026-07-22 14:27+0000\n"
+"PO-Revision-Date: 2026-07-22 16:43+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -82,6 +82,10 @@ msgstr "Raven približanja mreže tedna"
 msgid "The current zoom level of the week grid"
 msgstr "Trenutna raven približanja mreže tedna"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "Projekt GNOME"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "Upravljanje urnika"
@@ -125,6 +129,59 @@ msgstr ""
 "usklajevanje podatkov z različnimi napravami v različnih okoljih. Koledar GNOME "
 "podpira tudi krajevne koledarje brez povezave, zato je nepogrešljiv v vsakem "
 "trenutku (tudi po propadu civilizacije.).anslated with DeepL.com (free version)"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "koledarji"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "načrtovanje časa"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "dogodki"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "sestanki"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "srečanja"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "časovno načrtovanje"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "načrtovanje"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "dnevni red"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "opomniki"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "alarmi"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "vreme"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "vremenske napovedi"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+#| msgid "New Calendar"
+msgid "Google Calendar"
+msgstr "Koledar Google"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
