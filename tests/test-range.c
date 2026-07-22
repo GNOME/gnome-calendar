@@ -256,6 +256,43 @@ range_calculate_overlap_date_only (void)
 
 /*********************************************************************************************************************/
 
+static void
+range_compare (void)
+{
+  g_autoptr (GTimeZone) utc = NULL;
+  gint i;
+
+  g_test_bug ("1615");
+
+  utc = g_time_zone_new_utc ();
+  for (i = 0; i < G_N_ELEMENTS (ranges); i++)
+    {
+      g_autoptr (GDateTime) second_start = NULL;
+      g_autoptr (GDateTime) second_end = NULL;
+      g_autoptr (GDateTime) first_start = NULL;
+      g_autoptr (GDateTime) first_end = NULL;
+      g_autoptr (GcalRange) range_a = NULL;
+      g_autoptr (GcalRange) range_b = NULL;
+      gint compare;
+
+      first_start = g_date_time_new_from_iso8601 (ranges[i].first.start, utc);
+      first_end = g_date_time_new_from_iso8601 (ranges[i].first.end, utc);
+      second_start = g_date_time_new_from_iso8601 (ranges[i].second.start, utc);
+      second_end = g_date_time_new_from_iso8601 (ranges[i].second.end, utc);
+
+      range_a = gcal_range_new (first_start, first_end, GCAL_RANGE_DEFAULT);
+      g_assert_nonnull (range_a);
+
+      range_b = gcal_range_new (second_start, second_end, GCAL_RANGE_DEFAULT);
+      g_assert_nonnull (range_b);
+
+      compare = gcal_range_compare (range_a, range_b);
+      g_assert_cmpint (compare, ==, ranges[i].expected_position);
+    }
+}
+
+/*********************************************************************************************************************/
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -266,6 +303,7 @@ main (gint   argc,
 
   g_test_add_func ("/range/new", range_new);
   g_test_add_func ("/range/invalid-ranges", range_invalid);
+  g_test_add_func ("/range/compare", range_compare);
   g_test_add_func ("/range/calculate-overlap", range_calculate_overlap);
   g_test_add_func ("/range/calculate-overlap-date-only", range_calculate_overlap_date_only);
 
