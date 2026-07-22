@@ -185,6 +185,52 @@ range_tree_remove_data (void)
 
 /*********************************************************************************************************************/
 
+static void
+range_tree_deep_remove (void)
+{
+  static struct
+  {
+    const gchar *start;
+    const gchar *end;
+  } ranges[] = {
+    { "2026-03-05T00:00:00", "2026-03-10T00:00:00" },
+    { "2026-03-07T00:00:00", "2026-03-18T00:00:00" },
+    { "2026-03-19T00:00:00", "2026-04-02T00:00:00" },
+  };
+
+  g_autoptr (GcalRangeTree) range_tree = NULL;
+  g_autoptr (GcalRange) range = NULL;
+  g_autoptr (GTimeZone) utc = NULL;
+  gint i;
+
+  g_test_bug ("1615");
+
+  range_tree = gcal_range_tree_new ();
+  g_assert_nonnull (range_tree);
+
+  utc = g_time_zone_new_utc ();
+  for (i = 0; i < G_N_ELEMENTS (ranges); i++)
+    {
+      g_clear_pointer (&range, gcal_range_unref);
+
+      range = gcal_range_new_take (g_date_time_new_from_iso8601 (ranges[i].start, utc),
+                                   g_date_time_new_from_iso8601 (ranges[i].end, utc),
+                                   GCAL_RANGE_DEFAULT);
+
+      gcal_range_tree_add_range (range_tree, range, GINT_TO_POINTER (i));
+    }
+
+  i--;
+
+  g_assert_true (gcal_range_tree_has_entries_at_range (range_tree, range));
+
+  gcal_range_tree_remove_range (range_tree, range, GINT_TO_POINTER (i));
+
+  g_assert_false (gcal_range_tree_has_entries_at_range (range_tree, range));
+}
+
+/*********************************************************************************************************************/
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -199,6 +245,7 @@ main (gint   argc,
   g_test_add_func ("/range-tree/traverse", range_tree_traverse);
   g_test_add_func ("/range-tree/smaller-range", range_tree_smaller_range);
   g_test_add_func ("/range-tree/remove-data", range_tree_remove_data);
+  g_test_add_func ("/range-tree/deep-remove", range_tree_deep_remove);
 
   return g_test_run ();
 }
