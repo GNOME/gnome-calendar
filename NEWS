@@ -1,3 +1,10 @@
+Major Changes in 51.beta:
+* Fix sparodically disappearing horizontal line separators in the month view
+* Fix the event editor not saving changes to event durations
+* Fix a crash in the week view that would occur for multiple overlapping events
+* Don't show the tooltip for the month cell's overflow button if the button is invisible
+* Updated translations
+
 Major changes in 51.alpha:
 * Completely rework the internals of GNOME Calendar to be based on GListModel.
   Notably, GcalTimeline and GcalTimelineSubscriber all operate on GListModels,
