@@ -24,6 +24,7 @@
 #include "config.h"
 #include "gcal-debug.h"
 #include "gcal-event-widget-pool.h"
+#include "gcal-gui-utils.h"
 #include "gcal-month-cell.h"
 #include "gcal-month-popover.h"
 #include "gcal-month-view.h"
@@ -82,6 +83,9 @@ struct _GcalMonthView
   GtkWidget          *last_focused_widget;
 
   GdkModifierType     state;
+
+  GtkWidget          *dnd_cell;
+  GtkWidget          *dnd_widget;
 };
 
 static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
@@ -790,6 +794,65 @@ focus_month_cell (GcalMonthView    *self,
   return gtk_widget_grab_focus (new_cell);
 }
 
+static GtkWidget *
+get_month_cell_at_position (GcalMonthView *self,
+                            double         x,
+                            double         y)
+{
+  gint height = gtk_widget_get_height (GTK_WIDGET (self));
+  gint header_height = gtk_widget_get_height (self->header);
+
+  gdouble grid_y = MAX (0, y - header_height);
+  gdouble grid_height = height - header_height;
+  gdouble row_height = grid_height / N_ROWS_PER_PAGE;
+
+  gint row_idx = floor (grid_y / row_height);
+  row_idx = CLAMP (row_idx, 0, N_ROWS_PER_PAGE - 1);
+
+  GtkWidget *row_widget = g_ptr_array_index (self->week_rows, FIRST_VISIBLE_ROW_INDEX + row_idx);
+  GtkWidget *hovered_cell = gcal_month_view_row_get_cell_at_x (GCAL_MONTH_VIEW_ROW (row_widget), x);
+
+  return hovered_cell;
+}
+
+static void
+move_event_to_date (GcalMonthView         *self,
+                    GcalEvent             *event,
+                    GDateTime             *target_date,
+                    GcalRecurrenceModType  mod_type)
+{
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  g_autoptr (GDateTime) new_start = NULL;
+  g_autoptr (GcalEvent) changed_event = NULL;
+  GDateTime *start_dt;
+  GDateTime *end_dt;
+  GTimeSpan timespan = 0;
+
+  changed_event = gcal_event_new_from_event (event);
+  start_dt = gcal_event_get_date_start (changed_event);
+  end_dt = gcal_event_get_date_end (changed_event);
+
+  if (end_dt && start_dt)
+    timespan = g_date_time_difference (end_dt, start_dt);
+
+  new_start = g_date_time_new (g_date_time_get_timezone (start_dt),
+                               g_date_time_get_year (target_date),
+                               g_date_time_get_month (target_date),
+                               g_date_time_get_day_of_month (target_date),
+                               g_date_time_get_hour (start_dt),
+                               g_date_time_get_minute (start_dt),
+                               g_date_time_get_seconds (start_dt));
+
+  gcal_event_set_date_start (changed_event, new_start);
+
+  if (end_dt)
+    {
+      g_autoptr (GDateTime) new_end = g_date_time_add (new_start, timespan);
+      gcal_event_set_date_end (changed_event, new_end);
+    }
+
+  gcal_manager_update_event (gcal_context_get_manager (context), changed_event, mod_type);
+}
 
 
 /*
@@ -875,6 +938,129 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
   gcal_view_create_event (GCAL_VIEW (self), selection_range, x, y);
 
   GCAL_EXIT;
+}
+
+static GdkDragAction
+on_drop_target_motion_cb (GtkDropTarget *drop_target,
+                          gdouble        x,
+                          gdouble        y,
+                          GcalMonthView *self)
+{
+  GtkWidget *hovered_cell;
+
+  GCAL_ENTRY;
+
+  hovered_cell = get_month_cell_at_position (self, x, y);
+
+  if (self->dnd_cell != hovered_cell)
+    {
+      self->dnd_cell = hovered_cell;
+      gtk_widget_queue_allocate (GTK_WIDGET (self));
+    }
+
+  GCAL_RETURN (GDK_ACTION_COPY);
+}
+
+static GdkDragAction
+on_drop_target_enter_cb (GtkDropTarget *drop_target,
+                         double         x,
+                         double         y,
+                         GcalMonthView *self)
+{
+  GCAL_ENTRY;
+
+  gtk_widget_set_visible (self->dnd_widget, TRUE);
+  on_drop_target_motion_cb (drop_target, x, y, self);
+
+  GCAL_RETURN (GDK_ACTION_COPY);
+}
+
+static void
+on_drop_target_leave_cb (GtkDropTarget *drop_target,
+                         GcalMonthView *self)
+{
+  GCAL_ENTRY;
+
+  self->dnd_cell = NULL;
+  gtk_widget_set_visible (self->dnd_widget, FALSE);
+  gtk_widget_queue_allocate (GTK_WIDGET (self));
+
+  GCAL_EXIT;
+}
+
+
+typedef struct
+{
+  GcalMonthView *self;
+  GcalEvent     *event;
+  GDateTime     *target_date;
+} MonthDropData;
+
+static void
+on_recurrence_response_cb (GcalEvent             *event,
+                           GcalRecurrenceModType  mod_type,
+                           gpointer               user_data)
+{
+  MonthDropData *data = user_data;
+
+  if (mod_type != GCAL_RECURRENCE_MOD_NONE)
+    move_event_to_date (data->self, data->event, data->target_date, mod_type);
+
+  g_clear_object (&data->event);
+  gcal_clear_date_time (&data->target_date);
+  g_free (data);
+}
+
+static gboolean
+on_drop_target_drop_cb (GtkDropTarget *drop_target,
+                        const GValue  *value,
+                        double         x,
+                        double         y,
+                        GcalMonthView *self)
+{
+  GcalEventWidget *event_widget;
+  GDateTime *target_date = NULL;
+  GtkWidget *hovered_cell;
+  GcalEvent *event;
+
+  GCAL_ENTRY;
+
+  if (!G_VALUE_HOLDS (value, GCAL_TYPE_EVENT_WIDGET))
+    return FALSE;
+
+  event_widget = g_value_get_object (value);
+  event = gcal_event_widget_get_event (event_widget);
+
+  hovered_cell = get_month_cell_at_position (self, x, y);
+  g_assert (GCAL_IS_MONTH_CELL (hovered_cell));
+
+  target_date = gcal_month_cell_get_date (GCAL_MONTH_CELL (hovered_cell));
+
+  if (gcal_event_has_recurrence (event))
+    {
+      MonthDropData *data;
+
+      data = g_new0 (MonthDropData, 1);
+      data->self = self;
+      data->event = g_object_ref (event);
+      data->target_date = g_date_time_ref (target_date);
+
+      gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
+                                                   event,
+                                                   FALSE,
+                                                   on_recurrence_response_cb,
+                                                   data);
+    }
+  else
+    {
+      move_event_to_date (self, event, target_date, GCAL_RECURRENCE_MOD_THIS_ONLY);
+    }
+
+  self->dnd_cell = NULL;
+  gtk_widget_set_visible (self->dnd_widget, FALSE);
+  gtk_widget_queue_allocate (GTK_WIDGET (self));
+
+  GCAL_RETURN (TRUE);
 }
 
 static void
@@ -1688,6 +1874,25 @@ gcal_month_view_size_allocate (GtkWidget *widget,
   /* Overflow popover */
   if (gtk_widget_should_layout (self->overflow.popover))
     allocate_overflow_popover (self, width, height, baseline);
+
+  if (gtk_widget_should_layout (self->dnd_widget))
+    {
+      graphene_point_t p;
+      GtkAllocation alloc = { 0, 0, 0, 0 };
+
+      if (self->dnd_cell && gtk_widget_compute_point (self->dnd_cell,
+                                                      GTK_WIDGET (self),
+                                                      &GRAPHENE_POINT_INIT (0, 0),
+                                                      &p))
+        {
+          alloc.x = p.x;
+          alloc.y = p.y;
+          alloc.width = gtk_widget_get_width (self->dnd_cell);
+          alloc.height = gtk_widget_get_height (self->dnd_cell);
+        }
+
+      gtk_widget_size_allocate (self->dnd_widget, &alloc, baseline);
+    }
 }
 
 static void
@@ -1718,6 +1923,10 @@ gcal_month_view_snapshot (GtkWidget   *widget,
 
   /* Overflow popover */
   gtk_widget_snapshot_child (widget, self->overflow.popover, snapshot);
+
+  /* Render the DND highlight on top of the cells and events */
+  if (self->dnd_widget && gtk_widget_is_visible (self->dnd_widget))
+    gtk_widget_snapshot_child (widget, self->dnd_widget, snapshot);
 }
 
 
@@ -1740,6 +1949,7 @@ gcal_month_view_dispose (GObject *object)
   g_clear_pointer (&self->week_rows, g_ptr_array_unref);
 
   g_clear_weak_pointer (&self->last_focused_widget);
+  g_clear_pointer (&self->dnd_widget, gtk_widget_unparent);
 
   G_OBJECT_CLASS (gcal_month_view_parent_class)->dispose (object);
 
@@ -1849,6 +2059,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
 static void
 gcal_month_view_init (GcalMonthView *self)
 {
+  GtkDropTarget *drop_target;
   g_autoptr (GDateTime) now = NULL;
 
   self->event_widget_pool = gcal_event_widget_pool_new ();
@@ -1885,4 +2096,18 @@ gcal_month_view_init (GcalMonthView *self)
   gcal_view_set_date (GCAL_VIEW (self), now);
 
   update_visible_rows (self);
+  drop_target = gtk_drop_target_new (GCAL_TYPE_EVENT_WIDGET, GDK_ACTION_COPY);
+
+  gtk_drop_target_set_preload (drop_target, TRUE);
+
+  g_signal_connect (drop_target, "drop", G_CALLBACK (on_drop_target_drop_cb), self);
+  g_signal_connect (drop_target, "enter", G_CALLBACK (on_drop_target_enter_cb), self);
+  g_signal_connect (drop_target, "motion", G_CALLBACK (on_drop_target_motion_cb), self);
+  g_signal_connect (drop_target, "leave", G_CALLBACK (on_drop_target_leave_cb), self);
+
+  gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
+
+  self->dnd_widget = gcal_create_drop_target_widget ();
+  gtk_widget_set_visible (self->dnd_widget, FALSE);
+  gtk_widget_set_parent (self->dnd_widget, GTK_WIDGET (self));
 }
