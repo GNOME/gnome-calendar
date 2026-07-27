@@ -123,63 +123,6 @@ add_month_separators (GcalMonthCell *self)
 }
 
 static void
-move_event (GcalMonthCell         *self,
-            GcalEvent             *event,
-            GcalRecurrenceModType  mod_type)
-{
-
-  g_autoptr (GcalEvent) changed_event = NULL;
-  g_autoptr (GDateTime) start_dt = NULL;
-  GTimeSpan timespan = 0;
-  GcalContext *context;
-  GDateTime *end_dt;
-  gint diff;
-  gint start_month, current_month;
-  gint start_year, current_year;
-
-  GCAL_ENTRY;
-
-  changed_event = gcal_event_new_from_event (event);
-
-  /* Move the event's date */
-  start_dt = gcal_event_get_date_start (changed_event);
-  end_dt = gcal_event_get_date_end (changed_event);
-
-  start_month = g_date_time_get_month (start_dt);
-  start_year = g_date_time_get_year (start_dt);
-
-  current_month = g_date_time_get_month (self->date);
-  current_year = g_date_time_get_year (self->date);
-
-  timespan = g_date_time_difference (end_dt, start_dt);
-
-  start_dt = g_date_time_add_full (start_dt,
-                                   current_year - start_year,
-                                   current_month - start_month,
-                                   0, 0, 0, 0);
-
-  diff = gcal_date_time_compare_date (self->date, start_dt);
-
-  if (diff != 0)
-    {
-      g_autoptr (GDateTime) new_start = g_date_time_add_days (start_dt, diff);
-
-      gcal_event_set_date_start (changed_event, new_start);
-
-      /* The event may have a NULL end date, so we have to check it here */
-      if (end_dt)
-        {
-          g_autoptr (GDateTime) new_end = g_date_time_add (new_start, timespan);
-
-          gcal_event_set_date_end (changed_event, new_end);
-        }
-
-      context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
-      gcal_manager_update_event (gcal_context_get_manager (context), changed_event, mod_type);
-    }
-}
-
-static void
 update_weather (GcalMonthCell *self)
 {
   GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
@@ -254,68 +197,6 @@ overflow_button_clicked_cb (GtkWidget     *button,
                             GcalMonthCell *self)
 {
   g_signal_emit (self, signals[SHOW_OVERFLOW], 0, button);
-}
-
-static gboolean
-on_drop_target_accept_cb (GtkDropTarget *drop_target,
-                          GdkDrop       *drop,
-                          GcalMonthCell *self)
-{
-  GCAL_ENTRY;
-
-  if ((gdk_drop_get_actions (drop) & gtk_drop_target_get_actions (drop_target)) == 0)
-    GCAL_RETURN (FALSE);
-
-  if (!gdk_content_formats_contain_gtype (gdk_drop_get_formats (drop), GCAL_TYPE_EVENT_WIDGET))
-    GCAL_RETURN (FALSE);
-
-  GCAL_RETURN (TRUE);
-}
-
-static void
-on_ask_recurrence_response_cb (GcalEvent             *event,
-                               GcalRecurrenceModType  mod_type,
-                               gpointer               user_data)
-{
-  GcalMonthCell *self = GCAL_MONTH_CELL (user_data);
-
-  if (mod_type != GCAL_RECURRENCE_MOD_NONE)
-    move_event (self, event, mod_type);
-}
-
-static gboolean
-on_drop_target_drop_cb (GtkDropTarget *drop_target,
-                        const GValue  *value,
-                        gdouble        x,
-                        gdouble        y,
-                        GcalMonthCell *self)
-{
-  GcalEventWidget *event_widget;
-  GcalEvent *event;
-
-  GCAL_ENTRY;
-
-  if (!G_VALUE_HOLDS (value, GCAL_TYPE_EVENT_WIDGET))
-    GCAL_RETURN (FALSE);
-
-  event_widget = g_value_get_object (value);
-
-  event = gcal_event_widget_get_event (event_widget);
-
-  if (gcal_event_has_recurrence (event))
-    {
-      gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
-                                                   event,
-                                                   FALSE,
-                                                   on_ask_recurrence_response_cb,
-                                                   self);
-    }
-  else
-    {
-      move_event (self, event, GCAL_RECURRENCE_MOD_THIS_ONLY);
-    }
-
-  GCAL_RETURN (TRUE);
 }
 
 static void
@@ -424,14 +305,8 @@ static void
 gcal_month_cell_init (GcalMonthCell *self)
 {
   GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
-  GtkDropTarget *drop_target;
 
   gtk_widget_init_template (GTK_WIDGET (self));
-
-  drop_target = gtk_drop_target_new (GCAL_TYPE_EVENT_WIDGET, GDK_ACTION_COPY);
-  g_signal_connect (drop_target, "accept", G_CALLBACK (on_drop_target_accept_cb), self);
-  g_signal_connect (drop_target, "drop", G_CALLBACK (on_drop_target_drop_cb), self);
-  gtk_widget_add_controller (GTK_WIDGET (self), GTK_EVENT_CONTROLLER (drop_target));
 
   g_signal_connect_swapped (self->breakpoint_bin,
                             "notify::current-breakpoint", G_CALLBACK (on_breakpoint_changed_cb), self);
