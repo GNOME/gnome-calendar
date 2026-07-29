@@ -144,12 +144,13 @@ create_day_row_func (gpointer item,
                          "event", event,
                          "orientation", GTK_ORIENTATION_VERTICAL,
                          "timestamp-policy", timestamp_policy,
-                         "focusable", FALSE,
                          NULL);
 
   row = g_object_new (GTK_TYPE_LIST_BOX_ROW,
                       "child", widget,
-                      "activatable", TRUE,
+                      /* FIXME: The event widget itself should be unfocusable, not this.
+                       *        More information in `git blame`. */
+                      "focusable", FALSE,
                       NULL);
 
   gtk_accessible_update_property (GTK_ACCESSIBLE (row),
