@@ -158,6 +158,7 @@ create_day_row_func (gpointer item,
 
   gtk_accessible_update_relation (GTK_ACCESSIBLE (row),
                                   GTK_ACCESSIBLE_RELATION_LABELLED_BY, widget, NULL,
+                                  GTK_ACCESSIBLE_RELATION_DESCRIBED_BY, widget, NULL,
                                   -1);
 
   g_signal_connect (widget, "activate", G_CALLBACK (on_event_widget_activated_cb), self);
