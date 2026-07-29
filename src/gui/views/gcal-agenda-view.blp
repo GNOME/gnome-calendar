@@ -37,6 +37,7 @@ template $GcalAgendaView: Box {
         template ListItem {
           activatable: false;
           selectable: false;
+          focusable: false;
 
           child: $GcalAgendaViewDayRow {
             day: bind template.item;
