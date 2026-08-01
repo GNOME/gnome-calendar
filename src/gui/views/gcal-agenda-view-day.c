@@ -22,6 +22,7 @@
 #define G_LOG_DOMAIN "GcalAgendaViewDay"
 
 #include "gcal-agenda-view-day.h"
+#include "gcal-agenda-view-item.h"
 
 #include "gcal-date-time-utils.h"
 #include "gcal-range.h"
@@ -34,6 +35,7 @@ struct _GcalAgendaViewDay
   GcalRange *range;
 
   GtkFilterListModel *filtered_events;
+  GtkMapListModel    *map_model;
 };
 
 static void          g_list_model_interface_init                 (GListModelInterface *iface);
@@ -67,6 +69,21 @@ on_filtered_events_items_changed_cb (GListModel        *model,
     g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_N_ITEMS]);
 }
 
+static gpointer
+map_events_to_items_func (GcalEvent         *event,
+                          GcalAgendaViewDay *self)
+{
+  g_autoptr (GcalAgendaViewItem) item = NULL;
+
+  item = g_object_new (GCAL_TYPE_AGENDA_VIEW_ITEM,
+                       "event", event,
+                       NULL);
+
+  g_object_unref (event);
+
+  return g_steal_pointer (&item);
+}
+
 
 /*
  * GListModel interface
@@ -75,7 +92,7 @@ on_filtered_events_items_changed_cb (GListModel        *model,
 static GType
 gcal_agenda_view_day_get_item_type (GListModel *model G_GNUC_UNUSED)
 {
-  return GCAL_TYPE_EVENT;
+  return GCAL_TYPE_AGENDA_VIEW_ITEM;
 }
 
 static unsigned int
@@ -85,7 +102,7 @@ gcal_agenda_view_day_get_n_items (GListModel *model)
 
   g_assert (GCAL_IS_AGENDA_VIEW_DAY (self));
 
-  return g_list_model_get_n_items (G_LIST_MODEL (self->filtered_events));
+  return g_list_model_get_n_items (G_LIST_MODEL (self->map_model));
 }
 
 static gpointer
@@ -96,7 +113,7 @@ gcal_agenda_view_day_get_item (GListModel *model,
 
   g_assert (GCAL_IS_AGENDA_VIEW_DAY (self));
 
-  return g_list_model_get_item (G_LIST_MODEL (self->filtered_events), position);
+  return g_list_model_get_item (G_LIST_MODEL (self->map_model), position);
 }
 
 static void
@@ -119,6 +136,8 @@ gcal_agenda_view_day_dispose (GObject *object)
 
   g_clear_pointer (&self->range, gcal_range_unref);
   gcal_clear_date_time (&self->date);
+
+  g_clear_object (&self->map_model);
 
   G_OBJECT_CLASS (gcal_agenda_view_day_parent_class)->dispose (object);
 }
@@ -216,9 +235,15 @@ filter_events_func (gpointer item,
 static void
 gcal_agenda_view_day_init (GcalAgendaViewDay *self)
 {
+
   self->filtered_events = gtk_filter_list_model_new (NULL,
                                                      GTK_FILTER (gtk_custom_filter_new (filter_events_func, self, NULL)));
-  g_signal_connect (self->filtered_events, "items-changed", G_CALLBACK (on_filtered_events_items_changed_cb), self);
+
+  self->map_model = gtk_map_list_model_new (G_LIST_MODEL (self->filtered_events),
+                                            (GtkMapListModelMapFunc) map_events_to_items_func,
+                                            self, NULL);
+
+  g_signal_connect (self->map_model, "items-changed", G_CALLBACK (on_filtered_events_items_changed_cb), self);
 }
 
 GcalAgendaViewDay *

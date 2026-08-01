@@ -20,6 +20,7 @@
  */
 
 #include "gcal-agenda-view-day-row.h"
+#include "gcal-agenda-view-item.h"
 #include "gcal-date-time-utils.h"
 #include "gcal-debug.h"
 #include "gcal-enums.h"
@@ -129,10 +130,10 @@ create_day_row_func (gpointer item,
 
   self = (GcalAgendaViewDayRow *) user_data;
 
-  g_assert (GCAL_IS_EVENT (item));
+  g_assert (GCAL_IS_AGENDA_VIEW_ITEM (item));
   g_assert (GCAL_IS_AGENDA_VIEW_DAY_ROW (self));
 
-  event = item;
+  event = gcal_agenda_view_item_get_event (GCAL_AGENDA_VIEW_ITEM (item));
 
   /* Create and add the new event widget */
   if (gcal_event_get_all_day (event) || gcal_event_is_multiday (event))
