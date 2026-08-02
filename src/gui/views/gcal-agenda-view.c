@@ -20,7 +20,6 @@
 
 #include "gcal-agenda-view.h"
 #include "gcal-agenda-view-day.h"
-#include "gcal-agenda-view-day-row.h"
 #include "gcal-agenda-view-item.h"
 #include "gcal-debug.h"
 #include "gcal-enums.h"
@@ -431,7 +430,6 @@ gcal_agenda_view_class_init (GcalAgendaViewClass *klass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   g_type_ensure (GCAL_TYPE_AGENDA_VIEW_ITEM);
-  g_type_ensure (GCAL_TYPE_AGENDA_VIEW_DAY_ROW);
 
   object_class->dispose = gcal_agenda_view_dispose;
   object_class->finalize = gcal_agenda_view_finalize;
