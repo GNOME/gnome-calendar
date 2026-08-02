@@ -422,18 +422,23 @@ agenda-view listview > row {
   background: none;
 }
 
-agenda-view agendaviewdayrow {
-  margin-left: 9px;
-  margin-right: 9px;
+agenda-view listview {
+  margin-left: 12px;
+  margin-right: 12px;
   margin-bottom: 3px;
 }
 
-agenda-view agendaviewdayrow > box > label {
-  padding: 6px 0;
+agenda-view listview > row {
+  padding: 2px;
 }
 
-agenda-view agendaviewdayrow list > row,
-agenda-view agendaviewdayrow list > label {
+agenda-view listview > header {
+  padding: 4px 0px;
+  margin: 8px 0px 2px 0px;
+}
+
+agenda-view listview > row,
+agenda-view listview > header {
   border-radius: 6px;
   background: none;
 }
