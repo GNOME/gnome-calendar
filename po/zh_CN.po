@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-06-26 14:06+0000\n"
-"PO-Revision-Date: 2026-06-29 12:40+0800\n"
+"POT-Creation-Date: 2026-07-31 09:46+0000\n"
+"PO-Revision-Date: 2026-08-03 09:27+0800\n"
 "Last-Translator: lumingzh <lumingzh@qq.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Launchpad-Export-Date: 2016-03-22 14:52+0000\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Gtranslator 50.0\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -84,6 +84,10 @@ msgstr "周网格的缩放级别"
 msgid "The current zoom level of the week grid"
 msgstr "周网格的当前缩放级别"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "GNOME 项目"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "管理您的日程计划"
@@ -124,6 +128,58 @@ msgstr ""
 "和平台来同步事件。GNOME 日历同样支持本地和离线日历，所以您可以在旅行时的任何"
 "地点与任何时间使用它（或在文明崩溃之后）。"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "日历"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "日程安排"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "事件"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "会议"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "约会"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "计划安排"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "计划制订"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "议程"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "提醒"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "闹钟"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "天气"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "预报"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+msgid "Google Calendar"
+msgstr "谷歌日历"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
 msgstr "月视图"
@@ -141,11 +197,11 @@ msgid "Event editor"
 msgstr "事件编辑器"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
+#. Translators: %1$s is the start date, and %2$s. For example: June 21 – November 29, 2022
 #: src/core/gcal-event.c:1937 src/gui/gcal-event-popover.c:422
 #, c-format
-msgid "%1$s — %2$s"
-msgstr "%1$s — %2$s"
+msgid "%1$s – %2$s"
+msgstr "%1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start date, %2$s is the start time,
@@ -153,8 +209,8 @@ msgstr "%1$s — %2$s"
 #.
 #: src/core/gcal-event.c:1945
 #, c-format
-msgid "%1$s %2$s — %3$s %4$s"
-msgstr "%1$s %2$s — %3$s %4$s"
+msgid "%1$s %2$s – %3$s %4$s"
+msgstr "%1$s %2$s – %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #: src/core/gcal-event.c:1961
@@ -205,7 +261,7 @@ msgstr "编辑日历"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:19
 msgid "Account"
-msgstr "账号"
+msgstr "账户"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:27
 msgid "Open in Settings"
@@ -278,7 +334,7 @@ msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"如果日历属于您的在线账号，可以通过<a href=\"GOA\">在线账号设置</a>来添加。"
+"如果日历属于您的在线账户，可以通过<a href=\"GOA\">在线账户设置</a>来添加。"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:130
 #: src/gui/calendar-management/gcal-new-calendar-page.c:116
@@ -985,16 +1041,16 @@ msgstr "%1$s %2$d, %3$d"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
-#. * example: "Today, 19:00 — 22:00"
+#. * example: "Today, 19:00 – 22:00"
 #.
 #: src/gui/gcal-event-popover.c:264
 #, c-format
-msgid "Today, %1$s — %2$s"
-msgstr "今天 %1$s — %2$s"
+msgid "Today, %1$s – %2$s"
+msgstr "今天 %1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
-#. * example: "Tomorrow, 19:00 — 22:00"
+#. * example: "Tomorrow, 19:00 – 22:00"
 #.
 #: src/gui/gcal-event-popover.c:272
 #, c-format
@@ -1003,7 +1059,7 @@ msgstr "明天 %1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
-#. * example: "Tomorrow, 19:00 — 22:00"
+#. * example: "Tomorrow, 19:00 – 22:00"
 #.
 #: src/gui/gcal-event-popover.c:280
 #, c-format
@@ -1013,7 +1069,7 @@ msgstr "昨天 %1$s – %2$s"
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
 #. * of month, %3$s is the start hour, and %4$s is the end hour. This
-#. * format string results in dates like "November 21, 19:00 — 22:00".
+#. * format string results in dates like "November 21, 19:00 – 22:00".
 #.
 #: src/gui/gcal-event-popover.c:289
 #, c-format
@@ -1025,7 +1081,7 @@ msgstr "%1$s %2$d, %3$s – %4$s"
 #. * of month, %3$d is the year, %4$s is the start hour, and %5$s is the
 #. * end hour. This format string results in dates like:
 #. *
-#. * "November 21, 2021, 19:00 — 22:00".
+#. * "November 21, 2021, 19:00 – 22:00".
 #.
 #: src/gui/gcal-event-popover.c:304
 #, c-format
@@ -1403,7 +1459,7 @@ msgstr "日期和时间设置(_D)…"
 
 #: src/gui/gcal-window.blp:386
 msgid "_Online Accounts…"
-msgstr "在线账号(_O)…"
+msgstr "在线账户(_O)…"
 
 #: src/gui/gcal-window.blp:401
 msgid "_Keyboard Shortcuts"
@@ -1777,17 +1833,11 @@ msgstr "必应地图"
 #~ msgid "Week %d"
 #~ msgstr "第 %d 周"
 
-#~ msgid "The GNOME Project"
-#~ msgstr "GNOME 项目"
-
 #~ msgid "Done"
 #~ msgstr "完成"
 
 #~ msgid "Select Calendar"
 #~ msgstr "选择日历"
-
-#~ msgid "Schedule"
-#~ msgstr "日程安排"
 
 #, c-format
 #~ msgid "Last %A"
@@ -1886,9 +1936,6 @@ msgstr "必应地图"
 
 #~ msgid "Undo"
 #~ msgstr "撤消"
-
-#~ msgid "Settings"
-#~ msgstr "设置"
 
 #~ msgid "Calendar name"
 #~ msgstr "日历名称"
