@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2026-03-14 15:24+0000\n"
-"PO-Revision-Date: 2026-04-28 03:11+0330\n"
+"PO-Revision-Date: 2026-08-06 02:13+0330\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "Language: fa\n"
@@ -80,6 +80,10 @@ msgstr "سطح بزرگ‌نمایی شبکهٔ هفته"
 msgid "The current zoom level of the week grid"
 msgstr "سطح بزرگ‌نمایی کنونی شبکهٔ هفته"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "پروژهٔ گنوم"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "مدیریت زمان‌بندیتان"
@@ -121,6 +125,58 @@ msgstr ""
 "میان افزاره‌ها و بن‌سازه‌های مختلف هم‌گام کنید. همچینن تقویم گنوم از تقویم‌های برخط "
 "و محلّی پشتیبانی کرده تا بتوانید در هر جایی و هر زمانی، هنگام سفر (یا فروپاشی "
 "تمدّن) از آن استفاده کنید."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "تقویم‌ها"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "گاه‌شماری"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "رویدادها"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "ملاقات‌ها"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "قرارها"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "زمان‌بندی"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "برنامه‌ریزی"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "دستور کار"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "یادآوری‌ها"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "زنگ‌ها"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "آب‌وهوا"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "پیش‌بینی"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+msgid "Google Calendar"
+msgstr "تقویم گوگل"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
@@ -1788,9 +1844,6 @@ msgstr "نقشه‌های بینگ"
 #~ msgid "Select Calendar"
 #~ msgstr "گزینش تقویم"
 
-#~ msgid "Schedule"
-#~ msgstr "زمان‌بندی"
-
 #, c-format
 #~ msgid "Last %A"
 #~ msgstr "%Aٔ پیش"
@@ -1798,9 +1851,6 @@ msgstr "نقشه‌های بینگ"
 #, c-format
 #~ msgid "This %A"
 #~ msgstr "این %A"
-
-#~ msgid "The GNOME Project"
-#~ msgstr "پروژهٔ گنوم"
 
 #~ msgid ""
 #~ "Alternatively, enter the web address of an online calendar you want to "
@@ -1900,9 +1950,6 @@ msgstr "نقشه‌های بینگ"
 
 #~ msgid "Undo"
 #~ msgstr "برگردان"
-
-#~ msgid "Settings"
-#~ msgstr "تنظیمات"
 
 #~ msgid "Calendar name"
 #~ msgstr "نام تقویم"
