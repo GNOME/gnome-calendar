@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-03-11 00:30+0000\n"
-"PO-Revision-Date: 2026-03-11 06:03+0100\n"
+"POT-Creation-Date: 2026-03-14 15:24+0000\n"
+"PO-Revision-Date: 2026-08-05 05:44+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -76,6 +76,10 @@ msgstr "კვირის ბადის გადიდების დონ
 msgid "The current zoom level of the week grid"
 msgstr "კვირის ბადის გადიდების მიმდინარე დონე"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "პროექტი \"GNOME\""
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "მართეთ თქვენი განრიგი"
@@ -122,6 +126,58 @@ msgstr ""
 "პლატფორმებს შორი დაასინქრონოთ. GNOME Calendar-ს ასევე გააჩნია მხარდაჭერა "
 "ლოკალური და ინტერნეტის გარეშე მუშა კალენდრების, ასე რომ, მისი გამოყენება "
 "ყველგან და ყოველთვის (ან ცივილიზაციის კოლაფსის შემდეგ) შეგიძლიათ"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "კალენდრები"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "კალენდარი"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "მოვლენები"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "შეხვედრა"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "შეხვედრა"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "დაგეგმვა"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "დაგეგმვა"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "დღის წესრიგი"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "შეხსენება"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "განგაში"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "ამინდი"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "პროგნოზი"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+msgid "Google Calendar"
+msgstr "Google Calendar"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
@@ -1799,17 +1855,11 @@ msgstr "Bing Maps"
 #~ msgid "Week %d"
 #~ msgstr "კვირა %d"
 
-#~ msgid "The GNOME Project"
-#~ msgstr "პროექტი \"GNOME\""
-
 #~ msgid "Done"
 #~ msgstr "დასრულებულია"
 
 #~ msgid "Select Calendar"
 #~ msgstr "აირჩიეთ კალენდარი"
-
-#~ msgid "Schedule"
-#~ msgstr "განრიგი"
 
 #, c-format
 #~ msgid "Last %A"
@@ -1920,9 +1970,6 @@ msgstr "Bing Maps"
 
 #~ msgid "Undo"
 #~ msgstr "დაბრუნება"
-
-#~ msgid "Settings"
-#~ msgstr "მორგება"
 
 #~ msgid "Calendar name"
 #~ msgstr "კალენდარის სახელი"
