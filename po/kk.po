@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-03-11 00:30+0000\n"
-"PO-Revision-Date: 2026-03-11 06:39+0500\n"
+"POT-Creation-Date: 2026-03-14 15:24+0000\n"
+"PO-Revision-Date: 2026-08-05 21:40+0500\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -78,6 +78,10 @@ msgstr "Апта торының масштабтау деңгейі"
 msgid "The current zoom level of the week grid"
 msgstr "Апта торының ағымдағы масштабтау деңгейі"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "GNOME жобасы"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "Жоспарыңызды басқарыңыз"
@@ -124,6 +128,59 @@ msgstr ""
 "сияқты) күнтізбелерді қосуға болады. GNOME күнтізбесі жергілікті және офлайн "
 "күнтізбені де қолдайды, сондықтан оны саяхат кезінде кез келген жерде және "
 "кез келген уақытта пайдалануға болады (немесе өркениет құлағаннан кейін.)"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "күнтізбелер"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "күнтізбе жасау"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "оқиғалар"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "жиналыстар"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "кездесулер"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "жоспарлау"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "план құру"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "күн тәртібі"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "еске салулар"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "оятқыштар"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "ауа райы"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "болжам жасау"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+#| msgid "New Calendar"
+msgid "Google Calendar"
+msgstr "Google Calendar"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
@@ -1738,9 +1795,6 @@ msgstr "Bing Maps"
 #~ msgid "%s (this calendar is read-only)"
 #~ msgstr "%s (бұл күнтізбе тек оқу үшін)"
 
-#~ msgid "The GNOME Project"
-#~ msgstr "GNOME жобасы"
-
 #~ msgid "Default _Calendar"
 #~ msgstr "Үнсіз келісім _күнтізбесі"
 
@@ -1765,9 +1819,6 @@ msgstr "Bing Maps"
 
 #~ msgid "Select Calendar"
 #~ msgstr "Күнтізбені таңдау"
-
-#~ msgid "Schedule"
-#~ msgstr "Жоспар"
 
 #, c-format
 #~ msgid "Last %A"
@@ -1896,9 +1947,6 @@ msgstr "Bing Maps"
 
 #~ msgid "Undo"
 #~ msgstr "Болдырмау"
-
-#~ msgid "Settings"
-#~ msgstr "Баптаулар"
 
 #~ msgid "Calendar name"
 #~ msgstr "Күнтізбе атауы"
