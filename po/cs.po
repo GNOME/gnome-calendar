@@ -4,21 +4,22 @@
 #
 # Adam Matoušek <adamatousek@gmail.com>, 2013.
 # Marek Černocký <marek@manet.cz>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# Patrik Sivek <sivekpatrik@gmail.com>, 2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-03-11 00:30+0000\n"
-"PO-Revision-Date: 2026-03-11 14:58+0100\n"
-"Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
-"Language-Team: čeština <gnome-cs-list@gnome.org>\n"
+"POT-Creation-Date: 2026-03-14 15:24+0000\n"
+"PO-Revision-Date: 2026-08-05 21:13+0200\n"
+"Last-Translator: Patrik Sivek <sivekpatrik@gmail.com>\n"
+"Language-Team: Czech\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Gtranslator 50.0\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -82,6 +83,10 @@ msgstr "Úroveň přiblížení mřížky týdne"
 msgid "The current zoom level of the week grid"
 msgstr "Aktuální úroveň přiblížení mřížky týdne"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "Projekt GNOME"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "Spravovat svůj rozvrh"
@@ -127,6 +132,58 @@ msgstr ""
 "vaše události mezi více zařízeními a platformami. Kalendář GNOME také "
 "podporuje místní a offline kalendář, takže jej můžete používat kdekoli a "
 "kdykoli na cestách (nebo po kolapsu civilizace.)"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "kalendáře"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "kalendářování"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "události"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "zasedání"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "schůzky"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "rozvrhování"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "plánování"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "agenda"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "připomenutí"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "budíky"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "počasí"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "předpověď"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+msgid "Google Calendar"
+msgstr "Kalendář Google"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
@@ -1820,17 +1877,11 @@ msgstr "Mapy Bing"
 #~ msgid "Week %d"
 #~ msgstr "%d. týden"
 
-#~ msgid "The GNOME Project"
-#~ msgstr "Projekt GNOME"
-
 #~ msgid "Done"
 #~ msgstr "Hotovo"
 
 #~ msgid "Select Calendar"
 #~ msgstr "Vyberte kalendář"
-
-#~ msgid "Schedule"
-#~ msgstr "Plán"
 
 #, c-format
 #~ msgid "Last %A"
@@ -1940,9 +1991,6 @@ msgstr "Mapy Bing"
 
 #~ msgid "Undo"
 #~ msgstr "Zpět"
-
-#~ msgid "Settings"
-#~ msgstr "Nastavení"
 
 #~ msgid "Calendar name"
 #~ msgstr "Název kalendáře"
