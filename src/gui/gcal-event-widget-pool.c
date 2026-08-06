@@ -189,6 +189,7 @@ gcal_event_widget_pool_reclaim (GcalEventWidgetPool *self,
 
   g_debug ("Reclaiming event widget %p", event_widget);
 
+  gtk_widget_set_visible (event_widget, TRUE);
   gcal_event_widget_set_event (GCAL_EVENT_WIDGET (event_widget), NULL);
   gcal_event_widget_set_timestamp_policy (GCAL_EVENT_WIDGET (event_widget), GCAL_TIMESTAMP_POLICY_NONE);
 
