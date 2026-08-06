@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-03-11 00:30+0000\n"
-"PO-Revision-Date: 2026-03-11 10:22+0100\n"
+"POT-Creation-Date: 2026-03-14 15:24+0000\n"
+"PO-Revision-Date: 2026-08-06 18:19+0200\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -80,6 +80,10 @@ msgstr "Nivèl de zoom de la grasilha de setmana"
 msgid "The current zoom level of the week grid"
 msgstr "Lo nivèl actual de la grasilha de setmana"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "Lo projècte GNOME"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "Gerissètz vòstres agendas"
@@ -126,6 +130,58 @@ msgstr ""
 "aparelh e platafòrma. L'Agenda de GNOME pren egalament en carga l'agenda "
 "locala e fòra linha, çò que vos permet de l'utilizar pertot e a cada moment "
 "pendent vòstres desplaçaments (o après l'esfondrament de la civilizacion)."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "agendas"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "agenda"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "eveniments"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "reünions"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "rendètz-vos"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "planificacion"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "planificacion"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "agenda"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "rapèls"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "alarmas"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "metèo"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "prevision metèo"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+msgid "Google Calendar"
+msgstr "Agenda Google"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
@@ -1806,17 +1862,11 @@ msgstr "Bing Maps"
 #~ msgid "Week %d"
 #~ msgstr "Setmana %d"
 
-#~ msgid "Schedule"
-#~ msgstr "Oraris"
-
 #~ msgid "Last %A"
 #~ msgstr "%A passat"
 
 #~ msgid "This %A"
 #~ msgstr "Aqueste %A"
-
-#~ msgid "The GNOME Project"
-#~ msgstr "Lo projècte GNOME"
 
 #~ msgid "Done"
 #~ msgstr "Acabat"
@@ -1924,9 +1974,6 @@ msgstr "Bing Maps"
 
 #~ msgid "Undo"
 #~ msgstr "Anullar"
-
-#~ msgid "Settings"
-#~ msgstr "Paramètres"
 
 #~ msgid "Calendar name"
 #~ msgstr "Nom de l'agenda"
