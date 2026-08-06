@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-03-11 00:30+0000\n"
-"PO-Revision-Date: 2026-03-11 01:54+0100\n"
+"POT-Creation-Date: 2026-03-14 15:24+0000\n"
+"PO-Revision-Date: 2026-08-04 21:26+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -80,6 +80,10 @@ msgstr "Zoomnivå för veckorutnätet"
 msgid "The current zoom level of the week grid"
 msgstr "Aktuell zoomnivå för veckorutnätet"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "GNOME-projektet"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "Hantera ditt schema"
@@ -126,6 +130,58 @@ msgstr ""
 "Kalender stöder också lokala och frånkopplade kalendrar, så du kan använda "
 "det var som helst och närsomhelst när du reser (eller då civilisationen gått "
 "under.)"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "kalendrar"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "kalenderhållning"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "händelser"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "sammanträden"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "möten"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "schemaläggning"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "planering"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "agenda"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "påminnelser"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "alarm"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "väder"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "prognoser"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+msgid "Google Calendar"
+msgstr "Google-kalender"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
@@ -1820,9 +1876,6 @@ msgstr "Bing Maps"
 #~ msgid "00:00"
 #~ msgstr "00:00"
 
-#~ msgid "Schedule"
-#~ msgstr "Schema"
-
 # T.ex "I tisdags"
 #, c-format
 #~ msgid "Last %A"
@@ -1837,9 +1890,6 @@ msgstr "Bing Maps"
 
 #~ msgid "Select Calendar"
 #~ msgstr "Välj kalender"
-
-#~ msgid "The GNOME Project"
-#~ msgstr "GNOME-projektet"
 
 #~ msgid ""
 #~ "Alternatively, enter the web address of an online calendar you want to "
@@ -1949,9 +1999,6 @@ msgstr "Bing Maps"
 
 #~ msgid "Window position (x and y)."
 #~ msgstr "Fönsterposition (x och y)."
-
-#~ msgid "Settings"
-#~ msgstr "Inställningar"
 
 #~ msgid "Calendar name"
 #~ msgstr "­Kalendernamn"
