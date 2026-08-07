@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2026-03-14 15:24+0000\n"
-"PO-Revision-Date: 2026-04-10 21:24+0300\n"
+"PO-Revision-Date: 2026-07-22 21:01+0300\n"
 "Last-Translator: Artur So <arturios2005@mail.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -83,6 +83,10 @@ msgstr "Уровень масштабирования недельной сет�
 msgid "The current zoom level of the week grid"
 msgstr "Текущий уровень масштабирования недельной сетки"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "Проект GNOME"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "Управление расписанием"
@@ -130,6 +134,58 @@ msgstr ""
 "что позволяет использовать его в любом месте и в любое время во время "
 "путешествий (или после краха цивилизации)"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "календари"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "составление календаря"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "события"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "встречи"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "совещания"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "расписание"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "планирование"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "повестка дня"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "напоминания"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "будильники"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "погода"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "прогнозирование"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+msgid "Google Calendar"
+msgstr "Календарь Google"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
 msgstr "Просмотр месяца"
@@ -162,7 +218,7 @@ msgstr "%1$s %2$s — %3$s %4$s"
 #: src/core/gcal-event.c:1810
 #, c-format
 msgid "%1$s, %2$s – %3$s"
-msgstr "%1$s, %2$s — %3$s"
+msgstr "%1$s, %2$s – %3$s"
 
 #: src/gui/calendar-management/calendar-row.blp:20
 msgid "Read-Only Calendar"
@@ -1772,6 +1828,12 @@ msgstr "Карты Google"
 msgid "Bing Maps"
 msgstr "Карты Bing"
 
+#~ msgid "Agenda view"
+#~ msgstr "Просмотр повестки дня"
+
+#~ msgid "Open Location"
+#~ msgstr "Открыть местоположение"
+
 #, c-format
 #~ msgid "Previous %1$s"
 #~ msgstr "Предыдущий %1$s"
@@ -1834,9 +1896,6 @@ msgstr "Карты Bing"
 #~ msgid "Week %d"
 #~ msgstr "%d неделя"
 
-#~ msgid "Schedule"
-#~ msgstr "Расписание"
-
 #, c-format
 #~ msgid "Last %A"
 #~ msgstr "%A на прошлой неделе"
@@ -1844,9 +1903,6 @@ msgstr "Карты Bing"
 #, c-format
 #~ msgid "This %A"
 #~ msgstr "%A на этой неделе"
-
-#~ msgid "The GNOME Project"
-#~ msgstr "Проект GNOME"
 
 #~ msgid "Done"
 #~ msgstr "Готово"
@@ -1950,9 +2006,6 @@ msgstr "Карты Bing"
 
 #~ msgid "Undo"
 #~ msgstr "Вернуть"
-
-#~ msgid "Settings"
-#~ msgstr "Настройки"
 
 #~ msgid "Calendar name"
 #~ msgstr "Имя календаря"
