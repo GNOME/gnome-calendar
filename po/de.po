@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2026-03-14 15:24+0000\n"
-"PO-Revision-Date: 2026-04-14 21:41+0200\n"
+"PO-Revision-Date: 2026-08-05 23:38+0200\n"
 "Last-Translator: Christian Kirbach <christian.kirbach@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -88,6 +88,10 @@ msgstr "Vergrößerungsstufe der Wochenansicht"
 msgid "The current zoom level of the week grid"
 msgstr "Die aktuelle Vergrößerungsstufe der Wochenansicht"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "Das GNOME-Projekt"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "Verwalten Sie Ihre Termine"
@@ -134,6 +138,58 @@ msgstr ""
 "Kalender unterstützt zudem lokale und Offline-Kalender, Sie können es also "
 "jederzeit und überall auf Reisen verwenden (oder nach dem Zusammenbruch der "
 "Zivilisation)."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "Kalender"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "Terminplanung"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "Ereignisse"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "Besprechungen"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "Termine"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "Terminplanung"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "Planung"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "Agenda"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "Erinnerungen"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "Alarme"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "Wetter"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "Vorhersage"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+msgid "Google Calendar"
+msgstr "Google-Kalender"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
@@ -1820,17 +1876,11 @@ msgstr "Bing Maps"
 #~ msgid "00:00"
 #~ msgstr "00:00"
 
-#~ msgid "The GNOME Project"
-#~ msgstr "Das GNOME-Projekt"
-
 #~ msgid "Done"
 #~ msgstr "Fertig"
 
 #~ msgid "Select Calendar"
 #~ msgstr "Kalender auswählen"
-
-#~ msgid "Schedule"
-#~ msgstr "Terminplanung"
 
 #~ msgid "Last %A"
 #~ msgstr "Letzter %A"
@@ -1940,9 +1990,6 @@ msgstr "Bing Maps"
 
 #~ msgid "Undo"
 #~ msgstr "Rückgängig"
-
-#~ msgid "Settings"
-#~ msgstr "Einstellungen"
 
 #~ msgid "Calendar name"
 #~ msgstr "Kalendername"
