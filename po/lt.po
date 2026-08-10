@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-03-11 00:30+0000\n"
-"PO-Revision-Date: 2026-03-11 16:33+0200\n"
+"POT-Creation-Date: 2026-03-14 15:24+0000\n"
+"PO-Revision-Date: 2026-08-10 22:01+0300\n"
 "Last-Translator: Aurimas Černius <aurimas.cernius@mailo.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "(n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -81,6 +81,10 @@ msgstr "Savaitės tinklelio mastelis"
 msgid "The current zoom level of the week grid"
 msgstr "Dabartinis savaitės tinklelio mastelis"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "GNOME projektas"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "Tvarkykite savo dienotvarkę"
@@ -127,6 +131,58 @@ msgstr ""
 "platformose. GNOME kalendorius taip pat palaiko vietinius bei kalendorius be "
 "interneto ryšio, tad galite jį naudoti visur ir bet kada keliaudami (ar po "
 "civilizacijos griūties)."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "kalendoriai"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "kalendorius"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "įvykiai"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "susirinkimai"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "susitikimai"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "tvarkaraštis"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "planavimas"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "tvarkaraštis"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "priminimai"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "žadintuvai"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "orai"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "prognozės"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+msgid "Google Calendar"
+msgstr "Google kalendorius"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
@@ -1829,17 +1885,11 @@ msgstr "Bing žemėlapiai"
 #~ msgid "Week %d"
 #~ msgstr "%d savaitė"
 
-#~ msgid "The GNOME Project"
-#~ msgstr "GNOME projektas"
-
 #~ msgid "Done"
 #~ msgstr "Atlikta"
 
 #~ msgid "Select Calendar"
 #~ msgstr "Naujas kalendorius"
-
-#~ msgid "Schedule"
-#~ msgstr "Tvarkaraštis"
 
 #, c-format
 #~ msgid "Last %A"
@@ -1948,9 +1998,6 @@ msgstr "Bing žemėlapiai"
 
 #~ msgid "Undo"
 #~ msgstr "Atšaukti"
-
-#~ msgid "Settings"
-#~ msgstr "Nustatymai"
 
 #~ msgid "Calendar name"
 #~ msgstr "Kalendoriaus pavadinimas"
