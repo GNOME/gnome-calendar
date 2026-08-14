@@ -106,7 +106,8 @@
                 "-DCMAKE_INSTALL_LIBDIR:PATH=/app/lib",
                 "-DBUILD_SHARED_LIBS=On",
                 "-DICAL_BUILD_DOCS=False",
-                "-DWITH_CXX_BINDINGS=False"
+                "-DLIBICAL_CXX_BINDINGS=False",
+                "-DLIBICAL_JAVA_BINDINGS=False"
             ],
             "sources" : [
                 {
@@ -136,7 +137,8 @@
                 "-DENABLE_INSTALLED_TESTS=OFF",
                 "-DENABLE_GTK_DOC=OFF",
                 "-DENABLE_EXAMPLES=OFF",
-                "-DENABLE_OAUTH2_WEBKITGTK4=OFF"
+                "-DENABLE_OAUTH2_WEBKITGTK4=OFF",
+                "-DENABLE_OAUTH2_WEBKITGTK=OFF"
             ],
             "sources" : [
                 {
