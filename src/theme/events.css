@@ -45,3 +45,7 @@ event.slanted widget.edge,
 event.slanted-start widget.edge {
   background-color: transparent;
 }
+
+weekgrid event {
+  margin: 1px;
+}
