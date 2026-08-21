@@ -27,7 +27,7 @@
 #include "gcal-source-discoverer.h"
 #include "gcal-utils.h"
 
-#define ICAL_HEADER_STRING "BEGIN:VCALENDAR\r\n"
+#define ICAL_HEADER_STRING "BEGIN:VCALENDAR"
 
 G_DEFINE_QUARK (GcalSourceDiscoverer, gcal_source_discoverer_error);
 
@@ -262,6 +262,7 @@ discover_file_in_thread (DiscovererData  *data,
   g_autoptr (GPtrArray) source = NULL;
   g_autoptr (GUri) guri = NULL;
   g_autofree gchar *header_string = NULL;
+  gsize header_string_len;
   gsize header_string_read_len;
   gboolean is_calendar_header;
   const gchar *content_type;
@@ -292,16 +293,18 @@ discover_file_in_thread (DiscovererData  *data,
   if (!input_stream)
     GCAL_RETURN (NULL);
 
-  header_string = g_malloc0 (sizeof (gchar) * (strlen (ICAL_HEADER_STRING) + 1));
+  /* 2 to cover CRLF or LF, only the former is RFC compliant */
+  header_string_len = strlen (ICAL_HEADER_STRING) + 2;
+  header_string = g_malloc0 (sizeof (gchar) * (header_string_len + 1));
   g_input_stream_read_all (input_stream,
                            header_string,
-                           strlen (ICAL_HEADER_STRING),
+                           header_string_len,
                            &header_string_read_len,
                            cancellable,
                            NULL);
 
-  is_calendar_header = header_string_read_len == strlen (ICAL_HEADER_STRING) &&
-                       g_strcmp0 (ICAL_HEADER_STRING, header_string) == 0;
+  is_calendar_header = header_string_read_len == header_string_len &&
+                       g_regex_match_simple ("^" ICAL_HEADER_STRING "\\r?\\n", header_string, G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT);
 
   g_input_stream_close (input_stream, cancellable, error);
 
