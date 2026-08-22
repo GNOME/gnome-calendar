@@ -304,13 +304,13 @@ on_scroll_controller_scroll_cb (GtkEventControllerScroll *controller,
   switch (gdk_scroll_event_get_direction (event))
     {
     case GDK_SCROLL_SMOOTH:
-      scale = dy / 100.0 + 1.0;
+      scale = -dy / 100.0 + 1.0;
       discrete = FALSE;
       break;
 
     case GDK_SCROLL_UP:
     case GDK_SCROLL_DOWN:
-      scale = dy / 10.0 + 1.0;
+      scale = -dy / 10.0 + 1.0;
       discrete = TRUE;
       break;
 
