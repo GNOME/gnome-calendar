@@ -49,17 +49,50 @@ process_get (SoupServerMessage *message,
              const gchar *prefix,
              const gchar *path)
 {
-  g_autofree gchar *calendar_path = g_strdup_printf ("%s/calendar", prefix);
+  g_autofree gchar *crlf_calendar_path = g_strdup_printf ("%s/crlf-calendar", prefix);
+  g_autofree gchar *crlf_calendar_stream_path = g_strdup_printf ("%s/crlf-calendar-stream", prefix);
+  g_autofree gchar *lf_calendar_path = g_strdup_printf ("%s/lf-calendar", prefix);
+  g_autofree gchar *lf_calendar_stream_path = g_strdup_printf ("%s/lf-calendar-stream", prefix);
   g_autofree gchar *calendar_file = g_strdup_printf ("%s/calendar.ics", prefix);
 
-  if (g_strcmp0 (path, calendar_path) == 0)
+  if (g_strcmp0 (path, crlf_calendar_path) == 0)
     {
-      g_debug ("Serving empty calendar");
+      g_debug ("Serving empty CRLF calendar as text/calendar");
       soup_server_message_set_response (message,
                                         "text/calendar",
                                         SOUP_MEMORY_STATIC,
-                                        GCAL_TEST_SERVER_EMPTY_CALENDAR,
-                                        strlen (GCAL_TEST_SERVER_EMPTY_CALENDAR));
+                                        GCAL_TEST_SERVER_EMPTY_CRLF_CALENDAR,
+                                        strlen (GCAL_TEST_SERVER_EMPTY_CRLF_CALENDAR));
+    }
+
+  if (g_strcmp0 (path, crlf_calendar_stream_path) == 0)
+    {
+      g_debug ("Serving empty CRLF calendar as application/octet-stream");
+      soup_server_message_set_response (message,
+                                        "application/octet-stream",
+                                        SOUP_MEMORY_STATIC,
+                                        GCAL_TEST_SERVER_EMPTY_CRLF_CALENDAR,
+                                        strlen (GCAL_TEST_SERVER_EMPTY_CRLF_CALENDAR));
+    }
+
+  if (g_strcmp0 (path, lf_calendar_path) == 0)
+    {
+      g_debug ("Serving empty LF calendar as text/calendar");
+      soup_server_message_set_response (message,
+                                        "text/calendar",
+                                        SOUP_MEMORY_STATIC,
+                                        GCAL_TEST_SERVER_EMPTY_LF_CALENDAR,
+                                        strlen (GCAL_TEST_SERVER_EMPTY_LF_CALENDAR));
+    }
+
+  if (g_strcmp0 (path, lf_calendar_stream_path) == 0)
+    {
+      g_debug ("Serving empty LF calendar as application/octet-stream");
+      soup_server_message_set_response (message,
+                                        "application/octet-stream",
+                                        SOUP_MEMORY_STATIC,
+                                        GCAL_TEST_SERVER_EMPTY_LF_CALENDAR,
+                                        strlen (GCAL_TEST_SERVER_EMPTY_LF_CALENDAR));
     }
 
   if (g_strcmp0 (path, calendar_file) == 0)

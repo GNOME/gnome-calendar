@@ -153,7 +153,7 @@ server_request_no_auth_calendar (void)
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/public/calendar");
+  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/public/lf-calendar");
 
   session = gcal_create_soup_session ();
 
@@ -203,7 +203,7 @@ server_request_auth_calendar (void)
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area/calendar");
+  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area/lf-calendar");
 
   session = gcal_create_soup_session ();
 

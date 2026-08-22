@@ -57,27 +57,45 @@ discovered_file_cb (GObject      *source_object,
 static void
 discoverer_file (void)
 {
+  const gchar *const paths[] = {
+    /* content-type: text-calendar - CRLF line break - ICS header check result ignored */
+    "/public/crlf-calendar",
+    /* content-type: text-calendar - LF line break - ICS header check result ignored */
+    "/public/lf-calendar",
+    /* content-type: application/octet-stream - CRLF line break - ICS header check result used */
+    "/public/crlf-calendar-stream",
+    /* content-type: application/octet-stream - LF line break - ICS header check result used */
+    "/public/lf-calendar-stream",
+  };
   g_autoptr (GcalSimpleServer) server = NULL;
   g_autoptr (GMainLoop) mainloop = NULL;
   g_autoptr (GUri) uri = NULL;
-  g_autofree gchar *uri_str = NULL;
+  guint i;
+
+  g_test_bug ("1274");
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/public/calendar");
-
-  uri_str = g_uri_to_string_partial (uri, G_URI_HIDE_PASSWORD);
 
   mainloop = g_main_loop_new (NULL, FALSE);
 
-  gcal_discover_sources_from_uri (uri_str,
-                                  NULL,
-                                  NULL,
-                                  NULL,
-                                  discovered_file_cb,
-                                  mainloop);
+  for (i = 0; i < G_N_ELEMENTS (paths); i++)
+    {
+      g_autofree gchar *uri_str = NULL;
 
-  g_main_loop_run (mainloop);
+      e_util_change_uri_component (&uri, SOUP_URI_PATH, paths[i]);
+
+      uri_str = g_uri_to_string_partial (uri, G_URI_HIDE_PASSWORD);
+
+      gcal_discover_sources_from_uri (uri_str,
+                                      NULL,
+                                      NULL,
+                                      NULL,
+                                      discovered_file_cb,
+                                      mainloop);
+
+      g_main_loop_run (mainloop);
+    }
 }
 
 /*********************************************************************************************************************/
@@ -146,7 +164,7 @@ discoverer_webdav_unauthorized (void)
 
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
-  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area/calendar");
+  e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area/lf-calendar");
 
   uri_str = g_uri_to_string_partial (uri, G_URI_HIDE_PASSWORD);
 
