@@ -8,14 +8,15 @@
 # Dinzhong Chen <wsxy162@gmail.com>, 2017.
 # Mingcong Bai <jeffbai@aosc.xyz>, 2018.
 # Dingzhong Chen <wsxy162@gmail.com>, 2019.
+# Zeqian Sun <jianshusdd@outlook.com>, 2026.
 # lumingzh <lumingzh@qq.com>, 2022-2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-03-11 00:30+0000\n"
-"PO-Revision-Date: 2026-03-11 12:16+0800\n"
+"POT-Creation-Date: 2026-03-14 15:24+0000\n"
+"PO-Revision-Date: 2026-08-24 07:52+0800\n"
 "Last-Translator: lumingzh <lumingzh@qq.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -24,7 +25,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Launchpad-Export-Date: 2016-03-22 14:52+0000\n"
-"X-Generator: Gtranslator 49.0\n"
+"X-Generator: Gtranslator 50.0\n"
+"X-DL-Lang: zh_CN\n"
+"X-DL-Module: gnome-calendar\n"
+"X-DL-Branch: gnome-50\n"
+"X-DL-Domain: po\n"
+"X-DL-State: Translating\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -84,6 +90,10 @@ msgstr "周网格的缩放级别"
 msgid "The current zoom level of the week grid"
 msgstr "周网格的当前缩放级别"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "GNOME 项目"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "管理您的日程计划"
@@ -123,6 +133,58 @@ msgstr ""
 "（如 NextCloud、谷歌日历和 CalDAV / WebDAV 服务器）添加日历，可使您跨多个设备"
 "和平台来同步事件。GNOME 日历同样支持本地和离线日历，所以您可以在旅行时的任何"
 "地点与任何时间使用它（或在文明崩溃之后）。"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "日历"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "日程安排"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "事件"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "会议"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "约会"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "计划安排"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "计划制订"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "议程"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "提醒"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "闹钟"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "天气"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "预报"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+msgid "Google Calendar"
+msgstr "谷歌日历"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
@@ -1773,17 +1835,11 @@ msgstr "必应地图"
 #~ msgid "Week %d"
 #~ msgstr "第 %d 周"
 
-#~ msgid "The GNOME Project"
-#~ msgstr "GNOME 项目"
-
 #~ msgid "Done"
 #~ msgstr "完成"
 
 #~ msgid "Select Calendar"
 #~ msgstr "选择日历"
-
-#~ msgid "Schedule"
-#~ msgstr "日程安排"
 
 #, c-format
 #~ msgid "Last %A"
@@ -1882,9 +1938,6 @@ msgstr "必应地图"
 
 #~ msgid "Undo"
 #~ msgstr "撤消"
-
-#~ msgid "Settings"
-#~ msgstr "设置"
 
 #~ msgid "Calendar name"
 #~ msgstr "日历名称"
