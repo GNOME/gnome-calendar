@@ -1708,7 +1708,7 @@ gcal_month_view_focus (GtkWidget        *widget,
                 return FALSE;
 
               row = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_VIEW_ROW);
-              return gcal_month_view_row_focus_adjacent_event (GCAL_MONTH_VIEW_ROW (row), focused);
+              return gcal_month_view_row_focus_overlaying_event (GCAL_MONTH_VIEW_ROW (row), focused);
             }
 
           if (direction == GTK_DIR_TAB_FORWARD && GCAL_IS_EVENT_WIDGET (focused))

@@ -56,7 +56,7 @@ void                 gcal_month_view_row_update_selection       (GcalMonthViewRo
 gboolean             gcal_month_view_row_focus_underlying_cell  (GcalMonthViewRow    *self,
                                                                  GtkWidget           *widget);
 
-gboolean             gcal_month_view_row_focus_adjacent_event   (GcalMonthViewRow    *self,
+gboolean             gcal_month_view_row_focus_overlaying_event (GcalMonthViewRow    *self,
                                                                  GtkWidget           *widget);
 
 gboolean             gcal_month_view_row_get_ceiled_height      (GcalMonthViewRow    *self);

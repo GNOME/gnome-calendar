@@ -1467,17 +1467,17 @@ gcal_month_view_row_focus_underlying_cell (GcalMonthViewRow *self,
 }
 
 /**
- * gcal_month_view_row_focus_adjacent_event:
+ * gcal_month_view_row_focus_overlaying_event:
  * @self: a #GcalMonthViewRow
  * @widget: the month cell
  *
- * Focuses the adjacent event widget.
+ * Focuses the overlaying event widget.
  *
  * Returns: %TRUE if the event widget grabbed focus
  */
 gboolean
-gcal_month_view_row_focus_adjacent_event (GcalMonthViewRow *self,
-                                          GtkWidget        *widget)
+gcal_month_view_row_focus_overlaying_event (GcalMonthViewRow *self,
+                                            GtkWidget        *widget)
 {
   GtkWidget *picked_widget, *event_widget;
   graphene_rect_t rect;
