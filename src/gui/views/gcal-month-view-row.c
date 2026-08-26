@@ -1450,8 +1450,8 @@ gcal_month_view_row_update_selection (GcalMonthViewRow *self,
 }
 
 gboolean
-gcal_month_view_row_focus_adjacent_cell (GcalMonthViewRow *self,
-                                         GtkWidget        *widget)
+gcal_month_view_row_focus_underlying_cell (GcalMonthViewRow *self,
+                                           GtkWidget        *widget)
 {
   GtkWidget *cell;
   g_autoptr (FocusEventData) data = NULL;

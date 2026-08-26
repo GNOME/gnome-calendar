@@ -53,7 +53,7 @@ GtkWidget*           gcal_month_view_row_get_cell_at_x           (GcalMonthViewR
 void                 gcal_month_view_row_update_selection       (GcalMonthViewRow    *self,
                                                                  GcalRange           *selection_range);
 
-gboolean             gcal_month_view_row_focus_adjacent_cell    (GcalMonthViewRow    *self,
+gboolean             gcal_month_view_row_focus_underlying_cell  (GcalMonthViewRow    *self,
                                                                  GtkWidget           *widget);
 
 gboolean             gcal_month_view_row_focus_adjacent_event   (GcalMonthViewRow    *self,

@@ -1696,7 +1696,7 @@ gcal_month_view_focus (GtkWidget        *widget,
 
           row = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_VIEW_ROW);
 
-          return gcal_month_view_row_focus_adjacent_cell (GCAL_MONTH_VIEW_ROW (row), focused);
+          return gcal_month_view_row_focus_underlying_cell (GCAL_MONTH_VIEW_ROW (row), focused);
         }
       else if (focused)
         {
@@ -1717,7 +1717,7 @@ gcal_month_view_focus (GtkWidget        *widget,
                 return TRUE;
 
               row = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_VIEW_ROW);
-              return gcal_month_view_row_focus_adjacent_cell (GCAL_MONTH_VIEW_ROW (row), focused);
+              return gcal_month_view_row_focus_underlying_cell (GCAL_MONTH_VIEW_ROW (row), focused);
             }
         }
 
