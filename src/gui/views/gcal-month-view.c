@@ -1678,6 +1678,8 @@ gcal_month_view_focus (GtkWidget        *widget,
   GtkWidget *focused, *row;
   GtkRoot *root;
 
+  GCAL_ENTRY;
+
   root = gtk_widget_get_root (widget);
   focused = gtk_root_get_focus (root);
 
@@ -1692,11 +1694,11 @@ gcal_month_view_focus (GtkWidget        *widget,
           gcal_month_popover_popdown (GCAL_MONTH_POPOVER (self->overflow.popover));
 
           if (gtk_widget_is_ancestor (focused, self->overflow.popover))
-            return gtk_widget_grab_focus (self->overflow.relative_to);
+            GCAL_RETURN (gtk_widget_grab_focus (self->overflow.relative_to));
 
           row = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_VIEW_ROW);
 
-          return gcal_month_view_row_focus_underlying_cell (GCAL_MONTH_VIEW_ROW (row), focused);
+          GCAL_RETURN (gcal_month_view_row_focus_underlying_cell (GCAL_MONTH_VIEW_ROW (row), focused));
         }
       else if (focused)
         {
@@ -1705,27 +1707,27 @@ gcal_month_view_focus (GtkWidget        *widget,
               gcal_view_clear_marks (GCAL_VIEW (self));
 
               if (direction == GTK_DIR_TAB_FORWARD)
-                return FALSE;
+                GCAL_RETURN (FALSE);
 
               row = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_VIEW_ROW);
-              return gcal_month_view_row_focus_overlaying_event (GCAL_MONTH_VIEW_ROW (row), focused);
+              GCAL_RETURN (gcal_month_view_row_focus_overlaying_event (GCAL_MONTH_VIEW_ROW (row), focused));
             }
 
           if (direction == GTK_DIR_TAB_FORWARD && GCAL_IS_EVENT_WIDGET (focused))
             {
               if (GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction))
-                return TRUE;
+                GCAL_RETURN (TRUE);
 
               row = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_VIEW_ROW);
-              return gcal_month_view_row_focus_underlying_cell (GCAL_MONTH_VIEW_ROW (row), focused);
+              GCAL_RETURN (gcal_month_view_row_focus_underlying_cell (GCAL_MONTH_VIEW_ROW (row), focused));
             }
         }
 
-      return GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction);
+      GCAL_RETURN (GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction));
     }
 
   if (focused && !gtk_widget_is_ancestor (focused, widget))
-    return FALSE;
+    GCAL_RETURN (FALSE);
 
   do
     {
@@ -1741,12 +1743,12 @@ gcal_month_view_focus (GtkWidget        *widget,
   if (candidate == NULL)
     {
       if (GCAL_IS_MONTH_CELL (focused) && !(self->state & GDK_CONTROL_MASK))
-        return focus_month_cell (self, focused, direction);
+        GCAL_RETURN (focus_month_cell (self, focused, direction));
       else
-        return gtk_widget_keynav_failed (widget, direction);
+        GCAL_RETURN (gtk_widget_keynav_failed (widget, direction));
     }
 
-  return TRUE;
+  GCAL_RETURN (TRUE);
 }
 
 static void
