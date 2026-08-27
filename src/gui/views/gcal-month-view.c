@@ -1702,6 +1702,9 @@ gcal_month_view_focus (GtkWidget        *widget,
           if (gtk_widget_is_ancestor (focused, self->overflow.popover))
             GCAL_RETURN (gtk_widget_grab_focus (self->overflow.relative_to));
 
+          if (direction == GTK_DIR_TAB_BACKWARD)
+            GCAL_RETURN (FALSE);
+
           row = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_VIEW_ROW);
 
           GCAL_RETURN (gcal_month_view_row_focus_underlying_cell (GCAL_MONTH_VIEW_ROW (row), focused));
