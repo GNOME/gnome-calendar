@@ -1691,6 +1691,12 @@ gcal_month_view_focus (GtkWidget        *widget,
         {
           g_assert_nonnull (focused);
 
+          if (GCAL_IS_MONTH_CELL (focused))
+            {
+              gcal_view_clear_marks (GCAL_VIEW (self));
+              GCAL_RETURN (FALSE);
+            }
+
           gcal_month_popover_popdown (GCAL_MONTH_POPOVER (self->overflow.popover));
 
           if (gtk_widget_is_ancestor (focused, self->overflow.popover))
