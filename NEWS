@@ -1,3 +1,20 @@
+Major Changes in 51.rc:
+* Improve drag and drop behavior on the Month view. You can now drop events
+  on top of other events.
+* More keyboard navigation improvements in the Month view.
+  When an event is focused, pressing Ctrl+Tab focuses the month cell behind it.
+  When a month cell is focused, pressing Shift+Tab focuses the first event
+  in front of it.
+* Fix a rare crash in the Month view when scrolling
+* Be a little more permissive with the headers of remote iCalendar files.
+  Files with LF line breaks are now accepted. These files are not technically
+  compliant with RFC 5545, but some files are formatted like this in the wild
+  and other calendaring applications accept them without problem.
+* Fix event popover showing outside the window when the left mouse button is
+  released outside the window
+* Fix inverted Ctrl+Scroll zoom direction in the Week view
+* Updated translations
+
 Major Changes in 51.beta:
 * Fix sparodically disappearing horizontal line separators in the month view
 * Fix the event editor not saving changes to event durations
