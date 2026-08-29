@@ -47,6 +47,7 @@ struct _GcalAgendaView
   GtkBox              parent;
 
   GtkWidget          *scrolled_window;
+  GtkListView        *list_view;
 
   /* property */
   GDateTime          *date;
@@ -54,14 +55,9 @@ struct _GcalAgendaView
   GtkFilterListModel *filtered_days;
   GtkFlattenListModel *flatten_model;
 
-  guint               scroll_grid_timeout_id;
-  gulong              stack_page_changed_id;
-
   gint                events_on_date;
   gint                clicked_cell;
 };
-
-static void          schedule_position_scroll                    (GcalAgendaView       *self);
 
 static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
 
@@ -118,94 +114,6 @@ new_date_header_string (GDateTime *date)
 /*
  * Callbacks
  */
-
-static void
-stack_visible_child_changed_cb (AdwViewStack   *stack,
-                                GParamSpec     *pspec,
-                                GcalAgendaView *self)
-{
-  if (adw_view_stack_get_visible_child (stack) != (GtkWidget*) self)
-    return;
-
-  schedule_position_scroll (self);
-
-  g_clear_signal_handler (&self->stack_page_changed_id, stack);
-}
-
-static gboolean
-update_grid_scroll_position (GcalAgendaView *self)
-{
-  g_autoptr(GDateTime) week_start = NULL;
-  g_autoptr(GDateTime) week_end = NULL;
-  g_autoptr(GDateTime) now = NULL;
-  GtkAdjustment *vadjustment;
-  gdouble minutes, real_value;
-  gdouble max, page, page_increment, value;
-  gboolean dummy;
-
-  /* While the scrolled window is not mapped, we keep waiting */
-  if (!gtk_widget_get_realized (self->scrolled_window) ||
-      !gtk_widget_get_mapped (self->scrolled_window))
-    {
-      if (self->stack_page_changed_id == 0)
-        {
-          GtkWidget *stack = gtk_widget_get_ancestor (GTK_WIDGET (self), ADW_TYPE_VIEW_STACK);
-
-          self->stack_page_changed_id = g_signal_connect_object (stack,
-                                                                 "notify::visible-child",
-                                                                 G_CALLBACK (stack_visible_child_changed_cb),
-                                                                 self,
-                                                                 0);
-        }
-
-      self->scroll_grid_timeout_id = 0;
-
-      GCAL_RETURN (G_SOURCE_REMOVE);
-    }
-
-  now = g_date_time_new_now_local ();
-  week_start = gcal_date_time_get_start_of_week (self->date);
-  week_end = gcal_date_time_get_end_of_week (self->date);
-
-  /* Don't animate when not today */
-  if (gcal_date_time_compare_date (now, week_start) < 0 || gcal_date_time_compare_date (now, week_end) >= 0)
-    GCAL_GOTO (out);
-
-  vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));
-  minutes = g_date_time_get_hour (now) * 60 + g_date_time_get_minute (now);
-  page = gtk_adjustment_get_page_size (vadjustment);
-  max = gtk_adjustment_get_upper (vadjustment);
-
-  real_value = max / GCAL_MINUTES_PER_DAY * minutes - (page / 2.0);
-  page_increment = gtk_adjustment_get_page_increment (vadjustment);
-  value = gtk_adjustment_get_value (vadjustment);
-
-  gtk_adjustment_set_page_increment (vadjustment, real_value - value);
-
-  g_signal_emit_by_name (self->scrolled_window,
-                         "scroll-child",
-                         GTK_SCROLL_PAGE_FORWARD,
-                         FALSE,
-                         &dummy);
-
-  gtk_adjustment_set_page_increment (vadjustment, page_increment);
-
-out:
-  self->scroll_grid_timeout_id = 0;
-  GCAL_RETURN (G_SOURCE_REMOVE);
-}
-
-static void
-schedule_position_scroll (GcalAgendaView *self)
-{
-  /* Nothing is scheduled, we should do it now */
-  if (self->scroll_grid_timeout_id > 0)
-    g_source_remove (self->scroll_grid_timeout_id);
-
-  self->scroll_grid_timeout_id = g_timeout_add (200,
-                                                (GSourceFunc) update_grid_scroll_position,
-                                                self);
-}
 
 static gboolean
 n_items_and_date_to_boolean (GcalAgendaViewDay *day,
@@ -348,7 +256,7 @@ gcal_agenda_view_set_date (GcalView  *view,
       gcal_agenda_view_day_set_date (day, next_date);
     }
 
-  schedule_position_scroll (self);
+  gtk_list_view_scroll_to (self->list_view, 0, GTK_LIST_SCROLL_FOCUS, NULL);
 
   gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
 
@@ -538,6 +446,7 @@ gcal_agenda_view_class_init (GcalAgendaViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, flatten_model);
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, filtered_days);
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, scrolled_window);
+  gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, list_view);
 
   gtk_widget_class_bind_template_callback (widget_class, agenda_header_setup_cb);
   gtk_widget_class_bind_template_callback (widget_class, agenda_header_bind_cb);
