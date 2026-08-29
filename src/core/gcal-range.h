@@ -78,7 +78,7 @@ typedef enum
   GCAL_RANGE_DATE_ONLY,
 } GcalRangeType;
 
-GType                gcal_range_get_type                         (void) G_GNUC_CONST;
+GType                gcal_range_get_type                         (void);
 
 GcalRange*           gcal_range_new                              (GDateTime          *range_start,
                                                                   GDateTime          *range_end,

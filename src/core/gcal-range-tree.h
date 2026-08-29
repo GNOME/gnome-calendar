@@ -46,7 +46,7 @@ typedef gboolean    (*GcalRangeTraverseFunc)                     (GcalRange     
 #define GCAL_TRAVERSE_CONTINUE FALSE;
 #define GCAL_TRAVERSE_STOP     TRUE;
 
-GType                gcal_range_tree_get_type                    (void) G_GNUC_CONST;
+GType                gcal_range_tree_get_type                    (void);
 
 GcalRangeTree*       gcal_range_tree_new                         (void);
 

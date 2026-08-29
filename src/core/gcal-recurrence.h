@@ -69,7 +69,7 @@ struct _GcalRecurrence
 
 };
 
-GType                gcal_recurrence_get_type                    (void) G_GNUC_CONST;
+GType                gcal_recurrence_get_type                    (void);
 
 GcalRecurrence*      gcal_recurrence_new                         (void);
 
