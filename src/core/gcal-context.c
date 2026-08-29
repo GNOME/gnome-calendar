@@ -23,6 +23,12 @@
 #include "gcal-context.h"
 #include "gcal-time-zone-monitor.h"
 
+#include <gdesktop-enums.h>
+#include "gdesktop-enum-types.h"
+
+#define DESKTOP_SETTINGS_CALENDAR_NAMESPACE "org.gnome.desktop.calendar"
+#define CALENDAR_WEEK_START_DAY_KEY "week-start-day"
+
 struct _GcalContext
 {
   GObject             parent;
@@ -37,6 +43,7 @@ struct _GcalContext
   GcalWeatherService *weather_service;
 
   GcalTimeZoneMonitor   *timezone_monitor;
+  GDesktopWeekday        week_start_day;
 };
 
 G_DEFINE_TYPE (GcalContext, gcal_context, G_TYPE_OBJECT)
@@ -51,6 +58,7 @@ enum
   PROP_TIME_FORMAT,
   PROP_TIMEZONE,
   PROP_WEATHER_SERVICE,
+  PROP_WEEK_START_DAY,
   N_PROPS
 };
 
@@ -86,6 +94,29 @@ set_time_format_from_variant (GcalContext *self,
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_TIME_FORMAT]);
 }
 
+static void
+set_week_start_day_from_variant (GcalContext *self,
+                                 GVariant    *variant)
+{
+  g_autofree gchar *enum_format = NULL;
+  const char *weekday_nick = NULL;
+  GEnumValue *weekday = NULL;
+
+  g_assert (g_variant_type_equal (g_variant_get_type (variant), "s"));
+
+  /* extract the day as enum value by name */
+  weekday_nick = g_variant_get_string (variant, NULL);
+  weekday = g_enum_get_value_by_nick (g_type_class_get (G_DESKTOP_TYPE_WEEKDAY), weekday_nick);
+
+  if (!weekday || self->week_start_day == weekday->value)
+    return;
+
+  self->week_start_day = weekday->value;
+  g_debug ("Setting week start day to %s", weekday_nick);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_WEEK_START_DAY]);
+}
+
 static gboolean
 read_time_format (GcalContext *self)
 {
@@ -104,6 +135,7 @@ read_time_format (GcalContext *self)
 
   if (error)
     {
+      g_warning ("Failed to read the clock-format setting through the settings portal: %s", error->message);
       return FALSE;
     }
 
@@ -115,6 +147,35 @@ read_time_format (GcalContext *self)
   return TRUE;
 }
 
+static gboolean
+read_week_start_day (GcalContext *self)
+{
+  g_autoptr (GVariant) other_child = NULL;
+  g_autoptr (GVariant) child = NULL;
+  g_autoptr (GVariant) ret = NULL;
+  g_autoptr (GError) error = NULL;
+
+  ret = g_dbus_proxy_call_sync (self->settings_portal,
+                                "Read",
+                                g_variant_new ("(ss)", DESKTOP_SETTINGS_CALENDAR_NAMESPACE, CALENDAR_WEEK_START_DAY_KEY),
+                                G_DBUS_CALL_FLAGS_NONE,
+                                G_MAXINT,
+                                NULL,
+                                &error);
+
+  if (error)
+    {
+      g_warning ("Failed to read the week-start-day setting through the settings portal: %s", error->message);
+      return FALSE;
+    }
+
+  g_variant_get (ret, "(v)", &child);
+  g_variant_get (child, "v", &other_child);
+
+  set_week_start_day_from_variant (self, other_child);
+
+  return TRUE;
+}
 
 /*
  * Callbacks
@@ -140,6 +201,12 @@ on_portal_proxy_signal_cb (GDBusProxy  *proxy,
       g_strcmp0 (name, "clock-format") == 0)
     {
       set_time_format_from_variant (self, value);
+    }
+
+  if (g_strcmp0 (namespace, DESKTOP_SETTINGS_CALENDAR_NAMESPACE) == 0 &&
+      g_strcmp0 (name, CALENDAR_WEEK_START_DAY_KEY) == 0)
+    {
+      set_week_start_day_from_variant (self, value);
     }
 }
 
@@ -220,6 +287,10 @@ gcal_context_get_property (GObject    *object,
       g_value_set_object (value, self->weather_service);
       break;
 
+    case PROP_WEEK_START_DAY:
+      g_value_set_enum (value, self->week_start_day);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -240,6 +311,7 @@ gcal_context_set_property (GObject      *object,
     case PROP_TIME_FORMAT:
     case PROP_TIMEZONE:
     case PROP_WEATHER_SERVICE:
+    case PROP_WEEK_START_DAY:
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -297,6 +369,11 @@ gcal_context_class_init (GcalContextClass *klass)
                                                           "Weather service",
                                                           GCAL_TYPE_WEATHER_SERVICE,
                                                           G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  properties[PROP_WEEK_START_DAY] =
+    g_param_spec_enum ("week-start-day", NULL, NULL,
+                       G_DESKTOP_TYPE_WEEKDAY, get_first_weekday_iso (),
+                       G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 }
@@ -454,9 +531,16 @@ gcal_context_get_weather_service (GcalContext *self)
 void
 gcal_context_startup (GcalContext *self)
 {
+  gboolean time_format_available;
+  gboolean week_start_day_available;
+
   g_return_if_fail (GCAL_IS_CONTEXT (self));
 
-  if (read_time_format (self))
+  time_format_available = read_time_format (self);
+  week_start_day_available = read_week_start_day (self);
+
+  /* NOTE: can't inline because of short-circuiting */
+  if (time_format_available || week_start_day_available)
     {
       g_signal_connect (self->settings_portal,
                         "g-signal",
