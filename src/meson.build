@@ -19,6 +19,20 @@ gcal_deps = [
 
 built_sources = gnome.mkenums_simple('gcal-enum-types', sources: enum_headers)
 
+#
+# generate type header for gsettings-desktop-schemas
+#
+gdesktop_enums_header = files(
+  gsettings_desktop_schemas_dep.get_variable(pkgconfig: 'prefix') + '/include/gsettings-desktop-schemas/gdesktop-enums.h'
+)
+
+built_sources += gnome.mkenums_simple(
+  'gdesktop-enum-types',
+  sources: gdesktop_enums_header,
+  identifier_prefix: 'GDesktop',
+  symbol_prefix: 'g_desktop'
+)
+
 built_sources += gnome.gdbus_codegen(
   'gcal-shell-search-provider-generated',
   shell_search_provider_dbus_interfaces,
