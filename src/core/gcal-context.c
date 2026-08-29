@@ -26,7 +26,9 @@
 #include <gdesktop-enums.h>
 #include "gdesktop-enum-types.h"
 
+#define DESKTOP_SETTINGS_INTERFACE_NAMESPACE "org.gnome.desktop.interface"
 #define DESKTOP_SETTINGS_CALENDAR_NAMESPACE "org.gnome.desktop.calendar"
+#define CLOCK_FORMAT_KEY "clock-format"
 #define CALENDAR_WEEK_START_DAY_KEY "week-start-day"
 
 struct _GcalContext
@@ -117,21 +119,40 @@ set_week_start_day_from_variant (GcalContext *self,
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_WEEK_START_DAY]);
 }
 
-static gboolean
-read_time_format (GcalContext *self)
+static void
+read_variant_from_settings_portal (GcalContext  *self,
+                                   const char   *namespace,
+                                   const char   *key,
+                                   GVariant    **value,
+                                   GError      **error)
 {
-  g_autoptr (GVariant) other_child = NULL;
-  g_autoptr (GVariant) child = NULL;
   g_autoptr (GVariant) ret = NULL;
-  g_autoptr (GError) error = NULL;
+
+  g_assert_nonnull (value);
+  g_assert_nonnull (error);
 
   ret = g_dbus_proxy_call_sync (self->settings_portal,
-                                "Read",
-                                g_variant_new ("(ss)", "org.gnome.desktop.interface", "clock-format"),
+                                "ReadOne",
+                                g_variant_new ("(ss)", namespace, key),
                                 G_DBUS_CALL_FLAGS_NONE,
                                 G_MAXINT,
                                 NULL,
-                                &error);
+                                error);
+
+  g_variant_get (ret, "(v)", value);
+}
+
+static gboolean
+read_time_format (GcalContext *self)
+{
+  g_autoptr (GVariant) value = NULL;
+  g_autoptr (GError) error = NULL;
+
+  read_variant_from_settings_portal (self,
+                                     DESKTOP_SETTINGS_INTERFACE_NAMESPACE,
+                                     CLOCK_FORMAT_KEY,
+                                     &value,
+                                     &error);
 
   if (error)
     {
@@ -139,10 +160,7 @@ read_time_format (GcalContext *self)
       return FALSE;
     }
 
-  g_variant_get (ret, "(v)", &child);
-  g_variant_get (child, "v", &other_child);
-
-  set_time_format_from_variant (self, other_child);
+  set_time_format_from_variant (self, value);
 
   return TRUE;
 }
@@ -150,18 +168,14 @@ read_time_format (GcalContext *self)
 static gboolean
 read_week_start_day (GcalContext *self)
 {
-  g_autoptr (GVariant) other_child = NULL;
-  g_autoptr (GVariant) child = NULL;
-  g_autoptr (GVariant) ret = NULL;
+  g_autoptr (GVariant) value = NULL;
   g_autoptr (GError) error = NULL;
 
-  ret = g_dbus_proxy_call_sync (self->settings_portal,
-                                "Read",
-                                g_variant_new ("(ss)", DESKTOP_SETTINGS_CALENDAR_NAMESPACE, CALENDAR_WEEK_START_DAY_KEY),
-                                G_DBUS_CALL_FLAGS_NONE,
-                                G_MAXINT,
-                                NULL,
-                                &error);
+  read_variant_from_settings_portal (self,
+                                     DESKTOP_SETTINGS_CALENDAR_NAMESPACE,
+                                     CALENDAR_WEEK_START_DAY_KEY,
+                                     &value,
+                                     &error);
 
   if (error)
     {
@@ -169,10 +183,7 @@ read_week_start_day (GcalContext *self)
       return FALSE;
     }
 
-  g_variant_get (ret, "(v)", &child);
-  g_variant_get (child, "v", &other_child);
-
-  set_week_start_day_from_variant (self, other_child);
+  set_week_start_day_from_variant (self, value);
 
   return TRUE;
 }
@@ -197,8 +208,8 @@ on_portal_proxy_signal_cb (GDBusProxy  *proxy,
 
   g_variant_get (parameters, "(&s&sv)", &namespace, &name, &value);
 
-  if (g_strcmp0 (namespace, "org.gnome.desktop.interface") == 0 &&
-      g_strcmp0 (name, "clock-format") == 0)
+  if (g_strcmp0 (namespace, DESKTOP_SETTINGS_INTERFACE_NAMESPACE) == 0 &&
+      g_strcmp0 (name, CLOCK_FORMAT_KEY) == 0)
     {
       set_time_format_from_variant (self, value);
     }
