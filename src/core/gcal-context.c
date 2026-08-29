@@ -510,6 +510,29 @@ gcal_context_get_time_format (GcalContext *self)
 }
 
 /**
+ * gcal_context_get_week_start_day:
+ * @self: a #GcalContext instance
+ *
+ * Retrieves the current value of "week-start-day" desktop setting.
+ * Note that this value is synced with the source setting through
+ * the appropriate portal and if you want to be notified of changes
+ * you should register a callback on #GcalContext:week-start-day property.
+ *
+ * When the desktop setting is set to 'G_DESKTOP_WEEKDAY_DEFAULT'
+ * we fall back to 'get_first_weekday_iso()' function from 'gcal-utils.h'
+ * to find the actual day of the week from current locale.
+ *
+ * Returns: the currently set #GDesktopWeekday value
+ */
+GDesktopWeekday
+gcal_context_get_week_start_day (GcalContext *self)
+{
+  g_return_val_if_fail (GCAL_IS_CONTEXT (self), get_first_weekday ());
+
+  return self->week_start_day;
+}
+
+/**
  * gcal_context_get_timezone:
  *
  * Retrieves the system timezone.

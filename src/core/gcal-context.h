@@ -24,6 +24,7 @@
 #include "gcal-enums.h"
 #include "gcal-manager.h"
 #include "gcal-search-engine.h"
+#include "gdesktop-enums.h"
 #include "weather/gcal-weather-service.h"
 
 #include <glib-object.h>
@@ -44,6 +45,8 @@ GcalSearchEngine*    gcal_context_get_search_engine              (GcalContext   
 GSettings*           gcal_context_get_settings                   (GcalContext        *self);
 
 GcalTimeFormat       gcal_context_get_time_format                (GcalContext        *self);
+
+GDesktopWeekday      gcal_context_get_week_start_day             (GcalContext        *self);
 
 GTimeZone*           gcal_context_get_timezone                   (GcalContext        *self);
 
