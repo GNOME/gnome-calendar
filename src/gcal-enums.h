@@ -51,13 +51,13 @@ typedef enum
 typedef enum
 {
   GCAL_WEEK_DAY_INVALID   = 0,
-  GCAL_WEEK_DAY_SUNDAY    = 1 << 0,
-  GCAL_WEEK_DAY_MONDAY    = 1 << 1,
-  GCAL_WEEK_DAY_TUESDAY   = 1 << 2,
-  GCAL_WEEK_DAY_WEDNESDAY = 1 << 3,
-  GCAL_WEEK_DAY_THURSDAY  = 1 << 4,
-  GCAL_WEEK_DAY_FRIDAY    = 1 << 5,
-  GCAL_WEEK_DAY_SATURDAY  = 1 << 6
+  GCAL_WEEK_DAY_MONDAY    = 1 << 0,
+  GCAL_WEEK_DAY_TUESDAY   = 1 << 1,
+  GCAL_WEEK_DAY_WEDNESDAY = 1 << 2,
+  GCAL_WEEK_DAY_THURSDAY  = 1 << 3,
+  GCAL_WEEK_DAY_FRIDAY    = 1 << 4,
+  GCAL_WEEK_DAY_SATURDAY  = 1 << 5,
+  GCAL_WEEK_DAY_SUNDAY    = 1 << 6
 } GcalWeekDay;
 
 typedef enum

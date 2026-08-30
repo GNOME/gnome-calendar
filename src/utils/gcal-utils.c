@@ -549,7 +549,7 @@ struct
 
 /**
  * gcal_util_is_workday:
- * @day: a guint representing the day of a week (0…Sunday, 6…Saturday)
+ * @day: a guint representing the ISO 8601 day of a week (1…Monday, 7…Sunday)
  *
  * Checks whether @day is workday or not based on the Territory part of Locale.
  *
@@ -563,7 +563,7 @@ gcal_util_is_workday (guint day)
   gchar territory[3] = { 0, };
   guint i;
 
-  if (day > GCAL_N_WEEKDAYS - 1)
+  if (day < 1 || day > GCAL_N_WEEKDAYS)
     return FALSE;
 
   no_work_days = GCAL_WEEK_DAY_SATURDAY | GCAL_WEEK_DAY_SUNDAY;
