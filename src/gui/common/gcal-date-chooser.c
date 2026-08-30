@@ -1083,7 +1083,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
   self->date = g_date_time_new_now_local ();
   g_date_time_get_ymd (self->date, &self->this_year, NULL, NULL);
 
-  self->week_start = gcal_util_get_first_weekday_iso ();
+  self->week_start = gcal_context_get_week_start_day (context);
 
   gtk_widget_init_template (GTK_WIDGET (self));
 

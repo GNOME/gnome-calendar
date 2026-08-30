@@ -19,9 +19,10 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include "config.h"
+
 #define G_LOG_DOMAIN "GcalMonthView"
 
-#include "config.h"
 #include "gcal-debug.h"
 #include "gcal-event-widget-pool.h"
 #include "gcal-gui-utils.h"
@@ -194,7 +195,9 @@ allocate_overflow_popover (GcalMonthView *self,
 static inline void
 update_weekday_labels (GcalMonthView *self)
 {
-  const gint first_weekday = gcal_util_get_first_weekday_iso ();
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+
+  const gint first_weekday = gcal_context_get_week_start_day (context);
 
   for (gint i = 0; i < GCAL_N_WEEKDAYS; i++)
     {

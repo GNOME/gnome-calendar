@@ -19,6 +19,8 @@
  */
 
 #include "gcal-date-time-utils.h"
+#include "gcal-application.h"
+#include "gcal-context.h"
 #include "gcal-utils.h"
 
 /**
@@ -76,6 +78,9 @@ gcal_date_time_get_days_in_month (GDateTime *date)
 GDateTime*
 gcal_date_time_get_start_of_week (GDateTime *date)
 {
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+  g_assert (GCAL_IS_CONTEXT (context));
+
   g_autoptr (GDateTime) start_of_week = NULL;
   gint n_days_after_week_start;
   gint first_weekday;
@@ -83,7 +88,7 @@ gcal_date_time_get_start_of_week (GDateTime *date)
 
   g_assert (date != NULL);
 
-  first_weekday = gcal_util_get_first_weekday_iso ();
+  first_weekday = gcal_context_get_week_start_day (context);
   weekday = g_date_time_get_day_of_week (date) % GCAL_N_WEEKDAYS;
   n_days_after_week_start = (GCAL_N_WEEKDAYS + weekday - first_weekday) % GCAL_N_WEEKDAYS;
 
