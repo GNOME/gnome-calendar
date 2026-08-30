@@ -26,6 +26,8 @@
 #include <gdesktop-enums.h>
 #include "gdesktop-enum-types.h"
 
+#include "gcal-utils.h"
+
 #define DESKTOP_SETTINGS_INTERFACE_NAMESPACE "org.gnome.desktop.interface"
 #define DESKTOP_SETTINGS_CALENDAR_NAMESPACE "org.gnome.desktop.calendar"
 #define CLOCK_FORMAT_KEY "clock-format"
@@ -110,7 +112,13 @@ set_week_start_day_from_variant (GcalContext *self,
   weekday_nick = g_variant_get_string (variant, NULL);
   weekday = g_enum_get_value_by_nick (g_type_class_get (G_DESKTOP_TYPE_WEEKDAY), weekday_nick);
 
-  if (!weekday || self->week_start_day == weekday->value)
+  g_assert (weekday != NULL);
+
+  /* find the actual 'default' from locale */
+  if (weekday->value == G_DESKTOP_WEEKDAY_DEFAULT)
+    weekday = g_enum_get_value (g_type_class_get (G_DESKTOP_TYPE_WEEKDAY), gcal_util_get_first_weekday ());
+
+  if (self->week_start_day == weekday->value)
     return;
 
   self->week_start_day = weekday->value;
@@ -383,7 +391,7 @@ gcal_context_class_init (GcalContextClass *klass)
 
   properties[PROP_WEEK_START_DAY] =
     g_param_spec_enum ("week-start-day", NULL, NULL,
-                       G_DESKTOP_TYPE_WEEKDAY, get_first_weekday_iso (),
+                       G_DESKTOP_TYPE_WEEKDAY, gcal_util_get_first_weekday (),
                        G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
@@ -527,7 +535,7 @@ gcal_context_get_time_format (GcalContext *self)
 GDesktopWeekday
 gcal_context_get_week_start_day (GcalContext *self)
 {
-  g_return_val_if_fail (GCAL_IS_CONTEXT (self), get_first_weekday ());
+  g_return_val_if_fail (GCAL_IS_CONTEXT (self), gcal_util_get_first_weekday ());
 
   return self->week_start_day;
 }
