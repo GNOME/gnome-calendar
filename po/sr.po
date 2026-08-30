@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2026-03-14 15:24+0000\n"
-"PO-Revision-Date: 2026-03-16 21:05+0100\n"
-"Last-Translator: Марко М. Костић <marko.m.kostic@gmail.com>\n"
+"PO-Revision-Date: 2026-08-30 11:32+0200\n"
+"Last-Translator: Марко Костић <marko.m.kostic@gmail.com>\n"
 "Language-Team: Serbian <Serbian <gnome-sr@googlegroups.com>>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,8 @@ msgstr "Подешавање услуге временске прогнозе"
 
 #: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Whether weather reports are shown, automatic locations are used and a location-name"
-msgstr "Да ли се приказују временски извештаји, да ли се користе аутоматске локације и назив локације"
+msgstr ""
+"Да ли се приказују временски извештаји, да ли се користе аутоматске локације и назив локације"
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Zoom level of the week grid"
@@ -79,6 +80,10 @@ msgstr "Ниво увећања недељног прегледа"
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid "The current zoom level of the week grid"
 msgstr "Тренутни ниво увећања недељног прегледа"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "Пројекат Гном"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
@@ -89,13 +94,18 @@ msgid ""
 "GNOME Calendar is an elegant tool to help you plan and stay on top of your schedule for "
 "upcoming days and weeks, whether your months are filled with meetings and appointments, "
 "public events, travel logistics, or other commitments in your life."
-msgstr "Гномов календар је елегантан алат који вам помаже да испланирате и останете у току са својим распоредом за предстојеће дане и седмице, било да су вам месеци испуњени састанцима и обавезама, јавним догађајима, логистиком путовања или другим обавезама у животу."
+msgstr ""
+"Гномов календар је елегантан алат који вам помаже да испланирате и останете у току са својим "
+"распоредом за предстојеће дане и седмице, било да су вам месеци испуњени састанцима и "
+"обавезама, јавним догађајима, логистиком путовања или другим обавезама у животу."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:22
 msgid ""
 "Easily create and manage unlimited calendars and events with GNOME Calendar's infinite "
 "scrolling month view, week timetable, and scheduling list view."
-msgstr "Са лакоћом стварајте и управљајте неограниченим бројем календара и догађаја уз Гномов календар и његов непрекидан месечни преглед, седмични распоред и списак заказаних догађаја."
+msgstr ""
+"Са лакоћом стварајте и управљајте неограниченим бројем календара и догађаја уз Гномов "
+"календар и његов непрекидан месечни преглед, седмични распоред и списак заказаних догађаја."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
 msgid ""
@@ -106,7 +116,66 @@ msgid ""
 "synchronize your events across multiple devices and platforms. GNOME Calendar also supports "
 "local and offline calendaring, so you can use it anywhere and anytime while travelling (or "
 "after civilization's collapse.)"
-msgstr "Интегришући најновије Гномове технологије и најбоље примере из праксе, Гномов календар се ослања на зрели Еволуцијин сервер података за управљање великим бројем догађаја и обезбеђивање интеграције са другим апликацијама. Можете додати календаре са разних мрежних услуга (као што су NextCloud, Гугл календар и CalDAV / WebDAV сервери), што вам омогућава да ускладите своје догађаје на више уређаја и платформи. Гномов календар такође подржава месне и ванмрежне календаре, тако да га можете користити било где и било када док путујете (или након колапса цивилизације)."
+msgstr ""
+"Интегришући најновије Гномове технологије и најбоље примере из праксе, Гномов календар се "
+"ослања на зрели Еволуцијин сервер података за управљање великим бројем догађаја и "
+"обезбеђивање интеграције са другим апликацијама. Можете додати календаре са разних мрежних "
+"услуга (као што су NextCloud, Гугл календар и CalDAV / WebDAV сервери), што вам омогућава да "
+"ускладите своје догађаје на више уређаја и платформи. Гномов календар такође подржава месне и "
+"ванмрежне календаре, тако да га можете користити било где и било када док путујете (или након "
+"колапса цивилизације)."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+msgid "calendars"
+msgstr "календари"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+msgid "calendaring"
+msgstr "календар"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+msgid "events"
+msgstr "догађаји"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "састанци"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "заказани састанци"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "заказивање"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "планирање"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+msgid "agenda"
+msgstr "дневни ред"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+msgid "reminders"
+msgstr "подсетници"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "будилници"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+msgid "weather"
+msgstr "време"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "прогнозирање"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+msgid "Google Calendar"
+msgstr "Гугл Календар"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
@@ -247,13 +316,17 @@ msgstr "Повежи се на календар на мрежи"
 msgid ""
 "HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only be updated by the "
 "provider will be added as read-only."
-msgstr "Подржани су ХТТПС, КалДАВ или Вебкал УРЛ-ови. Календари на мрежи које може ажурирати само провајдер биће додати само за читање."
+msgstr ""
+"Подржани су ХТТПС, КалДАВ или Вебкал УРЛ-ови. Календари на мрежи које може ажурирати само "
+"провајдер биће додати само за читање."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:108
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it through the <a "
 "href=\"GOA\">online account settings</a>."
-msgstr "Ако календар припада једном од ваших налога на мрежи, можете га додати путем <a href=\"GOA\">подешавања налога на мрежи</a>."
+msgstr ""
+"Ако календар припада једном од ваших налога на мрежи, можете га додати путем <a "
+"href=\"GOA\">подешавања налога на мрежи</a>."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:126
 #: src/gui/calendar-management/gcal-new-calendar-page.c:124
