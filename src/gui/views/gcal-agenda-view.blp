@@ -35,6 +35,11 @@ template $GcalAgendaView: Box {
         };
       };
 
+      header-factory: SignalListItemFactory {
+        setup => $agenda_header_setup_cb(template);
+        bind => $agenda_header_bind_cb(template);
+      };
+
       factory: BuilderListItemFactory {
         template ListItem {
           activatable: false;

@@ -85,6 +85,35 @@ G_DEFINE_TYPE_WITH_CODE (GcalAgendaView, gcal_agenda_view, GTK_TYPE_BOX,
  * Auxiliary methods
  */
 
+static gchar *
+new_date_header_string (GDateTime *date)
+{
+  g_autoptr (GDateTime) today = NULL;
+  g_autoptr (GDateTime) tomorrow = NULL;
+  g_autoptr (GDateTime) yesterday = NULL;
+
+  if (date == NULL)
+    return NULL;
+
+  today = g_date_time_new_now_local ();
+  tomorrow = g_date_time_add_days (today, 1);
+  yesterday = g_date_time_add_days (today, -1);
+
+  if (gcal_date_time_compare_date (date, today) == 0)
+    return g_strdup (_("Today"));
+  else if (gcal_date_time_compare_date (date, tomorrow) == 0)
+    return g_strdup (_("Tomorrow"));
+  else if (gcal_date_time_compare_date (date, yesterday) == 0)
+    return g_strdup (_("Yesterday"));
+  else
+    /*
+     * Translators: %A is the full day name, %B is the month name
+     * and %d is the day of the month as a number between 0 and 31.
+     * More formats can be found on the doc:
+     * https://docs.gtk.org/glib/method.DateTime.format.html
+     */
+    return g_date_time_format (date, _("%A %B %d"));
+}
 
 /*
  * Callbacks
@@ -238,6 +267,53 @@ on_event_widget_activated_cb (GcalEventWidget *event_widget,
   gcal_view_event_activated (view, event_widget);
 }
 
+
+static void
+agenda_header_setup_cb (GcalAgendaView           *self,
+                        GtkListHeader            *header,
+                        GtkSignalListItemFactory *factory)
+{
+  GtkWidget *row;
+
+  g_assert (GCAL_IS_AGENDA_VIEW (self));
+
+  row = g_object_new (GTK_TYPE_LABEL,
+                      "can-focus", FALSE,
+                      "xalign", 0.0f,
+                      "ellipsize", PANGO_ELLIPSIZE_END,
+                      NULL);
+
+  gtk_widget_add_css_class (row, "caption-heading");
+
+  gtk_list_header_set_child (header, row);
+}
+
+static void
+agenda_header_bind_cb (GcalAgendaView           *self,
+                       GtkListHeader            *header,
+                       GtkSignalListItemFactory *factory)
+{
+  gpointer day;
+
+  g_assert (GCAL_IS_AGENDA_VIEW (self));
+
+  day = gtk_flatten_list_model_get_model_for_item (self->flatten_model, gtk_list_header_get_start (header));
+  g_assert (day == NULL || GCAL_IS_AGENDA_VIEW_DAY (day));
+
+  if (day != NULL)
+    {
+      g_autofree char *header_label = NULL;
+      GDateTime *date;
+      GtkLabel *label;
+
+      date = gcal_agenda_view_day_get_date (GCAL_AGENDA_VIEW_DAY (day));
+      header_label = new_date_header_string (date);
+
+      label = GTK_LABEL (gtk_list_header_get_child (header));
+
+      gtk_label_set_label (label, g_strdup (header_label));
+    }
+}
 
 /*
  * GcalView interface
@@ -463,6 +539,8 @@ gcal_agenda_view_class_init (GcalAgendaViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, filtered_days);
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, scrolled_window);
 
+  gtk_widget_class_bind_template_callback (widget_class, agenda_header_setup_cb);
+  gtk_widget_class_bind_template_callback (widget_class, agenda_header_bind_cb);
   gtk_widget_class_bind_template_callback (widget_class, n_items_and_date_to_boolean);
   gtk_widget_class_bind_template_callback (widget_class, on_event_widget_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, orientation_from_event);
