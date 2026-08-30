@@ -63,7 +63,7 @@ GdkPaintable*        gcal_util_get_circle_paintable_from_color   (const GdkRGBA 
 gchar*               gcal_util_get_desc_from_component           (ECalComponent      *component,
                                                                   const gchar        *joint_char);
 
-gint                 gcal_util_get_first_weekday                 (void);
+gint                 gcal_util_get_first_weekday_iso             (void);
 
 ECalComponent*       gcal_util_build_component_from_details      (const gchar        *summary,
                                                                   GDateTime          *initial_date,

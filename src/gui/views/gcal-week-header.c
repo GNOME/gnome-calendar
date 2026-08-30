@@ -100,8 +100,6 @@ struct _GcalWeekHeader
   GtkWidget          *overflow_label[GCAL_N_WEEKDAYS];
   WeekdayHeader       weekday_header[GCAL_N_WEEKDAYS];
 
-  gint                first_weekday;
-
   /*
    * Used for checking if the header is in collapsed state or expand state
    * false is collapse state true is expand state
@@ -1761,8 +1759,6 @@ gcal_week_header_init (GcalWeekHeader *self)
   self->dnd.widget = gcal_create_drop_target_widget ();
   gtk_widget_set_visible (self->dnd.widget, FALSE);
   gtk_widget_set_parent (self->dnd.widget, GTK_WIDGET (self));
-
-  self->first_weekday = gcal_util_get_first_weekday ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
 

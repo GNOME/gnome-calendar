@@ -17,6 +17,7 @@
  */
 
 #include <glib.h>
+#include <locale.h>
 
 #include "gcal-utils.h"
 
@@ -191,6 +192,47 @@ extract_meeting_url (void)
 
 /*********************************************************************************************************************/
 
+typedef struct {
+  const char *locale_name;
+  int         week_start_index;
+} LocaleIsoWeekDay;
+
+static void
+test_first_weekday (void)
+{
+  LocaleIsoWeekDay test_cases[] = {
+    { "C",           7 }, // Baseline standard (Sunday)
+    { "en_US.UTF-8", 7 }, // US Standard (Sunday)
+    { "de_DE.UTF-8", 1 }, // Euro Standard (Monday)
+    { "en_GB.UTF-8", 1 }, // UK Standard (Monday)
+    { "fa_IR.UTF-8", 6 }  // Iran, Somalia, Afghanistan (Saturday)
+  };
+
+  const char* initial_locale = setlocale (LC_ALL, NULL);
+
+  for (size_t i = 0; i < G_N_ELEMENTS (test_cases); ++i)
+  {
+    LocaleIsoWeekDay testcase = test_cases[i];
+    char *current_locale = setlocale (LC_ALL, testcase.locale_name);
+
+    if (!current_locale)
+      {
+        g_message ("Locale %s not installed. Skipping", testcase.locale_name);
+        continue;
+      }
+    else
+      {
+        g_message ("Testing locale %s", testcase.locale_name);
+        g_assert_cmpint (testcase.week_start_index, ==, gcal_util_get_first_weekday_iso ());
+      }
+  }
+
+  /* restore locale */
+  setlocale (LC_ALL, initial_locale);
+}
+
+/*********************************************************************************************************************/
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -202,6 +244,7 @@ main (gint   argc,
 
   g_test_add_func ("/utils/date-time/date_time_from_icaltime", date_time_from_icaltime);
   g_test_add_func ("/utils/misc/extract_meeting_url", extract_meeting_url);
+  g_test_add_func ("/utils/misc/get_first_weekday", test_first_weekday);
 
   return g_test_run ();
 }

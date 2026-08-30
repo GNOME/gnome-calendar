@@ -194,7 +194,7 @@ allocate_overflow_popover (GcalMonthView *self,
 static inline void
 update_weekday_labels (GcalMonthView *self)
 {
-  const gint first_weekday = gcal_util_get_first_weekday ();
+  const gint first_weekday = gcal_util_get_first_weekday_iso ();
 
   for (gint i = 0; i < GCAL_N_WEEKDAYS; i++)
     {

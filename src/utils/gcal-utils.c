@@ -213,36 +213,46 @@ gcal_util_get_desc_from_component (ECalComponent *component,
 /**
  * gcal_util_get_first_weekday:
  *
- * Copied from Clocks, which by itself is
- * copied from GtkCalendar.
+ * Finds the locale default first day of week
+ * respecting the ISO day counting (Monday: 1 - Sunday: 7).
  *
- * Returns: the first weekday, from 0 to 6
+ * Prefer using `GcalContext:week-start-day` property or
+ * the `GcalContext:gcal_context_get_week_start_day()` method
+ * to get the current setting from gsettings-desktop-schemas.
+ * Use this utility method only as a fallback.
+ *
+ * Returns: the first weekday, from 1 to 7
  */
 gint
-gcal_util_get_first_weekday (void)
+gcal_util_get_first_weekday_iso (void)
 {
   gint week_start;
 
 #ifdef HAVE__NL_TIME_FIRST_WEEKDAY
 
-  union { unsigned int word; char *string; } langinfo;
-  gint week_1stday = 0;
+  union { unsigned int baseline; char *offset; } langinfo;
+  gint iso_week_base = 7; /* default to Sunday (19971130) */
   gint first_weekday = 1;
   guint week_origin;
 
-  langinfo.string = nl_langinfo (_NL_TIME_FIRST_WEEKDAY);
-  first_weekday = langinfo.string[0];
-  langinfo.string = nl_langinfo (_NL_TIME_WEEK_1STDAY);
-  week_origin = langinfo.word;
+  /* first day of week index */
+  langinfo.offset = nl_langinfo (_NL_TIME_FIRST_WEEKDAY);
+  first_weekday = langinfo.offset[0];
+
+  /* find the baseline week origin */
+  langinfo.offset = nl_langinfo (_NL_TIME_WEEK_1STDAY);
+  week_origin = langinfo.baseline;
+
   if (week_origin == 19971130) /* Sunday */
-    week_1stday = 0;
+    iso_week_base = 7;
   else if (week_origin == 19971201) /* Monday */
-    week_1stday = 1;
+    iso_week_base = 1;
+  else if (week_origin == 19971129) /* unusual: Saturday */
+    iso_week_base = 6;
   else
     g_warning ("Unknown value of _NL_TIME_WEEK_1STDAY.\n");
 
-  week_start = (week_1stday + first_weekday - 1) % GCAL_N_WEEKDAYS;
-
+  week_start = ((iso_week_base - 1 + (first_weekday - 1)) % GCAL_N_WEEKDAYS) + 1;
 #else
 
   gchar *gtk_week_start;
