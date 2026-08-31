@@ -21,14 +21,16 @@ template $GcalAgendaView: Box {
       single-click-activate: true;
 
       model: Gtk.NoSelection {
-        model: FilterListModel filtered_days {
-          watch-items: true;
+        model: FlattenListModel flatten_model {
+          model: FilterListModel filtered_days {
+            watch-items: true;
 
-          filter: BoolFilter {
-            expression: expr $n_items_and_date_to_boolean(
-              item as <$GcalAgendaViewDay>.n-items,
-              item as <$GcalAgendaViewDay>.date,
-            ) as <bool>;
+            filter: BoolFilter {
+              expression: expr $n_items_and_date_to_boolean(
+                item as <$GcalAgendaViewDay>.n-items,
+                item as <$GcalAgendaViewDay>.date,
+              ) as <bool>;
+            };
           };
         };
       };
@@ -39,9 +41,13 @@ template $GcalAgendaView: Box {
           selectable: false;
           focusable: false;
 
-          child: $GcalAgendaViewDayRow {
-            day: bind template.item;
-            event-activated => $on_day_row_event_activated_cb(template) not-swapped;
+          child: $GcalEventWidget {
+            event: bind template.item as <$GcalAgendaViewItem>.event;
+            orientation: bind $orientation_from_event(template.item as <$GcalAgendaViewItem>.event) as <Orientation>;
+            timestamp-policy: bind $timestamp_policy_from_event(
+              template.item as <$GcalAgendaViewItem>.event
+              ) as <$GcalTimestampPolicy>;
+            activate => $on_event_widget_activated_cb(template) not-swapped;
           };
         }
       };

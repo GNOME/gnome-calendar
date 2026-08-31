@@ -65,6 +65,7 @@ src/gui/importer/gcal-import-dialog.c
 src/gui/importer/gcal-import-file-row.c
 src/gui/importer/gcal-importer.c
 src/gui/shortcuts-dialog.blp
+src/gui/views/gcal-agenda-view.c
 src/gui/views/gcal-agenda-view-day-row.blp
 src/gui/views/gcal-agenda-view-day-row.c
 src/gui/views/gcal-month-cell.blp

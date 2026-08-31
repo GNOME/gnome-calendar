@@ -31,6 +31,7 @@
 #include "gcal-view-private.h"
 
 #include <adwaita.h>
+#include <glib/gi18n.h>
 
 #include <math.h>
 
@@ -51,6 +52,7 @@ struct _GcalAgendaView
   GDateTime          *date;
   GListStore         *days_model;
   GtkFilterListModel *filtered_days;
+  GtkFlattenListModel *flatten_model;
 
   guint               scroll_grid_timeout_id;
   gulong              stack_page_changed_id;
@@ -202,6 +204,40 @@ n_items_and_date_to_boolean (GcalAgendaViewDay *day,
   return FALSE;
 }
 
+static GcalTimestampPolicy
+timestamp_policy_from_event (GtkListItem *item,
+                             GcalEvent   *event)
+{
+  gboolean is_multiday_or_all_day;
+
+  if (!event)
+    return GCAL_TIMESTAMP_POLICY_NONE;
+
+  is_multiday_or_all_day = (gcal_event_get_all_day (event) || gcal_event_is_multiday (event));
+  return is_multiday_or_all_day ? GCAL_TIMESTAMP_POLICY_END : GCAL_TIMESTAMP_POLICY_START;
+}
+
+static GtkOrientation
+orientation_from_event (GtkListItem *item,
+                        GcalEvent   *event)
+{
+  gboolean is_multiday_or_all_day = TRUE;
+
+  if (event)
+    is_multiday_or_all_day = (gcal_event_get_all_day (event) || gcal_event_is_multiday (event));
+
+  return is_multiday_or_all_day ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL;
+}
+
+static void
+on_event_widget_activated_cb (GcalEventWidget *event_widget,
+                              GtkListItem     *item)
+{
+  GcalView *view = GCAL_VIEW (gtk_widget_get_ancestor (GTK_WIDGET (event_widget), GCAL_TYPE_VIEW));
+
+  gcal_view_event_activated (view, event_widget);
+}
+
 
 /*
  * GcalView interface
@@ -295,19 +331,6 @@ gcal_view_interface_init (GcalViewInterface *iface)
 /*
  * GcalTimelineSubscriber iface
  */
-
-static void
-on_day_row_event_activated_cb (GcalAgendaViewDayRow *day_row,
-                               GcalEventWidget      *event_widget,
-                               gpointer              user_data)
-{
-  GcalAgendaView *self;
-
-  self = GCAL_AGENDA_VIEW (gtk_widget_get_ancestor (GTK_WIDGET (day_row), GCAL_TYPE_AGENDA_VIEW));
-  g_assert (GCAL_IS_AGENDA_VIEW (self));
-
-  gcal_view_event_activated (GCAL_VIEW (self), event_widget);
-}
 
 static GcalRange*
 gcal_agenda_view_get_range (GcalTimelineSubscriber *subscriber)
@@ -436,11 +459,14 @@ gcal_agenda_view_class_init (GcalAgendaViewClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-agenda-view.ui");
 
+  gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, flatten_model);
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, filtered_days);
   gtk_widget_class_bind_template_child (widget_class, GcalAgendaView, scrolled_window);
 
   gtk_widget_class_bind_template_callback (widget_class, n_items_and_date_to_boolean);
-  gtk_widget_class_bind_template_callback (widget_class, on_day_row_event_activated_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_event_widget_activated_cb);
+  gtk_widget_class_bind_template_callback (widget_class, orientation_from_event);
+  gtk_widget_class_bind_template_callback (widget_class, timestamp_policy_from_event);
 
   gtk_widget_class_set_css_name (widget_class, "agenda-view");
 }
