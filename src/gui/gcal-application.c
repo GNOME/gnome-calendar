@@ -240,6 +240,7 @@ gcal_application_show_about (GSimpleAction *simple,
   adw_about_dialog_set_debug_info (ADW_ABOUT_DIALOG (about), troubleshooting);
   adw_about_dialog_set_debug_info_filename (ADW_ABOUT_DIALOG (about), "Calendar.txt");
   adw_about_dialog_set_translator_credits (ADW_ABOUT_DIALOG (about), _("translator-credits"));
+  adw_about_dialog_set_support_url (ADW_ABOUT_DIALOG (about), "https://discourse.gnome.org/tag/calendar");
 
   weather_service = gcal_context_get_weather_service (self->context);
   adw_about_dialog_add_legal_section (ADW_ABOUT_DIALOG (about),
