@@ -1,16 +1,16 @@
 # Hungarian translation for gnome-calendar.
-# Copyright (C) 2013, 2014, 2015, 2016, 2017, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Free Software Foundation, Inc.
+# Copyright (C) 2013, 2014, 2015, 2016, 2017, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gnome-calendar package.
 #
-# Balázs Úr <ur.balazs at fsf dot hu>, 2013, 2014, 2015, 2016, 2017, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
+# Balázs Úr <ur.balazs at fsf dot hu>, 2013, 2014, 2015, 2016, 2017, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026.
 # Gabor Kelemen <kelemeng at ubuntu dot com>, 2016, 2017.
 # Balázs Meskó <mesko.balazs at fsf dot hu>, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2025-08-31 08:05+0000\n"
-"PO-Revision-Date: 2025-09-01 12:57+0200\n"
+"POT-Creation-Date: 2026-01-05 23:09+0000\n"
+"PO-Revision-Date: 2026-09-01 20:48+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <openscope at fsf dot hu>\n"
 "Language: hu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -80,6 +80,10 @@ msgstr "A hét rácsának nagyítási szintje"
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid "The current zoom level of the week grid"
 msgstr "A hét rácsának jelenlegi nagyítási szintje"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "A GNOME projekt"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
@@ -560,15 +564,15 @@ msgstr "Esemény törlése"
 msgid "_Save"
 msgstr "_Mentés"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:688
+#: src/gui/event-editor/gcal-event-editor-dialog.c:669
 msgid "New Event"
 msgstr "Új esemény"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:690
+#: src/gui/event-editor/gcal-event-editor-dialog.c:671
 msgid "Event Details"
 msgstr "Esemény részletei"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:692
+#: src/gui/event-editor/gcal-event-editor-dialog.c:673
 msgid "Edit Event"
 msgstr "Esemény szerkesztése"
 
@@ -756,8 +760,7 @@ msgstr "Időjárás"
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-calendar-navigation-button.c:105
-#| msgid "%a %B %d"
+#: src/gui/gcal-calendar-navigation-button.c:106
 msgid "%B %Y"
 msgstr "%Y. %B"
 
@@ -770,7 +773,6 @@ msgstr ""
 "    Nem tudja törölni vagy megváltoztatni ezt az eseményt."
 
 #: src/gui/gcal-event-popover.blp:71 src/gui/gcal-event-popover.c:593
-#| msgid "Edit Event"
 msgid "Export Event"
 msgstr "Esemény exportálása"
 
@@ -1274,7 +1276,6 @@ msgid "_Week"
 msgstr "_Hét"
 
 #: src/gui/gcal-window.blp:236
-#| msgid "C_alendar"
 msgid "_Agenda"
 msgstr "_Napirend"
 
@@ -1316,24 +1317,18 @@ msgid "_About Calendar"
 msgstr "A Naptár _névjegye"
 
 #: src/gui/gcal-window.c:245
-#| msgctxt "shortcut window"
-#| msgid "Previous View"
 msgid "Previous Week"
 msgstr "Előző hét"
 
 #: src/gui/gcal-window.c:247
-#| msgctxt "shortcut window"
-#| msgid "Previous View"
 msgid "Previous Month"
 msgstr "Előző hónap"
 
 #: src/gui/gcal-window.c:276
-#| msgid "1 Week"
 msgid "Next Week"
 msgstr "Következő hét"
 
 #: src/gui/gcal-window.c:278
-#| msgid "Month"
 msgid "Next Month"
 msgstr "Követező hónap"
 
@@ -1430,15 +1425,11 @@ msgid "File is not an iCalendar (.ics) file"
 msgstr "A fájl nem iCalendar-fájl (.ics)"
 
 #: src/gui/shortcuts-dialog.blp:6
-#| msgctxt "shortcut window"
-#| msgid "General"
 msgctxt "shortcut dialog"
 msgid "General"
 msgstr "Általános"
 
 #: src/gui/shortcuts-dialog.blp:9
-#| msgctxt "shortcut window"
-#| msgid "Open Main Menu"
 msgctxt "shortcut dialog"
 msgid "Open Main Menu"
 msgstr "Főmenü megnyitása"
@@ -1449,111 +1440,81 @@ msgid "Toggle Sidebar"
 msgstr "Oldalsáv be- és kikapcsolása"
 
 #: src/gui/shortcuts-dialog.blp:19
-#| msgid "New Event"
 msgctxt "shortcut dialog"
 msgid "New Event"
 msgstr "Új esemény"
 
 #: src/gui/shortcuts-dialog.blp:24
-#| msgid "Manage Calendars"
 msgctxt "shortcut dialog"
 msgid "Manage Calendars"
 msgstr "Naptárak kezelése"
 
 #: src/gui/shortcuts-dialog.blp:29
-#| msgctxt "shortcut window"
-#| msgid "Synchronize Calendars"
 msgctxt "shortcut dialog"
 msgid "Synchronize Calendars"
 msgstr "Naptárak szinkronizálása"
 
 #: src/gui/shortcuts-dialog.blp:34
-#| msgctxt "shortcut window"
-#| msgid "Close Window"
 msgctxt "shortcut dialog"
 msgid "Close Window"
 msgstr "Ablak bezárása"
 
 #: src/gui/shortcuts-dialog.blp:39
-#| msgctxt "tooltip"
-#| msgid "Search"
 msgctxt "shortcut dialog"
 msgid "Search"
 msgstr "Keresés"
 
 #: src/gui/shortcuts-dialog.blp:44
-#| msgctxt "shortcut window"
-#| msgid "Show Help"
 msgctxt "shortcut dialog"
 msgid "Show Help"
 msgstr "Súgó megjelenítése"
 
 #: src/gui/shortcuts-dialog.blp:49
-#| msgctxt "shortcut window"
-#| msgid "Shortcuts"
 msgctxt "shortcut dialog"
 msgid "Shortcuts"
 msgstr "Gyorsbillentyűk"
 
 #: src/gui/shortcuts-dialog.blp:55
-#| msgctxt "shortcut window"
-#| msgid "Navigation"
 msgctxt "shortcut dialog"
 msgid "Navigation"
 msgstr "Navigáció"
 
 #: src/gui/shortcuts-dialog.blp:58
-#| msgctxt "shortcut window"
-#| msgid "Go Back"
 msgctxt "shortcut dialog"
 msgid "Go Back"
 msgstr "Ugrás vissza"
 
 #: src/gui/shortcuts-dialog.blp:63
-#| msgctxt "shortcut window"
-#| msgid "Go Forward"
 msgctxt "shortcut dialog"
 msgid "Go Forward"
 msgstr "Ugrás előre"
 
 #: src/gui/shortcuts-dialog.blp:68
-#| msgctxt "shortcut window"
-#| msgid "Show Today"
 msgctxt "shortcut dialog"
 msgid "Show Today"
 msgstr "Mai nap megjelenítése"
 
 #: src/gui/shortcuts-dialog.blp:73
-#| msgctxt "shortcut window"
-#| msgid "Next View"
 msgctxt "shortcut dialog"
 msgid "Next View"
 msgstr "Következő nézet"
 
 #: src/gui/shortcuts-dialog.blp:78
-#| msgctxt "shortcut window"
-#| msgid "Previous View"
 msgctxt "shortcut dialog"
 msgid "Previous View"
 msgstr "Előző nézet"
 
 #: src/gui/shortcuts-dialog.blp:84
-#| msgctxt "shortcut window"
-#| msgid "View"
 msgctxt "shortcut dialog"
 msgid "View"
 msgstr "Nézet"
 
 #: src/gui/shortcuts-dialog.blp:87
-#| msgctxt "shortcut window"
-#| msgid "Month View"
 msgctxt "shortcut dialog"
 msgid "Month View"
 msgstr "Hónap nézet"
 
 #: src/gui/shortcuts-dialog.blp:92
-#| msgctxt "shortcut window"
-#| msgid "Week View"
 msgctxt "shortcut dialog"
 msgid "Week View"
 msgstr "Hét nézet"
@@ -1629,7 +1590,6 @@ msgid "Jitsi"
 msgstr "Jitsi"
 
 #: src/utils/gcal-utils.c:1246
-#| msgid "Number of Occurrences"
 msgid "Uber Conference"
 msgstr "Uber-konferencia"
 
@@ -1655,8 +1615,6 @@ msgstr "Zoom"
 
 #. Map
 #: src/utils/gcal-utils.c:1254
-#| msgctxt "shortcut window"
-#| msgid "View"
 msgid "View Map"
 msgstr "Térkép megtekintése"
 
@@ -1665,7 +1623,6 @@ msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
 #: src/utils/gcal-utils.c:1256 src/utils/gcal-utils.c:1257
-#| msgid "Google Meet"
 msgid "Google Maps"
 msgstr "Google Térkép"
 
