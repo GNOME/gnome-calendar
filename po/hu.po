@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-03-11 00:30+0000\n"
-"PO-Revision-Date: 2026-03-11 01:45+0100\n"
+"POT-Creation-Date: 2026-03-14 15:24+0000\n"
+"PO-Revision-Date: 2026-09-01 20:46+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <openscope at fsf dot hu>\n"
 "Language: hu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.1\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -80,6 +80,10 @@ msgstr "A hét rácsának nagyítási szintje"
 msgid "The current zoom level of the week grid"
 msgstr "A hét rácsának jelenlegi nagyítási szintje"
 
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
+msgid "The GNOME Project"
+msgstr "A GNOME projekt"
+
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
 msgstr "Kezelje az időbeosztását"
@@ -127,6 +131,65 @@ msgstr ""
 "platformon keresztül. A GNOME Naptár támogatja a helyi és kapcsolat nélküli "
 "naptárkészítést is, így utazás közben (vagy a civilizáció összeomlása után) "
 "bárhol és bármikor használhatja."
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
+#| msgid "Calendars"
+msgid "calendars"
+msgstr "naptárak"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
+#| msgid "Calendar"
+msgid "calendaring"
+msgstr "naptárkezelés"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
+#| msgid "No events"
+msgid "events"
+msgstr "események"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:42
+msgid "meetings"
+msgstr "megbeszélések"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:43
+msgid "appointments"
+msgstr "találkozók"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:44
+msgid "scheduling"
+msgstr "ütemezés"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:45
+msgid "planning"
+msgstr "tervezés"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
+#| msgid "Agenda"
+msgid "agenda"
+msgstr "napirend"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
+#| msgid "Reminders"
+msgid "reminders"
+msgstr "emlékeztetők"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:48
+msgid "alarms"
+msgstr "riasztások"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
+#| msgid "Weather"
+msgid "weather"
+msgstr "időjárás"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
+msgid "forecasting"
+msgstr "előrejelzés"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
+#| msgid "New Calendar"
+msgid "Google Calendar"
+msgstr "Google Naptár"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
@@ -347,17 +410,14 @@ msgid "Next Month"
 msgstr "Követező hónap"
 
 #: src/gui/common/gcal-date-chooser.blp:34
-#| msgid "Yearly"
 msgid "Year"
 msgstr "Év"
 
 #: src/gui/common/gcal-date-chooser.blp:35
-#| msgid "Previous Week"
 msgid "Previous Year"
 msgstr "Előző év"
 
 #: src/gui/common/gcal-date-chooser.blp:36
-#| msgid "Next Week"
 msgid "Next Year"
 msgstr "Következő év"
 
