@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-07-22 14:27+0000\n"
-"PO-Revision-Date: 2026-07-22 16:43+0200\n"
+"POT-Creation-Date: 2026-09-05 10:07+0000\n"
+"PO-Revision-Date: 2026-09-05 12:48+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -179,7 +179,6 @@ msgid "forecasting"
 msgstr "vremenske napovedi"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
-#| msgid "New Calendar"
 msgid "Google Calendar"
 msgstr "Koledar Google"
 
@@ -773,6 +772,11 @@ msgstr "Podrobnosti dogodka"
 msgid "Edit Event"
 msgstr "Uredi dogodek"
 
+#: src/gui/event-editor/gcal-notes-section.blp:40
+#: src/gui/event-editor/gcal-notes-section.blp:69
+msgid "Notes"
+msgstr "Opombe"
+
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
 msgstr "Organizator"
@@ -950,7 +954,7 @@ msgstr "Avtorske pravice © 2012–%d Avtorji programa Koledar"
 msgid "translator-credits"
 msgstr "Matej Urbančič <mateju@src@gnome.org>"
 
-#: src/gui/gcal-application.c:246 src/gui/gcal-window.blp:391
+#: src/gui/gcal-application.c:247 src/gui/gcal-window.blp:391
 msgid "Weather"
 msgstr "Vreme"
 
