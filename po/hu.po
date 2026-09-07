@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-08-28 23:31+0000\n"
-"PO-Revision-Date: 2026-09-01 20:51+0200\n"
+"POT-Creation-Date: 2026-09-05 10:07+0000\n"
+"PO-Revision-Date: 2026-09-07 11:03+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <openscope at fsf dot hu>\n"
 "Language: hu\n"
@@ -133,17 +133,14 @@ msgstr ""
 "bárhol és bármikor használhatja."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
-#| msgid "Calendars"
 msgid "calendars"
 msgstr "naptárak"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
-#| msgid "Calendar"
 msgid "calendaring"
 msgstr "naptárkezelés"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
-#| msgid "No events"
 msgid "events"
 msgstr "események"
 
@@ -164,12 +161,10 @@ msgid "planning"
 msgstr "tervezés"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
-#| msgid "Agenda"
 msgid "agenda"
 msgstr "napirend"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
-#| msgid "Reminders"
 msgid "reminders"
 msgstr "emlékeztetők"
 
@@ -178,7 +173,6 @@ msgid "alarms"
 msgstr "riasztások"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
-#| msgid "Weather"
 msgid "weather"
 msgstr "időjárás"
 
@@ -187,7 +181,6 @@ msgid "forecasting"
 msgstr "előrejelzés"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
-#| msgid "New Calendar"
 msgid "Google Calendar"
 msgstr "Google Naptár"
 
@@ -200,7 +193,6 @@ msgid "Week view"
 msgstr "Hét nézet"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:71
-#| msgid "Agenda"
 msgid "Agenda view"
 msgstr "Napirendnézet"
 
@@ -212,7 +204,6 @@ msgstr "Eseményszerkesztő"
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 – November 29, 2022
 #: src/core/gcal-event.c:1937 src/gui/gcal-event-popover.c:422
 #, c-format
-#| msgid "%1$s — %2$s"
 msgid "%1$s – %2$s"
 msgstr "%1$s – %2$s"
 
@@ -222,7 +213,6 @@ msgstr "%1$s – %2$s"
 #.
 #: src/core/gcal-event.c:1945
 #, c-format
-#| msgid "%1$s %2$s — %3$s %4$s"
 msgid "%1$s %2$s – %3$s %4$s"
 msgstr "%1$s %2$s – %3$s %4$s"
 
@@ -742,6 +732,11 @@ msgstr "Esemény részletei"
 msgid "Edit Event"
 msgstr "Esemény szerkesztése"
 
+#: src/gui/event-editor/gcal-notes-section.blp:40
+#: src/gui/event-editor/gcal-notes-section.blp:69
+msgid "Notes"
+msgstr "Jegyzetek"
+
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
 msgstr "Szervező"
@@ -922,7 +917,7 @@ msgstr ""
 "Úr Balázs <ur dot balazs at fsf dot hu>\n"
 "Meskó Balázs <mesko dot balazs at fsf dot hu>"
 
-#: src/gui/gcal-application.c:246 src/gui/gcal-window.blp:391
+#: src/gui/gcal-application.c:247 src/gui/gcal-window.blp:391
 msgid "Weather"
 msgstr "Időjárás"
 
@@ -932,7 +927,6 @@ msgstr "Időjárás"
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
 #: src/gui/gcal-calendar-navigation-button.c:106
-#| msgid "%B %Y"
 msgid "%OB %Y"
 msgstr "%Y. %OB"
 
@@ -953,7 +947,6 @@ msgid "No event notes"
 msgstr "Nincsenek eseményjegyzetek"
 
 #: src/gui/gcal-event-popover.blp:170
-#| msgid "Location"
 msgid "Open Location"
 msgstr "Hely megnyitása"
 
@@ -1081,7 +1074,6 @@ msgstr "%3$d. %1$s %2$d."
 #.
 #: src/gui/gcal-event-popover.c:264
 #, c-format
-#| msgid "Today, %1$s — %2$s"
 msgid "Today, %1$s – %2$s"
 msgstr "Ma, %1$s – %2$s"
 
