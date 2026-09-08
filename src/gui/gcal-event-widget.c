@@ -196,9 +196,9 @@ update_color (GcalEventWidget *self)
 
   /* Fades out an event that's earlier than the current date */
   if (date_compare < 0)
-    gtk_widget_add_css_class (GTK_WIDGET (self), "dimmed");
+    gtk_widget_add_css_class (GTK_WIDGET (self), "past");
   else
-    gtk_widget_remove_css_class (GTK_WIDGET (self), "dimmed");
+    gtk_widget_remove_css_class (GTK_WIDGET (self), "past");
 
   /* Remove the old style class */
   if (self->css_class)

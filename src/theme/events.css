@@ -41,6 +41,15 @@ event widget.edge {
   min-width: 6px;
 }
 
+event.past {
+  background-color: color-mix(in srgb, var(--event-bg-color) 10%, var(--view-bg-color));
+  color: color-mix(in srgb, var(--view-fg-color) 60%, transparent);
+}
+
+event.past widget.edge {
+  background-color: color-mix(in srgb, var(--event-bg-color) 20%, transparent);
+}
+
 event.slanted widget.edge,
 event.slanted-start widget.edge {
   background-color: transparent;
