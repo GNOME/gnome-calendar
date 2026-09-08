@@ -4,23 +4,24 @@
 #
 # Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2025
 # Gil Forcada Codinachs <gil.gnome@gmail.com>, 2018.
+# Xavi Ivars <xavi.ivars@gmail.com>, 2026.
 #
 # N.T.
-#       Event -> cita
+# Event -> cita
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-07-31 09:46+0000\n"
-"PO-Revision-Date: 2026-08-09 11:07+0000\n"
-"Last-Translator: Jordi Mas i Hernàndez <jmas@softcatala.org>\n"
+"POT-Creation-Date: 2026-09-05 10:07+0000\n"
+"PO-Revision-Date: 2026-09-08 21:52+0000\n"
+"Last-Translator: Xavi Ivars <xavi.ivars@gmail.com>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Minairó 0.1.0\n"
+"X-Generator: Minairó 1.4.0\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -136,17 +137,14 @@ msgstr ""
 "després del col·lapse de la civilització)."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
-#| msgid "Calendars"
 msgid "calendars"
 msgstr "calendaris"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:40
-#| msgid "Calendar"
 msgid "calendaring"
 msgstr "calendari"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:41
-#| msgid "No events"
 msgid "events"
 msgstr "esdeveniments"
 
@@ -167,12 +165,10 @@ msgid "planning"
 msgstr "planificació"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
-#| msgid "Agenda"
 msgid "agenda"
 msgstr "agenda"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:47
-#| msgid "Reminders"
 msgid "reminders"
 msgstr "recordatoris"
 
@@ -181,7 +177,6 @@ msgid "alarms"
 msgstr "alarmes"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
-#| msgid "Weather"
 msgid "weather"
 msgstr "temps"
 
@@ -190,7 +185,6 @@ msgid "forecasting"
 msgstr "previsió"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
-#| msgid "New Calendar"
 msgid "Google Calendar"
 msgstr "Google Calendar"
 
@@ -203,7 +197,6 @@ msgid "Week view"
 msgstr "Vista setmanal"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:71
-#| msgid "Agenda"
 msgid "Agenda view"
 msgstr "Vista d'agenda"
 
@@ -215,7 +208,6 @@ msgstr "Editor de cites"
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 – November 29, 2022
 #: src/core/gcal-event.c:1937 src/gui/gcal-event-popover.c:422
 #, c-format
-#| msgid "%1$s — %2$s"
 msgid "%1$s – %2$s"
 msgstr "%1$s – %2$s"
 
@@ -225,7 +217,6 @@ msgstr "%1$s – %2$s"
 #.
 #: src/core/gcal-event.c:1945
 #, c-format
-#| msgid "%1$s %2$s — %3$s %4$s"
 msgid "%1$s %2$s – %3$s %4$s"
 msgstr "%1$s %2$s – %3$s %4$s"
 
@@ -745,6 +736,11 @@ msgstr "Detalls de la cita"
 msgid "Edit Event"
 msgstr "Edita una cita"
 
+#: src/gui/event-editor/gcal-notes-section.blp:40
+#: src/gui/event-editor/gcal-notes-section.blp:69
+msgid "Notes"
+msgstr "Notes"
+
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
 msgstr "Organitzador"
@@ -926,7 +922,7 @@ msgstr ""
 "Miquel-Àngel Burgos i Fradeja <miquel.angel.burgos@gmail.com>, 2020\n"
 "Victor Dargallo <victordargallo@disroot.org>"
 
-#: src/gui/gcal-application.c:246 src/gui/gcal-window.blp:391
+#: src/gui/gcal-application.c:247 src/gui/gcal-window.blp:391
 msgid "Weather"
 msgstr "Meteorologia"
 
@@ -936,7 +932,6 @@ msgstr "Meteorologia"
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
 #: src/gui/gcal-calendar-navigation-button.c:106
-#| msgid "%B %Y"
 msgid "%OB %Y"
 msgstr "%OB de %Y"
 
@@ -957,7 +952,6 @@ msgid "No event notes"
 msgstr "No hi ha notes de la cita"
 
 #: src/gui/gcal-event-popover.blp:170
-#| msgid "Location"
 msgid "Open Location"
 msgstr "Obre la ubicació"
 
@@ -1085,7 +1079,6 @@ msgstr "%2$d %1$s de %3$d"
 #.
 #: src/gui/gcal-event-popover.c:264
 #, c-format
-#| msgid "Today, %1$s — %2$s"
 msgid "Today, %1$s – %2$s"
 msgstr "Avui, %1$s – %2$s"
 
