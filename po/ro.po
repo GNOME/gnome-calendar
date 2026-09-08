@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-06-30 00:55+0000\n"
+"POT-Creation-Date: 2026-09-05 10:07+0000\n"
 "PO-Revision-Date: 2026-07-22 16:08+0200\n"
 "Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
@@ -753,6 +753,11 @@ msgstr "Detaliile evenimentului"
 msgid "Edit Event"
 msgstr "Modifică evenimentul"
 
+#: src/gui/event-editor/gcal-notes-section.blp:40
+#: src/gui/event-editor/gcal-notes-section.blp:69
+msgid "Notes"
+msgstr "Notițe"
+
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
 msgstr "Organizator"
@@ -934,7 +939,7 @@ msgstr ""
 "Florentina Mușat <florentina.musat.28 [at] gmail [dot] com>\n"
 "Antonio Marin <gnmer.6qxyg@slmail.me>"
 
-#: src/gui/gcal-application.c:246 src/gui/gcal-window.blp:391
+#: src/gui/gcal-application.c:247 src/gui/gcal-window.blp:391
 msgid "Weather"
 msgstr "Vremea"
 
