@@ -1,3 +1,9 @@
+Major Changes in 51.0:
+* Preparations for further keyboard navigation improvements
+* Show a support URL in the About dialog
+* Minor code cleanups
+* Updated translations
+
 Major Changes in 51.rc:
 * Improve drag and drop behavior on the Month view. You can now drop events
   on top of other events.

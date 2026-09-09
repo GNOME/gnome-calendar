@@ -115,6 +115,63 @@
   <update_contact>gbsneto@gnome.org</update_contact>
 
   <releases>
+    <release date="2026-09-11" version="51.0" type="stable">
+      <description>
+        <p>
+          GNOME Calendar 51.0 is now available!
+        </p>
+        <p>
+          This is a remarkable release for us, as it is one of the biggest
+          releases in the history of the project, and we're excited to share a
+          slightly longer update on it.
+        </p>
+        <p>
+          The first thing many users will notice is how GNOME Calendar will
+          feel snappier now. During the past six months, a lot of work was put
+          in optimizing GNOME Calendar from the inside out. This includes a
+          major change in how it handles events internally, vastly reducing
+          the amount of data transferred between GNOME Calendar and other
+          components of the desktop, and applying many different tricks and
+          strategies to make it render faster. Really, this is probably the most
+          optimized the project has ever been.
+        </p>
+        <p>
+          Another front in which GNOME Calendar has been consistently improving
+          is accessibility and keyboard navigation. During this development cycle,
+          another big batch of improvements on these fronts were merged. You can
+          now navigate between events and days in the Month view using only your
+          keyboard. The Week view is now properly styled when the high-contrast
+          setting is enabled.
+        </p>
+        <p>
+          The event editor dialog was another area of focus, with a variety of
+          cleanups and improvements. In particular, the Notes section of the
+          event editor dialog received a visual shift.
+        </p>
+        <p>
+          A few other highlights:
+        </p>
+        <ul>
+          <li>Zooming in the Week view behaves like other apps</li>
+          <li>Improved drag and drop behavior on the Month view</li>
+          <li>Accept slightly misformatted iCalendar files</li>
+          <li>Support the maps URI for opening locations</li>
+          <li>Use a better month name formatting in various places</li>
+          <li>Add support for Teams links</li>
+          <li>Fix various crashes</li>
+          <li>New and updated translations</li>
+        </ul>
+        <p>
+          On the non-technical side, in the past few months the project received
+          contributions from many new contributors, as well as long time contributors.
+          Our issue tracker continues to be in excellent shape, well triaged, and
+          properly labeled. Our three latest releases were the biggest releases
+          in the history of the project. Thank you all very much for using,
+          developing, documenting, translating, testing, and fixing GNOME Calendar!
+        </p>
+      </description>
+    </release>
+
     <release date="2026-08-28" version="51~rc" type="development" />
     <release date="2026-07-25" version="51~beta" type="development" />
     <release date="2026-06-29" version="51~alpha" type="development" />
