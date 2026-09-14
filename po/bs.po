@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: bosnianuniversetranslation\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2026-09-13 20:37+0000\n"
-"PO-Revision-Date: 2026-09-14 20:40+0200\n"
+"PO-Revision-Date: 2026-09-14 21:51+0200\n"
 "Last-Translator: Alen Galinec <mind.on.warp@gmail.com>\n"
 "Language-Team: Bosnian\n"
 "Language: bs\n"
@@ -931,7 +931,7 @@ msgstr "Otvori kalendar prikazujući proslijeđeni termin"
 #: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
-msgstr "Autorska prava © 2012–%Id Autori kalendara"
+msgstr "Autorska prava © 2012–%Id pripadaju autorima kalendara"
 
 #: src/gui/gcal-application.c:242
 msgid "translator-credits"
