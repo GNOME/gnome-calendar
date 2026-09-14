@@ -32,6 +32,7 @@ sources += files(
   'gcal-agenda-view.c',
   'gcal-agenda-view-day.c',
   'gcal-agenda-view-day-row.c',
+  'gcal-agenda-view-item.c',
   'gcal-month-cell.c',
   'gcal-month-popover.c',
   'gcal-month-view.c',
