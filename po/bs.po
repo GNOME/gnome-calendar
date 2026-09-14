@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bosnianuniversetranslation\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-09-03 15:48+0000\n"
-"PO-Revision-Date: 2026-09-05 10:12+0200\n"
+"POT-Creation-Date: 2026-09-13 20:37+0000\n"
+"PO-Revision-Date: 2026-09-14 20:40+0200\n"
 "Last-Translator: Alen Galinec <mind.on.warp@gmail.com>\n"
 "Language-Team: Bosnian\n"
 "Language: bs\n"
@@ -173,7 +173,7 @@ msgstr "obavještenja"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
 msgid "weather"
-msgstr "vremenske prilike"
+msgstr "meteorološke informacije"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
 msgid "forecasting"
@@ -754,6 +754,11 @@ msgstr "Detalji termina"
 msgid "Edit Event"
 msgstr "Obrada termina"
 
+#: src/gui/event-editor/gcal-notes-section.blp:40
+#: src/gui/event-editor/gcal-notes-section.blp:69
+msgid "Notes"
+msgstr "Bilješke"
+
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
 msgstr "Organizator"
@@ -935,9 +940,10 @@ msgstr ""
 "   Samir Ribić https://launchpad.net/~megaribi\n"
 "   Alen Galinec https://gitlab.gnome.org/mindonwarp"
 
+# Prethodno sam preveo ovo kao "vremenske prilike" ali to glupo izgleda u UI-u, mislim da je "meteorološke informacije" bolji prevod i obuhvata i "vremenske prilike" i "vremensku prognozu".
 #: src/gui/gcal-application.c:247 src/gui/gcal-window.blp:391
 msgid "Weather"
-msgstr "Vremenske prilike"
+msgstr "Meteorološke informacije"
 
 #.
 #. * Translators: %OB is the month name and %Y is the year.
@@ -1440,9 +1446,10 @@ msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars"
 msgstr "Sinhronizacija online kalendara"
 
+# Prethodno sam preveo ovo kao "vremenske prilike" ali to glupo izgleda u UI-u, mislim da je "meteorološke informacije" bolji prevod i obuhvata i "vremenske prilike" i "vremensku prognozu".
 #: src/gui/gcal-weather-settings.blp:17
 msgid "Show Weather"
-msgstr "Prikaži vremenske prilike"
+msgstr "Prikaži meteorološke informacije"
 
 #: src/gui/gcal-weather-settings.blp:31
 msgid "Automatic Location"
@@ -1826,9 +1833,6 @@ msgstr "Bing Maps"
 
 #~ msgid "Toggle Alarm Sound"
 #~ msgstr "Uključi/isključi zvuk alarma"
-
-#~ msgid "Notes"
-#~ msgstr "Bilješke"
 
 #~ msgid "On-going"
 #~ msgstr "U toku"
