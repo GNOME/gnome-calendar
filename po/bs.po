@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bosnianuniversetranslation\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-09-03 15:48+0000\n"
-"PO-Revision-Date: 2026-09-05 10:12+0200\n"
+"POT-Creation-Date: 2026-09-13 20:37+0000\n"
+"PO-Revision-Date: 2026-09-14 21:44+0200\n"
 "Last-Translator: Alen Galinec <mind.on.warp@gmail.com>\n"
 "Language-Team: Bosnian\n"
 "Language: bs\n"
@@ -20,6 +20,12 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Gtranslator 50.0\n"
 "X-Launchpad-Export-Date: 2015-02-15 06:18+0000\n"
+"X-DL-VCS-Web: https://gitlab.gnome.org/GNOME/gnome-calendar/\n"
+"X-DL-Lang: bs\n"
+"X-DL-Module: gnome-calendar\n"
+"X-DL-Branch: gnome-51\n"
+"X-DL-Domain: po\n"
+"X-DL-State: Translating\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -173,7 +179,7 @@ msgstr "obavještenja"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:49
 msgid "weather"
-msgstr "vremenske prilike"
+msgstr "meteorološke informacije"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:50
 msgid "forecasting"
@@ -754,6 +760,11 @@ msgstr "Detalji termina"
 msgid "Edit Event"
 msgstr "Obrada termina"
 
+#: src/gui/event-editor/gcal-notes-section.blp:40
+#: src/gui/event-editor/gcal-notes-section.blp:69
+msgid "Notes"
+msgstr "Bilješke"
+
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
 msgstr "Organizator"
@@ -926,7 +937,7 @@ msgstr "Otvori kalendar prikazujući proslijeđeni termin"
 #: src/gui/gcal-application.c:144
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
-msgstr "Autorska prava © 2012–%Id Autori kalendara"
+msgstr "Autorska prava © 2012–%Id pripadaju autorima kalendara"
 
 #: src/gui/gcal-application.c:242
 msgid "translator-credits"
@@ -935,9 +946,10 @@ msgstr ""
 "   Samir Ribić https://launchpad.net/~megaribi\n"
 "   Alen Galinec https://gitlab.gnome.org/mindonwarp"
 
+# Prethodno prevedno kao "vremenske prilike" ali to izgleda jako čudno u UI. Prednost kod "meteorološke informacije" je da može značiti i "vremenske prilike" i "vremenska prognoza".
 #: src/gui/gcal-application.c:247 src/gui/gcal-window.blp:391
 msgid "Weather"
-msgstr "Vremenske prilike"
+msgstr "Meteorološke informacije"
 
 #.
 #. * Translators: %OB is the month name and %Y is the year.
@@ -1442,7 +1454,7 @@ msgstr "Sinhronizacija online kalendara"
 
 #: src/gui/gcal-weather-settings.blp:17
 msgid "Show Weather"
-msgstr "Prikaži vremenske prilike"
+msgstr "Prikaži meteorološke informacije"
 
 #: src/gui/gcal-weather-settings.blp:31
 msgid "Automatic Location"
@@ -1826,9 +1838,6 @@ msgstr "Bing Maps"
 
 #~ msgid "Toggle Alarm Sound"
 #~ msgstr "Uključi/isključi zvuk alarma"
-
-#~ msgid "Notes"
-#~ msgstr "Bilješke"
 
 #~ msgid "On-going"
 #~ msgstr "U toku"
