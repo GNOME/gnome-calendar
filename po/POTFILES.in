@@ -43,6 +43,7 @@ src/gui/event-editor/gcal-summary-section.c
 src/gui/event-editor/gcal-time-zone-dialog.blp
 src/gui/event-editor/gcal-time-zone-dialog.c
 src/gui/gcal-application.c
+src/gui/gcal-calendar-navigation-button.blp
 src/gui/gcal-calendar-navigation-button.c
 src/gui/gcal-event-popover.blp
 src/gui/gcal-event-popover.c
@@ -64,6 +65,7 @@ src/gui/importer/gcal-importer.c
 src/gui/shortcuts-dialog.blp
 src/gui/views/gcal-agenda-view-day-row.blp
 src/gui/views/gcal-agenda-view-day-row.c
+src/gui/views/gcal-month-cell.blp
 src/gui/views/gcal-month-popover.blp
 src/gui/views/gcal-week-grid.c
 src/gui/views/gcal-week-header.c
