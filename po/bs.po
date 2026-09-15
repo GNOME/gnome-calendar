@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: bosnianuniversetranslation\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2026-09-13 20:37+0000\n"
-"PO-Revision-Date: 2026-09-14 21:44+0200\n"
+"PO-Revision-Date: 2026-09-15 18:13+0200\n"
 "Last-Translator: Alen Galinec <mind.on.warp@gmail.com>\n"
 "Language-Team: Bosnian\n"
 "Language: bs\n"
@@ -208,20 +208,18 @@ msgstr "Obrada termina"
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 – November 29, 2022
 #: src/core/gcal-event.c:1937 src/gui/gcal-event-popover.c:422
-#, fuzzy, c-format
-#| msgid "%1$s — %2$s"
+#, c-format
 msgid "%1$s – %2$s"
-msgstr "%1$s — %2$s"
+msgstr "%1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
 #: src/core/gcal-event.c:1945
-#, fuzzy, c-format
-#| msgid "%1$s %2$s — %3$s %4$s"
+#, c-format
 msgid "%1$s %2$s – %3$s %4$s"
-msgstr "%1$s %2$s — %3$s %4$s"
+msgstr "%1$s %2$s – %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #: src/core/gcal-event.c:1961
@@ -298,9 +296,10 @@ msgstr "Naziv kalendara"
 msgid "Color"
 msgstr "Boja"
 
+# Izmjena sa "prikaz kalendara" na "vidjlivost kalendara" kako bi tekst bio konzistentan na obje stranice. Tekst se prikazuje kao tooltip na šalteru u dijalogu "Upravljanje kalendarima".
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:74
 msgid "_Display Calendar"
-msgstr "Prikaz kalendara"
+msgstr "Vidljivost kalendara"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:82
 msgid "_Export Calendar"
@@ -585,9 +584,10 @@ msgstr[0] "%1$u minuta prije"
 msgstr[1] "%1$u minute prije"
 msgstr[2] "%1$u minuta prije"
 
+# Ovo je tekst prikazan u redu podsjetnika za termin nakon odabira "Početak termina" u listi podržanih vrsta podsjetnika.
 #: src/gui/event-editor/gcal-alarm-row.c:198
 msgid "Event start time"
-msgstr "Vrijeme početka termina"
+msgstr "Na početku termina"
 
 #: src/gui/event-editor/gcal-attendee-row.blp:25
 #: src/gui/event-editor/gcal-organizer-row.blp:25
@@ -1764,7 +1764,7 @@ msgstr "Izmijeni više termina?"
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
-msgstr "Termin kojeg pokušavaš promijeniti se ponavlja. Primijeni izmjene na:"
+msgstr "Termin kojeg pokušavaš izmijeniti se ponavlja. Primijeni izmjene na:"
 
 #: src/utils/gcal-utils.c:1296
 msgid "_Only This Event"
@@ -1772,7 +1772,7 @@ msgstr "Samo ovaj termin"
 
 #: src/utils/gcal-utils.c:1302
 msgid "_Subsequent Events"
-msgstr "Naredne termine u seriji"
+msgstr "Predstojeće termine u seriji"
 
 #: src/utils/gcal-utils.c:1305
 msgid "_All Events"
