@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-09-05 10:07+0000\n"
-"PO-Revision-Date: 2026-09-05 12:48+0200\n"
+"POT-Creation-Date: 2026-09-15 16:46+0000\n"
+"PO-Revision-Date: 2026-09-16 07:23+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -958,6 +958,14 @@ msgstr "Matej Urbančič <mateju@src@gnome.org>"
 msgid "Weather"
 msgstr "Vreme"
 
+#: src/gui/gcal-calendar-navigation-button.blp:13
+msgid "_Choose Date"
+msgstr "_Izberite datum"
+
+#: src/gui/gcal-calendar-navigation-button.blp:16
+msgid "Choose a Date"
+msgstr "Izbrerite datum"
+
 #.
 #. * Translators: %OB is the month name and %Y is the year.
 #. * More formats can be found on the doc:
@@ -1744,6 +1752,10 @@ msgstr "Ni dogodkov"
 #: src/gui/views/gcal-agenda-view-day-row.c:89
 msgid "%A %B %d"
 msgstr "%A, %d. %B"
+
+#: src/gui/views/gcal-month-cell.blp:75
+msgid "All Events"
+msgstr "Vsi dogodki"
 
 #: src/gui/views/gcal-month-popover.blp:58
 msgid "New Event…"
