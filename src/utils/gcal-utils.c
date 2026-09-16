@@ -1412,7 +1412,7 @@ gcal_get_service_name_from_url (const gchar *url)
     { "meet.jit.si", N_("Jitsi") },
     { "jitsi", N_("Jitsi") },
     { "meetings.dialpad.com", N_("Uber Conference") },
-    { "meet.gnome.com", N_("GNOME Meet") },
+    { "meet.gnome.org", N_("GNOME Meet") },
     { "teams.microsoft.com", N_("Microsoft Teams") },
     { "whereby.com", N_("Whereby") },
     { "webex", N_("Webex") },
