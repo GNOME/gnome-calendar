@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-07-31 09:46+0000\n"
-"PO-Revision-Date: 2026-07-31 21:37+0200\n"
+"POT-Creation-Date: 2026-09-16 12:22+0000\n"
+"PO-Revision-Date: 2026-09-17 17:40+0200\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -425,43 +425,43 @@ msgstr "Annada venenta"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:333
+#: src/gui/common/gcal-date-chooser.c:336
 msgctxt "grid sunday"
 msgid "S"
 msgstr "DG"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:338
+#: src/gui/common/gcal-date-chooser.c:341
 msgctxt "grid monday"
 msgid "M"
 msgstr "DL"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:343
+#: src/gui/common/gcal-date-chooser.c:346
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "DM"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:348
+#: src/gui/common/gcal-date-chooser.c:351
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "DC"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:353
+#: src/gui/common/gcal-date-chooser.c:356
 msgctxt "grid thursday"
 msgid "T"
 msgstr "DJ"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:358
+#: src/gui/common/gcal-date-chooser.c:361
 msgctxt "grid friday"
 msgid "F"
 msgstr "DV"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:363
+#: src/gui/common/gcal-date-chooser.c:366
 msgctxt "grid saturday"
 msgid "S"
 msgstr "DS"
@@ -731,6 +731,11 @@ msgstr "Detalhs de l’eveniment"
 msgid "Edit Event"
 msgstr "Modificar l'eveniment"
 
+#: src/gui/event-editor/gcal-notes-section.blp:40
+#: src/gui/event-editor/gcal-notes-section.blp:69
+msgid "Notes"
+msgstr "Nòtas"
+
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
 msgstr "Organizaire"
@@ -911,9 +916,17 @@ msgstr ""
 "Cédric Valmary <cvalmary@yahoo.fr>, 2016-2018\n"
 "Quentin PAGÈS"
 
-#: src/gui/gcal-application.c:246 src/gui/gcal-window.blp:391
+#: src/gui/gcal-application.c:247 src/gui/gcal-window.blp:391
 msgid "Weather"
 msgstr "Metèo"
+
+#: src/gui/gcal-calendar-navigation-button.blp:13
+msgid "_Choose Date"
+msgstr "_Causir una data"
+
+#: src/gui/gcal-calendar-navigation-button.blp:16
+msgid "Choose a Date"
+msgstr "Causir una data"
 
 #.
 #. * Translators: %OB is the month name and %Y is the year.
@@ -1698,6 +1711,10 @@ msgstr "Pas cap d'eveniment"
 msgid "%A %B %d"
 msgstr "%A %d %B"
 
+#: src/gui/views/gcal-month-cell.blp:75
+msgid "All Events"
+msgstr "Totes los eveniments"
+
 #: src/gui/views/gcal-month-popover.blp:58
 msgid "New Event…"
 msgstr "Eveniment novèl…"
@@ -1798,9 +1815,6 @@ msgstr "Google Maps"
 #: src/utils/gcal-utils.c:1426
 msgid "Bing Maps"
 msgstr "Bing Maps"
-
-#~ msgid "Notes"
-#~ msgstr "Nòtas"
 
 #~ msgid "On-going"
 #~ msgstr "En cors"
