@@ -280,6 +280,10 @@ monthcell {
   outline-offset: 4px;
 }
 
+monthcell.overflow-hovered:hover {
+  background-color: var(--bg-color);
+}
+
 monthcell .overflow {
   border-radius: 6px;
 }

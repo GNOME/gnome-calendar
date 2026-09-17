@@ -200,6 +200,22 @@ overflow_button_clicked_cb (GtkWidget     *button,
 }
 
 static void
+on_motion_controller_motion_cb (GcalMonthCell            *self,
+                                gdouble                   x,
+                                gdouble                   y,
+                                GtkEventControllerMotion *controller)
+{
+  GtkStateFlags overflow_button_state_flags;
+
+  overflow_button_state_flags = gtk_widget_get_state_flags (self->overflow_button);
+
+  if (overflow_button_state_flags & GTK_STATE_FLAG_PRELIGHT)
+    gtk_widget_add_css_class (GTK_WIDGET (self), "overflow-hovered");
+  else
+    gtk_widget_remove_css_class (GTK_WIDGET (self), "overflow-hovered");
+}
+
+static void
 on_weather_service_weather_changed_cb (GcalWeatherService *weather_service,
                                        GcalMonthCell      *self)
 {
@@ -295,6 +311,7 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, weather_icon);
 
   gtk_widget_class_bind_template_callback (widget_class, overflow_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_motion_controller_motion_cb);
 
   gtk_widget_class_set_css_name (widget_class, "monthcell");
 

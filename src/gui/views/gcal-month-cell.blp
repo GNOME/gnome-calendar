@@ -12,6 +12,10 @@ template $GcalMonthCell: Widget {
   receives-default: true;
   focusable: true;
 
+  EventControllerMotion {
+    motion => $on_motion_controller_motion_cb(template);
+  }
+
   Adw.BreakpointBin breakpoint_bin {
     width-request: 50;
     height-request: 50;
