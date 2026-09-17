@@ -869,6 +869,7 @@ on_click_gesture_pressed_cb (GtkGestureClick *click_gesture,
                              GcalMonthView   *self)
 {
   GtkWidget *widget_at_position;
+  GtkWidget *overflow_button;
   GtkWidget *day_cell;
 
   GCAL_ENTRY;
@@ -879,7 +880,9 @@ on_click_gesture_pressed_cb (GtkGestureClick *click_gesture,
   if (!day_cell)
     GCAL_RETURN ();
 
-  g_assert (GCAL_IS_MONTH_CELL (day_cell));
+  if ((overflow_button = gcal_month_cell_get_overflow_button (GCAL_MONTH_CELL (day_cell))) &&
+      gtk_widget_is_ancestor (widget_at_position, overflow_button))
+    GCAL_RETURN ();
 
   gcal_clear_date_time (&self->selection.start);
   self->selection.start = g_date_time_ref (gcal_month_cell_get_date (GCAL_MONTH_CELL (day_cell)));
