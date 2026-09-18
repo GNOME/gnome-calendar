@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bosnianuniversetranslation\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-09-13 20:37+0000\n"
-"PO-Revision-Date: 2026-09-15 18:13+0200\n"
+"POT-Creation-Date: 2026-09-16 12:22+0000\n"
+"PO-Revision-Date: 2026-09-18 20:23+0200\n"
 "Last-Translator: Alen Galinec <mind.on.warp@gmail.com>\n"
 "Language-Team: Bosnian\n"
 "Language: bs\n"
@@ -18,8 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Gtranslator 50.0\n"
+"X-Generator: Gtranslator 51.0\n"
 "X-Launchpad-Export-Date: 2015-02-15 06:18+0000\n"
+"X-DL-VCS-Web: https://gitlab.gnome.org/GNOME/gnome-calendar/\n"
+"X-DL-Lang: bs\n"
+"X-DL-Module: gnome-calendar\n"
+"X-DL-Branch: main\n"
+"X-DL-Domain: po\n"
+"X-DL-State: None\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -429,43 +435,43 @@ msgstr "Sljedeća godina"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:333
+#: src/gui/common/gcal-date-chooser.c:336
 msgctxt "grid sunday"
 msgid "S"
 msgstr "N"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:338
+#: src/gui/common/gcal-date-chooser.c:341
 msgctxt "grid monday"
 msgid "M"
 msgstr "P"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:343
+#: src/gui/common/gcal-date-chooser.c:346
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "U"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:348
+#: src/gui/common/gcal-date-chooser.c:351
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "S"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:353
+#: src/gui/common/gcal-date-chooser.c:356
 msgctxt "grid thursday"
 msgid "T"
 msgstr "Č"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:358
+#: src/gui/common/gcal-date-chooser.c:361
 msgctxt "grid friday"
 msgid "F"
 msgstr "P"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:363
+#: src/gui/common/gcal-date-chooser.c:366
 msgctxt "grid saturday"
 msgid "S"
 msgstr "S"
@@ -944,6 +950,14 @@ msgstr ""
 #: src/gui/gcal-application.c:247 src/gui/gcal-window.blp:391
 msgid "Weather"
 msgstr "Meteorološke informacije"
+
+#: src/gui/gcal-calendar-navigation-button.blp:13
+msgid "_Choose Date"
+msgstr "Odaberi datum"
+
+#: src/gui/gcal-calendar-navigation-button.blp:16
+msgid "Choose a Date"
+msgstr "Odaberi datum"
 
 #.
 #. * Translators: %OB is the month name and %Y is the year.
@@ -1730,6 +1744,11 @@ msgstr "Nema termina"
 #: src/gui/views/gcal-agenda-view-day-row.c:89
 msgid "%A %B %d"
 msgstr "%A %d. %B"
+
+# Tekst je tooltip za oznaku u podnožju ćelije u mjesečnom prikazu kada ćelija sadrži više termina nego što je moguće prikazati u isto vrijeme. Klikom na ovu oznaku otvara se pop-up panel u kojem su prikazani svi termini u tom danu.
+#: src/gui/views/gcal-month-cell.blp:75
+msgid "All Events"
+msgstr "Svi termini"
 
 #: src/gui/views/gcal-month-popover.blp:58
 msgid "New Event…"
