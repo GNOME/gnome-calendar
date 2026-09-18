@@ -294,3 +294,12 @@ gcal_view_event_activated (GcalView        *self,
 
   g_signal_emit (self, signals[EVENT_ACTIVATED], 0, event_widget);
 }
+
+void
+gcal_view_first_weekday_changed (GcalView *self)
+{
+  g_assert (GCAL_IS_VIEW (self));
+  g_assert (GCAL_VIEW_GET_IFACE (self)->first_weekday_changed != NULL);
+
+  GCAL_VIEW_GET_IFACE (self)->first_weekday_changed (self);
+}

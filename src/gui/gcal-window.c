@@ -730,6 +730,15 @@ on_window_undo_delete_event_cb (GSimpleAction *action,
 }
 
 static void
+on_week_start_day_changed_cb (GcalWindow *self)
+{
+  g_assert (GCAL_IS_WINDOW (self));
+
+  for (size_t i = 0; i < GCAL_WINDOW_VIEW_N_VIEWS; ++i)
+    gcal_view_first_weekday_changed (GCAL_VIEW (self->views[i]));
+}
+
+static void
 on_breakpoint_changed (GObject *object,
                        GParamSpec *pspec,
                        GcalWindow *window)
@@ -1497,6 +1506,11 @@ gcal_window_init (GcalWindow *self)
                    G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
 
   g_signal_connect (self->agenda_page, "notify::visible", G_CALLBACK (on_agenda_page_visible_changed_cb), self);
+
+  g_signal_connect_object (context, "notify::week-start-day",
+                           G_CALLBACK (on_week_start_day_changed_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
 }
 
 /**

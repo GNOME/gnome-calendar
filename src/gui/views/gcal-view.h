@@ -57,6 +57,8 @@ struct _GcalViewInterface
   GList*             (*get_children_by_uuid)                     (GcalView              *view,
                                                                   GcalRecurrenceModType  mod,
                                                                   const gchar           *uuid);
+
+  void               (*first_weekday_changed)                    (GcalView           *view);
 };
 
 void                 gcal_view_set_date                          (GcalView           *view,
@@ -75,5 +77,7 @@ GList*               gcal_view_get_children_by_uuid              (GcalView      
 GDateTime*           gcal_view_get_next_date                     (GcalView              *self);
 
 GDateTime*           gcal_view_get_previous_date                 (GcalView              *self);
+
+void                 gcal_view_first_weekday_changed             (GcalView              *self);
 
 G_END_DECLS
