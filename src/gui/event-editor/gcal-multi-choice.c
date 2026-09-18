@@ -73,6 +73,7 @@ enum
 {
   WRAPPED,
   ACTIVATE,
+  USER_CHANGED,
   LAST_SIGNAL
 };
 
@@ -132,6 +133,8 @@ action_activated (GcalMultiChoice *self,
     g_signal_emit (self, signals[WRAPPED], 0);
 
   gtk_widget_grab_focus (GTK_WIDGET (self));
+
+  g_signal_emit (self, signals[USER_CHANGED], 0);
 }
 
 static void
@@ -483,6 +486,20 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
    */
   signals[WRAPPED] =
     g_signal_new ("wrapped",
+                  G_TYPE_FROM_CLASS (object_class),
+                  G_SIGNAL_RUN_LAST,
+                  0,
+                  NULL, NULL,
+                  NULL,
+                  G_TYPE_NONE, 0);
+
+  /**
+   * GcalMultiChoice::user-changed:
+   *
+   * Emitted when the user explicitly changes the value using up and down buttons.
+   */
+  signals[USER_CHANGED] =
+    g_signal_new ("user-changed",
                   G_TYPE_FROM_CLASS (object_class),
                   G_SIGNAL_RUN_LAST,
                   0,
