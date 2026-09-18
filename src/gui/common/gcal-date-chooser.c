@@ -600,9 +600,6 @@ gcal_date_chooser_set_date (GcalView  *view,
   g_date_time_get_ymd (self->date, &y1, &m1, &d1);
   g_date_time_get_ymd (date, &y2, &m2, &d2);
 
-  if (y1 != y2 || m1 != m2)
-    d2 = 1;
-
   gcal_set_date_time (&self->date, date);
 
   if (y1 != y2 || m1 != m2 || d1 != d2)
@@ -871,30 +868,25 @@ multi_choice_changed (GcalDateChooser *self,
 }
 
 static void
-combined_multi_choice_changed (GcalDateChooser *self)
+on_combined_multi_choice_user_changed (GcalDateChooser *self)
 {
-  gint year, month, day, value;
+  int year, month, value;
 
   value = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->combined_choice));
-  decode_combined_choice_value (value, &year, &month, &day);
+  decode_combined_choice_value (value, &year, &month, NULL);
 
-  multi_choice_changed (self, year, month, day);
+  multi_choice_changed (self, year, month, 1);
 }
 
 static void
-split_multi_choice_changed (GcalDateChooser *self)
+on_split_multi_choice_user_changed (GcalDateChooser *self)
 {
-  gint year, month, day;
+  int year, month;
 
   year = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->year_choice));
   month = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->month_choice)) + 1;
 
-  day = g_date_time_get_day_of_month (self->date);
-
-  /* Make sure the day is valid at that month */
-  day = MIN (day, month_length[leap (year)][month]);
-
-  multi_choice_changed (self, year, month, day);
+  multi_choice_changed (self, year, month, 1);
 }
 
 static gboolean
@@ -1028,10 +1020,10 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, grid);
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, gizmo);
 
-  gtk_widget_class_bind_template_callback (widget_class, combined_multi_choice_changed);
+  gtk_widget_class_bind_template_callback (widget_class, on_combined_multi_choice_user_changed);
   gtk_widget_class_bind_template_callback (widget_class, get_combined_choice_visible);
   gtk_widget_class_bind_template_callback (widget_class, get_split_choice_visible);
-  gtk_widget_class_bind_template_callback (widget_class, split_multi_choice_changed);
+  gtk_widget_class_bind_template_callback (widget_class, on_split_multi_choice_user_changed);
 
   gtk_widget_class_set_css_name (widget_class, "datechooser");
 }

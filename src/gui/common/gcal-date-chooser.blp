@@ -16,7 +16,7 @@ template $GcalDateChooser: Adw.Bin {
       previous-button-tooltip: _("Previous Month");
       next-button-tooltip: _("Next Month");
       visible: bind $get_split_choice_visible(template.show-heading, template.split-month-year) as <bool>;
-      notify::value => $split_multi_choice_changed() swapped;
+      user-changed => $on_split_multi_choice_user_changed() swapped;
 
       layout {
         column: 0;
@@ -33,7 +33,7 @@ template $GcalDateChooser: Adw.Bin {
       category: _("Year");
       previous-button-tooltip: _("Previous Year");
       next-button-tooltip: _("Next Year");
-      notify::value => $split_multi_choice_changed() swapped;
+      user-changed => $on_split_multi_choice_user_changed() swapped;
 
       layout {
         column: 1;
@@ -53,7 +53,7 @@ template $GcalDateChooser: Adw.Bin {
       category: _("Month");
       previous-button-tooltip: _("Previous Month");
       next-button-tooltip: _("Next Month");
-      notify::value => $combined_multi_choice_changed() swapped;
+      user-changed => $on_combined_multi_choice_user_changed() swapped;
 
       layout {
         column: 0;
@@ -92,6 +92,7 @@ Popover popover {
       previous-button-tooltip: bind month_choice.previous-button-tooltip;
       next-button-tooltip: bind month_choice.next-button-tooltip;
       string-list: bind month_choice.string-list;
+      user-changed => $on_split_multi_choice_user_changed() swapped;
     }
 
     $GcalMultiChoice {
@@ -102,6 +103,7 @@ Popover popover {
       previous-button-tooltip: bind year_choice.previous-button-tooltip;
       next-button-tooltip: bind year_choice.next-button-tooltip;
       string-list: bind year_choice.string-list;
+      user-changed => $on_split_multi_choice_user_changed() swapped;
     }
 
     styles [
