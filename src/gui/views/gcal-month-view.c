@@ -230,13 +230,15 @@ static void
 update_active_date (GcalMonthView *self)
 {
   g_autoptr (GcalRange) top_row_range = NULL;
+  g_autoptr (GDateTime) date = NULL;
   GtkWidget *top_row;
 
   top_row = g_ptr_array_index (self->week_rows, FIRST_VISIBLE_ROW_INDEX);
   top_row_range = gcal_month_view_row_get_range (GCAL_MONTH_VIEW_ROW (top_row));
   g_assert (top_row_range != NULL);
 
-  gcal_view_set_date (GCAL_VIEW (self), gcal_range_get_start (top_row_range));
+  date = gcal_range_get_start (top_row_range);
+  gcal_view_set_date (GCAL_VIEW (self), date);
   g_object_notify (G_OBJECT (self), "active-date");
 }
 
