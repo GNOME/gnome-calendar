@@ -575,6 +575,14 @@ on_clock_day_changed_cb (GcalDateChooser *self)
   /* FIXME Update the widget to the new day. */
 }
 
+static void
+on_week_start_day_changed_cb (GcalDateChooser *self)
+{
+  g_assert (GCAL_IS_DATE_CHOOSER (self));
+
+  gcal_view_first_weekday_changed (GCAL_VIEW (self));
+}
+
 static gboolean
 update_event_indicators_in_idle_cb (gpointer data)
 {
@@ -664,6 +672,20 @@ gcal_date_chooser_get_previous_date (GcalView *view)
 }
 
 static void
+gcal_date_chooser_first_weekday_changed (GcalView *view)
+{
+  GcalDateChooser *self = GCAL_DATE_CHOOSER (view);
+
+  GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
+
+  self->week_start = gcal_context_get_week_start_day (context);
+
+  calendar_init_weekday_display (self);
+  calendar_compute_days (self);
+  calendar_update_selected_day_display (self);
+}
+
+static void
 gcal_view_interface_init (GcalViewInterface *iface)
 {
   iface->get_date = gcal_date_chooser_get_date;
@@ -671,6 +693,7 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->get_children_by_uuid = gcal_date_chooser_get_children_by_uuid;
   iface->get_next_date = gcal_date_chooser_get_next_date;
   iface->get_previous_date = gcal_date_chooser_get_previous_date;
+  iface->first_weekday_changed = gcal_date_chooser_first_weekday_changed;
 }
 
 
@@ -1217,6 +1240,12 @@ gcal_date_chooser_init (GcalDateChooser *self)
   g_signal_connect_object (gcal_context_get_clock (context),
                            "day-changed",
                            G_CALLBACK (on_clock_day_changed_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
+
+  g_signal_connect_object (context,
+                           "notify::week-start-day",
+                           G_CALLBACK (on_week_start_day_changed_cb),
                            self,
                            G_CONNECT_SWAPPED);
 }
