@@ -114,7 +114,7 @@ gcal_view_default_init (GcalViewInterface *iface)
 /**
  * gcal_view_set_date:
  * @view: a #GcalView
- * @date: an #GDateTime
+ * @date: (transfer none): a #GDateTime
  *
  * Sets the date of @view.
  */
