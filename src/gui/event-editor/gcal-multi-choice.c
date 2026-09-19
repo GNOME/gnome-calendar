@@ -56,7 +56,8 @@ struct _GcalMultiChoice
 
 enum
 {
-  PROP_VALUE = 1,
+  PROP_0,
+  PROP_VALUE,
   PROP_MIN_VALUE,
   PROP_MAX_VALUE,
   PROP_CHOICES,
@@ -64,7 +65,7 @@ enum
   PROP_CATEGORY,
   PROP_PREVIOUS_BUTTON_TOOLTIP,
   PROP_NEXT_BUTTON_TOOLTIP,
-  NUM_PROPERTIES
+  N_PROPS,
 };
 
 enum
@@ -75,7 +76,7 @@ enum
 };
 
 static guint signals[LAST_SIGNAL] = { 0, };
-static GParamSpec *properties[NUM_PROPERTIES] = { NULL, };
+static GParamSpec *properties[N_PROPS] = { NULL, };
 
 static void gcal_multi_choice_accessible_init (GtkAccessibleInterface *iface);
 
@@ -579,7 +580,7 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
                            NULL,
                            G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
 
-  g_object_class_install_properties (object_class, NUM_PROPERTIES, properties);
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   signals[WRAPPED] =
     g_signal_new ("wrapped",
