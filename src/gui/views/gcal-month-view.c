@@ -345,6 +345,33 @@ dump_row_ranges (GcalMonthView *self)
 }
 
 static void
+redraw_month_view_rows (GcalMonthView *self)
+{
+  gint n_weeks_before = 0;
+
+  g_assert (GCAL_IS_MONTH_VIEW (self));
+
+  n_weeks_before = N_ROWS_PER_PAGE * (N_PAGES - 1) / 2;
+
+  for (gint i = 0; i < self->week_rows->len; i++)
+    {
+      g_autoptr (GDateTime) week_start = NULL;
+      g_autoptr (GDateTime) week_end = NULL;
+      g_autoptr (GcalRange) range = NULL;
+      g_autoptr (GDateTime) date = NULL;
+      GcalMonthViewRow *row;
+
+      date = g_date_time_add_weeks (self->date, i - n_weeks_before);
+      week_start = gcal_date_time_get_start_of_week (date);
+      week_end = g_date_time_add_weeks (week_start, 1);
+      range = gcal_range_new (week_start, week_end, GCAL_RANGE_DEFAULT);
+
+      row = g_ptr_array_index (self->week_rows, i);
+      gcal_month_view_row_set_range (row, range);
+    }
+}
+
+static void
 update_week_ranges (GcalMonthView *self,
                     GDateTime     *new_date)
 {
@@ -389,22 +416,7 @@ update_week_ranges (GcalMonthView *self,
     }
   else
     {
-      for (gint i = 0; i < self->week_rows->len; i++)
-        {
-          g_autoptr (GDateTime) week_start = NULL;
-          g_autoptr (GDateTime) week_end = NULL;
-          g_autoptr (GcalRange) range = NULL;
-          g_autoptr (GDateTime) date = NULL;
-          GcalMonthViewRow *row;
-
-          date = g_date_time_add_weeks (self->date, i - n_weeks_before);
-          week_start = gcal_date_time_get_start_of_week (date);
-          week_end = g_date_time_add_weeks (week_start, 1);
-          range = gcal_range_new (week_start, week_end, GCAL_RANGE_DEFAULT);
-
-          row = g_ptr_array_index (self->week_rows, i);
-          gcal_month_view_row_set_range (row, range);
-        }
+      redraw_month_view_rows (self);
     }
 
   maybe_popdown_overflow_popover (self);
@@ -1612,7 +1624,6 @@ gcal_month_view_get_next_date (GcalView *view)
   return g_date_time_new_local (year, month, 1, 0, 0, 0);
 }
 
-
 static GDateTime*
 gcal_month_view_get_previous_date (GcalView *view)
 {
@@ -1628,6 +1639,19 @@ gcal_month_view_get_previous_date (GcalView *view)
 }
 
 static void
+gcal_month_view_first_weekday_changed (GcalView *view)
+{
+  GcalMonthView *self = GCAL_MONTH_VIEW (view);
+
+  update_weekday_labels (self);
+  update_week_ranges (self, self->date);
+  redraw_month_view_rows (self);
+  update_visible_rows (self);
+
+  gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
+}
+
+static void
 gcal_view_interface_init (GcalViewInterface *iface)
 {
   iface->get_date = gcal_month_view_get_date;
@@ -1636,6 +1660,7 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->get_children_by_uuid = gcal_month_view_get_children_by_uuid;
   iface->get_next_date = gcal_month_view_get_next_date;
   iface->get_previous_date = gcal_month_view_get_previous_date;
+  iface->first_weekday_changed = gcal_month_view_first_weekday_changed;
 }
 
 
