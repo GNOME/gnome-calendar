@@ -1907,3 +1907,22 @@ gcal_week_header_set_expanded (GcalWeekHeader *self,
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EXPANDED]);
 }
+
+/**
+ * gcal_week_header_redraw:
+ * @self: a #GcalWeekHeader
+ *
+ * Triggers a redraw of the week header
+ * after changing the start day of week.
+ */
+void
+gcal_week_header_redraw (GcalWeekHeader *self)
+{
+  g_assert (GCAL_IS_WEEK_HEADER (self));
+
+  update_title (self);
+  gtk_widget_queue_draw (GTK_WIDGET (self));
+
+  update_unchanged_events (self, self->active_date);
+  update_weather_infos (self);
+}

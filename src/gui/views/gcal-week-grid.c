@@ -1302,3 +1302,17 @@ gcal_week_grid_set_date (GcalWeekGrid *self,
   invalidate_layout_blocks (self);
 }
 
+/**
+ * gcal_week_grid_redraw:
+ * @self: a #GcalWeekGrid
+ *
+ * Triggers a redraw of the grid after e.g.
+ * changing the start day of week.
+ */
+void
+gcal_week_grid_redraw (GcalWeekGrid *self)
+{
+  g_assert (GCAL_IS_WEEK_GRID (self));
+
+  invalidate_layout_blocks (self);
+}

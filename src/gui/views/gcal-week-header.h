@@ -50,6 +50,8 @@ gboolean             gcal_week_header_get_expanded               (GcalWeekHeader
 void                 gcal_week_header_set_expanded               (GcalWeekHeader     *self,
                                                                   gboolean            expanded);
 
+void                 gcal_week_header_redraw                     (GcalWeekHeader     *self);
+
 G_END_DECLS
 
 #endif /* GCAL_WEEK_HEADER_H */

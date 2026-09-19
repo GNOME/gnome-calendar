@@ -45,6 +45,8 @@ void                 gcal_week_grid_clear_marks                  (GcalWeekGrid  
 void                 gcal_week_grid_set_date                     (GcalWeekGrid       *self,
                                                                   GDateTime          *date);
 
+void                 gcal_week_grid_redraw                       (GcalWeekGrid       *self);
+
 G_END_DECLS
 
 #endif /* GCAL_WEEK_GRID_H */

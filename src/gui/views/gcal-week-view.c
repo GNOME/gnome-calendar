@@ -465,6 +465,15 @@ gcal_week_view_get_previous_date (GcalView *view)
 }
 
 static void
+gcal_week_view_first_weekday_changed (GcalView *view)
+{
+  GcalWeekView *self = GCAL_WEEK_VIEW (view);
+
+  gcal_week_header_redraw (GCAL_WEEK_HEADER (self->header));
+  gcal_week_grid_redraw (GCAL_WEEK_GRID (self->week_grid));
+}
+
+static void
 gcal_view_interface_init (GcalViewInterface *iface)
 {
   iface->get_date = gcal_week_view_get_date;
@@ -473,6 +482,7 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->clear_marks = gcal_week_view_clear_marks;
   iface->get_next_date = gcal_week_view_get_next_date;
   iface->get_previous_date = gcal_week_view_get_previous_date;
+  iface->first_weekday_changed = gcal_week_view_first_weekday_changed;
 }
 
 
