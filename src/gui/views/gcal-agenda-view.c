@@ -300,6 +300,15 @@ gcal_agenda_view_get_previous_date (GcalView *view)
 }
 
 static void
+gcal_agenda_view_first_weekday_changed (GcalView *view)
+{
+  GcalAgendaView *self = GCAL_AGENDA_VIEW (view);
+
+  gtk_list_view_scroll_to (self->list_view, 0, GTK_LIST_SCROLL_FOCUS, NULL);
+  gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
+}
+
+static void
 gcal_view_interface_init (GcalViewInterface *iface)
 {
   iface->get_date = gcal_agenda_view_get_date;
@@ -308,6 +317,7 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->clear_marks = gcal_agenda_view_clear_marks;
   iface->get_next_date = gcal_agenda_view_get_next_date;
   iface->get_previous_date = gcal_agenda_view_get_previous_date;
+  iface->first_weekday_changed = gcal_agenda_view_first_weekday_changed;
 }
 
 
