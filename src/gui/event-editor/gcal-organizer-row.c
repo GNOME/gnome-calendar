@@ -60,7 +60,7 @@ on_copy_email_cb (GSimpleAction *action,
   GdkClipboard *clipboard = gdk_display_get_clipboard (display);
 
   g_autofree const gchar *email =
-    gcal_get_email_from_mailto_uri (gcal_event_organizer_get_uri (self->organizer));
+    gcal_util_get_email_from_mailto_uri (gcal_event_organizer_get_uri (self->organizer));
 
   gdk_clipboard_set_text (clipboard, email);
 }
@@ -88,7 +88,7 @@ generate_subtitle (GcalOrganizerRow   *self,
   if (organizer == NULL)
     return NULL;
 
-  email = gcal_get_email_from_mailto_uri (gcal_event_organizer_get_uri (organizer));
+  email = gcal_util_get_email_from_mailto_uri (gcal_event_organizer_get_uri (organizer));
   name_with_email = g_strdup_printf ("%s (%s)", gcal_event_organizer_get_name (organizer), email);
 
   return g_strdup (name_with_email);

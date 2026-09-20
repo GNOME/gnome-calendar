@@ -206,7 +206,7 @@ gcal_date_chooser_day_set_date (GcalDateChooserDay *self,
   else
     gtk_widget_remove_css_class (widget, "today");
 
-  if (G_LIKELY (is_workday (weekday)))
+  if (G_LIKELY (gcal_util_is_workday (weekday)))
     gtk_widget_remove_css_class (widget, "non-workday");
   else
     gtk_widget_add_css_class (widget, "non-workday");

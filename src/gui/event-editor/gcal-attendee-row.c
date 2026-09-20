@@ -64,7 +64,7 @@ on_copy_email_cb (GSimpleAction *action,
   GdkClipboard *clipboard = gdk_display_get_clipboard (display);
 
   g_autofree const gchar *email =
-    gcal_get_email_from_mailto_uri (gcal_event_attendee_get_uri (self->attendee));
+    gcal_util_get_email_from_mailto_uri (gcal_event_attendee_get_uri (self->attendee));
 
   gdk_clipboard_set_text (clipboard, email);
 }
@@ -90,7 +90,7 @@ setup_row_title_and_subtitle (GcalAttendeeRow *self)
 
   /* this is the initial line for both cases */
   title = g_string_new (gcal_event_attendee_get_name (self->attendee));
-  g_autofree const gchar *delegator_email = gcal_get_email_from_mailto_uri (gcal_event_attendee_get_uri (self->attendee));
+  g_autofree const gchar *delegator_email = gcal_util_get_email_from_mailto_uri (gcal_event_attendee_get_uri (self->attendee));
 
   if (gcal_event_attendee_get_part_status (self->attendee) != GCAL_EVENT_ATTENDEE_PART_DELEGATED)
     {
@@ -104,7 +104,7 @@ setup_row_title_and_subtitle (GcalAttendeeRow *self)
       if (delegator_email)
         g_string_append_printf (title, " (%s)", delegator_email);
 
-      g_autofree const gchar *delegated_to = gcal_get_email_from_mailto_uri (gcal_event_attendee_get_delegated_to (self->attendee));
+      g_autofree const gchar *delegated_to = gcal_util_get_email_from_mailto_uri (gcal_event_attendee_get_delegated_to (self->attendee));
       subtitle = g_string_new (gettext ("Delegated to: "));
       g_string_append (subtitle, delegated_to);
     }

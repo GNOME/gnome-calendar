@@ -267,7 +267,7 @@ get_result_metas_cb (GcalShellSearchProvider  *self,
       g_variant_builder_add (&builder, "{sv}", "id", g_variant_new_string (uuid));
       g_variant_builder_add (&builder, "{sv}", "name", g_variant_new_string (gcal_event_get_summary (event)));
 
-      paintable = get_circle_paintable_from_color (gcal_event_get_color (event), 96);
+      paintable = gcal_util_get_circle_paintable_from_color (gcal_event_get_color (event), 96);
       texture = paintable_to_texture (paintable);
       icon_variant = g_icon_serialize (G_ICON (texture));
       g_variant_builder_add (&builder, "{sv}", "icon", icon_variant);

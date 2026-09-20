@@ -384,9 +384,9 @@ on_settings_button_clicked_cb (GtkWidget            *button,
   goa = e_source_get_extension (parent, E_SOURCE_EXTENSION_GOA);
 
   app = g_application_get_default ();
-  gcal_utils_launch_gnome_settings (g_application_get_dbus_connection (app),
-                                    "online-accounts",
-                                    e_source_goa_get_account_id (goa));
+  gcal_util_launch_gnome_settings (g_application_get_dbus_connection (app),
+                                   "online-accounts",
+                                   e_source_goa_get_account_id (goa));
 
   GCAL_EXIT;
 }

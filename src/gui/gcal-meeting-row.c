@@ -64,7 +64,7 @@ setup_meeting (GcalMeetingRow *self)
 {
   g_autofree gchar *markup_url = NULL;
 
-  const gchar *service_name = gcal_get_service_name_from_url (self->url);
+  const gchar *service_name = gcal_util_get_service_name_from_url (self->url);
 
   if (service_name)
     gtk_label_set_label (self->title, service_name);

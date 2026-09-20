@@ -1375,11 +1375,11 @@ on_drop_target_drop_cb (GtkDropTarget  *drop_target,
       data->event = g_object_ref (event);
       data->drop_cell = cell;
 
-      gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
-                                                   event,
-                                                   FALSE,
-                                                   on_ask_recurrence_response_cb,
-                                                   data);
+      gcal_util_ask_recurrence_modification_type (GTK_WIDGET (self),
+                                                  event,
+                                                  FALSE,
+                                                  on_ask_recurrence_response_cb,
+                                                  data);
     }
   else
     {
@@ -1762,7 +1762,7 @@ gcal_week_header_init (GcalWeekHeader *self)
   gtk_widget_set_visible (self->dnd.widget, FALSE);
   gtk_widget_set_parent (self->dnd.widget, GTK_WIDGET (self));
 
-  self->first_weekday = get_first_weekday ();
+  self->first_weekday = gcal_util_get_first_weekday ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
@@ -1834,7 +1834,7 @@ gcal_week_header_get_children_by_uuid (GcalWeekHeader        *self,
 
   GCAL_ENTRY;
 
-  result = filter_children_by_uid_and_modtype (GTK_WIDGET (self->grid), mod, uuid);
+  result = gcal_util_filter_children_by_uid_and_modtype (GTK_WIDGET (self->grid), mod, uuid);
 
   GCAL_RETURN (g_steal_pointer (&result));
 }

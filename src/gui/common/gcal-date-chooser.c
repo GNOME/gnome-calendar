@@ -393,7 +393,7 @@ format_month (GcalMultiChoice *choice,
               gint             value,
               gpointer         data)
 {
-  return g_strdup (gcal_get_month_name (value));
+  return g_strdup (gcal_util_get_month_name (value));
 }
 
 static gchar *
@@ -408,9 +408,9 @@ format_month_year (GcalMultiChoice *choice,
   decode_combined_choice_value (value, &year, &month, NULL);
 
   if (g_date_time_get_year (now) == year)
-    return g_strdup (gcal_get_month_name (month - 1));
+    return g_strdup (gcal_util_get_month_name (month - 1));
   else
-    return g_strdup_printf ("%s %d", gcal_get_month_name (month - 1), year);
+    return g_strdup_printf ("%s %d", gcal_util_get_month_name (month - 1), year);
 }
 
 static void
@@ -422,7 +422,7 @@ calendar_init_month_display (GcalDateChooser *self)
 
   for (i = 0; i < 12; i++)
     {
-      month = gcal_get_month_name (i);
+      month = gcal_util_get_month_name (i);
       months[i] = g_strdup (month);
     }
 
@@ -1083,7 +1083,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
   self->date = g_date_time_new_now_local ();
   g_date_time_get_ymd (self->date, &self->this_year, NULL, NULL);
 
-  self->week_start = get_first_weekday ();
+  self->week_start = gcal_util_get_first_weekday ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
 

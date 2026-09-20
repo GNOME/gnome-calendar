@@ -448,7 +448,7 @@ event_get_attendees (void)
   g_assert_cmpstr ("MAILTO:jane_doe@host.com", ==, gcal_event_organizer_get_sent_by (organizer));
   g_assert_cmpstr ("mailto:alice@example.com", ==, gcal_event_organizer_get_uri (organizer));
 
-  g_autofree const gchar *uri_trimmed = gcal_get_email_from_mailto_uri (gcal_event_organizer_get_uri (organizer));
+  g_autofree const gchar *uri_trimmed = gcal_util_get_email_from_mailto_uri (gcal_event_organizer_get_uri (organizer));
   g_assert_cmpstr ("alice@example.com", ==, uri_trimmed);
 }
 

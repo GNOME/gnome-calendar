@@ -67,7 +67,7 @@ set_event (GcalSearchHitEvent *self,
 
   calendar = gcal_event_get_calendar (self->event);
   color = gcal_calendar_get_color (calendar);
-  paintable = get_circle_paintable_from_color (color, 16);
+  paintable = gcal_util_get_circle_paintable_from_color (color, 16);
   gcal_search_hit_set_primary_icon (search_hit, paintable);
 }
 

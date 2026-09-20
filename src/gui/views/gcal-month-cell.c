@@ -96,7 +96,7 @@ update_style_flags (GcalMonthCell *self)
     gtk_widget_remove_css_class (GTK_WIDGET (self), "today");
 
   weekday = g_date_time_get_day_of_week (self->date);
-  if (is_workday (weekday))
+  if (gcal_util_is_workday (weekday))
     gtk_widget_add_css_class (GTK_WIDGET (self), "workday");
   else
     gtk_widget_remove_css_class (GTK_WIDGET (self), "workday");
@@ -280,7 +280,7 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
                                          1,
                                          GTK_TYPE_WIDGET);
 
-  signals[ACTIVATE] = gcal_create_activate_signal_and_shortcuts (widget_class, GCAL_TYPE_MONTH_CELL);
+  signals[ACTIVATE] = gcal_util_create_activate_signal_and_shortcuts (widget_class, GCAL_TYPE_MONTH_CELL);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-month-cell.ui");
 

@@ -191,7 +191,7 @@ setup_alarms (GcalRemindersSection *self,
       alarm = l->data;
 
       /* Make already-added alarm buttons insensitive */
-      minutes = get_alarm_trigger_minutes (event, alarm);
+      minutes = gcal_util_get_alarm_trigger_minutes (event, alarm);
 
       for (j = 0; j < G_N_ELEMENTS (minutes_button); j++)
         {
@@ -237,10 +237,10 @@ sort_alarms_func (GtkListBoxRow *a,
     return -1;
 
   alarm_a = gcal_alarm_row_get_alarm (GCAL_ALARM_ROW (a));
-  minutes_a = get_alarm_trigger_minutes (event, alarm_a);
+  minutes_a = gcal_util_get_alarm_trigger_minutes (event, alarm_a);
 
   alarm_b = gcal_alarm_row_get_alarm (GCAL_ALARM_ROW (b));
-  minutes_b = get_alarm_trigger_minutes (event, alarm_b);
+  minutes_b = gcal_util_get_alarm_trigger_minutes (event, alarm_b);
 
   return minutes_a - minutes_b;
 }
@@ -259,7 +259,7 @@ on_remove_alarm_cb (GcalAlarmRow         *alarm_row,
   event = gcal_event_editor_section_get_event (GCAL_EVENT_EDITOR_SECTION (self));
 
   alarm = gcal_alarm_row_get_alarm (alarm_row);
-  trigger_minutes = get_alarm_trigger_minutes (event, alarm);
+  trigger_minutes = gcal_util_get_alarm_trigger_minutes (event, alarm);
   gcal_event_remove_alarm (event, trigger_minutes);
 
   /* Make the button sensitive again */

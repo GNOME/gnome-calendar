@@ -459,7 +459,7 @@ on_web_description_label_link_activated_cb (GtkLabel            *label,
 {
   GDBusConnection *connection = g_application_get_dbus_connection (g_application_get_default ());
 
-  gcal_utils_launch_gnome_settings (connection, "online-accounts", NULL);
+  gcal_util_launch_gnome_settings (connection, "online-accounts", NULL);
 }
 
 

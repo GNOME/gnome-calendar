@@ -83,7 +83,7 @@ create_source_for_uri (DiscovererData  *data)
   /* Display name */
   path = g_uri_get_path (guri);
   basename = g_path_get_basename (path);
-  display_name = gcal_utils_format_filename_for_display (basename);
+  display_name = gcal_util_format_filename_for_display (basename);
   e_source_set_display_name (source, display_name);
 
   ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
@@ -283,7 +283,7 @@ discover_file_in_thread (DiscovererData  *data,
   GCAL_TRACE_MSG ("Creating request for %s", uri_str);
 #endif
 
-  session = gcal_create_soup_session ();
+  session = gcal_util_create_soup_session ();
 
   message = soup_message_new_from_uri ("GET", guri);
   g_signal_connect (message, "authenticate", G_CALLBACK (on_soup_message_authenticate_cb), data);

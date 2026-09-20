@@ -107,7 +107,7 @@ setup_calendars (GcalImportDialog *self)
   GcalManager *manager;
 
   manager = gcal_context_get_manager (context);
-  calendars = gcal_create_writable_calendars_model (manager);
+  calendars = gcal_util_create_writable_calendars_model (manager);
 
   // TODO: sort model
 

@@ -111,7 +111,7 @@ validate (GcalEventEditorDialog *self)
 
   event_name = gcal_event_get_summary (self->edited_event);
 
-  gtk_widget_action_set_enabled (GTK_WIDGET (self), "event-editor.save", gcal_is_valid_event_name (event_name));
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "event-editor.save", gcal_util_is_valid_event_name (event_name));
 }
 
 static void
@@ -252,7 +252,7 @@ set_up_context (GcalEventEditorDialog *self)
 
   context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   manager = gcal_context_get_manager (context);
-  writable_calendars = gcal_create_writable_calendars_model (manager);
+  writable_calendars = gcal_util_create_writable_calendars_model (manager);
 
   self->read_only_calendar_model = g_list_store_new (GCAL_TYPE_CALENDAR);
 
@@ -310,11 +310,11 @@ save_event (GcalEventEditorDialog *self,
 
   if (gcal_event_has_recurrence (self->event) && gcal_event_has_recurrence (self->edited_event))
     {
-      gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
-                                                   self->edited_event,
-                                                   schedule_equal,
-                                                   on_ask_recurrence_response_save_cb,
-                                                   self);
+      gcal_util_ask_recurrence_modification_type (GTK_WIDGET (self),
+                                                  self->edited_event,
+                                                  schedule_equal,
+                                                  on_ask_recurrence_response_save_cb,
+                                                  self);
       GCAL_RETURN (FALSE);
     }
 
@@ -392,11 +392,11 @@ on_delete_row_activated_cb (AdwButtonRow          *button,
 
   if (gcal_event_has_recurrence (self->edited_event))
     {
-      gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
-                                                   self->edited_event,
-                                                   TRUE,
-                                                   on_ask_recurrence_response_delete_cb,
-                                                   self);
+      gcal_util_ask_recurrence_modification_type (GTK_WIDGET (self),
+                                                  self->edited_event,
+                                                  TRUE,
+                                                  on_ask_recurrence_response_delete_cb,
+                                                  self);
     }
   else
     {

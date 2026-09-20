@@ -53,62 +53,62 @@ typedef void (*GcalAskRecurrenceCallback) (GcalEvent             *event,
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ICalTime, g_object_unref)
 
-gchar*               gcal_get_weekday                            (gint                i);
+gchar*               gcal_util_get_weekday                       (gint                i);
 
-gchar*               gcal_get_month_name                         (gint                i);
+gchar*               gcal_util_get_month_name                    (gint                i);
 
-GdkPaintable*        get_circle_paintable_from_color             (const GdkRGBA      *color,
+GdkPaintable*        gcal_util_get_circle_paintable_from_color   (const GdkRGBA      *color,
                                                                   gint                size);
 
-gchar*               get_desc_from_component                     (ECalComponent      *component,
+gchar*               gcal_util_get_desc_from_component           (ECalComponent      *component,
                                                                   const gchar        *joint_char);
 
-gint                 get_first_weekday                           (void);
+gint                 gcal_util_get_first_weekday                 (void);
 
-ECalComponent*       build_component_from_details                (const gchar        *summary,
+ECalComponent*       gcal_util_build_component_from_details      (const gchar        *summary,
                                                                   GDateTime          *initial_date,
                                                                   GDateTime          *final_date);
 
 /* code brought from evolution */
-gchar*               format_utc_offset                           (gint64              offset);
+gchar*               gcal_util_format_utc_offset                 (gint64              offset);
 
-gint                 get_alarm_trigger_minutes                   (GcalEvent          *event,
+gint                 gcal_util_get_alarm_trigger_minutes         (GcalEvent          *event,
                                                                   ECalComponentAlarm *alarm);
 
-gboolean             is_workday                                  (guint	              day);
+gboolean             gcal_util_is_workday                        (guint               day);
 
-GList*               filter_children_by_uid_and_modtype          (GtkWidget             *widget,
-                                                                  GcalRecurrenceModType  mod,
-                                                                  const gchar           *uid);
+GList*               gcal_util_filter_children_by_uid_and_modtype (GtkWidget             *widget,
+                                                                   GcalRecurrenceModType  mod,
+                                                                   const gchar           *uid);
 
-void                 gcal_utils_launch_gnome_settings            (GDBusConnection *connection,
+void                 gcal_util_launch_gnome_settings             (GDBusConnection *connection,
                                                                   const gchar     *panel_id,
                                                                   const gchar     *action);
 
-gchar*               gcal_utils_format_filename_for_display      (const gchar         *filename);
+gchar*               gcal_util_format_filename_for_display       (const gchar         *filename);
 
-void                 gcal_utils_extract_meeting_url              (const char         *description,
+void                 gcal_util_extract_meeting_url               (const char         *description,
                                                                   char              **out_description,
                                                                   char              **out_meeting_url);
 
-void                 gcal_utils_ask_recurrence_modification_type (GtkWidget                 *parent,
+void                 gcal_util_ask_recurrence_modification_type  (GtkWidget                 *parent,
                                                                   GcalEvent                 *event,
                                                                   gboolean                   show_mod_all,
                                                                   GcalAskRecurrenceCallback  callback,
                                                                   gpointer                   user_data);
 
-GTimeZone *          gcal_util_get_app_timezone_or_local         ();
+GTimeZone *          gcal_util_get_app_timezone_or_local         (void);
 
-gboolean             gcal_is_valid_event_name                    (const gchar          *event_name);
+gboolean             gcal_util_is_valid_event_name               (const gchar          *event_name);
 
-const gchar*         gcal_get_service_name_from_url              (const gchar        *url);
+const gchar*         gcal_util_get_service_name_from_url         (const gchar        *url);
 
-SoupSession *        gcal_create_soup_session                    (void);
+SoupSession *        gcal_util_create_soup_session               (void);
 
-GListModel *         gcal_create_writable_calendars_model        (GcalManager        *manager);
+GListModel *         gcal_util_create_writable_calendars_model   (GcalManager        *manager);
 
-const gchar *        gcal_get_email_from_mailto_uri              (const gchar        *mailto_uri);
+const gchar *        gcal_util_get_email_from_mailto_uri         (const gchar        *mailto_uri);
 
-guint                gcal_create_activate_signal_and_shortcuts   (GtkWidgetClass *widget_class,
-                                                                  GType           widget_type);
+guint                gcal_util_create_activate_signal_and_shortcuts (GtkWidgetClass *widget_class,
+                                                                     GType           widget_type);
 #endif /* __GCAL_UTILS_H__ */

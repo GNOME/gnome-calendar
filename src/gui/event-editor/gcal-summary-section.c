@@ -53,9 +53,9 @@ on_summary_entry_text_changed_cb (GcalSummarySection *self)
   summary = gcal_event_get_summary (event);
   text = gtk_editable_get_text (GTK_EDITABLE (self->summary_entry));
 
-  should_request_validation = gcal_is_valid_event_name (text) != gcal_is_valid_event_name (summary);
+  should_request_validation = gcal_util_is_valid_event_name (text) != gcal_util_is_valid_event_name (summary);
 
-  if (gcal_is_valid_event_name (text))
+  if (gcal_util_is_valid_event_name (text))
     gtk_widget_remove_css_class (GTK_WIDGET (self->summary_entry), "error");
   else
     gtk_widget_add_css_class (GTK_WIDGET (self->summary_entry), "error");

@@ -494,7 +494,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
   summary = gtk_editable_get_text (GTK_EDITABLE (self->summary_entry));
 
   /* Create an ECalComponent from the data above */
-  component = build_component_from_details (summary, date_start, date_end);
+  component = gcal_util_build_component_from_details (summary, date_start, date_end);
 
   event = gcal_event_new (calendar, component, NULL);
   gcal_event_set_all_day (event, all_day);
@@ -520,7 +520,7 @@ summary_entry_text_changed (AdwEntryRow         *entry,
 {
   gboolean is_valid_event_name;
 
-  is_valid_event_name = gcal_is_valid_event_name (gtk_editable_get_text (GTK_EDITABLE (entry)));
+  is_valid_event_name = gcal_util_is_valid_event_name (gtk_editable_get_text (GTK_EDITABLE (entry)));
 
   if (is_valid_event_name)
     gtk_widget_remove_css_class (GTK_WIDGET (entry), "error");
@@ -534,7 +534,7 @@ static void
 summary_entry_activated (AdwEntryRow         *entry,
                          GcalQuickAddPopover *self)
 {
-  if (gcal_is_valid_event_name (gtk_editable_get_text (GTK_EDITABLE (entry))))
+  if (gcal_util_is_valid_event_name (gtk_editable_get_text (GTK_EDITABLE (entry))))
     edit_or_create_event (self, self->add_button);
   else
     edit_or_create_event (self, self->edit_button);
@@ -663,7 +663,7 @@ gcal_quick_add_popover_init (GcalQuickAddPopover *self)
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  self->read_write_calendars_model = gcal_create_writable_calendars_model (manager);
+  self->read_write_calendars_model = gcal_util_create_writable_calendars_model (manager);
 
   bind_model (self);
 

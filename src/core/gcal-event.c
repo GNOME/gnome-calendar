@@ -200,7 +200,7 @@ get_timezone_from_ical (GcalEvent             *self,
 
       /* libical-glib prior to 3.0.12 fails if no return location for is_daylight is passed */
       offset = i_cal_timezone_get_utc_offset (zone, itt, &is_daylight);
-      tzid = format_utc_offset (offset);
+      tzid = gcal_util_format_utc_offset (offset);
       tz = g_time_zone_new_identifier (tzid);
     }
 
@@ -291,7 +291,7 @@ load_alarms (GcalEvent *self)
       gint trigger_minutes;
 
       alarm = e_cal_component_get_alarm (self->component, l->data);
-      trigger_minutes = get_alarm_trigger_minutes (self, alarm);
+      trigger_minutes = gcal_util_get_alarm_trigger_minutes (self, alarm);
 
       /* We only support a single alarm for a given time */
       if (!g_hash_table_contains (self->alarms, GINT_TO_POINTER (trigger_minutes)))
@@ -423,7 +423,7 @@ setup_component (GcalEvent  *self,
   gcal_event_set_location (self, location ? location : "");
 
   /* Setup description */
-  description = get_desc_from_component (self->component, "\n\n");
+  description = gcal_util_get_desc_from_component (self->component, "\n\n");
   gcal_event_set_description (self, description);
 
   /* Setup UID */
@@ -1198,7 +1198,7 @@ gcal_event_get_alarms (GcalEvent *self)
       gint trigger_minutes;
 
       alarm = e_cal_component_get_alarm (self->component, l->data);
-      trigger_minutes = get_alarm_trigger_minutes (self, alarm);
+      trigger_minutes = gcal_util_get_alarm_trigger_minutes (self, alarm);
 
       /* We only support a single alarm for a given time */
       if (!g_hash_table_contains (tmp, GINT_TO_POINTER (trigger_minutes)))
@@ -1271,7 +1271,7 @@ gcal_event_add_alarm (GcalEvent          *self,
   g_return_if_fail (GCAL_IS_EVENT (self));
 
   new_alarm = e_cal_component_alarm_copy (alarm);
-  minutes = get_alarm_trigger_minutes (self, alarm);
+  minutes = gcal_util_get_alarm_trigger_minutes (self, alarm);
 
   /* Only 1 alarm per relative time */
   if (g_hash_table_contains (self->alarms, GINT_TO_POINTER (minutes)))
@@ -1706,7 +1706,7 @@ gcal_event_alarms_equal (GcalEvent *event1,
         {
           ECalComponentAlarm *aux = i->data;
 
-          if (get_alarm_trigger_minutes (event1, alarm) != get_alarm_trigger_minutes (event1, aux))
+          if (gcal_util_get_alarm_trigger_minutes (event1, alarm) != gcal_util_get_alarm_trigger_minutes (event1, aux))
             continue;
 
           other_alarm = aux;

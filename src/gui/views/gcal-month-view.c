@@ -194,13 +194,13 @@ allocate_overflow_popover (GcalMonthView *self,
 static inline void
 update_weekday_labels (GcalMonthView *self)
 {
-  const gint first_weekday = get_first_weekday ();
+  const gint first_weekday = gcal_util_get_first_weekday ();
 
   for (gint i = 0; i < N_WEEKDAYS; i++)
     {
       g_autofree gchar *weekday_name = NULL;
 
-      weekday_name = g_utf8_strup (gcal_get_weekday ((i + first_weekday) % N_WEEKDAYS), -1);
+      weekday_name = g_utf8_strup (gcal_util_get_weekday ((i + first_weekday) % N_WEEKDAYS), -1);
 
       gtk_label_set_label (GTK_LABEL (self->weekday_label[i]), weekday_name);
     }
@@ -1047,11 +1047,11 @@ on_drop_target_drop_cb (GtkDropTarget *drop_target,
       data->event = g_object_ref (event);
       data->target_date = g_date_time_ref (target_date);
 
-      gcal_utils_ask_recurrence_modification_type (GTK_WIDGET (self),
-                                                   event,
-                                                   FALSE,
-                                                   on_recurrence_response_cb,
-                                                   data);
+      gcal_util_ask_recurrence_modification_type (GTK_WIDGET (self),
+                                                  event,
+                                                  FALSE,
+                                                  on_recurrence_response_cb,
+                                                  data);
     }
   else
     {

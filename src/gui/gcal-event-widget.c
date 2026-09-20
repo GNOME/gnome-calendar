@@ -376,7 +376,7 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
 
       if (error == NULL)
         {
-          const gchar *service_name = gcal_get_service_name_from_url (location);
+          const gchar *service_name = gcal_util_get_service_name_from_url (location);
 
           if (service_name)
             {
@@ -717,7 +717,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
    */
   g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
 
-  signals[ACTIVATE] = gcal_create_activate_signal_and_shortcuts (widget_class, GCAL_TYPE_EVENT_WIDGET);
+  signals[ACTIVATE] = gcal_util_create_activate_signal_and_shortcuts (widget_class, GCAL_TYPE_EVENT_WIDGET);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-event-widget.ui");
 

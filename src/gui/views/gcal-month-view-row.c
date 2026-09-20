@@ -1405,7 +1405,7 @@ gcal_month_view_row_get_children_by_uuid (GcalMonthViewRow      *self,
 {
   g_assert (GCAL_IS_MONTH_VIEW_ROW (self));
 
-  return filter_children_by_uid_and_modtype (GTK_WIDGET (self), mod, uuid);
+  return gcal_util_filter_children_by_uid_and_modtype (GTK_WIDGET (self), mod, uuid);
 }
 
 GtkWidget*

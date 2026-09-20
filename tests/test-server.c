@@ -105,7 +105,7 @@ server_request_no_auth_empty (void)
   server = init_server ();
   uri = gcal_simple_server_get_uri (server);
 
-  session = gcal_create_soup_session ();
+  session = gcal_util_create_soup_session ();
 
   message = soup_message_new_from_uri ("GET", uri);
   g_signal_connect (message, "authenticate", G_CALLBACK (fail_authenticate_cb), server);
@@ -130,7 +130,7 @@ server_request_no_auth_ics (void)
   uri = gcal_simple_server_get_uri (server);
   e_util_change_uri_component (&uri, SOUP_URI_PATH, "/public/calendar.ics");
 
-  session = gcal_create_soup_session ();
+  session = gcal_util_create_soup_session ();
 
   message = soup_message_new_from_uri ("GET", uri);
   g_signal_connect (message, "authenticate", G_CALLBACK (fail_authenticate_cb), server);
@@ -155,7 +155,7 @@ server_request_no_auth_calendar (void)
   uri = gcal_simple_server_get_uri (server);
   e_util_change_uri_component (&uri, SOUP_URI_PATH, "/public/lf-calendar");
 
-  session = gcal_create_soup_session ();
+  session = gcal_util_create_soup_session ();
 
   message = soup_message_new_from_uri ("GET", uri);
   g_signal_connect (message, "authenticate", G_CALLBACK (fail_authenticate_cb), server);
@@ -180,7 +180,7 @@ server_request_auth_empty (void)
   uri = gcal_simple_server_get_uri (server);
   e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area");
 
-  session = gcal_create_soup_session ();
+  session = gcal_util_create_soup_session ();
 
   message = soup_message_new_from_uri ("GET", uri);
   g_signal_connect (message, "authenticate", G_CALLBACK (authenticate_cb), server);
@@ -205,7 +205,7 @@ server_request_auth_calendar (void)
   uri = gcal_simple_server_get_uri (server);
   e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area/lf-calendar");
 
-  session = gcal_create_soup_session ();
+  session = gcal_util_create_soup_session ();
 
   message = soup_message_new_from_uri ("GET", uri);
   g_signal_connect (message, "authenticate", G_CALLBACK (authenticate_cb), server);
@@ -230,7 +230,7 @@ server_request_auth_ics (void)
   uri = gcal_simple_server_get_uri (server);
   e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area/calendar.ics");
 
-  session = gcal_create_soup_session ();
+  session = gcal_util_create_soup_session ();
 
   message = soup_message_new_from_uri ("GET", uri);
   g_signal_connect (message, "authenticate", G_CALLBACK (authenticate_cb), server);
@@ -255,7 +255,7 @@ server_request_auth_wrong (void)
   uri = gcal_simple_server_get_uri (server);
   e_util_change_uri_component (&uri, SOUP_URI_PATH, "/secret-area");
 
-  session = gcal_create_soup_session ();
+  session = gcal_util_create_soup_session ();
 
   message = soup_message_new_from_uri ("GET", uri);
   g_signal_connect (message, "authenticate", G_CALLBACK (wrong_authenticate_cb), server);

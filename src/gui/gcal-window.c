@@ -646,7 +646,7 @@ on_window_new_event_cb (GSimpleAction *action,
   end = g_date_time_add_days (start, 1);
 
   manager = gcal_context_get_manager (context);
-  comp = build_component_from_details ("", start, end);
+  comp = gcal_util_build_component_from_details ("", start, end);
   default_calendar = gcal_manager_get_default_calendar (manager);
   event = gcal_event_new (default_calendar, comp, NULL);
 
@@ -660,7 +660,7 @@ on_window_open_date_time_settings_cb (GSimpleAction *action,
 {
   GDBusConnection *connection = g_application_get_dbus_connection (g_application_get_default ());
 
-  gcal_utils_launch_gnome_settings (connection, "datetime", NULL);
+  gcal_util_launch_gnome_settings (connection, "datetime", NULL);
 }
 
 static void
@@ -670,7 +670,7 @@ on_window_open_online_accounts_cb (GSimpleAction *action,
 {
   GDBusConnection *connection = g_application_get_dbus_connection (g_application_get_default ());
 
-  gcal_utils_launch_gnome_settings (connection, "online-accounts", NULL);
+  gcal_util_launch_gnome_settings (connection, "online-accounts", NULL);
 }
 
 static void
@@ -907,7 +907,7 @@ create_event_detailed_cb (GcalView   *view,
   manager = gcal_context_get_manager (context);
   range_start = gcal_range_get_start (range);
   range_end = gcal_range_get_end (range);
-  comp = build_component_from_details ("", range_start, range_end);
+  comp = gcal_util_build_component_from_details ("", range_start, range_end);
   default_calendar = gcal_manager_get_default_calendar (manager);
   event = gcal_event_new (default_calendar, comp, NULL);
 

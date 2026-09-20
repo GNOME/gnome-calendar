@@ -105,7 +105,7 @@ month_item[12] =
 #define SCROLL_HARDNESS 10.0
 
 /**
- * gcal_get_weekday:
+ * gcal_util_get_weekday:
  * @i: the weekday index
  *
  * Retrieves the weekday name.
@@ -113,13 +113,13 @@ month_item[12] =
  * Returns: (transfer full): the weekday name
  */
 gchar*
-gcal_get_weekday (gint i)
+gcal_util_get_weekday (gint i)
 {
   return nl_langinfo (ab_day[i]);
 }
 
 /**
- * gcal_get_month_name:
+ * gcal_util_get_month_name:
  * @i: the month index
  *
  * Retrieves the month name.
@@ -127,13 +127,13 @@ gcal_get_weekday (gint i)
  * Returns: (transfer full): the month name
  */
 gchar*
-gcal_get_month_name (gint i)
+gcal_util_get_month_name (gint i)
 {
   return nl_langinfo (month_item[i]);
 }
 
 /**
- * get_circle_paintable_from_color:
+ * gcal_util_get_circle_paintable_from_color:
  * @color: a #GdkRGBA
  * @size: the size of the surface
  *
@@ -143,8 +143,8 @@ gcal_get_month_name (gint i)
  * Returns: (transfer full): a #cairo_surface_t
  */
 GdkPaintable*
-get_circle_paintable_from_color (const GdkRGBA *color,
-                                 gint           size)
+gcal_util_get_circle_paintable_from_color (const GdkRGBA *color,
+                                           gint           size)
 {
   g_autoptr (GtkSnapshot) snapshot = NULL;
   GskRoundedRect rect;
@@ -164,7 +164,7 @@ get_circle_paintable_from_color (const GdkRGBA *color,
 }
 
 /**
- * get_desc_from_component:
+ * gcal_util_get_desc_from_component:
  * @component: an #ECalComponent
  * @joint_char: the character to use when merging event comments
  *
@@ -176,8 +176,8 @@ get_circle_paintable_from_color (const GdkRGBA *color,
  * description
  **/
 gchar*
-get_desc_from_component (ECalComponent *component,
-                         const gchar   *joint_char)
+gcal_util_get_desc_from_component (ECalComponent *component,
+                                   const gchar   *joint_char)
 {
   GSList *text_list;
   GSList *l;
@@ -294,7 +294,7 @@ out:
 }
 
 /**
- * get_first_weekday:
+ * gcal_util_get_first_weekday:
  *
  * Copied from Clocks, which by itself is
  * copied from GtkCalendar.
@@ -302,7 +302,7 @@ out:
  * Returns: the first weekday, from 0 to 6
  */
 gint
-get_first_weekday (void)
+gcal_util_get_first_weekday (void)
 {
   gint week_start;
 
@@ -356,7 +356,7 @@ get_first_weekday (void)
 }
 
 /**
- * build_component_from_details:
+ * gcal_util_build_component_from_details:
  * @summary:
  * @initial_date:
  * @final_date:
@@ -366,9 +366,9 @@ get_first_weekday (void)
  * Returns: (transfer full): an {@link ECalComponent} object
  **/
 ECalComponent*
-build_component_from_details (const gchar *summary,
-                              GDateTime   *initial_date,
-                              GDateTime   *final_date)
+gcal_util_build_component_from_details (const gchar *summary,
+                                        GDateTime   *initial_date,
+                                        GDateTime   *final_date)
 {
   ECalComponent *event = NULL;
   ECalComponentDateTime *dt = NULL;
@@ -433,7 +433,7 @@ build_component_from_details (const gchar *summary,
 }
 
 /**
- * format_utc_offset:
+ * gcal_util_format_utc_offset:
  * @offset: an UTC offset
  *
  * Formats the UTC offset to a string that GTimeZone can
@@ -443,7 +443,7 @@ build_component_from_details (const gchar *summary,
  * offset
  */
 gchar*
-format_utc_offset (gint64 offset)
+gcal_util_format_utc_offset (gint64 offset)
 {
   const char *sign = "+";
   gint hours, minutes, seconds;
@@ -468,7 +468,7 @@ format_utc_offset (gint64 offset)
 }
 
 /**
- * get_alarm_trigger_minutes:
+ * gcal_util_get_alarm_trigger_minutes:
  * @event: a #GcalEvent
  * @alarm: a #ECalComponentAlarm
  *
@@ -479,8 +479,8 @@ format_utc_offset (gint64 offset)
  * start that @alarm will be triggered.
  */
 gint
-get_alarm_trigger_minutes (GcalEvent          *event,
-                           ECalComponentAlarm *alarm)
+gcal_util_get_alarm_trigger_minutes (GcalEvent          *event,
+                                     ECalComponentAlarm *alarm)
 {
   ECalComponentAlarmTrigger *trigger;
   ICalDuration *duration;
@@ -548,7 +548,7 @@ struct
 
 
 /**
- * is_workday:
+ * gcal_util_is_workday:
  * @day: a guint representing the day of a week (0…Sunday, 6…Saturday)
  *
  * Checks whether @day is workday or not based on the Territory part of Locale.
@@ -556,7 +556,7 @@ struct
  * Returns: %TRUE if @day is a workday, %FALSE otherwise.
  */
 gboolean
-is_workday (guint day)
+gcal_util_is_workday (guint day)
 {
   GcalWeekDay no_work_days;
   gchar *locale;
@@ -592,9 +592,9 @@ is_workday (guint day)
 }
 
 GList*
-filter_children_by_uid_and_modtype (GtkWidget             *widget,
-                                    GcalRecurrenceModType  mod,
-                                    const gchar           *uid)
+gcal_util_filter_children_by_uid_and_modtype (GtkWidget             *widget,
+                                              GcalRecurrenceModType  mod,
+                                              const gchar           *uid)
 {
   GtkWidget *child;
   GcalEvent *event;
@@ -692,9 +692,9 @@ create_dbus_proxy (GDBusConnection *connection,
 }
 
 void
-gcal_utils_launch_gnome_settings (GDBusConnection *connection,
-                                  const gchar     *panel_id,
-                                  const gchar     *action)
+gcal_util_launch_gnome_settings (GDBusConnection *connection,
+                                 const gchar     *panel_id,
+                                 const gchar     *action)
 {
   g_autoptr (GDBusProxy) proxy = NULL;
   GVariantBuilder builder;
@@ -742,7 +742,7 @@ gcal_utils_launch_gnome_settings (GDBusConnection *connection,
 }
 
 gchar*
-gcal_utils_format_filename_for_display (const gchar *filename)
+gcal_util_format_filename_for_display (const gchar *filename)
 {
   /*
    * Foo_bar-something-cool.ics
@@ -765,7 +765,7 @@ gcal_utils_format_filename_for_display (const gchar *filename)
 }
 
 static gboolean
-gcal_utils_extract_google_section (const gchar  *description,
+gcal_util_extract_google_section (const gchar  *description,
                                    gchar       **out_description,
                                    gchar       **out_meeting_url)
 {
@@ -819,7 +819,7 @@ gcal_utils_extract_google_section (const gchar  *description,
 }
 
 static gboolean
-gcal_utils_extract_teams_section (const gchar  *description,
+gcal_util_extract_teams_section (const gchar  *description,
                                   gchar       **out_description,
                                   gchar       **out_meeting_url)
 {
@@ -876,7 +876,7 @@ gcal_utils_extract_teams_section (const gchar  *description,
 }
 
 /**
- * gcal_utils_extract_meeting_url:
+ * gcal_util_extract_meeting_url:
  * @description: (nullable): a string description
  * @out_description: (nullable)(transfer full): return location for a parsed description
  * @out_meeting_url: (nullable)(transfer full): return location for the parsed meeting url
@@ -884,12 +884,12 @@ gcal_utils_extract_teams_section (const gchar  *description,
  * Parses @description for meeting URLs.
  */
 void
-gcal_utils_extract_meeting_url (const char  *description,
-                                char       **out_description,
-                                char       **out_meeting_url)
+gcal_util_extract_meeting_url (const char  *description,
+                               char       **out_description,
+                               char       **out_meeting_url)
 {
-  if (!gcal_utils_extract_google_section (description, out_description, out_meeting_url) &&
-      !gcal_utils_extract_teams_section (description, out_description, out_meeting_url))
+  if (!gcal_util_extract_google_section (description, out_description, out_meeting_url) &&
+      !gcal_util_extract_teams_section (description, out_description, out_meeting_url))
     {
       if (out_description)
         *out_description = g_strdup (description);
@@ -933,11 +933,11 @@ on_message_dialog_response_cb (GObject      *source_object,
 }
 
 void
-gcal_utils_ask_recurrence_modification_type (GtkWidget                 *parent,
-                                             GcalEvent                 *event,
-                                             gboolean                   show_mod_all,
-                                             GcalAskRecurrenceCallback  callback,
-                                             gpointer                   user_data)
+gcal_util_ask_recurrence_modification_type (GtkWidget                 *parent,
+                                            GcalEvent                 *event,
+                                            gboolean                   show_mod_all,
+                                            GcalAskRecurrenceCallback  callback,
+                                            gpointer                   user_data)
 {
   AskRecurrenceData *data;
   ECalClient *client;
@@ -985,7 +985,7 @@ gcal_utils_ask_recurrence_modification_type (GtkWidget                 *parent,
  * Returns: (transfer full): a #GTimeZone
  */
 GTimeZone *
-gcal_util_get_app_timezone_or_local ()
+gcal_util_get_app_timezone_or_local (void)
 {
   GcalApplication *application = NULL;
   GcalContext *context = NULL;
@@ -999,7 +999,7 @@ gcal_util_get_app_timezone_or_local ()
 }
 
 /**
- * gcal_is_valid_event_name:
+ * gcal_util_is_valid_event_name:
  * @event_name: the name of the event to check
  *
  * Check if the event name is valid
@@ -1007,14 +1007,14 @@ gcal_util_get_app_timezone_or_local ()
  * Returns: %TRUE if the name is valid, %FALSE otherwise.
  */
 gboolean
-gcal_is_valid_event_name (const gchar *event_name)
+gcal_util_is_valid_event_name (const gchar *event_name)
 {
   g_autofree gchar *aux = g_strstrip (g_strdup (event_name));
   return g_utf8_strlen (aux, -1) > 0;
 }
 
 /**
- * gcal_get_service_name_from_url:
+ * gcal_util_get_service_name_from_url:
  * @url: the meeting url to get service name from
  *
  * Given a meeting service URL, get the service provider name,
@@ -1023,7 +1023,7 @@ gcal_is_valid_event_name (const gchar *event_name)
  * Returns: the service name or NULL
  */
 const gchar *
-gcal_get_service_name_from_url (const gchar *url)
+gcal_util_get_service_name_from_url (const gchar *url)
 {
   struct {
     const gchar *needle;
@@ -1062,14 +1062,14 @@ gcal_get_service_name_from_url (const gchar *url)
 }
 
 /**
- * gcal_create_soup_session:
+ * gcal_util_create_soup_session:
  *
 * Creates a new #SoupSession with correct default settings.
  *
  * Returns: (transfer full): a new #SoupSession
  */
 SoupSession *
-gcal_create_soup_session (void)
+gcal_util_create_soup_session (void)
 {
   g_autoptr (SoupSession) session = NULL;
 
@@ -1088,7 +1088,7 @@ gcal_create_soup_session (void)
 }
 
 /**
- * gcal_create_writable_calendars_model:
+ * gcal_util_create_writable_calendars_model:
  * @manager: a #GcalManager
  *
  * Retrieves a model with all available read-write #GcalCalendar.
@@ -1097,7 +1097,7 @@ gcal_create_soup_session (void)
  * Returns: (transfer full): a #GListModel with all available read-write #GcalCalendar
  */
 GListModel*
-gcal_create_writable_calendars_model (GcalManager *manager)
+gcal_util_create_writable_calendars_model (GcalManager *manager)
 {
   g_autoptr (GtkFilterListModel) filter_model = NULL;
   GtkBoolFilter *bool_filter;
@@ -1117,7 +1117,7 @@ gcal_create_writable_calendars_model (GcalManager *manager)
 }
 
 /**
- * gcal_get_email_from_mailto_uri:
+ * gcal_util_get_email_from_mailto_uri:
  * @mailto_uri: the original mailto string.
  *
  * Tries to strip the "mailto:" part of the incoming string.
@@ -1131,7 +1131,7 @@ gcal_create_writable_calendars_model (GcalManager *manager)
  * Returns: (transfer full) (nullable): The URI without the "mailto:" part.
  */
 const gchar *
-gcal_get_email_from_mailto_uri (const gchar *mailto_uri)
+gcal_util_get_email_from_mailto_uri (const gchar *mailto_uri)
 {
   if (mailto_uri == NULL)
     return NULL;
@@ -1169,8 +1169,8 @@ gcal_get_email_from_mailto_uri (const gchar *mailto_uri)
  * Returns: the signal ID
  */
 guint
-gcal_create_activate_signal_and_shortcuts (GtkWidgetClass *widget_class,
-                                           GType           widget_type)
+gcal_util_create_activate_signal_and_shortcuts (GtkWidgetClass *widget_class,
+                                                GType           widget_type)
 {
   const guint activate_keyvals[] = {
     GDK_KEY_space,

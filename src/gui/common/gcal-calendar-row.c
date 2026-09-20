@@ -56,7 +56,7 @@ paintable_from_gdk_rgb (GBinding     *binding,
                         gpointer      user_data)
 {
   GdkRGBA *rgba = g_value_get_boxed (from_value);
-  g_value_take_object (to_value, get_circle_paintable_from_color (rgba, 16));
+  g_value_take_object (to_value, gcal_util_get_circle_paintable_from_color (rgba, 16));
   return TRUE;
 }
 

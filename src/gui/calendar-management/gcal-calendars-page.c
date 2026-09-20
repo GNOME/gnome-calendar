@@ -84,7 +84,7 @@ make_calendar_row (GcalCalendarsPage *self,
 
   /* source color icon */
   color = gcal_calendar_get_color (calendar);
-  color_paintable = get_circle_paintable_from_color (color, 24);
+  color_paintable = gcal_util_get_circle_paintable_from_color (color, 24);
   icon = GTK_WIDGET (gtk_builder_get_object (builder, "icon"));
   gtk_image_set_from_paintable (GTK_IMAGE (icon), color_paintable);
 
@@ -248,7 +248,7 @@ on_calendar_color_changed_cb (GcalCalendar *calendar,
   const GdkRGBA *color;
 
   color = gcal_calendar_get_color (calendar);
-  color_paintable = get_circle_paintable_from_color (color, 24);
+  color_paintable = gcal_util_get_circle_paintable_from_color (color, 24);
   gtk_image_set_from_paintable (GTK_IMAGE (icon), color_paintable);
 }
 

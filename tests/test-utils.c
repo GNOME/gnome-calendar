@@ -170,21 +170,21 @@ extract_meeting_url (void)
   g_autofree char *description = NULL;
   g_autofree char *meeting_url = NULL;
 
-  gcal_utils_extract_meeting_url (GOOGLE_SAMPLE_DESCRIPTION, &description, &meeting_url);
+  gcal_util_extract_meeting_url (GOOGLE_SAMPLE_DESCRIPTION, &description, &meeting_url);
   g_assert_cmpstr (description, ==, "");
   g_assert_cmpstr (meeting_url, ==, "https://meet.google.com/abc-defg-hij");
 
   g_clear_pointer (&description, g_free);
   g_clear_pointer (&meeting_url, g_free);
 
-  gcal_utils_extract_meeting_url (GOOGLE_SAMPLE_DESCRIPTION_WITH_COMMENT, &description, &meeting_url);
+  gcal_util_extract_meeting_url (GOOGLE_SAMPLE_DESCRIPTION_WITH_COMMENT, &description, &meeting_url);
   g_assert_cmpstr (description, ==, "TROLOLO\n");
   g_assert_cmpstr (meeting_url, ==, "https://meet.google.com/abc-defg-hij");
 
   g_clear_pointer (&description, g_free);
   g_clear_pointer (&meeting_url, g_free);
 
-  gcal_utils_extract_meeting_url (TEAMS_SAMPLE_DESCRIPTION, &description, &meeting_url);
+  gcal_util_extract_meeting_url (TEAMS_SAMPLE_DESCRIPTION, &description, &meeting_url);
   g_assert_cmpstr (description, ==, "");
   g_assert_cmpstr (meeting_url, ==, "https://teams.microsoft.com/meet/12345678912345?p=0AbCdEfGjKLm1nOjTj");
 }
