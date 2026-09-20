@@ -32,6 +32,15 @@
 #define GCAL_MINUTES_PER_DAY 1440
 #define GCAL_MAX_MINUTES     (GCAL_N_WEEKDAYS * GCAL_MINUTES_PER_DAY)
 
+/**
+ * GCAL_NTH_WEEKDAY:
+ *
+ * Computes days after the first weekday for use in conjunction
+ * with [struct@GLib.DateTime].
+ */
+#define GCAL_NTH_WEEKDAY(weekday, first_weekday) \
+  (weekday - first_weekday + GCAL_N_WEEKDAYS) % GCAL_N_WEEKDAYS
+
 #define GCAL_DEFAULT_APPLICATION GCAL_APPLICATION (g_application_get_default ())
 
 #define gcal_clear_timeout(pp) { if (pp && *pp) { g_source_remove (*pp); *pp = 0; } }
