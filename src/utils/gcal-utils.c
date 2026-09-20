@@ -133,26 +133,6 @@ gcal_get_month_name (gint i)
 }
 
 /**
- * gcal_get_paintable_from_color:
- * @color: a #GdkRGBA
- * @size: the size of the surface
- *
- * Creates a squared surface filled with @color. The
- * surface is always @size x @size.
- *
- * Returns: (transfer full): a #GdkPaintable
- */
-GdkPaintable*
-gcal_get_paintable_from_color (const GdkRGBA *color,
-                               gint           size)
-{
-  g_autoptr (GtkSnapshot) snapshot = gtk_snapshot_new ();
-
-  gtk_snapshot_append_color (snapshot, color, &GRAPHENE_RECT_INIT (0, 0, size, size));
-  return gtk_snapshot_to_paintable (snapshot, &GRAPHENE_SIZE_INIT (size, size));
-}
-
-/**
  * get_circle_paintable_from_color:
  * @color: a #GdkRGBA
  * @size: the size of the surface
@@ -181,24 +161,6 @@ get_circle_paintable_from_color (const GdkRGBA *color,
   gtk_snapshot_pop (snapshot);
 
   return gtk_snapshot_to_paintable (snapshot, &GRAPHENE_SIZE_INIT (size, size));
-}
-
-/**
- * get_color_name_from_source:
- * @source: an #ESource
- * @out_color: return value for the color
- *
- * Utility function to retrieve the color from @source.
- */
-void
-get_color_name_from_source (ESource *source,
-                            GdkRGBA *out_color)
-{
-  ESourceSelectable *extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
-
-  /* FIXME: We should handle calendars colours better */
-  if (!gdk_rgba_parse (out_color, e_source_selectable_get_color (extension)))
-    gdk_rgba_parse (out_color, "#becedd"); /* calendar default colour */
 }
 
 /**
@@ -246,43 +208,6 @@ get_desc_from_component (ECalComponent *component,
 
   g_slist_free_full (text_list, e_cal_component_text_free);
   return desc != NULL ? g_strstrip (desc) : NULL;
-}
-
-/**
- * get_uuid_from_component:
- * @source: an {@link ESource}
- * @component: an {@link ECalComponent}
- *
- * Obtains the uuid from a component in the form
- * "source_uid:event_uid:event_rid" or "source:uid:event_uid" if the
- * component doesn't hold a recurrence event
- *
- * Returns: (Transfer full) a new allocated string with the description
- **/
-gchar*
-get_uuid_from_component (ESource       *source,
-                         ECalComponent *component)
-{
-  gchar *uuid;
-  ECalComponentId *id;
-
-  id = e_cal_component_get_id (component);
-  if (e_cal_component_id_get_rid (id) != NULL)
-    {
-      uuid = g_strdup_printf ("%s:%s:%s",
-                              e_source_get_uid (source),
-                              e_cal_component_id_get_uid (id),
-                              e_cal_component_id_get_rid (id));
-    }
-  else
-    {
-      uuid = g_strdup_printf ("%s:%s",
-                              e_source_get_uid (source),
-                              e_cal_component_id_get_uid (id));
-    }
-  e_cal_component_id_free (id);
-
-  return uuid;
 }
 
 static gboolean
@@ -508,202 +433,6 @@ build_component_from_details (const gchar *summary,
 }
 
 /**
- * icaltime_compare_date:
- * @date1: an #ICalTime
- * @date2: an #ICalTime
- *
- * Compare date parts of #ICalTime objects. Returns negative value,
- * 0 or positive value accordingly if @date1 is before, same day or
- * after date2.
- *
- * As a bonus it returns the amount of days passed between two days on the
- * same year.
- *
- * Returns: negative, 0 or positive
- **/
-gint
-icaltime_compare_date (const ICalTime *date1,
-                       const ICalTime *date2)
-{
-  if (date2 == NULL)
-    return 0;
-
-  if (i_cal_time_get_year (date1) < i_cal_time_get_year (date2))
-    return -1;
-  else if (i_cal_time_get_year (date1) > i_cal_time_get_year (date2))
-    return 1;
-  else
-    return time_day_of_year (i_cal_time_get_day (date1), i_cal_time_get_month (date1) - 1, i_cal_time_get_year (date1)) -
-           time_day_of_year (i_cal_time_get_day (date2), i_cal_time_get_month (date2) - 1, i_cal_time_get_year (date2));
-}
-
-/**
- * icaltime_compare_with_current:
- * @date1: an #ICalTime
- * @date2: an #ICalTime
- * @current_time_t: the current time
- *
- * Compares @date1 and @date2 against the current time. Dates
- * closer to the current date are sorted before.
- *
- * Returns: negative if @date1 comes after @date2, 0 if they're
- * equal, positive otherwise
- */
-gint
-icaltime_compare_with_current (const ICalTime *date1,
-                               const ICalTime *date2,
-                               time_t         *current_time_t)
-{
-  g_autoptr (GTimeZone) zone = NULL;
-  ICalTimezone *zone1, *zone2;
-  gint result = 0;
-  time_t start1, start2, diff1, diff2;
-
-  zone = gcal_util_get_app_timezone_or_local ();
-
-  zone1 = i_cal_time_get_timezone (date1);
-  if (!zone1)
-    zone1 = gcal_timezone_to_icaltimezone (zone);
-
-  zone2 = i_cal_time_get_timezone (date2);
-  if (!zone2)
-    zone2 = gcal_timezone_to_icaltimezone (zone);
-
-  start1 = i_cal_time_as_timet_with_zone (date1, zone1);
-  start2 = i_cal_time_as_timet_with_zone (date2, zone2);
-  diff1 = start1 - *current_time_t;
-  diff2 = start2 - *current_time_t;
-
-  if (diff1 != diff2)
-    {
-      if (diff1 == 0)
-        result = -1;
-      else if (diff2 == 0)
-        result = 1;
-
-      if (diff1 > 0 && diff2 < 0)
-        result = -1;
-      else if (diff2 > 0 && diff1 < 0)
-        result = 1;
-      else if (diff1 < 0 && diff2 < 0)
-        result = ABS (diff1) - ABS (diff2);
-      else if (diff1 > 0 && diff2 > 0)
-        result = diff1 - diff2;
-    }
-
-  return result;
-}
-
-/**
- * e_strftime_fix_am_pm:
- *
- * Function to do a last minute fixup of the AM/PM stuff if the locale
- * and gettext haven't done it right. Most English speaking countries
- * except the USA use the 24 hour clock (UK, Australia etc). However
- * since they are English nobody bothers to write a language
- * translation (gettext) file. So the locale turns off the AM/PM, but
- * gettext does not turn on the 24 hour clock. Leaving a mess.
- *
- * This routine checks if AM/PM are defined in the locale, if not it
- * forces the use of the 24 hour clock.
- *
- * The function itself is a front end on strftime and takes exactly
- * the same arguments.
- *
- * TODO: Actually remove the '%p' from the fixed up string so that
- * there isn't a stray space.
- */
-gsize
-e_strftime_fix_am_pm (gchar *str,
-                      gsize max,
-                      const gchar *fmt,
-                      const struct tm *tm)
-{
-  gchar buf[10];
-  gchar *sp;
-  gchar *ffmt;
-  gsize ret;
-
-  if (strstr(fmt, "%p")==NULL && strstr(fmt, "%P")==NULL) {
-    /* No AM/PM involved - can use the fmt string directly */
-    ret = e_strftime (str, max, fmt, tm);
-  } else {
-    /* Get the AM/PM symbol from the locale */
-    e_strftime (buf, 10, "%p", tm);
-
-    if (buf[0]) {
-      /* AM/PM have been defined in the locale
-       * so we can use the fmt string directly. */
-      ret = e_strftime (str, max, fmt, tm);
-    } else {
-      /* No AM/PM defined by locale
-       * must change to 24 hour clock. */
-      ffmt = g_strdup (fmt);
-      for (sp=ffmt; (sp=strstr(sp, "%l")); sp++) {
-        /* Maybe this should be 'k', but I have never
-         * seen a 24 clock actually use that format. */
-        sp[1]='H';
-      }
-      for (sp=ffmt; (sp=strstr(sp, "%I")); sp++) {
-        sp[1]='H';
-      }
-      ret = e_strftime (str, max, ffmt, tm);
-      g_free (ffmt);
-    }
-  }
-
-  return (ret);
-}
-
-/**
- * e_utf8_strftime_fix_am_pm:
- *
- * Stolen from Evolution codebase. Selects the
- * correct time format.
- *
- * Returns: the size of the string
- */
-gsize
-e_utf8_strftime_fix_am_pm (gchar *str,
-                           gsize max,
-                           const gchar *fmt,
-                           const struct tm *tm)
-{
-  gsize sz, ret;
-  gchar *locale_fmt, *buf;
-
-  locale_fmt = g_locale_from_utf8 (fmt, -1, NULL, &sz, NULL);
-  if (!locale_fmt)
-    return 0;
-
-  ret = e_strftime_fix_am_pm (str, max, locale_fmt, tm);
-  if (!ret) {
-    g_free (locale_fmt);
-    return 0;
-  }
-
-  buf = g_locale_to_utf8 (str, ret, NULL, &sz, NULL);
-  if (!buf) {
-    g_free (locale_fmt);
-    return 0;
-  }
-
-  if (sz >= max) {
-    gchar *tmp = buf + max - 1;
-    tmp = g_utf8_find_prev_char (buf, tmp);
-    if (tmp)
-      sz = tmp - buf;
-    else
-      sz = 0;
-  }
-  memcpy (str, buf, sz);
-  str[sz] = '\0';
-  g_free (locale_fmt);
-  g_free (buf);
-  return sz;
-}
-
-/**
  * format_utc_offset:
  * @offset: an UTC offset
  *
@@ -781,75 +510,6 @@ get_alarm_trigger_minutes (GcalEvent          *event,
   g_clear_pointer (&alarm_dt, g_date_time_unref);
 
   return diff;
-}
-
-/**
- * should_change_date_for_scroll:
- * @scroll_value: the current scroll value
- * @scroll_event: the #GdkEvent that is being parsed
- *
- * Utility function to check if the date should change based
- * on the scroll. The date is changed when the user scrolls
- * too much on touchpad, or performs a rotation of the scroll
- * button in a mouse.
- *
- * Returns: %TRUE if the date should change, %FALSE otherwise.
- */
-gboolean
-should_change_date_for_scroll (gdouble  *scroll_value,
-                               GdkEvent *scroll_event)
-{
-  gdouble dx, dy;
-
-  g_return_val_if_fail (gdk_event_get_event_type (scroll_event) == GDK_SCROLL, FALSE);
-
-  switch (gdk_scroll_event_get_direction (scroll_event))
-    {
-    case GDK_SCROLL_DOWN:
-      *scroll_value = SCROLL_HARDNESS;
-      break;
-
-    case GDK_SCROLL_UP:
-      *scroll_value = -SCROLL_HARDNESS;
-      break;
-
-    case GDK_SCROLL_SMOOTH:
-      gdk_scroll_event_get_deltas (scroll_event, &dx, &dy);
-      *scroll_value += dy;
-      break;
-
-    /* Ignore horizontal scrolling for now */
-    case GDK_SCROLL_LEFT:
-    case GDK_SCROLL_RIGHT:
-    default:
-      break;
-    }
-
-  if (*scroll_value <= -SCROLL_HARDNESS || *scroll_value >= SCROLL_HARDNESS)
-    return TRUE;
-
-  return FALSE;
-}
-
-/**
- * is_source_enabled:
- * @source: an #ESource
- *
- * Retrieves whether the @source is enabled or not.
- * Disabled sources don't show their events.
- *
- * Returns: %TRUE if @source is enabled, %FALSE otherwise.
- */
-gboolean
-is_source_enabled (ESource *source)
-{
-  ESourceSelectable *selectable;
-
-  g_return_val_if_fail (E_IS_SOURCE (source), FALSE);
-
-  selectable = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
-
-  return e_source_selectable_get_selected (selectable);
 }
 
 struct
@@ -1312,41 +972,6 @@ gcal_utils_ask_recurrence_modification_type (GtkWidget                 *parent,
                            NULL,
                            on_message_dialog_response_cb,
                            data);
-}
-
-/**
- * gcal_util_translate_time_string:
- * @str: String to translate
- *
- * Translate @str according to the locale defined by LC_TIME; unlike
- * dcgettext(), the translations is still taken from the LC_MESSAGES
- * catalogue and not the LC_TIME one.
- *
- * Returns: the translated string
- */
-const gchar *
-gcal_util_translate_time_string (const gchar *str)
-{
-  const gchar *locale = g_getenv ("LC_TIME");
-  const gchar *res;
-  gchar *sep;
-  locale_t old_loc;
-  locale_t loc = (locale_t) 0;
-
-  if (locale)
-    loc = newlocale (LC_MESSAGES_MASK, locale, (locale_t) 0);
-
-  old_loc = uselocale (loc);
-
-  sep = strchr (str, '\004');
-  res = g_dpgettext (NULL, str, sep ? sep - str + 1 : 0);
-
-  uselocale (old_loc);
-
-  if (loc != (locale_t) 0)
-    freelocale (loc);
-
-  return res;
 }
 
 /**

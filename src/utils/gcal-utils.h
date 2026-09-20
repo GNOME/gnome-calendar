@@ -57,20 +57,11 @@ gchar*               gcal_get_weekday                            (gint          
 
 gchar*               gcal_get_month_name                         (gint                i);
 
-GdkPaintable*        gcal_get_paintable_from_color               (const GdkRGBA      *color,
-                                                                  gint                size);
-
 GdkPaintable*        get_circle_paintable_from_color             (const GdkRGBA      *color,
                                                                   gint                size);
 
-void                 get_color_name_from_source                  (ESource            *source,
-                                                                  GdkRGBA            *out_color);
-
 gchar*               get_desc_from_component                     (ECalComponent      *component,
                                                                   const gchar        *joint_char);
-
-gchar*               get_uuid_from_component                     (ESource            *source,
-                                                                  ECalComponent      *component);
 
 gint                 get_first_weekday                           (void);
 
@@ -78,33 +69,11 @@ ECalComponent*       build_component_from_details                (const gchar   
                                                                   GDateTime          *initial_date,
                                                                   GDateTime          *final_date);
 
-gint                 icaltime_compare_date                       (const ICalTime *date1,
-                                                                  const ICalTime *date2);
-
-gint                 icaltime_compare_with_current               (const ICalTime *date1,
-                                                                  const ICalTime *date2,
-                                                                  time_t         *current_time_t);
-
 /* code brought from evolution */
-gsize                e_strftime_fix_am_pm                        (gchar              *str,
-                                                                  gsize               max,
-                                                                  const gchar        *fmt,
-                                                                  const struct tm    *tm);
-
-gsize                e_utf8_strftime_fix_am_pm                   (gchar              *str,
-                                                                  gsize               max,
-                                                                  const gchar        *fmt,
-                                                                  const struct tm    *tm);
-
 gchar*               format_utc_offset                           (gint64              offset);
 
 gint                 get_alarm_trigger_minutes                   (GcalEvent          *event,
                                                                   ECalComponentAlarm *alarm);
-
-gboolean             should_change_date_for_scroll               (gdouble            *scroll_value,
-                                                                  GdkEvent           *scroll_event);
-
-gboolean             is_source_enabled                           (ESource            *source);
 
 gboolean             is_workday                                  (guint	              day);
 
@@ -127,8 +96,6 @@ void                 gcal_utils_ask_recurrence_modification_type (GtkWidget     
                                                                   gboolean                   show_mod_all,
                                                                   GcalAskRecurrenceCallback  callback,
                                                                   gpointer                   user_data);
-
-const gchar *        gcal_util_translate_time_string             (const gchar          *str);
 
 GTimeZone *          gcal_util_get_app_timezone_or_local         ();
 
