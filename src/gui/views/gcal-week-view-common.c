@@ -46,12 +46,12 @@ gcal_week_view_common_snapshot_hour_lines (GtkWidget      *widget,
   color.alpha = is_high_contrast ? 0.65 : 0.15;
   gtk_snapshot_restore (snapshot);
 
-  column_width = width / (float) N_WEEKDAYS;
+  column_width = width / (float) GCAL_N_WEEKDAYS;
 
   switch (orientation)
     {
     case GTK_ORIENTATION_HORIZONTAL:
-      for (i = 0; i < N_WEEKDAYS; i++)
+      for (i = 0; i < GCAL_N_WEEKDAYS; i++)
         {
           gdouble x;
 
@@ -74,7 +74,7 @@ gcal_week_view_common_snapshot_hour_lines (GtkWidget      *widget,
           gtk_snapshot_append_color (snapshot,
                                      &color,
                                      &GRAPHENE_RECT_INIT (0.f,
-                                                          ALIGNED ((height / 24.0) * i),
+                                                          GCAL_ALIGNED ((height / 24.0) * i),
                                                           width,
                                                           1.0));
         }
@@ -87,7 +87,7 @@ gcal_week_view_common_snapshot_hour_lines (GtkWidget      *widget,
           gtk_snapshot_append_color (snapshot,
                                      &color,
                                      &GRAPHENE_RECT_INIT (0.f,
-                                                          ALIGNED ((height / 24.0) * i + half_cell_height),
+                                                          GCAL_ALIGNED ((height / 24.0) * i + half_cell_height),
                                                           width,
                                                           1.0));
         }

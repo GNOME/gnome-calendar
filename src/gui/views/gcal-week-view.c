@@ -134,7 +134,7 @@ update_grid_scroll_position (GcalWeekView *self)
   page = gtk_adjustment_get_page_size (vadjustment);
   max = gtk_adjustment_get_upper (vadjustment);
 
-  real_value = max / MINUTES_PER_DAY * minutes - (page / 2.0);
+  real_value = max / GCAL_MINUTES_PER_DAY * minutes - (page / 2.0);
   page_increment = gtk_adjustment_get_page_increment (vadjustment);
   value = gtk_adjustment_get_value (vadjustment);
 

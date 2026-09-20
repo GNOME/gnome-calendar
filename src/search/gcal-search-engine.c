@@ -163,8 +163,8 @@ gcal_search_engine_search (GcalSearchEngine    *self,
   context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   timezone = gcal_context_get_timezone (context);
   now = g_date_time_new_now (timezone);
-  range_start = g_date_time_add_months (now, -N_WEEKDAYS - 1);
-  range_end = g_date_time_add_months (now, N_WEEKDAYS - 1);
+  range_start = g_date_time_add_months (now, -GCAL_N_WEEKDAYS - 1);
+  range_end = g_date_time_add_months (now, GCAL_N_WEEKDAYS - 1);
   model = gcal_search_model_new (cancellable, range_start, range_end);
 
   gcal_timeline_set_filter (self->timeline, search_query);

@@ -84,8 +84,8 @@ gcal_date_time_get_start_of_week (GDateTime *date)
   g_assert (date != NULL);
 
   first_weekday = gcal_util_get_first_weekday ();
-  weekday = g_date_time_get_day_of_week (date) % N_WEEKDAYS;
-  n_days_after_week_start = (N_WEEKDAYS + weekday - first_weekday) % N_WEEKDAYS;
+  weekday = g_date_time_get_day_of_week (date) % GCAL_N_WEEKDAYS;
+  n_days_after_week_start = (GCAL_N_WEEKDAYS + weekday - first_weekday) % GCAL_N_WEEKDAYS;
 
   start_of_week = g_date_time_add_days (date, -n_days_after_week_start);
 

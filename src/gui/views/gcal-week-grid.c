@@ -538,13 +538,13 @@ on_click_gesture_pressed_cb (GtkGestureClick *click_gesture,
   g_assert (self->selection.start == -1);
   g_assert (self->selection.end == -1);
 
-  minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / MINUTES_PER_DAY;
-  column_width = floor (gtk_widget_get_width (GTK_WIDGET (self)) / N_WEEKDAYS);
+  minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / GCAL_MINUTES_PER_DAY;
+  column_width = floor (gtk_widget_get_width (GTK_WIDGET (self)) / GCAL_N_WEEKDAYS);
   column = (gint) x / column_width;
   minute = y / minute_height;
   minute = minute - (minute % 30);
 
-  self->selection.start = (column * MINUTES_PER_DAY + minute) / 30;
+  self->selection.start = (column * GCAL_MINUTES_PER_DAY + minute) / 30;
   self->selection.end = self->selection.start;
 
   gtk_widget_set_visible (self->selection.widget, TRUE);
@@ -569,12 +569,12 @@ on_motion_controller_motion_cb (GtkEventControllerMotion *motion_controller,
   gint column;
   gint minute;
 
-  minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / MINUTES_PER_DAY;
-  column = self->selection.start * 30 / MINUTES_PER_DAY;
+  minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / GCAL_MINUTES_PER_DAY;
+  column = self->selection.start * 30 / GCAL_MINUTES_PER_DAY;
   minute = y / minute_height;
   minute = minute - (minute % 30);
 
-  self->selection.end = (column * MINUTES_PER_DAY + minute) / 30;
+  self->selection.end = (column * GCAL_MINUTES_PER_DAY + minute) / 30;
 
   gtk_widget_queue_allocate (GTK_WIDGET (self));
 }
@@ -603,12 +603,12 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
 
   ltr = gtk_widget_get_direction (GTK_WIDGET (self)) != GTK_TEXT_DIR_RTL;
 
-  minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / MINUTES_PER_DAY;
-  column = self->selection.start * 30 / MINUTES_PER_DAY;
+  minute_height = (gdouble) gtk_widget_get_height (GTK_WIDGET (self)) / GCAL_MINUTES_PER_DAY;
+  column = self->selection.start * 30 / GCAL_MINUTES_PER_DAY;
   minute = y / minute_height;
   minute = minute - (minute % 30);
 
-  self->selection.end = (column * MINUTES_PER_DAY + minute) / 30;
+  self->selection.end = (column * GCAL_MINUTES_PER_DAY + minute) / 30;
 
   start_cell = self->selection.start;
   end_cell = self->selection.end;
@@ -636,15 +636,15 @@ on_click_gesture_released_cb (GtkGestureClick *click_gesture,
       guint rtl_start_cell, rtl_end_cell, rtl_column;
 
       /* Fix the minute */
-      rtl_column = N_WEEKDAYS - 1 - column;
+      rtl_column = GCAL_N_WEEKDAYS - 1 - column;
       rtl_start_cell = start_cell + (rtl_column - column) * 48;
-      rtl_end_cell = (rtl_column * MINUTES_PER_DAY + minute) / 30;
+      rtl_end_cell = (rtl_column * GCAL_MINUTES_PER_DAY + minute) / 30;
 
       start = gcal_date_time_add_floating_minutes (week_start, rtl_start_cell * 30);
       end = gcal_date_time_add_floating_minutes (week_start, (rtl_end_cell + 1) * 30);
     }
 
-  local_x = round ((column + 0.5) * (gtk_widget_get_width (GTK_WIDGET (self)) / (float) N_WEEKDAYS));
+  local_x = round ((column + 0.5) * (gtk_widget_get_width (GTK_WIDGET (self)) / (float) GCAL_N_WEEKDAYS));
   local_y = (minute + 15) * minute_height;
 
   if (!gtk_widget_compute_point (GTK_WIDGET (self),
@@ -667,7 +667,7 @@ get_dnd_cell (GcalWeekGrid *self,
   gdouble column_width, cell_height;
   gint column, row;
 
-  column_width = gtk_widget_get_width (GTK_WIDGET (self)) / (float) N_WEEKDAYS;
+  column_width = gtk_widget_get_width (GTK_WIDGET (self)) / (float) GCAL_N_WEEKDAYS;
   cell_height = gtk_widget_get_height (GTK_WIDGET (self)) / 48.0;
   column = floor (x / column_width);
   row = y / cell_height;
@@ -693,10 +693,10 @@ move_event_to_cell (GcalWeekGrid          *self,
     {
       gint column, row;
 
-      column = cell / (MINUTES_PER_DAY / 30);
+      column = cell / (GCAL_MINUTES_PER_DAY / 30);
       row = cell - column * 48;
 
-      cell = (N_WEEKDAYS - 1 - column) * 48 + row;
+      cell = (GCAL_N_WEEKDAYS - 1 - column) * 48 + row;
     }
 
   changed_event = gcal_event_new_from_event (event);
@@ -888,7 +888,7 @@ get_today_column (GcalWeekGrid *self)
   days_diff = g_date_time_difference (today, week_start) / G_TIME_SPAN_DAY;
 
   /* Today is out of range */
-  if (g_date_time_compare (today, week_start) < 0 || days_diff > N_WEEKDAYS)
+  if (g_date_time_compare (today, week_start) < 0 || days_diff > GCAL_N_WEEKDAYS)
     return -1;
 
   return days_diff;
@@ -974,8 +974,8 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   /* Preliminary calculations */
-  minutes_height = (gdouble) height / MINUTES_PER_DAY;
-  column_width = (gdouble) width / (float) N_WEEKDAYS;
+  minutes_height = (gdouble) height / GCAL_MINUTES_PER_DAY;
+  column_width = (gdouble) width / (float) GCAL_N_WEEKDAYS;
 
   /* Selection */
   if (gtk_widget_should_layout (self->selection.widget))
@@ -1003,7 +1003,7 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
           start = start - end;
         }
 
-      column = (int) floor (start * 30 / (double) MINUTES_PER_DAY);
+      column = (int) floor (start * 30 / (double) GCAL_MINUTES_PER_DAY);
 
 #define Y_POSITION(row_) ((gint) round (((row_) * 30) * minutes_height))
 
@@ -1035,7 +1035,7 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
 
       cell_height = minutes_height * 30;
       event_height = minutes_height * self->dnd.event_minutes;
-      column = self->dnd.cell / (MINUTES_PER_DAY / 30);
+      column = self->dnd.cell / (GCAL_MINUTES_PER_DAY / 30);
       row = self->dnd.cell - column * 48;
 
       gtk_widget_size_allocate (self->dnd.widget,
@@ -1159,7 +1159,7 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
         x = width - (today_column * column_width) - column_width;
 
       allocation.x = x;
-      allocation.y = round (minutes_from_midnight * ((gdouble) height / MINUTES_PER_DAY));
+      allocation.y = round (minutes_from_midnight * ((gdouble) height / GCAL_MINUTES_PER_DAY));
       allocation.width = column_width;
       allocation.height = MAX (1, now_strip_height);
 

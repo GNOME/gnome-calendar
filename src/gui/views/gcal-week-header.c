@@ -96,9 +96,9 @@ struct _GcalWeekHeader
    * The list will later be iterated after the active date is changed
    * and the events will be placed
    */
-  GPtrArray          *events[N_WEEKDAYS];
-  GtkWidget          *overflow_label[N_WEEKDAYS];
-  WeekdayHeader       weekday_header[N_WEEKDAYS];
+  GPtrArray          *events[GCAL_N_WEEKDAYS];
+  GtkWidget          *overflow_label[GCAL_N_WEEKDAYS];
+  WeekdayHeader       weekday_header[GCAL_N_WEEKDAYS];
 
   gint                first_weekday;
 
@@ -123,7 +123,7 @@ struct _GcalWeekHeader
   } dnd;
 
   /* Array of nullable weather infos for each day, starting with Sunday. */
-  WeatherInfoDay      weather_infos[N_WEEKDAYS];
+  WeatherInfoDay      weather_infos[GCAL_N_WEEKDAYS];
 };
 
 typedef enum
@@ -281,8 +281,8 @@ on_button_pressed (GtkGestureClick *click_gesture,
 
   ltr = gtk_widget_get_direction (GTK_WIDGET (self)) != GTK_TEXT_DIR_RTL;
   width = gtk_widget_get_width (self->scrolledwindow);
-  column_width = width / (float) N_WEEKDAYS;
-  column = ltr ? (x / column_width) : (N_WEEKDAYS - x / column_width);
+  column_width = width / (float) GCAL_N_WEEKDAYS;
+  column = ltr ? (x / column_width) : (GCAL_N_WEEKDAYS - x / column_width);
 
   self->selection.start = column;
   self->selection.end = column;
@@ -306,8 +306,8 @@ on_motion_notify (GtkEventControllerMotion *motion_event,
 
   ltr = gtk_widget_get_direction (GTK_WIDGET (self)) != GTK_TEXT_DIR_RTL;
   width = gtk_widget_get_width (self->scrolledwindow);
-  column_width = width / (float) N_WEEKDAYS;
-  column = ltr ? (x / column_width) : (N_WEEKDAYS - x / column_width);
+  column_width = width / (float) GCAL_N_WEEKDAYS;
+  column = ltr ? (x / column_width) : (GCAL_N_WEEKDAYS - x / column_width);
 
   self->selection.end = column;
 
@@ -337,8 +337,8 @@ on_button_released (GtkGestureClick *click_gesture,
 
   ltr = gtk_widget_get_direction (GTK_WIDGET (self)) != GTK_TEXT_DIR_RTL;
   width = gtk_widget_get_width (self->scrolledwindow);
-  column_width = width / (float) N_WEEKDAYS;
-  column = ltr ? (x / column_width) : (N_WEEKDAYS - x / column_width);
+  column_width = width / (float) GCAL_N_WEEKDAYS;
+  column = ltr ? (x / column_width) : (GCAL_N_WEEKDAYS - x / column_width);
 
   self->selection.end = column;
   gtk_widget_queue_allocate (GTK_WIDGET (self));
@@ -396,7 +396,7 @@ get_today_column (GcalWeekHeader *self)
   days_diff = g_date_time_difference (today, week_start) / G_TIME_SPAN_DAY;
 
   /* Today is out of range */
-  if (g_date_time_compare (today, week_start) < 0 || days_diff > N_WEEKDAYS)
+  if (g_date_time_compare (today, week_start) < 0 || days_diff > GCAL_N_WEEKDAYS)
     return -1;
 
   return days_diff;
@@ -454,7 +454,7 @@ update_overflow (GcalWeekHeader *self)
 
   show_expand = FALSE;
 
-  for (i = 0; i < N_WEEKDAYS; i++)
+  for (i = 0; i < GCAL_N_WEEKDAYS; i++)
     {
       GtkWidget *label;
       gboolean show_label;
@@ -536,11 +536,11 @@ merge_events (GcalWeekHeader *self,
 static void
 check_mergeable_events (GcalWeekHeader *self)
 {
-  GList *checked_events[N_WEEKDAYS] = { NULL, };
+  GList *checked_events[GCAL_N_WEEKDAYS] = { NULL, };
   gint weekday;
 
   /* We don't need to check the last column */
-  for (weekday = 0; weekday < N_WEEKDAYS - 1; weekday++)
+  for (weekday = 0; weekday < GCAL_N_WEEKDAYS - 1; weekday++)
     {
       gint index = 0;
 
@@ -566,7 +566,7 @@ check_mergeable_events (GcalWeekHeader *self)
            * Horizontally check if the next cells have the same event
            * than the current cell.
            */
-          for (gsize j = 1; j < N_WEEKDAYS - weekday; j++)
+          for (gsize j = 1; j < GCAL_N_WEEKDAYS - weekday; j++)
             {
               GcalEvent *next_event;
 
@@ -646,7 +646,7 @@ split_event_widget_at_column (GcalWeekHeader *self,
   old_width = gtk_grid_layout_child_get_column_span (GTK_GRID_LAYOUT_CHILD (layout_child));
 
   create_before = column > 0 && left_attach < column;
-  create_after = column < N_WEEKDAYS - 1 && old_width > 1 && left_attach + old_width > column + 1;
+  create_after = column < GCAL_N_WEEKDAYS - 1 && old_width > 1 && left_attach + old_width > column + 1;
 
   event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
 
@@ -961,10 +961,10 @@ add_event (GcalWeekHeader *self,
   if (g_date_time_compare (event_end, week_end) < 0)
     end = floor (g_date_time_difference (event_end, week_start) / G_TIME_SPAN_DAY) - all_day;
   else
-    end = N_WEEKDAYS - 1;
+    end = GCAL_N_WEEKDAYS - 1;
 
   /* Sanity checks */
-  if (start > end || start > N_WEEKDAYS - 1 || end < 0)
+  if (start > end || start > GCAL_N_WEEKDAYS - 1 || end < 0)
     {
       g_warning ("Error adding event '%s' to the week header", gcal_event_get_summary (event));
       return;
@@ -1006,7 +1006,7 @@ remove_event (GcalWeekHeader *self,
     }
 
   /* Remove from the weekday's GList */
-  for (weekday = 0; weekday < N_WEEKDAYS; weekday++)
+  for (weekday = 0; weekday < GCAL_N_WEEKDAYS; weekday++)
     {
       guint event_position;
 
@@ -1048,9 +1048,9 @@ update_unchanged_events (GcalWeekHeader *self,
                                         g_date_time_get_month (new_week_start),
                                         g_date_time_get_day_of_month (new_week_start),
                                         0, 0, 0);
-  utc_week_end = g_date_time_add_days (utc_week_start, N_WEEKDAYS);
+  utc_week_end = g_date_time_add_days (utc_week_start, GCAL_N_WEEKDAYS);
 
-  for (weekday = 0; weekday < N_WEEKDAYS; weekday++)
+  for (weekday = 0; weekday < GCAL_N_WEEKDAYS; weekday++)
     {
       for (gsize i = 0; i < self->events[weekday]->len; i++)
         {
@@ -1120,7 +1120,7 @@ update_title (GcalWeekHeader *self)
   week_start = gcal_date_time_get_start_of_week (self->active_date);
   today_column = get_today_column (self);
 
-  for (gint i = 0; i < N_WEEKDAYS; i++)
+  for (gint i = 0; i < GCAL_N_WEEKDAYS; i++)
     {
       g_autoptr (GDateTime) day = NULL;
       g_autofree gchar *weekday_date = NULL;
@@ -1261,7 +1261,7 @@ get_dnd_cell (GcalWeekHeader *self,
 {
   gdouble column_width;
 
-  column_width = gtk_widget_get_width (GTK_WIDGET (self)) / (float) N_WEEKDAYS;
+  column_width = gtk_widget_get_width (GTK_WIDGET (self)) / (float) GCAL_N_WEEKDAYS;
 
   return x / column_width;
 }
@@ -1286,7 +1286,7 @@ move_event_to_cell (GcalWeekHeader        *self,
 
   /* RTL languages swap the drop cell column */
   if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
-    cell = N_WEEKDAYS - 1 - cell;
+    cell = GCAL_N_WEEKDAYS - 1 - cell;
 
   changed_event = gcal_event_new_from_event (event);
   start_date = gcal_event_get_date_start (changed_event);
@@ -1518,7 +1518,7 @@ gcal_week_header_size_allocate (GtkWidget *widget,
   gtk_widget_allocate (self->main_box, width, height, baseline, NULL);
 
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
-  cell_width = width / (float) N_WEEKDAYS;
+  cell_width = width / (float) GCAL_N_WEEKDAYS;
 
   if (gtk_widget_should_layout (self->selection.widget))
     {
@@ -1545,9 +1545,9 @@ gcal_week_header_size_allocate (GtkWidget *widget,
 
       gtk_widget_size_allocate (self->selection.widget,
                                 &(GtkAllocation) {
-                                  .x = ALIGNED (selection_x),
+                                  .x = GCAL_ALIGNED (selection_x),
                                   .y = -6,
-                                  .width = ALIGNED (selection_width + 1),
+                                  .width = GCAL_ALIGNED (selection_width + 1),
                                   .height = height + 6,
                                 },
                                 baseline);
@@ -1582,7 +1582,7 @@ gcal_week_header_snapshot (GtkWidget   *widget,
 
   width = gtk_widget_get_width (widget);
   height = gtk_widget_get_height (widget);
-  x = ALIGNED (ltr ? 0 : width);
+  x = GCAL_ALIGNED (ltr ? 0 : width);
 
   gtk_snapshot_save (snapshot);
   gtk_snapshot_translate (snapshot, &GRAPHENE_POINT_INIT (x, 0));
@@ -1627,7 +1627,7 @@ gcal_week_header_finalize (GObject *object)
 
   gcal_clear_date_time (&self->active_date);
 
-  for (i = 0; i < N_WEEKDAYS; i++)
+  for (i = 0; i < GCAL_N_WEEKDAYS; i++)
     g_clear_pointer (&self->events[i], g_ptr_array_unref);
 
   for (i = 0; i < G_N_ELEMENTS (self->weather_infos); i++)
@@ -1746,7 +1746,7 @@ gcal_week_header_init (GcalWeekHeader *self)
 
   g_signal_connect (self->events_model, "items-changed", G_CALLBACK (events_changed_cb), self);
 
-  for (gsize i = 0; i < N_WEEKDAYS; i++)
+  for (gsize i = 0; i < GCAL_N_WEEKDAYS; i++)
     self->events[i] = g_ptr_array_new_with_free_func (g_object_unref);
 
   self->expanded = FALSE;
@@ -1766,7 +1766,7 @@ gcal_week_header_init (GcalWeekHeader *self)
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  for (i = 0; i < N_WEEKDAYS; i++)
+  for (i = 0; i < GCAL_N_WEEKDAYS; i++)
     {
       WeekdayHeader *header = &self->weekday_header[i];
       GtkWidget *box;
@@ -1790,7 +1790,7 @@ gcal_week_header_init (GcalWeekHeader *self)
 
       gtk_box_append (self->weekdays_box, box);
 
-      /* Add N_WEEKDAYS empty widget to the grid to ensure proper spacing */
+      /* Add GCAL_N_WEEKDAYS empty widget to the grid to ensure proper spacing */
       gtk_grid_attach (self->grid, gtk_box_new (GTK_ORIENTATION_VERTICAL, 0), i, 0, 1, 1);
     }
 

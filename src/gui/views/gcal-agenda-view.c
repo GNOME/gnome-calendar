@@ -144,7 +144,7 @@ update_grid_scroll_position (GcalAgendaView *self)
   page = gtk_adjustment_get_page_size (vadjustment);
   max = gtk_adjustment_get_upper (vadjustment);
 
-  real_value = max / MINUTES_PER_DAY * minutes - (page / 2.0);
+  real_value = max / GCAL_MINUTES_PER_DAY * minutes - (page / 2.0);
   page_increment = gtk_adjustment_get_page_increment (vadjustment);
   value = gtk_adjustment_get_value (vadjustment);
 
@@ -451,7 +451,7 @@ gcal_agenda_view_init (GcalAgendaView *self)
   self->date = g_date_time_new_now_local ();
   self->days_model = g_list_store_new (GCAL_TYPE_AGENDA_VIEW_DAY);
 
-  for (size_t i = 0; i < N_WEEKDAYS; i++)
+  for (size_t i = 0; i < GCAL_N_WEEKDAYS; i++)
     {
       g_autoptr (GcalAgendaViewDay) day = NULL;
       g_autoptr (GDateTime) date = NULL;

@@ -127,7 +127,7 @@ struct _GcalWindow
   GtkWidget          *quick_add_popover;
 
   /* day, week, month, year, list */
-  GtkWidget          *views[N_WEEKDAYS - 1];
+  GtkWidget          *views[GCAL_N_WEEKDAYS - 1];
   gboolean            subscribed;
 
   GcalWindowView      active_view;

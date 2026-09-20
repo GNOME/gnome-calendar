@@ -27,10 +27,10 @@
 #include <libecal/libecal.h>
 #include <libgweather/gweather.h>
 
-#define N_WEEKDAYS 7
-#define ALIGNED(x)      (round (x) + 0.5)
-#define MINUTES_PER_DAY 1440
-#define MAX_MINUTES     (N_WEEKDAYS * MINUTES_PER_DAY)
+#define GCAL_N_WEEKDAYS 7
+#define GCAL_ALIGNED(x)      (round (x) + 0.5)
+#define GCAL_MINUTES_PER_DAY 1440
+#define GCAL_MAX_MINUTES     (GCAL_N_WEEKDAYS * GCAL_MINUTES_PER_DAY)
 
 #define GCAL_DEFAULT_APPLICATION GCAL_APPLICATION (g_application_get_default ())
 

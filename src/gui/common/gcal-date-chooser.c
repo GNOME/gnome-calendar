@@ -35,7 +35,7 @@
 #include <stdlib.h>
 
 #define ROWS 6
-#define DAYS ROWS * N_WEEKDAYS
+#define DAYS ROWS * GCAL_N_WEEKDAYS
 
 struct _GcalDateChooser
 {
@@ -51,9 +51,9 @@ struct _GcalDateChooser
 
   GtkWidget          *day_grid;
   GtkWidget          *corner;
-  GtkWidget          *cols[N_WEEKDAYS];
+  GtkWidget          *cols[GCAL_N_WEEKDAYS];
   GtkWidget          *rows[ROWS];
-  GtkWidget          *days[ROWS][N_WEEKDAYS];
+  GtkWidget          *days[ROWS][GCAL_N_WEEKDAYS];
   GtkWidget          *week[ROWS];
 
   GDateTime          *date;
@@ -221,9 +221,9 @@ calendar_compute_days (GcalDateChooser *self)
   first_day = g_date_time_get_day_of_week (date);
   g_date_time_unref (date);
 
-  first_day = (first_day + N_WEEKDAYS - self->week_start) % N_WEEKDAYS;
+  first_day = (first_day + GCAL_N_WEEKDAYS - self->week_start) % GCAL_N_WEEKDAYS;
   if (first_day == 0)
-    first_day = N_WEEKDAYS;
+    first_day = GCAL_N_WEEKDAYS;
 
   /* Compute days of previous month */
   if (month > 1)
@@ -251,8 +251,8 @@ calendar_compute_days (GcalDateChooser *self)
     }
 
   /* Compute days of current month */
-  row = first_day / N_WEEKDAYS;
-  col = first_day % N_WEEKDAYS;
+  row = first_day / GCAL_N_WEEKDAYS;
+  col = first_day % GCAL_N_WEEKDAYS;
 
   for (day = 1; day <= ndays_in_month; day++)
     {
@@ -263,7 +263,7 @@ calendar_compute_days (GcalDateChooser *self)
       g_date_time_unref (date);
 
       col++;
-      if (col == N_WEEKDAYS)
+      if (col == GCAL_N_WEEKDAYS)
         {
           row++;
           col = 0;
@@ -283,7 +283,7 @@ calendar_compute_days (GcalDateChooser *self)
   day = 1;
   for (; row < ROWS; row++)
     {
-      for (; col < N_WEEKDAYS; col++)
+      for (; col < GCAL_N_WEEKDAYS; col++)
         {
           d = GCAL_DATE_CHOOSER_DAY (self->days[row][col]);
           date = g_date_time_new_local (other_year, other_month, day, 0, 0, 0);
@@ -300,7 +300,7 @@ calendar_compute_days (GcalDateChooser *self)
     {
       gchar *text;
 
-      d = GCAL_DATE_CHOOSER_DAY (self->days[row][N_WEEKDAYS - 1]);
+      d = GCAL_DATE_CHOOSER_DAY (self->days[row][GCAL_N_WEEKDAYS - 1]);
       date = gcal_date_chooser_day_get_date (d);
       text = g_strdup_printf ("%d", g_date_time_get_week_of_year (date));
       gtk_label_set_label (GTK_LABEL (self->rows[row]), text);
@@ -381,9 +381,9 @@ calendar_get_weekday_name (gint i)
 static void
 calendar_init_weekday_display (GcalDateChooser *self)
 {
-  for (gint i = 0; i < N_WEEKDAYS; i++)
+  for (gint i = 0; i < GCAL_N_WEEKDAYS; i++)
     {
-      const char *text = calendar_get_weekday_name ((i + self->week_start) % N_WEEKDAYS);
+      const char *text = calendar_get_weekday_name ((i + self->week_start) % GCAL_N_WEEKDAYS);
       gtk_label_set_label (GTK_LABEL (self->cols[i]), text);
     }
 }
@@ -462,7 +462,7 @@ calendar_update_selected_day_display (GcalDateChooser *self)
     {
       gboolean row_selected = FALSE;
 
-      for (col = 0; col < N_WEEKDAYS; col++)
+      for (col = 0; col < GCAL_N_WEEKDAYS; col++)
       {
         gboolean day_selected;
 
@@ -524,7 +524,7 @@ update_event_indicators (GcalDateChooser *self)
 
   for (row = 0; row < ROWS; row++)
     {
-      for (col = 0; col < N_WEEKDAYS; col++)
+      for (col = 0; col < GCAL_N_WEEKDAYS; col++)
         {
           GcalDateChooserDay *day = GCAL_DATE_CHOOSER_DAY (self->days[row][col]);
           if (events_at_range)
@@ -1042,7 +1042,7 @@ show_week_number_to_column_span_cb (GBinding     *binding,
                                     GValue       *to_value,
                                     gpointer      user_data)
 {
-  g_value_set_int (to_value, g_value_get_boolean (from_value) ? N_WEEKDAYS + 1 : N_WEEKDAYS);
+  g_value_set_int (to_value, g_value_get_boolean (from_value) ? GCAL_N_WEEKDAYS + 1 : GCAL_N_WEEKDAYS);
 
   return TRUE;
 }
@@ -1089,7 +1089,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
 
   gcal_gizmo_set_focus_func (self->gizmo, gcal_gizmo_focus, NULL);
 
-  for (col = 0; col < N_WEEKDAYS; col++)
+  for (col = 0; col < GCAL_N_WEEKDAYS; col++)
     {
       self->cols[col] = gtk_label_new ("");
 
@@ -1170,11 +1170,11 @@ gcal_date_chooser_init (GcalDateChooser *self)
                                  "column-spacing", 2,
                                  "visible", TRUE,
                                  NULL);
-  gtk_grid_attach (GTK_GRID (self->grid), self->day_grid, 0, 0, N_WEEKDAYS, ROWS);
+  gtk_grid_attach (GTK_GRID (self->grid), self->day_grid, 0, 0, GCAL_N_WEEKDAYS, ROWS);
 
   for (row = 0; row < ROWS; row++)
     {
-      for (col = 0; col < N_WEEKDAYS; col++)
+      for (col = 0; col < GCAL_N_WEEKDAYS; col++)
         {
           self->days[row][col] = gcal_date_chooser_day_new ();
 
