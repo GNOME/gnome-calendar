@@ -190,6 +190,12 @@ update_today_action_enabled (GcalWindow *window)
   g_autoptr (GDateTime) now = NULL;
   GSimpleAction *action;
   gboolean enabled;
+  int active_year;
+  int active_month;
+  int active_day;
+  int now_year;
+  int now_month;
+  int now_day;
 
   GCAL_ENTRY;
 
@@ -200,12 +206,13 @@ update_today_action_enabled (GcalWindow *window)
     case GCAL_WINDOW_VIEW_WEEK:
     case GCAL_WINDOW_VIEW_MONTH:
     case GCAL_WINDOW_VIEW_AGENDA:
-      enabled = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
-                g_date_time_get_week_of_year (window->active_date) !=  g_date_time_get_week_of_year (now);
+      g_date_time_get_ymd (window->active_date, &active_year, &active_month, &active_day);
+      g_date_time_get_ymd (now, &now_year, &now_month, &now_day);
 
-      GCAL_TRACE_MSG ("Active date's week is %d, current week is %d",
-                      g_date_time_get_week_of_year (window->active_date),
-                      g_date_time_get_week_of_year (now));
+      enabled = active_year != now_year || active_month != now_month || active_day != now_day;
+
+      GCAL_TRACE_MSG ("Active date's year, month, and day are %d, %d, and %d; current year, month, and day are %d, %d, %d",
+                      active_year, active_month, active_day, now_year, now_month, now_day);
       break;
 
     default:
