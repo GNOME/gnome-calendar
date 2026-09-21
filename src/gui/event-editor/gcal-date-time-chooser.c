@@ -287,6 +287,9 @@ validate_and_normalize_time_entry (GcalDateTimeChooser *self)
                                      g_date_time_get_day_of_month (self->date_time),
                                      hour, minute, 0);
 
+        if (!date_time)
+          break;
+
         gcal_date_time_chooser_set_date_time (self, date_time);
       }
       break;
