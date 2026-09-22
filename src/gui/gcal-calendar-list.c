@@ -136,7 +136,7 @@ on_listbox_row_activated_cb (GtkListBox *listbox,
                              GtkListBoxRow *row,
                              GcalCalendarList *self)
 {
-  GcalCalendar *calendar = g_object_get_data (G_OBJECT (row), "calendar");
+  GcalCalendar *calendar = GCAL_CALENDAR (g_object_get_data (G_OBJECT (row), "calendar"));
 
   gcal_calendar_set_visible (calendar, !gcal_calendar_get_visible (calendar));
 
@@ -154,7 +154,7 @@ update_header_func (GtkListBoxRow *row,
   GtkWidget *header = NULL;
   ESource *parent;
 
-  calendar = g_object_get_data (G_OBJECT (row), "calendar");
+  calendar = GCAL_CALENDAR (g_object_get_data (G_OBJECT (row), "calendar"));
   parent = gcal_calendar_get_parent_source (calendar);
 
   if (before)
@@ -162,7 +162,7 @@ update_header_func (GtkListBoxRow *row,
       GcalCalendar *before_calendar;
       ESource *before_parent;
 
-      before_calendar = g_object_get_data (G_OBJECT (before), "calendar");
+      before_calendar = GCAL_CALENDAR (g_object_get_data (G_OBJECT (before), "calendar"));
       before_parent = gcal_calendar_get_parent_source (before_calendar);
 
       if (g_strcmp0 (e_source_get_display_name (parent), e_source_get_display_name (before_parent)) != 0)
