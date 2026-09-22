@@ -719,7 +719,7 @@ on_window_undo_delete_event_cb (GSimpleAction *action,
   if (!self->delete_event_toast)
     GCAL_RETURN ();
 
-  event = g_object_get_data (G_OBJECT (self->delete_event_toast), "event");
+  event = GCAL_EVENT (g_object_get_data (G_OBJECT (self->delete_event_toast), "event"));
   modifier = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (self->delete_event_toast), "modifier"));
 
   g_assert (event != NULL);
@@ -1000,7 +1000,7 @@ on_toast_dismissed_cb (AdwToast   *toast,
     GCAL_RETURN();
 
   manager = gcal_context_get_manager (context);
-  event = g_object_get_data (G_OBJECT (toast), "event");
+  event = GCAL_EVENT (g_object_get_data (G_OBJECT (toast), "event"));
   modifier = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (toast), "modifier"));
 
   g_assert (event != NULL);
