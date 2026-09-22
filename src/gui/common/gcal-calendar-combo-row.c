@@ -52,7 +52,7 @@ on_calendar_selected_cb (AdwComboRow *row,
                          GParamSpec  *pspec,
                          GtkListItem *item)
 {
-  GtkWidget *checkmark = g_object_get_data (G_OBJECT (item), "checkmark");
+  GtkWidget *checkmark = GTK_WIDGET (g_object_get_data (G_OBJECT (item), "checkmark"));
 
   if (adw_combo_row_get_selected_item (row) == gtk_list_item_get_item (item))
     gtk_widget_set_opacity (checkmark, 1);
@@ -92,8 +92,8 @@ calendar_item_bind_cb (GtkSignalListItemFactory *factory,
 
   data = gtk_list_item_get_item (item);
 
-  box = g_object_get_data (G_OBJECT (item), "box");
-  checkmark = g_object_get_data (G_OBJECT (item), "checkmark");
+  box = GTK_WIDGET (g_object_get_data (G_OBJECT (item), "box"));
+  checkmark = GTK_WIDGET (g_object_get_data (G_OBJECT (item), "checkmark"));
 
   calendar_row = gcal_calendar_row_new (data);
 
