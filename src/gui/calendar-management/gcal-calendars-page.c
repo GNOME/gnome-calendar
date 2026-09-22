@@ -126,7 +126,7 @@ add_calendar (GcalCalendarsPage *self,
        child != NULL;
        child = gtk_widget_get_next_sibling (child))
     {
-      if (g_object_get_data (G_OBJECT (child), "calendar") == calendar)
+      if (GCAL_CALENDAR (g_object_get_data (G_OBJECT (child), "calendar")) == calendar)
         return;
     }
 
@@ -149,7 +149,7 @@ remove_calendar (GcalCalendarsPage *self,
        child != NULL;
        child = gtk_widget_get_next_sibling (child))
     {
-      GcalCalendar *row_calendar = g_object_get_data (G_OBJECT (child), "calendar");
+      GcalCalendar *row_calendar = GCAL_CALENDAR (g_object_get_data (G_OBJECT (child), "calendar"));
 
       if (row_calendar && row_calendar == calendar)
         {
@@ -193,7 +193,7 @@ clear_toast_and_delete_calendar (GcalCalendarsPage *self,
 
   GCAL_ENTRY;
 
-  calendar = g_object_get_data (G_OBJECT (toast), "calendar");
+  calendar = GCAL_CALENDAR (g_object_get_data (G_OBJECT (toast), "calendar"));
 
   if (!calendar)
     {
@@ -240,8 +240,8 @@ listbox_sort_func (GtkListBoxRow *row1,
   const gchar *parent_name2;
   gint retval;
 
-  calendar1 = g_object_get_data (G_OBJECT (row1), "calendar");
-  calendar2 = g_object_get_data (G_OBJECT (row2), "calendar");
+  calendar1 = GCAL_CALENDAR (g_object_get_data (G_OBJECT (row1), "calendar"));
+  calendar2 = GCAL_CALENDAR (g_object_get_data (G_OBJECT (row2), "calendar"));
 
   retval = g_ascii_strcasecmp (gcal_calendar_get_name (calendar1), gcal_calendar_get_name (calendar2));
 
@@ -275,7 +275,7 @@ on_listbox_row_activated_cb (GtkListBox        *listbox,
 {
   GcalCalendarManagementPage *page = GCAL_CALENDAR_MANAGEMENT_PAGE (self);
 
-  GcalCalendar *calendar = g_object_get_data (G_OBJECT (row), "calendar");
+  GcalCalendar *calendar = GCAL_CALENDAR (g_object_get_data (G_OBJECT (row), "calendar"));
 
   gcal_calendar_management_page_switch_page (page, "edit-calendar", calendar);
 }
@@ -304,7 +304,7 @@ on_toast_button_clicked_cb (AdwToast          *toast,
 
   GCAL_ENTRY;
 
-  calendar = g_object_get_data (G_OBJECT (toast), "calendar");
+  calendar = GCAL_CALENDAR (g_object_get_data (G_OBJECT (toast), "calendar"));
   g_assert (calendar != NULL);
 
   gcal_calendar_set_visible (calendar, TRUE);
