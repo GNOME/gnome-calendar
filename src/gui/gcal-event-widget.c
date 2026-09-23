@@ -605,9 +605,12 @@ gcal_event_widget_set_property (GObject      *object,
 
     case PROP_ORIENTATION:
       self->orientation = g_value_get_enum (value);
-      gcal_event_widget_update_orientation_widgets (self);
-      gcal_event_widget_update_style (self);
-      gcal_event_widget_update_timestamp (self);
+      if (self->event)
+        {
+          gcal_event_widget_update_orientation_widgets (self);
+          gcal_event_widget_update_style (self);
+          gcal_event_widget_update_timestamp (self);
+        }
       g_object_notify (object, "orientation");
       break;
 
@@ -1000,6 +1003,7 @@ gcal_event_widget_set_event (GcalEventWidget *self,
       g_signal_group_set_target (self->event_signal_group, event);
 
       update_color (self);
+      gcal_event_widget_update_orientation_widgets (self);
       gcal_event_widget_set_event_tooltip (self, event);
       gcal_event_widget_update_style (self);
       gcal_event_widget_update_timestamp (self);
