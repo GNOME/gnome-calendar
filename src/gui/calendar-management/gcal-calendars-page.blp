@@ -8,7 +8,18 @@ template $GcalCalendarsPage: Adw.NavigationPage {
   child: Adw.ToastOverlay toast_overlay {
     Adw.ToolbarView {
       [top]
-      Adw.HeaderBar {}
+      Adw.HeaderBar {
+        [start]
+        MenuButton {
+          tooltip-text: _("Add Calendar");
+          icon-name: "plus-large-symbolic";
+
+          menu-model: menu {
+            item (_("New Local Calendar…"), "calendar-management.new-local-calendar")
+            item (_("Add Remote Calendar…"), "calendar-management.new-online-calendar")
+          };
+        }
+      }
 
       content: Adw.PreferencesPage {
         Adw.PreferencesGroup {
@@ -23,37 +34,6 @@ template $GcalCalendarsPage: Adw.NavigationPage {
           }
         }
       };
-
-      [bottom]
-      Adw.Clamp {
-        ListBox {
-          selection-mode: none;
-          margin-top: 15;
-          margin-bottom: 15;
-          margin-start: 12;
-          margin-end: 12;
-
-          Adw.ButtonRow {
-            title: _("_Add Calendar");
-            use-underline: true;
-            end-icon-name: "go-next-symbolic";
-            activated => $on_new_calendar_row_activated_cb(template) not-swapped;
-
-            ShortcutController {
-              scope: managed;
-
-              Shortcut {
-                trigger: "<Ctrl>n";
-                action: "activate";
-              }
-            }
-          }
-
-          styles [
-            "boxed-list",
-          ]
-        }
-      }
     }
   };
 }

@@ -213,6 +213,22 @@ clear_toast_and_delete_calendar (GcalCalendarsPage *self,
  * Callbacks
  */
 
+static void
+on_new_local_calendar_action_activated (GtkWidget *widget)
+{
+  GcalCalendarManagementPage *page = GCAL_CALENDAR_MANAGEMENT_PAGE (widget);
+
+  gcal_calendar_management_page_switch_page (page, "new-local-calendar", NULL);
+}
+
+static void
+on_new_online_calendar_action_activated (GtkWidget *widget)
+{
+  GcalCalendarManagementPage *page = GCAL_CALENDAR_MANAGEMENT_PAGE (widget);
+
+  gcal_calendar_management_page_switch_page (page, "new-online-calendar", NULL);
+}
+
 static gint
 listbox_sort_func (GtkListBoxRow *row1,
                    GtkListBoxRow *row2,
@@ -262,15 +278,6 @@ on_listbox_row_activated_cb (GtkListBox        *listbox,
   GcalCalendar *calendar = g_object_get_data (G_OBJECT (row), "calendar");
 
   gcal_calendar_management_page_switch_page (page, "edit-calendar", calendar);
-}
-
-static void
-on_new_calendar_row_activated_cb (AdwButtonRow      *button,
-                                  GcalCalendarsPage *self)
-{
-  GcalCalendarManagementPage *page = GCAL_CALENDAR_MANAGEMENT_PAGE (self);
-
-  gcal_calendar_management_page_switch_page (page, "new-local-calendar", NULL);
 }
 
 static void
@@ -417,7 +424,11 @@ gcal_calendars_page_class_init (GcalCalendarsPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, toast_overlay);
 
   gtk_widget_class_bind_template_callback (widget_class, on_listbox_row_activated_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_new_calendar_row_activated_cb);
+
+  gtk_widget_class_install_action (widget_class, "calendar-management.new-local-calendar", NULL,
+                                   (GtkWidgetActionActivateFunc) on_new_local_calendar_action_activated);
+  gtk_widget_class_install_action (widget_class, "calendar-management.new-online-calendar", NULL,
+                                   (GtkWidgetActionActivateFunc) on_new_online_calendar_action_activated);
 }
 
 static void
