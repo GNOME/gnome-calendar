@@ -7,7 +7,6 @@ blueprints = custom_target(
     'gcal-calendar-management-dialog.blp',
     'gcal-calendars-page.blp',
     'gcal-edit-calendar-page.blp',
-    'gcal-new-calendar-page.blp',
     'gcal-new-local-calendar-page.blp',
     'gcal-new-online-calendar-page.blp',
   ),
@@ -33,7 +32,6 @@ sources += files(
   'gcal-calendar-management-page.c',
   'gcal-calendars-page.c',
   'gcal-edit-calendar-page.c',
-  'gcal-new-calendar-page.c',
   'gcal-new-local-calendar-page.c',
   'gcal-new-online-calendar-page.c',
 )

@@ -10,8 +10,6 @@ src/gui/calendar-management/gcal-calendars-page.blp
 src/gui/calendar-management/gcal-calendars-page.c
 src/gui/calendar-management/gcal-edit-calendar-page.blp
 src/gui/calendar-management/gcal-edit-calendar-page.c
-src/gui/calendar-management/gcal-new-calendar-page.blp
-src/gui/calendar-management/gcal-new-calendar-page.c
 src/gui/calendar-management/gcal-new-local-calendar-page.blp
 src/gui/calendar-management/gcal-new-local-calendar-page.c
 src/gui/calendar-management/gcal-new-online-calendar-page.blp

@@ -270,7 +270,7 @@ on_new_calendar_row_activated_cb (AdwButtonRow      *button,
 {
   GcalCalendarManagementPage *page = GCAL_CALENDAR_MANAGEMENT_PAGE (self);
 
-  gcal_calendar_management_page_switch_page (page, "new-calendar", NULL);
+  gcal_calendar_management_page_switch_page (page, "new-local-calendar", NULL);
 }
 
 static void

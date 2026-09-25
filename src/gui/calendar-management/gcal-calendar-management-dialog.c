@@ -24,7 +24,7 @@
 #include "gcal-calendar-management-page.h"
 #include "gcal-calendars-page.h"
 #include "gcal-edit-calendar-page.h"
-#include "gcal-new-calendar-page.h"
+#include "gcal-new-local-calendar-page.h"
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
@@ -170,7 +170,7 @@ gcal_calendar_management_dialog_init (GcalCalendarManagementDialog *self)
     GType        gtype;
   } pages[] = {
     { GCAL_PAGE_CALENDARS, GCAL_TYPE_CALENDARS_PAGE },
-    { GCAL_PAGE_NEW_CALENDAR, GCAL_TYPE_NEW_CALENDAR_PAGE },
+    { GCAL_PAGE_NEW_CALENDAR, GCAL_TYPE_NEW_LOCAL_CALENDAR_PAGE },
     { GCAL_PAGE_EDIT_CALENDAR, GCAL_TYPE_EDIT_CALENDAR_PAGE },
   };
 
