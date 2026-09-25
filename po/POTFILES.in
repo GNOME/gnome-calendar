@@ -12,6 +12,8 @@ src/gui/calendar-management/gcal-edit-calendar-page.blp
 src/gui/calendar-management/gcal-edit-calendar-page.c
 src/gui/calendar-management/gcal-new-calendar-page.blp
 src/gui/calendar-management/gcal-new-calendar-page.c
+src/gui/calendar-management/gcal-new-local-calendar-page.blp
+src/gui/calendar-management/gcal-new-local-calendar-page.c
 src/gui/common/gcal-calendar-combo-row.blp
 src/gui/common/gcal-calendar-row.c
 src/gui/common/gcal-date-chooser.blp
