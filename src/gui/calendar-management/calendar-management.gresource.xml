@@ -7,5 +7,6 @@
     <file compressed="true">gcal-edit-calendar-page.ui</file>
     <file compressed="true">gcal-new-calendar-page.ui</file>
     <file compressed="true">gcal-new-local-calendar-page.ui</file>
+    <file compressed="true">gcal-new-online-calendar-page.ui</file>
   </gresource>
 </gresources>
