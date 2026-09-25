@@ -14,31 +14,6 @@ template $GcalNewOnlineCalendarPage: Adw.NavigationPage {
 
     content: Adw.PreferencesPage {
       Adw.PreferencesGroup {
-        title: _("Create a Local Calendar");
-
-        Adw.EntryRow local_calendar_name_row {
-          title: _("Calendar Name");
-          notify::text => $on_local_calendar_name_row_text_changed_cb(template) not-swapped;
-        }
-
-        Adw.ActionRow {
-          title: _("Color");
-          activatable-widget: local_calendar_color_button;
-
-          ColorDialogButton local_calendar_color_button {
-            valign: center;
-
-            dialog: ColorDialog {
-              modal: true;
-              with-alpha: false;
-            };
-
-            notify::rgba => $on_local_calendar_color_button_rgba_changed_cb(template) not-swapped;
-          }
-        }
-      }
-
-      Adw.PreferencesGroup {
         title: _("Connect to an Online Calendar");
 
         Grid {
