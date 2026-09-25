@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-03-14 15:24+0000\n"
-"PO-Revision-Date: 2026-08-25 18:52+0100\n"
+"POT-Creation-Date: 2026-09-13 20:37+0000\n"
+"PO-Revision-Date: 2026-09-25 11:10+0100\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Português (https://l10n.gnome.org/teams/pt/)\n"
 "Language: pt\n"
@@ -23,12 +23,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.6\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5
-#: src/gui/gcal-window.c:417 src/main.c:35
+#: src/gui/gcal-window.c:414 src/main.c:35
 msgid "Calendar"
 msgstr "Calendário"
 
@@ -112,9 +112,10 @@ msgid ""
 "Calendar's infinite scrolling month view, week timetable, and scheduling "
 "list view."
 msgstr ""
-"Crie e gerencie facilmente calendários e eventos ilimitados com a "
-"visualização de mês com deslocação infinita, o calendário semanal e a vista "
-"de lista de agendamento do Calendário do GNOME."
+"Crie e faça a gestão facilmente de calendários e eventos ilimitados com a "
+"visualização mensal de deslocamento infinito, o horário semanal e a "
+"visualização\n"
+"em lista de agendamentos do Calendário do GNOME."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:26
 msgid ""
@@ -166,7 +167,6 @@ msgid "planning"
 msgstr "planeamento"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:46
-#| msgid "Agenda"
 msgid "agenda"
 msgstr "agenda"
 
@@ -187,9 +187,8 @@ msgid "forecasting"
 msgstr "previsão"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:57
-#| msgid "New Calendar"
 msgid "Google Calendar"
-msgstr "Google Calendar"
+msgstr "Calendário Google"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
@@ -200,27 +199,33 @@ msgid "Week view"
 msgstr "Visualização da semana"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:71
+msgid "Agenda view"
+msgstr "Visualização da agenda"
+
+#: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:75
 msgid "Event editor"
 msgstr "Editor de eventos"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#. Translators: %1$s is the start date, and %2$s. For example: June 21 - November 29, 2022
-#: src/core/gcal-event.c:1786 src/gui/gcal-event-popover.c:423
+#. Translators: %1$s is the start date, and %2$s. For example: June 21 – November 29, 2022
+#: src/core/gcal-event.c:1937 src/gui/gcal-event-popover.c:422
 #, c-format
-msgid "%1$s — %2$s"
-msgstr "%1$s — %2$s"
+#| msgid "%1$s — %2$s"
+msgid "%1$s – %2$s"
+msgstr "%1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1794
+#: src/core/gcal-event.c:1945
 #, c-format
-msgid "%1$s %2$s — %3$s %4$s"
-msgstr "%1$s %2$s — %3$s %4$s"
+#| msgid "%1$s %2$s — %3$s %4$s"
+msgid "%1$s %2$s – %3$s %4$s"
+msgstr "%1$s %2$s – %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1810
+#: src/core/gcal-event.c:1961
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -242,9 +247,9 @@ msgid "Calendar Settings"
 msgstr "Definições do Calendário"
 
 #: src/gui/calendar-management/gcal-calendars-page.blp:5
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:88
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:90
 msgid "Calendars"
-msgstr "Caléndários"
+msgstr "Calendários"
 
 #: src/gui/calendar-management/gcal-calendars-page.blp:37
 msgid "_Add Calendar"
@@ -252,13 +257,13 @@ msgstr "_Adicionar calendário"
 
 #. Create the new toast
 #. TRANSLATORS: %s is a calendar name.
-#: src/gui/calendar-management/gcal-calendars-page.c:351
+#: src/gui/calendar-management/gcal-calendars-page.c:349
 #, c-format
 msgid "Calendar “%s” removed"
 msgstr "Calendário “%s” removido"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:356
-#: src/gui/gcal-window.c:994
+#: src/gui/calendar-management/gcal-calendars-page.c:354
+#: src/gui/gcal-window.c:1020
 msgid "_Undo"
 msgstr "An_ular"
 
@@ -275,10 +280,10 @@ msgid "Open in Settings"
 msgstr "Abrir em Definições"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:43
-#: src/gui/calendar-management/gcal-edit-calendar-page.c:197
-#: src/gui/event-editor/gcal-summary-section.blp:18
-#: src/gui/gcal-event-popover.blp:144
-#: src/gui/importer/gcal-import-file-row.c:180
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:191
+#: src/gui/event-editor/gcal-summary-section.blp:12
+#: src/gui/gcal-event-popover.blp:152
+#: src/gui/importer/gcal-import-file-row.c:176
 msgid "Location"
 msgstr "Localização"
 
@@ -304,15 +309,15 @@ msgstr "_Exportar calendário"
 msgid "_Remove Calendar"
 msgstr "_Remover calendário"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.c:180
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:174
 msgid "Calendar URL"
 msgstr "URL do calendário"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.c:198
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:192
 msgid "On This Computer"
 msgstr "Neste computador"
 
-#: src/gui/calendar-management/gcal-edit-calendar-page.c:344
+#: src/gui/calendar-management/gcal-edit-calendar-page.c:338
 msgid "Export Calendar"
 msgstr "Exportar Calendário"
 
@@ -328,7 +333,7 @@ msgstr "Criar um calendário local"
 msgid "Connect to an Online Calendar"
 msgstr "Ligue-se a um calendário online"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:49
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:50
 msgid ""
 "HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
 "be updated by the provider will be added as read-only."
@@ -336,7 +341,7 @@ msgstr ""
 "São suportados URLs HTTPS, CalDAV ou Webcal. Os calendários online que só "
 "podem ser atualizados pelo fornecedor serão adicionados como apenas-leitura."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:108
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:111
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -344,46 +349,46 @@ msgstr ""
 "Se o calendário pertence a uma das suas contas online, pode adicioná-lo "
 "através das <a href=\"GOA\">definições de contas online</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:126
-#: src/gui/calendar-management/gcal-new-calendar-page.c:124
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:130
+#: src/gui/calendar-management/gcal-new-calendar-page.c:116
 msgctxt "button"
 msgid "Add Calendar"
 msgstr "Adicionar calendário"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:141
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:145
 msgid "Credentials"
 msgstr "Credenciais"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:147
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:151
 msgid "User"
 msgstr "Utilizador"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:151
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:155
 msgid "Password"
 msgstr "Palavra-passe"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:161
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:165
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:18
-#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1213
+#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1295
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:162
+#: src/gui/calendar-management/gcal-new-calendar-page.blp:166
 msgid "_Connect"
 msgstr "_Ligar"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:117
+#: src/gui/calendar-management/gcal-new-calendar-page.c:109
 #, c-format
 msgid "Add Calendar"
 msgid_plural "Add %1$u Calendars"
 msgstr[0] "Adicionar calendário"
 msgstr[1] "Adicionar %1$u calendários"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:332
+#: src/gui/calendar-management/gcal-new-calendar-page.c:324
 msgid "The URL you have entered appears to be invalid."
 msgstr "O URL que introduziu parece não ser válido."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:385
+#: src/gui/calendar-management/gcal-new-calendar-page.c:379
 msgid "A valid user and password are required to connect to this calendar."
 msgstr ""
 "É necessário um utilizador e uma palavra-passe válidos para estabelecer "
@@ -394,17 +399,17 @@ msgid "This calendar is hidden"
 msgstr "Este calendário está oculto"
 
 #: src/gui/common/gcal-date-chooser.blp:15
-#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:411
+#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:408
 msgid "Month"
 msgstr "Mês"
 
 #: src/gui/common/gcal-date-chooser.blp:16
-#: src/gui/common/gcal-date-chooser.blp:56 src/gui/gcal-window.c:257
+#: src/gui/common/gcal-date-chooser.blp:56 src/gui/gcal-window.c:253
 msgid "Previous Month"
 msgstr "Mês anterior"
 
 #: src/gui/common/gcal-date-chooser.blp:17
-#: src/gui/common/gcal-date-chooser.blp:57 src/gui/gcal-window.c:288
+#: src/gui/common/gcal-date-chooser.blp:57 src/gui/gcal-window.c:284
 msgid "Next Month"
 msgstr "Mês seguinte"
 
@@ -428,43 +433,43 @@ msgstr "Ano seguinte"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:336
+#: src/gui/common/gcal-date-chooser.c:333
 msgctxt "grid sunday"
 msgid "S"
 msgstr "D"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:341
+#: src/gui/common/gcal-date-chooser.c:338
 msgctxt "grid monday"
 msgid "M"
 msgstr "S"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:346
+#: src/gui/common/gcal-date-chooser.c:343
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "T"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:351
+#: src/gui/common/gcal-date-chooser.c:348
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "Q"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:356
+#: src/gui/common/gcal-date-chooser.c:353
 msgctxt "grid thursday"
 msgid "T"
 msgstr "Q"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:361
+#: src/gui/common/gcal-date-chooser.c:358
 msgctxt "grid friday"
 msgid "F"
 msgstr "S"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:366
+#: src/gui/common/gcal-date-chooser.c:363
 msgctxt "grid saturday"
 msgid "S"
 msgstr "S"
@@ -568,7 +573,7 @@ msgstr[1] "%1$u minutos antes"
 msgid "Event start time"
 msgstr "Início do evento"
 
-#: src/gui/event-editor/gcal-attendee-row.blp:29
+#: src/gui/event-editor/gcal-attendee-row.blp:25
 #: src/gui/event-editor/gcal-organizer-row.blp:25
 msgid "Copy email"
 msgstr "Copiar e-mail"
@@ -582,7 +587,7 @@ msgid "optional"
 msgstr "opcional"
 
 #: src/gui/event-editor/gcal-attendee-details-page.blp:5
-#: src/gui/event-editor/gcal-attendees-section.blp:22
+#: src/gui/event-editor/gcal-attendees-section.blp:9
 msgid "Participants"
 msgstr "Participantes"
 
@@ -590,19 +595,19 @@ msgstr "Participantes"
 msgid "Accepted"
 msgstr "Aceite"
 
-#: src/gui/event-editor/gcal-attendee-details-page.blp:29
+#: src/gui/event-editor/gcal-attendee-details-page.blp:21
 msgid "Tentative"
 msgstr "Provisório"
 
-#: src/gui/event-editor/gcal-attendee-details-page.blp:42
+#: src/gui/event-editor/gcal-attendee-details-page.blp:26
 msgid "Declined"
 msgstr "Recusado"
 
-#: src/gui/event-editor/gcal-attendee-details-page.blp:55
+#: src/gui/event-editor/gcal-attendee-details-page.blp:31
 msgid "Delegated"
 msgstr "Delegado"
 
-#: src/gui/event-editor/gcal-attendee-details-page.blp:68
+#: src/gui/event-editor/gcal-attendee-details-page.blp:36
 msgid "Not responded"
 msgstr "Sem resposta"
 
@@ -641,15 +646,15 @@ msgid_plural "%1$u not responded"
 msgstr[0] "%1$u não respondido"
 msgstr[1] "%1$u não respondidos"
 
-#: src/gui/event-editor/gcal-attendees-section.blp:28
+#: src/gui/event-editor/gcal-attendees-section.blp:15
 msgid "Resources"
-msgstr "Resursos"
+msgstr "Recursos"
 
 #: src/gui/event-editor/gcal-date-chooser-row.blp:12
 msgid "Edit Date"
 msgstr "Editar Data"
 
-#: src/gui/event-editor/gcal-date-chooser-row.blp:32
+#: src/gui/event-editor/gcal-date-chooser-row.blp:33
 msgid "Edit date"
 msgstr "Editar data"
 
@@ -657,215 +662,214 @@ msgstr "Editar data"
 msgid "Date"
 msgstr "Data"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:11
+#: src/gui/event-editor/gcal-date-time-chooser.blp:12
 msgid "Time"
 msgstr "Hora"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:20
-#: src/gui/event-editor/gcal-time-chooser-row.blp:12
+#: src/gui/event-editor/gcal-date-time-chooser.blp:22
 msgid "Edit Time"
 msgstr "Editar Hora"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:52
+#: src/gui/event-editor/gcal-date-time-chooser.blp:55
 msgid ":"
 msgstr ":"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:70
-#: src/gui/event-editor/gcal-date-time-chooser.c:205
-#: src/gui/event-editor/gcal-date-time-chooser.c:270
+#: src/gui/event-editor/gcal-date-time-chooser.blp:73
+#: src/gui/event-editor/gcal-date-time-chooser.c:208
+#: src/gui/event-editor/gcal-date-time-chooser.c:273
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "AM"
 msgstr "AM"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:75
-#: src/gui/event-editor/gcal-date-time-chooser.c:205
+#: src/gui/event-editor/gcal-date-time-chooser.blp:78
+#: src/gui/event-editor/gcal-date-time-chooser.c:208
 #: src/gui/views/gcal-week-hour-bar.c:57
 msgid "PM"
 msgstr "PM"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:85
-#: src/gui/event-editor/gcal-date-time-chooser.blp:94
+#: src/gui/event-editor/gcal-date-time-chooser.blp:88
+#: src/gui/event-editor/gcal-date-time-chooser.blp:97
 msgid "Change Timezone"
 msgstr "Alterar Fuso Horário"
 
-#: src/gui/event-editor/gcal-date-time-chooser.blp:103
-#: src/gui/event-editor/gcal-time-chooser-row.blp:29
+#: src/gui/event-editor/gcal-date-time-chooser.blp:106
 msgid "Edit time"
 msgstr "Editar hora"
 
 #. Translators: "%1$s" is the timezone identifier (e.g. UTC, America/Sao_Paulo)
 #. * and "%2$s" is the timezone offset (e.g. UTC-3).
 #.
-#: src/gui/event-editor/gcal-date-time-chooser.c:141
+#: src/gui/event-editor/gcal-date-time-chooser.c:144
 #, c-format
 msgid "%1$s (%2$s)"
 msgstr "%1$s (%2$s)"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:25
-#: src/gui/event-editor/gcal-event-editor-dialog.c:129
+#: src/gui/event-editor/gcal-event-editor-dialog.c:124
 msgid "_Done"
 msgstr "_Concluído"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:38
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:36
 msgid "This event is in a read-only calendar. It cannot be edited or deleted."
 msgstr ""
 "Este evento faz parte de um calendário apenas de leitura. Não pode eliminar "
 "ou alterar este evento."
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:70
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:60
 msgid "Reminders"
 msgstr "Lembretes"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:78
-msgid "Notes"
-msgstr "Notas"
-
-#: src/gui/event-editor/gcal-event-editor-dialog.blp:89
+#: src/gui/event-editor/gcal-event-editor-dialog.blp:72
 msgid "_Delete Event"
 msgstr "_Eliminar evento"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:129
+#: src/gui/event-editor/gcal-event-editor-dialog.c:124
 msgid "_Save"
 msgstr "_Gravar"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:705
+#: src/gui/event-editor/gcal-event-editor-dialog.c:155
 msgid "New Event"
 msgstr "Novo evento"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:707
+#: src/gui/event-editor/gcal-event-editor-dialog.c:157
 msgid "Event Details"
 msgstr "Detalhes de evento"
 
-#: src/gui/event-editor/gcal-event-editor-dialog.c:709
+#: src/gui/event-editor/gcal-event-editor-dialog.c:159
 msgid "Edit Event"
 msgstr "Editar evento"
+
+#: src/gui/event-editor/gcal-notes-section.blp:40
+#: src/gui/event-editor/gcal-notes-section.blp:69
+msgid "Notes"
+msgstr "Notas"
 
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
 msgstr "Organizador"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:16
+#: src/gui/event-editor/gcal-reminders-section.blp:14
 msgid "Add Reminder"
 msgstr "Adicionar um lembrete"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:38
+#: src/gui/event-editor/gcal-reminders-section.blp:36
 msgid "Event start"
 msgstr "Início do evento"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:43
+#: src/gui/event-editor/gcal-reminders-section.blp:41
 msgid "5 Minutes"
 msgstr "5 minutos"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:48
+#: src/gui/event-editor/gcal-reminders-section.blp:46
 msgid "10 Minutes"
 msgstr "10 minutos"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:53
+#: src/gui/event-editor/gcal-reminders-section.blp:51
 msgid "15 Minutes"
 msgstr "15 minutos"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:58
+#: src/gui/event-editor/gcal-reminders-section.blp:56
 msgid "30 Minutes"
 msgstr "30 minutos"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:63
+#: src/gui/event-editor/gcal-reminders-section.blp:61
 msgid "1 Hour"
 msgstr "1 hora"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:68
+#: src/gui/event-editor/gcal-reminders-section.blp:66
 msgid "1 Day"
 msgstr "1 dia"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:73
+#: src/gui/event-editor/gcal-reminders-section.blp:71
 msgid "2 Days"
 msgstr "2 dias"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:78
+#: src/gui/event-editor/gcal-reminders-section.blp:76
 msgid "3 Days"
 msgstr "3 dias"
 
-#: src/gui/event-editor/gcal-reminders-section.blp:83
+#: src/gui/event-editor/gcal-reminders-section.blp:81
 msgid "1 Week"
 msgstr "1 semana"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:13
+#: src/gui/event-editor/gcal-schedule-section.blp:16
 msgid "_All Day"
 msgstr "Todo o di_a"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:19
-msgid "_Time Slot"
-msgstr "Intervalo de _Tempo"
-
-#: src/gui/event-editor/gcal-schedule-section.blp:27
-#: src/gui/event-editor/gcal-schedule-section.blp:40
+#: src/gui/event-editor/gcal-schedule-section.blp:24
+#: src/gui/event-editor/gcal-schedule-section.blp:47
 msgid "Start Date"
 msgstr "Data de início"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:34
-#: src/gui/event-editor/gcal-schedule-section.blp:46
+#: src/gui/event-editor/gcal-schedule-section.blp:30
+#: src/gui/event-editor/gcal-schedule-section.blp:54
 msgid "End Date"
 msgstr "Data do fim"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:41
+#: src/gui/event-editor/gcal-schedule-section.blp:38
+msgid "_Time Slot"
+msgstr "Intervalo de _Tempo"
+
+#: src/gui/event-editor/gcal-schedule-section.blp:48
 msgid "Start Time"
 msgstr "Hora de início"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:47
+#: src/gui/event-editor/gcal-schedule-section.blp:55
 msgid "End Time"
 msgstr "Hora final"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:55
+#: src/gui/event-editor/gcal-schedule-section.blp:68
 msgid "Repeat"
 msgstr "Repetir"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:60
+#: src/gui/event-editor/gcal-schedule-section.blp:73
 msgid "No Repeat"
 msgstr "Sem repetição"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:61
+#: src/gui/event-editor/gcal-schedule-section.blp:74
 msgid "Daily"
 msgstr "Diariamente"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:62
+#: src/gui/event-editor/gcal-schedule-section.blp:75
 msgid "Monday – Friday"
 msgstr "Segunda – Sexta"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:63
+#: src/gui/event-editor/gcal-schedule-section.blp:76
 msgid "Weekly"
 msgstr "Semanalmente"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:64
+#: src/gui/event-editor/gcal-schedule-section.blp:77
 msgid "Monthly"
 msgstr "Mensalmente"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:65
+#: src/gui/event-editor/gcal-schedule-section.blp:78
 msgid "Yearly"
 msgstr "Anualmente"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:73
+#: src/gui/event-editor/gcal-schedule-section.blp:86
 msgid "End Repeat"
 msgstr "Repetir até"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:78
+#: src/gui/event-editor/gcal-schedule-section.blp:91
 msgid "Forever"
 msgstr "Para sempre"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:79
-#: src/gui/event-editor/gcal-schedule-section.blp:89
+#: src/gui/event-editor/gcal-schedule-section.blp:92
+#: src/gui/event-editor/gcal-schedule-section.blp:102
 msgid "Number of Occurrences"
 msgstr "Número de ocorrências"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:80
+#: src/gui/event-editor/gcal-schedule-section.blp:93
 msgid "Until Date"
 msgstr "Até à data"
 
-#: src/gui/event-editor/gcal-schedule-section.blp:103
+#: src/gui/event-editor/gcal-schedule-section.blp:116
 msgid "End Repeat Date"
 msgstr "Data do fim da repetição"
 
-#: src/gui/event-editor/gcal-summary-section.blp:13
+#: src/gui/event-editor/gcal-summary-section.blp:6
 #: src/gui/gcal-quick-add-popover.blp:44
-#: src/gui/importer/gcal-import-file-row.c:179
+#: src/gui/importer/gcal-import-file-row.c:175
 msgid "Title"
 msgstr "Título"
 
@@ -914,7 +918,7 @@ msgstr "Abrir o calendário mostrando um evento passado"
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d Os autores do Calendário"
 
-#: src/gui/gcal-application.c:241
+#: src/gui/gcal-application.c:242
 msgid "translator-credits"
 msgstr ""
 "Tiago Santos <tiagofsantos81@sapo.pt>\n"
@@ -925,20 +929,21 @@ msgstr ""
 "Luís Da Costa <luisdc@libretrend.com>\n"
 "João Carvalhinho <joao.carvalhinho@gmail.com>"
 
-#: src/gui/gcal-application.c:245 src/gui/gcal-window.blp:389
+#: src/gui/gcal-application.c:247 src/gui/gcal-window.blp:391
 msgid "Weather"
 msgstr "Meteorologia"
 
 #.
-#. * Translators: %B is the month name and %Y is the year.
+#. * Translators: %OB is the month name and %Y is the year.
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
 #: src/gui/gcal-calendar-navigation-button.c:106
-msgid "%B %Y"
-msgstr "%B %Y"
+#| msgid "%B %Y"
+msgid "%OB %Y"
+msgstr "%OB %Y"
 
-#: src/gui/gcal-event-popover.blp:54
+#: src/gui/gcal-event-popover.blp:59
 msgid ""
 "<b>This event is part of a read-only calendar</b>\n"
 "    You cannot delete or change this event."
@@ -946,73 +951,77 @@ msgstr ""
 "<b>Este evento faz parte de um calendário de apenas-leitura</b>\n"
 "    Não pode eliminar ou alterar este evento."
 
-#: src/gui/gcal-event-popover.blp:71 src/gui/gcal-event-popover.c:593
+#: src/gui/gcal-event-popover.blp:77 src/gui/gcal-event-popover.c:591
 msgid "Export Event"
 msgstr "Exportar evento"
 
-#: src/gui/gcal-event-popover.blp:98
+#: src/gui/gcal-event-popover.blp:104
 msgid "No event notes"
 msgstr "Nenhuma nota de evento"
 
-#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:211
+#: src/gui/gcal-event-popover.blp:170
+msgid "Open Location"
+msgstr "Abrir localização"
+
+#: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:199
 msgid "January"
 msgstr "Janeiro"
 
-#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:212
+#: src/gui/gcal-event-popover.c:126 src/gui/gcal-quick-add-popover.c:200
 msgid "February"
 msgstr "Fevereiro"
 
-#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:213
+#: src/gui/gcal-event-popover.c:127 src/gui/gcal-quick-add-popover.c:201
 msgid "March"
 msgstr "Março"
 
-#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:214
+#: src/gui/gcal-event-popover.c:128 src/gui/gcal-quick-add-popover.c:202
 msgid "April"
 msgstr "Abril"
 
-#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:215
+#: src/gui/gcal-event-popover.c:129 src/gui/gcal-quick-add-popover.c:203
 msgid "May"
 msgstr "Maio"
 
-#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:216
+#: src/gui/gcal-event-popover.c:130 src/gui/gcal-quick-add-popover.c:204
 msgid "June"
 msgstr "Junho"
 
-#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:217
+#: src/gui/gcal-event-popover.c:131 src/gui/gcal-quick-add-popover.c:205
 msgid "July"
 msgstr "Julho"
 
-#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:218
+#: src/gui/gcal-event-popover.c:132 src/gui/gcal-quick-add-popover.c:206
 msgid "August"
 msgstr "Agosto"
 
-#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:219
+#: src/gui/gcal-event-popover.c:133 src/gui/gcal-quick-add-popover.c:207
 msgid "September"
 msgstr "Setembro"
 
-#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:220
+#: src/gui/gcal-event-popover.c:134 src/gui/gcal-quick-add-popover.c:208
 msgid "October"
 msgstr "Outubro"
 
-#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:221
+#: src/gui/gcal-event-popover.c:135 src/gui/gcal-quick-add-popover.c:209
 msgid "November"
 msgstr "Novembro"
 
-#: src/gui/gcal-event-popover.c:137 src/gui/gcal-quick-add-popover.c:222
+#: src/gui/gcal-event-popover.c:136 src/gui/gcal-quick-add-popover.c:210
 msgid "December"
 msgstr "Dezembro"
 
-#: src/gui/gcal-event-popover.c:162
+#: src/gui/gcal-event-popover.c:161
 #, c-format
 msgid "Today %s"
 msgstr "Hoje %s"
 
-#: src/gui/gcal-event-popover.c:166
+#: src/gui/gcal-event-popover.c:165
 #, c-format
 msgid "Tomorrow %s"
 msgstr "Amanhã %s"
 
-#: src/gui/gcal-event-popover.c:170
+#: src/gui/gcal-event-popover.c:169
 #, c-format
 msgid "Yesterday %s"
 msgstr "Ontem %s"
@@ -1022,7 +1031,7 @@ msgstr "Ontem %s"
 #. * of month, and %3$ is the hour. This format string results in dates
 #. * like "November 21, 22:00".
 #.
-#: src/gui/gcal-event-popover.c:179
+#: src/gui/gcal-event-popover.c:178
 #, c-format
 msgid "%1$s %2$d, %3$s"
 msgstr "%1$s %2$d, %3$s"
@@ -1032,23 +1041,23 @@ msgstr "%1$s %2$d, %3$s"
 #. * of month, %3$d is the year, and %4$s is the hour. This format string
 #. * results in dates like "November 21, 2020, 22:00".
 #.
-#: src/gui/gcal-event-popover.c:191
+#: src/gui/gcal-event-popover.c:190
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%1$s %2$d, %3$d, %4$s"
 
-#: src/gui/gcal-event-popover.c:203 src/gui/gcal-event-popover.c:317
-#: src/gui/views/gcal-agenda-view.c:198
+#: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
+#: src/gui/views/gcal-agenda-view-day-row.c:77
 msgid "Today"
 msgstr "Hoje"
 
-#: src/gui/gcal-event-popover.c:207 src/gui/gcal-event-popover.c:321
-#: src/gui/gcal-window.c:290 src/gui/views/gcal-agenda-view.c:200
+#: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
+#: src/gui/gcal-window.c:286 src/gui/views/gcal-agenda-view-day-row.c:79
 msgid "Tomorrow"
 msgstr "Amanhã"
 
-#: src/gui/gcal-event-popover.c:211 src/gui/gcal-event-popover.c:325
-#: src/gui/gcal-window.c:259 src/gui/views/gcal-agenda-view.c:202
+#: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
+#: src/gui/gcal-window.c:255 src/gui/views/gcal-agenda-view-day-row.c:81
 msgid "Yesterday"
 msgstr "Ontem"
 
@@ -1057,7 +1066,7 @@ msgstr "Ontem"
 #. * the day of month. This format string results in dates like
 #. * "November 21".
 #.
-#: src/gui/gcal-event-popover.c:220 src/gui/gcal-event-popover.c:334
+#: src/gui/gcal-event-popover.c:219 src/gui/gcal-event-popover.c:333
 #, c-format
 msgid "%1$s %2$d"
 msgstr "%1$s %2$d"
@@ -1067,34 +1076,35 @@ msgstr "%1$s %2$d"
 #. * of month, and %3$d is the year. This format string results in dates
 #. * like "November 21, 2020".
 #.
-#: src/gui/gcal-event-popover.c:231 src/gui/gcal-event-popover.c:345
+#: src/gui/gcal-event-popover.c:230 src/gui/gcal-event-popover.c:344
 #, c-format
 msgid "%1$s %2$d, %3$d"
 msgstr "%1$s %2$d, %3$d"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
-#. * example: "Today, 19:00 — 22:00"
+#. * example: "Today, 19:00 – 22:00"
 #.
-#: src/gui/gcal-event-popover.c:265
+#: src/gui/gcal-event-popover.c:264
 #, c-format
-msgid "Today, %1$s — %2$s"
-msgstr "Hoje, %1$s — %2$s"
+#| msgid "Today, %1$s — %2$s"
+msgid "Today, %1$s – %2$s"
+msgstr "Hoje, %1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
-#. * example: "Tomorrow, 19:00 — 22:00"
+#. * example: "Tomorrow, 19:00 – 22:00"
 #.
-#: src/gui/gcal-event-popover.c:273
+#: src/gui/gcal-event-popover.c:272
 #, c-format
 msgid "Tomorrow, %1$s – %2$s"
 msgstr "Amanhã, %1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
-#. * example: "Tomorrow, 19:00 — 22:00"
+#. * example: "Tomorrow, 19:00 – 22:00"
 #.
-#: src/gui/gcal-event-popover.c:281
+#: src/gui/gcal-event-popover.c:280
 #, c-format
 msgid "Yesterday, %1$s – %2$s"
 msgstr "Ontem, %1$s – %2$s"
@@ -1102,9 +1112,9 @@ msgstr "Ontem, %1$s – %2$s"
 #.
 #. * Translators: %1$s is a month name (e.g. November), %2$d is the day
 #. * of month, %3$s is the start hour, and %4$s is the end hour. This
-#. * format string results in dates like "November 21, 19:00 — 22:00".
+#. * format string results in dates like "November 21, 19:00 – 22:00".
 #.
-#: src/gui/gcal-event-popover.c:290
+#: src/gui/gcal-event-popover.c:289
 #, c-format
 msgid "%1$s %2$d, %3$s – %4$s"
 msgstr "%1$s %2$d, %3$s – %4$s"
@@ -1114,23 +1124,23 @@ msgstr "%1$s %2$d, %3$s – %4$s"
 #. * of month, %3$d is the year, %4$s is the start hour, and %5$s is the
 #. * end hour. This format string results in dates like:
 #. *
-#. * "November 21, 2021, 19:00 — 22:00".
+#. * "November 21, 2021, 19:00 – 22:00".
 #.
-#: src/gui/gcal-event-popover.c:305
+#: src/gui/gcal-event-popover.c:304
 #, c-format
 msgid "%1$s %2$d, %3$d, %4$s – %5$s"
 msgstr "%1$s %2$d, %3$d, %4$s – %5$s"
 
-#: src/gui/gcal-event-popover.c:370
+#: src/gui/gcal-event-popover.c:369
 msgid "View Additional Details"
 msgstr "Ver detalhes adicionais"
 
-#: src/gui/gcal-event-popover.c:375
+#: src/gui/gcal-event-popover.c:374
 msgid "Edit Additional Details"
 msgstr "Editar detalhes adicionais"
 
 #. Translators: %s is the meeting service name for the event (e.g. "Google Meet")
-#: src/gui/gcal-event-widget.c:388
+#: src/gui/gcal-event-widget.c:384
 #, c-format
 msgid ""
 "\n"
@@ -1143,7 +1153,7 @@ msgstr ""
 
 #. Translators: %s is a URL informed as the location of the event
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gui/gcal-event-widget.c:401 src/gui/gcal-event-widget.c:407
+#: src/gui/gcal-event-widget.c:398 src/gui/gcal-event-widget.c:404
 #, c-format
 msgid ""
 "\n"
@@ -1160,11 +1170,11 @@ msgstr ""
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-event-widget.c:466
+#: src/gui/gcal-event-widget.c:465
 msgid "%a %B %d"
 msgstr "%a %B %d"
 
-#: src/gui/gcal-meeting-row.blp:35
+#: src/gui/gcal-meeting-row.blp:34
 msgid "_Join"
 msgstr "_Participar"
 
@@ -1180,73 +1190,73 @@ msgstr "_Editar detalhes"
 msgid "_Save Event"
 msgstr "_Guardar Evento"
 
-#: src/gui/gcal-quick-add-popover.c:189
+#: src/gui/gcal-quick-add-popover.c:177
 msgid "from next Monday"
 msgstr "a partir da próxima segunda-feira"
 
-#: src/gui/gcal-quick-add-popover.c:190
+#: src/gui/gcal-quick-add-popover.c:178
 msgid "from next Tuesday"
 msgstr "a partir da próxima terça-feira"
 
-#: src/gui/gcal-quick-add-popover.c:191
+#: src/gui/gcal-quick-add-popover.c:179
 msgid "from next Wednesday"
 msgstr "a partir da próxima quarta-feira"
 
-#: src/gui/gcal-quick-add-popover.c:192
+#: src/gui/gcal-quick-add-popover.c:180
 msgid "from next Thursday"
 msgstr "a partir da próxima quinta-feira"
 
-#: src/gui/gcal-quick-add-popover.c:193
+#: src/gui/gcal-quick-add-popover.c:181
 msgid "from next Friday"
 msgstr "a partir da próxima sexta-feira"
 
-#: src/gui/gcal-quick-add-popover.c:194
+#: src/gui/gcal-quick-add-popover.c:182
 msgid "from next Saturday"
 msgstr "a partir do próximo sábado"
 
-#: src/gui/gcal-quick-add-popover.c:195
+#: src/gui/gcal-quick-add-popover.c:183
 msgid "from next Sunday"
 msgstr "a partir do próximo domingo"
 
-#: src/gui/gcal-quick-add-popover.c:200
+#: src/gui/gcal-quick-add-popover.c:188
 msgid "to next Monday"
 msgstr "até à próxima segunda-feira"
 
-#: src/gui/gcal-quick-add-popover.c:201
+#: src/gui/gcal-quick-add-popover.c:189
 msgid "to next Tuesday"
 msgstr "até à próxima terça-feira"
 
-#: src/gui/gcal-quick-add-popover.c:202
+#: src/gui/gcal-quick-add-popover.c:190
 msgid "to next Wednesday"
 msgstr "até à próxima quarta-feira"
 
-#: src/gui/gcal-quick-add-popover.c:203
+#: src/gui/gcal-quick-add-popover.c:191
 msgid "to next Thursday"
 msgstr "até à próxima quinta-feira"
 
-#: src/gui/gcal-quick-add-popover.c:204
+#: src/gui/gcal-quick-add-popover.c:192
 msgid "to next Friday"
 msgstr "até à próxima sexta-feira"
 
-#: src/gui/gcal-quick-add-popover.c:205
+#: src/gui/gcal-quick-add-popover.c:193
 msgid "to next Saturday"
 msgstr "até ao próximo sábado"
 
-#: src/gui/gcal-quick-add-popover.c:206
+#: src/gui/gcal-quick-add-popover.c:194
 msgid "to next Sunday"
 msgstr "até ao próximo domingo"
 
-#: src/gui/gcal-quick-add-popover.c:230
+#: src/gui/gcal-quick-add-popover.c:218
 #, c-format
 msgid "from Today"
 msgstr "a partir de hoje"
 
-#: src/gui/gcal-quick-add-popover.c:234
+#: src/gui/gcal-quick-add-popover.c:222
 #, c-format
 msgid "from Tomorrow"
 msgstr "a partir de amanhã"
 
-#: src/gui/gcal-quick-add-popover.c:238
+#: src/gui/gcal-quick-add-popover.c:226
 #, c-format
 msgid "from Yesterday"
 msgstr "desde ontem"
@@ -1255,22 +1265,22 @@ msgstr "desde ontem"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:256
+#: src/gui/gcal-quick-add-popover.c:244
 #, c-format
 msgid "from %1$s %2$s"
 msgstr "a partir de %1$s %2$s"
 
-#: src/gui/gcal-quick-add-popover.c:265
+#: src/gui/gcal-quick-add-popover.c:253
 #, c-format
 msgid "to Today"
 msgstr "até hoje"
 
-#: src/gui/gcal-quick-add-popover.c:269
+#: src/gui/gcal-quick-add-popover.c:257
 #, c-format
 msgid "to Tomorrow"
 msgstr "até amanhã"
 
-#: src/gui/gcal-quick-add-popover.c:273
+#: src/gui/gcal-quick-add-popover.c:261
 #, c-format
 msgid "to Yesterday"
 msgstr "até ontem"
@@ -1279,124 +1289,124 @@ msgstr "até ontem"
 #. * this is the format string for representing a date consisting of a month
 #. * name and a date of month.
 #.
-#: src/gui/gcal-quick-add-popover.c:291
+#: src/gui/gcal-quick-add-popover.c:279
 #, c-format
 msgid "to %1$s %2$s"
 msgstr "até %1$s %2$s"
 
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
-#: src/gui/gcal-quick-add-popover.c:297
+#: src/gui/gcal-quick-add-popover.c:285
 #, c-format
 msgid "New Event %1$s %2$s"
 msgstr "Novo evento %1$s %2$s"
 
-#: src/gui/gcal-quick-add-popover.c:314
+#: src/gui/gcal-quick-add-popover.c:302
 #, c-format
 msgid "New Event Today"
 msgstr "Novo evento hoje"
 
-#: src/gui/gcal-quick-add-popover.c:318
+#: src/gui/gcal-quick-add-popover.c:306
 #, c-format
 msgid "New Event Tomorrow"
 msgstr "Novo evento amanhã"
 
-#: src/gui/gcal-quick-add-popover.c:322
+#: src/gui/gcal-quick-add-popover.c:310
 #, c-format
 msgid "New Event Yesterday"
 msgstr "Novo evento ontem"
 
-#: src/gui/gcal-quick-add-popover.c:328
+#: src/gui/gcal-quick-add-popover.c:316
 msgid "New Event next Monday"
 msgstr "Novo evento na próxima segunda-feira"
 
-#: src/gui/gcal-quick-add-popover.c:329
+#: src/gui/gcal-quick-add-popover.c:317
 msgid "New Event next Tuesday"
 msgstr "Novo evento na próxima terça-feira"
 
-#: src/gui/gcal-quick-add-popover.c:330
+#: src/gui/gcal-quick-add-popover.c:318
 msgid "New Event next Wednesday"
 msgstr "Novo evento na próxima quarta-feira"
 
-#: src/gui/gcal-quick-add-popover.c:331
+#: src/gui/gcal-quick-add-popover.c:319
 msgid "New Event next Thursday"
 msgstr "Novo evento na próxima quinta-feira"
 
-#: src/gui/gcal-quick-add-popover.c:332
+#: src/gui/gcal-quick-add-popover.c:320
 msgid "New Event next Friday"
 msgstr "Novo evento na próxima sexta-feira"
 
-#: src/gui/gcal-quick-add-popover.c:333
+#: src/gui/gcal-quick-add-popover.c:321
 msgid "New Event next Saturday"
 msgstr "Novo evento no próximo sábado"
 
-#: src/gui/gcal-quick-add-popover.c:334
+#: src/gui/gcal-quick-add-popover.c:322
 msgid "New Event next Sunday"
 msgstr "Novo evento no próximo domingo"
 
 #. Translators: %d is the numeric day of month
-#: src/gui/gcal-quick-add-popover.c:346
+#: src/gui/gcal-quick-add-popover.c:334
 #, c-format
 msgid "New Event on January %d"
 msgstr "Novo evento a %d de janeiro"
 
-#: src/gui/gcal-quick-add-popover.c:347
+#: src/gui/gcal-quick-add-popover.c:335
 #, c-format
 msgid "New Event on February %d"
 msgstr "Novo evento a %d de fevereiro"
 
-#: src/gui/gcal-quick-add-popover.c:348
+#: src/gui/gcal-quick-add-popover.c:336
 #, c-format
 msgid "New Event on March %d"
 msgstr "Novo evento a %d de março"
 
-#: src/gui/gcal-quick-add-popover.c:349
+#: src/gui/gcal-quick-add-popover.c:337
 #, c-format
 msgid "New Event on April %d"
 msgstr "Novo evento a %d de abril"
 
-#: src/gui/gcal-quick-add-popover.c:350
+#: src/gui/gcal-quick-add-popover.c:338
 #, c-format
 msgid "New Event on May %d"
 msgstr "Novo evento a %d de maio"
 
-#: src/gui/gcal-quick-add-popover.c:351
+#: src/gui/gcal-quick-add-popover.c:339
 #, c-format
 msgid "New Event on June %d"
 msgstr "Novo evento a %d de junho"
 
-#: src/gui/gcal-quick-add-popover.c:352
+#: src/gui/gcal-quick-add-popover.c:340
 #, c-format
 msgid "New Event on July %d"
 msgstr "Novo evento a %d de julho"
 
-#: src/gui/gcal-quick-add-popover.c:353
+#: src/gui/gcal-quick-add-popover.c:341
 #, c-format
 msgid "New Event on August %d"
 msgstr "Novo evento a %d de agosto"
 
-#: src/gui/gcal-quick-add-popover.c:354
+#: src/gui/gcal-quick-add-popover.c:342
 #, c-format
 msgid "New Event on September %d"
 msgstr "Novo evento a %d de setembro"
 
-#: src/gui/gcal-quick-add-popover.c:355
+#: src/gui/gcal-quick-add-popover.c:343
 #, c-format
 msgid "New Event on October %d"
 msgstr "Novo evento a %d de outubro"
 
-#: src/gui/gcal-quick-add-popover.c:356
+#: src/gui/gcal-quick-add-popover.c:344
 #, c-format
 msgid "New Event on November %d"
 msgstr "Novo evento a %d de novembro"
 
-#: src/gui/gcal-quick-add-popover.c:357
+#: src/gui/gcal-quick-add-popover.c:345
 #, c-format
 msgid "New Event on December %d"
 msgstr "Novo evento a %d de dezembro"
 
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour.
 #. * To avoid spurious line wrapping, use non-breaking space characters around the en dash.
-#: src/gui/gcal-quick-add-popover.c:426
+#: src/gui/gcal-quick-add-popover.c:415
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -1409,11 +1419,11 @@ msgstr "Procurar eventos"
 msgid "Search events"
 msgstr "Procurar eventos"
 
-#: src/gui/gcal-search-button.c:179
+#: src/gui/gcal-search-button.c:169
 msgid "No results found"
 msgstr "Sem resultados"
 
-#: src/gui/gcal-search-button.c:179
+#: src/gui/gcal-search-button.c:169
 #, c-format
 msgid "One result found"
 msgid_plural "%u results found"
@@ -1483,55 +1493,55 @@ msgstr "Adicionar evento"
 msgid "Manage Calendars"
 msgstr "Gerir calendários"
 
-#: src/gui/gcal-window.blp:372
+#: src/gui/gcal-window.blp:374
 msgid "_Synchronize Calendars"
 msgstr "_Sincronizar calendários"
 
-#: src/gui/gcal-window.blp:379
+#: src/gui/gcal-window.blp:381
 msgid "_Date & Time Settings…"
 msgstr "_Definições de data e hora…"
 
-#: src/gui/gcal-window.blp:384
+#: src/gui/gcal-window.blp:386
 msgid "_Online Accounts…"
 msgstr "Contas _online…"
 
-#: src/gui/gcal-window.blp:399
+#: src/gui/gcal-window.blp:401
 msgid "_Keyboard Shortcuts"
 msgstr "_Teclas de atalho"
 
-#: src/gui/gcal-window.blp:404
+#: src/gui/gcal-window.blp:406
 msgid "_About Calendar"
 msgstr "_Acerca do Calendário"
 
-#: src/gui/gcal-window.c:255
+#: src/gui/gcal-window.c:251
 msgid "Previous Week"
 msgstr "Semana anterior"
 
-#: src/gui/gcal-window.c:286
+#: src/gui/gcal-window.c:282
 msgid "Next Week"
 msgstr "Semana seguinte"
 
-#: src/gui/gcal-window.c:408
+#: src/gui/gcal-window.c:405
 msgid "Week"
 msgstr "Semana"
 
-#: src/gui/gcal-window.c:414
+#: src/gui/gcal-window.c:411
 msgid "Agenda"
 msgstr "Calendário"
 
-#: src/gui/gcal-window.c:992
+#: src/gui/gcal-window.c:1018
 msgid "Another event deleted"
 msgstr "Outro evento eliminado"
 
-#: src/gui/gcal-window.c:992
+#: src/gui/gcal-window.c:1018
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
-#: src/gui/gcal-window.c:1057
+#: src/gui/gcal-window.c:1083
 msgid "Could not import some files: Not ICS files"
 msgstr "Não foi possível importar alguns ficheiros: Não são ficheiros ICS"
 
-#: src/gui/gcal-window.c:1062
+#: src/gui/gcal-window.c:1088
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Não foi possível importar “%s”: não é um ficheiro ICS"
@@ -1548,22 +1558,22 @@ msgstr "_Importar"
 msgid "C_alendar"
 msgstr "C_alendário"
 
-#: src/gui/importer/gcal-import-dialog.c:338
+#: src/gui/importer/gcal-import-dialog.c:328
 #, c-format
 msgid "Import %d event"
 msgid_plural "Import %d events"
 msgstr[0] "Importar %d evento"
 msgstr[1] "Importar %d eventos"
 
-#: src/gui/importer/gcal-import-file-row.c:181
+#: src/gui/importer/gcal-import-file-row.c:177
 msgid "Starts"
 msgstr "Inicia"
 
-#: src/gui/importer/gcal-import-file-row.c:182
+#: src/gui/importer/gcal-import-file-row.c:178
 msgid "Ends"
 msgstr "Termina"
 
-#: src/gui/importer/gcal-import-file-row.c:183
+#: src/gui/importer/gcal-import-file-row.c:179
 msgid "Description"
 msgstr "Descrição"
 
@@ -1694,7 +1704,7 @@ msgctxt "shortcut dialog"
 msgid "Week View"
 msgstr "Visualização da semana"
 
-#: src/gui/views/gcal-agenda-view.blp:27
+#: src/gui/views/gcal-agenda-view-day-row.blp:25
 msgid "No events"
 msgstr "Sem eventos"
 
@@ -1704,38 +1714,34 @@ msgstr "Sem eventos"
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/views/gcal-agenda-view.c:210
+#: src/gui/views/gcal-agenda-view-day-row.c:89
 msgid "%A %B %d"
 msgstr "%A %B %d"
-
-#: src/gui/views/gcal-agenda-view.c:415
-msgid "On-going"
-msgstr "Em andamento"
 
 #: src/gui/views/gcal-month-popover.blp:58
 msgid "New Event…"
 msgstr "Novo evento…"
 
-#: src/gui/views/gcal-week-header.c:479
+#: src/gui/views/gcal-week-header.c:473
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Outro evento"
 msgstr[1] "Outros %d eventos"
 
-#: src/gui/views/gcal-week-view.c:241
+#: src/gui/views/gcal-week-view.c:235
 msgid "Hide Additional Events"
 msgstr "Ocultar eventos adicionais"
 
-#: src/gui/views/gcal-week-view.c:243
+#: src/gui/views/gcal-week-view.c:237
 msgid "Show Additional Events"
 msgstr "Mostrar eventos adicionais"
 
-#: src/utils/gcal-utils.c:1209
+#: src/utils/gcal-utils.c:1291
 msgid "Modify Multiple Events?"
 msgstr "Modificar vários eventos?"
 
-#: src/utils/gcal-utils.c:1210
+#: src/utils/gcal-utils.c:1292
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1743,75 +1749,78 @@ msgstr ""
 "O evento que está a tentar modificar é recorrente. As alterações "
 "selecionadas devem afetar:"
 
-#: src/utils/gcal-utils.c:1214
+#: src/utils/gcal-utils.c:1296
 msgid "_Only This Event"
 msgstr "Apenas _este evento"
 
-#: src/utils/gcal-utils.c:1220
+#: src/utils/gcal-utils.c:1302
 msgid "_Subsequent Events"
 msgstr "Eventos _subsequentes"
 
-#: src/utils/gcal-utils.c:1223
+#: src/utils/gcal-utils.c:1305
 msgid "_All Events"
 msgstr "_Todos os eventos"
 
 #. Conferencing
-#: src/utils/gcal-utils.c:1326
+#: src/utils/gcal-utils.c:1408
 msgid "BlueJeans"
 msgstr "BlueJeans"
 
-#: src/utils/gcal-utils.c:1327 src/utils/gcal-utils.c:1328
+#: src/utils/gcal-utils.c:1409 src/utils/gcal-utils.c:1410
 msgid "BigBlueButton"
 msgstr "BigBlueButton"
 
-#: src/utils/gcal-utils.c:1329
+#: src/utils/gcal-utils.c:1411
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1330 src/utils/gcal-utils.c:1331
+#: src/utils/gcal-utils.c:1412 src/utils/gcal-utils.c:1413
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1332
+#: src/utils/gcal-utils.c:1414
 msgid "Uber Conference"
 msgstr "Uber Conference"
 
-#: src/utils/gcal-utils.c:1333
+#: src/utils/gcal-utils.c:1415
 msgid "GNOME Meet"
 msgstr "GNOME Meet"
 
-#: src/utils/gcal-utils.c:1334
+#: src/utils/gcal-utils.c:1416
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
-#: src/utils/gcal-utils.c:1335
+#: src/utils/gcal-utils.c:1417
 msgid "Whereby"
 msgstr "Pelo qual"
 
-#: src/utils/gcal-utils.c:1336
+#: src/utils/gcal-utils.c:1418
 msgid "Webex"
 msgstr "Webex"
 
-#: src/utils/gcal-utils.c:1337
+#: src/utils/gcal-utils.c:1419
 msgid "Zoom"
 msgstr "Zoom"
 
 #. Map
-#: src/utils/gcal-utils.c:1340
+#: src/utils/gcal-utils.c:1422
 msgid "View Map"
 msgstr "Ver Mapa"
 
-#: src/utils/gcal-utils.c:1341
+#: src/utils/gcal-utils.c:1423
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: src/utils/gcal-utils.c:1342 src/utils/gcal-utils.c:1343
+#: src/utils/gcal-utils.c:1424 src/utils/gcal-utils.c:1425
 msgid "Google Maps"
 msgstr "Mapas Google"
 
-#: src/utils/gcal-utils.c:1344
+#: src/utils/gcal-utils.c:1426
 msgid "Bing Maps"
 msgstr "Bing Maps"
+
+#~ msgid "On-going"
+#~ msgstr "Em andamento"
 
 #, c-format
 #~ msgid "Previous %1$s"
