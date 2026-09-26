@@ -889,6 +889,29 @@ on_split_multi_choice_user_changed (GcalDateChooser *self)
   multi_choice_changed (self, year, month, 1);
 }
 
+static void
+on_split_multi_choice_wrapped (GcalDateChooser *self)
+{
+  int year, month;
+
+  year = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->year_choice));
+  month = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->month_choice)) + 1;
+
+  switch (month)
+    {
+    case G_DATE_JANUARY:
+      year++;
+      break;
+    case G_DATE_DECEMBER:
+      year--;
+      break;
+    default:
+      g_assert_not_reached ();
+    }
+
+  multi_choice_changed (self, year, month, 1);
+}
+
 static gboolean
 on_drop_target_drop_cb (GtkDropTarget   *target,
                         const GValue    *value,
@@ -1021,6 +1044,7 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, gizmo);
 
   gtk_widget_class_bind_template_callback (widget_class, on_combined_multi_choice_user_changed);
+  gtk_widget_class_bind_template_callback (widget_class, on_split_multi_choice_wrapped);
   gtk_widget_class_bind_template_callback (widget_class, get_combined_choice_visible);
   gtk_widget_class_bind_template_callback (widget_class, get_split_choice_visible);
   gtk_widget_class_bind_template_callback (widget_class, on_split_multi_choice_user_changed);

@@ -17,6 +17,7 @@ template $GcalDateChooser: Adw.Bin {
       next-button-tooltip: _("Next Month");
       visible: bind $get_split_choice_visible(template.show-heading, template.split-month-year) as <bool>;
       user-changed => $on_split_multi_choice_user_changed() swapped;
+      wrapped => $on_split_multi_choice_wrapped() swapped;
 
       layout {
         column: 0;
@@ -93,6 +94,7 @@ Popover popover {
       next-button-tooltip: bind month_choice.next-button-tooltip;
       string-list: bind month_choice.string-list;
       user-changed => $on_split_multi_choice_user_changed() swapped;
+      wrapped => $on_split_multi_choice_wrapped() swapped;
     }
 
     $GcalMultiChoice {
