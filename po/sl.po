@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-09-15 16:46+0000\n"
-"PO-Revision-Date: 2026-09-16 07:23+0200\n"
+"POT-Creation-Date: 2026-09-26 00:04+0000\n"
+"PO-Revision-Date: 2026-09-26 12:55+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -237,22 +237,37 @@ msgid "Calendar Settings"
 msgstr "Nastavitve koledarja"
 
 #: src/gui/calendar-management/gcal-calendars-page.blp:5
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:90
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:65
 msgid "Calendars"
 msgstr "Koledarji"
 
-#: src/gui/calendar-management/gcal-calendars-page.blp:37
-msgid "_Add Calendar"
-msgstr "_Dodaj koledar"
+#: src/gui/calendar-management/gcal-calendars-page.blp:14
+#: src/gui/calendar-management/gcal-new-local-calendar-page.c:72
+#: src/gui/calendar-management/gcal-new-online-calendar-page.c:93
+#, c-format
+msgid "Add Calendar"
+msgid_plural "Add %1$u Calendars"
+msgstr[0] "Dodaj %1$u koledarjev"
+msgstr[1] "Dodaj %1$u koledar"
+msgstr[2] "Dodaj %1$u koledarja"
+msgstr[3] "Dodaj %1$u koledarje"
+
+#: src/gui/calendar-management/gcal-calendars-page.blp:18
+msgid "New Local Calendar…"
+msgstr "Nov krajevni koledar …"
+
+#: src/gui/calendar-management/gcal-calendars-page.blp:19
+msgid "Add Remote Calendar…"
+msgstr "Dodaj oddaljeni koledar …"
 
 #. Create the new toast
 #. TRANSLATORS: %s is a calendar name.
-#: src/gui/calendar-management/gcal-calendars-page.c:349
+#: src/gui/calendar-management/gcal-calendars-page.c:356
 #, c-format
 msgid "Calendar “%s” removed"
 msgstr "Koledar »%s« je odstranjen."
 
-#: src/gui/calendar-management/gcal-calendars-page.c:354 src/gui/gcal-window.c:1020
+#: src/gui/calendar-management/gcal-calendars-page.c:361 src/gui/gcal-window.c:1020
 msgid "_Undo"
 msgstr "_Razveljavi"
 
@@ -276,12 +291,12 @@ msgid "Location"
 msgstr "Mesto dogodka"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:54
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:20
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:20
 msgid "Calendar Name"
 msgstr "Ime koledarja"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:58
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:25
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:25
 msgid "Color"
 msgstr "Barva"
 
@@ -309,19 +324,28 @@ msgstr "V tem računalniku"
 msgid "Export Calendar"
 msgstr "Izvozi koledar"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:5
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:5
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:5
 msgid "New Calendar"
 msgstr "Nov koledar"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:17
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:17
 msgid "Create a Local Calendar"
 msgstr "Ustvari krajevni koledar"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:42
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:44
+#: src/gui/calendar-management/gcal-new-local-calendar-page.c:79
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:105
+#: src/gui/calendar-management/gcal-new-online-calendar-page.c:100
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "Dodaj koledar"
+
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:17
 msgid "Connect to an Online Calendar"
 msgstr "Poveži se s spletnim koledarjem"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:50
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:25
 msgid ""
 "HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only be "
 "updated by the provider will be added as read-only."
@@ -329,7 +353,7 @@ msgstr ""
 "Podprti so URL-ji HTTPS, CalDAV ali Webcal. Spletni koledarji, ki jih lahko "
 "posodobi samo ponudnik, bodo dodani samo za branje."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:111
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:86
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it through "
 "the <a href=\"GOA\">online account settings</a>."
@@ -337,48 +361,33 @@ msgstr ""
 "Koledarje, ki so dostopni prek storitev in zahtevajo prijavo, je mogoče dodati "
 "med nastavitvami <a href=\"GOA\">spletnih računov</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:130
-#: src/gui/calendar-management/gcal-new-calendar-page.c:116
-msgctxt "button"
-msgid "Add Calendar"
-msgstr "Dodaj koledar"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:145
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:120
 msgid "Credentials"
 msgstr "Poverila"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:151
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:126
 msgid "User"
 msgstr "Uporabnik"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:155
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:130
 msgid "Password"
 msgstr "Geslo"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:165
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:140
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:18
-#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1295
+#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:955
 msgid "_Cancel"
 msgstr "_Prekliči"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:166
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:141
 msgid "_Connect"
 msgstr "_Vzpostavi povezavo"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:109
-#, c-format
-msgid "Add Calendar"
-msgid_plural "Add %1$u Calendars"
-msgstr[0] "Dodaj %1$u koledarjev"
-msgstr[1] "Dodaj %1$u koledar"
-msgstr[2] "Dodaj %1$u koledarja"
-msgstr[3] "Dodaj %1$u koledarje"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:324
+#: src/gui/calendar-management/gcal-new-online-calendar-page.c:271
 msgid "The URL you have entered appears to be invalid."
 msgstr "Zdi se, da je URL, ki ste ga vnesli, neveljaven."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:379
+#: src/gui/calendar-management/gcal-new-online-calendar-page.c:321
 msgid "A valid user and password are required to connect to this calendar."
 msgstr "Za povezavo s tem koledarjem potrebujete veljavnega uporabnika in geslo."
 
@@ -386,30 +395,30 @@ msgstr "Za povezavo s tem koledarjem potrebujete veljavnega uporabnika in geslo.
 msgid "This calendar is hidden"
 msgstr "Ta koledar je skrit"
 
-#: src/gui/common/gcal-date-chooser.blp:15 src/gui/common/gcal-date-chooser.blp:55
+#: src/gui/common/gcal-date-chooser.blp:15 src/gui/common/gcal-date-chooser.blp:53
 #: src/gui/gcal-window.c:408
 msgid "Month"
 msgstr "Mesec"
 
-#: src/gui/common/gcal-date-chooser.blp:16 src/gui/common/gcal-date-chooser.blp:56
+#: src/gui/common/gcal-date-chooser.blp:16 src/gui/common/gcal-date-chooser.blp:54
 #: src/gui/gcal-window.c:253
 msgid "Previous Month"
 msgstr "Predhodni mesec"
 
-#: src/gui/common/gcal-date-chooser.blp:17 src/gui/common/gcal-date-chooser.blp:57
+#: src/gui/common/gcal-date-chooser.blp:17 src/gui/common/gcal-date-chooser.blp:55
 #: src/gui/gcal-window.c:284
 msgid "Next Month"
 msgstr "Naslednji mesec"
 
-#: src/gui/common/gcal-date-chooser.blp:34
+#: src/gui/common/gcal-date-chooser.blp:33
 msgid "Year"
 msgstr "Leto"
 
-#: src/gui/common/gcal-date-chooser.blp:35
+#: src/gui/common/gcal-date-chooser.blp:34
 msgid "Previous Year"
 msgstr "Predhodno leto"
 
-#: src/gui/common/gcal-date-chooser.blp:36
+#: src/gui/common/gcal-date-chooser.blp:35
 msgid "Next Year"
 msgstr "Naslednje leto"
 
@@ -421,43 +430,43 @@ msgstr "Naslednje leto"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:333
+#: src/gui/common/gcal-date-chooser.c:336
 msgctxt "grid sunday"
 msgid "S"
 msgstr "N"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:338
+#: src/gui/common/gcal-date-chooser.c:341
 msgctxt "grid monday"
 msgid "M"
 msgstr "P"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:343
+#: src/gui/common/gcal-date-chooser.c:346
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "T"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:348
+#: src/gui/common/gcal-date-chooser.c:351
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "S"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:353
+#: src/gui/common/gcal-date-chooser.c:356
 msgctxt "grid thursday"
 msgid "T"
 msgstr "Č"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:358
+#: src/gui/common/gcal-date-chooser.c:361
 msgctxt "grid friday"
 msgid "F"
 msgstr "P"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:363
+#: src/gui/common/gcal-date-chooser.c:366
 msgctxt "grid saturday"
 msgid "S"
 msgstr "S"
@@ -1753,7 +1762,7 @@ msgstr "Ni dogodkov"
 msgid "%A %B %d"
 msgstr "%A, %d. %B"
 
-#: src/gui/views/gcal-month-cell.blp:75
+#: src/gui/views/gcal-month-cell.blp:79
 msgid "All Events"
 msgstr "Vsi dogodki"
 
@@ -1778,11 +1787,11 @@ msgstr "Skrij dodatne dogodke"
 msgid "Show Additional Events"
 msgstr "Pokaži dodatne dogodke"
 
-#: src/utils/gcal-utils.c:1291
+#: src/utils/gcal-utils.c:951
 msgid "Modify Multiple Events?"
 msgstr "Ali želite spremeniti več dogodkov?"
 
-#: src/utils/gcal-utils.c:1292
+#: src/utils/gcal-utils.c:952
 msgid ""
 "The event you are trying to modify is recurring. The changes you have selected "
 "should be applied to:"
@@ -1790,72 +1799,72 @@ msgstr ""
 "Dogodek, ki ga nameravate spremeniti, se ponavlja. Spremembe, ki jih boste "
 "naredili se bodo odražale na:"
 
-#: src/utils/gcal-utils.c:1296
+#: src/utils/gcal-utils.c:956
 msgid "_Only This Event"
 msgstr "_Le ta dogodek"
 
-#: src/utils/gcal-utils.c:1302
+#: src/utils/gcal-utils.c:962
 msgid "_Subsequent Events"
 msgstr "_Poznejši dogodki"
 
-#: src/utils/gcal-utils.c:1305
+#: src/utils/gcal-utils.c:965
 msgid "_All Events"
 msgstr "_Vsi dogodki"
 
 #. Conferencing
-#: src/utils/gcal-utils.c:1408
+#: src/utils/gcal-utils.c:1033
 msgid "BlueJeans"
 msgstr "BlueJeans"
 
-#: src/utils/gcal-utils.c:1409 src/utils/gcal-utils.c:1410
+#: src/utils/gcal-utils.c:1034 src/utils/gcal-utils.c:1035
 msgid "BigBlueButton"
 msgstr "BigBlueButton"
 
-#: src/utils/gcal-utils.c:1411
+#: src/utils/gcal-utils.c:1036
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1412 src/utils/gcal-utils.c:1413
+#: src/utils/gcal-utils.c:1037 src/utils/gcal-utils.c:1038
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1414
+#: src/utils/gcal-utils.c:1039
 msgid "Uber Conference"
 msgstr "Konferenca Uber"
 
-#: src/utils/gcal-utils.c:1415
+#: src/utils/gcal-utils.c:1040
 msgid "GNOME Meet"
 msgstr "GNOME Meet"
 
-#: src/utils/gcal-utils.c:1416
+#: src/utils/gcal-utils.c:1041
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
-#: src/utils/gcal-utils.c:1417
+#: src/utils/gcal-utils.c:1042
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1418
+#: src/utils/gcal-utils.c:1043
 msgid "Webex"
 msgstr "Webex"
 
-#: src/utils/gcal-utils.c:1419
+#: src/utils/gcal-utils.c:1044
 msgid "Zoom"
 msgstr "Zoom"
 
 #. Map
-#: src/utils/gcal-utils.c:1422
+#: src/utils/gcal-utils.c:1047
 msgid "View Map"
 msgstr "Pokaži zemljevid"
 
-#: src/utils/gcal-utils.c:1423
+#: src/utils/gcal-utils.c:1048
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: src/utils/gcal-utils.c:1424 src/utils/gcal-utils.c:1425
+#: src/utils/gcal-utils.c:1049 src/utils/gcal-utils.c:1050
 msgid "Google Maps"
 msgstr "Zemljevidi Google"
 
-#: src/utils/gcal-utils.c:1426
+#: src/utils/gcal-utils.c:1051
 msgid "Bing Maps"
 msgstr "Zemljevidi Bing"
