@@ -206,20 +206,18 @@ msgstr "Επεξεργαστής συμβάντων"
 #. Translators: %1$s is the start date and %2$s is the end date.
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 – November 29, 2022
 #: src/core/gcal-event.c:1937 src/gui/gcal-event-popover.c:422
-#, fuzzy, c-format
 #| msgid "%1$s — %2$s"
 msgid "%1$s – %2$s"
-msgstr "%1$s — %2$s"
+msgstr "%1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
 #: src/core/gcal-event.c:1945
-#, fuzzy, c-format
 #| msgid "%1$s %2$s — %3$s %4$s"
 msgid "%1$s %2$s – %3$s %4$s"
-msgstr "%1$s %2$s — %3$s %4$s"
+msgstr "%1$s %2$s – %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #: src/core/gcal-event.c:1961
@@ -938,10 +936,9 @@ msgstr "Καιρός"
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
 #: src/gui/gcal-calendar-navigation-button.c:106
-#, fuzzy
 #| msgid "%B %Y"
 msgid "%OB %Y"
-msgstr "%B %Y"
+msgstr "%OB %Y"
 
 #: src/gui/gcal-event-popover.blp:59
 msgid ""
@@ -960,10 +957,9 @@ msgid "No event notes"
 msgstr "Δεν υπάρχουν σημειώσεις συμβάντος"
 
 #: src/gui/gcal-event-popover.blp:170
-#, fuzzy
 #| msgid "Location"
 msgid "Open Location"
-msgstr "Τοποθεσία"
+msgstr "Άνοιγμα τοποθεσίας"
 
 #: src/gui/gcal-event-popover.c:125 src/gui/gcal-quick-add-popover.c:199
 msgid "January"
@@ -1088,10 +1084,9 @@ msgstr "%2$d %1$s, %3$d"
 #. * example: "Today, 19:00 – 22:00"
 #.
 #: src/gui/gcal-event-popover.c:264
-#, fuzzy, c-format
 #| msgid "Today, %1$s — %2$s"
 msgid "Today, %1$s – %2$s"
-msgstr "Σήμερα, %1$s — %2$s"
+msgstr "Σήμερα, %1$s – %2$s"
 
 #.
 #. * Translators: %1$s is the start hour, and %2$s is the end hour, for
