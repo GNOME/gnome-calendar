@@ -1,7 +1,32 @@
 # Contributing
 
-When contributing to the development of GNOME Calendar, please first discuss the change you wish to
-make via issue, email, or any other method with the maintainers before making a change.
+Thank you for considering contributing to the GNOME Calendar project! These guidelines are meant
+for new contributors, regardless of their level of proficiency; following them allows other
+contributors to the GNOME Calendar project to more effectively evaluate your contribution, and
+provide prompt feedback to you. Additionally, by following these guidelines you clearly communicate
+that you respect the time and effort that the people working on GNOME Calendar put into managing
+the project.
+
+GNOME Calendar is free software, and it would not exist without contributions from the free
+software community. There are many things that we value:
+
+- Issue triages
+- Bug reports
+- Feature requests
+- User experience reports
+- Translations
+- User interface designs
+- Documentation improvements
+- Patch reviews
+- Test additions
+- Bug fixes
+- Performance enhancements 
+- Source code cleanups
+- Feature implementations
+
+If you are interested in helping us with any of these categories (or anything else that we did not
+think about when writing this), then please read on to learn more about our guidelines and
+processes :)
 
 ## Code of Conduct
 
@@ -23,34 +48,30 @@ to avoid them in favor of using [existing documentation](https://developer.gnome
 [chats and forums](https://welcome.gnome.org). Since AI generated information is frequently
 misleading or false, we cannot supply support on anything referencing AI output.
 
-## Pull Request Process
+## Communication Channels
 
-1. Ensure your code compiles and doesn't break anything. Run `meson test -C <builddir>` before creating
-   the pull request.
-2. If you're adding new API, it must be properly documented.
-3. The commit message is formatted as follows:
+- Technical discussions happen in the issue tracker and on proposed patches directly, which are both
+  hosted on [GNOME's Git forge][forge].
 
-   ```plain
-   component: <summary>
+- Day-to-day conversations, coordination and socialising with other contributors happens primarily
+  in our group chat on [Matrix][matrix].
 
-   A paragraph explaining the problem and its context.
+- Support for users is provided on [GNOME Discourse][discourse], in the "Applications" category,
+  using the "calendar" tag.
 
-   Another one explaining how you solved that.
+# Next Steps
 
-   <link to the issue>
-   ```
+- Check out [GNOME Calendar on welcome.gnome.org][welcome], which contains concrete steps and
+  instructions on how to contribute in a variety of different ways.
 
-4. You may merge the pull request in once you have the sign-off of the maintainers, or if you
-   do not have permission to do that, you may request the second reviewer to merge it for you.
+- Join our group chat on [Matrix][matrix]! We are happy to assist you with your contribution, as
+  well as having a nice chat about all things Calendar :)
 
-## About GNOME Calendar  
+- If you intend to work on the source code of GNOME Calendar directly, you may want to check out our
+  [Hacking Guide][hacking], which explains how to work with the code base in more depth.
 
-Learn more about GNOME Calendar by reading our [HACKING.md](HACKING.md) file.
-
-### Attribution
-
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,
-available at [http://contributor-covenant.org/version/1/4][version]
-
-[homepage]: http://contributor-covenant.org
-[version]: http://contributor-covenant.org/version/1/4/
+[forge]: https://gitlab.gnome.org/GNOME/gnome-calendar/
+[welcome]: https://welcome.gnome.org/en-GB/app/Calendar/
+[matrix]: https://matrix.to/#/#gnome-calendar:gnome.org/
+[discourse]: https://discourse.gnome.org/tags/c/applications/7/calendar/22
+[hacking]: ./HACKING.md
