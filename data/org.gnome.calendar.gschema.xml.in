@@ -26,5 +26,11 @@
       <summary>Zoom level of the week grid</summary>
       <description>The current zoom level of the week grid</description>
     </key>
+    <key name="month-view-n-week-rows" type="u">
+      <range min="2" max="20"/>
+      <default>5</default>
+      <summary>Number of week rows displayed by the Month view</summary>
+      <description>The current number of week rows displayed by the Month view</description>
+    </key>
   </schema>
 </schemalist>
