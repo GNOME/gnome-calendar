@@ -38,11 +38,10 @@
 #include <math.h>
 #include <adwaita.h>
 
-#define N_ROWS_PER_PAGE 5
 #define N_PAGES 3
-#define N_TOTAL_ROWS (N_ROWS_PER_PAGE * N_PAGES)
-#define FIRST_VISIBLE_ROW_INDEX (N_ROWS_PER_PAGE * (N_PAGES - 1) / 2)
-#define LAST_VISIBLE_ROW_INDEX (FIRST_VISIBLE_ROW_INDEX + N_ROWS_PER_PAGE - 1)
+#define N_TOTAL_ROWS(self_) ((self_)->rows_per_page * N_PAGES)
+#define FIRST_VISIBLE_ROW_INDEX(self_) ((self_)->rows_per_page * (N_PAGES - 1) / 2)
+#define LAST_VISIBLE_ROW_INDEX(self_) (FIRST_VISIBLE_ROW_INDEX((self_)) + (self_)->rows_per_page - 1)
 #define CELL_ACTIVATED_OFFSET 18.0
 
 // N_PAGES must be an odd number
@@ -60,6 +59,8 @@ struct _GcalMonthView
   GPtrArray          *week_rows;
 
   GcalEventWidgetPool *event_widget_pool;
+
+  uint32_t            rows_per_page;
 
   struct {
     GtkWidget        *popover;
@@ -239,7 +240,7 @@ update_active_date (GcalMonthView *self)
   int first_weekday;
   int weekday;
 
-  top_row = g_ptr_array_index (self->week_rows, FIRST_VISIBLE_ROW_INDEX);
+  top_row = g_ptr_array_index (self->week_rows, FIRST_VISIBLE_ROW_INDEX (self));
   top_row_range = gcal_month_view_row_get_range (GCAL_MONTH_VIEW_ROW (top_row));
   g_assert (top_row_range != NULL);
 
@@ -264,7 +265,7 @@ maybe_popdown_overflow_popover (GcalMonthView *self)
   found = g_ptr_array_find (self->week_rows, self->overflow.row, &row_index);
   g_assert (found);
 
-  if (floor (row_index / (gdouble) N_ROWS_PER_PAGE) != floor (N_PAGES / 2.0))
+  if (floor (row_index / (gdouble) self->rows_per_page) != floor (N_PAGES / 2.0))
     gcal_month_popover_popdown (GCAL_MONTH_POPOVER (self->overflow.popover));
 }
 
@@ -358,7 +359,7 @@ redraw_month_view_rows (GcalMonthView *self)
 
   g_assert (GCAL_IS_MONTH_VIEW (self));
 
-  n_weeks_before = N_ROWS_PER_PAGE * (N_PAGES - 1) / 2;
+  n_weeks_before = self->rows_per_page * (N_PAGES - 1) / 2;
 
   for (gint i = 0; i < self->week_rows->len; i++)
     {
@@ -390,7 +391,7 @@ update_week_ranges (GcalMonthView *self,
    * The current date corresponds to the week of the first
    * visible row.
    */
-  n_weeks_before = N_ROWS_PER_PAGE * (N_PAGES - 1) / 2;
+  n_weeks_before = self->rows_per_page * (N_PAGES - 1) / 2;
 
   current_date = g_steal_pointer (&self->date);
   if (current_date)
@@ -442,8 +443,8 @@ update_visible_rows (GcalMonthView *self)
   int actual_first_visible_row;
   int actual_last_visible_row;
 
-  actual_first_visible_row = MAX (FIRST_VISIBLE_ROW_INDEX - (self->row_offset < 0.0 ? 1 : 0), 0);
-  actual_last_visible_row = MIN (LAST_VISIBLE_ROW_INDEX + (self->row_offset > 0.0 ? 1 : 0), N_TOTAL_ROWS);
+  actual_first_visible_row = MAX (FIRST_VISIBLE_ROW_INDEX (self) - (self->row_offset < 0.0 ? 1 : 0), 0);
+  actual_last_visible_row = MIN (LAST_VISIBLE_ROW_INDEX (self) + (self->row_offset > 0.0 ? 1 : 0), N_TOTAL_ROWS (self));
 
   for (unsigned int i = 0; i < self->week_rows->len; i++)
     {
@@ -511,7 +512,7 @@ offset_and_shuffle_rows_by_pixels (GcalMonthView *self,
   GCAL_ENTRY;
 
   grid_height = get_grid_height (self);
-  row_height = grid_height / (gdouble) N_ROWS_PER_PAGE;
+  row_height = grid_height / (gdouble) self->rows_per_page;
 
   offset_and_shuffle_rows (self, dy_pixels / row_height);
 
@@ -809,10 +810,10 @@ focus_month_cell (GcalMonthView    *self,
   new_row = g_ptr_array_index (self->week_rows, new_row_index);
   new_cell = gcal_month_view_row_get_cell_at_x (GCAL_MONTH_VIEW_ROW (new_row), new_cell_x);
 
-  if (row_index < FIRST_VISIBLE_ROW_INDEX || row_index > LAST_VISIBLE_ROW_INDEX)
+  if (row_index < FIRST_VISIBLE_ROW_INDEX (self) || row_index > LAST_VISIBLE_ROW_INDEX (self))
     return TRUE;
 
-  if (new_row_index < FIRST_VISIBLE_ROW_INDEX || new_row_index > LAST_VISIBLE_ROW_INDEX)
+  if (new_row_index < FIRST_VISIBLE_ROW_INDEX (self) || new_row_index > LAST_VISIBLE_ROW_INDEX (self))
     trigger_scroll (self, n_rows);
 
   return gtk_widget_grab_focus (new_cell);
@@ -828,12 +829,12 @@ get_month_cell_at_position (GcalMonthView *self,
 
   gdouble grid_y = MAX (0, y - header_height);
   gdouble grid_height = height - header_height;
-  gdouble row_height = grid_height / N_ROWS_PER_PAGE;
+  gdouble row_height = grid_height / self->rows_per_page;
 
   gint row_idx = floor (grid_y / row_height);
-  row_idx = CLAMP (row_idx, 0, N_ROWS_PER_PAGE - 1);
+  row_idx = CLAMP (row_idx, 0, self->rows_per_page - 1);
 
-  GtkWidget *row_widget = g_ptr_array_index (self->week_rows, FIRST_VISIBLE_ROW_INDEX + row_idx);
+  GtkWidget *row_widget = g_ptr_array_index (self->week_rows, FIRST_VISIBLE_ROW_INDEX (self) + row_idx);
   GtkWidget *hovered_cell = gcal_month_view_row_get_cell_at_x (GCAL_MONTH_VIEW_ROW (row_widget), x);
 
   return hovered_cell;
@@ -1354,7 +1355,7 @@ decelerate_scroll_cb (gdouble  value,
   dy = self->last_velocity - value;
   self->last_velocity = value;
 
-  if (fabs (value) > (get_grid_height (self) / (gdouble) N_ROWS_PER_PAGE / 5.0))
+  if (fabs (value) > (get_grid_height (self) / (gdouble) self->rows_per_page / 5.0))
     offset_and_shuffle_rows_by_pixels (self, dy);
   else
     adw_animation_skip (self->kinetic_scroll_animation);
@@ -1391,7 +1392,7 @@ on_scroll_controller_decelerate_cb (GtkEventControllerScroll *scroll_controller,
   cancel_deceleration (self);
 
   grid_height = get_grid_height (self);
-  if (fabs (velocity_y) < (grid_height / (gdouble) N_ROWS_PER_PAGE / 5.0))
+  if (fabs (velocity_y) < (grid_height / (gdouble) self->rows_per_page / 5.0))
     {
       snap_to_top_row (self);
       GCAL_RETURN ();
@@ -1401,7 +1402,7 @@ on_scroll_controller_decelerate_cb (GtkEventControllerScroll *scroll_controller,
   animation_target = adw_callback_animation_target_new (decelerate_scroll_cb, self, NULL);
 
   /* Hijack the velocity so that it always ends in an actual row */
-  row_height = grid_height / (gdouble) N_ROWS_PER_PAGE;
+  row_height = grid_height / (gdouble) self->rows_per_page;
   velocity_y -= fmod (velocity_y, row_height) + self->row_offset * row_height;
 
   g_assert (self->kinetic_scroll_animation == NULL);
@@ -1895,7 +1896,7 @@ gcal_month_view_size_allocate (GtkWidget *widget,
   gtk_widget_allocate (self->header, width, header_height, baseline, NULL);
 
   grid_height = height - header_height + 1;
-  row_height = grid_height / (gdouble) N_ROWS_PER_PAGE;
+  row_height = grid_height / (gdouble) self->rows_per_page;
   row_scroll_offset = self->row_offset * row_height;
   y_offset = header_height - row_scroll_offset - (grid_height * ((N_PAGES - 1) / 2.0));
 
@@ -2113,6 +2114,7 @@ gcal_month_view_init (GcalMonthView *self)
   GtkDropTarget *drop_target;
   g_autoptr (GDateTime) now = NULL;
 
+  self->rows_per_page = 5;
   self->event_widget_pool = gcal_event_widget_pool_new ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
@@ -2120,11 +2122,11 @@ gcal_month_view_init (GcalMonthView *self)
 
   gtk_accessible_update_relation (GTK_ACCESSIBLE (self),
                                   GTK_ACCESSIBLE_RELATION_COL_COUNT, GCAL_N_WEEKDAYS,
-                                  GTK_ACCESSIBLE_RELATION_ROW_COUNT, N_ROWS_PER_PAGE,
+                                  GTK_ACCESSIBLE_RELATION_ROW_COUNT, self->rows_per_page,
                                   -1);
 
-  self->week_rows = g_ptr_array_new_full (N_TOTAL_ROWS, (GDestroyNotify) gtk_widget_unparent);
-  for (gint i = 0; i < N_TOTAL_ROWS; i++)
+  self->week_rows = g_ptr_array_new_full (N_TOTAL_ROWS (self), (GDestroyNotify) gtk_widget_unparent);
+  for (gint i = 0; i < N_TOTAL_ROWS (self); i++)
     {
       GtkWidget *row = gcal_month_view_row_new (self->event_widget_pool);
       g_signal_connect (row, "event-activated", G_CALLBACK (on_event_widget_activated_cb), self);
