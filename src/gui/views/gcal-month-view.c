@@ -1478,6 +1478,51 @@ on_month_popover_closed_cb (GcalMonthPopover *month_popover,
     }
 }
 
+static void
+on_settings_month_view_n_week_rows_changed_cb (GSettings     *settings,
+                                               gchar         *key,
+                                               GcalMonthView *self)
+{
+  uint32_t old_rows_per_page = self->rows_per_page;
+
+  self->rows_per_page = g_settings_get_uint (settings, "month-view-n-week-rows");
+  g_assert (self->rows_per_page > 1 && self->rows_per_page <= 20);
+
+  if (self->rows_per_page > old_rows_per_page)
+    {
+      int new_rows = N_TOTAL_ROWS (self) - self->week_rows->len;
+
+      g_assert (new_rows > 0);
+
+      while (new_rows-- > 0)
+        {
+          GtkWidget *row = gcal_month_view_row_new (self->event_widget_pool);
+          g_signal_connect (row, "event-activated", G_CALLBACK (on_event_widget_activated_cb), self);
+          g_signal_connect (row, "cell-activated", G_CALLBACK (on_month_row_cell_activated_cb), self);
+          g_signal_connect (row, "show-overflow", G_CALLBACK (on_month_row_show_overflow_cb), self);
+          gtk_widget_insert_before (row, GTK_WIDGET (self), self->header);
+          g_ptr_array_add (self->week_rows, row);
+        }
+    }
+  else
+    {
+      g_ptr_array_set_size (self->week_rows, N_TOTAL_ROWS (self));
+    }
+
+
+  gtk_accessible_update_relation (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_RELATION_COL_COUNT, GCAL_N_WEEKDAYS,
+                                  GTK_ACCESSIBLE_RELATION_ROW_COUNT, self->rows_per_page,
+                                  -1);
+
+  update_weekday_labels (self);
+  redraw_month_view_rows (self);
+  update_week_ranges (self, self->date);
+  update_visible_rows (self);
+
+  gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (self));
+}
+
 
 /*
  * GcalTimelineSubscriber iface
@@ -2113,8 +2158,19 @@ gcal_month_view_init (GcalMonthView *self)
 {
   GtkDropTarget *drop_target;
   g_autoptr (GDateTime) now = NULL;
+  GSettings *settings;
 
-  self->rows_per_page = 5;
+  settings = gcal_context_get_settings (gcal_application_get_context (GCAL_DEFAULT_APPLICATION));
+
+  self->rows_per_page = g_settings_get_uint (settings, "month-view-n-week-rows");
+  g_assert (self->rows_per_page > 1 && self->rows_per_page <= 20);
+
+  g_signal_connect_object (settings,
+                           "changed::month-view-n-week-rows",
+                           G_CALLBACK (on_settings_month_view_n_week_rows_changed_cb),
+                           self,
+                           0);
+
   self->event_widget_pool = gcal_event_widget_pool_new ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
