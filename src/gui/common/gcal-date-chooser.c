@@ -422,9 +422,7 @@ calendar_init_month_display (GcalDateChooser *self)
   g_autoptr (GtkStringList) year_list = gtk_string_list_new (NULL);
   int max_year;
 
-  g_object_get (self->year_choice,
-                "max-value", &max_year,
-                NULL);
+  max_year = gcal_multi_choice_get_max_value (GCAL_MULTI_CHOICE (self->year_choice));
   gtk_string_list_take (year_list, g_strdup_printf ("%i", max_year));
 
   for (int i = 0; i < 12; i++)
