@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-09-05 10:07+0000\n"
-"PO-Revision-Date: 2026-07-22 16:08+0200\n"
+"POT-Creation-Date: 2026-09-30 18:57+0000\n"
+"PO-Revision-Date: 2026-09-30 22:49+0300\n"
 "Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -19,8 +19,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2);\n"
-"X-Generator: Gtranslator 50.0\n"
+"X-Generator: Gtranslator 51.0\n"
 "X-Project-Style: gnome\n"
+"X-DL-VCS-Web: https://gitlab.gnome.org/GNOME/gnome-calendar/\n"
+"X-DL-Lang: ro\n"
+"X-DL-Module: gnome-calendar\n"
+"X-DL-Branch: main\n"
+"X-DL-Domain: po\n"
+"X-DL-State: Translating\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -241,23 +247,37 @@ msgid "Calendar Settings"
 msgstr "Preferințe Calendar"
 
 #: src/gui/calendar-management/gcal-calendars-page.blp:5
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:90
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:65
 msgid "Calendars"
 msgstr "Calendare"
 
-#: src/gui/calendar-management/gcal-calendars-page.blp:37
-msgid "_Add Calendar"
-msgstr "_Adaugă un calendar"
+#: src/gui/calendar-management/gcal-calendars-page.blp:14
+#: src/gui/calendar-management/gcal-new-local-calendar-page.c:72
+#: src/gui/calendar-management/gcal-new-online-calendar-page.c:93
+#, c-format
+msgid "Add Calendar"
+msgid_plural "Add %1$u Calendars"
+msgstr[0] "Adaugă un calendar"
+msgstr[1] "Adaugă %1$u calendare"
+msgstr[2] "Adaugă %1$u de calendare"
+
+#: src/gui/calendar-management/gcal-calendars-page.blp:18
+msgid "New Local Calendar…"
+msgstr "Calendar local nou…"
+
+#: src/gui/calendar-management/gcal-calendars-page.blp:19
+msgid "Add Remote Calendar…"
+msgstr "Adaugă un calendar extern…"
 
 #. Create the new toast
 #. TRANSLATORS: %s is a calendar name.
-#: src/gui/calendar-management/gcal-calendars-page.c:349
+#: src/gui/calendar-management/gcal-calendars-page.c:356
 #, c-format
 msgid "Calendar “%s” removed"
 msgstr "Calendarul „%s” a fost eliminat"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:354
-#: src/gui/gcal-window.c:1020
+#: src/gui/calendar-management/gcal-calendars-page.c:361
+#: src/gui/gcal-window.c:1029
 msgid "_Undo"
 msgstr "An_ulează"
 
@@ -282,12 +302,12 @@ msgid "Location"
 msgstr "Locul"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:54
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:20
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:20
 msgid "Calendar Name"
 msgstr "Numele calendarului"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:58
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:25
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:25
 msgid "Color"
 msgstr "Culoarea"
 
@@ -315,19 +335,28 @@ msgstr "În acest computer"
 msgid "Export Calendar"
 msgstr "Exportă calendarul"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:5
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:5
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:5
 msgid "New Calendar"
 msgstr "Calendar nou"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:17
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:17
 msgid "Create a Local Calendar"
 msgstr "Creează un calendar local"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:42
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:44
+#: src/gui/calendar-management/gcal-new-local-calendar-page.c:79
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:105
+#: src/gui/calendar-management/gcal-new-online-calendar-page.c:100
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "Adaugă un calendar"
+
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:17
 msgid "Connect to an Online Calendar"
 msgstr "Conectează la un calendar online"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:50
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:25
 msgid ""
 "HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
 "be updated by the provider will be added as read-only."
@@ -336,7 +365,7 @@ msgstr ""
 "pot fi actualizate numai de către furnizor vor fi adăugate ca fiind doar de "
 "citit."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:111
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:86
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -344,47 +373,33 @@ msgstr ""
 "În cazul în care calendarul aparține unuia dintre propriile conturi online, "
 "poate fi adăugat prin <a href=\"GOA\">opțiunile contului online</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:130
-#: src/gui/calendar-management/gcal-new-calendar-page.c:116
-msgctxt "button"
-msgid "Add Calendar"
-msgstr "Adaugă un calendar"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:145
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:120
 msgid "Credentials"
 msgstr "Date de acces"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:151
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:126
 msgid "User"
 msgstr "Utilizatorul"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:155
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:130
 msgid "Password"
 msgstr "Parola"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:165
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:140
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:18
-#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1295
+#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:879
 msgid "_Cancel"
 msgstr "_Anulează"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:166
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:141
 msgid "_Connect"
 msgstr "_Conectează"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:109
-#, c-format
-msgid "Add Calendar"
-msgid_plural "Add %1$u Calendars"
-msgstr[0] "Adaugă un calendar"
-msgstr[1] "Adaugă %1$u calendare"
-msgstr[2] "Adaugă %1$u de calendare"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:324
+#: src/gui/calendar-management/gcal-new-online-calendar-page.c:271
 msgid "The URL you have entered appears to be invalid."
 msgstr "URL-ul introdus nu pare corect."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:379
+#: src/gui/calendar-management/gcal-new-online-calendar-page.c:321
 msgid "A valid user and password are required to connect to this calendar."
 msgstr ""
 "Pentru conectarea la acest calendar sunt necesare un nume de utilizator și o "
@@ -395,29 +410,29 @@ msgid "This calendar is hidden"
 msgstr "Acest calendar este ascuns"
 
 #: src/gui/common/gcal-date-chooser.blp:15
-#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:408
+#: src/gui/common/gcal-date-chooser.blp:53 src/gui/gcal-window.c:408
 msgid "Month"
 msgstr "Luna"
 
 #: src/gui/common/gcal-date-chooser.blp:16
-#: src/gui/common/gcal-date-chooser.blp:56 src/gui/gcal-window.c:253
+#: src/gui/common/gcal-date-chooser.blp:54 src/gui/gcal-window.c:253
 msgid "Previous Month"
 msgstr "Luna precedentă"
 
 #: src/gui/common/gcal-date-chooser.blp:17
-#: src/gui/common/gcal-date-chooser.blp:57 src/gui/gcal-window.c:284
+#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:284
 msgid "Next Month"
 msgstr "Luna următoare"
 
-#: src/gui/common/gcal-date-chooser.blp:34
+#: src/gui/common/gcal-date-chooser.blp:33
 msgid "Year"
 msgstr "Anul"
 
-#: src/gui/common/gcal-date-chooser.blp:35
+#: src/gui/common/gcal-date-chooser.blp:34
 msgid "Previous Year"
 msgstr "Anul precedent"
 
-#: src/gui/common/gcal-date-chooser.blp:36
+#: src/gui/common/gcal-date-chooser.blp:35
 msgid "Next Year"
 msgstr "Anul următor"
 
@@ -429,43 +444,43 @@ msgstr "Anul următor"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:333
+#: src/gui/common/gcal-date-chooser.c:336
 msgctxt "grid sunday"
 msgid "S"
 msgstr "D"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:338
+#: src/gui/common/gcal-date-chooser.c:341
 msgctxt "grid monday"
 msgid "M"
 msgstr "L"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:343
+#: src/gui/common/gcal-date-chooser.c:346
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "M"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:348
+#: src/gui/common/gcal-date-chooser.c:351
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "M"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:353
+#: src/gui/common/gcal-date-chooser.c:356
 msgctxt "grid thursday"
 msgid "T"
 msgstr "J"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:358
+#: src/gui/common/gcal-date-chooser.c:361
 msgctxt "grid friday"
 msgid "F"
 msgstr "V"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:363
+#: src/gui/common/gcal-date-chooser.c:366
 msgctxt "grid saturday"
 msgid "S"
 msgstr "S"
@@ -943,6 +958,14 @@ msgstr ""
 msgid "Weather"
 msgstr "Vremea"
 
+#: src/gui/gcal-calendar-navigation-button.blp:13
+msgid "_Choose Date"
+msgstr "_Alege data"
+
+#: src/gui/gcal-calendar-navigation-button.blp:16
+msgid "Choose a Date"
+msgstr "Alege o dată"
+
 #.
 #. * Translators: %OB is the month name and %Y is the year.
 #. * More formats can be found on the doc:
@@ -1056,17 +1079,17 @@ msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%2$d %1$s, %3$d, %4$s"
 
 #: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
-#: src/gui/views/gcal-agenda-view-day-row.c:77
+#: src/gui/views/gcal-agenda-view.c:98
 msgid "Today"
 msgstr "Astăzi"
 
 #: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/gcal-window.c:286 src/gui/views/gcal-agenda-view-day-row.c:79
+#: src/gui/gcal-window.c:286 src/gui/views/gcal-agenda-view.c:100
 msgid "Tomorrow"
 msgstr "Mâine"
 
 #: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/gcal-window.c:255 src/gui/views/gcal-agenda-view-day-row.c:81
+#: src/gui/gcal-window.c:255 src/gui/views/gcal-agenda-view.c:102
 msgid "Yesterday"
 msgstr "Ieri"
 
@@ -1538,19 +1561,19 @@ msgstr "Săptămâna"
 msgid "Agenda"
 msgstr "Agendă"
 
-#: src/gui/gcal-window.c:1018
+#: src/gui/gcal-window.c:1027
 msgid "Another event deleted"
 msgstr "Un alt eveniment șters"
 
-#: src/gui/gcal-window.c:1018
+#: src/gui/gcal-window.c:1027
 msgid "Event deleted"
 msgstr "Eveniment șters"
 
-#: src/gui/gcal-window.c:1083
+#: src/gui/gcal-window.c:1092
 msgid "Could not import some files: Not ICS files"
 msgstr "Nu s-au putut importa unele fișiere: Nu sunt fișiere ICS"
 
-#: src/gui/gcal-window.c:1088
+#: src/gui/gcal-window.c:1097
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Nu s-a putut importa „%s”: Nu este un fișier ICS"
@@ -1714,25 +1737,25 @@ msgctxt "shortcut dialog"
 msgid "Week View"
 msgstr "Săptămânală"
 
-#: src/gui/views/gcal-agenda-view-day-row.blp:25
-msgid "No events"
-msgstr "Niciun eveniment"
-
 #.
 #. * Translators: %A is the full day name, %B is the month name
 #. * and %d is the day of the month as a number between 0 and 31.
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/views/gcal-agenda-view-day-row.c:89
+#: src/gui/views/gcal-agenda-view.c:110
 msgid "%A %B %d"
 msgstr "%A %e %B"
+
+#: src/gui/views/gcal-month-cell.blp:79
+msgid "All Events"
+msgstr "Toate evenimentele"
 
 #: src/gui/views/gcal-month-popover.blp:58
 msgid "New Event…"
 msgstr "Eveniment nou…"
 
-#: src/gui/views/gcal-week-header.c:473
+#: src/gui/views/gcal-week-header.c:471
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1748,11 +1771,11 @@ msgstr "Ascunde evenimentele suplimentare"
 msgid "Show Additional Events"
 msgstr "Arată evenimentele suplimentare"
 
-#: src/utils/gcal-utils.c:1291
+#: src/utils/gcal-utils.c:875
 msgid "Modify Multiple Events?"
 msgstr "Se modifică mai multe evenimente?"
 
-#: src/utils/gcal-utils.c:1292
+#: src/utils/gcal-utils.c:876
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1760,72 +1783,72 @@ msgstr ""
 "Se încearcă modificarea unui eveniment care se repetă. Modificările alese ar "
 "trebui aplicate:"
 
-#: src/utils/gcal-utils.c:1296
+#: src/utils/gcal-utils.c:880
 msgid "_Only This Event"
 msgstr "D_oar acestui eveniment"
 
-#: src/utils/gcal-utils.c:1302
+#: src/utils/gcal-utils.c:886
 msgid "_Subsequent Events"
 msgstr "Evenimentelor _următoare"
 
-#: src/utils/gcal-utils.c:1305
+#: src/utils/gcal-utils.c:889
 msgid "_All Events"
 msgstr "_Tuturor evenimentelor"
 
 #. Conferencing
-#: src/utils/gcal-utils.c:1408
+#: src/utils/gcal-utils.c:957
 msgid "BlueJeans"
 msgstr "BlueJeans"
 
-#: src/utils/gcal-utils.c:1409 src/utils/gcal-utils.c:1410
+#: src/utils/gcal-utils.c:958 src/utils/gcal-utils.c:959
 msgid "BigBlueButton"
 msgstr "BigBlueButton"
 
-#: src/utils/gcal-utils.c:1411
+#: src/utils/gcal-utils.c:960
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1412 src/utils/gcal-utils.c:1413
+#: src/utils/gcal-utils.c:961 src/utils/gcal-utils.c:962
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1414
+#: src/utils/gcal-utils.c:963
 msgid "Uber Conference"
 msgstr "Uber Conference"
 
-#: src/utils/gcal-utils.c:1415
+#: src/utils/gcal-utils.c:964
 msgid "GNOME Meet"
 msgstr "GNOME Meet"
 
-#: src/utils/gcal-utils.c:1416
+#: src/utils/gcal-utils.c:965
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
-#: src/utils/gcal-utils.c:1417
+#: src/utils/gcal-utils.c:966
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1418
+#: src/utils/gcal-utils.c:967
 msgid "Webex"
 msgstr "Webex"
 
-#: src/utils/gcal-utils.c:1419
+#: src/utils/gcal-utils.c:968
 msgid "Zoom"
 msgstr "Zoom"
 
 #. Map
-#: src/utils/gcal-utils.c:1422
+#: src/utils/gcal-utils.c:971
 msgid "View Map"
 msgstr "Arată harta"
 
-#: src/utils/gcal-utils.c:1423
+#: src/utils/gcal-utils.c:972
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: src/utils/gcal-utils.c:1424 src/utils/gcal-utils.c:1425
+#: src/utils/gcal-utils.c:973 src/utils/gcal-utils.c:974
 msgid "Google Maps"
 msgstr "Hărți Google"
 
-#: src/utils/gcal-utils.c:1426
+#: src/utils/gcal-utils.c:975
 msgid "Bing Maps"
 msgstr "Hărți Bing"
