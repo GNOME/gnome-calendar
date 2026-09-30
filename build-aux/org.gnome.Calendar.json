@@ -8,6 +8,7 @@
         "devel"
     ],
     "finish-args" : [
+        "--env=G_DEBUG=fatal-criticals",
         "--device=dri",
         "--share=ipc",
         "--share=network",
