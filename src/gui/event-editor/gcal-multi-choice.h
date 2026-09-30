@@ -49,10 +49,20 @@ GtkPopover*          gcal_multi_choice_get_popover               (GcalMultiChoic
 void                 gcal_multi_choice_set_popover               (GcalMultiChoice    *self,
                                                                   GtkWidget          *popover);
 
-const gchar*         gcal_multi_choice_get_category              (GcalMultiChoice    *self);
+const char          *gcal_multi_choice_get_category              (GcalMultiChoice    *self);
 
 void                 gcal_multi_choice_set_category              (GcalMultiChoice    *self,
                                                                   const gchar        *category);
+
+const char          *gcal_multi_choice_get_previous_button_tooltip (GcalMultiChoice  *self);
+
+void                 gcal_multi_choice_set_previous_button_tooltip (GcalMultiChoice  *self,
+                                                                    const char       *previous_button_tooltip);
+
+const char          *gcal_multi_choice_get_next_button_tooltip   (GcalMultiChoice    *self);
+
+void                 gcal_multi_choice_set_next_button_tooltip   (GcalMultiChoice    *self,
+                                                                  const char         *next_button_tooltip);
 
 void                 gcal_multi_choice_set_choices               (GcalMultiChoice     *self,
                                                                   const gchar        **selfs);

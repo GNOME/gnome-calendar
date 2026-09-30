@@ -41,8 +41,8 @@ struct _GcalMultiChoice
   gint                            min_value;
   gint                            max_value;
   gchar                          *category;
-  gchar                          *prev_button_tooltip_text;
-  gchar                          *next_button_tooltip_text;
+  gchar                          *previous_button_tooltip;
+  gchar                          *next_button_tooltip;
 
   GtkStringList                  *string_list;
   GtkWidget                      *active;
@@ -226,8 +226,8 @@ gcal_multi_choice_dispose (GObject *object)
   g_clear_pointer (&self->string_list, g_object_unref);
 
   g_clear_pointer (&self->category, g_free);
-  g_clear_pointer (&self->prev_button_tooltip_text, g_free);
-  g_clear_pointer (&self->next_button_tooltip_text, g_free);
+  g_clear_pointer (&self->previous_button_tooltip, g_free);
+  g_clear_pointer (&self->next_button_tooltip, g_free);
 
   if (self->format_destroy)
     g_clear_pointer (&self->format_data, self->format_destroy);
@@ -270,11 +270,11 @@ gcal_multi_choice_get_property (GObject    *object,
       break;
 
     case PROP_PREVIOUS_BUTTON_TOOLTIP:
-      g_value_set_string (value, self->prev_button_tooltip_text);
+      g_value_set_string (value, gcal_multi_choice_get_previous_button_tooltip (self));
       break;
 
     case PROP_NEXT_BUTTON_TOOLTIP:
-      g_value_set_string (value, self->next_button_tooltip_text);
+      g_value_set_string (value, gcal_multi_choice_get_next_button_tooltip (self));
       break;
 
     default:
@@ -318,13 +318,11 @@ gcal_multi_choice_set_property (GObject      *object,
       break;
 
     case PROP_PREVIOUS_BUTTON_TOOLTIP:
-      if (g_set_str (&self->prev_button_tooltip_text, g_value_get_string (value)))
-        g_object_notify_by_pspec (object, properties[PROP_PREVIOUS_BUTTON_TOOLTIP]);
+      gcal_multi_choice_set_previous_button_tooltip (self, g_value_get_string (value));
       break;
 
     case PROP_NEXT_BUTTON_TOOLTIP:
-      if (g_set_str (&self->next_button_tooltip_text, g_value_get_string (value)))
-        g_object_notify_by_pspec (object, properties[PROP_NEXT_BUTTON_TOOLTIP]);
+      gcal_multi_choice_set_next_button_tooltip (self, g_value_get_string (value));
       break;
 
     default:
@@ -446,21 +444,43 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
                            GTK_TYPE_POPOVER,
                            G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
+  /**
+   * GcalMultiChoice:category:
+   *
+   * The category representing this #GcalMultiChoice.
+   */
   properties[PROP_CATEGORY] =
-      g_param_spec_string ("category", "Category", "Category",
+      g_param_spec_string ("category", NULL, NULL,
                            "",
-                           G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
+                           G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * GcalMultiChoice:previous-button-tooltip:
+   *
+   * The tooltip text of the previous button.
+   */
   properties[PROP_PREVIOUS_BUTTON_TOOLTIP] =
       g_param_spec_string ("previous-button-tooltip", NULL, NULL,
                            NULL,
-                           G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
+                           G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * GcalMultiChoice:next-button-tooltip:
+   *
+   * The tooltip text of the next button.
+   */
   properties[PROP_NEXT_BUTTON_TOOLTIP] =
       g_param_spec_string ("next-button-tooltip", NULL, NULL,
                            NULL,
-                           G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
+                           G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
+  /**
+   * GcalMultiChoice::wrapped:
+   *
+   * Emitted when the value wraps
+   */
   signals[WRAPPED] =
     g_signal_new ("wrapped",
                   G_TYPE_FROM_CLASS (object_class),
@@ -734,23 +754,6 @@ gcal_multi_choice_set_value_callbacks (GcalMultiChoice              *self,
   self->next_cb = next_cb;
 }
 
-void
-gcal_multi_choice_set_popover (GcalMultiChoice *self,
-                               GtkWidget       *popover)
-{
-  g_assert (GCAL_IS_MULTI_CHOICE (self));
-  g_assert (popover == NULL || GTK_IS_POPOVER (popover));
-
-  if (gtk_popover_bin_get_popover (self->popover_bin) == popover)
-    return;
-
-  gtk_popover_bin_set_popover (self->popover_bin, popover);
-
-  update_sensitivity (self);
-
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_POPOVER]);
-}
-
 /**
  * gcal_multi_choice_get_popover:
  * @self: a #GcalMultiChoice
@@ -772,28 +775,27 @@ gcal_multi_choice_get_popover (GcalMultiChoice *self)
 }
 
 /**
- * gcal_multi_choice_set_category:
+ * gcal_multi_choice_set_popover:
  * @self: a #GcalMultiChoice
- * @category: The category name
+ * @popover: (transfer none) (nullable): the popover
  *
- * Set the value of the category name
+ * Sets the popover.
  */
 void
-gcal_multi_choice_set_category (GcalMultiChoice *self,
-                                const gchar     *category)
+gcal_multi_choice_set_popover (GcalMultiChoice *self,
+                               GtkWidget       *popover)
 {
   g_assert (GCAL_IS_MULTI_CHOICE (self));
+  g_assert (popover == NULL || GTK_IS_POPOVER (popover));
 
-  if (g_strcmp0 (self->category, category) != 0)
-    {
-      self->category = g_strdup (category ? category : "");
+  if (gtk_popover_bin_get_popover (self->popover_bin) == popover)
+    return;
 
-      gtk_accessible_update_property (GTK_ACCESSIBLE (self),
-                                      GTK_ACCESSIBLE_PROPERTY_LABEL, category,
-                                      -1);
+  gtk_popover_bin_set_popover (self->popover_bin, popover);
 
-      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CATEGORY]);
-    }
+  update_sensitivity (self);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_POPOVER]);
 }
 
 /**
@@ -811,3 +813,99 @@ gcal_multi_choice_get_category (GcalMultiChoice *self)
 
   return self->category ? self->category : "";
 }
+
+/**
+ * gcal_multi_choice_set_category:
+ * @self: a #GcalMultiChoice
+ * @category: The category name
+ *
+ * Set the value of the category name
+ */
+void
+gcal_multi_choice_set_category (GcalMultiChoice *self,
+                                const gchar     *category)
+{
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
+  if (g_strcmp0 (self->category, category) == 0)
+    return;
+
+  self->category = g_strdup (category ? category : "");
+
+  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_PROPERTY_LABEL, category,
+                                  -1);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CATEGORY]);
+}
+
+/**
+ * gcal_multi_choice_get_previous_button_tooltip:
+ * @self: a #GcalMultiChoice
+ *
+ * Gets the tooltip text of the previous button.
+ *
+ * Returns: (transfer none): the tooltip text of the previous button.
+ */
+const char *
+gcal_multi_choice_get_previous_button_tooltip (GcalMultiChoice *self)
+{
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
+  return self->previous_button_tooltip;
+}
+
+/**
+ * gcal_multi_choice_set_previous_button_tooltip:
+ * @self: a #GcalMultiChoice
+ * @previous_button_tooltip: the previous button tooltip text
+ *
+ * Sets the previous button tooltip text.
+ */
+void
+gcal_multi_choice_set_previous_button_tooltip (GcalMultiChoice *self,
+                                               const char      *previous_button_tooltip)
+{
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
+  if (!g_set_str (&self->previous_button_tooltip, previous_button_tooltip))
+    return;
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_PREVIOUS_BUTTON_TOOLTIP]);
+}
+
+/**
+ * gcal_multi_choice_get_next_button_tooltip:
+ * @self: a #GcalMultiChoice
+ *
+ * Gets the tooltip text of the next button.
+ *
+ * Returns: (transfer none): the tooltip text of the next button.
+ */
+const char *
+gcal_multi_choice_get_next_button_tooltip (GcalMultiChoice *self)
+{
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
+  return self->next_button_tooltip;
+}
+
+/**
+ * gcal_multi_choice_set_next_button_tooltip:
+ * @self: a #GcalMultiChoice
+ * @next_button_tooltip: the next button tooltip text
+ *
+ * Sets the next button tooltip text.
+ */
+void
+gcal_multi_choice_set_next_button_tooltip (GcalMultiChoice *self,
+                                           const char      *next_button_tooltip)
+{
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
+  if (!g_set_str (&self->next_button_tooltip, next_button_tooltip))
+    return;
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_NEXT_BUTTON_TOOLTIP]);
+}
+
