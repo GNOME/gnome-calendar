@@ -119,28 +119,6 @@ apply_value (GcalMultiChoice *self)
 }
 
 static void
-set_value (GcalMultiChoice *self,
-           gint             value)
-{
-  value = CLAMP (value, self->min_value, self->max_value);
-
-  if (self->value == value)
-    return;
-
-  self->value = value;
-
-  apply_value (self);
-
-  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
-                                  GTK_ACCESSIBLE_PROPERTY_VALUE_MAX, (gdouble) self->max_value,
-                                  GTK_ACCESSIBLE_PROPERTY_VALUE_MIN, (gdouble) self->min_value,
-                                  GTK_ACCESSIBLE_PROPERTY_VALUE_NOW, (gdouble) self->value,
-                                  -1);
-
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_VALUE]);
-}
-
-static void
 action_activated (GcalMultiChoice *self,
                   int              value)
 {
@@ -148,7 +126,7 @@ action_activated (GcalMultiChoice *self,
 
   wrapped_value = WRAP (value, self->min_value, self->max_value);
 
-  set_value (self, wrapped_value);
+  gcal_multi_choice_set_value (self, wrapped_value);
 
   if (wrapped_value != value)
     g_signal_emit (self, signals[WRAPPED], 0);
@@ -268,15 +246,15 @@ gcal_multi_choice_get_property (GObject    *object,
   switch (property_id)
     {
     case PROP_VALUE:
-      g_value_set_int (value, self->value);
+      g_value_set_int (value, gcal_multi_choice_get_value (self));
       break;
 
     case PROP_MIN_VALUE:
-      g_value_set_int (value, self->min_value);
+      g_value_set_int (value, gcal_multi_choice_get_min_value (self));
       break;
 
     case PROP_MAX_VALUE:
-      g_value_set_int (value, self->max_value);
+      g_value_set_int (value, gcal_multi_choice_get_max_value (self));
       break;
 
     case PROP_STRING_LIST:
@@ -320,15 +298,11 @@ gcal_multi_choice_set_property (GObject      *object,
       break;
 
     case PROP_MIN_VALUE:
-      self->min_value = g_value_get_int (value);
-      g_object_notify_by_pspec (object, properties[PROP_MIN_VALUE]);
-      gcal_multi_choice_set_value (self, self->value);
+      gcal_multi_choice_set_min_value (self, g_value_get_int (value));
       break;
 
     case PROP_MAX_VALUE:
-      self->max_value = g_value_get_int (value);
-      g_object_notify_by_pspec (object, properties[PROP_MAX_VALUE]);
-      gcal_multi_choice_set_value (self, self->value);
+      gcal_multi_choice_set_max_value (self, g_value_get_int (value));
       break;
 
     case PROP_STRING_LIST:
@@ -422,18 +396,35 @@ gcal_multi_choice_class_init (GcalMultiChoiceClass *class)
 
   widget_class->state_flags_changed = gcal_multi_choice_state_flags_changed;
 
+  /**
+   * GcalMultiChoice:value:
+   *
+   * The current value.
+   */
   properties[PROP_VALUE] =
-      g_param_spec_int ("value", "Value", "Value",
+      g_param_spec_int ("value", NULL, NULL,
                         G_MININT, G_MAXINT, 0,
-                        G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
+                        G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * GcalMultiChoice:min-value:
+   *
+   * The minimum value.
+   */
   properties[PROP_MIN_VALUE] =
-      g_param_spec_int ("min-value", "Minimum Value", "Minimum Value",
+      g_param_spec_int ("min-value", NULL, NULL,
                         G_MININT, G_MAXINT, 0,
-                        G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
+                        G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * GcalMultiChoice:max-value:
+   *
+   * The maximum value.
+   */
   properties[PROP_MAX_VALUE] =
-      g_param_spec_int ("max-value", "Maximum Value", "Maximum Value",
+      g_param_spec_int ("max-value", NULL, NULL,
                         G_MININT, G_MAXINT, 0,
-                        G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
+                        G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalMultiChoice:string-list:
@@ -537,6 +528,22 @@ gcal_multi_choice_new (void)
 }
 
 /**
+ * gcal_multi_choice_get_value:
+ * @self: a #GcalMultiChoice
+ *
+ * Gets the value for @self.
+ *
+ * Returns: The value for @self.
+ */
+int
+gcal_multi_choice_get_value (GcalMultiChoice *self)
+{
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
+  return self->value;
+}
+
+/**
  * gcal_multi_choice_set_value:
  * @self: a #GcalMultiChoice
  * @value: the value
@@ -545,27 +552,106 @@ gcal_multi_choice_new (void)
  */
 void
 gcal_multi_choice_set_value (GcalMultiChoice *self,
-                             gint             value)
+                             int              value)
 {
   g_assert (GCAL_IS_MULTI_CHOICE (self));
 
-  set_value (self, value);
+  value = CLAMP (value, self->min_value, self->max_value);
+
+  if (self->value == value)
+    return;
+
+  self->value = value;
+
+  apply_value (self);
+
+  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_PROPERTY_VALUE_NOW, (double) value,
+                                  -1);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_VALUE]);
 }
 
 /**
- * gcal_multi_choice_get_value:
+ * gcal_multi_choice_get_min_value:
  * @self: a #GcalMultiChoice
  *
- * Gets the value for @self.
+ * Gets the minimum value for @self.
  *
- * Returns: The value for @self.
+ * Returns: the minimum value for @self.
  */
-gint
-gcal_multi_choice_get_value (GcalMultiChoice *self)
+int
+gcal_multi_choice_get_min_value (GcalMultiChoice *self)
 {
   g_assert (GCAL_IS_MULTI_CHOICE (self));
 
-  return self->value;
+  return self->min_value;
+}
+
+/**
+ * gcal_multi_choice_set_min_value:
+ * @self: a #GcalMultiChoice
+ * @min_value: the minimum value
+ *
+ * Sets the minimum value for @self.
+ */
+void
+gcal_multi_choice_set_min_value (GcalMultiChoice *self,
+                                 int              min_value)
+{
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
+  if (self->min_value == min_value)
+    return;
+
+  self->min_value = min_value;
+
+  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_PROPERTY_VALUE_MIN, (double) min_value,
+                                  -1);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_MIN_VALUE]);
+}
+
+/**
+ * gcal_multi_choice_get_max_value:
+ * @self: a #GcalMultiChoice
+ *
+ * Gets the maximum value for @self.
+ *
+ * Returns: the maximum value for @self.
+ */
+int
+gcal_multi_choice_get_max_value (GcalMultiChoice *self)
+{
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
+  return self->max_value;
+}
+
+/**
+ * gcal_multi_choice_set_max_value:
+ * @self: a #GcalMultiChoice
+ * @max_value: the maximum value
+ *
+ * Sets the maximum value for @self.
+ */
+void
+gcal_multi_choice_set_max_value (GcalMultiChoice *self,
+                                 int              max_value)
+{
+  g_assert (GCAL_IS_MULTI_CHOICE (self));
+
+  if (self->max_value == max_value)
+    return;
+
+  self->max_value = max_value;
+
+  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_PROPERTY_VALUE_MAX, (double) max_value,
+                                  -1);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_MAX_VALUE]);
 }
 
 /**

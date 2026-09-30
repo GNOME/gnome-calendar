@@ -29,10 +29,20 @@ G_DECLARE_FINAL_TYPE (GcalMultiChoice, gcal_multi_choice, GCAL, MULTI_CHOICE, Gt
 
 GtkWidget*           gcal_multi_choice_new                       (void);
 
-gint                 gcal_multi_choice_get_value                 (GcalMultiChoice    *self);
+int                  gcal_multi_choice_get_value                 (GcalMultiChoice    *self);
 
 void                 gcal_multi_choice_set_value                 (GcalMultiChoice    *self,
-                                                                  gint                value);
+                                                                  int                 value);
+
+int                  gcal_multi_choice_get_min_value             (GcalMultiChoice    *self);
+
+void                 gcal_multi_choice_set_min_value             (GcalMultiChoice    *self,
+                                                                  int                 min_value);
+
+int                  gcal_multi_choice_get_max_value             (GcalMultiChoice    *self);
+
+void                 gcal_multi_choice_set_max_value             (GcalMultiChoice    *self,
+                                                                  int                 max_value);
 
 GtkPopover*          gcal_multi_choice_get_popover               (GcalMultiChoice    *self);
 
