@@ -121,9 +121,15 @@ gcal_log_init (void)
 
   if (g_once_init_enter (&initialized))
     {
+      const char *messages_debug = g_getenv ("G_MESSAGES_DEBUG");
+
       standard_channel = g_io_channel_unix_new (STDOUT_FILENO);
 
       g_log_set_default_handler (gcal_log_handler, NULL);
+
+      /* Assume tracing if G_MESSAGES_DEBUG=all */
+      if (g_strcmp0 (messages_debug, "all") == 0)
+        log_verbosity = 4;
 
       g_once_init_leave (&initialized, TRUE);
     }
