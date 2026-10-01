@@ -23,7 +23,8 @@
 
 G_BEGIN_DECLS
 
-void                 gcal_log_init                               (void);
+void gcal_log_init               (void);
+void gcal_log_increase_verbosity (void);
 
 G_END_DECLS
 

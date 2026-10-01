@@ -25,6 +25,7 @@
 G_LOCK_DEFINE_STATIC (channel_lock);
 
 GIOChannel *standard_channel = NULL;
+static int log_verbosity = 0;
 
 static const gchar* ignored_domains[] =
 {
@@ -67,6 +68,32 @@ gcal_log_handler (const gchar    *domain,
   if (domain && g_strv_contains (ignored_domains, domain))
     return;
 
+  switch ((int)log_level)
+    {
+    case G_LOG_LEVEL_MESSAGE:
+      if (log_verbosity < 1)
+        return;
+      break;
+
+    case G_LOG_LEVEL_INFO:
+      if (log_verbosity < 2)
+        return;
+      break;
+
+    case G_LOG_LEVEL_DEBUG:
+      if (log_verbosity < 3)
+        return;
+      break;
+
+    case GCAL_LOG_LEVEL_TRACE:
+      if (log_verbosity < 4)
+        return;
+      break;
+
+    default:
+      break;
+    }
+
   level = log_level_str (log_level);
   now = g_date_time_new_now_local ();
   ftime = g_date_time_format (now, "%H:%M:%S");
@@ -102,3 +129,8 @@ gcal_log_init (void)
     }
 }
 
+void
+gcal_log_increase_verbosity (void)
+{
+  log_verbosity++;
+}
