@@ -16,6 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE
+#endif
+
+#ifdef __linux__
+# include <sys/types.h>
+# include <sys/syscall.h>
+#endif
+
 #include "gcal-debug.h"
 #include "gcal-log.h"
 
@@ -33,6 +42,16 @@ static const gchar* ignored_domains[] =
   "GWeather",
   NULL
 };
+
+static inline gint
+get_thread_id (void)
+{
+#ifdef __linux__
+  return (gint) syscall (SYS_gettid);
+#else
+  return GPOINTER_TO_INT (g_thread_self ());
+#endif /* __linux__ */
+}
 
 static const gchar *
 log_level_str (GLogLevelFlags log_level)
@@ -58,11 +77,12 @@ gcal_log_handler (const gchar    *domain,
                   const gchar    *message,
                   gpointer        user_data)
 {
-  g_autoptr (GDateTime) now = NULL;
-  g_autofree gchar *buffer = NULL;
-  g_autofree gchar *ftime = NULL;
+  gint64 now;
+  struct tm tt;
+  time_t t;
   const gchar *level;
-  gint microsecond;
+  gchar ftime[32];
+  gchar *buffer;
 
   /* Skip ignored log domains */
   if (domain && g_strv_contains (ignored_domains, domain))
@@ -95,13 +115,15 @@ gcal_log_handler (const gchar    *domain,
     }
 
   level = log_level_str (log_level);
-  now = g_date_time_new_now_local ();
-  ftime = g_date_time_format (now, "%H:%M:%S");
-  microsecond = g_date_time_get_microsecond (now);
-  buffer = g_strdup_printf ("%s.%04d\t%28s: %s: %s\n",
+  now = g_get_real_time ();
+  t = now / G_USEC_PER_SEC;
+  tt = *localtime (&t);
+  strftime (ftime, sizeof (ftime), "%H:%M:%S", &tt);
+  buffer = g_strdup_printf ("%s.%04d\t%30s[%5d]: %s: %s\n",
                             ftime,
-                            microsecond,
+                            (gint)((now % G_USEC_PER_SEC) / 100L),
                             domain,
+                            get_thread_id (),
                             level,
                             message);
 
