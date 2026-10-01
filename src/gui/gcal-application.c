@@ -51,6 +51,16 @@ G_DEFINE_TYPE (GcalApplication, gcal_application, ADW_TYPE_APPLICATION);
 
 static gboolean show_version = FALSE;
 
+static gboolean
+verbose_cb (int      *argc,
+            char     *argv[],
+            gboolean *standalone,
+            gboolean *version)
+{
+  gcal_log_increase_verbosity ();
+  return TRUE;
+}
+
 static GOptionEntry gcal_application_goptions[] = {
   { 
     "quit", 'q', 0,
@@ -63,9 +73,9 @@ static GOptionEntry gcal_application_goptions[] = {
     N_("Display version number"), NULL
   },
   {
-    "debug", 0, 0,
-    G_OPTION_ARG_NONE, NULL,
-    N_("Enable debug messages"), NULL
+    "verbose", 'v', G_OPTION_FLAG_NO_ARG,
+    G_OPTION_ARG_CALLBACK, verbose_cb,
+    N_("Increase verbosity level. Can be used multiple times."),
   },
   {
     "date", 'd', 0,
