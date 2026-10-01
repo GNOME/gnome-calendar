@@ -18,6 +18,7 @@
 
 #include "config.h"
 #include "gcal-application.h"
+#include "gcal-log.h"
 
 #include <glib/gi18n.h>
 
@@ -33,6 +34,8 @@ main (gint    argc,
   textdomain (GETTEXT_PACKAGE);
 
   g_set_application_name (_("Calendar"));
+
+  gcal_log_init ();
 
   app = gcal_application_new ();
 

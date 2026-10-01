@@ -507,10 +507,6 @@ static gint
 gcal_application_handle_local_options (GApplication *app,
                                        GVariantDict *options)
 {
-  /* Initialize logging before anything else */
-  if (g_variant_dict_contains (options, "debug"))
-    gcal_log_init ();
-
   if (show_version)
     {
       g_print ("gnome-calendar: Version %s\n", PACKAGE_VERSION);
