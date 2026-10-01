@@ -58,7 +58,7 @@ static GOptionEntry gcal_application_goptions[] = {
     N_("Quit GNOME Calendar"), NULL
   },
   {
-    "version", 'v', 0,
+    "version", 'V', 0,
     G_OPTION_ARG_NONE, &show_version,
     N_("Display version number"), NULL
   },
