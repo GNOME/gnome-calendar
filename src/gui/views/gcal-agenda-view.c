@@ -255,7 +255,8 @@ gcal_agenda_view_set_date (GcalView  *view,
       gcal_agenda_view_day_set_date (day, next_date);
     }
 
-  gtk_list_view_scroll_to (self->list_view, 0, GTK_LIST_SCROLL_FOCUS, NULL);
+  if (g_list_model_get_n_items (G_LIST_MODEL (self->flatten_model)) > 0)
+    gtk_list_view_scroll_to (self->list_view, 0, GTK_LIST_SCROLL_FOCUS, NULL);
 
   gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
 
