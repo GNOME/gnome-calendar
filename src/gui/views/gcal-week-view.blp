@@ -3,6 +3,28 @@ using Gtk 4.0;
 template $GcalWeekView: Box {
   orientation: vertical;
 
+  ShortcutController {
+    Shortcut {
+      trigger: "<Primary>plus";
+      action: "action(week-view.zoom-in)";
+    }
+
+    Shortcut {
+      trigger: "<Primary>minus";
+      action: "action(week-view.zoom-out)";
+    }
+
+    Shortcut {
+      trigger: "<Primary>KP_Add";
+      action: "action(week-view.zoom-in)";
+    }
+
+    Shortcut {
+      trigger: "<Primary>KP_Subtract";
+      action: "action(week-view.zoom-out)";
+    }
+  }
+
   styles [
     "week-view",
   ]
