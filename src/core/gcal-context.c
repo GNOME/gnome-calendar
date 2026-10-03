@@ -127,7 +127,7 @@ set_week_start_day_from_variant (GcalContext *self,
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_WEEK_START_DAY]);
 }
 
-static void
+static gboolean
 read_variant_from_settings_portal (GcalContext  *self,
                                    const char   *namespace,
                                    const char   *key,
@@ -135,9 +135,10 @@ read_variant_from_settings_portal (GcalContext  *self,
                                    GError      **error)
 {
   g_autoptr (GVariant) ret = NULL;
+  g_autoptr (GError) internal_error = NULL;
 
-  g_assert_nonnull (value);
-  g_assert_nonnull (error);
+  g_assert (value);
+  g_assert (error);
 
   ret = g_dbus_proxy_call_sync (self->settings_portal,
                                 "ReadOne",
@@ -145,9 +146,17 @@ read_variant_from_settings_portal (GcalContext  *self,
                                 G_DBUS_CALL_FLAGS_NONE,
                                 G_MAXINT,
                                 NULL,
-                                error);
+                                &internal_error);
+
+  if (internal_error) /* `ret` is also NULL in this case */
+    {
+      g_propagate_error (error, internal_error);
+      return FALSE;
+    }
 
   g_variant_get (ret, "(v)", value);
+
+  return TRUE;
 }
 
 static gboolean
@@ -156,15 +165,15 @@ read_time_format (GcalContext *self)
   g_autoptr (GVariant) value = NULL;
   g_autoptr (GError) error = NULL;
 
-  read_variant_from_settings_portal (self,
-                                     DESKTOP_SETTINGS_INTERFACE_NAMESPACE,
-                                     CLOCK_FORMAT_KEY,
-                                     &value,
-                                     &error);
-
-  if (error)
+  if (!read_variant_from_settings_portal (self,
+                                          DESKTOP_SETTINGS_INTERFACE_NAMESPACE,
+                                          CLOCK_FORMAT_KEY,
+                                          &value,
+                                          &error))
     {
-      g_warning ("Failed to read the clock-format setting through the settings portal: %s", error->message);
+      if (error)
+        g_warning ("Failed to read the clock-format setting through the settings portal: %s", error->message);
+ 
       return FALSE;
     }
 
@@ -179,15 +188,15 @@ read_week_start_day (GcalContext *self)
   g_autoptr (GVariant) value = NULL;
   g_autoptr (GError) error = NULL;
 
-  read_variant_from_settings_portal (self,
-                                     DESKTOP_SETTINGS_CALENDAR_NAMESPACE,
-                                     CALENDAR_WEEK_START_DAY_KEY,
-                                     &value,
-                                     &error);
-
-  if (error)
+  if (!read_variant_from_settings_portal (self,
+                                          DESKTOP_SETTINGS_CALENDAR_NAMESPACE,
+                                          CALENDAR_WEEK_START_DAY_KEY,
+                                          &value,
+                                          &error))
     {
-      g_warning ("Failed to read the week-start-day setting through the settings portal: %s", error->message);
+      if (error)
+        g_warning ("Failed to read the week-start-day setting through the settings portal: %s", error->message);
+
       return FALSE;
     }
 
