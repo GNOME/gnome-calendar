@@ -254,9 +254,11 @@ add_event_to_block (GcalWeekGrid *self,
                                          NULL);
 
       g_signal_connect (child_data->widget, "activate", G_CALLBACK (on_event_widget_activated_cb), self);
+
+      gtk_widget_set_parent (child_data->widget, GTK_WIDGET (self));
     }
 
-  gtk_widget_set_parent (child_data->widget, GTK_WIDGET (self));
+  g_assert (gtk_widget_get_parent (child_data->widget) == GTK_WIDGET (self));
 }
 
 static void
