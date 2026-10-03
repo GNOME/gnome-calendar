@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-09-26 00:04+0000\n"
-"PO-Revision-Date: 2026-09-26 12:55+0200\n"
+"POT-Creation-Date: 2026-10-02 21:39+0000\n"
+"PO-Revision-Date: 2026-10-03 12:46+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5
-#: src/gui/gcal-window.c:414 src/main.c:35
+#: src/gui/gcal-window.c:421 src/main.c:36
 msgid "Calendar"
 msgstr "Koledar"
 
@@ -267,7 +267,7 @@ msgstr "Dodaj oddaljeni koledar …"
 msgid "Calendar “%s” removed"
 msgstr "Koledar »%s« je odstranjen."
 
-#: src/gui/calendar-management/gcal-calendars-page.c:361 src/gui/gcal-window.c:1020
+#: src/gui/calendar-management/gcal-calendars-page.c:361 src/gui/gcal-window.c:1036
 msgid "_Undo"
 msgstr "_Razveljavi"
 
@@ -375,7 +375,7 @@ msgstr "Geslo"
 
 #: src/gui/calendar-management/gcal-new-online-calendar-page.blp:140
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:18
-#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:955
+#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:879
 msgid "_Cancel"
 msgstr "_Prekliči"
 
@@ -395,30 +395,30 @@ msgstr "Za povezavo s tem koledarjem potrebujete veljavnega uporabnika in geslo.
 msgid "This calendar is hidden"
 msgstr "Ta koledar je skrit"
 
-#: src/gui/common/gcal-date-chooser.blp:15 src/gui/common/gcal-date-chooser.blp:53
-#: src/gui/gcal-window.c:408
+#: src/gui/common/gcal-date-chooser.blp:15 src/gui/common/gcal-date-chooser.blp:54
+#: src/gui/gcal-window.c:415
 msgid "Month"
 msgstr "Mesec"
 
-#: src/gui/common/gcal-date-chooser.blp:16 src/gui/common/gcal-date-chooser.blp:54
-#: src/gui/gcal-window.c:253
+#: src/gui/common/gcal-date-chooser.blp:16 src/gui/common/gcal-date-chooser.blp:55
+#: src/gui/gcal-window.c:260
 msgid "Previous Month"
 msgstr "Predhodni mesec"
 
-#: src/gui/common/gcal-date-chooser.blp:17 src/gui/common/gcal-date-chooser.blp:55
-#: src/gui/gcal-window.c:284
+#: src/gui/common/gcal-date-chooser.blp:17 src/gui/common/gcal-date-chooser.blp:56
+#: src/gui/gcal-window.c:291
 msgid "Next Month"
 msgstr "Naslednji mesec"
 
-#: src/gui/common/gcal-date-chooser.blp:33
+#: src/gui/common/gcal-date-chooser.blp:34
 msgid "Year"
 msgstr "Leto"
 
-#: src/gui/common/gcal-date-chooser.blp:34
+#: src/gui/common/gcal-date-chooser.blp:35
 msgid "Previous Year"
 msgstr "Predhodno leto"
 
-#: src/gui/common/gcal-date-chooser.blp:35
+#: src/gui/common/gcal-date-chooser.blp:36
 msgid "Next Year"
 msgstr "Naslednje leto"
 
@@ -934,36 +934,36 @@ msgstr "Preišči časovne pasove"
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
-#: src/gui/gcal-application.c:58
+#: src/gui/gcal-application.c:68
 msgid "Quit GNOME Calendar"
 msgstr "Končaj program"
 
-#: src/gui/gcal-application.c:63
+#: src/gui/gcal-application.c:73
 msgid "Display version number"
 msgstr "Pokaži številko različice"
 
-#: src/gui/gcal-application.c:68
-msgid "Enable debug messages"
-msgstr "Omogoči sporočila za razhroščevanje"
+#: src/gui/gcal-application.c:78
+msgid "Increase verbosity level. Can be used multiple times."
+msgstr "Povečajte raven obsega poročanja. Lahko uporabite večkrat zapored."
 
-#: src/gui/gcal-application.c:73
+#: src/gui/gcal-application.c:83
 msgid "Open calendar on the passed date"
 msgstr "Odpri koledar na preteklem datumu"
 
-#: src/gui/gcal-application.c:78
+#: src/gui/gcal-application.c:88
 msgid "Open calendar showing the passed event"
 msgstr "Odpri koledar v pogledu preteklih dogodkov"
 
-#: src/gui/gcal-application.c:144
+#: src/gui/gcal-application.c:154
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Avtorske pravice © 2012–%d Avtorji programa Koledar"
 
-#: src/gui/gcal-application.c:242
+#: src/gui/gcal-application.c:252
 msgid "translator-credits"
 msgstr "Matej Urbančič <mateju@src@gnome.org>"
 
-#: src/gui/gcal-application.c:247 src/gui/gcal-window.blp:391
+#: src/gui/gcal-application.c:257 src/gui/gcal-window.blp:391
 msgid "Weather"
 msgstr "Vreme"
 
@@ -1088,17 +1088,17 @@ msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%2$d. %1$s %3$d ob %4$s"
 
 #: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
-#: src/gui/views/gcal-agenda-view-day-row.c:77
+#: src/gui/views/gcal-agenda-view.c:98
 msgid "Today"
 msgstr "danes"
 
 #: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/gcal-window.c:286 src/gui/views/gcal-agenda-view-day-row.c:79
+#: src/gui/gcal-window.c:293 src/gui/views/gcal-agenda-view.c:100
 msgid "Tomorrow"
 msgstr "jutri"
 
 #: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/gcal-window.c:255 src/gui/views/gcal-agenda-view-day-row.c:81
+#: src/gui/gcal-window.c:262 src/gui/views/gcal-agenda-view.c:102
 msgid "Yesterday"
 msgstr "včeraj"
 
@@ -1555,35 +1555,35 @@ msgstr "_Tipkovne bližnjice"
 msgid "_About Calendar"
 msgstr "_O programu"
 
-#: src/gui/gcal-window.c:251
+#: src/gui/gcal-window.c:258
 msgid "Previous Week"
 msgstr "Predhodni teden"
 
-#: src/gui/gcal-window.c:282
+#: src/gui/gcal-window.c:289
 msgid "Next Week"
 msgstr "Naslednji teden"
 
-#: src/gui/gcal-window.c:405
+#: src/gui/gcal-window.c:412
 msgid "Week"
 msgstr "Teden"
 
-#: src/gui/gcal-window.c:411
+#: src/gui/gcal-window.c:418
 msgid "Agenda"
 msgstr "Dnevni red"
 
-#: src/gui/gcal-window.c:1018
+#: src/gui/gcal-window.c:1034
 msgid "Another event deleted"
 msgstr "Izbrisan je drug dogodek"
 
-#: src/gui/gcal-window.c:1018
+#: src/gui/gcal-window.c:1034
 msgid "Event deleted"
 msgstr "Dogodek je izbrisan"
 
-#: src/gui/gcal-window.c:1083
+#: src/gui/gcal-window.c:1099
 msgid "Could not import some files: Not ICS files"
 msgstr "Nekaterih datotek ni bilo mogoče uvoziti: niso datoteke ICS"
 
-#: src/gui/gcal-window.c:1088
+#: src/gui/gcal-window.c:1104
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Datoteke »%s« ni bilo mogoče uvoziti: ni datoteka ICS"
@@ -1733,24 +1733,30 @@ msgctxt "shortcut dialog"
 msgid "Previous View"
 msgstr "Skoči na predhodni pogled"
 
-#: src/gui/shortcuts-dialog.blp:84
+#: src/gui/shortcuts-dialog.blp:83
+msgctxt "shortcut dialog"
+msgid "Zoom In"
+msgstr "Približaj"
+
+#: src/gui/shortcuts-dialog.blp:88
+msgctxt "shortcut dialog"
+msgid "Zoom Out"
+msgstr "Oddalji"
+
+#: src/gui/shortcuts-dialog.blp:94
 msgctxt "shortcut dialog"
 msgid "View"
 msgstr "Pogled"
 
-#: src/gui/shortcuts-dialog.blp:87
+#: src/gui/shortcuts-dialog.blp:97
 msgctxt "shortcut dialog"
 msgid "Month View"
 msgstr "Preklopi na mesečni pogled"
 
-#: src/gui/shortcuts-dialog.blp:92
+#: src/gui/shortcuts-dialog.blp:102
 msgctxt "shortcut dialog"
 msgid "Week View"
 msgstr "Preklopi na tedenski pogled"
-
-#: src/gui/views/gcal-agenda-view-day-row.blp:25
-msgid "No events"
-msgstr "Ni dogodkov"
 
 #.
 #. * Translators: %A is the full day name, %B is the month name
@@ -1758,7 +1764,7 @@ msgstr "Ni dogodkov"
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/views/gcal-agenda-view-day-row.c:89
+#: src/gui/views/gcal-agenda-view.c:110
 msgid "%A %B %d"
 msgstr "%A, %d. %B"
 
@@ -1770,7 +1776,7 @@ msgstr "Vsi dogodki"
 msgid "New Event…"
 msgstr "Nov dogodek …"
 
-#: src/gui/views/gcal-week-header.c:473
+#: src/gui/views/gcal-week-header.c:471
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1787,11 +1793,11 @@ msgstr "Skrij dodatne dogodke"
 msgid "Show Additional Events"
 msgstr "Pokaži dodatne dogodke"
 
-#: src/utils/gcal-utils.c:951
+#: src/utils/gcal-utils.c:875
 msgid "Modify Multiple Events?"
 msgstr "Ali želite spremeniti več dogodkov?"
 
-#: src/utils/gcal-utils.c:952
+#: src/utils/gcal-utils.c:876
 msgid ""
 "The event you are trying to modify is recurring. The changes you have selected "
 "should be applied to:"
@@ -1799,72 +1805,72 @@ msgstr ""
 "Dogodek, ki ga nameravate spremeniti, se ponavlja. Spremembe, ki jih boste "
 "naredili se bodo odražale na:"
 
-#: src/utils/gcal-utils.c:956
+#: src/utils/gcal-utils.c:880
 msgid "_Only This Event"
 msgstr "_Le ta dogodek"
 
-#: src/utils/gcal-utils.c:962
+#: src/utils/gcal-utils.c:886
 msgid "_Subsequent Events"
 msgstr "_Poznejši dogodki"
 
-#: src/utils/gcal-utils.c:965
+#: src/utils/gcal-utils.c:889
 msgid "_All Events"
 msgstr "_Vsi dogodki"
 
 #. Conferencing
-#: src/utils/gcal-utils.c:1033
+#: src/utils/gcal-utils.c:957
 msgid "BlueJeans"
 msgstr "BlueJeans"
 
-#: src/utils/gcal-utils.c:1034 src/utils/gcal-utils.c:1035
+#: src/utils/gcal-utils.c:958 src/utils/gcal-utils.c:959
 msgid "BigBlueButton"
 msgstr "BigBlueButton"
 
-#: src/utils/gcal-utils.c:1036
+#: src/utils/gcal-utils.c:960
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1037 src/utils/gcal-utils.c:1038
+#: src/utils/gcal-utils.c:961 src/utils/gcal-utils.c:962
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1039
+#: src/utils/gcal-utils.c:963
 msgid "Uber Conference"
 msgstr "Konferenca Uber"
 
-#: src/utils/gcal-utils.c:1040
+#: src/utils/gcal-utils.c:964
 msgid "GNOME Meet"
 msgstr "GNOME Meet"
 
-#: src/utils/gcal-utils.c:1041
+#: src/utils/gcal-utils.c:965
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
-#: src/utils/gcal-utils.c:1042
+#: src/utils/gcal-utils.c:966
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1043
+#: src/utils/gcal-utils.c:967
 msgid "Webex"
 msgstr "Webex"
 
-#: src/utils/gcal-utils.c:1044
+#: src/utils/gcal-utils.c:968
 msgid "Zoom"
 msgstr "Zoom"
 
 #. Map
-#: src/utils/gcal-utils.c:1047
+#: src/utils/gcal-utils.c:971
 msgid "View Map"
 msgstr "Pokaži zemljevid"
 
-#: src/utils/gcal-utils.c:1048
+#: src/utils/gcal-utils.c:972
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: src/utils/gcal-utils.c:1049 src/utils/gcal-utils.c:1050
+#: src/utils/gcal-utils.c:973 src/utils/gcal-utils.c:974
 msgid "Google Maps"
 msgstr "Zemljevidi Google"
 
-#: src/utils/gcal-utils.c:1051
+#: src/utils/gcal-utils.c:975
 msgid "Bing Maps"
 msgstr "Zemljevidi Bing"
