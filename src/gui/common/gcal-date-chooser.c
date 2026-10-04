@@ -46,6 +46,9 @@ struct _GcalDateChooser
   GtkWidget          *year_choice;
   GtkWidget          *combined_choice;
 
+  GtkWidget          *selected_day_widget;
+  GtkWidget          *selected_week_widget;
+
   GcalGizmo          *gizmo;
   GtkWidget          *grid;
 
@@ -448,22 +451,38 @@ calendar_update_selected_day_display (GcalDateChooser *self)
   GDateTime *date;
   gint row, col;
 
+  if (self->selected_day_widget)
+    {
+      gcal_date_chooser_day_set_selected (GCAL_DATE_CHOOSER_DAY (self->selected_day_widget), FALSE);
+      g_clear_weak_pointer (&self->selected_day_widget);
+    }
+  if (self->selected_week_widget)
+    {
+      gtk_widget_set_visible (self->selected_week_widget, FALSE);
+      g_clear_weak_pointer (&self->selected_week_widget);
+    }
+
   for (row = 0; row < ROWS; row++)
     {
-      gboolean row_selected = FALSE;
-
       for (col = 0; col < GCAL_N_WEEKDAYS; col++)
-      {
-        gboolean day_selected;
+        {
+          d = GCAL_DATE_CHOOSER_DAY (self->days[row][col]);
+          date = gcal_date_chooser_day_get_date (d);
 
-        d = GCAL_DATE_CHOOSER_DAY (self->days[row][col]);
-        date = gcal_date_chooser_day_get_date (d);
-        day_selected = gcal_date_time_compare_date (date, self->date) == 0;
-        gcal_date_chooser_day_set_selected (d, day_selected);
-        row_selected |= day_selected;
-      }
+          if (gcal_date_time_compare_date (date, self->date) == 0)
+            {
+              gcal_date_chooser_day_set_selected (d, TRUE);
+              g_set_weak_pointer (&self->selected_day_widget, GTK_WIDGET (d));
+              break;
+            }
+        }
 
-      gtk_widget_set_visible (self->week[row], row_selected && self->show_selected_week);
+      if (self->selected_day_widget)
+        {
+          gtk_widget_set_visible (self->week[row], self->show_selected_week);
+          g_set_weak_pointer (&self->selected_week_widget, GTK_WIDGET (self->week[row]));
+          break;
+        }
     }
 }
 
@@ -693,15 +712,19 @@ gcal_gizmo_focus (GcalGizmo        *gizmo,
                   GtkDirectionType  direction,
                   gpointer          user_data)
 {
+  GcalDateChooser *self = GCAL_DATE_CHOOSER (user_data);
   GtkWidget *focus_widget, *new_focus;
   GTypeClass *gizmo_parent_class;
-  gboolean is_tab, is_rtl;
+  gboolean is_rtl;
   GtkRoot *root;
 
-  is_tab = direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD;
+  if (direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD)
+    {
+      if (gtk_widget_get_focus_child (GTK_WIDGET (gizmo)))
+        return FALSE;
 
-  if (gtk_widget_get_focus_child (GTK_WIDGET (gizmo)) && is_tab)
-    return FALSE;
+      return gtk_widget_grab_focus (self->selected_day_widget);
+    }
 
   if (direction == GTK_DIR_LEFT || direction == GTK_DIR_RIGHT)
     {
@@ -963,6 +986,11 @@ gcal_date_chooser_finalize (GObject *object)
 static void
 gcal_date_chooser_dispose (GObject *object)
 {
+  GcalDateChooser *self = GCAL_DATE_CHOOSER (object);
+
+  g_clear_weak_pointer (&self->selected_day_widget);
+  g_clear_weak_pointer (&self->selected_week_widget);
+
   G_OBJECT_CLASS (gcal_date_chooser_parent_class)->dispose (object);
 }
 
@@ -1116,7 +1144,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  gcal_gizmo_set_focus_func (self->gizmo, gcal_gizmo_focus, NULL);
+  gcal_gizmo_set_focus_func (self->gizmo, gcal_gizmo_focus, self);
 
   for (col = 0; col < GCAL_N_WEEKDAYS; col++)
     {
