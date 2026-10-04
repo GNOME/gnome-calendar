@@ -34,13 +34,6 @@
 
 #include <math.h>
 
-typedef struct
-{
-  GtkWidget          *widget;
-  GcalEvent          *event;
-  GcalAgendaView     *self;
-} ChildData;
-
 struct _GcalAgendaView
 {
   GtkBox              parent;
