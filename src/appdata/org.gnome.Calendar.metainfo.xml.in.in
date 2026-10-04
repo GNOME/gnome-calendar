@@ -115,6 +115,8 @@
   <update_contact>gbsneto@gnome.org</update_contact>
 
   <releases>
+    <release date="2026-09-13" version="52~alpha" type="development" />
+
     <release date="2026-09-11" version="51.0" type="stable">
       <description>
         <p>

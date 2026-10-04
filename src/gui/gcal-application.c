@@ -242,7 +242,7 @@ gcal_application_show_about (GSimpleAction *simple,
   copyright = build_about_copyright (self);
   troubleshooting = build_system_information ();
 
-  about = adw_about_dialog_new_from_appdata ("/org/gnome/calendar/appdata", MAJOR_VERSION);
+  about = adw_about_dialog_new_from_appdata ("/org/gnome/calendar/appdata", RELEASE_TAG);
 
   adw_about_dialog_set_designers (ADW_ABOUT_DIALOG (about), designers);
   adw_about_dialog_set_copyright (ADW_ABOUT_DIALOG (about), copyright);

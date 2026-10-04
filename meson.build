@@ -63,6 +63,13 @@ config_h = configuration_data()
 
 package_bugreport = 'http://bugzilla.gnome.org/enter_bug.cgi?product=' + meson.project_name()
 
+# release tag for the about dialog and metainfo release infos
+if development_release
+  release_tag = calendar_version.replace('.', '~')
+else
+  release_tag = calendar_version
+endif
+
 # package
 set_defines = [
   ['PACKAGE', meson.project_name()],
@@ -71,7 +78,8 @@ set_defines = [
   ['PACKAGE_STRING', '@0@ @1@'.format(meson.project_name(), calendar_version)],
   ['PACKAGE_TARNAME', meson.project_name()],
   ['PACKAGE_URL', 'https://apps.gnome.org/Calendar/'],
-  ['MAJOR_VERSION', calendar_major_version + '.' + '0'],
+  ['MAJOR_VERSION', calendar_major_version],
+  ['RELEASE_TAG', release_tag],
   ['PACKAGE_VERSION', calendar_version + rev],
   ['VERSION', calendar_version + rev],
   ['GETTEXT_PACKAGE', meson.project_name()],
