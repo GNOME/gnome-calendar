@@ -1849,17 +1849,21 @@ void
 gcal_week_header_set_date (GcalWeekHeader *self,
                            GDateTime      *date)
 {
+  g_autoptr (GDateTime) start_of_week_1 = NULL;
+  g_autoptr (GDateTime) start_of_week_2 = NULL;
   gboolean had_date;
 
   /*
    * If the active date changed, but we're still in the same week,
    * there's no need to recalculate visible events.
    */
-  if (self->active_date && date &&
-      g_date_time_get_year (self->active_date) == g_date_time_get_year (date) &&
-      g_date_time_get_week_of_year (self->active_date) == g_date_time_get_week_of_year (date))
+  if (self->active_date && date)
     {
-      return;
+      start_of_week_1 = gcal_date_time_get_start_of_week (self->active_date);
+      start_of_week_2 = gcal_date_time_get_start_of_week (date);
+
+      if (g_date_time_equal (start_of_week_1, start_of_week_2))
+        return;
     }
 
   had_date = self->active_date != NULL;
