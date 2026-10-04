@@ -27,7 +27,6 @@ struct _GcalAgendaViewItem
   GObject parent_instance;
 
   GcalEvent       *event;
-  GcalEventWidget *event_widget;
 
 };
 
@@ -37,7 +36,6 @@ enum
 {
   PROP_0,
   PROP_EVENT,
-  PROP_EVENT_WIDGET,
   N_PROPS
 };
 
@@ -48,7 +46,6 @@ gcal_agenda_view_item_dispose (GObject *object)
 {
   GcalAgendaViewItem *self = GCAL_AGENDA_VIEW_ITEM (object);
 
-  g_clear_object (&self->event_widget);
   g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_agenda_view_item_parent_class)->dispose (object);
@@ -68,10 +65,6 @@ gcal_agenda_view_item_get_property (GObject *object,
       g_value_set_object (value, gcal_agenda_view_item_get_event (self));
       break;
 
-    case PROP_EVENT_WIDGET:
-      g_value_set_object (value, gcal_agenda_view_item_get_event_widget (self));
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -89,9 +82,6 @@ gcal_agenda_view_item_set_property (GObject *object,
     {
     case PROP_EVENT:
       gcal_agenda_view_item_set_event (self, g_value_get_object (value));
-      break;
-    case PROP_EVENT_WIDGET:
-      gcal_agenda_view_item_set_event_widget (self, g_value_get_object (value));
       break;
 
     default:
@@ -116,18 +106,6 @@ gcal_agenda_view_item_class_init (GcalAgendaViewItemClass *klass)
   properties [PROP_EVENT] =
     g_param_spec_object ("event", NULL, NULL,
                          GCAL_TYPE_EVENT,
-                         G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
-  /**
-   * GcalAgendaViewItem:event:
-   *
-   * The event widget representing the item in the #GcalAgendaView.
-   *
-   * This should be passed into `gcal_view_event_activated`
-   * when the `::activated` signal is emitted on the item's row.
-   */
-  properties [PROP_EVENT_WIDGET] =
-    g_param_spec_object ("event-widget", NULL, NULL,
-                         GCAL_TYPE_EVENT_WIDGET,
                          G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
@@ -189,39 +167,4 @@ gcal_agenda_view_item_set_event (GcalAgendaViewItem *self,
 
   if (g_set_object (&self->event, event))
     g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
-}
-
-/**
- * gcal_agenda_view_item_get_event_widget:
- * @self: a #GcalAgendaViewItem
- *
- * Gets the event widget representing the item in the agenda view.
- *
- * Returns (nullable) (transfer none): the #GcalEventWidget presenting the @event.
- */
-
-GcalEventWidget *
-gcal_agenda_view_item_get_event_widget (GcalAgendaViewItem *self)
-{
-  g_return_val_if_fail (GCAL_IS_AGENDA_VIEW_ITEM (self), NULL);
-
-  return self->event_widget;
-}
-
-/**
- * gcal_agenda_view_item_set_event_widget:
- * @self: a #GcalAgendaViewItem
- * @widget: (nullable) (transfer none): the #GcalEventWidget presenting the @event.
- *
- * Sets the event widget representing the item in the agenda view.
- */
-void
-gcal_agenda_view_item_set_event_widget (GcalAgendaViewItem *self,
-                                        GcalEventWidget    *event_widget)
-{
-  g_return_if_fail (GCAL_IS_AGENDA_VIEW_ITEM (self));
-  g_return_if_fail (event_widget == NULL || GCAL_IS_EVENT_WIDGET (event_widget));
-
-  if (g_set_object (&self->event_widget, event_widget))
-    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT_WIDGET]);
 }

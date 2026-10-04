@@ -35,8 +35,4 @@ GcalAgendaViewItem *gcal_agenda_view_item_new              (void);
 GcalEvent          *gcal_agenda_view_item_get_event        (GcalAgendaViewItem *self);
 void                gcal_agenda_view_item_set_event        (GcalAgendaViewItem *self,
                                                             GcalEvent          *event);
-GcalEventWidget    *gcal_agenda_view_item_get_event_widget (GcalAgendaViewItem *self);
-void                gcal_agenda_view_item_set_event_widget (GcalAgendaViewItem *self,
-                                                            GcalEventWidget    *widget);
-
 G_END_DECLS
