@@ -497,6 +497,8 @@ gcal_week_view_first_weekday_changed (GcalView *view)
 
   gcal_week_header_redraw (GCAL_WEEK_HEADER (self->header));
   gcal_week_grid_redraw (GCAL_WEEK_GRID (self->week_grid));
+
+  gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (self));
 }
 
 static void
