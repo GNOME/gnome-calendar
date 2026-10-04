@@ -53,9 +53,6 @@ struct _GcalAgendaView
   GListStore         *days_model;
   GtkFilterListModel *filtered_days;
   GtkFlattenListModel *flatten_model;
-
-  gint                events_on_date;
-  gint                clicked_cell;
 };
 
 static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
