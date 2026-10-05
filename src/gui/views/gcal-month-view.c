@@ -1545,18 +1545,13 @@ gcal_month_view_set_date (GcalView  *view,
                           GDateTime *date)
 {
   GcalMonthView *self;
-  gboolean week_changed;
 
   GCAL_ENTRY;
 
   self = GCAL_MONTH_VIEW (view);
 
-  week_changed = !self->date ||
-                 !date ||
-                 g_date_time_get_month (self->date) != g_date_time_get_month (date) ||
-                 g_date_time_get_week_of_year (self->date) != g_date_time_get_week_of_year (date);
-
-  if (!week_changed)
+  if (self->date && date &&
+      g_date_time_equal (self->date, date))
     GCAL_RETURN ();
 
 #ifdef GCAL_ENABLE_TRACE
