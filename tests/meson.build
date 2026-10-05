@@ -39,6 +39,7 @@ tests = [
   'internals',
   'range',
   'range-tree',
+  'search',
   'server',
   'utils',
   'event-attendee',
