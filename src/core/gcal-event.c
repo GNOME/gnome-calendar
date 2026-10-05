@@ -1911,8 +1911,15 @@ gcal_event_format_date (GcalEvent *self)
 
   /* XXX: nasty... */
   application = GCAL_APPLICATION (g_application_get_default ());
-  context = gcal_application_get_context (application);
-  time_format = gcal_context_get_time_format (context);
+  if (application)
+    {
+      context = gcal_application_get_context (application);
+      time_format = gcal_context_get_time_format (context);
+    }
+  else
+    {
+      time_format = GCAL_TIME_FORMAT_24H;
+    }
 
   if (time_format == GCAL_TIME_FORMAT_24H)
     hour_format = "%R";

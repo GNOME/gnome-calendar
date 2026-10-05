@@ -474,7 +474,9 @@ gcal_shell_search_provider_constructed (GObject *object)
   GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   GcalManager *manager = gcal_context_get_manager (context);
 
-  self->timeline = gcal_timeline_new ();
+  self->timeline = g_object_new (GCAL_TYPE_TIMELINE,
+                                 "expand-recurrences", FALSE,
+                                 NULL);
   g_signal_connect (self->timeline, "notify::complete", G_CALLBACK (on_timeline_completed_cb), self);
 
   g_signal_connect (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), self);

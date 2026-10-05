@@ -24,6 +24,8 @@
 #include "gcal-search-hit-event.h"
 #include "gcal-utils.h"
 
+#include <glib/gi18n.h>
+
 struct _GcalSearchHitEvent
 {
   GcalSearchHit       parent;
@@ -63,9 +65,22 @@ set_event (GcalSearchHitEvent *self,
   gcal_search_hit_set_title (search_hit, gcal_event_get_summary (event));
 
   date_string = gcal_event_format_date (event);
+
+  if (gcal_event_has_recurrence (event))
+    {
+      g_autofree gchar *formatted_date = g_steal_pointer (&date_string);
+
+      if (formatted_date && *formatted_date != '\0')
+        date_string = g_strdup_printf (_ ("%s • Recurring"), formatted_date);
+      else
+        date_string = g_strdup (_ ("Recurring"));
+    }
+
   gcal_search_hit_set_subtitle (search_hit, date_string);
 
   calendar = gcal_event_get_calendar (self->event);
+  g_assert (calendar != NULL);
+
   color = gcal_calendar_get_color (calendar);
   paintable = gcal_util_get_circle_paintable_from_color (color, 16);
   gcal_search_hit_set_primary_icon (search_hit, paintable);

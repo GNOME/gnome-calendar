@@ -113,7 +113,9 @@ gcal_search_engine_constructed (GObject *object)
   G_OBJECT_CLASS (gcal_search_engine_parent_class)->constructed (object);
 
   /* Set up the data model */
-  self->timeline = gcal_timeline_new ();
+  self->timeline = g_object_new (GCAL_TYPE_TIMELINE,
+                                 "expand-recurrences", FALSE,
+                                 NULL);
 
   context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   manager = gcal_context_get_manager (context);
