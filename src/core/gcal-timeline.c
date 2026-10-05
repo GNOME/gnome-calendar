@@ -46,6 +46,7 @@ struct _GcalTimeline
 
   GHashTable         *calendars; /* GcalCalendar* -> GcalCalendarMonitor* */
   gboolean            complete;
+  gboolean            expand_recurrences;
 
   GListStore         *calendar_monitors;
   GListModel         *events_model;
@@ -61,6 +62,7 @@ enum
 {
   PROP_0,
   PROP_COMPLETE,
+  PROP_EXPAND_RECURRENCES,
   PROP_FILTER,
   N_PROPS
 };
@@ -74,6 +76,7 @@ static GParamSpec *properties [N_PROPS] = { NULL, };
 
 typedef struct
 {
+  GcalTimeline *timeline;
   GcalRange *range;
   GtkFilterListModel *events;
   GtkSortListModel *sorted_events;
@@ -102,6 +105,9 @@ event_in_subscriber_range_func (gpointer item,
 
   if (!data->range)
     return FALSE;
+
+  if (!data->timeline->expand_recurrences && gcal_event_has_recurrence (item))
+    return TRUE;
 
   return gcal_event_overlaps (item, data->range);
 }
@@ -159,6 +165,7 @@ subscriber_data_new (GcalTimeline           *self,
   g_autoptr (SubscriberData) data = NULL;
 
   data = g_new0 (SubscriberData, 1);
+  data->timeline = self;
   data->range = gcal_timeline_subscriber_get_range (subscriber);
 
   filter = gtk_custom_filter_new (event_in_subscriber_range_func, data, NULL);
@@ -502,6 +509,10 @@ gcal_timeline_get_property (GObject    *object,
       g_value_set_boolean (value, self->complete);
       break;
 
+    case PROP_EXPAND_RECURRENCES:
+      g_value_set_boolean (value, self->expand_recurrences);
+      break;
+
     case PROP_FILTER:
       g_value_set_string (value, self->filter);
       break;
@@ -521,6 +532,10 @@ gcal_timeline_set_property (GObject      *object,
 
   switch (prop_id)
     {
+    case PROP_EXPAND_RECURRENCES:
+      self->expand_recurrences = g_value_get_boolean (value);
+      break;
+
     case PROP_FILTER:
       gcal_timeline_set_filter (self, g_value_get_string (value));
       break;
@@ -551,6 +566,17 @@ gcal_timeline_class_init (GcalTimelineClass *klass)
                                                     G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
+   * GcalTimeline:expand-recurrences:
+   *
+   * Whether to expand recurrences into multiple instances.
+   */
+  properties[PROP_EXPAND_RECURRENCES] = g_param_spec_boolean ("expand-recurrences",
+                                                              "Expand recurrences",
+                                                              "Expand recurrences",
+                                                              TRUE,
+                                                              G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+
+  /**
    * GcalTimeline::filter:
    *
    * The search filter.
@@ -568,6 +594,7 @@ static void
 gcal_timeline_init (GcalTimeline *self)
 {
   self->augmentation_factor = 1.0;
+  self->expand_recurrences = TRUE;
 
   self->cancellable = g_cancellable_new ();
   self->calendars = g_hash_table_new_full (NULL, NULL, NULL, g_object_unref);
@@ -635,7 +662,10 @@ gcal_timeline_add_calendar (GcalTimeline *self,
 
   GCAL_TRACE_MSG ("Adding calendar '%s' to timeline %p", gcal_calendar_get_name (calendar), self);
 
-  monitor = gcal_calendar_monitor_new (calendar);
+  monitor = g_object_new (GCAL_TYPE_CALENDAR_MONITOR,
+                          "calendar", calendar,
+                          "expand-recurrences", self->expand_recurrences,
+                          NULL);
   g_signal_connect (monitor, "notify::complete", G_CALLBACK (on_calendar_monitor_completed_cb), self);
   g_hash_table_insert (self->calendars, calendar, g_object_ref (monitor));
   g_list_store_append (self->calendar_monitors, monitor);
@@ -768,3 +798,12 @@ gcal_timeline_is_complete (GcalTimeline *self)
 
   return self->complete;
 }
+
+gboolean
+gcal_timeline_get_expand_recurrences (GcalTimeline *self)
+{
+  g_return_val_if_fail (GCAL_IS_TIMELINE (self), TRUE);
+
+  return self->expand_recurrences;
+}
+

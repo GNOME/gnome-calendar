@@ -81,6 +81,7 @@ struct _GcalCalendarMonitor
     GHashTable       *events; /* gchar* -> GcalEvent* */
     GcalRange        *range;
     gchar            *filter;
+    gboolean          expand_recurrences;
   } shared;
 };
 
@@ -98,6 +99,7 @@ enum
   PROP_0,
   PROP_CALENDAR,
   PROP_COMPLETE,
+  PROP_EXPAND_RECURRENCES,
   N_PROPS
 };
 
@@ -383,14 +385,26 @@ on_client_view_objects_added_cb (ECalClientView      *view,
       if (!icomponent || !i_cal_component_get_uid (icomponent))
         continue;
 
-      /* Recurrent events will be processed later */
-      if (e_cal_util_component_has_recurrences (icomponent) &&
-          !e_cal_util_component_is_instance (icomponent))
+      if (self->shared.expand_recurrences)
         {
-          GCAL_TRACE_MSG ("Component %s (%s) needs to be expanded",
-                          i_cal_component_get_summary (icomponent),
-                          i_cal_component_get_uid (icomponent));
-          g_ptr_array_add (components_to_expand, icomponent);
+          /* Recurrent events will be processed later */
+          if (e_cal_util_component_has_recurrences (icomponent) &&
+              !e_cal_util_component_is_instance (icomponent))
+            {
+              GCAL_TRACE_MSG ("Component %s (%s) needs to be expanded",
+                              i_cal_component_get_summary (icomponent),
+                              i_cal_component_get_uid (icomponent));
+              g_ptr_array_add (components_to_expand, icomponent);
+              continue;
+            }
+        }
+      else if (e_cal_util_component_is_instance (icomponent))
+        {
+          /*
+           * When recurrence expansion is disabled, ignore detached recurrence
+           * instances (components with a RECURRENCE-ID) returned by EDS so
+           * only the master recurring component is processed.
+           */
           continue;
         }
 
@@ -528,12 +542,17 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
       if (!icomponent || !i_cal_component_get_uid (icomponent))
         continue;
 
+      /* Ignore modified detached recurrence instances when expansion is disabled */
+      if (!self->shared.expand_recurrences && e_cal_util_component_is_instance (icomponent))
+        continue;
+
       ecomponent = e_cal_component_new_from_icalcomponent (i_cal_component_clone (icomponent));
 
       if (!ecomponent)
         continue;
 
-      recurrence_main = e_cal_util_component_has_recurrences (icomponent) &&
+      recurrence_main = self->shared.expand_recurrences &&
+                        e_cal_util_component_has_recurrences (icomponent) &&
                         !e_cal_util_component_is_instance (icomponent);
 
       /*
@@ -1047,6 +1066,9 @@ remove_events_outside_range (GcalCalendarMonitor *self,
     {
       GcalRange *event_range = gcal_event_get_range (event);
 
+      if (!self->shared.expand_recurrences && gcal_event_has_recurrence (event))
+        continue;
+
       if (gcal_range_calculate_overlap (range, event_range, NULL) != GCAL_RANGE_NO_OVERLAP)
         continue;
 
@@ -1326,6 +1348,10 @@ gcal_calendar_monitor_get_property (GObject    *object,
       g_value_set_boolean (value, self->complete);
       break;
 
+    case PROP_EXPAND_RECURRENCES:
+      g_value_set_boolean (value, gcal_calendar_monitor_get_expand_recurrences (self));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -1348,6 +1374,10 @@ gcal_calendar_monitor_set_property (GObject      *object,
                         "notify::visible",
                         G_CALLBACK (on_calendar_visible_changed_cb),
                         self);
+      break;
+
+    case PROP_EXPAND_RECURRENCES:
+      self->shared.expand_recurrences = g_value_get_boolean (value);
       break;
 
     case PROP_COMPLETE:
@@ -1374,12 +1404,24 @@ gcal_calendar_monitor_class_init (GcalCalendarMonitorClass *klass)
                                                     FALSE,
                                                     G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
+  /**
+   * GcalCalendarMonitor:expand-recurrences:
+   *
+   * Whether to expand recurrences into multiple instances.
+   */
+  properties[PROP_EXPAND_RECURRENCES] = g_param_spec_boolean ("expand-recurrences",
+                                                              NULL,
+                                                              NULL,
+                                                              TRUE,
+                                                              G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+
   g_object_class_install_properties (object_class, N_PROPS, properties);
 }
 
 static void
 gcal_calendar_monitor_init (GcalCalendarMonitor *self)
 {
+  self->shared.expand_recurrences = TRUE;
   self->shared.events = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
   self->thread_context = g_main_context_new ();
   self->main_context = g_main_context_ref_thread_default ();
@@ -1500,5 +1542,13 @@ gcal_calendar_monitor_is_complete (GcalCalendarMonitor *self)
   g_return_val_if_fail (GCAL_IS_CALENDAR_MONITOR (self), FALSE);
 
   return self->complete;
+}
+
+gboolean
+gcal_calendar_monitor_get_expand_recurrences (GcalCalendarMonitor *self)
+{
+  g_return_val_if_fail (GCAL_IS_CALENDAR_MONITOR (self), TRUE);
+
+  return self->shared.expand_recurrences;
 }
 

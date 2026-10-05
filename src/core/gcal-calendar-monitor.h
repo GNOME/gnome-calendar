@@ -43,4 +43,6 @@ void                 gcal_calendar_monitor_set_filter            (GcalCalendarMo
 
 gboolean             gcal_calendar_monitor_is_complete           (GcalCalendarMonitor *self);
 
+gboolean             gcal_calendar_monitor_get_expand_recurrences (GcalCalendarMonitor *self);
+
 G_END_DECLS

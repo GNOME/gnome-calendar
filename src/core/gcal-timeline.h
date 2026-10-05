@@ -56,4 +56,6 @@ void                 gcal_timeline_set_filter                    (GcalTimeline  
 
 gboolean             gcal_timeline_is_complete                   (GcalTimeline       *self);
 
+gboolean             gcal_timeline_get_expand_recurrences         (GcalTimeline           *self);
+
 G_END_DECLS
