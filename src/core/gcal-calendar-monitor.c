@@ -1327,6 +1327,8 @@ gcal_calendar_monitor_finalize (GObject *object)
   g_clear_pointer (&self->shared.filter, g_free);
   g_clear_pointer (&self->shared.range, gcal_range_unref);
 
+  g_rw_lock_clear (&self->shared.lock);
+
   G_OBJECT_CLASS (gcal_calendar_monitor_parent_class)->finalize (object);
 }
 
