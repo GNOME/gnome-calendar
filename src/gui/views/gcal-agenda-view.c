@@ -260,8 +260,6 @@ gcal_agenda_view_get_children_by_uuid (GcalView              *view,
 {
   GCAL_ENTRY;
 
-  /* FIXME Not sure what to do here. */
-
   GCAL_RETURN (NULL);
 }
 
