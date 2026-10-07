@@ -124,6 +124,7 @@ gcal_view_set_date (GcalView  *view,
 {
   g_return_if_fail (GCAL_IS_VIEW (view));
   g_return_if_fail (GCAL_VIEW_GET_IFACE (view)->set_date);
+  g_return_if_fail (date != NULL);
 
   GCAL_VIEW_GET_IFACE (view)->set_date (view, date);
 }
