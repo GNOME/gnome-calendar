@@ -324,3 +324,45 @@ gcal_date_time_format_utc_offset (GDateTime *date_time)
 
   return g_string_free_and_steal (g_steal_pointer (&utc_str));
 }
+
+static inline gboolean
+date_time_is_local_timezone (GDateTime *date_time)
+{
+  g_autoptr (GTimeZone) local_timezone = NULL;
+  GTimeZone *timezone;
+
+  local_timezone = g_time_zone_new_local ();
+  timezone = g_date_time_get_timezone (date_time);
+
+  return g_time_zone_get_offset (local_timezone, 0) == g_time_zone_get_offset (timezone, 0);
+}
+
+/**
+ * gcal_date_time_week_equal:
+ * @dt1: the first [struct@GLib.DateTime]
+ * @dt2: the second [struct@GLib.DateTime]
+ *
+ * Checks whether both dates belong in the same week.
+ *
+ * Both @dt1 and @dt2 must belong in the same timezone.
+ *
+ * Returns: %TRUE if both dates belong in the same week, %FALSE otherwise
+ */
+gboolean
+gcal_date_time_week_equal (GDateTime *dt1,
+                           GDateTime *dt2)
+{
+  g_autoptr (GDateTime) start_of_week_1 = NULL;
+  g_autoptr (GDateTime) start_of_week_2 = NULL;
+
+  g_assert (dt1 != NULL);
+  g_assert (dt2 != NULL);
+
+  g_assert (date_time_is_local_timezone (dt1));
+  g_assert (date_time_is_local_timezone (dt2));
+
+  start_of_week_1 = gcal_date_time_get_start_of_week (dt1);
+  start_of_week_2 = gcal_date_time_get_start_of_week (dt2);
+
+  return g_date_time_equal (start_of_week_1, start_of_week_2);
+}

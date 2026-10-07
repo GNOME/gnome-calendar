@@ -56,5 +56,8 @@ GDateTime*           gcal_date_time_add_floating_minutes         (GDateTime     
 
 gchar*               gcal_date_time_format_utc_offset            (GDateTime          *date_time);
 
+gboolean             gcal_date_time_week_equal                   (GDateTime          *dt1,
+                                                                  GDateTime          *dt2);
+
 G_END_DECLS
 
