@@ -117,17 +117,8 @@ maybe_update_range (GcalShellSearchProvider *self)
   start = g_date_time_add_weeks (now, -1);
   end = g_date_time_add_weeks (now, 3);
 
-  if (self->range_start && gcal_date_time_compare_date (self->range_start, start) != 0)
-    {
-      g_set_date_time (&self->range_start, start);
-      range_changed = TRUE;
-    }
-
-  if (self->range_end && gcal_date_time_compare_date (self->range_end, end) != 0)
-    {
-      g_set_date_time (&self->range_end, end);
-      range_changed = TRUE;
-    }
+  range_changed |= g_set_date_time (&self->range_start, start);
+  range_changed |= g_set_date_time (&self->range_end, end);
 
   if (range_changed)
     gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (self));
