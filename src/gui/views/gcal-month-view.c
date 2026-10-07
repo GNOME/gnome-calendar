@@ -1599,6 +1599,16 @@ gcal_month_view_set_date (GcalView  *view,
   if (g_date_time_equal (self->date, date))
     GCAL_RETURN ();
 
+  /*
+   * If the active date changed, but we're still in the same week,
+   * there's no need to recalculate visible events.
+   */
+  if (gcal_date_time_week_equal (self->date, date))
+    {
+      g_set_date_time (&self->date, date);
+      GCAL_RETURN ();
+    }
+
 #ifdef GCAL_ENABLE_TRACE
   {
     g_autofree gchar *new_date_string = g_date_time_format (date, "%x %X %z");
