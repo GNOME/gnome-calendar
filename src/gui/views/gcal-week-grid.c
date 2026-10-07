@@ -1299,7 +1299,7 @@ void
 gcal_week_grid_set_date (GcalWeekGrid *self,
                          GDateTime    *date)
 {
-  gcal_set_date_time (&self->active_date, date);
+  g_set_date_time (&self->active_date, date);
 
   invalidate_layout_blocks (self);
 }

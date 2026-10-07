@@ -469,7 +469,7 @@ gcal_application_command_line (GApplication            *app,
                                           result.tm_min,
                                           0);
 
-          gcal_set_date_time (&self->initial_date, initial_date);
+          g_set_date_time (&self->initial_date, initial_date);
         }
       else
         {
@@ -676,5 +676,5 @@ gcal_application_set_initial_date (GcalApplication *self,
 {
   g_return_if_fail (GCAL_IS_APPLICATION (self));
 
-  gcal_set_date_time (&self->initial_date, initial_date);
+  g_set_date_time (&self->initial_date, initial_date);
 }

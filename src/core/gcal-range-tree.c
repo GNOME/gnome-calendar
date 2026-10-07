@@ -220,7 +220,7 @@ insert (Node           *n,
 
   /* Update the current node's maximum subrange value */
   if (!n->max || g_date_time_compare (range_end, n->max) > 0)
-    gcal_set_date_time (&n->max, range_end);
+    g_set_date_time (&n->max, range_end);
 
   return rebalance (n);
 }

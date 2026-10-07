@@ -266,7 +266,7 @@ gcal_agenda_view_day_set_date (GcalAgendaViewDay *self,
 {
   g_assert (GCAL_IS_AGENDA_VIEW_DAY (self));
 
-  if (gcal_set_date_time (&self->date, date))
+  if (g_set_date_time (&self->date, date))
     {
       GtkFilter *filter = NULL;
 

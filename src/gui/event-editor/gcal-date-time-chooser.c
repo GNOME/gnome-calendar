@@ -724,7 +724,7 @@ gcal_date_time_chooser_set_date_time (GcalDateTimeChooser *self,
 {
   GCAL_ENTRY;
 
-  gcal_set_date_time (&self->date_time, date_time);
+  g_set_date_time (&self->date_time, date_time);
 
   g_signal_handlers_block_by_func (self->date_row, on_date_changed_cb, self);
   gcal_date_chooser_row_set_date (self->date_row, date_time);

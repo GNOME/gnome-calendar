@@ -232,7 +232,7 @@ gcal_agenda_view_set_date (GcalView  *view,
 
   GCAL_ENTRY;
 
-  gcal_set_date_time (&self->date, date);
+  g_set_date_time (&self->date, date);
 
   for (unsigned int i = 0; i < g_list_model_get_n_items (G_LIST_MODEL (self->days_model)); i++)
     {

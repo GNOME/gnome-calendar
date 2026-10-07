@@ -397,7 +397,7 @@ update_week_ranges (GcalMonthView *self,
   if (current_date)
     current_range = gcal_timeline_subscriber_get_range (GCAL_TIMELINE_SUBSCRIBER (self));
 
-  gcal_set_date_time (&self->date, new_date);
+  g_set_date_time (&self->date, new_date);
 
   if (current_range && gcal_range_contains_datetime (current_range, new_date))
     {

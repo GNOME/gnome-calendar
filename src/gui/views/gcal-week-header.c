@@ -1868,7 +1868,7 @@ gcal_week_header_set_date (GcalWeekHeader *self,
 
   had_date = self->active_date != NULL;
 
-  gcal_set_date_time (&self->active_date, date);
+  g_set_date_time (&self->active_date, date);
 
   update_title (self);
   gtk_widget_queue_draw (GTK_WIDGET (self));

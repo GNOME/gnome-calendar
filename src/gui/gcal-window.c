@@ -332,7 +332,7 @@ update_active_date (GcalWindow *window,
   new_date_string = g_date_time_format (new_date, "%x %X %z");
   g_debug ("Updating active date to %s", new_date_string);
 
-  gcal_set_date_time (&window->active_date, new_date);
+  g_set_date_time (&window->active_date, new_date);
 
   for (i = 0; i < GCAL_WINDOW_VIEW_N_VIEWS; i++)
     gcal_view_set_date (GCAL_VIEW (window->views[i]), new_date);

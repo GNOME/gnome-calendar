@@ -432,7 +432,7 @@ gcal_week_view_set_date (GcalView  *view,
 
   GCAL_ENTRY;
 
-  gcal_set_date_time (&self->date, date);
+  g_set_date_time (&self->date, date);
 
   /* Propagate the new date */
   gcal_week_grid_set_date (GCAL_WEEK_GRID (self->week_grid), date);

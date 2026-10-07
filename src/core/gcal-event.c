@@ -991,7 +991,7 @@ gcal_event_set_date_end (GcalEvent *self,
 {
   g_return_if_fail (GCAL_IS_EVENT (self));
 
-  if (gcal_set_date_time (&self->dt_end, dt))
+  if (g_set_date_time (&self->dt_end, dt))
     {
       ECalComponentDateTime *component_dt;
 
@@ -1037,7 +1037,7 @@ gcal_event_set_date_start (GcalEvent *self,
 {
   g_return_if_fail (GCAL_IS_EVENT (self));
 
-  if (gcal_set_date_time (&self->dt_start, dt))
+  if (g_set_date_time (&self->dt_start, dt))
     {
       ECalComponentDateTime *component_dt;
 

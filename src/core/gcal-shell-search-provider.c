@@ -119,13 +119,13 @@ maybe_update_range (GcalShellSearchProvider *self)
 
   if (self->range_start && gcal_date_time_compare_date (self->range_start, start) != 0)
     {
-      gcal_set_date_time (&self->range_start, start);
+      g_set_date_time (&self->range_start, start);
       range_changed = TRUE;
     }
 
   if (self->range_end && gcal_date_time_compare_date (self->range_end, end) != 0)
     {
-      gcal_set_date_time (&self->range_end, end);
+      g_set_date_time (&self->range_end, end);
       range_changed = TRUE;
     }
 

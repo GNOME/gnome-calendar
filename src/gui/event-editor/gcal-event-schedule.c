@@ -117,8 +117,8 @@ gcal_event_schedule_set_all_day (const GcalEventSchedule *values, gboolean all_d
                                                    0.0);
       g_autoptr (GDateTime) new_end = g_date_time_add_days (tmp, 1);
 
-      gcal_set_date_time (&copy->curr.date_start, new_start);
-      gcal_set_date_time (&copy->curr.date_end, new_end);
+      g_set_date_time (&copy->curr.date_start, new_start);
+      g_set_date_time (&copy->curr.date_end, new_end);
     }
   else
     {
@@ -176,8 +176,8 @@ gcal_event_schedule_set_all_day (const GcalEventSchedule *values, gboolean all_d
                                      g_date_time_get_seconds (values->orig.date_end));
         }
 
-      gcal_set_date_time (&copy->curr.date_start, new_start);
-      gcal_set_date_time (&copy->curr.date_end, new_end);
+      g_set_date_time (&copy->curr.date_start, new_start);
+      g_set_date_time (&copy->curr.date_end, new_end);
     }
 
   copy->curr.all_day = all_day;
@@ -201,11 +201,11 @@ gcal_event_schedule_set_start_date (const GcalEventSchedule *values, GDateTime *
 {
   GcalEventSchedule *copy = gcal_event_schedule_copy (values);
 
-  gcal_set_date_time (&copy->curr.date_start, start);
+  g_set_date_time (&copy->curr.date_start, start);
 
   if (g_date_time_compare (start, copy->curr.date_end) == 1)
     {
-      gcal_set_date_time (&copy->curr.date_end, start);
+      g_set_date_time (&copy->curr.date_end, start);
     }
 
   return copy;
@@ -226,16 +226,16 @@ gcal_event_schedule_set_end_date (const GcalEventSchedule *values, GDateTime *en
        * iCalendar.
        */
       g_autoptr (GDateTime) fake_end_date = g_date_time_add_days (end, 1);
-      gcal_set_date_time (&copy->curr.date_end, fake_end_date);
+      g_set_date_time (&copy->curr.date_end, fake_end_date);
     }
   else
     {
-      gcal_set_date_time (&copy->curr.date_end, end);
+      g_set_date_time (&copy->curr.date_end, end);
     }
 
   if (g_date_time_compare (copy->curr.date_start, end) == 1)
     {
-      gcal_set_date_time (&copy->curr.date_start, end);
+      g_set_date_time (&copy->curr.date_start, end);
     }
 
   return copy;
@@ -246,7 +246,7 @@ gcal_event_schedule_set_start_date_time (const GcalEventSchedule *values, GDateT
 {
   GcalEventSchedule *copy = gcal_event_schedule_copy (values);
 
-  gcal_set_date_time (&copy->curr.date_start, start);
+  g_set_date_time (&copy->curr.date_start, start);
 
   if (g_date_time_compare (start, copy->curr.date_end) == 1)
     {
@@ -254,7 +254,7 @@ gcal_event_schedule_set_start_date_time (const GcalEventSchedule *values, GDateT
       g_autoptr (GDateTime) new_end = g_date_time_add_hours (start, 1);
       g_autoptr (GDateTime) new_end_in_end_tz = g_date_time_to_timezone (new_end, end_tz);
 
-      gcal_set_date_time (&copy->curr.date_end, new_end_in_end_tz);
+      g_set_date_time (&copy->curr.date_end, new_end_in_end_tz);
     }
 
   return copy;
@@ -265,7 +265,7 @@ gcal_event_schedule_set_end_date_time (const GcalEventSchedule *values, GDateTim
 {
   GcalEventSchedule *copy = gcal_event_schedule_copy (values);
 
-  gcal_set_date_time (&copy->curr.date_end, end);
+  g_set_date_time (&copy->curr.date_end, end);
 
   if (g_date_time_compare (copy->curr.date_start, end) == 1)
     {
@@ -273,7 +273,7 @@ gcal_event_schedule_set_end_date_time (const GcalEventSchedule *values, GDateTim
       g_autoptr (GDateTime) new_start = g_date_time_add_hours (end, -1);
       g_autoptr (GDateTime) new_start_in_start_tz = g_date_time_to_timezone (new_start, start_tz);
 
-      gcal_set_date_time (&copy->curr.date_start, new_start_in_start_tz);
+      g_set_date_time (&copy->curr.date_start, new_start_in_start_tz);
     }
 
   return copy;
@@ -398,7 +398,7 @@ gcal_event_schedule_set_recurrence_until (const GcalEventSchedule *values,
   g_assert (copy->curr.recur->frequency != GCAL_RECURRENCE_NO_REPEAT);
   g_assert (copy->curr.recur->limit_type == GCAL_RECURRENCE_UNTIL);
 
-  gcal_set_date_time (&copy->curr.recur->limit.until, until);
+  g_set_date_time (&copy->curr.recur->limit.until, until);
 
   return copy;
 }
