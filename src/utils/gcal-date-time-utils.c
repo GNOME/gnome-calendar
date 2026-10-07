@@ -24,31 +24,6 @@
 #include "gcal-utils.h"
 
 /**
- * gcal_set_datetime:
- * @dest: location to a #GDateTime pointer
- * @src: (nullable): a #GDateTime
- *
- * Performs the same of g_set_object(), but with #GDateTime
- * instances.
- *
- * Returns: %TRUE if the value of @dest changed, %FALSE otherwise
- */
-gboolean
-gcal_set_date_time (GDateTime **dest,
-                    GDateTime  *src)
-{
-  if (*dest == src)
-    return FALSE;
-
-  gcal_clear_date_time (dest);
-
-  if (src)
-    *dest = g_date_time_ref (src);
-
-  return TRUE;
-}
-
-/**
  * gcal_date_time_get_days_in_month:
  * @date: a #GDateTime
  *

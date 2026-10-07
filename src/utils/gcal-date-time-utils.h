@@ -33,9 +33,6 @@ G_BEGIN_DECLS
  */
 #define gcal_clear_date_time(dt) g_clear_pointer (dt, g_date_time_unref)
 
-gboolean             gcal_set_date_time                          (GDateTime         **dest,
-                                                                  GDateTime          *src);
-
 guint8               gcal_date_time_get_days_in_month            (GDateTime          *date);
 
 GDateTime*           gcal_date_time_get_start_of_week            (GDateTime          *date);
