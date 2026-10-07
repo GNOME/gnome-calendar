@@ -1846,20 +1846,14 @@ void
 gcal_week_header_set_date (GcalWeekHeader *self,
                            GDateTime      *date)
 {
-  g_autoptr (GDateTime) start_of_week_1 = NULL;
-  g_autoptr (GDateTime) start_of_week_2 = NULL;
+  if (gcal_date_time_week_equal (self->active_date, date))
+    {
+      g_set_date_time (&self->active_date, date);
+      return;
+    }
 
-  /*
-   * If the active date changed, but we're still in the same week,
-   * there's no need to recalculate visible events.
-   */
-  start_of_week_1 = gcal_date_time_get_start_of_week (self->active_date);
-  start_of_week_2 = gcal_date_time_get_start_of_week (date);
-
-  if (g_date_time_equal (start_of_week_1, start_of_week_2))
+  if (!g_set_date_time (&self->active_date, date))
     return;
-
-  g_set_date_time (&self->active_date, date);
 
   update_title (self);
   gtk_widget_queue_draw (GTK_WIDGET (self));

@@ -429,14 +429,21 @@ gcal_week_view_set_date (GcalView  *view,
                          GDateTime *date)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (view);
+  gboolean week_equal;
 
   GCAL_ENTRY;
 
-  g_set_date_time (&self->date, date);
+  week_equal = gcal_date_time_week_equal (self->date, date);
+
+  if (!g_set_date_time (&self->date, date))
+    GCAL_RETURN ();
 
   /* Propagate the new date */
   gcal_week_grid_set_date (GCAL_WEEK_GRID (self->week_grid), date);
   gcal_week_header_set_date (GCAL_WEEK_HEADER (self->header), date);
+
+  if (week_equal)
+    GCAL_RETURN ();
 
   schedule_position_scroll (self);
 

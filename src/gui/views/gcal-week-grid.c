@@ -1301,7 +1301,18 @@ void
 gcal_week_grid_set_date (GcalWeekGrid *self,
                          GDateTime    *date)
 {
-  g_set_date_time (&self->active_date, date);
+  /*
+   * If the active date changed, but we're still in the same week,
+   * there's no need to recalculate visible events.
+   */
+  if (gcal_date_time_week_equal (self->active_date, date))
+    {
+      g_set_date_time (&self->active_date, date);
+      return;
+    }
+
+  if (!g_set_date_time (&self->active_date, date))
+    return;
 
   invalidate_layout_blocks (self);
 }
