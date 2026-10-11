@@ -671,16 +671,6 @@ on_window_open_date_time_settings_cb (GSimpleAction *action,
 }
 
 static void
-on_window_open_online_accounts_cb (GSimpleAction *action,
-                                   GVariant      *param,
-                                   gpointer       user_data)
-{
-  GDBusConnection *connection = g_application_get_dbus_connection (g_application_get_default ());
-
-  gcal_util_launch_gnome_settings (connection, "online-accounts", NULL);
-}
-
-static void
 on_window_previous_date_activated_cb (GSimpleAction *action,
                                       GVariant      *param,
                                       gpointer       user_data)
@@ -1471,7 +1461,6 @@ gcal_window_init (GcalWindow *self)
     {"next-date", on_window_next_date_activated_cb },
     {"new-event", on_window_new_event_cb },
     {"open-date-time-settings", on_window_open_date_time_settings_cb },
-    {"open-online-accounts", on_window_open_online_accounts_cb },
     {"previous-date", on_window_previous_date_activated_cb },
     {"show-calendars", on_show_calendars_action_activated },
     {"today", on_window_today_activated_cb },
