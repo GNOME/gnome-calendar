@@ -1510,6 +1510,7 @@ on_settings_month_view_n_week_rows_changed_cb (GSettings     *settings,
                                                GcalMonthView *self)
 {
   uint32_t old_rows_per_page = self->rows_per_page;
+  g_autoptr (GDateTime) next_date = NULL;
 
   self->rows_per_page = g_settings_get_uint (settings, "month-view-n-week-rows");
   g_assert (self->rows_per_page > 1 && self->rows_per_page <= 20);
@@ -1540,6 +1541,9 @@ on_settings_month_view_n_week_rows_changed_cb (GSettings     *settings,
                                   GTK_ACCESSIBLE_RELATION_COL_COUNT, GCAL_N_WEEKDAYS,
                                   GTK_ACCESSIBLE_RELATION_ROW_COUNT, self->rows_per_page,
                                   -1);
+
+  next_date = g_date_time_add_days (self->date, GCAL_N_WEEKDAYS * (self->rows_per_page - old_rows_per_page));
+  g_set_date_time (&self->date, next_date);
 
   update_weekday_labels (self);
   redraw_month_view_rows (self);
