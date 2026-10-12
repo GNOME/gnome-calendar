@@ -1726,6 +1726,30 @@ gcal_month_view_get_previous_date (GcalView *view)
 }
 
 static void
+gcal_month_view_zoom_in (GcalView *view)
+{
+  GcalMonthView *self = GCAL_MONTH_VIEW (view);
+  GSettings *settings;
+
+  settings = gcal_context_get_settings (gcal_application_get_context (GCAL_DEFAULT_APPLICATION));
+
+  if (self->rows_per_page > 2)
+    g_settings_set_uint (settings, "month-view-n-week-rows", self->rows_per_page - 1);
+}
+
+static void
+gcal_month_view_zoom_out (GcalView *view)
+{
+  GcalMonthView *self = GCAL_MONTH_VIEW (view);
+  GSettings *settings;
+
+  settings = gcal_context_get_settings (gcal_application_get_context (GCAL_DEFAULT_APPLICATION));
+
+  if (self->rows_per_page < 20)
+    g_settings_set_uint (settings, "month-view-n-week-rows", self->rows_per_page + 1);
+}
+
+static void
 gcal_month_view_first_weekday_changed (GcalView *view)
 {
   GcalMonthView *self = GCAL_MONTH_VIEW (view);
@@ -1747,6 +1771,8 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->get_children_by_uuid = gcal_month_view_get_children_by_uuid;
   iface->get_next_date = gcal_month_view_get_next_date;
   iface->get_previous_date = gcal_month_view_get_previous_date;
+  iface->zoom_in = gcal_month_view_zoom_in;
+  iface->zoom_out = gcal_month_view_zoom_out;
   iface->first_weekday_changed = gcal_month_view_first_weekday_changed;
 }
 
