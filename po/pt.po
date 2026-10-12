@@ -10,20 +10,21 @@
 # Luís Da Costa <luisdc@libretrend.com>, 2024.
 # João Carvalhinho <joao.carvalhinho@gmail.com>, 2025.
 #
+# SPDX-FileCopyrightText: 2026 Cátia Silva <catias89@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2026-09-13 20:37+0000\n"
-"PO-Revision-Date: 2026-09-25 11:10+0100\n"
-"Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
-"Language-Team: Português (https://l10n.gnome.org/teams/pt/)\n"
+"PO-Revision-Date: 2026-10-12 13:30+0100\n"
+"Last-Translator: Cátia Silva <catias89@gmail.com>\n"
+"Language-Team: Portuguese <li@pt.corg>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -75,20 +76,20 @@ msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
-"Determine se são mostrados relatórios meteorológicos, se são usadas "
+"Determine se são apresentados relatórios meteorológicos, se são utilizadas "
 "localizações automáticas, e o nome de uma localização"
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Zoom level of the week grid"
-msgstr "Nível de zoom da grelha da semana"
+msgstr "Nível de ampliação da grelha da semana"
 
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid "The current zoom level of the week grid"
-msgstr "O atual nível de zoom da grelha da semana"
+msgstr "O nível atual de ampliação da grelha da semana"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
 msgid "The GNOME Project"
-msgstr "O projeto GNOME"
+msgstr "O Projeto GNOME"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:14
 msgid "Manage your schedule"
@@ -101,7 +102,8 @@ msgid ""
 "meetings and appointments, public events, travel logistics, or other "
 "commitments in your life."
 msgstr ""
-"O GNOME Calendar é uma ferramenta elegante que ajuda a planear e a manter-se "
+"O Calendário do GNOME é uma ferramenta elegante que ajuda a planear e a"
+" manter-se "
 "organizado com a sua agenda para os próximos dias e semanas, seja se os seus "
 "meses estão repletos de reuniões e compromissos, eventos públicos, logística "
 "de viagens ou outras obrigações na sua vida."
@@ -112,7 +114,7 @@ msgid ""
 "Calendar's infinite scrolling month view, week timetable, and scheduling "
 "list view."
 msgstr ""
-"Crie e faça a gestão facilmente de calendários e eventos ilimitados com a "
+"Crie e faça facilmente a gestão de calendários e eventos ilimitados com a "
 "visualização mensal de deslocamento infinito, o horário semanal e a "
 "visualização\n"
 "em lista de agendamentos do Calendário do GNOME."
@@ -135,7 +137,7 @@ msgstr ""
 "serviços de calendário online (como NextCloud, Google Calendar e servidores "
 "CalDAV / WebDAV), permitindo sincronizar os seus eventos em vários "
 "dispositivos e plataformas. O Calendário do GNOME também suporta calendários "
-"locais e offline, para que possa utilizá-lo em qualquer lugar e a qualquer "
+"locais e offline, para que possa utiliza-lo em qualquer lugar e a qualquer "
 "momento durante viagens (ou após o colapso da civilização)."
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:39
@@ -192,11 +194,11 @@ msgstr "Calendário Google"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:63
 msgid "Month view"
-msgstr "Visualização do mês"
+msgstr "Visualização mensal"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:67
 msgid "Week view"
-msgstr "Visualização da semana"
+msgstr "Visualização semanal"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:71
 msgid "Agenda view"
@@ -210,7 +212,6 @@ msgstr "Editor de eventos"
 #. Translators: %1$s is the start date, and %2$s. For example: June 21 – November 29, 2022
 #: src/core/gcal-event.c:1937 src/gui/gcal-event-popover.c:422
 #, c-format
-#| msgid "%1$s — %2$s"
 msgid "%1$s – %2$s"
 msgstr "%1$s – %2$s"
 
@@ -220,7 +221,6 @@ msgstr "%1$s – %2$s"
 #.
 #: src/core/gcal-event.c:1945
 #, c-format
-#| msgid "%1$s %2$s — %3$s %4$s"
 msgid "%1$s %2$s – %3$s %4$s"
 msgstr "%1$s %2$s – %3$s %4$s"
 
@@ -236,7 +236,7 @@ msgstr "_Calendário de apenas-leitura"
 
 #: src/gui/calendar-management/calendar-row.blp:29
 msgid "Display Calendar"
-msgstr "Mostrar calendário"
+msgstr "Apresentar calendário"
 
 #: src/gui/calendar-management/calendar-row.blp:39
 msgid "Edit calendar"
@@ -299,7 +299,7 @@ msgstr "Cor"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:74
 msgid "_Display Calendar"
-msgstr "_Mostrar calendário"
+msgstr "_Apresentar calendário"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:82
 msgid "_Export Calendar"
@@ -346,7 +346,7 @@ msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"Se o calendário pertence a uma das suas contas online, pode adicioná-lo "
+"Se o calendário pertencer a uma das suas contas online, pode adiciona-lo "
 "através das <a href=\"GOA\">definições de contas online</a>."
 
 #: src/gui/calendar-management/gcal-new-calendar-page.blp:130
@@ -396,7 +396,7 @@ msgstr ""
 
 #: src/gui/common/gcal-calendar-row.c:72
 msgid "This calendar is hidden"
-msgstr "Este calendário está oculto"
+msgstr "Este calendário encontra-se oculto"
 
 #: src/gui/common/gcal-date-chooser.blp:15
 #: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:408
@@ -733,7 +733,7 @@ msgstr "Novo evento"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:157
 msgid "Event Details"
-msgstr "Detalhes de evento"
+msgstr "Detalhes do evento"
 
 #: src/gui/event-editor/gcal-event-editor-dialog.c:159
 msgid "Edit Event"
@@ -804,7 +804,7 @@ msgstr "Data de início"
 #: src/gui/event-editor/gcal-schedule-section.blp:30
 #: src/gui/event-editor/gcal-schedule-section.blp:54
 msgid "End Date"
-msgstr "Data do fim"
+msgstr "Data de fim"
 
 #: src/gui/event-editor/gcal-schedule-section.blp:38
 msgid "_Time Slot"
@@ -816,7 +816,7 @@ msgstr "Hora de início"
 
 #: src/gui/event-editor/gcal-schedule-section.blp:55
 msgid "End Time"
-msgstr "Hora final"
+msgstr "Hora de fim"
 
 #: src/gui/event-editor/gcal-schedule-section.blp:68
 msgid "Repeat"
@@ -865,7 +865,7 @@ msgstr "Até à data"
 
 #: src/gui/event-editor/gcal-schedule-section.blp:116
 msgid "End Repeat Date"
-msgstr "Data do fim da repetição"
+msgstr "Data de fim da repetição"
 
 #: src/gui/event-editor/gcal-summary-section.blp:6
 #: src/gui/gcal-quick-add-popover.blp:44
@@ -895,7 +895,7 @@ msgstr "%1$s %2$s"
 
 #: src/gui/gcal-application.c:58
 msgid "Quit GNOME Calendar"
-msgstr "Sair do Calendário GNOME"
+msgstr "Sair do Calendário do GNOME"
 
 #: src/gui/gcal-application.c:63
 msgid "Display version number"
@@ -927,7 +927,8 @@ msgstr ""
 "Juliano de Souza Camargo <julianosc@pm.me>\n"
 "Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Luís Da Costa <luisdc@libretrend.com>\n"
-"João Carvalhinho <joao.carvalhinho@gmail.com>"
+"João Carvalhinho <joao.carvalhinho@gmail.com>\n"
+"Cátia Silva <catias89@gmail.com>"
 
 #: src/gui/gcal-application.c:247 src/gui/gcal-window.blp:391
 msgid "Weather"
@@ -939,7 +940,6 @@ msgstr "Meteorologia"
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
 #: src/gui/gcal-calendar-navigation-button.c:106
-#| msgid "%B %Y"
 msgid "%OB %Y"
 msgstr "%OB %Y"
 
@@ -1087,7 +1087,6 @@ msgstr "%1$s %2$d, %3$d"
 #.
 #: src/gui/gcal-event-popover.c:264
 #, c-format
-#| msgid "Today, %1$s — %2$s"
 msgid "Today, %1$s – %2$s"
 msgstr "Hoje, %1$s – %2$s"
 
@@ -1474,7 +1473,7 @@ msgstr "_Semana"
 
 #: src/gui/gcal-window.blp:251
 msgid "_Agenda"
-msgstr "C_alendário"
+msgstr "_Agenda"
 
 #: src/gui/gcal-window.blp:286
 msgid "_Today"
@@ -1527,7 +1526,7 @@ msgstr "Semana"
 
 #: src/gui/gcal-window.c:411
 msgid "Agenda"
-msgstr "Calendário"
+msgstr "Agenda"
 
 #: src/gui/gcal-window.c:1018
 msgid "Another event deleted"
@@ -1591,7 +1590,7 @@ msgstr "Falha na atribuição de um novo objeto na memória"
 
 #: src/gui/importer/gcal-importer.c:44
 msgid "File is malformed, invalid, or corrupted"
-msgstr "O ficheiro está malformado, inválido, ou corrompido"
+msgstr "O ficheiro está mal formado, inválido, ou corrompido"
 
 #: src/gui/importer/gcal-importer.c:47
 msgid "Failed to parse the calendar contents"
@@ -1599,7 +1598,7 @@ msgstr "Falha ao analisar o conteúdo do calendário"
 
 #: src/gui/importer/gcal-importer.c:50
 msgid "Failed to read file"
-msgstr "Falha ao ler ficheiro"
+msgstr "Falha ao carregar o ficheiro"
 
 #: src/gui/importer/gcal-importer.c:57
 msgid "Internal error"
@@ -1697,12 +1696,12 @@ msgstr "Visualização"
 #: src/gui/shortcuts-dialog.blp:87
 msgctxt "shortcut dialog"
 msgid "Month View"
-msgstr "Visualização do mês"
+msgstr "Visualização mensal"
 
 #: src/gui/shortcuts-dialog.blp:92
 msgctxt "shortcut dialog"
 msgid "Week View"
-msgstr "Visualização da semana"
+msgstr "Visualização semanal"
 
 #: src/gui/views/gcal-agenda-view-day-row.blp:25
 msgid "No events"
@@ -1735,7 +1734,7 @@ msgstr "Ocultar eventos adicionais"
 
 #: src/gui/views/gcal-week-view.c:237
 msgid "Show Additional Events"
-msgstr "Mostrar eventos adicionais"
+msgstr "Apresentar eventos adicionais"
 
 #: src/utils/gcal-utils.c:1291
 msgid "Modify Multiple Events?"
@@ -1792,7 +1791,7 @@ msgstr "Microsoft Teams"
 
 #: src/utils/gcal-utils.c:1417
 msgid "Whereby"
-msgstr "Pelo qual"
+msgstr "Whereby"
 
 #: src/utils/gcal-utils.c:1418
 msgid "Webex"
@@ -2179,3 +2178,4 @@ msgstr "Bing Maps"
 
 #~ msgid "Year %d"
 #~ msgstr "Ano %d"
+
