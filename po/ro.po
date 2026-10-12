@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-09-30 18:57+0000\n"
-"PO-Revision-Date: 2026-09-30 22:49+0300\n"
+"POT-Creation-Date: 2026-10-11 18:50+0000\n"
+"PO-Revision-Date: 2026-10-12 22:18+0300\n"
 "Last-Translator: Antonio Marin <gnmer.6qxyg@slmail.me>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -31,7 +31,7 @@ msgstr ""
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5
-#: src/gui/gcal-window.c:414 src/main.c:35
+#: src/gui/gcal-window.c:421 src/main.c:36
 msgid "Calendar"
 msgstr "Calendar"
 
@@ -88,6 +88,14 @@ msgstr "Nivelul de mărire a grilei săptămânale"
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid "The current zoom level of the week grid"
 msgstr "Nivelul actual de mărire a grilei săptămânale"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Number of week rows displayed by the Month view"
+msgstr "Numărul de rânduri cu săptămâni din afișarea lunară"
+
+#: data/org.gnome.calendar.gschema.xml.in:33
+msgid "The current number of week rows displayed by the Month view"
+msgstr "Numărul actual de rânduri cu săptămâni din afișarea lunară"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
 msgid "The GNOME Project"
@@ -277,7 +285,7 @@ msgid "Calendar “%s” removed"
 msgstr "Calendarul „%s” a fost eliminat"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:361
-#: src/gui/gcal-window.c:1029
+#: src/gui/gcal-window.c:1036
 msgid "_Undo"
 msgstr "An_ulează"
 
@@ -410,29 +418,29 @@ msgid "This calendar is hidden"
 msgstr "Acest calendar este ascuns"
 
 #: src/gui/common/gcal-date-chooser.blp:15
-#: src/gui/common/gcal-date-chooser.blp:53 src/gui/gcal-window.c:408
+#: src/gui/common/gcal-date-chooser.blp:54 src/gui/gcal-window.c:415
 msgid "Month"
 msgstr "Luna"
 
 #: src/gui/common/gcal-date-chooser.blp:16
-#: src/gui/common/gcal-date-chooser.blp:54 src/gui/gcal-window.c:253
+#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:260
 msgid "Previous Month"
 msgstr "Luna precedentă"
 
 #: src/gui/common/gcal-date-chooser.blp:17
-#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:284
+#: src/gui/common/gcal-date-chooser.blp:56 src/gui/gcal-window.c:291
 msgid "Next Month"
 msgstr "Luna următoare"
 
-#: src/gui/common/gcal-date-chooser.blp:33
+#: src/gui/common/gcal-date-chooser.blp:34
 msgid "Year"
 msgstr "Anul"
 
-#: src/gui/common/gcal-date-chooser.blp:34
+#: src/gui/common/gcal-date-chooser.blp:35
 msgid "Previous Year"
 msgstr "Anul precedent"
 
-#: src/gui/common/gcal-date-chooser.blp:35
+#: src/gui/common/gcal-date-chooser.blp:36
 msgid "Next Year"
 msgstr "Anul următor"
 
@@ -922,39 +930,39 @@ msgstr "Caută un fus orar"
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
-#: src/gui/gcal-application.c:58
+#: src/gui/gcal-application.c:68
 msgid "Quit GNOME Calendar"
 msgstr "Închide calendarul GNOME"
 
-#: src/gui/gcal-application.c:63
+#: src/gui/gcal-application.c:73
 msgid "Display version number"
 msgstr "Afișează numărul versiunii"
 
-#: src/gui/gcal-application.c:68
-msgid "Enable debug messages"
-msgstr "Activează mesajele de depanare"
+#: src/gui/gcal-application.c:78
+msgid "Increase verbosity level. Can be used multiple times."
+msgstr "Crește nivelul de detaliere. Poate fi utilizat de mai multe ori."
 
-#: src/gui/gcal-application.c:73
+#: src/gui/gcal-application.c:83
 msgid "Open calendar on the passed date"
 msgstr "Deschide calendarul la data indicată"
 
-#: src/gui/gcal-application.c:78
+#: src/gui/gcal-application.c:88
 msgid "Open calendar showing the passed event"
 msgstr "Deschide calendarul la evenimentul indicat"
 
-#: src/gui/gcal-application.c:144
+#: src/gui/gcal-application.c:154
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Drepturi de autor © 2012–%d autorii lui Calendar"
 
-#: src/gui/gcal-application.c:242
+#: src/gui/gcal-application.c:252
 msgid "translator-credits"
 msgstr ""
 "Adrian Gabor <raziel [underscore] theripper [at] yahoo [dot] com>\n"
 "Florentina Mușat <florentina.musat.28 [at] gmail [dot] com>\n"
 "Antonio Marin <gnmer.6qxyg@slmail.me>"
 
-#: src/gui/gcal-application.c:247 src/gui/gcal-window.blp:391
+#: src/gui/gcal-application.c:257 src/gui/gcal-window.blp:391
 msgid "Weather"
 msgstr "Vremea"
 
@@ -971,7 +979,7 @@ msgstr "Alege o dată"
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-calendar-navigation-button.c:106
+#: src/gui/gcal-calendar-navigation-button.c:109
 msgid "%OB %Y"
 msgstr "%OB %Y"
 
@@ -1079,17 +1087,17 @@ msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%2$d %1$s, %3$d, %4$s"
 
 #: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
-#: src/gui/views/gcal-agenda-view.c:98
+#: src/gui/views/gcal-agenda-view.c:88
 msgid "Today"
 msgstr "Astăzi"
 
 #: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/gcal-window.c:286 src/gui/views/gcal-agenda-view.c:100
+#: src/gui/gcal-window.c:293 src/gui/views/gcal-agenda-view.c:90
 msgid "Tomorrow"
 msgstr "Mâine"
 
 #: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/gcal-window.c:255 src/gui/views/gcal-agenda-view.c:102
+#: src/gui/gcal-window.c:262 src/gui/views/gcal-agenda-view.c:92
 msgid "Yesterday"
 msgstr "Ieri"
 
@@ -1545,35 +1553,35 @@ msgstr "S_curtături"
 msgid "_About Calendar"
 msgstr "Despre Calend_ar"
 
-#: src/gui/gcal-window.c:251
+#: src/gui/gcal-window.c:258
 msgid "Previous Week"
 msgstr "Săptămâna precedentă"
 
-#: src/gui/gcal-window.c:282
+#: src/gui/gcal-window.c:289
 msgid "Next Week"
 msgstr "Săptămână următoare"
 
-#: src/gui/gcal-window.c:405
+#: src/gui/gcal-window.c:412
 msgid "Week"
 msgstr "Săptămâna"
 
-#: src/gui/gcal-window.c:411
+#: src/gui/gcal-window.c:418
 msgid "Agenda"
 msgstr "Agendă"
 
-#: src/gui/gcal-window.c:1027
+#: src/gui/gcal-window.c:1034
 msgid "Another event deleted"
 msgstr "Un alt eveniment șters"
 
-#: src/gui/gcal-window.c:1027
+#: src/gui/gcal-window.c:1034
 msgid "Event deleted"
 msgstr "Eveniment șters"
 
-#: src/gui/gcal-window.c:1092
+#: src/gui/gcal-window.c:1099
 msgid "Could not import some files: Not ICS files"
 msgstr "Nu s-au putut importa unele fișiere: Nu sunt fișiere ICS"
 
-#: src/gui/gcal-window.c:1097
+#: src/gui/gcal-window.c:1104
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Nu s-a putut importa „%s”: Nu este un fișier ICS"
@@ -1722,17 +1730,27 @@ msgctxt "shortcut dialog"
 msgid "Previous View"
 msgstr "Precedenta"
 
-#: src/gui/shortcuts-dialog.blp:84
+#: src/gui/shortcuts-dialog.blp:83
+msgctxt "shortcut dialog"
+msgid "Zoom In"
+msgstr "Mărește"
+
+#: src/gui/shortcuts-dialog.blp:88
+msgctxt "shortcut dialog"
+msgid "Zoom Out"
+msgstr "Micșorează"
+
+#: src/gui/shortcuts-dialog.blp:94
 msgctxt "shortcut dialog"
 msgid "View"
 msgstr "Afișare"
 
-#: src/gui/shortcuts-dialog.blp:87
+#: src/gui/shortcuts-dialog.blp:97
 msgctxt "shortcut dialog"
 msgid "Month View"
 msgstr "Lunară"
 
-#: src/gui/shortcuts-dialog.blp:92
+#: src/gui/shortcuts-dialog.blp:102
 msgctxt "shortcut dialog"
 msgid "Week View"
 msgstr "Săptămânală"
@@ -1743,7 +1761,7 @@ msgstr "Săptămânală"
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/views/gcal-agenda-view.c:110
+#: src/gui/views/gcal-agenda-view.c:100
 msgid "%A %B %d"
 msgstr "%A %e %B"
 
