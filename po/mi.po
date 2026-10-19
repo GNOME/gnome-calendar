@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar main\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2026-08-28 23:31+0000\n"
-"PO-Revision-Date: 2026-09-01 01:41+1200\n"
+"POT-Creation-Date: 2026-10-16 21:37+0000\n"
+"PO-Revision-Date: 2026-10-19 12:26+1300\n"
 "Last-Translator: Arlewatyerre Tuhoro-Bell <aidan@ursa.nz>\n"
-"Language-Team: Māori <https://l10n.gnome.org/teams/mi/>\n"
+"Language-Team: Māori <https://gitlab.gnome.org/Teams/Translation/mi>\n"
 "Language: mi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
 #: src/gui/common/gcal-calendar-combo-row.blp:5 src/gui/gcal-window.blp:5
-#: src/gui/gcal-window.c:414 src/main.c:35
+#: src/gui/gcal-window.c:421 src/main.c:36
 msgid "Calendar"
 msgstr "Maramataka"
 
@@ -38,7 +38,7 @@ msgstr "Te uru me te whakahaere i ō maramataka"
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in.in:12
 msgid "Calendar;Event;Reminder;"
-msgstr "Maramataka;Takunetanga;Whakamaharatanga;"
+msgstr "Calendar;Event;Reminder;Maramataka;Takunetanga;Whakamaharatanga;"
 
 #: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
@@ -85,6 +85,14 @@ msgstr "Te taumata topa o te mātiti wiki"
 #: data/org.gnome.calendar.gschema.xml.in:27
 msgid "The current zoom level of the week grid"
 msgstr "Te taumata topa o nāianei o te mātiti wiki"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Number of week rows displayed by the Month view"
+msgstr ""
+
+#: data/org.gnome.calendar.gschema.xml.in:33
+msgid "The current number of week rows displayed by the Month view"
+msgstr ""
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
 msgid "The GNOME Project"
@@ -245,23 +253,36 @@ msgid "Calendar Settings"
 msgstr "Ngā Tautuhinga Maramataka"
 
 #: src/gui/calendar-management/gcal-calendars-page.blp:5
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:90
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:65
 msgid "Calendars"
 msgstr "Ngā Maramataka"
 
-#: src/gui/calendar-management/gcal-calendars-page.blp:37
-msgid "_Add Calendar"
-msgstr "_Tāpiri Maramataka"
+#: src/gui/calendar-management/gcal-calendars-page.blp:14
+#: src/gui/calendar-management/gcal-new-local-calendar-page.c:72
+#: src/gui/calendar-management/gcal-new-online-calendar-page.c:93
+#, c-format
+msgid "Add Calendar"
+msgid_plural "Add %1$u Calendars"
+msgstr[0] "Tāpiri Maramataka"
+msgstr[1] "Tāpiri %1$u Maramataka"
+
+#: src/gui/calendar-management/gcal-calendars-page.blp:18
+msgid "New Local Calendar…"
+msgstr ""
+
+#: src/gui/calendar-management/gcal-calendars-page.blp:19
+msgid "Add Remote Calendar…"
+msgstr ""
 
 #. Create the new toast
 #. TRANSLATORS: %s is a calendar name.
-#: src/gui/calendar-management/gcal-calendars-page.c:349
+#: src/gui/calendar-management/gcal-calendars-page.c:356
 #, c-format
 msgid "Calendar “%s” removed"
 msgstr "Kua tangohia te maramataka “%s”"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:354
-#: src/gui/gcal-window.c:1020
+#: src/gui/calendar-management/gcal-calendars-page.c:361
+#: src/gui/gcal-window.c:1026
 msgid "_Undo"
 msgstr "_Wete"
 
@@ -286,12 +307,12 @@ msgid "Location"
 msgstr "Wāhi"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:54
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:20
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:20
 msgid "Calendar Name"
 msgstr "Ingoa Maramataka"
 
 #: src/gui/calendar-management/gcal-edit-calendar-page.blp:58
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:25
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:25
 msgid "Color"
 msgstr "Tae"
 
@@ -319,19 +340,28 @@ msgstr "I Tēnei Rorohiko"
 msgid "Export Calendar"
 msgstr "Kaweatu Maramataka"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:5
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:5
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:5
 msgid "New Calendar"
 msgstr "Maramataka Hou"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:17
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:17
 msgid "Create a Local Calendar"
 msgstr "Waihanga he Maramataka ā-Rohe"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:42
+#: src/gui/calendar-management/gcal-new-local-calendar-page.blp:44
+#: src/gui/calendar-management/gcal-new-local-calendar-page.c:79
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:105
+#: src/gui/calendar-management/gcal-new-online-calendar-page.c:100
+msgctxt "button"
+msgid "Add Calendar"
+msgstr "Tāpiri Maramataka"
+
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:17
 msgid "Connect to an Online Calendar"
 msgstr "Hono ki tētahi Maramataka Tuihono"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:50
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:25
 msgid ""
 "HTTPS, CalDAV, or Webcal URLs are supported. Online calendars that can only "
 "be updated by the provider will be added as read-only."
@@ -339,7 +369,7 @@ msgstr ""
 "Ka tautokona ngā URL HTTPS, CalDAV, Webcal rānei. Ko ngā maramataka tuihono "
 "ka taea anake te whakahou e te kaiwhakarato, ka tāpirihia hei pānui-anake."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:111
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:86
 msgid ""
 "If the calendar belongs to one of your online accounts, you can add it "
 "through the <a href=\"GOA\">online account settings</a>."
@@ -347,46 +377,33 @@ msgstr ""
 "Mēnā nō tētahi o ō pūkete tuihono te maramataka, ka taea e koe te tāpiri mā "
 "ngā <a href=\"GOA\">tautuhinga pūkete tuihono</a>."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:130
-#: src/gui/calendar-management/gcal-new-calendar-page.c:116
-msgctxt "button"
-msgid "Add Calendar"
-msgstr "Tāpiri Maramataka"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:145
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:120
 msgid "Credentials"
 msgstr "Ngā Tohu Takiuru"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:151
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:126
 msgid "User"
 msgstr "Kaiwhakamahi"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:155
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:130
 msgid "Password"
 msgstr "Kupuhuna"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:165
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:140
 #: src/gui/event-editor/gcal-event-editor-dialog.blp:18
-#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:1295
+#: src/gui/importer/gcal-import-dialog.blp:18 src/utils/gcal-utils.c:879
 msgid "_Cancel"
 msgstr "_Whakakore"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.blp:166
+#: src/gui/calendar-management/gcal-new-online-calendar-page.blp:141
 msgid "_Connect"
 msgstr "_Hono"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:109
-#, c-format
-msgid "Add Calendar"
-msgid_plural "Add %1$u Calendars"
-msgstr[0] "Tāpiri Maramataka"
-msgstr[1] "Tāpiri %1$u Maramataka"
-
-#: src/gui/calendar-management/gcal-new-calendar-page.c:324
+#: src/gui/calendar-management/gcal-new-online-calendar-page.c:271
 msgid "The URL you have entered appears to be invalid."
 msgstr "Te āhua nei kāore te URL i tāurua e koe i te whaimana."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:379
+#: src/gui/calendar-management/gcal-new-online-calendar-page.c:321
 msgid "A valid user and password are required to connect to this calendar."
 msgstr ""
 "E hiahiatia ana he kaiwhakamahi me te kupuhuna whaimana hei hono ki tēnei "
@@ -397,17 +414,17 @@ msgid "This calendar is hidden"
 msgstr "Kua hunaia tēnei maramataka"
 
 #: src/gui/common/gcal-date-chooser.blp:15
-#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:408
+#: src/gui/common/gcal-date-chooser.blp:54 src/gui/gcal-window.c:415
 msgid "Month"
 msgstr "Marama"
 
 #: src/gui/common/gcal-date-chooser.blp:16
-#: src/gui/common/gcal-date-chooser.blp:56 src/gui/gcal-window.c:253
+#: src/gui/common/gcal-date-chooser.blp:55 src/gui/gcal-window.c:260
 msgid "Previous Month"
 msgstr "Marama o Mua"
 
 #: src/gui/common/gcal-date-chooser.blp:17
-#: src/gui/common/gcal-date-chooser.blp:57 src/gui/gcal-window.c:284
+#: src/gui/common/gcal-date-chooser.blp:56 src/gui/gcal-window.c:291
 msgid "Next Month"
 msgstr "Marama Panuku"
 
@@ -431,43 +448,43 @@ msgstr "Tau Panuku"
 #. * Please make sure these abbreviations match GNOME Shell's
 #. * abbreviations for your language.
 #.
-#: src/gui/common/gcal-date-chooser.c:333
+#: src/gui/common/gcal-date-chooser.c:336
 msgctxt "grid sunday"
 msgid "S"
 msgstr "R"
 
 #. Translators: Calendar grid abbreviation for Monday
-#: src/gui/common/gcal-date-chooser.c:338
+#: src/gui/common/gcal-date-chooser.c:341
 msgctxt "grid monday"
 msgid "M"
 msgstr "M"
 
 #. Translators: Calendar grid abbreviation for Tuesday
-#: src/gui/common/gcal-date-chooser.c:343
+#: src/gui/common/gcal-date-chooser.c:346
 msgctxt "grid tuesday"
 msgid "T"
 msgstr "T"
 
 #. Translators: Calendar grid abbreviation for Wednesday
-#: src/gui/common/gcal-date-chooser.c:348
+#: src/gui/common/gcal-date-chooser.c:351
 msgctxt "grid wednesday"
 msgid "W"
 msgstr "W"
 
 #. Translators: Calendar grid abbreviation for Thursday
-#: src/gui/common/gcal-date-chooser.c:353
+#: src/gui/common/gcal-date-chooser.c:356
 msgctxt "grid thursday"
 msgid "T"
 msgstr "T"
 
 #. Translators: Calendar grid abbreviation for Friday
-#: src/gui/common/gcal-date-chooser.c:358
+#: src/gui/common/gcal-date-chooser.c:361
 msgctxt "grid friday"
 msgid "F"
 msgstr "P"
 
 #. Translators: Calendar grid abbreviation for Saturday
-#: src/gui/common/gcal-date-chooser.c:363
+#: src/gui/common/gcal-date-chooser.c:366
 msgctxt "grid saturday"
 msgid "S"
 msgstr "H"
@@ -737,6 +754,11 @@ msgstr "Ngā Taipitopito Takunetanga"
 msgid "Edit Event"
 msgstr "Takatā Takunetanga"
 
+#: src/gui/event-editor/gcal-notes-section.blp:40
+#: src/gui/event-editor/gcal-notes-section.blp:69
+msgid "Notes"
+msgstr ""
+
 #: src/gui/event-editor/gcal-organizer-row.blp:5
 msgid "Organizer"
 msgstr "Kaiwhakahaere"
@@ -886,47 +908,55 @@ msgstr "Rapu Rohe Wā"
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
-#: src/gui/gcal-application.c:58
+#: src/gui/gcal-application.c:68
 msgid "Quit GNOME Calendar"
 msgstr "Whakamutua te Maramataka GNOME"
 
-#: src/gui/gcal-application.c:63
+#: src/gui/gcal-application.c:73
 msgid "Display version number"
 msgstr "Whakaatu i te nama putanga"
 
-#: src/gui/gcal-application.c:68
-msgid "Enable debug messages"
-msgstr "Whakahohe i ngā karere patuiro"
+#: src/gui/gcal-application.c:78
+msgid "Increase verbosity level. Can be used multiple times."
+msgstr ""
 
-#: src/gui/gcal-application.c:73
+#: src/gui/gcal-application.c:83
 msgid "Open calendar on the passed date"
 msgstr "Huaki i te maramataka i te rā kua tukua"
 
-#: src/gui/gcal-application.c:78
+#: src/gui/gcal-application.c:88
 msgid "Open calendar showing the passed event"
 msgstr "Huaki i te maramataka e whakaatu ana i te takunetanga kua tukua"
 
-#: src/gui/gcal-application.c:144
+#: src/gui/gcal-application.c:154
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Manatārua © 2012–%d Ngā kaituhi o te Maramataka"
 
-#: src/gui/gcal-application.c:242
+#: src/gui/gcal-application.c:252
 msgid "translator-credits"
 msgstr ""
 "Arlewatyerre Tuhoro-Bell <aidan@ursa.nz>\n"
 "Te Rōpū Whakamāori GNOME https://gitlab.gnome.org/Teams/Translation/mi"
 
-#: src/gui/gcal-application.c:246 src/gui/gcal-window.blp:391
+#: src/gui/gcal-application.c:257 src/gui/gcal-window.blp:386
 msgid "Weather"
 msgstr "Huarere"
+
+#: src/gui/gcal-calendar-navigation-button.blp:13
+msgid "_Choose Date"
+msgstr ""
+
+#: src/gui/gcal-calendar-navigation-button.blp:16
+msgid "Choose a Date"
+msgstr ""
 
 #.
 #. * Translators: %OB is the month name and %Y is the year.
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/gcal-calendar-navigation-button.c:106
+#: src/gui/gcal-calendar-navigation-button.c:109
 msgid "%OB %Y"
 msgstr "%OB %Y"
 
@@ -1034,17 +1064,17 @@ msgid "%1$s %2$d, %3$d, %4$s"
 msgstr "%1$s %2$d, %3$d, %4$s"
 
 #: src/gui/gcal-event-popover.c:202 src/gui/gcal-event-popover.c:316
-#: src/gui/views/gcal-agenda-view-day-row.c:77
+#: src/gui/views/gcal-agenda-view.c:88
 msgid "Today"
 msgstr "Tēnei rā"
 
 #: src/gui/gcal-event-popover.c:206 src/gui/gcal-event-popover.c:320
-#: src/gui/gcal-window.c:286 src/gui/views/gcal-agenda-view-day-row.c:79
+#: src/gui/gcal-window.c:293 src/gui/views/gcal-agenda-view.c:90
 msgid "Tomorrow"
 msgstr "Āpōpō"
 
 #: src/gui/gcal-event-popover.c:210 src/gui/gcal-event-popover.c:324
-#: src/gui/gcal-window.c:255 src/gui/views/gcal-agenda-view-day-row.c:81
+#: src/gui/gcal-window.c:262 src/gui/views/gcal-agenda-view.c:92
 msgid "Yesterday"
 msgstr "Inanahi"
 
@@ -1419,7 +1449,7 @@ msgstr[1] "%u ngā hua i kitea"
 #: src/gui/gcal-sync-indicator.blp:19
 msgctxt "tooltip"
 msgid "Synchronizing Remote Calendars"
-msgstr "Te tukutahi i ngā maramataka tawhiti"
+msgstr "Kei te tukutahi i ngā maramataka tawhiti"
 
 #: src/gui/gcal-weather-settings.blp:17
 msgid "Show Weather"
@@ -1487,47 +1517,43 @@ msgstr "_Tukutahi Maramataka"
 msgid "_Date & Time Settings…"
 msgstr "Ngā Tautuhinga _Rā me te Wā…"
 
-#: src/gui/gcal-window.blp:386
-msgid "_Online Accounts…"
-msgstr "Ngā Pūkete _Tuihono…"
-
-#: src/gui/gcal-window.blp:401
+#: src/gui/gcal-window.blp:396
 msgid "_Keyboard Shortcuts"
 msgstr "Ngā Pokatata _Papapātuhi"
 
-#: src/gui/gcal-window.blp:406
+#: src/gui/gcal-window.blp:401
 msgid "_About Calendar"
 msgstr "_Mō te Maramataka"
 
-#: src/gui/gcal-window.c:251
+#: src/gui/gcal-window.c:258
 msgid "Previous Week"
 msgstr "Wiki o Mua"
 
-#: src/gui/gcal-window.c:282
+#: src/gui/gcal-window.c:289
 msgid "Next Week"
 msgstr "Wiki Panuku"
 
-#: src/gui/gcal-window.c:405
+#: src/gui/gcal-window.c:412
 msgid "Week"
 msgstr "Wiki"
 
-#: src/gui/gcal-window.c:411
+#: src/gui/gcal-window.c:418
 msgid "Agenda"
 msgstr "Rārangi Take"
 
-#: src/gui/gcal-window.c:1018
+#: src/gui/gcal-window.c:1024
 msgid "Another event deleted"
 msgstr "Kua mukua tētahi atu takunetanga"
 
-#: src/gui/gcal-window.c:1018
+#: src/gui/gcal-window.c:1024
 msgid "Event deleted"
 msgstr "Kua mukua te takunetanga"
 
-#: src/gui/gcal-window.c:1083
+#: src/gui/gcal-window.c:1089
 msgid "Could not import some files: Not ICS files"
 msgstr "Kāore i taea te kawemai i ētahi kōnae: Ehara i te kōnae ICS"
 
-#: src/gui/gcal-window.c:1088
+#: src/gui/gcal-window.c:1094
 #, c-format
 msgid "Could not import “%s”: Not an ICS file"
 msgstr "Kāore i taea te kawemai i “%s”: Ehara i te kōnae ICS"
@@ -1675,24 +1701,30 @@ msgctxt "shortcut dialog"
 msgid "Previous View"
 msgstr "Tirohanga o Mua"
 
-#: src/gui/shortcuts-dialog.blp:84
+#: src/gui/shortcuts-dialog.blp:83
+msgctxt "shortcut dialog"
+msgid "Zoom In"
+msgstr "Topa Mai"
+
+#: src/gui/shortcuts-dialog.blp:88
+msgctxt "shortcut dialog"
+msgid "Zoom Out"
+msgstr "Topa Atu"
+
+#: src/gui/shortcuts-dialog.blp:94
 msgctxt "shortcut dialog"
 msgid "View"
 msgstr "Tiro"
 
-#: src/gui/shortcuts-dialog.blp:87
+#: src/gui/shortcuts-dialog.blp:97
 msgctxt "shortcut dialog"
 msgid "Month View"
 msgstr "Tirohanga Marama"
 
-#: src/gui/shortcuts-dialog.blp:92
+#: src/gui/shortcuts-dialog.blp:102
 msgctxt "shortcut dialog"
 msgid "Week View"
 msgstr "Tirohanga Wiki"
-
-#: src/gui/views/gcal-agenda-view-day-row.blp:25
-msgid "No events"
-msgstr "Kāore he takunetanga"
 
 #.
 #. * Translators: %A is the full day name, %B is the month name
@@ -1700,15 +1732,19 @@ msgstr "Kāore he takunetanga"
 #. * More formats can be found on the doc:
 #. * https://docs.gtk.org/glib/method.DateTime.format.html
 #.
-#: src/gui/views/gcal-agenda-view-day-row.c:89
+#: src/gui/views/gcal-agenda-view.c:100
 msgid "%A %B %d"
 msgstr "%A %d %B"
+
+#: src/gui/views/gcal-month-cell.blp:79
+msgid "All Events"
+msgstr "Ngā Takunetanga Katoa"
 
 #: src/gui/views/gcal-month-popover.blp:58
 msgid "New Event…"
 msgstr "Takunetanga Hou…"
 
-#: src/gui/views/gcal-week-header.c:473
+#: src/gui/views/gcal-week-header.c:471
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1723,11 +1759,11 @@ msgstr "Huna Takunetanga Tāpiri"
 msgid "Show Additional Events"
 msgstr "Whakaatu Takunetanga Tāpiri"
 
-#: src/utils/gcal-utils.c:1291
+#: src/utils/gcal-utils.c:875
 msgid "Modify Multiple Events?"
 msgstr "Whakarerekē i ngā Takunetanga Maha?"
 
-#: src/utils/gcal-utils.c:1292
+#: src/utils/gcal-utils.c:876
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1735,72 +1771,72 @@ msgstr ""
 "He takunetanga tukurua tēnei e ngana ana koe ki te whakarerekē. Ko ngā "
 "panonitanga kua tīpakohia e koe me hoatu ki:"
 
-#: src/utils/gcal-utils.c:1296
+#: src/utils/gcal-utils.c:880
 msgid "_Only This Event"
 msgstr "_Tēnei Takunetanga Anake"
 
-#: src/utils/gcal-utils.c:1302
+#: src/utils/gcal-utils.c:886
 msgid "_Subsequent Events"
 msgstr "Ngā Takunetanga _Whai ake"
 
-#: src/utils/gcal-utils.c:1305
+#: src/utils/gcal-utils.c:889
 msgid "_All Events"
 msgstr "Ngā Takunetanga _Katoa"
 
 #. Conferencing
-#: src/utils/gcal-utils.c:1408
+#: src/utils/gcal-utils.c:957
 msgid "BlueJeans"
 msgstr "BlueJeans"
 
-#: src/utils/gcal-utils.c:1409 src/utils/gcal-utils.c:1410
+#: src/utils/gcal-utils.c:958 src/utils/gcal-utils.c:959
 msgid "BigBlueButton"
 msgstr "BigBlueButton"
 
-#: src/utils/gcal-utils.c:1411
+#: src/utils/gcal-utils.c:960
 msgid "Google Meet"
 msgstr "Google Meet"
 
-#: src/utils/gcal-utils.c:1412 src/utils/gcal-utils.c:1413
+#: src/utils/gcal-utils.c:961 src/utils/gcal-utils.c:962
 msgid "Jitsi"
 msgstr "Jitsi"
 
-#: src/utils/gcal-utils.c:1414
+#: src/utils/gcal-utils.c:963
 msgid "Uber Conference"
 msgstr "Uber Conference"
 
-#: src/utils/gcal-utils.c:1415
+#: src/utils/gcal-utils.c:964
 msgid "GNOME Meet"
 msgstr "GNOME Meet"
 
-#: src/utils/gcal-utils.c:1416
+#: src/utils/gcal-utils.c:965
 msgid "Microsoft Teams"
 msgstr "Microsoft Teams"
 
-#: src/utils/gcal-utils.c:1417
+#: src/utils/gcal-utils.c:966
 msgid "Whereby"
 msgstr "Whereby"
 
-#: src/utils/gcal-utils.c:1418
+#: src/utils/gcal-utils.c:967
 msgid "Webex"
 msgstr "Webex"
 
-#: src/utils/gcal-utils.c:1419
+#: src/utils/gcal-utils.c:968
 msgid "Zoom"
 msgstr "Zoom"
 
 #. Map
-#: src/utils/gcal-utils.c:1422
+#: src/utils/gcal-utils.c:971
 msgid "View Map"
 msgstr "Tiro Mahere"
 
-#: src/utils/gcal-utils.c:1423
+#: src/utils/gcal-utils.c:972
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: src/utils/gcal-utils.c:1424 src/utils/gcal-utils.c:1425
+#: src/utils/gcal-utils.c:973 src/utils/gcal-utils.c:974
 msgid "Google Maps"
 msgstr "Google Maps"
 
-#: src/utils/gcal-utils.c:1426
+#: src/utils/gcal-utils.c:975
 msgid "Bing Maps"
 msgstr "Bing Maps"
