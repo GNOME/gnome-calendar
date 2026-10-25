@@ -269,7 +269,7 @@ filter_timezones (ICalComponent *component)
 }
 
 static void
-setup_file (GcalImportFileRow *self)
+set_up_file (GcalImportFileRow *self)
 {
   gcal_importer_import_file (self->file,
                              self->cancellable,
@@ -362,7 +362,7 @@ gcal_import_file_row_set_property (GObject      *object,
     case PROP_FILE:
       g_assert (self->file == NULL);
       self->file = g_value_dup_object (value);
-      setup_file (self);
+      set_up_file (self);
       break;
 
     default:

@@ -718,7 +718,7 @@ move_event_to_cell (GcalWeekGrid          *self,
   gcal_event_set_all_day (changed_event, FALSE);
   gcal_event_set_date_start (changed_event, dnd_date);
 
-  /* Setup the new end date */
+  /* Set up the new end date */
   new_end = g_date_time_add (dnd_date, timespan);
   gcal_event_set_date_end (changed_event, new_end);
 
@@ -1120,7 +1120,7 @@ gcal_week_grid_size_allocate (GtkWidget *widget,
                 x = width - (x + event_width);
               y = (g_date_time_get_hour (event_start) * 60 + g_date_time_get_minute (event_start)) * minutes_height;
 
-              /* Setup the child position and size */
+              /* Set up the child position and size */
               child_allocation.x = x;
               child_allocation.y = y;
               child_allocation.width = event_width;

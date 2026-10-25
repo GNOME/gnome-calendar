@@ -187,7 +187,7 @@ create_discovered_source (ESource                 *source,
   if (user_addresses)
     e_source_webdav_set_email_address (webdav, user_addresses->data);
 
-  /* Setup the color */
+  /* Set up the color */
   selectable = e_source_get_extension (new_source, E_SOURCE_EXTENSION_CALENDAR);
   e_source_selectable_set_color (selectable, discovered_source->color);
 

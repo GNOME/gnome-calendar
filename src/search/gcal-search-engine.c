@@ -112,7 +112,7 @@ gcal_search_engine_constructed (GObject *object)
 
   G_OBJECT_CLASS (gcal_search_engine_parent_class)->constructed (object);
 
-  /* Setup the data model */
+  /* Set up the data model */
   self->timeline = gcal_timeline_new ();
 
   context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);

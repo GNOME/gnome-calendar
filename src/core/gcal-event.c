@@ -256,7 +256,7 @@ gcal_event_update_uid_internal (GcalEvent *self)
   ECalComponentId *id;
   const gchar *source_id;
 
-  /* Setup event uid */
+  /* Set up event uid */
   source_id = self->calendar ? gcal_calendar_get_id (self->calendar) : "";
   id = e_cal_component_get_id (self->component);
 
@@ -325,8 +325,8 @@ load_attendees (GcalEvent *self)
 }
 
 static gboolean
-setup_component (GcalEvent  *self,
-                 GError    **error)
+set_up_component (GcalEvent  *self,
+                  GError    **error)
 {
   g_autoptr (GTimeZone) zone_start = NULL;
   g_autoptr (GDateTime) date_start = NULL;
@@ -340,7 +340,7 @@ setup_component (GcalEvent  *self,
 
   g_assert (self->component != NULL);
 
-  /* Setup start date */
+  /* Set up start date */
   start = e_cal_component_get_dtstart (self->component);
 
   /*
@@ -377,7 +377,7 @@ setup_component (GcalEvent  *self,
 
   g_clear_object (&date);
 
-  /* Setup end date */
+  /* Set up end date */
   end = e_cal_component_get_dtend (self->component);
 
   if (end && e_cal_component_datetime_get_value (end))
@@ -400,7 +400,7 @@ setup_component (GcalEvent  *self,
 
       self->dt_end = g_steal_pointer (&date_end);
 
-      /* Setup all day */
+      /* Set up all day */
       self->all_day = start_is_all_day && end_is_all_day;
 
       g_clear_object (&date);
@@ -422,11 +422,11 @@ setup_component (GcalEvent  *self,
   location = e_cal_component_get_location (self->component);
   gcal_event_set_location (self, location ? location : "");
 
-  /* Setup description */
+  /* Set up description */
   description = gcal_util_get_desc_from_component (self->component, "\n\n");
   gcal_event_set_description (self, description);
 
-  /* Setup UID */
+  /* Set up UID */
   gcal_event_update_uid_internal (self);
 
   /* Set has-recurrence to check if the component has recurrence or not */
@@ -435,15 +435,15 @@ setup_component (GcalEvent  *self,
   /* Load the recurrence-rules in GcalRecurrence struct */
   self->recurrence = gcal_recurrence_parse_recurrence_rules (self->component);
 
-  /* Load and setup the alarms */
+  /* Load and set up the alarms */
   load_alarms (self);
 
-  /* Load and setup organizer */
+  /* Load and set up organizer */
   organizer = e_cal_component_get_organizer (self->component);
   if (organizer)
     self->organizer = gcal_event_organizer_new (organizer);
 
-  /* load and setup attendees */
+  /* load and set up attendees */
   if (e_cal_component_has_attendees (self->component))
     load_attendees (self);
 
@@ -481,7 +481,7 @@ gcal_event_initable_init (GInitable     *initable,
 {
   GcalEvent *self = GCAL_EVENT (initable);
 
-  return setup_component (self, error);
+  return set_up_component (self, error);
 }
 
 static void
@@ -995,7 +995,7 @@ gcal_event_set_date_end (GcalEvent *self,
     {
       ECalComponentDateTime *component_dt;
 
-      /* Setup the ECalComponent's datetime value */
+      /* Set up the ECalComponent's datetime value */
       component_dt = build_component_from_datetime (self, dt);
 
       e_cal_component_set_dtend (self->component, component_dt);
@@ -1041,7 +1041,7 @@ gcal_event_set_date_start (GcalEvent *self,
     {
       ECalComponentDateTime *component_dt;
 
-      /* Setup the ECalComponent's datetime value */
+      /* Set up the ECalComponent's datetime value */
       component_dt = build_component_from_datetime (self, dt);
 
       e_cal_component_set_dtstart (self->component, component_dt);

@@ -248,8 +248,8 @@ on_event_widget_activated (GcalEventWidget *widget,
 
 
 static inline void
-setup_event_widget (GcalWeekHeader *self,
-                    GtkWidget      *widget)
+set_up_event_widget (GcalWeekHeader *self,
+                     GtkWidget      *widget)
 {
   g_signal_connect_object (widget, "activate", G_CALLBACK (on_event_widget_activated), self, 0);
 }
@@ -512,7 +512,7 @@ merge_events (GcalWeekHeader *self,
   GDateTime *end_date;
   gint deleted_width, current_width;
 
-  /* Setup the new end date of the merged event */
+  /* Set up the new end date of the merged event */
   end_date = gcal_event_widget_get_date_end (GCAL_EVENT_WIDGET (to_be_removed));
   gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (event), end_date);
 
@@ -657,7 +657,7 @@ split_event_widget_at_column (GcalWeekHeader *self,
 
       gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget_before), column_date);
 
-      setup_event_widget (self, widget_before);
+      set_up_event_widget (self, widget_before);
 
       gtk_grid_attach (self->grid,
                        widget_before,
@@ -694,7 +694,7 @@ split_event_widget_at_column (GcalWeekHeader *self,
       gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (widget_after), end_column_date);
       gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget_after), event_end);
 
-      setup_event_widget (self, widget_after);
+      set_up_event_widget (self, widget_after);
 
       gtk_grid_attach (self->grid,
                        widget_after,
@@ -804,7 +804,7 @@ add_event_to_grid (GcalWeekHeader *self,
   /* Add the event to the grid */
   widget = gcal_event_widget_pool_take_or_create (self->event_widget_pool, event);
   g_assert (GCAL_IS_EVENT_WIDGET (widget));
-  setup_event_widget (self, widget);
+  set_up_event_widget (self, widget);
 
   gtk_grid_attach (self->grid,
                    widget,
@@ -813,7 +813,7 @@ add_event_to_grid (GcalWeekHeader *self,
                    1,
                    1);
 
-  /* Setup event visibility */
+  /* Set up event visibility */
   is_visible = is_event_visible (self, start, position);
 
   gtk_widget_set_visible (widget, is_visible);
@@ -868,7 +868,7 @@ add_event_to_grid (GcalWeekHeader *self,
 
           cloned_widget = gcal_event_widget_pool_take_or_create (self->event_widget_pool, event);
           g_assert (GCAL_IS_EVENT_WIDGET (cloned_widget));
-          setup_event_widget (self, cloned_widget);
+          set_up_event_widget (self, cloned_widget);
 
           gtk_grid_attach (self->grid,
                            cloned_widget,

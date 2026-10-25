@@ -202,7 +202,7 @@ format_alarm_duration (ICalDuration *duration)
 }
 
 static void
-setup_alarm (GcalAlarmRow *self)
+set_up_alarm (GcalAlarmRow *self)
 {
   g_autofree gchar *formatted_duration = NULL;
   ECalComponentAlarmTrigger *trigger;
@@ -274,7 +274,7 @@ gcal_alarm_row_set_property (GObject      *object,
     case PROP_ALARM:
       g_assert (self->alarm == NULL);
       self->alarm = e_cal_component_alarm_copy (g_value_get_pointer (value));
-      setup_alarm (self);
+      set_up_alarm (self);
       break;
 
     default:

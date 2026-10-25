@@ -83,7 +83,7 @@ show_context_menu (GcalAttendeeRow *self,
 }
 
 static void
-setup_row_title_and_subtitle (GcalAttendeeRow *self)
+set_up_row_title_and_subtitle (GcalAttendeeRow *self)
 {
   g_autoptr (GString) title = NULL;
   g_autoptr (GString) subtitle = NULL;
@@ -114,9 +114,9 @@ setup_row_title_and_subtitle (GcalAttendeeRow *self)
 }
 
 static void
-setup_row_content (GcalAttendeeRow *self)
+set_up_row_content (GcalAttendeeRow *self)
 {
-  setup_row_title_and_subtitle (self);
+  set_up_row_title_and_subtitle (self);
 
   /* set role */
   if (gcal_event_attendee_get_role (self->attendee) == GCAL_EVENT_ATTENDEE_ROLE_OPTIONAL)
@@ -163,7 +163,7 @@ gcal_attendee_row_set_property (GObject      *object,
     case PROP_ATTENDEE:
       g_assert (self->attendee == NULL);
       self->attendee = g_value_get_object (value);
-      setup_row_content (self);
+      set_up_row_content (self);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);

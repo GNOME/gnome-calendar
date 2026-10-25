@@ -163,8 +163,8 @@ create_alarm_row (GcalRemindersSection *self,
 }
 
 static void
-setup_alarms (GcalRemindersSection *self,
-              GcalEvent            *event)
+set_up_alarms (GcalRemindersSection *self,
+               GcalEvent            *event)
 {
   g_autoptr (GList) alarms = NULL;
   GList *l;
@@ -332,7 +332,7 @@ gcal_reminders_section_event_set_cb (GcalEventEditorSection *section,
 {
   GcalRemindersSection *self = GCAL_REMINDERS_SECTION (section);
 
-  setup_alarms (self, event);
+  set_up_alarms (self, event);
 }
 
 

@@ -121,8 +121,8 @@ build_summary_subtitle (GcalAttendeeSummaryRow *self)
 }
 
 static void
-setup_filtered_attendees (GcalAttendeeSummaryRow *self,
-                          GListModel             *attendees)
+set_up_filtered_attendees (GcalAttendeeSummaryRow *self,
+                           GListModel             *attendees)
 {
   g_return_if_fail (GCAL_IS_ATTENDEE_SUMMARY_ROW (self));
 
@@ -191,7 +191,7 @@ gcal_attendee_summary_row_set_property (GObject      *object,
   switch (property_id)
     {
     case PROP_ATTENDEES:
-      setup_filtered_attendees (self, g_value_get_object (value));
+      set_up_filtered_attendees (self, g_value_get_object (value));
       break;
     case PROP_FILTER_FLAGS:
       change_attendee_filter_type (self, g_value_get_flags (value));

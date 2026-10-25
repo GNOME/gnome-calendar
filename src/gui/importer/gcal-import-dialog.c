@@ -100,7 +100,7 @@ update_default_calendar (GcalImportDialog *self)
 }
 
 static void
-setup_calendars (GcalImportDialog *self)
+set_up_calendars (GcalImportDialog *self)
 {
   GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   g_autoptr (GListModel) calendars = NULL;
@@ -149,9 +149,9 @@ add_file (GcalImportDialog *self,
 }
 
 static void
-setup_files (GcalImportDialog  *self,
-             GFile            **files,
-             gint               n_files)
+set_up_files (GcalImportDialog  *self,
+              GFile            **files,
+              gint               n_files)
 {
   gint i;
 
@@ -165,8 +165,8 @@ setup_files (GcalImportDialog  *self,
 }
 
 static void
-setup_files_list (GcalImportDialog *self,
-                  GList            *list)
+set_up_files_list (GcalImportDialog *self,
+                   GList            *list)
 {
   gint n_files = 0;
   gboolean has_multiple = list->next != NULL;
@@ -348,7 +348,7 @@ gcal_import_dialog_constructed (GObject *object)
 
   G_OBJECT_CLASS (gcal_import_dialog_parent_class)->constructed (object);
 
-  setup_calendars (self);
+  set_up_calendars (self);
 }
 
 static void
@@ -405,7 +405,7 @@ gcal_import_dialog_new_for_files (GFile **files,
   self =  g_object_new (GCAL_TYPE_IMPORT_DIALOG,
                         NULL);
 
-  setup_files (self, files, n_files);
+  set_up_files (self, files, n_files);
 
   return GTK_WIDGET (self);
 }
@@ -418,7 +418,7 @@ gcal_import_dialog_new_for_file_list (GList *file_list)
   self =  g_object_new (GCAL_TYPE_IMPORT_DIALOG,
                         NULL);
 
-  setup_files_list (self, file_list);
+  set_up_files_list (self, file_list);
 
   return GTK_WIDGET (self);
 }

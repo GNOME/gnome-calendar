@@ -473,8 +473,8 @@ layout_block_free (gpointer data)
 }
 
 static void
-setup_child_widget (GcalMonthViewRow *self,
-                    GtkWidget        *widget)
+set_up_child_widget (GcalMonthViewRow *self,
+                     GtkWidget        *widget)
 {
   gtk_widget_insert_after (widget, GTK_WIDGET (self), self->day_cells[GCAL_N_WEEKDAYS - 1]);
 
@@ -787,7 +787,7 @@ recalculate_layout_blocks (GcalMonthViewRow *self)
 
                   g_assert (GCAL_IS_EVENT_WIDGET (event_widget));
 
-                  setup_child_widget (self, event_widget);
+                  set_up_child_widget (self, event_widget);
                 }
 
               if (!gcal_event_get_all_day (event) && !gcal_event_is_multiday (event))

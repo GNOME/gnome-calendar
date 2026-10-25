@@ -60,7 +60,7 @@ static GParamSpec *properties[N_PROPS] = { NULL, };
  */
 
 static void
-setup_meeting (GcalMeetingRow *self)
+set_up_meeting (GcalMeetingRow *self)
 {
   g_autofree gchar *markup_url = NULL;
 
@@ -144,7 +144,7 @@ gcal_meeting_row_set_property (GObject      *object,
     case PROP_URL:
       g_assert (self->url == NULL);
       self->url = g_value_dup_string (value);
-      setup_meeting (self);
+      set_up_meeting (self);
       break;
 
     default:

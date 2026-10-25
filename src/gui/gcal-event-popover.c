@@ -452,7 +452,7 @@ add_meeting (GcalEventPopover *self,
 }
 
 static void
-setup_location_label (GcalEventPopover *self)
+set_up_location_label (GcalEventPopover *self)
 {
   g_autoptr (GUri) guri = NULL;
   g_autofree gchar *location = NULL;
@@ -485,7 +485,7 @@ setup_location_label (GcalEventPopover *self)
 }
 
 static void
-setup_description_label (GcalEventPopover *self)
+set_up_description_label (GcalEventPopover *self)
 {
   g_autofree gchar *description = NULL;
   g_autofree gchar *meeting_url = NULL;
@@ -514,8 +514,8 @@ set_event_internal (GcalEventPopover *self,
 
   gtk_label_set_label (self->summary_label, gcal_event_get_summary (event));
 
-  setup_description_label (self);
-  setup_location_label (self);
+  set_up_description_label (self);
+  set_up_location_label (self);
   update_placeholder_label (self);
   update_date_time_label (self);
   update_decorations (self, event);

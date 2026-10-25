@@ -857,7 +857,7 @@ show_new_event_widget (GcalView   *view,
 
   g_debug ("Quick add popover position (%f, %f)", x, y);
 
-  /* Setup the quick add popover's dates */
+  /* Set up the quick add popover's dates */
   gcal_quick_add_popover_set_range (GCAL_QUICK_ADD_POPOVER (window->quick_add_popover),
                                     window->event_creation_data->range);
 
@@ -1467,7 +1467,7 @@ gcal_window_init (GcalWindow *self)
     {"undo-delete-event", on_window_undo_delete_event_cb },
   };
 
-  /* Setup actions */
+  /* Set up actions */
   g_action_map_add_action_entries (G_ACTION_MAP (self),
                                    actions,
                                    G_N_ELEMENTS (actions),

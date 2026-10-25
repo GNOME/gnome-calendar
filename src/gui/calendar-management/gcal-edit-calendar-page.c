@@ -112,8 +112,8 @@ is_remote_source (ESource *source)
 }
 
 static void
-setup_calendar (GcalEditCalendarPage *self,
-                GcalCalendar         *calendar)
+set_up_calendar (GcalEditCalendarPage *self,
+                 GcalCalendar         *calendar)
 {
   ESource *source;
   gboolean is_remote;
@@ -402,7 +402,7 @@ gcal_edit_calendar_page_activate (GcalCalendarManagementPage *page,
 {
   GCAL_ENTRY;
 
-  setup_calendar (GCAL_EDIT_CALENDAR_PAGE (page), calendar);
+  set_up_calendar (GCAL_EDIT_CALENDAR_PAGE (page), calendar);
 
   GCAL_EXIT;
 }
