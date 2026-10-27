@@ -27,6 +27,8 @@
 #include "gcal-utils.h"
 #include "gcal-weather-info.h"
 
+#include <glib/gi18n.h>
+
 struct _GcalMonthCell
 {
   GtkWidget           parent;
@@ -365,6 +367,7 @@ void
 gcal_month_cell_set_date (GcalMonthCell *self,
                           GDateTime     *date)
 {
+  g_autofree char *accessible_label = NULL;
   gint day_of_month;
 
   g_return_if_fail (GCAL_IS_MONTH_CELL (self));
@@ -391,6 +394,16 @@ gcal_month_cell_set_date (GcalMonthCell *self,
       gtk_label_set_text (self->day_label, date_number);
       gtk_widget_remove_css_class (GTK_WIDGET (self->day_label), "first-day");
     }
+
+  /*
+   * Translators: %e is the day as a number, %B is the month name, and %Y is the year.
+   * More formats can be found on the doc:
+   * https://docs.gtk.org/glib/method.DateTime.format.html
+   */
+  accessible_label = g_date_time_format (date, _("%e %B %Y"));
+  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_PROPERTY_LABEL, accessible_label,
+                                  -1);
 
   update_weather (self);
 }
