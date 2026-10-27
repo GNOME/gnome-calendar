@@ -387,19 +387,19 @@ update_week_ranges (GcalMonthView *self,
   g_autoptr (GDateTime) current_date = NULL;
   gint n_weeks_before;
 
+  current_range = gcal_timeline_subscriber_get_range (GCAL_TIMELINE_SUBSCRIBER (self));
+
+  current_date = g_steal_pointer (&self->date);
+  g_assert (current_date != NULL);
+  g_set_date_time (&self->date, new_date);
+
   /*
    * The current date corresponds to the week of the first
    * visible row.
    */
   n_weeks_before = self->rows_per_page * (N_PAGES - 1) / 2;
 
-  current_date = g_steal_pointer (&self->date);
-  if (current_date)
-    current_range = gcal_timeline_subscriber_get_range (GCAL_TIMELINE_SUBSCRIBER (self));
-
-  g_set_date_time (&self->date, new_date);
-
-  if (current_range && gcal_range_contains_datetime (current_range, new_date))
+  if (gcal_range_contains_datetime (current_range, new_date))
     {
       g_autoptr (GcalRange) row_range = NULL;
       GcalMonthViewRow *row;
@@ -1596,8 +1596,7 @@ gcal_month_view_set_date (GcalView  *view,
 
   self = GCAL_MONTH_VIEW (view);
 
-  if (self->date && date &&
-      g_date_time_equal (self->date, date))
+  if (g_date_time_equal (self->date, date))
     GCAL_RETURN ();
 
 #ifdef GCAL_ENABLE_TRACE
@@ -2201,10 +2200,9 @@ gcal_month_view_init (GcalMonthView *self)
 
   gtk_widget_set_parent (self->overflow.popover, GTK_WIDGET (self));
 
-  now = g_date_time_new_now_local ();
-  gcal_view_set_date (GCAL_VIEW (self), now);
+  self->date = g_date_time_new_now_local ();
+  redraw_month_view_rows (self);
 
-  update_visible_rows (self);
   drop_target = gtk_drop_target_new (GCAL_TYPE_EVENT_WIDGET, GDK_ACTION_COPY);
 
   gtk_drop_target_set_preload (drop_target, TRUE);
