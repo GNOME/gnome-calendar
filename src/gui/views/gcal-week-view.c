@@ -666,6 +666,8 @@ gcal_week_view_init (GcalWeekView *self)
 
   gtk_widget_set_size_request (self->content, -1, HEIGHT_DEFAULT);
 
+  self->date = g_date_time_new_now_local ();
+
   restore_zoom_level (self);
 }
 

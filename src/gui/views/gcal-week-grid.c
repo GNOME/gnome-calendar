@@ -1205,6 +1205,8 @@ gcal_week_grid_init (GcalWeekGrid *self)
   GtkGesture *click_gesture;
   AdwStyleManager *manager;
 
+  self->active_date = g_date_time_new_now_local ();
+
   self->selection.start = -1;
   self->selection.end = -1;
   self->selection.widget = gcal_create_selection_widget ();

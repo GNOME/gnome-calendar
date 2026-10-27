@@ -175,9 +175,6 @@ add_weather_infos (GcalWeekHeader *self,
   gint consumed = 0;
   guint i;
 
-  if (!self->active_date)
-    return 0;
-
   week_start_dt = gcal_date_time_get_start_of_week (self->active_date);
   g_date_set_dmy (&week_start,
                   g_date_time_get_day_of_month (week_start_dt),
@@ -1112,9 +1109,6 @@ update_title (GcalWeekHeader *self)
   g_autoptr (GDateTime) week_start = NULL;
   gint today_column;
 
-  if(!self->active_date)
-    return;
-
   week_start = gcal_date_time_get_start_of_week (self->active_date);
   today_column = get_today_column (self);
 
@@ -1736,6 +1730,8 @@ gcal_week_header_init (GcalWeekHeader *self)
 
   self->event_widget_pool = gcal_event_widget_pool_new ();
 
+  self->active_date = g_date_time_new_now_local ();
+
   gcal_event_array_init (&self->event_array);
 
   filter = gtk_custom_filter_new (event_is_all_day_or_multiday_func, NULL, NULL);
@@ -1809,6 +1805,7 @@ gcal_week_header_init (GcalWeekHeader *self)
                            self,
                            0);
 
+  update_title (self);
   update_weather_infos (self);
 }
 
@@ -1851,30 +1848,23 @@ gcal_week_header_set_date (GcalWeekHeader *self,
 {
   g_autoptr (GDateTime) start_of_week_1 = NULL;
   g_autoptr (GDateTime) start_of_week_2 = NULL;
-  gboolean had_date;
 
   /*
    * If the active date changed, but we're still in the same week,
    * there's no need to recalculate visible events.
    */
-  if (self->active_date && date)
-    {
-      start_of_week_1 = gcal_date_time_get_start_of_week (self->active_date);
-      start_of_week_2 = gcal_date_time_get_start_of_week (date);
+  start_of_week_1 = gcal_date_time_get_start_of_week (self->active_date);
+  start_of_week_2 = gcal_date_time_get_start_of_week (date);
 
-      if (g_date_time_equal (start_of_week_1, start_of_week_2))
-        return;
-    }
-
-  had_date = self->active_date != NULL;
+  if (g_date_time_equal (start_of_week_1, start_of_week_2))
+    return;
 
   g_set_date_time (&self->active_date, date);
 
   update_title (self);
   gtk_widget_queue_draw (GTK_WIDGET (self));
 
-  if (had_date)
-    update_unchanged_events (self, self->active_date);
+  update_unchanged_events (self, self->active_date);
 
   update_weather_infos (self);
 }
