@@ -25,6 +25,7 @@
 #include "gcal-date-time-utils.h"
 #include "gcal-utils.h"
 
+#include <glib/gi18n.h>
 #include <stdlib.h>
 #include <langinfo.h>
 
@@ -188,6 +189,7 @@ gcal_date_chooser_day_set_date (GcalDateChooserDay *self,
   GtkWidget *widget = GTK_WIDGET (self);
   g_autoptr (GDateTime) now = NULL;
   g_autofree gchar *text = NULL;
+  g_autofree char *accessible_label = NULL;
   gboolean today;
   gint weekday;
 
@@ -213,6 +215,16 @@ gcal_date_chooser_day_set_date (GcalDateChooserDay *self,
 
   text = g_strdup_printf ("%d", g_date_time_get_day_of_month (date));
   gtk_label_set_label (GTK_LABEL (self->label), text);
+
+  /*
+   * Translators: %B is the month name, and %e is the day as a number.
+   * More formats can be found on the doc:
+   * https://docs.gtk.org/glib/method.DateTime.format.html
+   */
+  accessible_label = g_date_time_format (date, _("%B %e"));
+  gtk_accessible_update_property (GTK_ACCESSIBLE (self),
+                                  GTK_ACCESSIBLE_PROPERTY_LABEL, accessible_label,
+                                  -1);
 }
 
 GDateTime*
