@@ -116,6 +116,9 @@ escape_markup_cb (GcalSearchHit *hit,
 {
   g_autofree gchar *escaped_string = NULL;
 
+  if (!string)
+    return NULL;
+
   escaped_string = g_markup_escape_text (string, -1);
   escaped_string = g_strstrip (escaped_string);
 
