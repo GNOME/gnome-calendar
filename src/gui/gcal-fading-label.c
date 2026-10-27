@@ -178,6 +178,9 @@ gcal_fading_label_snapshot (GtkWidget   *widget,
       self->cached_text_node = gtk_snapshot_free_to_node (g_steal_pointer (&text_snapshot));
     }
 
+  if (!self->cached_text_node)
+    return;
+
   if (self->cached_extents.x + self->cached_extents.width <= width)
     {
       gtk_snapshot_append_node (snapshot, self->cached_text_node);
