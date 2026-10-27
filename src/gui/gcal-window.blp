@@ -157,7 +157,7 @@ template $GcalWindow: Adw.ApplicationWindow {
             $GcalDateChooser date_chooser {
               split-month-year: true;
               vexpand: false;
-              active-date: bind template.active-date no-sync-create bidirectional;
+              active-date: bind template.active-date bidirectional;
               day-selected => $day_selected(template);
             }
 
@@ -192,7 +192,7 @@ template $GcalWindow: Adw.ApplicationWindow {
             $GcalSyncIndicator sync_indicator {}
 
             title-widget: $GcalCalendarNavigationButton navigation_button_title {
-              active-date: bind template.active-date no-sync-create bidirectional;
+              active-date: bind template.active-date bidirectional;
               active: bind split_view.show-sidebar inverted;
             };
 
@@ -226,7 +226,7 @@ template $GcalWindow: Adw.ApplicationWindow {
               icon-name: "calendar-month-symbolic";
 
               child: $GcalMonthView month_view {
-                active-date: bind template.active-date no-sync-create bidirectional;
+                active-date: bind template.active-date bidirectional;
                 create-event => $show_new_event_widget(template) not-swapped;
                 create-event-detailed => $create_event_detailed_cb(template) not-swapped;
                 event-activated => $event_activated(template) not-swapped;
@@ -240,7 +240,7 @@ template $GcalWindow: Adw.ApplicationWindow {
               icon-name: "calendar-week-symbolic";
 
               child: $GcalWeekView week_view {
-                active-date: bind template.active-date no-sync-create bidirectional;
+                active-date: bind template.active-date bidirectional;
                 create-event => $show_new_event_widget(template) not-swapped;
                 event-activated => $event_activated(template) not-swapped;
               };
@@ -255,7 +255,7 @@ template $GcalWindow: Adw.ApplicationWindow {
 
               child: $GcalAgendaView agenda_view {
                 vexpand: true;
-                active-date: bind template.active-date no-sync-create bidirectional;
+                active-date: bind template.active-date bidirectional;
                 create-event => $show_new_event_widget(template) not-swapped;
                 event-activated => $event_activated(template) not-swapped;
               };

@@ -319,7 +319,6 @@ update_active_date (GcalWindow *window,
 {
   g_autoptr (GDateTime) new_date = NULL;
   g_autofree gchar *new_date_string = NULL;
-  GcalWindowView i;
 
   GCAL_ENTRY;
 
@@ -332,15 +331,14 @@ update_active_date (GcalWindow *window,
   new_date_string = g_date_time_format (new_date, "%x %X %z");
   g_debug ("Updating active date to %s", new_date_string);
 
-  g_set_date_time (&window->active_date, new_date);
-
-  for (i = 0; i < GCAL_WINDOW_VIEW_N_VIEWS; i++)
-    gcal_view_set_date (GCAL_VIEW (window->views[i]), new_date);
-  gcal_view_set_date (GCAL_VIEW (window->date_chooser), new_date);
+  if (!g_set_date_time (&window->active_date, new_date))
+    GCAL_RETURN ();
 
   update_today_action_enabled (window);
 
   maybe_add_subscribers_to_timeline (window);
+
+  g_object_notify_by_pspec (G_OBJECT (window), properties[PROP_ACTIVE_DATE]);
 
   GCAL_EXIT;
 }
@@ -1380,11 +1378,10 @@ gcal_window_class_init (GcalWindowClass *klass)
   widget_class->unmap = gcal_window_unmap;
 
 
-  properties[PROP_ACTIVE_DATE] = g_param_spec_boxed ("active-date",
-                                                     "Date",
-                                                     "The active/selected date",
-                                                     G_TYPE_DATE_TIME,
-                                                     G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+  properties[PROP_ACTIVE_DATE] =
+      g_param_spec_boxed ("active-date", NULL, NULL,
+                          G_TYPE_DATE_TIME,
+                          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
   properties[PROP_ACTIVE_VIEW] = g_param_spec_enum ("active-view",
                                                     "Active View",
@@ -1473,13 +1470,14 @@ gcal_window_init (GcalWindow *self)
                                    G_N_ELEMENTS (actions),
                                    self);
 
+  self->active_date = g_date_time_new_now_local ();
+
   gtk_widget_init_template (GTK_WIDGET (self));
 
   self->views[GCAL_WINDOW_VIEW_WEEK] = self->week_view;
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;
   self->views[GCAL_WINDOW_VIEW_AGENDA] = self->agenda_view;
 
-  self->active_date = g_date_time_new_from_unix_local (0);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
   /* devel styling */
