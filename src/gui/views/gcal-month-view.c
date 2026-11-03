@@ -2212,6 +2212,7 @@ gcal_month_view_init (GcalMonthView *self)
 
   self->date = g_date_time_new_now_local ();
   redraw_month_view_rows (self);
+  update_visible_rows (self);
 
   drop_target = gtk_drop_target_new (GCAL_TYPE_EVENT_WIDGET, GDK_ACTION_COPY);
 
