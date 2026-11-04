@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2026-10-31 23:20+0000\n"
-"PO-Revision-Date: 2026-10-31 13:48+0400\n"
+"PO-Revision-Date: 2026-11-04 14:55+0400\n"
 "Last-Translator: Huseyn <abdullazadehuseyn28@gmail.com>\n"
 "Language-Team: Azerbaijani\n"
 "Language: az\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 50.0\n"
+"X-Generator: Poedit 3.10\n"
 
 #: data/org.gnome.Calendar.desktop.in.in:2
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:13
@@ -81,11 +81,11 @@ msgstr "Həftə cədvəlinin cari miqyası"
 
 #: data/org.gnome.calendar.gschema.xml.in:32
 msgid "Number of week rows displayed by the Month view"
-msgstr ""
+msgstr "Ay görünüşü tərəfindən göstərilən həftə sıralarının sayı"
 
 #: data/org.gnome.calendar.gschema.xml.in:33
 msgid "The current number of week rows displayed by the Month view"
-msgstr ""
+msgstr "Ay görünüşü tərəfindən göstərilən cari həftə sıralarının sayı"
 
 #: src/appdata/org.gnome.Calendar.metainfo.xml.in.in:10
 msgid "The GNOME Project"
@@ -259,16 +259,12 @@ msgstr[0] "Təqvim əlavə et"
 msgstr[1] "%1$u təqvim əlavə et"
 
 #: src/gui/calendar-management/gcal-calendars-page.blp:18
-#, fuzzy
-#| msgid "Create a Local Calendar"
 msgid "New Local Calendar…"
-msgstr "Yerli təqvim yarat"
+msgstr "Yeni yerli təqvim…"
 
 #: src/gui/calendar-management/gcal-calendars-page.blp:19
-#, fuzzy
-#| msgid "_Remove Calendar"
 msgid "Add Remote Calendar…"
-msgstr "Təqvimi _sil"
+msgstr "Uzaq təqvim əlavə et…"
 
 #. Create the new toast
 #. TRANSLATORS: %s is a calendar name.
@@ -912,7 +908,7 @@ msgstr "Versiya nömrəsini göstər"
 
 #: src/gui/gcal-application.c:78
 msgid "Increase verbosity level. Can be used multiple times."
-msgstr ""
+msgstr "Uzunçuluq səviyyəsini artırın. Bir neçə dəfə istifadə edilə bilər."
 
 #: src/gui/gcal-application.c:83
 msgid "Open calendar on the passed date"
@@ -929,7 +925,9 @@ msgstr "Copyright © 2012–%d Təqvim müəllifləri"
 
 #: src/gui/gcal-application.c:252
 msgid "translator-credits"
-msgstr "Huseyn <abdullazadehuseyn28@gmail.com>"
+msgstr ""
+"Huseyn <abdullazadehuseyn28@gmail.com>\n"
+"Nicat Məmmədov <nicat.m@pm.me>"
 
 #: src/gui/gcal-application.c:257 src/gui/gcal-window.blp:386
 msgid "Weather"
@@ -937,11 +935,11 @@ msgstr "Hava"
 
 #: src/gui/gcal-calendar-navigation-button.blp:13
 msgid "_Choose Date"
-msgstr ""
+msgstr "_Tarix seç"
 
 #: src/gui/gcal-calendar-navigation-button.blp:16
 msgid "Choose a Date"
-msgstr ""
+msgstr "Tarix seçin"
 
 #.
 #. * Translators: %OB is the month name and %Y is the year.
@@ -1257,17 +1255,17 @@ msgstr "gələn bazara qədər"
 #: src/gui/gcal-quick-add-popover.c:218
 #, c-format
 msgid "from Today"
-msgstr "Bu gündən"
+msgstr "bu gündən"
 
 #: src/gui/gcal-quick-add-popover.c:222
 #, c-format
 msgid "from Tomorrow"
-msgstr "Sabahdan"
+msgstr "sabahdan"
 
 #: src/gui/gcal-quick-add-popover.c:226
 #, c-format
 msgid "from Yesterday"
-msgstr "Dünəndən"
+msgstr "dünəndən"
 
 #. Translators:
 #. * this is the format string for representing a date consisting of a month
@@ -1281,17 +1279,17 @@ msgstr "%2$s %1$s tarixindən"
 #: src/gui/gcal-quick-add-popover.c:253
 #, c-format
 msgid "to Today"
-msgstr "Bu günə qədər"
+msgstr "bu günə qədər"
 
 #: src/gui/gcal-quick-add-popover.c:257
 #, c-format
 msgid "to Tomorrow"
-msgstr "Sabaha qədər"
+msgstr "sabaha qədər"
 
 #: src/gui/gcal-quick-add-popover.c:261
 #, c-format
 msgid "to Yesterday"
-msgstr "Dünənə qədər"
+msgstr "dünənə qədər"
 
 #. Translators:
 #. * this is the format string for representing a date consisting of a month
@@ -1694,18 +1692,14 @@ msgid "Previous View"
 msgstr "Əvvəlki görünüş"
 
 #: src/gui/shortcuts-dialog.blp:83
-#, fuzzy
-#| msgid "Zoom"
 msgctxt "shortcut dialog"
 msgid "Zoom In"
-msgstr "Zoom"
+msgstr "Yaxınlaşdır"
 
 #: src/gui/shortcuts-dialog.blp:88
-#, fuzzy
-#| msgid "Zoom"
 msgctxt "shortcut dialog"
 msgid "Zoom Out"
-msgstr "Zoom"
+msgstr "Uzaqlaşdır"
 
 #: src/gui/shortcuts-dialog.blp:94
 msgctxt "shortcut dialog"
@@ -1733,10 +1727,8 @@ msgid "%A %B %d"
 msgstr "%A, %d %B"
 
 #: src/gui/views/gcal-month-cell.blp:78
-#, fuzzy
-#| msgid "_All Events"
 msgid "All Events"
-msgstr "_Bütün hadisələr"
+msgstr "Bütün tədbirlər"
 
 #: src/gui/views/gcal-month-popover.blp:58
 msgid "New Event…"
