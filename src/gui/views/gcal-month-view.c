@@ -820,6 +820,32 @@ focus_month_cell (GcalMonthView    *self,
 }
 
 static GtkWidget *
+get_first_month_cell_in_row (GcalMonthView *self,
+                             GtkWidget     *row)
+{
+  GtkWidget *cell = gcal_month_view_row_get_cell_at_x (GCAL_MONTH_VIEW_ROW (row), 0.0);
+  int cell_width = gtk_widget_get_width (cell);
+
+  if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
+    return gcal_month_view_row_get_cell_at_x (GCAL_MONTH_VIEW_ROW (row), gtk_widget_get_width (row) - cell_width / 2.0);
+  else
+    return cell;
+}
+
+static GtkWidget *
+get_last_month_cell_in_row (GcalMonthView *self,
+                            GtkWidget     *row)
+{
+  GtkWidget *cell = gcal_month_view_row_get_cell_at_x (GCAL_MONTH_VIEW_ROW (row), 0.0);
+  int cell_width = gtk_widget_get_width (cell);
+
+  if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
+    return cell;
+  else
+    return gcal_month_view_row_get_cell_at_x (GCAL_MONTH_VIEW_ROW (row), gtk_widget_get_width (row) - cell_width / 2.0);
+}
+
+static GtkWidget *
 get_month_cell_at_position (GcalMonthView *self,
                             double         x,
                             double         y)
@@ -1812,13 +1838,34 @@ gcal_month_view_focus (GtkWidget        *widget,
               GCAL_RETURN (gcal_month_view_row_focus_overlaying_event (GCAL_MONTH_VIEW_ROW (row), focused));
             }
 
-          if (direction == GTK_DIR_TAB_FORWARD && GCAL_IS_EVENT_WIDGET (focused))
+          if (GCAL_IS_EVENT_WIDGET (focused))
             {
-              if (GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction))
-                GCAL_RETURN (TRUE);
+              if (direction == GTK_DIR_TAB_FORWARD)
+                {
+                  if (GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction))
+                    GCAL_RETURN (TRUE);
 
-              row = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_VIEW_ROW);
-              GCAL_RETURN (gcal_month_view_row_focus_underlying_cell (GCAL_MONTH_VIEW_ROW (row), focused));
+                  row = gtk_widget_get_ancestor (focused, GCAL_TYPE_MONTH_VIEW_ROW);
+                  GCAL_RETURN (gcal_month_view_row_focus_underlying_cell (GCAL_MONTH_VIEW_ROW (row), focused));
+                }
+              else
+                {
+                  GCAL_RETURN (GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction));
+                }
+            }
+
+          if (GTK_WIDGET_CLASS (gcal_month_view_parent_class)->focus (widget, direction))
+            GCAL_RETURN (TRUE);
+
+          if (direction == GTK_DIR_TAB_FORWARD)
+            {
+              row = g_ptr_array_index (self->week_rows, FIRST_VISIBLE_ROW_INDEX (self));
+              GCAL_RETURN (gtk_widget_grab_focus (get_first_month_cell_in_row (self, row)));
+            }
+          if (direction == GTK_DIR_TAB_BACKWARD)
+            {
+              row = g_ptr_array_index (self->week_rows, LAST_VISIBLE_ROW_INDEX (self));
+              GCAL_RETURN (gtk_widget_grab_focus (get_last_month_cell_in_row (self, row)));
             }
         }
 
