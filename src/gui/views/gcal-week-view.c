@@ -388,33 +388,6 @@ stack_visible_child_changed_cb (AdwViewStack *stack,
   g_clear_signal_handler (&self->stack_page_changed_id, stack);
 }
 
-static void
-zoom_in_activated_cb (GtkWidget  *widget,
-                      const char *action_name,
-                      GVariant   *param)
-{
-  GcalWeekView *self = GCAL_WEEK_VIEW (widget);
-  gdouble view_center_y = gtk_widget_get_height (self->scrolled_window) / 2.0;
-
-  begin_zoom (self, view_center_y);
-  apply_zoom (self, view_center_y, 1.1);
-  save_zoom_level (self);
-}
-
-static void
-zoom_out_activated_cb (GtkWidget  *widget,
-                       const char *action_name,
-                       GVariant   *param)
-
-{
-  GcalWeekView *self = GCAL_WEEK_VIEW (widget);
-  gdouble view_center_y = gtk_widget_get_height (self->scrolled_window) / 2.0;
-
-  begin_zoom (self, view_center_y);
-  apply_zoom (self, view_center_y, 0.9);
-  save_zoom_level (self);
-}
-
 /* GcalView implementation */
 static GDateTime*
 gcal_week_view_get_date (GcalView *view)
@@ -498,6 +471,28 @@ gcal_week_view_get_previous_date (GcalView *view)
 }
 
 static void
+gcal_week_view_zoom_in (GcalView *view)
+{
+  GcalWeekView *self = GCAL_WEEK_VIEW (view);
+  gdouble view_center_y = gtk_widget_get_height (self->scrolled_window) / 2.0;
+
+  begin_zoom (self, view_center_y);
+  apply_zoom (self, view_center_y, 1.1);
+  save_zoom_level (self);
+}
+
+static void
+gcal_week_view_zoom_out (GcalView *view)
+{
+  GcalWeekView *self = GCAL_WEEK_VIEW (view);
+  gdouble view_center_y = gtk_widget_get_height (self->scrolled_window) / 2.0;
+
+  begin_zoom (self, view_center_y);
+  apply_zoom (self, view_center_y, 0.9);
+  save_zoom_level (self);
+}
+
+static void
 gcal_week_view_first_weekday_changed (GcalView *view)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (view);
@@ -517,6 +512,8 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->clear_marks = gcal_week_view_clear_marks;
   iface->get_next_date = gcal_week_view_get_next_date;
   iface->get_previous_date = gcal_week_view_get_previous_date;
+  iface->zoom_in = gcal_week_view_zoom_in;
+  iface->zoom_out = gcal_week_view_zoom_out;
   iface->first_weekday_changed = gcal_week_view_first_weekday_changed;
 }
 
@@ -659,9 +656,6 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_zoom_gesture_end_cb);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
-
-  gtk_widget_class_install_action (widget_class, "week-view.zoom-in", NULL, zoom_in_activated_cb);
-  gtk_widget_class_install_action (widget_class, "week-view.zoom-out", NULL, zoom_out_activated_cb);
 }
 
 static void
