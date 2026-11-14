@@ -75,6 +75,26 @@ template $GcalWindow: Adw.ApplicationWindow {
     }
 
     Shortcut {
+      trigger: "<Primary>plus";
+      action: "action(win.zoom-in)";
+    }
+
+    Shortcut {
+      trigger: "<Primary>minus";
+      action: "action(win.zoom-out)";
+    }
+
+    Shortcut {
+      trigger: "<Primary>KP_Add";
+      action: "action(win.zoom-in)";
+    }
+
+    Shortcut {
+      trigger: "<Primary>KP_Subtract";
+      action: "action(win.zoom-out)";
+    }
+
+    Shortcut {
       trigger: "<Ctrl>n";
       action: "action(win.new-event)";
     }

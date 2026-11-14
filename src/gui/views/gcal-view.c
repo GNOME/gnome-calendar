@@ -264,6 +264,36 @@ gcal_view_get_previous_date (GcalView *self)
   return g_steal_pointer (&previous_date);
 }
 
+/**
+ * gcal_view_zoom_in:
+ * @self: a #GcalView
+ *
+ * Zooms the given view in.
+ */
+void
+gcal_view_zoom_in (GcalView *self)
+{
+  g_assert (GCAL_IS_VIEW (self));
+
+  if (GCAL_VIEW_GET_IFACE (self)->zoom_in != NULL)
+    GCAL_VIEW_GET_IFACE (self)->zoom_in (self);
+}
+
+/**
+ * gcal_view_zoom_out:
+ * @self: a #GcalView
+ *
+ * Zooms the given view out.
+ */
+void
+gcal_view_zoom_out (GcalView *self)
+{
+  g_assert (GCAL_IS_VIEW (self));
+
+  if (GCAL_VIEW_GET_IFACE (self)->zoom_out != NULL)
+    GCAL_VIEW_GET_IFACE (self)->zoom_out (self);
+}
+
 void
 gcal_view_create_event (GcalView  *self,
                         GcalRange *range,

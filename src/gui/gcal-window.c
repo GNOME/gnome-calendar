@@ -601,6 +601,26 @@ on_view_action_activated (GSimpleAction *action,
 }
 
 static void
+on_view_zoom_in_activated_cb (GSimpleAction *action,
+                              GVariant      *param,
+                              gpointer       user_data)
+{
+  GcalWindow *window = GCAL_WINDOW (user_data);
+
+  gcal_view_zoom_in (GCAL_VIEW (window->views[window->active_view]));
+}
+
+static void
+on_view_zoom_out_activated_cb (GSimpleAction *action,
+                               GVariant      *param,
+                               gpointer       user_data)
+{
+  GcalWindow *window = GCAL_WINDOW (user_data);
+
+  gcal_view_zoom_out (GCAL_VIEW (window->views[window->active_view]));
+}
+
+static void
 on_back_button_pressed_cb (GtkGestureClick *gesture_click,
                            gint             n_press,
                            gdouble          x,
@@ -1455,6 +1475,8 @@ gcal_window_init (GcalWindow *self)
   GcalContext *context = gcal_application_get_context (GCAL_DEFAULT_APPLICATION);
   static const GActionEntry actions[] = {
     {"change-view", on_view_action_activated, "i" },
+    {"zoom-in", on_view_zoom_in_activated_cb },
+    {"zoom-out", on_view_zoom_out_activated_cb },
     {"next-date", on_window_next_date_activated_cb },
     {"new-event", on_window_new_event_cb },
     {"open-date-time-settings", on_window_open_date_time_settings_cb },

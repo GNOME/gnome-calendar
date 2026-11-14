@@ -51,6 +51,10 @@ struct _GcalViewInterface
 
   GDateTime*         (*get_previous_date)                        (GcalView           *self);
 
+  void               (*zoom_in)                                  (GcalView           *self);
+
+  void               (*zoom_out)                                 (GcalView           *self);
+
   /* Marks related API */
   void               (*clear_marks)                              (GcalView           *view);
 
@@ -77,6 +81,10 @@ GList*               gcal_view_get_children_by_uuid              (GcalView      
 GDateTime*           gcal_view_get_next_date                     (GcalView              *self);
 
 GDateTime*           gcal_view_get_previous_date                 (GcalView              *self);
+
+void                 gcal_view_zoom_in                           (GcalView              *self);
+
+void                 gcal_view_zoom_out                          (GcalView              *self);
 
 void                 gcal_view_first_weekday_changed             (GcalView              *self);
 
