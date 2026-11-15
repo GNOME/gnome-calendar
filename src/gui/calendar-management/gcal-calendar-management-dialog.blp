@@ -9,5 +9,21 @@ template $GcalCalendarManagementDialog: Adw.Dialog {
 
   Adw.NavigationView navigation_view {
     popped => $on_navigation_view_popped_cb(template) not-swapped;
+
+    $GcalCalendarsPage {
+      switch-page => $on_page_switched_cb(template) not-swapped;
+    }
+
+    $GcalEditCalendarPage {
+      switch-page => $on_page_switched_cb(template) not-swapped;
+    }
+
+    $GcalNewLocalCalendarPage {
+      switch-page => $on_page_switched_cb(template) not-swapped;
+    }
+
+    $GcalNewOnlineCalendarPage {
+      switch-page => $on_page_switched_cb(template) not-swapped;
+    }
   }
 }

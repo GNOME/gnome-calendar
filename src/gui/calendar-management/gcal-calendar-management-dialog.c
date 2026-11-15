@@ -18,7 +18,6 @@
 
 #define G_LOG_DOMAIN "GcalCalendarManagementDialog"
 
-#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-calendar-management-dialog.h"
 #include "gcal-calendar-management-page.h"
@@ -26,7 +25,6 @@
 #include "gcal-edit-calendar-page.h"
 #include "gcal-new-local-calendar-page.h"
 #include "gcal-new-online-calendar-page.h"
-#include "gcal-utils.h"
 
 #include <glib/gi18n.h>
 #include <libsoup/soup.h>
@@ -44,15 +42,6 @@
  * online accounts.
  */
 
-typedef enum
-{
-  GCAL_PAGE_CALENDARS,
-  GCAL_PAGE_NEW_LOCAL_CALENDAR,
-  GCAL_PAGE_NEW_ONLINE_CALENDAR,
-  GCAL_PAGE_EDIT_CALENDAR,
-  N_PAGES,
-} GcalPageType;
-
 struct _GcalCalendarManagementDialog
 {
   AdwDialog           parent;
@@ -63,9 +52,6 @@ struct _GcalCalendarManagementDialog
   ESource            *source;
   ESource            *old_default_source;
   GBinding           *title_bind;
-
-  /* auxiliary */
-  GcalCalendarManagementPage *pages[N_PAGES];
 };
 
 static void          on_page_switched_cb                         (GcalCalendarManagementPage   *page,
@@ -157,44 +143,26 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
 
   widget_class->unmap = gcal_calendar_management_dialog_unmap;
 
+  /*
+   * Need to make sure all types are initialized so that Builder can find them.
+   */
+  g_type_ensure (GCAL_TYPE_CALENDARS_PAGE);
+  g_type_ensure (GCAL_TYPE_EDIT_CALENDAR_PAGE);
+  g_type_ensure (GCAL_TYPE_NEW_LOCAL_CALENDAR_PAGE);
+  g_type_ensure (GCAL_TYPE_NEW_ONLINE_CALENDAR_PAGE);
+
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-calendar-management-dialog.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, navigation_view);
 
   gtk_widget_class_bind_template_callback (widget_class, on_navigation_view_popped_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_page_switched_cb);
 }
 
 static void
 gcal_calendar_management_dialog_init (GcalCalendarManagementDialog *self)
 {
-  const struct {
-    GcalPageType page_type;
-    GType        gtype;
-  } pages[] = {
-    { GCAL_PAGE_CALENDARS, GCAL_TYPE_CALENDARS_PAGE },
-    { GCAL_PAGE_NEW_LOCAL_CALENDAR, GCAL_TYPE_NEW_LOCAL_CALENDAR_PAGE },
-    { GCAL_PAGE_NEW_ONLINE_CALENDAR, GCAL_TYPE_NEW_ONLINE_CALENDAR_PAGE },
-    { GCAL_PAGE_EDIT_CALENDAR, GCAL_TYPE_EDIT_CALENDAR_PAGE },
-  };
-
   gtk_widget_init_template (GTK_WIDGET (self));
-
-  for (gint i = 0; i < N_PAGES; i++)
-    {
-      GcalCalendarManagementPage *page;
-
-      page = g_object_new (pages[i].gtype, NULL);
-
-      adw_navigation_view_add (self->navigation_view, ADW_NAVIGATION_PAGE (page));
-
-      g_signal_connect_object (page,
-                               "switch-page",
-                               G_CALLBACK (on_page_switched_cb),
-                               self,
-                               0);
-
-      self->pages[i] = page;
-    }
 
   set_page (self, "calendars", NULL);
 }
