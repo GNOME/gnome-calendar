@@ -377,11 +377,11 @@ update_header (GcalQuickAddPopover *self)
 
       all_day = gcal_range_get_range_type (self->range) == GCAL_RANGE_DATE_ONLY;
 
-      if (all_day &&
-          (g_date_time_difference (range_end, range_start) / G_TIME_SPAN_DAY > 1 &&
-           g_date_time_difference (range_end, range_start) / G_TIME_SPAN_MINUTE > 1))
+      if (all_day && gcal_date_time_compare_date (range_end, range_start) > 1)
         {
-          title_date = get_date_string_for_multiday (range_start, g_date_time_add_days (range_end, -1));
+          g_autoptr (GDateTime) end = g_date_time_add_days (range_end, -1);
+
+          title_date = get_date_string_for_multiday (range_start, end);
         }
       else
         {
