@@ -145,7 +145,8 @@ common_flags = [
 
 if calendar_debug
   common_flags += [
-    '-DG_DISABLE_CAST_CHECKS'
+    '-DG_DISABLE_CAST_CHECKS',
+    '-Werror=implicit-fallthrough',
   ]
 elif calendar_buildtype == 'release'
   common_flags += [
