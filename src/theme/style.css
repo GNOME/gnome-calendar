@@ -390,7 +390,7 @@ calendar-view.month-view {
   }
 }
 
-calendar-view.month-view > box.month-header {
+calendar-view.month-view box.month-header {
   padding-bottom: 6px;
   box-shadow:
     0 1px var(--raised-shade-color, var(--raised-shade-color-base)),
